@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory>
+        <EditTextPreference android:key="name"
+            android:title="填写用户名"
+            android:summary="填写你的用户名"
+            android:dialogTitle="你所使用的用户名为："/>
+        <ListPreference
+            android:key="gendar"
+            android:title="性别"
+            android:summary="请选择你的性别"
+            android:dialogTitle="ListPreference"
+            android:entries="@array/gendar_name_list"
+            android:entryValues="@array/gendar_values_list"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="系统功能设置组">
+        <CheckBoxPreference
+            android:key="autosave"
+            android:title="自动保存进队"
+            android:summaryOn="自动保存：开启"
+            android:defaultValue="true"
+            android:summaryOff="自动保存：关闭"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

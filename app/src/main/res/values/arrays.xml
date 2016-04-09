@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="tab_titles">
+
+        <item>音乐堂</item>
+        <item>音乐湖</item>
+
+    </string-array>
+    <string-array name="player_titles">
+
+        <item>播放列表</item>
+        <item>图片</item>
+        <item>歌词</item>
+
+    </string-array>
+</resources>

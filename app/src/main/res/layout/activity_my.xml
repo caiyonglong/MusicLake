@@ -1,0 +1,51 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/id_drawerlayout"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <!-- 第一个位置 -->
+    <!-- 你的主界面内容，必须放置在Drawerlayout中的第一个位置
+    根据自己的需要来放置控件，
+        例如：LinearLayout布局或者RelativeLayout布局；
+    也可以是单个控件，
+        如 TextView等  -->
+    <include
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        layout="@layout/content_main" />
+
+
+    <!-- 第二个位置 -->
+    <!-- 用来放Drawerlayout中的内容，
+    这里使用NavigationView来实现类似Google pLay中的侧滑栏效果，
+    必须在build.gradle中添加compile 'com.android.support:design:22.2.0'；
+    另外，如果不需要NavigationView效果，
+    也可以放置一个普通布局文件就是一个普通的侧滑栏了。
+     -->
+
+    <!--
+     注意：
+        如果使用NavigationView（其他控件也是一样）的特有属性，需要加上命名空间：
+                xmlns:app="http://schemas.android.com/apk/res-auto"；
+        另外，一定要添加android:layout_gravity="left"属性。
+     -->
+
+    <!--
+        属性解析：
+            app:headerLayout：    NavigationView中头部的head部分的布局，是自己实现的；
+            app:menu：            指定Nav中的Menu布局，就是自己写Menu中的按钮，要放在res/menu/文件夹下；
+            app:itemTextColor：  用来设置Nav中，menu item的颜色选择器。
+        还有一些属性：           和itemTextColor用法一样，指定一个颜色选择器，实现不同的颜色效果。
+            app:itemIconTint:
+            app:itemBackground:
+    -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/id_navigationview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:itemTextColor="@color/selector_nav_menu_textcolor"
+        android:layout_gravity="left" />
+
+</android.support.v4.widget.DrawerLayout>

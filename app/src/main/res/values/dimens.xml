@@ -1,0 +1,34 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="bottom_player_height">65dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="title_text_size">15sp</dimen>
+    <dimen name="city_name_size">20sp</dimen>
+    <dimen name="city_size_size">12sp</dimen>
+    <dimen name="city_progress_size">11sp</dimen>
+    <dimen name="normal_margin">5dp</dimen>
+    <dimen name="font_58">29dp</dimen>
+    <dimen name="font_170">85dp</dimen>
+    <dimen name="font_26">13sp</dimen>
+    <dimen name="offline_down_title_hight">25dp</dimen>
+    <dimen name="font_24">12sp</dimen>
+    <dimen name="font_30">15sp</dimen>
+    <dimen name="font_32">16sp</dimen>
+    <dimen name="font_28">14sp</dimen>
+    <dimen name="font_22">11sp</dimen>
+    <dimen name="poi_title_size">18sp</dimen>
+    <dimen name="poi_field_size">20sp</dimen>
+    <dimen name="margin_left">15dp</dimen>
+    <dimen name="margin_right">15dp</dimen>
+    <dimen name="offset_title">5dp</dimen>
+    <dimen name="width_title_leftImg">30dp</dimen>
+
+    <dimen name="title_height">55dp</dimen>
+
+    <dimen name="play_btn_width">40dp</dimen>
+</resources>

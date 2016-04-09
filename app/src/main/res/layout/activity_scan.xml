@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45.0dip"
+        android:background="@color/setting_blue"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/activity_scan_ib_return"
+            android:layout_width="45.0dip"
+            android:layout_height="30.0dip"
+
+            android:background="@drawable/btn_bg_style"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:src="@drawable/ic_common_title_bar_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5.0dip"
+
+            android:text="@string/xml_activity_scan_title"
+            android:textColor="@color/main_white"
+            android:textSize="17.0sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.0dip"
+        android:background="@drawable/fx_information_bg" />
+
+    <ListView
+        android:id="@+id/activity_scan_lv"
+        android:layout_width="match_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0"
+        android:cacheColorHint="@color/transparent"
+        android:padding="2.0dip"
+       />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100.0dip"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/activity_scan_text"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dip"
+            android:gravity="center"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip"
+            android:singleLine="true"
+            android:textColor="@color/main_black"
+            android:textSize="19.0sp" />
+
+        <Button
+            android:id="@+id/activity_scan_btn_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/scan_finish_btn_bg_style"
+            android:minWidth="120.0dip"
+            android:singleLine="true"
+            android:textColor="@color/main_white"
+            android:textSize="20.0sp" />
+    </LinearLayout>
+
+</LinearLayout>

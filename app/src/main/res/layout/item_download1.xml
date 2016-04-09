@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <!-- blocksDescendants：viewgroup会覆盖子类控件而直接获得焦点 -->
+    <!-- 用于解决ListView点击事件失效的问题 -->
+
+    <LinearLayout
+        android:id="@+id/adapter_music_item_view"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dip"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_marginLeft="20dp"
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/music_item_tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:gravity="bottom"
+                android:singleLine="true"
+                android:textColor="@color/main_white"
+                android:textSize="16.0sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="25.0dip">
+
+                <TextView
+                    android:id="@+id/music_item_tv_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingRight="15.0dip"
+                    android:singleLine="true"
+                    android:textColor="@color/main_white"
+                    android:textSize="12.0sp" />
+
+                <TextView
+                    android:id="@+id/music_item_tv_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|right"
+                    android:singleLine="true"
+                    android:textColor="@color/main_white"
+                    android:textSize="12.0sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ImageButton
+
+            android:id="@+id/list_black_btn"
+            android:layout_width="28dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dip"
+            android:background="@drawable/list_black_btn_close"
+            android:contentDescription="@string/app_name" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/music_item_tv_folder"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dip"
+        android:gravity="center_vertical"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip"
+        android:singleLine="true"
+        android:textColor="@color/main_white"
+        android:textSize="16.0sp" />
+
+</RelativeLayout>

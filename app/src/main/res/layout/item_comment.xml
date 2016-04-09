@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F7F7F7">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/userName_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/red_btn_bg_color"
+            android:text = "userName"
+            />
+        <TextView
+            android:id="@+id/time_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_below="@+id/userName_comment"
+            android:textColor="@color/main_black"
+            android:text = "2016-3-16 0:13发表"
+            />
+        <TextView
+            android:id="@+id/index_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text = "1楼"
+            android:gravity="center"
+            android:textColor="#888888"
+            android:layout_marginRight="4dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_comment_floor"
+            />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/content_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dip"
+        android:text = "评论"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        />
+</LinearLayout>

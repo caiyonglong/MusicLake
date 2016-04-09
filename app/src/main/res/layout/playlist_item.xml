@@ -1,0 +1,69 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/playlist_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardBackgroundColor="@color/main_white"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="5dp"
+    app:cardMaxElevation="4dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="5dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/playlist_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/icon_hnust" />
+
+
+            <LinearLayout
+                android:layout_below="@+id/playlist_album"
+                android:layout_width="wrap_content"
+
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/playlist_name"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="歌单名"
+                    android:singleLine="true"
+                    android:layout_toLeftOf="@+id/playlist_delete"
+                    android:textColor="@color/main_black"
+                    android:textSize="15sp" />
+                <ImageButton
+                    android:id="@+id/playlist_delete"
+                    android:background="@drawable/icon_folder_delete"
+                    android:layout_width="50dp"
+                    android:visibility="gone"
+                    android:gravity="center_vertical"
+                    android:layout_height="50dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_white"
+    >
+
+    <RelativeLayout
+
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:background="@color/setting_blue"
+        android:layout_height="50dp">
+
+        <ImageButton
+            android:id="@+id/backImageButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_common_title_bar_back"
+             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="动态发布"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+        <Button
+            android:id="@+id/btn_send_info"
+            android:text="发送"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/main_white"
+            android:background="@color/white"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <EditText
+        android:textColor="@color/main_black"
+        android:id="@+id/edit_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bar"
+        android:layout_margin="16dp"
+        android:background="@drawable/selector_edittext"
+        android:gravity="left|top"
+        android:hint="分享心情，分享歌曲..."
+        android:textSize="16sp"
+        android:inputType="textMultiLine"
+        android:minLines="8"
+        android:padding="10dp">
+
+        <requestFocus />
+    </EditText>
+
+
+
+</RelativeLayout>
+
+

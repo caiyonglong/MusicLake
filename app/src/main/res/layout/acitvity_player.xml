@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/shadow_vertical" />
+
+    <RelativeLayout
+        android:id="@+id/title_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height">
+
+        <!--<ImageView-->
+            <!--android:id="@+id/title_left"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@drawable/dark_selector"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:paddingRight="5dp"-->
+            <!--android:src="@drawable/back_arrow" />-->
+
+        <ImageButton
+            android:id="@+id/title_left"
+            android:layout_width="50dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_common_title_bar_back" />
+        <TextView
+            android:id="@+id/tv_song_name"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/title_left"
+            android:ellipsize="marquee"
+            android:shadowColor="#000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="4"
+            android:singleLine="true"
+            android:textColor="@color/clouds" />
+
+        <TextView
+            android:id="@+id/tv_artist"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_song_name"
+            android:layout_below="@+id/tv_song_name"
+            android:layout_marginTop="5dp"
+            android:shadowColor="#000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="4"
+            android:singleLine="true"
+            android:textColor="@color/clouds" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/title_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_player"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </android.support.v4.view.ViewPager>
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/pageicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5sp"
+            android:src="@mipmap/page_icon_mid" />
+        <LinearLayout
+            android:id="@+id/controller_root"
+            android:background="@drawable/shadow_reverse"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20.0dip"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/activity_player_tv_time_current"
+                    android:layout_width="50.0dip"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="8.0dip"
+                    android:textColor="@color/main_white"
+                    android:textSize="13.0sp"
+                    android:textStyle="bold" />
+
+                <SeekBar
+                    android:id="@+id/activity_player_seek"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="200.0dip"
+                    android:layout_height="15.0dip"
+                    android:max="0"
+                    android:paddingTop="1.0dip"
+
+                    android:progress="0"
+                    android:thumb="@null" />
+                <!--android:progressDrawable="@drawable/player_seekbar_style"-->
+
+                <TextView
+                    android:id="@+id/activity_player_tv_time_total"
+                    android:layout_width="50.0dip"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingLeft="8.0dip"
+                    android:textColor="@color/main_white"
+                    android:textSize="13.0sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="7.0dip"
+                android:paddingRight="7.0dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="7.0dip"
+                    android:paddingRight="7.0dip">
+
+                    <!-- 这里出现问题，android:background引用color里的transparent并没达到透明效果，搞不清楚什么原因 -->
+                    <!-- 原因已经找到，在raw文件夹下放了图片资源，竟然能影响到颜色，在raw文件夹下的图片会降低质量 -->
+
+                    <ImageButton
+                        android:id="@+id/activity_player_ib_mode"
+                        android:layout_width="40dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/white"
+                        android:contentDescription="@string/app_name" />
+
+                    <ImageButton
+
+                        android:id="@+id/activity_player_ib_previous"
+                        android:layout_width="40dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/player_btn_previous_style"
+                        android:contentDescription="@string/app_name" />
+
+                    <ImageButton
+
+                        android:id="@+id/activity_player_ib_play"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/player_btn_pause_style"
+                        android:contentDescription="@string/app_name" />
+
+                    <ImageButton
+
+                        android:id="@+id/activity_player_ib_next"
+                        android:layout_width="40dp"
+                        android:layout_height="70dp"
+
+                        android:layout_margin="10dp"
+                        android:background="@drawable/player_btn_next_style"
+                        android:contentDescription="@string/app_name" />
+
+                    <ImageButton
+                        android:id="@+id/activity_player_ib_favorite"
+                        android:layout_width="40dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/player_btn_favorite_nostar_style"
+                        android:contentDescription="@string/app_name" />
+                </LinearLayout>
+                <!--<ImageButton-->
+                <!--android:id="@+id/song_download"-->
+                <!--android:layout_width="40dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:background="@drawable/icon_download"-->
+                <!--android:contentDescription="@string/app_name" />-->
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

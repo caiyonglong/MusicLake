@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <CheckBox
+        android:id="@+id/adapter_scan_item_cb"
+        android:layout_width="30.0dip"
+        android:layout_height="30.0dip"
+        android:layout_marginLeft="10.0dip"
+        android:button="@drawable/scan_item_cbx_selection" />
+
+    <TextView
+        android:id="@+id/adapter_scan_item_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dip"
+        android:layout_marginLeft="5.0dip"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:textSize="16.0sp" />
+
+</LinearLayout>

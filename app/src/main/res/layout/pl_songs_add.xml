@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:Android="http://schemas.android.com/apk/res/android"
+    Android:layout_width="fill_parent"
+    Android:layout_height="fill_parent"
+    Android:orientation="horizontal" >
+
+    <!-- 专辑图片 -->
+
+    <ImageView
+        Android:id="@+id/albumPicture"
+        Android:layout_width="70dp"
+        Android:layout_height="70dp"
+        Android:layout_alignParentLeft="true"
+        Android:layout_alignParentTop="true"
+        Android:background="@mipmap/main_img_album" />
+
+        <!-- 图标图片 -->
+
+    <ImageView
+        Android:id="@+id/icon"
+        Android:layout_width="24dp"
+        Android:layout_height="24dp"
+        Android:layout_alignParentRight="true"
+        Android:layout_centerVertical="true"
+        Android:layout_marginRight="10dp"
+        Android:layout_marginLeft="6dp"
+        Android:layout_gravity="center" />
+    
+    <!-- 商品信息 -->
+
+    <LinearLayout
+        Android:layout_width="wrap_content"
+        Android:layout_height="wrap_content"
+        Android:layout_alignParentTop="true"
+        Android:layout_toRightOf="@id/albumPicture"
+        Android:layout_toLeftOf="@id/icon"
+        Android:layout_marginBottom="6dp"
+        Android:layout_marginLeft="10dp"
+        Android:layout_marginTop="6dp"
+        Android:orientation="vertical" >
+
+        <TextView
+            Android:id="@+id/songName"
+            Android:layout_width="wrap_content"
+            Android:layout_height="wrap_content"
+            Android:textColor="#FFFFFFFF"
+            Android:textSize="18sp" />
+
+        <TextView
+            Android:id="@+id/singerName"
+            Android:layout_width="wrap_content"
+            Android:layout_height="wrap_content"
+            Android:textColor="#FFFFFFFF"
+            Android:textSize="12sp" />
+    </LinearLayout>
+
+
+
+    <!--
+         购买和商品详情  
+    <LinearLayout Android:gravity="right"  
+    Android:orientation="horizontal" 
+    Android:layout_width="fill_parent"  
+    Android:layout_height="wrap_content">  
+    <CheckBox Android:id="@+id/checkItem"    
+        Android:layout_width="wrap_content"  
+        Android:layout_height="wrap_content"    
+        Android:layout_margin="5px"/>  
+    <Button  Android:id="@+id/detailItem"    
+        Android:layout_width="wrap_content"  
+        Android:layout_height="wrap_content"    
+        Android:layout_margin="5px"/>  
+    </LinearLayout>
+    -->
+
+</RelativeLayout>
