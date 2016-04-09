@@ -130,16 +130,16 @@ public class FormatUtil {
 
 //        System.out.println(day + "天" + hour + "小时" + min + "分" + s + "秒" ;
         if (day == 0 && hour == 0 && min == 0) {
-            return "今天 " + hournow+":"+minnow;
+            return s+"秒前";
         } else if (day == 0 && hour == 0) {
-            return "今天 " + min + " 分钟前"+hournow+":"+minnow;
+            return min + " 分钟前";
         } else if (day == 0) {
-            return "今天 " + hour + " 小时前"+hournow+":"+minnow;
+            return hour + " 小时前";
         } else {
             if (day == 1)
-                return "昨天"+ hour+":"+min;
+                return "昨天";
             else
-                return day + " 天前" + hournow+":"+minnow;
+                return day + " 天前" ;
         }
 
 
