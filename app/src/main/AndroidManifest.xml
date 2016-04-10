@@ -63,7 +63,6 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
         <meta-data
@@ -77,9 +76,9 @@
             android:name=".map.NearActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:permission="android.permission.WRITE_EXTERNAL_STORAGE"
             android:name=".map.CloudDetailActivity"
-            android:screenOrientation="portrait"></activity>
+            android:permission="android.permission.WRITE_EXTERNAL_STORAGE"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".map.PreviewPhotoActivity"
             android:screenOrientation="portrait" />
@@ -140,11 +139,11 @@
             android:theme="@style/AppTheme" />
 
         <service android:name="com.amap.api.location.APSService" />
-        <service android:name=".service.DownloadService"></service>
+        <service android:name=".service.DownloadService" />
 
         <activity
-            android:theme="@style/Theme.AppCompat.Light"
             android:name=".SettingsActivity"
+            android:theme="@style/MyTheme"
             android:label="@string/title_activity_settings"></activity>
     </application>
 

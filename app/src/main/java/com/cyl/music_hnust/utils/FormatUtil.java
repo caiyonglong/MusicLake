@@ -134,7 +134,7 @@ public class FormatUtil {
         } else if (day == 0 && hour == 0) {
             return min + " 分钟前";
         } else if (day == 0) {
-            return hour + " 小时前";
+            return  hour + " 小时前";
         } else {
             if (day == 1)
                 return "昨天";

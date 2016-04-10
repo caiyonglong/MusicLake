@@ -32,7 +32,11 @@
     <string name="gpslocate">定位</string>
     <string name="gpsrotate">旋转</string>
 
+    <!--设置-->
+
     <string name="no_result">对不起，没有搜索到相关数据！</string>
+
+
     <string name="title_activity_settings">设置</string>
     <string name="info_secret_setting">隐私设置</string>
     <string name="info_secret_setting_detail">个人隐私设置,可隐藏真实姓名</string>
@@ -42,63 +46,25 @@
 
     <!-- Strings related to Settings -->
 
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
     <string name="pref_title_social_recommendations">不让别人看到我的真实姓名</string>
     <string name="pref_description_social_recommendations">对方只能看到你的昵称
     </string>
 
-    <string name="pref_title_display_name">设置昵称</string>
-    <string name="pref_default_display_name">John Smith</string>
 
-    <string name="pref_title_add_friends_to_messages">不让别人看到我的真实姓名</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-    <string-array name="gendar_values_list">
-        <item>男</item>
-        <item>女</item>
-    </string-array>
-    <string-array name="gendar_name_list">
-        <item>1</item>
-        <item>0</item>
-    </string-array>
+    <string name="pref_title_display_name">设置昵称</string>
+    <string name="pref_default_display_name">少年</string>
+
+
+
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
+    <string name="pref_header_data_sync">其他</string>g>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications">网络设置</string>
 
-    <string name="pref_title_new_message_notifications">仅WIFI联网</string>
+    <string name="pref_title_wifi">仅WIFI联网</string>
+    <string name="pref_title_about">关于</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>

@@ -17,9 +17,21 @@
 
     </style>
 
+    <style name="MyTheme" parent="Theme.AppCompat.Light">
+
+        <!--选中状态icon的颜色和字体颜色-->
+        <item name="colorPrimary">@color/setting_blue</item>
+        <item name="colorPrimaryDark">@color/setting_blue</item>
+        <item name="colorAccent">@color/setting_blue</item>
+        <!--正常状态下字体颜色和icon颜色-->
+        <item name="android:textColorPrimary">@color/main_white</item>
+
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/main_white</item>
