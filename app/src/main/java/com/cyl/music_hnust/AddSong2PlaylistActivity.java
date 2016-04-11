@@ -1,5 +1,6 @@
 package com.cyl.music_hnust;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,24 +44,35 @@ public class AddSong2PlaylistActivity extends AppCompatActivity {
     private Timer timer;
     private TimerTask myTimerTask;
     private ScanUtil scanUtil;
-    Handler handler = new Handler() {
+    private MyHandler handler;
+
+    class MyHandler extends Handler {
+        WeakReference<Activity> mActivityReference;
+
+        MyHandler(Activity activity) {
+            mActivityReference= new WeakReference<Activity>(activity);
+        }
+
         @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
-            switch (msg.what) {
-                case SETADAPTER:
-                    setAdapter();
-                    break;
+        public void handleMessage(Message msg) {
+
+            final Activity activity = mActivityReference.get();
+            if (activity!=null) {
+                switch (msg.what) {
+                    case SETADAPTER:
+                        setAdapter();
+                        break;
+                }
             }
         }
-    };
-
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addsong2playlist);
         songs=new ArrayList<>();
         scanUtil = new ScanUtil(this);
+        handler = new MyHandler(this);
 
         Intent it = getIntent();
         playlist = it.getStringExtra("playlist");

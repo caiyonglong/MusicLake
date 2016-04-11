@@ -1,5 +1,6 @@
 package com.cyl.music_hnust;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,12 +21,14 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
 import com.cyl.music_hnust.application.MyApplication;
+import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,17 +58,26 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    Handler handler = new Handler() {
+    class MyHandler extends Handler {
+        WeakReference<Activity> mActivityReference;
+
+        MyHandler(Activity activity) {
+            mActivityReference= new WeakReference<Activity>(activity);
+        }
+
         @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
-            switch (msg.what) {
-                case SETADAPTER:
-                    setAdapter();
-                    break;
+        public void handleMessage(Message msg) {
+
+            final Activity activity = mActivityReference.get();
+            if (activity!=null) {
+                switch (msg.what) {
+                    case SETADAPTER:
+                        setAdapter();
+                        break;
+                }
             }
         }
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +118,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
             public void run() {
                 Message message = new Message();
                 message.what = SETADAPTER;
+                MyHandler handler =new MyHandler(PlaylistSongActivity.this);
                 handler.sendMessage(message);
             }
         };

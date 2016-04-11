@@ -67,6 +67,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private List<Comment> mDatas;
 
+
     Handler handler = new Handler() {
 
         @Override

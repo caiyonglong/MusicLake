@@ -1,5 +1,6 @@
 package com.cyl.music_hnust;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -46,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,41 +60,50 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
     private ImageButton back;
     private Button btn_result_show;
     private RecyclerView shake_result;
-    public List<Location> mydatas;
+    public static List<Location> mydatas;
 
     private RequestQueue mRequestQueue;
     private ImageLoader imageLoader;
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private MyLocationAdapter adapter;
+    private static MyLocationAdapter adapter;
 
 
     private MusicPlayService mService;
 
-    private ProgressDialog progDialog = null;
+    private static ProgressDialog progDialog = null;
+    private static MyHandler handler;
 
-    Handler handler = new Handler() {
+    static class MyHandler extends Handler {
+        WeakReference<Activity> mActivityReference;
+
+        MyHandler(Activity activity) {
+            mActivityReference= new WeakReference<Activity>(activity);
+        }
 
         @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    break;
-                case 1:
-                    dissmissProgressDialog();
-                    mydatas = (List<Location>) msg.obj;
-                    adapter.myDatas = mydatas;
-                    adapter.notifyDataSetChanged();
-                    break;
-                case 2:
-                    dissmissProgressDialog();
+        public void handleMessage(Message msg) {
+            final Activity activity = mActivityReference.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case 0:
+                        break;
+                    case 1:
+                        dissmissProgressDialog();
+                        mydatas = (List<Location>) msg.obj;
+                        adapter.myDatas = mydatas;
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        dissmissProgressDialog();
 
-                    break;
+                        break;
+                }
             }
         }
-    };
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +111,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_shake);
         MyApplication application = (MyApplication) getApplication();
         mService = application.getmService();
+        handler = new MyHandler(ShakeActivity.this);
 
         initView();
         initdata();
@@ -135,7 +147,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
     /**
      * 隐藏进度框
      */
-    private void dissmissProgressDialog() {
+    private static void dissmissProgressDialog() {
         if (progDialog != null) {
             progDialog.dismiss();
         }
@@ -157,6 +169,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
                 volley_StringRequest_GET(user.getUser_id(), "", 1);
 
             } else {
+
                 handler.sendEmptyMessage(2);
                 ToastUtil.show(getApplicationContext(), "未播放歌曲");
             }

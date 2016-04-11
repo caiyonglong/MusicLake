@@ -1,5 +1,6 @@
 package com.cyl.music_hnust;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -48,32 +50,43 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton back;
     private EditText send_info;
     private Button btn_send_info;
+    private MyHandler handler;
 
 
     private RequestQueue mRequestQueue;
-    Handler handler = new Handler() {
+
+    static class MyHandler extends Handler {
+        WeakReference<Activity > mActivityReference;
+
+        MyHandler(Activity activity) {
+            mActivityReference= new WeakReference<Activity>(activity);
+        }
 
         @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    Toast.makeText(getApplicationContext(), "发布成功", Toast.LENGTH_SHORT).show();
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    String error_code = (String) msg.obj;
-                    Toast.makeText(getApplicationContext(), "发布失败,网络异常", Toast.LENGTH_SHORT).show();
-                    break;
+        public void handleMessage(Message msg) {
+            final Activity activity = mActivityReference.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case 0:
+                        Toast.makeText(activity, "发布成功", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        String error_code = (String) msg.obj;
+                        Toast.makeText(activity, "发布失败,网络异常", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         }
-    };
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        handler =new MyHandler(EditActivity.this);
 
         mRequestQueue = Volley.newRequestQueue(this);
 

@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +58,16 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     public static List<Dynamic> mdatas;
     public static int position;
     public static boolean loadmoring = true;
-    Handler handler = new Handler() {
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<MyFragment> myMusicfragment;
+
+        private MyHandler(MyFragment myfragment) {
+            myMusicfragment = new WeakReference<MyFragment>(myfragment);
+        }
 
         @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
+        public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
                     if (loadmoring) {
@@ -69,7 +75,6 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                         Log.e("size", mdatas.size() + "");
                         mRecyclerViewAdapter.myDatas = mdatas;
                         mRecyclerViewAdapter.notifyDataSetChanged();
-                        Toast.makeText(getContext(), "加载数据" + 0, Toast.LENGTH_SHORT).show();
 
                         mRecyclerViewAdapter.loadmore = "点击加载更多...";
                     } else {
@@ -83,7 +88,6 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                         Log.e("size", mdatas.size() + "");
                         mRecyclerViewAdapter.myDatas.addAll(mdatas);
                         mRecyclerViewAdapter.notifyDataSetChanged();
-                        Toast.makeText(getContext(), "加载数据" + 1, Toast.LENGTH_SHORT).show();
 
                         mRecyclerViewAdapter.loadmore = "点击加载更多...";
                     } else {
@@ -107,7 +111,8 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                     break;
             }
         }
-    };
+    }
+
 
     @Nullable
     @Override
@@ -261,6 +266,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                                 message.setData(bundle);
 
                             }
+                            MyHandler handler =new MyHandler(MyFragment.this);
                             handler.sendMessage(message);
                         } catch (JSONException e) {
                             e.printStackTrace();
