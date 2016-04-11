@@ -4,6 +4,7 @@
 
     <color name="backgroundColor">#E8E8E0</color>
     <color name="setting_blue">#4A90E2</color>
+    <color name="logo_blue">#2f88f1</color>
 
     <color name="main_blue_light">#3F56B5</color>
     <color name="main_blue_dark">#30459E</color>

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:background="@drawable/fx_information_bg"
+        android:background="@color/setting_blue"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 

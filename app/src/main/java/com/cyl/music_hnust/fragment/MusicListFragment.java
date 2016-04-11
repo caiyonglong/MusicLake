@@ -36,8 +36,6 @@ public class MusicListFragment extends Fragment {
     private ListView song_list;
     private List<MusicInfo> datas = new ArrayList<>();
     public static LrcView lyric;
-    private String mp3Path;
-    public static boolean searching = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.frag_player, container, false);

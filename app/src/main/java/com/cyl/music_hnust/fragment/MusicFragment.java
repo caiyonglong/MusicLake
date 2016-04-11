@@ -166,8 +166,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        application = MyActivity.application;
-        mService = application.getmService();
+        mService = MyActivity.application.getmService();
         dbDao = new DBDao(getContext());
 
         initView();
@@ -284,17 +283,17 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
             // FloatingActionButton的点击事件
             case R.id.next_buttom:
-                if (mService!=null){
-                    if (mService.getSongs() != null) {
-                        mCallbacks.OnFragmentClick(v);
-                    }
-                }else {
+                mService = MyActivity.application.getmService();
+                if (mService.getSongs() != null) {
+                    mCallbacks.OnFragmentClick(v);
+                } else {
                     Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
                 }
 
-
                 break;
             case R.id.play_buttom:
+                mService = MyActivity.application.getmService();
+
                 if (mService.getSongs() != null) {
                     mCallbacks.OnFragmentClick(v);
                 } else {
@@ -303,7 +302,8 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
                 break;
             case R.id.singer_pic:
-                if (mService != null && mService.getSongs() != null) {
+                mService = MyActivity.application.getmService();
+                if (mService.getSongs() != null) {
                     Intent it5 = new Intent(getActivity(), PlayerActivity.class);
                     startActivity(it5);
                 } else {
@@ -311,9 +311,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 }
                 break;
             case R.id.list_buttom:
-                if (mService == null) {
-                    mService = application.getmService();
-                }
+                mService= MyActivity.application.getmService();
                 getPopupWindowInstance(v);
                 break;
         }
@@ -365,7 +363,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
         if (null != mPopupWindow) {
             mPopupWindow.dismiss();
             return;
-        } else {
+        } else {;
             List<MusicInfo> playlist = mService.getSongs();
 
             initPopuptWindow(v);
@@ -465,8 +463,13 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
 
     public static void initBackGround(Context context, String albumpic) {
+
         Bitmap bitmap = CommonUtils.scaleBitmap(context, albumpic);
-        singer_pic.setImageBitmap(bitmap);
+        if (bitmap != null) {
+            singer_pic.setImageBitmap(bitmap);
+        } else {
+            singer_pic.setImageResource(R.drawable.player_cover_default);
+        }
 
     }
 

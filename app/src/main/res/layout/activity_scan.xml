@@ -17,10 +17,9 @@
             android:layout_width="45.0dip"
             android:layout_height="30.0dip"
 
-            android:background="@drawable/btn_bg_style"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
-            android:src="@drawable/ic_common_title_bar_back" />
+            android:background="@drawable/ic_common_title_bar_back" />
 
         <TextView
             android:layout_width="wrap_content"

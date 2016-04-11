@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <RelativeLayout
-        android:background="@drawable/base_titlebar_bg"
+        android:background="@color/setting_blue"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="本地歌曲"
+            android:text="位置详情"
             android:textColor="#ffffff"
             android:textSize="18dp" />
 

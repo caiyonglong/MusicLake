@@ -114,14 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
 
         mImg_bg = (ImageView) findViewById(R.id.Img_bg);
-        BitmapDrawable result = null;
-        Bitmap original = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_hnust);
-        try {
-            result = new BitmapDrawable(CommonUtils.doBlur(original, 50, false));
-        } catch (Error e) {
-            e.printStackTrace();
-        }
-        mImg_bg.setBackgroundDrawable(result);
+
     }
 
 

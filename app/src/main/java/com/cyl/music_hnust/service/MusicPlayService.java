@@ -1,21 +1,31 @@
 package com.cyl.music_hnust.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
+import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.cyl.music_hnust.MyActivity;
 import com.cyl.music_hnust.R;
@@ -24,6 +34,7 @@ import com.cyl.music_hnust.lyric.LrcProcess;
 import com.cyl.music_hnust.lyric.LrcView;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.view.RoundCorner;
 
 public class MusicPlayService extends Service {
 
@@ -36,6 +47,9 @@ public class MusicPlayService extends Service {
     private List<MusicInfo> songs;//要播放的歌曲集合
     public LrcProcess mLrcProcess;
     public LrcView mLrcView;
+    public Notification notif;
+    NotificationManager nm;
+
 
 
     MyReceiver serviceReceiver;
@@ -64,6 +78,22 @@ public class MusicPlayService extends Service {
                 nextMusic();
             }
 
+        });
+        mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                mp.reset();
+                File file = new File(getPath());
+                if (file.exists()) {
+                    Toast.makeText(getApplicationContext(), "播放出错",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "文件已不存在",
+                            Toast.LENGTH_SHORT).show();
+
+                }
+                return true;
+            }
         });
     }
 
@@ -95,7 +125,10 @@ public class MusicPlayService extends Service {
         it.putExtra("update", 1);
         it.putExtra("name", getSongName());
         it.putExtra("artist", getSingerName());
+        it.putExtra("pic",getSong().getAlbumPic()+"");
         sendBroadcast(it);
+
+        showNotification();
 
         try {
 
@@ -137,6 +170,7 @@ public class MusicPlayService extends Service {
             currentListItme = 0;
         }
         if (songs.get(currentListItme).getPath()!=null) {
+            showNotification();
             playMusic(songs.get(currentListItme).getPath());
         }else {
             ToastUtil.show(context,"播放列表为空");
@@ -147,16 +181,20 @@ public class MusicPlayService extends Service {
     /* 上一首 */
     public void frontMusic() {
         Log.v("itme", currentListItme + "hree");
+
         if (--currentListItme < 0) {
             currentListItme = songs.size() - 1;
         }
         if (songs.get(currentListItme).getPath()!=null) {
+            showNotification();
             playMusic(songs.get(currentListItme).getPath());
         }else {
             ToastUtil.show(context,"播放列表为空");
         }
 
     }
+
+
 
 
     /**
@@ -173,9 +211,84 @@ public class MusicPlayService extends Service {
         if (mMediaPlayer.isPlaying()) {
             currentTime = mMediaPlayer.getCurrentPosition();
             mMediaPlayer.pause();
+            showNotification();
         } else {
+            showNotification();
             mMediaPlayer.start();
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @SuppressWarnings("deprecation")
+    public void showNotification() {
+        MusicInfo m = getSong();
+        CharSequence from = m.getName();
+        CharSequence message = m.getArtist();
+        Intent nextIntent2 = new Intent();
+        nextIntent2.setAction("liu.appwidget3.Not5ificat5ionnext"); // 为Intent对象设置Action
+        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(
+                MusicPlayService.this, 0, nextIntent2, 0);
+        Intent StartIntent2 = new Intent();
+        StartIntent2.setAction("liu.appwidget3.Not5ificat5ion"); // 为Intent对象设置Action
+        PendingIntent nPendingIntent = PendingIntent.getBroadcast(
+                MusicPlayService.this, 0, StartIntent2, 0);
+        Intent intent = new Intent();
+        intent.setClass(this, MyActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                intent, 0);
+        RemoteViews rv = new RemoteViews(getPackageName(),
+                R.layout.notification);
+        rv.setOnClickPendingIntent(R.id.notificationnext, nextPendingIntent);
+        rv.setOnClickPendingIntent(R.id.notificationplay, nPendingIntent);
+        rv.setTextViewText(R.id.noticationname, m.getName());
+        rv.setTextViewText(R.id.noticationsinger,
+                m.getArtist().equals("未知艺术家") ? "music" : m.getArtist());
+        if (mMediaPlayer.isPlaying()) {
+            rv.setImageViewResource(R.id.notificationplay,
+                    R.drawable.notificapause);
+        } else {
+            rv.setImageViewResource(R.id.notificationplay,
+                    R.drawable.notificaplay);
+        }
+        Bitmap bm=null;
+        if (getSong().getAlbumPic()!=null) {
+             bm = BitmapFactory.decodeFile(getSong().getAlbumPic());
+        }
+        if (bm != null) {
+            try {
+                rv.setImageViewBitmap(R.id.gfdhstrdsga, RoundCorner
+                        .toRoundCorner(bm, bm
+                                .getHeight() / 6));
+            } catch (Exception e) {
+                rv.setImageViewResource(R.id.gfdhstrdsga,
+                        R.drawable.ic_launcher);
+            }
+        } else {
+            rv.setImageViewResource(R.id.gfdhstrdsga, R.drawable.ic_launcher);
+        }
+
+        Notification.Builder builder = new Notification.Builder(this);
+
+        builder.setContentIntent(contentIntent);
+        builder.setContent(rv);
+        builder.setContentTitle(from);
+        builder.setContentInfo(message);
+
+        notif=builder.getNotification();
+
+//        notif = new Notification(R.drawable.notificaplay, m.getName(),
+//                System.currentTimeMillis());
+//
+        Log.e("notify","notify");
+        notif.flags = Notification.FLAG_ONGOING_EVENT;
+        notif.contentView=rv;
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(0x7f090000,notif);
+
+//        notif.setLatestEventInfo(this, from, message, contentIntent);
+//        notif.contentView = rv;
+      //  nm.notify(0x7f090000, notif);
+      //  isnotyplay = false;
     }
 
     @Override

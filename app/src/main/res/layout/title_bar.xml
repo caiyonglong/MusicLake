@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/base_titlebar_bg">
+        android:background="@color/setting_blue">
 
         <ImageButton
             android:id="@+id/back"

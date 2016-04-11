@@ -71,7 +71,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
     public static MyApplication application;
 
-    private MusicPlayService mService;
+    public static MusicPlayService mService;
 
     // (0~4对应SlidingAdapter的position，不可更改)
     public static final int SLIDING_MENU_SCAN = 0;// 侧滑->扫描歌曲
@@ -107,6 +107,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         application = (MyApplication) getApplication();
+        mService = new MusicPlayService();
+
+        application.setmService(mService);
 
         musicReceiver = new MusicReceiver();
         //注册广播
@@ -445,6 +448,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             String artist = intent.getStringExtra("artist");
             String pic = intent.getStringExtra("pic");
             if (current >= 0) {
+
+                Log.e("==",pic+"");
                 MusicFragment.initBackGround(getApplicationContext(), pic);
                 MusicFragment.song_name.setText(name);
                 MusicFragment.singer_name.setText(artist);

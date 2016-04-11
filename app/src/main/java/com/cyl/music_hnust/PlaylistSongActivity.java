@@ -136,7 +136,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.backImageButton:
+            case R.id.back:
                 finish();
                 break;
             case R.id.playlist_edit:

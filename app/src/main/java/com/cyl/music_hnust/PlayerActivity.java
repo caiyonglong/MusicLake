@@ -66,8 +66,8 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_player);
-        MyApplication application = (MyApplication) getApplication();
-        mService = application.getmService();
+     //   MyApplication application = (MyApplication) getApplication();
+        mService = MyActivity.application.getmService();
         //广播
         playerReceiver = new PlayerReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -130,8 +130,8 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void initTitle() {
         MusicInfo song = mService.getSong();
-        tv_songName.setText(song == null ? "暂无歌曲" : song.getName() + " ");
-        tv_singerName.setText(song == null ? " "
+        tv_songName.setText(song == null ? "湖科音乐" : song.getName() + " ");
+        tv_singerName.setText(song == null ? "属于我的音乐"
                 : song.getArtist() + " " + " - " + song.getAlbum() + " ");
         alphaAnim(tv_songName, 200);
         alphaAnim(tv_singerName, 400);
@@ -420,8 +420,7 @@ public class PlayerActivity extends AppCompatActivity {
             String name = intent.getStringExtra("name");
             String artist = intent.getStringExtra("artist");
             if (current >= 0) {
-                tv_songName.setText(name);
-                tv_singerName.setText(artist);
+                initTitle();
             }
             switch (update) {
                 case 1://播放

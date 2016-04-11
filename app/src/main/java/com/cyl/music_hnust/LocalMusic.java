@@ -62,7 +62,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.local_music);
-        application = (MyApplication) getApplication();
+        mService = MyActivity.application.getmService();
 
 
 
@@ -126,13 +126,14 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onItemClick(View view, int position) {
-
-        if (null == mService) {
-            mService = application.getmService();
-        }
+//
+//        if (null == mService) {
+//            mService = application.getmService();
+//        }
         mService.setCurrentListItme(position);
         mService.setSongs(mDatas);
         mService.playMusic(mDatas.get(position).getPath());
+
 //        it.setClass(LocalMusic.this, PlayerActivity.class);
 //        startActivity(it);
     }
