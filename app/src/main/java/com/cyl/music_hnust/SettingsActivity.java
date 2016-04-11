@@ -10,9 +10,13 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -21,7 +25,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.cyl.music_hnust.utils.DataClearmanager;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -39,7 +46,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -56,65 +63,53 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                 ? listPreference.getEntries()[index]
                                 : null);
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
+            } else if (preference instanceof SwitchPreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list.
+                SwitchPreference switchPreference = (SwitchPreference) preference;
+                if (switchPreference.isChecked()){
+                    Toast.makeText(SettingsActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
                 }
+
+
+            } else if (preference instanceof CheckBoxPreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list.
+//                CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+//                if (checkBoxPreference.isChecked()){
+//                    Toast.makeText(SettingsActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
+//                }
+
 
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
+
+
             }
             return true;
         }
     };
 
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
+
     private static boolean isXLargeTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+        if (preference instanceof EditTextPreference) {
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getString(preference.getKey(), ""));
+        }
     }
 
     @Override
@@ -140,17 +135,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     /**
      * 关闭设置
      */
-    public void end(){
+    public void end() {
         finish();
-    };
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
     }
+
+    ;
 
 
     /**
@@ -158,9 +147,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener{
+    public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private Preference preference_about;
+        private Preference preference_cache;
+        public CheckBoxPreference secret_check;
+        public EditTextPreference nikname;
+        public SwitchPreference wifi_switch;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -168,10 +161,24 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-            preference_about= findPreference("key_about");
+            preference_about = findPreference("key_about");
+            preference_cache = findPreference("key_cache");
+            secret_check = (CheckBoxPreference) findPreference("secret_check");
+            nikname = (EditTextPreference) findPreference("nickname");
+            wifi_switch = (SwitchPreference) findPreference("wifi_switch");
             preference_about.setOnPreferenceClickListener(this);
-
-            bindPreferenceSummaryToValue(findPreference("nickname"));
+//            editTextPreference.setOnPreferenceChangeListener(this);
+            String size="";
+            try {
+                size = DataClearmanager.getTotalCacheSize(getActivity());
+            } catch (Exception e) {
+                size="0";
+                e.printStackTrace();
+            }
+            preference_cache.setSummary("缓存大小 "+size);
+            bindPreferenceSummaryToValue(nikname);
+            bindPreferenceSummaryToValue(wifi_switch);
+            bindPreferenceSummaryToValue(secret_check);
         }
 
         @Override
@@ -187,13 +194,27 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            switch (preference.getKey()){
+            switch (preference.getKey()) {
                 case "key_about":
-                    Toast.makeText(getApplicationContext(),"湖科音乐 1.0",Toast.LENGTH_LONG).show();
-                break;
+                    Toast.makeText(getActivity(), "湖科音乐 1.0", Toast.LENGTH_LONG).show();
+                    break;
+                case "key_cache":
+                    DataClearmanager.cleanInternalCache(getActivity());
+                    Toast.makeText(getActivity(), "清除中...", Toast.LENGTH_LONG).show();
+
+                    String size="";
+                    try {
+                        size = DataClearmanager.getTotalCacheSize(getActivity());
+                    } catch (Exception e) {
+                        size="0";
+                        e.printStackTrace();
+                    }
+                    preference_cache.setSummary("缓存大小 "+size);
+                    break;
             }
             return false;
         }
+
     }
 
 }

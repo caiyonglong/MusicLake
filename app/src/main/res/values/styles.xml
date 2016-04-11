@@ -24,7 +24,7 @@
         <item name="colorPrimaryDark">@color/setting_blue</item>
         <item name="colorAccent">@color/setting_blue</item>
         <!--正常状态下字体颜色和icon颜色-->
-        <item name="android:textColorPrimary">@color/main_white</item>
+        <item name="android:textColorPrimary">@color/main_black</item>
 
     </style>
 

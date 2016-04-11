@@ -38,7 +38,7 @@
 
 
     <string name="title_activity_settings">设置</string>
-    <string name="info_secret_setting">隐私设置</string>
+    <string name="info_secret_setting">个人设置</string>
     <string name="info_secret_setting_detail">个人隐私设置,可隐藏真实姓名</string>
 
     <string name="info_network_setting">网络设置</string>
@@ -46,9 +46,7 @@
 
     <!-- Strings related to Settings -->
 
-    <string name="pref_title_social_recommendations">不让别人看到我的真实姓名</string>
-    <string name="pref_description_social_recommendations">对方只能看到你的昵称
-    </string>
+    <string name="pref_title_social_recommendations">是否只显示昵称</string>
 
 
     <string name="pref_title_display_name">设置昵称</string>
@@ -65,6 +63,7 @@
 
     <string name="pref_title_wifi">仅WIFI联网</string>
     <string name="pref_title_about">关于</string>
+    <string name="pref_title_clear">清除缓存</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>

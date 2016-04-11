@@ -3,13 +3,12 @@
     <PreferenceCategory
         android:title="@string/info_secret_setting">
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:defaultValue="true"
-            android:key="secret_switch"
-            android:summary="@string/pref_description_social_recommendations"
+            android:key="secret_check"
             android:title="@string/pref_title_social_recommendations" />
         <EditTextPreference
-
+            android:dependency="secret_check"
             android:capitalize="words"
             android:defaultValue="@string/pref_default_display_name"
             android:inputType="textCapWords"
@@ -31,12 +30,11 @@
     <PreferenceCategory
         android:title="@string/pref_header_data_sync">
 
-
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="secret_switch"
-            android:title="@string/pref_title_wifi" />
+        <Preference android:title="@string/pref_title_clear"
+            android:key="key_cache"
+            android:summary="缓存数据 0 M"
+            >
+        </Preference>
         <Preference android:title="@string/pref_title_about"
             android:key="key_about"
             >
