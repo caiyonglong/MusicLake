@@ -125,20 +125,22 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
     public static MusicPlayService mService;
     private DBDao dbDao;
+    private MyHandler handler;
 
     private static class MyHandler extends Handler {
-        private final WeakReference<MusicFragment> myMusicfragment;
+        private final WeakReference<Fragment> myfragment;
 
-        private MyHandler(MusicFragment myfragment) {
-            myMusicfragment = new WeakReference<MusicFragment>(myfragment);
+        private MyHandler(Fragment fragment) {
+            myfragment = new WeakReference<Fragment>(fragment);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            MusicFragment musicFragment = myMusicfragment.get();
+            Fragment musicFragment = myfragment.get();
             if (musicFragment != null) {
                 switch (msg.what) {
-                    case 1:
+                    case 0:
+                        playlistadapter.notifyDataSetChanged();
                         break;
                 }
             }
@@ -168,6 +170,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
         super.onActivityCreated(savedInstanceState);
         mService = MyActivity.application.getmService();
         dbDao = new DBDao(getContext());
+        handler = new MyHandler(MusicFragment.this);
 
         initView();
 
@@ -257,9 +260,12 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                                     ScanUtil scanUtil = new ScanUtil(getContext());
                                     scanUtil.scanPlaylistFromDB();
                                     al_playlist = MusicList.playlist;
-                                    playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
-                                    playlistadapter.setOnItemClickListener(MusicFragment.this);
-                                    mRecyclerView.setAdapter(playlistadapter);
+                                    playlistadapter.mDatas = al_playlist;
+                                    playlistadapter.setmHeights(al_playlist);
+                                    handler.sendEmptyMessage(0);
+                            //        playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
+//                                    playlistadapter.setOnItemClickListener(MusicFragment.this);
+//                                    mRecyclerView.setAdapter(playlistadapter);
                                 } else {
                                     ToastUtil.show(getContext(), "歌单名不能为空！");
                                 }
@@ -327,9 +333,12 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
             ScanUtil scanUtil = new ScanUtil(getContext());
             scanUtil.scanPlaylistFromDB();
             al_playlist = MusicList.playlist;
-            playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
-            playlistadapter.setOnItemClickListener(this);
-            mRecyclerView.setAdapter(playlistadapter);
+            playlistadapter.mDatas = al_playlist;
+            playlistadapter.setmHeights(al_playlist);
+            handler.sendEmptyMessage(0);
+//            playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
+//            playlistadapter.setOnItemClickListener(this);
+//            mRecyclerView.setAdapter(playlistadapter);
         }
         Log.e(TAG, "resultCode:" + resultCode + "__" + requestCode);
     }

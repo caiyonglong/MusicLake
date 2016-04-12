@@ -199,7 +199,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
          */
         private void initView() {
             list_download = (ListView) mView.findViewById(R.id.list_download);
-            adapter = new ListAdapter(getApplicationContext(), listinfo);
+            adapter = new ListAdapter(getApplicationContext(), listinfo, 0);
             list_download.setAdapter(adapter);
             list_download.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

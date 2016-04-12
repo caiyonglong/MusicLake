@@ -1,13 +1,16 @@
 package com.cyl.music_hnust;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -91,6 +94,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         search_result.setLayoutManager(mLayoutManager);
 
 
+
     }
 
     private SweetAlertDialog pDialog;
@@ -102,93 +106,109 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.search_go_btn:
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
+                boolean permis=prefs.getBoolean("wifi_switch",true);
+
                 search_info = search_edit_info.getText().toString().trim();
-                //AsyncTask<执行异步任务时所必须的参数（如果必须的话），异步任务执行的进度，异步任务执行完毕后的返回值（就是backgroud方法的返回值类型）>——————>这里这三个值只能写数据类型，不能写具体对象
-                new AsyncTask<OutputStream, Integer, Boolean>() {
-                    //后台执行的任务（所需参数的类型，可变参数数组（内含所需参数的值））
-                    // String search_info;
-
-                    @Override
-                    protected Boolean doInBackground(OutputStream... params) {
-                        try {
-                            //params[0]=fos=execute所接受的参数
-
-                            //在后台任务中调用自定义的工具方法，该工具方法需要接受一个抽象类的对象（自己设计的抽象类）
-                            /**
-                             * 这里的第二个参数必须传一个自定义接口的对象，所以必须实现接口中的抽象方法才能创建出对象，相当于这里的这个对象是出生就
-                             * 带着两个抽象方法的，把这个带着抽象方法的接口对象传给工具方法后，工具方法拿着传过来的这个接口对象想调用抽象方法，
-                             * 就只能用我们创建接口对象时已经实现好的方法，也就是说，它是借用的我们的抽象方法去办事，它自己没有，因为它自己没实现
-                             * 这个借用我们的抽象方法的过程就叫做：回调，这种抽象方法就叫做回调函数。
-                             * 比如：listener.beforeBackup(cursor.getCount());这句话就是用了我们实现好的方法，而且给我们的方法传进去了一个参数
-                             * 它回调时传的参数，我们这边可以立马捕获，因为它的对象本来就是我们的对象的引用
-                             * 要始终记得：我们把自定义接口类型的对象（带着两个方法）传递给工具类的方法后，工具方法拿着这个自定义接口类型对象的引用调用抽象方法时，调用的不是工具类
-                             * 中的抽象方法体，而是借用的我们已经实现了的抽象方法去做事，它用我们的方法办事，我们这边当然都可以拿到
-                             */
-
-                            try {
-                                Log.e("info", search_info + "");
-                                String json = HttpByGet.requestByHttpGet(search_info)
-                                        + "";
-
-                                infos = JsonParsing.getmusicId(json);
-                                Log.e("T", infos.get(0).getId() + ":" + infos.size());
-                                for (int i = 0; i < infos.size(); i++) {
-                                    String json2 = HttpByGet.requestByHttpGet2(infos
-                                            .get(i).getId());
-                                    Log.e("JsonParsing", "======" + json2);
-                                    JsonParsing.getMusicInfo(json2, infos.get(i));
-                                }
-                            } catch (Exception e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                            return true;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return false;
-                        }
-                    }
-
-                    //后台任务执行前的操作
-                    @Override
-                    protected void onPreExecute() {
-                        pDialog = new SweetAlertDialog(SearchActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                        pDialog.setTitleText("Loading");
-                        pDialog.setCancelable(true);
-                        pDialog.show();
-                        super.onPreExecute();
-                    }
-
-                    //后台任务执行后的操作
-                    @Override
-                    protected void onPostExecute(Boolean result) {
-//                    pDialog.dismiss();
-                        if (result) {
-                            pDialog.setTitleText("搜索完成!")
-                                    .setConfirmText("OK")
-                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
-                        }
-                        adapter.mDatas = infos;
-                        adapter.notifyDataSetChanged();
-                        super.onPostExecute(result);
-                    }
-
-                    @Override
-                    protected void onProgressUpdate(Integer... values) {
-                        // TODO Auto-generated method stub
-                        super.onProgressUpdate(values);
-                    }
-                }.execute();
-
+                pDialog = new SweetAlertDialog(SearchActivity.this, SweetAlertDialog.ERROR_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                if (permis){
+                    pDialog.setTitleText("仅Wifi联网");
+                    pDialog.setCancelable(true);
+                    pDialog.show();
+                }else if (TextUtils.isEmpty(search_info)){
+                    pDialog.setTitleText("仅Wifi联网");
+                    pDialog.setCancelable(true);
+                    pDialog.show();
+                }else {
+                    initSearch();
+                }
                 break;
         }
     }
 
 
-    private void initData() {
+    private void initSearch() {
+        //AsyncTask<执行异步任务时所必须的参数（如果必须的话），异步任务执行的进度，异步任务执行完毕后的返回值（就是backgroud方法的返回值类型）>——————>这里这三个值只能写数据类型，不能写具体对象
+        new AsyncTask<OutputStream, Integer, Boolean>() {
+            //后台执行的任务（所需参数的类型，可变参数数组（内含所需参数的值））
+            // String search_info;
+
+            @Override
+            protected Boolean doInBackground(OutputStream... params) {
+                try {
+                    //params[0]=fos=execute所接受的参数
+
+                    //在后台任务中调用自定义的工具方法，该工具方法需要接受一个抽象类的对象（自己设计的抽象类）
+                    /**
+                     * 这里的第二个参数必须传一个自定义接口的对象，所以必须实现接口中的抽象方法才能创建出对象，相当于这里的这个对象是出生就
+                     * 带着两个抽象方法的，把这个带着抽象方法的接口对象传给工具方法后，工具方法拿着传过来的这个接口对象想调用抽象方法，
+                     * 就只能用我们创建接口对象时已经实现好的方法，也就是说，它是借用的我们的抽象方法去办事，它自己没有，因为它自己没实现
+                     * 这个借用我们的抽象方法的过程就叫做：回调，这种抽象方法就叫做回调函数。
+                     * 比如：listener.beforeBackup(cursor.getCount());这句话就是用了我们实现好的方法，而且给我们的方法传进去了一个参数
+                     * 它回调时传的参数，我们这边可以立马捕获，因为它的对象本来就是我们的对象的引用
+                     * 要始终记得：我们把自定义接口类型的对象（带着两个方法）传递给工具类的方法后，工具方法拿着这个自定义接口类型对象的引用调用抽象方法时，调用的不是工具类
+                     * 中的抽象方法体，而是借用的我们已经实现了的抽象方法去做事，它用我们的方法办事，我们这边当然都可以拿到
+                     */
+
+                    try {
+                        Log.e("info", search_info + "");
+                        String json = HttpByGet.requestByHttpGet(search_info)
+                                + "";
+
+                        infos = JsonParsing.getmusicId(json);
+                        Log.e("T", infos.get(0).getId() + ":" + infos.size());
+                        for (int i = 0; i < infos.size(); i++) {
+                            String json2 = HttpByGet.requestByHttpGet2(infos
+                                    .get(i).getId());
+                            Log.e("JsonParsing", "======" + json2);
+                            JsonParsing.getMusicInfo(json2, infos.get(i));
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            //后台任务执行前的操作
+            @Override
+            protected void onPreExecute() {
+                pDialog = new SweetAlertDialog(SearchActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.setTitleText("Loading");
+                pDialog.setCancelable(true);
+                pDialog.show();
+                super.onPreExecute();
+            }
+
+            //后台任务执行后的操作
+            @Override
+            protected void onPostExecute(Boolean result) {
+//                    pDialog.dismiss();
+                if (result) {
+                    pDialog.setTitleText("搜索完成!")
+                            .setConfirmText("OK")
+                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                } else {
+                    Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
+                }
+                adapter.mDatas = infos;
+                adapter.notifyDataSetChanged();
+                super.onPostExecute(result);
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                // TODO Auto-generated method stub
+                super.onProgressUpdate(values);
+            }
+        }.execute();
+
 
     }
 
@@ -209,6 +229,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 //
 
                 List<MusicInfo> list =mService.getSongs();
+                if (list==null){
+                    list = new ArrayList<>();
+                    mService.setSongs(list);
+                }
                 int listitem =mService.getCurrentListItme()+1;
                 list.add(listitem,musicInfo);
                 mService.setSongs(list);

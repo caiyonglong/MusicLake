@@ -2,66 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/base_bg"
     android:orientation="vertical">
 
 
     <RelativeLayout
-
-
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content"
+        android:background="@color/setting_blue">
+
         <ImageButton
             android:id="@+id/backImageButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_common_title_bar_back"
-             />
+            android:background="@drawable/ic_common_title_bar_back" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="下载列表"
-            android:textColor="#ffffff"
-            android:textSize="18dp" />
+            android:layout_centerInParent="true">
+
+            <RadioGroup
+                android:id="@+id/group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/btnQ"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_shape_left"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="已下载"
+                    android:textColor="@color/main_black" />
+
+                <RadioButton
+                    android:id="@+id/btnG"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_shape"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="正在下载"
+                    android:textColor="@color/main_white" />
+            </RadioGroup>
+        </LinearLayout>
     </RelativeLayout>
-    <RadioGroup
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/btnQ"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:background="@drawable/btn_shape_left"
-            android:button="@null"
-            android:checked="true"
-            android:gravity="center"
-            android:text="已下载"
-            android:textColor="@color/main_black" />
-
-        <RadioButton
-            android:id="@+id/btnG"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:background="@drawable/btn_shape"
-            android:button="@null"
-            android:checked="true"
-            android:gravity="center"
-            android:text="正在下载"
-            android:textColor="@color/main_white" />
-    </RadioGroup>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
 </LinearLayout>

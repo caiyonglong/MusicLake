@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ public class AddSong2PlaylistActivity extends AppCompatActivity {
 
     private TextView tv_finish, tv_back;
     private ListView listView;
-    public Button  btn_back;
+    public ImageButton  btn_back;
     private String playlist;// 当前歌单
     private List<MusicInfo> songs;// 得到全部歌曲
     private ArrayList<String> addSongIds = new ArrayList<String>();// 将要添加的歌曲的id集合
@@ -101,7 +102,7 @@ public class AddSong2PlaylistActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         tv_finish = (TextView) findViewById(R.id.tv_finish);
         tv_back = (TextView) findViewById(R.id.tv_back);
-        btn_back = (Button) findViewById(R.id.back_btn);
+        btn_back = (ImageButton) findViewById(R.id.back_btn);
     }
 
     private void initListener() {

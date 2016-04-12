@@ -1,47 +1,75 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
 
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <!-- blocksDescendants：viewgroup会覆盖子类控件而直接获得焦点 -->
+    <!-- 用于解决ListView点击事件失效的问题 -->
 
     <LinearLayout
-        android:id="@+id/playlist_container"
+        android:id="@+id/adapter_music_item_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
+        android:layout_height="60.0dip"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/playlist_delete"
-            android:visibility="gone"
-            android:background="@drawable/icon_folder_delete"
-            android:layout_width="60dp"
-            android:layout_height="match_parent" />
-        <com.cyl.music_hnust.view.RoundedImageView
-            android:id="@+id/playlist_album"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:layout_marginRight="10dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/user_icon_default_main" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_width="0.0dip"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_weight="1.0"
+            android:gravity="center_vertical"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/playlist_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="歌单名"
-                android:textColor="@color/main_black_grey"
-                android:textSize="20sp" />
 
+
+            <TextView
+                android:id="@+id/music_item_tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:gravity="bottom"
+                android:singleLine="true"
+                android:textColor="@color/main_white"
+                android:textSize="16.0sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="25.0dip">
+
+                <TextView
+                    android:id="@+id/music_item_tv_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingRight="15.0dip"
+                    android:singleLine="true"
+                    android:textColor="@color/main_white"
+                    android:textSize="12.0sp" />
+
+                <TextView
+                    android:id="@+id/music_item_tv_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|right"
+                    android:singleLine="true"
+                    android:textColor="@color/gray"
+                    android:textSize="12.0sp" />
+            </RelativeLayout>
         </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/music_item_tv_folder"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dip"
+        android:gravity="center_vertical"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip"
+        android:singleLine="true"
+        android:textColor="@color/main_white"
+        android:textSize="16.0sp" />
+
+</RelativeLayout>

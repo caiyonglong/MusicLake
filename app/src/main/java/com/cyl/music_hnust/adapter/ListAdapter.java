@@ -24,12 +24,15 @@ public class ListAdapter extends BaseAdapter {
     private Context context;
     private List<MusicInfo> files;
     private ViewHolder viewHolder = null;
+    private int i =0;
 
-    public ListAdapter(Context context, List<MusicInfo> files) {
+    public ListAdapter(Context context, List<MusicInfo> files, int i) {
         this.context = context;
         this.files = files;
+        this.i = i;
         mInflater = LayoutInflater.from(context);
     }
+
 
     @Override
     public int getCount() {
@@ -67,17 +70,17 @@ public class ListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final MusicInfo file = files.get(position);
-//		viewHolder.icon.setImageResource(R.drawable.ico);
         viewHolder.music_item_tv_name.setText(file.getName());
         viewHolder.music_item_tv_artist.setText(file.getArtist()+"-"+file.getAlbum());
-//        viewHolder.list_black_btn.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, "点击", Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
+
+        if (i==1){
+            viewHolder.music_item_tv_name.setTextColor(R.color.main_white);
+            viewHolder.music_item_tv_artist.setTextColor(R.color.main_white);
+        }else if (i==0){
+            viewHolder.music_item_tv_name.setTextColor(R.color.gray);
+            viewHolder.music_item_tv_artist.setTextColor(R.color.gray);
+        }
+
 
         return convertView;
     }

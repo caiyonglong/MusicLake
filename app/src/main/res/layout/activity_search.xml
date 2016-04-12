@@ -2,11 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/base_bg"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:background="@drawable/fx_information_bg"
+        android:background="@color/setting_blue"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -22,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="在线搜索"
+            android:text="在线音乐搜索"
             android:textColor="#ffffff"
             android:textSize="18dp" />
     </RelativeLayout>
@@ -39,6 +38,7 @@
             android:textColorHint="@color/gray"
             android:hint="搜索信息"
             android:layout_weight="1"
+            android:textColor="@color/gray"
             android:inputType="textNoSuggestions"
             android:background="@drawable/bg_edit"
             android:layout_width="wrap_content"
@@ -46,7 +46,10 @@
         <Button
             android:text="搜索"
             android:id="@+id/search_go_btn"
-            android:background="@color/white"
+
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

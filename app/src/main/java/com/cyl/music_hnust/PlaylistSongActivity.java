@@ -40,25 +40,26 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
     private ImageButton back;
     private TextView playlist_title, playlist_edit;
     private Button edit_back, add_song;
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
 
     public static boolean idEdit = false;//判断是不是编辑模式，是的话显示删除图标
 //    private long playlistId;//当前播放列表id
-    private List<MusicInfo> songs=new ArrayList<>();//储存当前播放列表所有歌曲
-    private MusicRecyclerViewAdapter adapter;//适配器
-    private String playlist;//歌单名
+    private static List<MusicInfo> songs=new ArrayList<>();//储存当前播放列表所有歌曲
+    private static MusicRecyclerViewAdapter adapter;//适配器
+    private static String playlist;//歌单名
 
     private ArrayList<String> pl_songIds;// 列表歌曲的id集合
 
     private Timer timer;//定时器
     private TimerTask myTimerTask;//定时器任务
-    private final int SETADAPTER = 111;
+    private final static int SETADAPTER = 111;
     private MusicPlayService mService;
-    private ScanUtil scanUtil;
+    private static ScanUtil scanUtil;
+    MyHandler handler;
 
-    private RecyclerView.LayoutManager mLayoutManager;
+    private static RecyclerView.LayoutManager mLayoutManager;
 
-    class MyHandler extends Handler {
+    static class MyHandler extends Handler {
         WeakReference<Activity> mActivityReference;
 
         MyHandler(Activity activity) {
@@ -85,6 +86,9 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.local_music);
         MyApplication application = (MyApplication) getApplication();
         mService = application.getmService();
+        idEdit = false;
+
+         handler =new MyHandler(PlaylistSongActivity.this);
 
         scanUtil =new ScanUtil(this);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -118,7 +122,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
             public void run() {
                 Message message = new Message();
                 message.what = SETADAPTER;
-                MyHandler handler =new MyHandler(PlaylistSongActivity.this);
                 handler.sendMessage(message);
             }
         };
@@ -141,6 +144,11 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
         back.setOnClickListener(this);
         edit_back.setOnClickListener(this);
         add_song.setOnClickListener(this);
+
+        adapter = new MusicRecyclerViewAdapter(this, songs);
+        adapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(mLayoutManager);
 
 
 
@@ -173,12 +181,11 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    public void setAdapter() {
+    public static void setAdapter() {
         songs =getListItems();
-        adapter = new MusicRecyclerViewAdapter(getApplicationContext(), songs);
-        adapter.setOnItemClickListener(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(mLayoutManager);
+        adapter.mDatas=songs;
+        adapter.notifyDataSetChanged();
+
 
     }
 
@@ -186,7 +193,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
      * 根据歌单名
      * 得到歌曲信息
      */
-    private List<MusicInfo> getListItems() {
+    private static List<MusicInfo> getListItems() {
 
         scanUtil.scanPlaylistSongFromDB(playlist);
         List<MusicInfo> list = MusicList.list;

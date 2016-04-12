@@ -2,6 +2,7 @@ package com.cyl.music_hnust;
 
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,6 +11,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -25,8 +28,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.utils.DataClearmanager;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +51,32 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
+    MyHandler handler;
+    static class MyHandler extends Handler {
+        WeakReference<Activity> mActivityReference;
+
+        MyHandler(Activity activity) {
+            mActivityReference = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final Activity activity = mActivityReference.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case 0:
+
+                        //.
+                        break;
+                    case 1:
+
+                    case 2:
+                        break;
+                }
+            }
+        }
+    }
+
     private Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -67,8 +98,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 SwitchPreference switchPreference = (SwitchPreference) preference;
-                if (switchPreference.isChecked()){
-                    Toast.makeText(SettingsActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
+                if (switchPreference.isChecked()) {
+                    Toast.makeText(SettingsActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -147,10 +178,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+    public  class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private Preference preference_about;
-        private Preference preference_cache;
+        public Preference preference_cache;
         public CheckBoxPreference secret_check;
         public EditTextPreference nikname;
         public SwitchPreference wifi_switch;
@@ -168,14 +199,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             wifi_switch = (SwitchPreference) findPreference("wifi_switch");
             preference_about.setOnPreferenceClickListener(this);
 //            editTextPreference.setOnPreferenceChangeListener(this);
-            String size="";
+            String size = "";
             try {
                 size = DataClearmanager.getTotalCacheSize(getActivity());
             } catch (Exception e) {
-                size="0";
+                size = "0";
                 e.printStackTrace();
             }
-            preference_cache.setSummary("缓存大小 "+size);
+            preference_cache.setSummary("当前缓存 " + size);
             bindPreferenceSummaryToValue(nikname);
             bindPreferenceSummaryToValue(wifi_switch);
             bindPreferenceSummaryToValue(secret_check);
@@ -198,19 +229,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 case "key_about":
                     Toast.makeText(getActivity(), "湖科音乐 1.0", Toast.LENGTH_LONG).show();
                     break;
-                case "key_cache":
-                    DataClearmanager.cleanInternalCache(getActivity());
-                    Toast.makeText(getActivity(), "清除中...", Toast.LENGTH_LONG).show();
 
-                    String size="";
-                    try {
-                        size = DataClearmanager.getTotalCacheSize(getActivity());
-                    } catch (Exception e) {
-                        size="0";
-                        e.printStackTrace();
-                    }
-                    preference_cache.setSummary("缓存大小 "+size);
-                    break;
             }
             return false;
         }

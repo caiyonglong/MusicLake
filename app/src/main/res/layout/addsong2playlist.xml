@@ -4,24 +4,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/base_bg"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rlt"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
+        android:background="@color/setting_blue"
         android:layout_alignParentTop="true">
 
-        <Button
+
+        <ImageButton
             android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_common_title_bar_back"
-            android:textColor="@android:color/white"
-            android:textSize="10dp" />
+            android:background="@drawable/ic_common_title_bar_back" />
+
 
         <TextView
             android:id="@+id/title_tv"
@@ -37,40 +36,33 @@
     </RelativeLayout>
 
     <LinearLayout
+
         android:id="@+id/ll_edit"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
+        android:layout_height="wrap_content">
+        <Button
             android:id="@+id/tv_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="返回"
-            android:textColor="@color/main_white"
-            android:textSize="20dp" />
-
-        <TextView
+            android:textColor="@color/main_black"
+            android:background="@drawable/btn_bg_style"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="|"
-            android:textSize="20dp" />
-
-        <TextView
+            android:text="返回"
+            />
+        <Button
             android:id="@+id/tv_finish"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+
+            android:textColor="@color/main_black"
+            android:background="@drawable/btn_bg_style"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:text="完成"
-            android:textColor="@color/main_white"
-            android:textSize="20dp" />
+            />
+
     </LinearLayout>
+
 
 
     <ListView

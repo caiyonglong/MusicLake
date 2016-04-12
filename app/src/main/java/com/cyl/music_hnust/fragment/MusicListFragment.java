@@ -88,7 +88,7 @@ public class MusicListFragment extends Fragment {
         iv_album = (RoundedImageView) mView.findViewById(R.id.iv_album);
         song_list = (ListView) mView.findViewById(R.id.song_list);
         datas = PlayerActivity.mService.getSongs();
-        final ListAdapter adapter = new ListAdapter(getContext(),datas);
+        final ListAdapter adapter = new ListAdapter(getContext(),datas,1);
         song_list.setAdapter(adapter);
         song_list.setSelection(PlayerActivity.mService.getCurrentListItme());
         song_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

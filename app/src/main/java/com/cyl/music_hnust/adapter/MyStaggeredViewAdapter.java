@@ -54,9 +54,8 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
         this.type = type;
         mLayoutInflater = LayoutInflater.from(mContext);
         mHeights = new ArrayList<>();
-        for (int i = 0; i < mDatas.size(); i++) {
-            mHeights.add((int) (Math.random() * 200) + 200);
-        }
+        setmHeights(mDatas);
+
     }
 
     /**
@@ -112,5 +111,9 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
         return mDatas.size();
     }
 
-
+    public void setmHeights(List<String> mDatas) {
+        for (int i = 0; i < mDatas.size(); i++) {
+            mHeights.add((int) (Math.random() * 200) + 200);
+        }
+    }
 }

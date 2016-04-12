@@ -14,7 +14,6 @@
         Android:layout_alignParentTop="true"
         Android:background="@mipmap/main_img_album" />
 
-        <!-- 图标图片 -->
 
     <ImageView
         Android:id="@+id/icon"
@@ -25,8 +24,7 @@
         Android:layout_marginRight="10dp"
         Android:layout_marginLeft="6dp"
         Android:layout_gravity="center" />
-    
-    <!-- 商品信息 -->
+
 
     <LinearLayout
         Android:layout_width="wrap_content"
@@ -43,34 +41,16 @@
             Android:id="@+id/songName"
             Android:layout_width="wrap_content"
             Android:layout_height="wrap_content"
-            Android:textColor="#FFFFFFFF"
+            Android:textColor="@color/gray"
             Android:textSize="18sp" />
 
         <TextView
             Android:id="@+id/singerName"
             Android:layout_width="wrap_content"
             Android:layout_height="wrap_content"
-            Android:textColor="#FFFFFFFF"
+            Android:textColor="@color/gray"
             Android:textSize="12sp" />
     </LinearLayout>
 
-
-
-    <!--
-         购买和商品详情  
-    <LinearLayout Android:gravity="right"  
-    Android:orientation="horizontal" 
-    Android:layout_width="fill_parent"  
-    Android:layout_height="wrap_content">  
-    <CheckBox Android:id="@+id/checkItem"    
-        Android:layout_width="wrap_content"  
-        Android:layout_height="wrap_content"    
-        Android:layout_margin="5px"/>  
-    <Button  Android:id="@+id/detailItem"    
-        Android:layout_width="wrap_content"  
-        Android:layout_height="wrap_content"    
-        Android:layout_margin="5px"/>  
-    </LinearLayout>
-    -->
 
 </RelativeLayout>

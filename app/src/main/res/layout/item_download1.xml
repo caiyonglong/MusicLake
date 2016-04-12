@@ -31,7 +31,7 @@
                 android:layout_height="30.0dip"
                 android:gravity="bottom"
                 android:singleLine="true"
-                android:textColor="@color/main_white"
+                android:textColor="@color/gray"
                 android:textSize="16.0sp" />
 
             <RelativeLayout
@@ -45,7 +45,7 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15.0dip"
                     android:singleLine="true"
-                    android:textColor="@color/main_white"
+                    android:textColor="@color/gray"
                     android:textSize="12.0sp" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|right"
                     android:singleLine="true"
-                    android:textColor="@color/main_white"
+                    android:textColor="@color/gray"
                     android:textSize="12.0sp" />
             </RelativeLayout>
         </LinearLayout>
@@ -79,7 +79,7 @@
         android:paddingLeft="10.0dip"
         android:paddingRight="10.0dip"
         android:singleLine="true"
-        android:textColor="@color/main_white"
+        android:textColor="@color/gray"
         android:textSize="16.0sp" />
 
 </RelativeLayout>

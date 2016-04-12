@@ -63,7 +63,7 @@
 
     <string name="pref_title_wifi">仅WIFI联网</string>
     <string name="pref_title_about">关于</string>
-    <string name="pref_title_clear">清除缓存</string>
+    <string name="pref_title_clear">缓存数据</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
