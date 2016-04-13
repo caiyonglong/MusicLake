@@ -1,11 +1,7 @@
 package com.cyl.music_hnust;
 
-import android.content.ContentUris;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +14,6 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.list.MusicList;
-import com.cyl.music_hnust.utils.Album;
-import com.cyl.music_hnust.utils.Mp3;
-import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
 
 import java.util.List;

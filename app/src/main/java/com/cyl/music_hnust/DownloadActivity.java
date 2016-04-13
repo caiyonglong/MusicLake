@@ -45,9 +45,12 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
     private ArrayList<Fragment> fragmentList;
     private ImageButton back;
     public MusicInfo songinfo;
+
+    private UpdateReceiver receiver;
+
 //    public List<Downloadinfo> downloadinfos = new ArrayList<>();
 
-    public MusicPlayService mService;
+    public static MusicPlayService mService;
     public int position=0;
 
     @Override
@@ -58,6 +61,10 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         mService = application.getmService();
         initView();
         initViewPager();
+
+
+        receiver = new UpdateReceiver();
+        receiver.registerAction(Constant.DOWNLOADMANAGEACTION);
     }
 
     private void initView() {
@@ -166,7 +173,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         }
     }
 
-    private class DownloadedFragment extends Fragment {
+    public static class DownloadedFragment extends Fragment {
         private static final String FILE_NAME = "/hnustmusic";
         View mView;
         private ListView list_download;
@@ -186,7 +193,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            dao = new DBDao(getApplicationContext());
+            dao = new DBDao(getActivity());
             List<ScanInfo> list = new ArrayList<ScanInfo>();
             String path= "/storage/emulated/0/hkmusic/";
             list.add(new ScanInfo(path, true));
@@ -199,7 +206,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
          */
         private void initView() {
             list_download = (ListView) mView.findViewById(R.id.list_download);
-            adapter = new ListAdapter(getApplicationContext(), listinfo, 0);
+            adapter = new ListAdapter(getActivity(), listinfo, 0);
             list_download.setAdapter(adapter);
             list_download.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -217,16 +224,15 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
 
     }
 
-    private class DownloadingFragment extends Fragment {
+    public static class DownloadingFragment extends Fragment {
         private ListView list_download;
         /**
          * 存放要显示列表的数据
          */
-        private List<FileState> data;
-        private DownloadManageAdapter adapter;
+        public static List<FileState> data;
+        public static DownloadManageAdapter adapter;
 
         private SqliteDao dao;
-        private UpdateReceiver receiver;
 
         View mView;
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -238,11 +244,9 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            dao = new SqliteDao(getApplicationContext());
+            dao = new SqliteDao(getActivity());
 
             data = dao.getFileStates();
-            receiver = new UpdateReceiver();
-            receiver.registerAction(Constant.DOWNLOADMANAGEACTION);
 
         }
 
@@ -253,55 +257,60 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
             initView();
         }
 
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-            dao.updateFileState(data);
-            unregisterReceiver(receiver);
-        }
+
         /**
          * 初始化控件
          */
         private void initView() {
             list_download = (ListView) mView.findViewById(R.id.list_download);
-            adapter = new DownloadManageAdapter(getApplicationContext(), data, dao);
+            adapter = new DownloadManageAdapter(getActivity(), data, dao);
             list_download.setAdapter(adapter);
         }
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            dao.updateFileState(data);
+        }
+
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+    /**
+     *
+     * 项目名称：MultithreadedDownload 类名称：UpdateReceiver 类描述：
+     * 接收器类，用来接收后台service发送过来的下载进度 创建人：wpy 创建时间：2014-10-13 上午10:11:20
+     *
+     */
+    private class UpdateReceiver extends BroadcastReceiver {
         /**
+         * 注册广播接收器
          *
-         * 项目名称：MultithreadedDownload 类名称：UpdateReceiver 类描述：
-         * 接收器类，用来接收后台service发送过来的下载进度 创建人：wpy 创建时间：2014-10-13 上午10:11:20
-         *
+         * @param action
          */
-        private class UpdateReceiver extends BroadcastReceiver {
-            /**
-             * 注册广播接收器
-             *
-             * @param action
-             */
-            public void registerAction(String action) {
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction(action);
-                registerReceiver(this, intentFilter);
-            }
+        public void registerAction(String action) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(action);
+            registerReceiver(this, intentFilter);
+        }
 
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Constant.DOWNLOADMANAGEACTION)) {
-                    String url = intent.getStringExtra("url");
-                    int completeSize = intent.getIntExtra("completeSize", 0);
-                    for (int i = 0; i < data.size(); i++) {
-                        FileState fileState = data.get(i);
-                        if (fileState.getUrl().equals(url)) {
-                            fileState.setCompleteSize(completeSize);
-                            data.set(i, fileState);
-                        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constant.DOWNLOADMANAGEACTION)) {
+                String url = intent.getStringExtra("url");
+                int completeSize = intent.getIntExtra("completeSize", 0);
+                for (int i = 0; i < DownloadingFragment.data.size(); i++) {
+                    FileState fileState = DownloadingFragment.data.get(i);
+                    if (fileState.getUrl().equals(url)) {
+                        fileState.setCompleteSize(completeSize);
+                        DownloadingFragment.data.set(i, fileState);
                     }
-                    adapter.setList(data);
-                    adapter.notifyDataSetChanged();
                 }
+                DownloadingFragment.adapter.setList(DownloadingFragment.data);
+                DownloadingFragment.adapter.notifyDataSetChanged();
             }
-
         }
 
     }

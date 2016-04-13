@@ -41,7 +41,7 @@
     </android.support.v7.widget.RecyclerView>
     <TextView
         android:id="@+id/tv_no_songs"
-        android:text="播放列表为空"
+        android:text="播放列表为空\n请扫描歌曲"
         android:textSize="20dp"
         android:gravity="center"
         android:visibility="gone"

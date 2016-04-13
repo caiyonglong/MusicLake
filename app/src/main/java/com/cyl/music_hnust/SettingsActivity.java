@@ -77,7 +77,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    private Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private  Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
-    private void bindPreferenceSummaryToValue(Preference preference) {
+    private  void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -163,14 +163,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    /**
-     * 关闭设置
-     */
-    public void end() {
+//    /**
+//     * 关闭设置
+//     */
+    public  void end() {
         finish();
     }
 
-    ;
+    //;
 
 
     /**
@@ -178,7 +178,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public  class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+    public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private Preference preference_about;
         public Preference preference_cache;
@@ -198,15 +198,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             nikname = (EditTextPreference) findPreference("nickname");
             wifi_switch = (SwitchPreference) findPreference("wifi_switch");
             preference_about.setOnPreferenceClickListener(this);
-//            editTextPreference.setOnPreferenceChangeListener(this);
-            String size = "";
-            try {
-                size = DataClearmanager.getTotalCacheSize(getActivity());
-            } catch (Exception e) {
-                size = "0";
-                e.printStackTrace();
-            }
-            preference_cache.setSummary("当前缓存 " + size);
+            preference_cache.setOnPreferenceClickListener(this);
+
             bindPreferenceSummaryToValue(nikname);
             bindPreferenceSummaryToValue(wifi_switch);
             bindPreferenceSummaryToValue(secret_check);
@@ -228,6 +221,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             switch (preference.getKey()) {
                 case "key_about":
                     Toast.makeText(getActivity(), "湖科音乐 1.0", Toast.LENGTH_LONG).show();
+                    break;
+                case "key_cache":
+                    Toast.makeText(getActivity(), "清除成功", Toast.LENGTH_LONG).show();
                     break;
 
             }

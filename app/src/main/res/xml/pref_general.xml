@@ -32,7 +32,6 @@
 
         <Preference android:title="@string/pref_title_clear"
             android:key="key_cache"
-            android:summary=""
             >
         </Preference>
         <Preference android:title="@string/pref_title_about"

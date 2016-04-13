@@ -4,11 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -33,11 +32,11 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.fragment.MusicFragment;
 import com.cyl.music_hnust.fragment.MyFragment;
-import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.FormatUtil;
+import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
 
@@ -107,9 +106,18 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         application = (MyApplication) getApplication();
-        mService = new MusicPlayService();
 
-        application.setmService(mService);
+        if (mService==null) {
+            mService = new MusicPlayService();
+
+            application.setmService(mService);
+            Log.e("11","d222d");
+        }else {
+            MediaPlayer mediaPlayer =mService.getmMediaPlayer();
+            application.setmService(mService);
+            Log.e("11","dd");
+        }
+
 
         musicReceiver = new MusicReceiver();
         //注册广播
@@ -302,9 +310,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
         mNavigationView = (NavigationView) findViewById(R.id.id_navigationview);
 
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -322,6 +328,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             return true;
         }
         if (id == R.id.action_share) {
+
             return true;
         }
         if (id == R.id.action_search) {
@@ -332,6 +339,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onPageSelected(int position) {
@@ -359,8 +367,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
     private void close() {
-
-
         if (mService != null) {
             mService.stopSelf();
         }
@@ -448,7 +454,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             String artist = intent.getStringExtra("artist");
             String pic = intent.getStringExtra("pic");
             if (current >= 0) {
-
                 Log.e("==",pic+"");
                 MusicFragment.initBackGround(getApplicationContext(), pic);
                 MusicFragment.song_name.setText(name);
@@ -456,7 +461,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             }
             switch (update) {
                 case 0:
-                    MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
+
+                   // MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
                     break;
                 case 1:
                     MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_pause);

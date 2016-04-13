@@ -94,7 +94,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         search_result.setLayoutManager(mLayoutManager);
 
 
-
     }
 
     private SweetAlertDialog pDialog;
@@ -106,21 +105,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.search_go_btn:
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
-                boolean permis=prefs.getBoolean("wifi_switch",true);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                boolean permis = prefs.getBoolean("wifi_switch", true);
 
                 search_info = search_edit_info.getText().toString().trim();
                 pDialog = new SweetAlertDialog(SearchActivity.this, SweetAlertDialog.ERROR_TYPE);
                 pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                if (permis){
+                if (permis) {
                     pDialog.setTitleText("仅Wifi联网");
                     pDialog.setCancelable(true);
                     pDialog.show();
-                }else if (TextUtils.isEmpty(search_info)){
+                } else if (TextUtils.isEmpty(search_info)) {
                     pDialog.setTitleText("仅Wifi联网");
                     pDialog.setCancelable(true);
                     pDialog.show();
-                }else {
+                } else {
                     initSearch();
                 }
                 break;
@@ -228,22 +227,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 Log.e("TEST", position + "-----" + musicInfo.getAlbumPic());
 //
 
-                List<MusicInfo> list =mService.getSongs();
-                if (list==null){
+                List<MusicInfo> list = mService.getSongs();
+                if (list == null) {
                     list = new ArrayList<>();
+                    list.add(musicInfo);
+                    mService.setCurrentListItme(0);
                     mService.setSongs(list);
+                    mService.playMusic(infos.get(position).getPath());
+                }else {
+                    int listitem = mService.getCurrentListItme() + 1;
+                    list.add(listitem, musicInfo);
+                    mService.setSongs(list);
+                    ToastUtil.show(getApplicationContext(), "已添加到播放队列");
                 }
-                int listitem =mService.getCurrentListItme()+1;
-                list.add(listitem,musicInfo);
-                mService.setSongs(list);
-                ToastUtil.show(getApplicationContext(),"已添加到播放队列");
 
-//                mService.setCurrentListItme(position);
-//                mService.setSongs(infos);
-//                mService.playMusic(infos.get(position).getPath());
-//                Intent it = new Intent(SearchActivity.this, PlayerActivity.class);
-////                it.putExtra("page", "online");
-//                startActivity(it);
                 break;
             case R.id.list_black_btn:
                 initPopuWindow1(view, position);
