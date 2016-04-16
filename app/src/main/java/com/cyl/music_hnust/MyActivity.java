@@ -107,16 +107,18 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         setContentView(R.layout.activity_my);
         application = (MyApplication) getApplication();
 
-        if (mService==null) {
-            mService = new MusicPlayService();
+        application.setmService(mService);
 
-            application.setmService(mService);
-            Log.e("11","d222d");
-        }else {
-            MediaPlayer mediaPlayer =mService.getmMediaPlayer();
-            application.setmService(mService);
-            Log.e("11","dd");
-        }
+//        if (mService==null) {
+//            mService = new MusicPlayService();
+//
+//            Log.e("11","d222d");
+//        }else {
+////            mService.s
+////            MediaPlayer mediaPlayer =mService.getmMediaPlayer();
+////            application.setmService(mService);
+//            Log.e("11","dd");
+//        }
 
 
         musicReceiver = new MusicReceiver();
@@ -134,6 +136,18 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
         // 对各种控件进行设置、适配、填充数据
         configViews();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        Intent intent = new Intent(MusicPlayService.BROADCAST_ACTION_SERVICE);
+//        intent.putExtra(MusicPlayService.INTENT_ACTIVITY,
+//                MusicPlayService.ACTIVITY_MAIN);
+//        sendBroadcast(intent);
+//        application.setmService(mService);
 
     }
 
@@ -455,6 +469,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             String pic = intent.getStringExtra("pic");
             if (current >= 0) {
                 Log.e("==",pic+"");
+                if (update==0)
+                application.setmService(mService);
                 MusicFragment.initBackGround(getApplicationContext(), pic);
                 MusicFragment.song_name.setText(name);
                 MusicFragment.singer_name.setText(artist);

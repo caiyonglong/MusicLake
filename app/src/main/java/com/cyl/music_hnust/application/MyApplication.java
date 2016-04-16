@@ -8,11 +8,14 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.service.MusicPlayService;
 
 
 public class MyApplication extends Application {
 	MusicPlayService mService;
+	static RequestQueue mRequestQueue;
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
@@ -29,6 +32,7 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 		Intent intent = new Intent(this, MusicPlayService.class);
 		startService(intent);System.out.println("intent?"+(null == intent));
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -42,4 +46,7 @@ public class MyApplication extends Application {
 		this.mService = mService;
 	}
 
+	public  RequestQueue getHttpQueues() {
+		return mRequestQueue;
+	}
 }

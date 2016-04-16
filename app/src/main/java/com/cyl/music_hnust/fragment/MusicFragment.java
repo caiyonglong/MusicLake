@@ -104,19 +104,13 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     private TextView popPlaysumTextTextView;
     private TextView tv_no;
 
-
-    //   private FullyLinearLayoutManager mLayoutManager;
     private ExStaggeredGridLayoutManager mLayoutManager;
 
     private RecyclerView.LayoutManager mpLayoutManager;
-    // private PlaylistRecyclerViewAdapter playlistadapter;
     private static MyStaggeredViewAdapter playlistadapter;
 
     private static int type = 1;
-    //    public static List<MusicInfo> songs;// 歌曲集合
-    private List<String> singers;// 歌手集合
     private List<String> al_playlist;// 播放列表集合
-    private List<Album> albums;// 专辑集合
 
 
     private String TAG = "My_Fragment_Music";
@@ -168,7 +162,8 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mService = MyActivity.application.getmService();
+        application=MyActivity.application;
+        mService = application.getmService();
         dbDao = new DBDao(getContext());
         handler = new MyHandler(MusicFragment.this);
 

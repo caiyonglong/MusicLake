@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
 
     android:layout_height="match_parent">
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ImageView
+            android:background="@mipmap/ic_launcher"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
 
+    </LinearLayout>
     <TextView
-        android:text="欢迎使用"
-        android:textColor="@color/main_white"
-        android:textSize="20dp"
-        android:layout_centerInParent="true"
+        android:layout_weight="15"
+        android:textSize="25dp"
+        android:layout_gravity="center_horizontal"
+        android:text="湖科音乐"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</RelativeLayout>
+
+    <TextView
+        android:layout_weight="5"
+        android:gravity="center_vertical"
+        android:text="湖科音乐@copyright by master in 2016"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

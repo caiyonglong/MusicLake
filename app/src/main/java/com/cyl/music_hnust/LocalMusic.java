@@ -1,13 +1,17 @@
 package com.cyl.music_hnust;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
@@ -19,6 +23,7 @@ import com.cyl.music_hnust.utils.Album;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
+import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +70,6 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         mService = MyActivity.application.getmService();
 
 
-
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         back = (ImageButton) findViewById(R.id.back);
         title = (TextView) findViewById(R.id.title);
@@ -74,16 +78,16 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         back.setOnClickListener(this);
 
         it = getIntent();
-        if ("local".equals(it.getStringExtra("action"))){
-            type =LOCAL_LIST;
+        if ("local".equals(it.getStringExtra("action"))) {
+            type = LOCAL_LIST;
             title.setText("本地音乐");
-        }else if ("favor".equals(it.getStringExtra("action"))){
-            type =FAVOR_LIST;
+        } else if ("favor".equals(it.getStringExtra("action"))) {
+            type = FAVOR_LIST;
             title.setText("我的最爱");
         }
 
         initData();
-        if (mDatas.size()==0){
+        if (mDatas.size() == 0) {
             music_list.setVisibility(View.GONE);
             tv_no_songs.setVisibility(View.VISIBLE);
         }
@@ -103,12 +107,12 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         songs = MusicList.list;
         mDatas = new ArrayList<>();
         for (int i = 0; i < songs.size(); i++) {
-            if (type ==FAVOR_LIST){
+            if (type == FAVOR_LIST) {
                 if (songs.get(i).isFavorite()) {
                     mDatas.add(songs.get(i));
                 }
-            }else {
-                mDatas=songs;
+            } else {
+                mDatas = songs;
             }
         }
     }
@@ -130,13 +134,38 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
 //        if (null == mService) {
 //            mService = application.getmService();
 //        }
-        mService.setCurrentListItme(position);
-        mService.setSongs(mDatas);
-        mService.playMusic(mDatas.get(position).getPath());
+        switch (view.getId()) {
+            case R.id.music_container:
+                mService.setCurrentListItme(position);
+                mService.setSongs(mDatas);
+                mService.playMusic(mDatas.get(position).getPath());
+                break;
+            case R.id.list_black_btn:
+                singleChoice(view);
 
-//        it.setClass(LocalMusic.this, PlayerActivity.class);
-//        startActivity(it);
+                break;
+        }
+
     }
+    public void singleChoice(View source){
+        String[] item= getResources().getStringArray(R.array.song_list);
+        ListAdapter items = new ArrayAdapter<String>(this,
+                R.layout.item_songs, item);
+//        int items;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("歌曲")
+                .setIcon(R.mipmap.ic_launcher)
+                .setAdapter(items , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ToastUtil.show(getApplicationContext(),"你选择了");
+                    }
+                });
+//        builder.setPositiveButton();
+        builder.create();
+        builder.show();
+    }
+
 
 
 }

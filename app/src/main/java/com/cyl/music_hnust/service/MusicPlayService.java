@@ -38,6 +38,8 @@ import com.cyl.music_hnust.view.RoundCorner;
 
 public class MusicPlayService extends Service {
 
+    public static final String INTENT_ACTIVITY = "activity";
+    public static final String ACTIVITY_MAIN = "myactivity";
     private final IBinder mBinder = new LocalBinder();
     private Context context;
     /* MediaPlayer对象 */
@@ -390,8 +392,13 @@ public class MusicPlayService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String str = intent.getAction();
-            Log.e("Action",str);
             int control = intent.getIntExtra("control",-1);
+
+            if (str.equals(BROADCAST_ACTION_SERVICE))
+            {
+                control =0;
+            }
+            Log.e("Action",str);
             Log.e("ddd",control+"");
             switch (control){
                 case 0:

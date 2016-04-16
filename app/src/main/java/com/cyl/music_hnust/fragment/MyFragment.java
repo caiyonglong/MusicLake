@@ -27,6 +27,7 @@ import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.LoginActivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.MyRecyclerViewAdapter;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
@@ -54,6 +55,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     private RecyclerView.LayoutManager mLayoutManager;
     public static MyRecyclerViewAdapter mRecyclerViewAdapter;
     private RequestQueue mRequestQueue;
+    private MyApplication myApplication;
     private ImageLoader imageLoader;
     public static List<Dynamic> mdatas;
     public static int position;
@@ -118,8 +120,10 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.frag_main, container, false);
+        myApplication = new MyApplication();
         mdatas = new ArrayList<>();
-        mRequestQueue = Volley.newRequestQueue(getContext());
+        mRequestQueue =myApplication.getHttpQueues();
+
         imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
             @Override
             public void putBitmap(String url, Bitmap bitmap) {
@@ -130,8 +134,8 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                 return null;
             }
         });
-        User userinfo = UserStatus.getUserInfo(getContext());
-        volley_StringRequest_GET(userinfo.getUser_id(), 0, null, null);
+     //   User userinfo = UserStatus.getUserInfo(getContext());
+      //  volley_StringRequest_GET(userinfo.getUser_id(), 0, null, null);
         return mView;
     }
 
@@ -281,9 +285,12 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                 // VolleyLog.e("Error: ", error.getMessage());
             }
         });
+        jsonObjectRequest.setTag("info");
         // 3 将StringRequest添加到RequestQueue
         mRequestQueue.add(jsonObjectRequest);
+        mRequestQueue.start();
     }
+
 
 
 

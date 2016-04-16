@@ -84,7 +84,7 @@ public class MusicRecyclerViewAdapter extends RecyclerView.Adapter<MusicRecycler
         if (mDatas.get(position).getName()!=null)
         holder.tv_name.setText(position+1+"."+mDatas.get(position).getName().toString());
         if (mDatas.get(position).getArtist()!=null)
-        holder.tv_artist.setText("   "+mDatas.get(position).getArtist().toString());
+        holder.tv_artist.setText("   "+mDatas.get(position).getArtist().toString()+"-"+mDatas.get(position).getAlbum().toString());
 
     }
 

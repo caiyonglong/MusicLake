@@ -14,4 +14,11 @@
         <item>歌词</item>
 
     </string-array>
+    <string-array name="song_list">
+
+        <item>喜欢</item>
+        <item>歌曲信息</item>
+        <item>删除</item>
+
+    </string-array>
 </resources>
