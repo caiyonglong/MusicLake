@@ -34,6 +34,22 @@
                 android:src="@mipmap/icon_hnust"
                 app:layout_collapseMode="parallax" />
 
+            <FrameLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                >
+
+                <ImageView
+                    android:id="@+id/head"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@mipmap/user_icon_default_main" />
+
+            </FrameLayout>
+
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -284,16 +300,5 @@
 
 
     <!--"-->
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end" >
-        <com.cyl.music_hnust.view.RoundedImageView
-            android:id="@+id/fbtn_head"
-            android:src="@mipmap/user_icon_default_main"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-    </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>

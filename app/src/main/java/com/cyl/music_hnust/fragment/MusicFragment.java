@@ -162,8 +162,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        application=MyActivity.application;
-        mService = application.getmService();
+
         dbDao = new DBDao(getContext());
         handler = new MyHandler(MusicFragment.this);
 
@@ -304,6 +303,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 break;
             case R.id.singer_pic:
                 mService = MyActivity.application.getmService();
+
                 if (mService.getSongs() != null) {
                     Intent it5 = new Intent(getActivity(), PlayerActivity.class);
                     startActivity(it5);
@@ -312,7 +312,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 }
                 break;
             case R.id.list_buttom:
-                mService= MyActivity.application.getmService();
+
                 getPopupWindowInstance(v);
                 break;
         }
@@ -331,9 +331,6 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
             playlistadapter.mDatas = al_playlist;
             playlistadapter.setmHeights(al_playlist);
             handler.sendEmptyMessage(0);
-//            playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
-//            playlistadapter.setOnItemClickListener(this);
-//            mRecyclerView.setAdapter(playlistadapter);
         }
         Log.e(TAG, "resultCode:" + resultCode + "__" + requestCode);
     }
@@ -367,7 +364,10 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
         if (null != mPopupWindow) {
             mPopupWindow.dismiss();
             return;
-        } else {;
+        } else {
+
+            mService = MyActivity.application.getmService();
+
             List<MusicInfo> playlist = mService.getSongs();
 
             initPopuptWindow(v);

@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.fragment;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import com.cyl.music_hnust.PlayerActivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.ListAdapter;
 import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.lyric.LrcView;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.view.RoundedImageView;
@@ -35,7 +33,7 @@ public class MusicListFragment extends Fragment {
     public static  Animation operatingAnim;
     private ListView song_list;
     private List<MusicInfo> datas = new ArrayList<>();
-    public static LrcView lyric;
+//    public  LrcView lyric;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.frag_player, container, false);
@@ -53,7 +51,7 @@ public class MusicListFragment extends Fragment {
             iv_album.setVisibility(View.VISIBLE);
             initAlbum();
         }else {
-            lyric.setVisibility(View.VISIBLE);
+         //   lyric.setVisibility(View.VISIBLE);
 
         }
     }
@@ -99,7 +97,7 @@ public class MusicListFragment extends Fragment {
                 adapter.getView(position, view, parent).setAlpha((float) 0.5);
             }
         });
-        lyric = (LrcView) mView.findViewById(R.id.LyricShow);
+       // lyric = (LrcView) mView.findViewById(R.id.LyricShow);
     }
 
 

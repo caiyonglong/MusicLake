@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,13 +24,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
-import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
-import com.cyl.music_hnust.fragment.MusicFragment;
 import com.cyl.music_hnust.fragment.MusicListFragment;
-import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.lyric.LrcProcess;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
@@ -45,7 +40,7 @@ import java.util.List;
 public class PlayerActivity extends AppCompatActivity {
     private ImageButton mFrontImageButton, mPauseImageButton,
             mNextImageButton, mFavorImageButton, title_left;
-    private ImageView page_icon,mIvBg;
+    private ImageView page_icon, mIvBg;
     private TextView tv_songName, tv_singerName, tv_curcentTime, tv_allTime;
     private ViewPager viewpager_player;
     private SeekBar seekBar1;// 播放进度条
@@ -53,8 +48,8 @@ public class PlayerActivity extends AppCompatActivity {
     public static MusicPlayService mService;
     private MyViewPagerAdapter myViewPagerAdapter;
 
-    private int page[] = { R.mipmap.page_icon_left, R.mipmap.page_icon_mid,
-            R.mipmap.page_icon_right };
+    private int page[] = {R.mipmap.page_icon_left, R.mipmap.page_icon_mid,
+            R.mipmap.page_icon_right};
     // 填充到ViewPager中的Fragment
     private List<Fragment> mFragments;
     String[] mTitles;
@@ -66,15 +61,16 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_player);
-     //   MyApplication application = (MyApplication) getApplication();
+
         mService = MyActivity.application.getmService();
+
         //广播
         playerReceiver = new PlayerReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPDATE_ACTION);
         registerReceiver(playerReceiver, intentFilter);
 
-       // initFragment();
+        // initFragment();
         initView();
         setListener();
         new AsyncTask<Void, Void, Boolean>() {
@@ -149,7 +145,7 @@ public class PlayerActivity extends AppCompatActivity {
             mFragments.add(i, mFragment);
 
         }
-        myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(),mTitles,mFragments);
+        myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), mTitles, mFragments);
         viewpager_player.setAdapter(myViewPagerAdapter);
         viewpager_player.setCurrentItem(1);
         viewpager_player.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -192,7 +188,6 @@ public class PlayerActivity extends AppCompatActivity {
         viewpager_player = (ViewPager) findViewById(R.id.viewpager_player);
 
 
-
         // 启动
         handler.post(updateThread);
     }
@@ -209,17 +204,17 @@ public class PlayerActivity extends AppCompatActivity {
                 if (song == null) {
                 }
                 if (song != null
-                        && !TextUtils.isEmpty(song.getAlbumPic()) ) {
-                    if (HttpByGet.isURL(song.getAlbumPic())){
+                        && !TextUtils.isEmpty(song.getAlbumPic())) {
+                    if (HttpByGet.isURL(song.getAlbumPic())) {
                         final Bitmap[] bitmap = {null};
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                bitmap[0] =HttpByGet.getHttpBitmap(song.getAlbumPic());
+                                bitmap[0] = HttpByGet.getHttpBitmap(song.getAlbumPic());
                             }
                         }).start();
-                        original =bitmap[0];
-                    }else {
+                        original = bitmap[0];
+                    } else {
                         original = CommonUtils.scaleBitmap(getApplicationContext(), song.getAlbumPic());
                     }
 
@@ -246,6 +241,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }.execute();
     }
+
     private void recycleBitmap(ImageView iv, Bitmap bitmap) {
         if (bitmap != null
                 && !bitmap.isRecycled()) {
@@ -349,12 +345,11 @@ public class PlayerActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 DBDao dbDao = new DBDao(getApplicationContext());
                 if (!mService.getSong().isFavorite()) {
-                    dbDao.update(mService.getSong().getName(),true);
+                    dbDao.update(mService.getSong().getName(), true);
                     mService.getSong().setFavorite(true);
                     mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
-                }
-                else{
-                    dbDao.update(mService.getSong().getName(),false);
+                } else {
+                    dbDao.update(mService.getSong().getName(), false);
                     mService.getSong().setFavorite(false);
                     mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_nostar_style);
                 }
@@ -438,12 +433,12 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
 
-    public LrcProcess mLrcProcess;
+//    public LrcProcess mLrcProcess;
 
     public void initLrc(String path) {
         // /////////////////////// 初始化歌词配置 /////////////////////// //
 
-        Log.e("初始化歌词配置",path+"====");
+        Log.e("初始化歌词配置", path + "====");
 //        mLrcProcess = new LrcProcess();
 //        // 读取歌词文件
 //        mLrcProcess.readLRC(path);
@@ -461,58 +456,56 @@ public class PlayerActivity extends AppCompatActivity {
         // /////////////////////// 初始化歌词配置 /////////////////////// //
     }
 
+/**
+ Handler mHandler = new Handler();
+ // 歌词滚动线程
+ Runnable mRunnable = new Runnable() {
 
-    Handler mHandler = new Handler();
-    // 歌词滚动线程
-    Runnable mRunnable = new Runnable() {
+@Override public void run() {
+// TODO Auto-generated method stub
+MusicListFragment.lyric.SetIndex(LrcIndex());
+MusicListFragment.lyric.invalidate();
+mHandler.postDelayed(mRunnable, 100);
+}
+};
+ // 创建对象
+ private List<LrcProcess.LrcContent> lrcList = new ArrayList<LrcProcess.LrcContent>();
+ // 初始化歌词检索值
+ private int index = 0;
+ // 初始化歌曲播放时间的变量
+ private int CurrentTime = 0;
+ // 初始化歌曲总时间的变量
+ private int CountTime = 0;
 
-        @Override
-        public void run() {
-            // TODO Auto-generated method stub
-            MusicListFragment.lyric.SetIndex(LrcIndex());
-            MusicListFragment.lyric.invalidate();
-            mHandler.postDelayed(mRunnable, 100);
-        }
-    };
-    // 创建对象
-    private List<LrcProcess.LrcContent> lrcList = new ArrayList<LrcProcess.LrcContent>();
-    // 初始化歌词检索值
-    private int index = 0;
-    // 初始化歌曲播放时间的变量
-    private int CurrentTime = 0;
-    // 初始化歌曲总时间的变量
-    private int CountTime = 0;
+ /**
+ * 歌词同步处理类
 
-    /**
-     * 歌词同步处理类
-     */
-    public int LrcIndex() {
-        if (mService.getmMediaPlayer().isPlaying()) {
-            // 获得歌曲播放在哪的时间
-            CurrentTime = mService.getmMediaPlayer().getCurrentPosition();
-            // 获得歌曲总时间长度
-            CountTime = mService.getmMediaPlayer().getDuration();
-        }
-        if (CurrentTime < CountTime) {
+ public int LrcIndex() {
+ if (mService.getmMediaPlayer().isPlaying()) {
+ // 获得歌曲播放在哪的时间
+ CurrentTime = mService.getmMediaPlayer().getCurrentPosition();
+ // 获得歌曲总时间长度
+ CountTime = mService.getmMediaPlayer().getDuration();
+ }
+ if (CurrentTime < CountTime) {
 
-            for (int i = 0; i < lrcList.size(); i++) {
-                if (i < lrcList.size() - 1) {
-                    if (CurrentTime < lrcList.get(i).getLrc_time() && i == 0) {
-                        index = i;
-                    }
-                    if (CurrentTime > lrcList.get(i).getLrc_time()
-                            && CurrentTime < lrcList.get(i + 1).getLrc_time()) {
-                        index = i;
-                    }
-                }
-                if (i == lrcList.size() - 1
-                        && CurrentTime > lrcList.get(i).getLrc_time()) {
-                    index = i;
-                }
-            }
-        }
-        return index;
-    }
-
-
+ for (int i = 0; i < lrcList.size(); i++) {
+ if (i < lrcList.size() - 1) {
+ if (CurrentTime < lrcList.get(i).getLrc_time() && i == 0) {
+ index = i;
+ }
+ if (CurrentTime > lrcList.get(i).getLrc_time()
+ && CurrentTime < lrcList.get(i + 1).getLrc_time()) {
+ index = i;
+ }
+ }
+ if (i == lrcList.size() - 1
+ && CurrentTime > lrcList.get(i).getLrc_time()) {
+ index = i;
+ }
+ }
+ }
+ return index;
+ }
+ */
 }

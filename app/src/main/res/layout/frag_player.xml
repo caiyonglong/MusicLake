@@ -19,7 +19,7 @@
         android:layout_centerInParent="true"
         android:scaleType="fitCenter" />
 
-    <com.cyl.music_hnust.lyric.LrcView
+    <com.cyl.music_hnust.lyric.LyricView
         android:id="@+id/LyricShow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

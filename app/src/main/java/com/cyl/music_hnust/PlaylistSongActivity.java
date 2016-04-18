@@ -228,6 +228,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
             mService.setCurrentListItme(position);
             mService.setSongs(songs);
             mService.playMusic(songs.get(position).getPath());
+            MyActivity.application.setmService(mService);
 //            Intent it = new Intent(PlaylistSongActivity.this, PlayerActivity.class);
 //            startActivity(it);
         }

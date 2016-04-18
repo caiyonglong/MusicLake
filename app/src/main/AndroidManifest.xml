@@ -141,6 +141,9 @@
         <service
             android:name=".service.MusicPlayService"
             android:enabled="true" />
+        <service
+            android:name=".service.MediaService"
+            android:enabled="true" />
 
         <activity
             android:name=".PlaylistSongActivity"
@@ -152,6 +155,10 @@
 
         <activity
             android:name=".SettingsActivity"
+            android:theme="@style/MyTheme"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".ClipActivity"
             android:theme="@style/MyTheme"
             android:label="@string/title_activity_settings"></activity>
     </application>

@@ -1,13 +1,13 @@
 package com.cyl.music_hnust.utils;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import android.graphics.Bitmap;
-import android.util.Log;
 
 public class MemoryCache {
 
@@ -90,4 +90,6 @@ public class MemoryCache {
 			return 0;
 		return bitmap.getRowBytes() * bitmap.getHeight();
 	}
+
+
 }

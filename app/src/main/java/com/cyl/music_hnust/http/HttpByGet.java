@@ -78,9 +78,11 @@ public class HttpByGet {
                 //	JsonParsing.getmusicId(json);
                 //	Log.e(TAG_GET, result);
             } else {
+                json="ERROR";
                 Log.e(TAG_GET, "HttpGet方式请求失败");
             }
         } catch (IOException e) {
+            json="ERROR";
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

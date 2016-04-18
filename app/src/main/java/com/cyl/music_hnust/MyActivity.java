@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +36,7 @@ import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.FormatUtil;
+import com.cyl.music_hnust.utils.ImageLoader;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
@@ -71,21 +72,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     public static MyApplication application;
 
     public static MusicPlayService mService;
+    public static List<MusicInfo> songs;
 
-    // (0~4对应SlidingAdapter的position，不可更改)
-    public static final int SLIDING_MENU_SCAN = 0;// 侧滑->扫描歌曲
-    public static final int SLIDING_MENU_ALL = 1;// 侧滑->全部歌曲
-    public static final int SLIDING_MENU_FAVORITE = 2;// 侧滑->我的最爱
-    public static final int SLIDING_MENU_FOLDER = 3;// 侧滑->文件夹
-    public static final int SLIDING_MENU_EXIT = 4;// 侧滑->退出程序
-    public static final int SLIDING_MENU_FOLDER_LIST = 5;// 侧滑->文件夹->文件夹列表
-
-    public static final int DIALOG_DISMISS = 0;// 对话框消失
-    public static final int DIALOG_SCAN = 1;// 扫描对话框
-    public static final int DIALOG_MENU_REMOVE = 2;// 歌曲列表移除对话框
-    public static final int DIALOG_MENU_DELETE = 3;// 歌曲列表提示删除对话框
-    public static final int DIALOG_MENU_INFO = 4;// 歌曲详情对话框
-    public static final int DIALOG_DELETE = 5;// 歌曲删除对话框
 
     public static final String PREFERENCES_NAME = "settings";// SharedPreferences名称
     public static final String PREFERENCES_MODE = "mode";// 存储播放模式
@@ -94,38 +82,24 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     public static final String PREFERENCES_LYRIC = "lyric";// 存储歌词高亮颜色
 
     public static final String BROADCAST_ACTION_SCAN = "com.cwd.cmeplayer.action.scan";// 扫描广播标志
-    public static final String BROADCAST_ACTION_MENU = "com.cwd.cmeplayer.action.menu";// 弹出菜单广播标志
-    public static final String BROADCAST_ACTION_FAVORITE = "com.cwd.cmeplayer.action.favorite";// 喜爱广播标志
-    public static final String BROADCAST_ACTION_EXIT = "com.cwd.cmeplayer.action.exit";// 退出程序广播标志
-    public static final String BROADCAST_INTENT_PAGE = "com.cwd.cmeplayer.intent.page";// 页面状态
-    public static final String BROADCAST_INTENT_POSITION = "com.cwd.cmeplayer.intent.position";// 歌曲索引
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        regist();//注册广播
         application = (MyApplication) getApplication();
 
-        application.setmService(mService);
+        if (mService == null) {
+            mService = new MusicPlayService();
+            application.setmService(mService);
+            Log.e("11", "d222d");
+        } else {
+            mService = application.getmService();
+            application.setmService(mService);
+        }
 
-//        if (mService==null) {
-//            mService = new MusicPlayService();
-//
-//            Log.e("11","d222d");
-//        }else {
-////            mService.s
-////            MediaPlayer mediaPlayer =mService.getmMediaPlayer();
-////            application.setmService(mService);
-//            Log.e("11","dd");
-//        }
-
-
-        musicReceiver = new MusicReceiver();
-        //注册广播
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UPDATE_ACTION);
-        registerReceiver(musicReceiver, intentFilter);
 
         // 初始化各种控件
         initViews();
@@ -139,17 +113,14 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        Intent intent = new Intent(MusicPlayService.BROADCAST_ACTION_SERVICE);
-//        intent.putExtra(MusicPlayService.INTENT_ACTIVITY,
-//                MusicPlayService.ACTIVITY_MAIN);
-//        sendBroadcast(intent);
-//        application.setmService(mService);
-
+    private void regist() {
+        musicReceiver = new MusicReceiver();
+        //注册广播
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_ACTION);
+        registerReceiver(musicReceiver, intentFilter);
     }
+
 
     private void initData() {
 
@@ -174,6 +145,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
     }
 
+
     private void configViews() {
 
         // 设置显示Toolbar
@@ -194,14 +166,10 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
                     id_header_name.setText(userinfo.getUser_name().toString());
                     signature.setText(userinfo.getUser_id().toString());
-                    if (userinfo.getUser_img()!=null){
-                        BitmapFactory.Options option = new BitmapFactory.Options();
-                        // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
-                        option.inSampleSize = 1;
-                        // 根据图片的SDCard路径读出Bitmap
-                        Bitmap bm = BitmapFactory.decodeFile(userinfo.getUser_img(), option);
-                        id_header_face.setImageBitmap(bm);
 
+                    if (userinfo.getUser_img() != null) {
+                        String path = userinfo.getUser_img();
+                        id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
                     }
 
                     UserStatus.saveuserstatus(MyActivity.this, true);
@@ -294,6 +262,11 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                         Intent it = new Intent(getApplicationContext(), SettingsActivity.class);
                         startActivity(it);
                         break;
+                    case R.id.nav_menu_exit://退出程序
+                        close();
+                        unregisterReceiver(musicReceiver);
+                        MyActivity.this.finish();
+                        break;
                     case R.id.nav_menu_scan:
                         Intent intent1 = new Intent(getApplicationContext(), ScanActivity.class);
                         startActivity(intent1);
@@ -341,10 +314,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             startActivityForResult(it, 1);
             return true;
         }
-        if (id == R.id.action_share) {
-
-            return true;
-        }
         if (id == R.id.action_search) {
             Intent it3 = new Intent(this, SearchActivity.class);
             startActivity(it3);
@@ -373,17 +342,26 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            close();
-            this.finish();
+//            close();
+//            this.finish();
+//            return true;
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
     private void close() {
+
         if (mService != null) {
+            mService.mMediaPlayer.stop();
+            mService.mMediaPlayer.release();
             mService.stopSelf();
         }
+
     }
 
     @Override
@@ -409,8 +387,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 dynamic.setComment(0);
                 dynamic.setContent(data.getStringExtra("content"));
                 dynamic.setUser(userinfo);
-             //   dynamic = (Dynamic) data.getSerializableExtra("comment");
-                MyFragment.mdatas.add(0,dynamic);
+                //   dynamic = (Dynamic) data.getSerializableExtra("comment");
+                MyFragment.mdatas.add(0, dynamic);
                 MyFragment.mRecyclerViewAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(1);
                 Log.e("-----", dynamic.getContent());
@@ -468,17 +446,16 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             String artist = intent.getStringExtra("artist");
             String pic = intent.getStringExtra("pic");
             if (current >= 0) {
-                Log.e("==",pic+"");
-                if (update==0)
-                application.setmService(mService);
+                Log.e("==", pic + "");
                 MusicFragment.initBackGround(getApplicationContext(), pic);
                 MusicFragment.song_name.setText(name);
                 MusicFragment.singer_name.setText(artist);
+
             }
             switch (update) {
                 case 0:
 
-                   // MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
+                    // MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
                     break;
                 case 1:
                     MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_pause);

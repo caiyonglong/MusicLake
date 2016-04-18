@@ -216,6 +216,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
                     mService.setSongs(listinfo);
                     mService.setCurrentListItme(position);
                     mService.playMusic(listinfo.get(position).getPath());
+                    MyActivity.application.setmService(mService);
                 }
             });
 

@@ -1,48 +1,42 @@
 package com.cyl.music_hnust;
 
-import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
-import com.cyl.music_hnust.utils.ToastUtil;
-import com.cyl.music_hnust.view.RoundedImageView;
-import com.cyl.music_hnust.view.SelectPicPopupWindow;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Map;
+import java.io.FileNotFoundException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by trumi on 16-3-2.
  */
-public class UserCenterMainAcivity extends AppCompatActivity {
+public class UserCenterMainAcivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView user_name;
     private TextView user_num;
@@ -50,7 +44,22 @@ public class UserCenterMainAcivity extends AppCompatActivity {
     private TextView user_class;
     private TextView user_major;
     private TextView user_logout;
-    private RoundedImageView fbtn_head;
+
+    private ImageView head;
+//    private LinearLayout ll;
+
+    private PopupWindow popWindow;
+    private LayoutInflater layoutInflater;
+    private TextView photograph,albums;
+    private LinearLayout cancel;
+
+    public static final int PHOTOZOOM = 0; // 相册/拍照
+    public static final int PHOTOTAKE = 1; // 相册/拍照
+    public static final int IMAGE_COMPLETE = 2; // 结果
+    public static final int CROPREQCODE = 3; // 截取
+    private String photoSavePath;//保存路径
+    private String photoSaveName;//图pian名
+    private String path;//图片全路径
 
 
     @Override
@@ -69,11 +78,21 @@ public class UserCenterMainAcivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //  getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        File file = new File(Environment.getExternalStorageDirectory(), "hkmusic/cache");
+        if (!file.exists())
+            file.mkdirs();
+        photoSavePath=Environment.getExternalStorageDirectory()+"/hkmusic/cache/";
+        photoSaveName =System.currentTimeMillis()+ ".png";
+
         initView();
 
         //设置工具栏标题
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("个人中心");
+
+
 
 
         User userinfo = UserStatus.getUserInfo(this);
@@ -83,6 +102,10 @@ public class UserCenterMainAcivity extends AppCompatActivity {
             user_departments.setText(userinfo.getUser_college());
             user_class.setText(userinfo.getUser_class());
             user_major.setText(userinfo.getUser_major());
+            if (userinfo.getUser_img()!=null){
+                path = userinfo.getUser_img();
+                head.setImageBitmap(getLoacalBitmap(path));
+            }
         }
 
         user_logout.setOnClickListener(new View.OnClickListener() {
@@ -115,17 +138,8 @@ public class UserCenterMainAcivity extends AppCompatActivity {
             }
         });
 
-        fbtn_head.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //实例化SelectPicPopupWindow
-                menuWindow = new SelectPicPopupWindow(UserCenterMainAcivity.this, itemsOnClick);
-                //显示窗口
-                menuWindow.showAtLocation(UserCenterMainAcivity.this.findViewById(R.id.main_content),
-                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-                //设置layout在PopupWindow中显示的位置
-            }
-        });
+
+
 
 
     }
@@ -156,191 +170,127 @@ public class UserCenterMainAcivity extends AppCompatActivity {
         user_departments = (TextView) findViewById(R.id.usercenter_departments);
         user_num = (TextView) findViewById(R.id.usercenter_num);
         user_logout = (TextView) findViewById(R.id.usercenter_logout);
-        fbtn_head = (RoundedImageView) findViewById(R.id.fbtn_head);
-
-        User userinfo =UserStatus.getUserInfo(this);
-        if (userinfo.getUser_img()!=null){
-            BitmapFactory.Options option = new BitmapFactory.Options();
-            // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
-            option.inSampleSize = 1;
-            // 根据图片的SDCard路径读出Bitmap
-            Log.e("userinfo.getUser_img()",userinfo.getUser_img()+"");
-            Bitmap bm = BitmapFactory.decodeFile(userinfo.getUser_img(), option);
-            fbtn_head.setImageBitmap(bm);
-
-        }
-
+        head = (ImageView) findViewById(R.id.head);
+        head.setOnClickListener(this);
     }
 
-
-    public static SelectPicPopupWindow menuWindow;
-    //为弹出窗口实现监听类
-    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
-
-        public void onClick(View v) {
-            menuWindow.dismiss();
-            switch (v.getId()) {
-                case R.id.btn_take_photo:
-                    takePhoto();
-                    break;
-                case R.id.btn_pick_photo:
-                    pickPhoto();
-                default:
-                    break;
-            }
-
-
-        }
-
-    };
-
-    /**
-     * 拍照获取图片
-     */
-    private void takePhoto() {
-        // 执行拍照前，应该先判断SD卡是否存在
-        String SDState = Environment.getExternalStorageState();
-        if (SDState.equals(Environment.MEDIA_MOUNTED)) {
-
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            /***
-             * 需要说明一下，以下操作使用照相机拍照，拍照后的图片会存放在相册中的
-             * 这里使用的这种方式有一个好处就是获取的图片是拍照后的原图
-             * 如果不使用ContentValues存放照片路径的话，拍照后获取的图片为缩略图不清晰
-             */
-            ContentValues values = new ContentValues();
-            photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(intent, 0);
-        } else {
-            Toast.makeText(this, "内存卡不存在", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /***
-     * 从相册中取图片
-     */
-    private void pickPhoto() {
-        Intent intent = new Intent();
-        // 如果要限制上传到服务器的图片类型时可以直接写如：image/jpeg 、 image/png等的类型
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
-    }
 
     @Override
+    public void onClick(View arg0) {
+        switch (arg0.getId()) {
+            case R.id.head:
+                showPopupWindow(head);
+                break;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void showPopupWindow(View parent){
+        if (popWindow == null) {
+            View view = layoutInflater.inflate(R.layout.pop_image_select,null);
+            popWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT,true);
+            initPop(view);
+        }
+        popWindow.setAnimationStyle(android.R.style.Animation_InputMethod);
+        popWindow.setFocusable(true);
+        popWindow.setOutsideTouchable(true);
+        popWindow.setBackgroundDrawable(new BitmapDrawable());
+        popWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+    }
+
+    public void initPop(View view){
+        photograph = (TextView) view.findViewById(R.id.photograph);//拍照
+        albums = (TextView) view.findViewById(R.id.albums);//相册
+        cancel= (LinearLayout) view.findViewById(R.id.cancel);//取消
+        photograph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                popWindow.dismiss();
+                photoSaveName =String.valueOf(System.currentTimeMillis()) + ".png";
+                Uri imageUri = null;
+                Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                imageUri = Uri.fromFile(new File(photoSavePath,photoSaveName));
+                openCameraIntent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
+                openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(openCameraIntent, PHOTOTAKE);
+            }
+        });
+        albums.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                popWindow.dismiss();
+                Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                openAlbumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(openAlbumIntent, PHOTOZOOM);
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                popWindow.dismiss();
+
+            }
+        });
+    }
+
+    /**
+     * 图片选择及拍照结果
+     */
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // 点击取消按钮
-        if (resultCode == RESULT_CANCELED) {
+        if (resultCode != RESULT_OK) {
             return;
         }
-
-        // 可以使用同一个方法，这里分开写为了防止以后扩展不同的需求
+        Uri uri = null;
         switch (requestCode) {
-            case 1:// 如果是直接从相册获取
-                doPhoto(requestCode, data);
+            case PHOTOZOOM://相册
+                if (data==null) {
+                    return;
+                }
+                uri = data.getData();
+                String[] proj = { MediaStore.Images.Media.DATA };
+                Cursor cursor = managedQuery(uri, proj, null, null,null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                path = cursor.getString(column_index);// 图片在的路径
+                Intent intent3=new Intent(UserCenterMainAcivity.this, ClipActivity.class);
+                intent3.putExtra("path", path);
+                startActivityForResult(intent3, IMAGE_COMPLETE);
                 break;
-            case 0:// 如果是调用相机拍照时
-                doPhoto(requestCode, data);
+            case PHOTOTAKE://拍照
+                path=photoSavePath+photoSaveName;
+                uri = Uri.fromFile(new File(path));
+                Intent intent2=new Intent(UserCenterMainAcivity.this, ClipActivity.class);
+                intent2.putExtra("path", path);
+                startActivityForResult(intent2, IMAGE_COMPLETE);
+                break;
+            case IMAGE_COMPLETE:
+                final String temppath = data.getStringExtra("path");
+                User user =UserStatus.getUserInfo(getApplicationContext());
+                user.setUser_img(temppath);
+                UserStatus.savaUserInfo(getApplicationContext(),user);
+                head.setImageBitmap(getLoacalBitmap(temppath));
+                break;
+            default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
-     * 选择图片后，获取图片的路径
-     *
-     * @param requestCode
-     * @param data
+     * @param url
+     * @return
      */
-    Uri photoUri;
-    String picPath;
-
-    private void doPhoto(int requestCode, Intent data) {
-
-        // 从相册取图片，有些手机有异常情况，请注意
-        if (requestCode == 1) {
-            if (data == null) {
-                Toast.makeText(this, "选择图片文件路径出错", Toast.LENGTH_LONG).show();
-                return;
-            }
-            photoUri = data.getData();
-            if (photoUri == null) {
-                Toast.makeText(this, "选择图片文件路径出错", Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-
-        String[] pojo = {MediaStore.MediaColumns.DATA};
-        // The method managedQuery() from the type Activity is deprecated
-        //Cursor cursor = managedQuery(photoUri, pojo, null, null, null);
-        Cursor cursor = getApplicationContext().getContentResolver().query(photoUri, pojo, null, null, null);
-        if (cursor != null) {
-            int columnIndex = cursor.getColumnIndexOrThrow(pojo[0]);
-            cursor.moveToFirst();
-            picPath = cursor.getString(columnIndex);
-
-
-            // 4.0以上的版本会自动关闭 (4.0--14;; 4.0.3--15)
-            if (Build.VERSION.SDK_INT < 14) {
-                cursor.close();
-            }
-        }
-
-        // 如果图片符合要求将其上传到服务器
-        if (picPath != null && (picPath.endsWith(".png") ||
-                picPath.endsWith(".PNG") ||
-                picPath.endsWith(".jpg") ||
-                picPath.endsWith(".JPG"))) {
-
-
-            BitmapFactory.Options option = new BitmapFactory.Options();
-            // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
-            option.inSampleSize = 1;
-            // 根据图片的SDCard路径读出Bitmap
-            Bitmap bm = BitmapFactory.decodeFile(picPath, option);
-            Log.e("pic", picPath + "===");
-            saveImg(picPath);
-            // 显示在图片控件上
-            fbtn_head.setImageBitmap(bm);
-
-//            pd = ProgressDialog.show(getApplicationContext(), null," 正在上传图片，请稍候...");
-//            new Thread(uploadImageRunnable).start();
-        } else {
-            Toast.makeText(this, "请选择png或jpg格式的文件", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    private void saveImg(String picPath) {
-        File file = new File(picPath);
-        Log.e("abd",file.getPath() + "=="+file.getName()+"");
-       // String end = file.getName();
-        CopySdcardFile(file.getPath(),getApplicationContext().getFilesDir()+file.getName());
-
-        User userinfo =UserStatus.getUserInfo(this);
-        userinfo.setUser_img(getApplicationContext().getFilesDir()+file.getName());
-        UserStatus.savaUserInfo(this,userinfo);
-
-        Log.e("abd",getApplicationContext().getFilesDir()+file.getName() + "=="+file.getName()+"");
-    }
-
-    //文件拷贝
-    //要复制的目录下的所有非子目录(文件夹)文件拷贝
-    public int CopySdcardFile(String fromFile, String toFile) {
+    public static Bitmap getLoacalBitmap(String url) {
         try {
-            InputStream fosfrom = new FileInputStream(fromFile);
-            OutputStream fosto = new FileOutputStream(toFile);
-            byte bt[] = new byte[1024];
-            int c;
-            while ((c = fosfrom.read(bt)) > 0) {
-                fosto.write(bt, 0, c);
-            }
-            fosfrom.close();
-            fosto.close();
-            return 0;
-        } catch (Exception ex) {
-            return -1;
+            FileInputStream fis = new FileInputStream(url);
+            return BitmapFactory.decodeStream(fis);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
     }
+
+
 }

@@ -139,6 +139,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                 mService.setCurrentListItme(position);
                 mService.setSongs(mDatas);
                 mService.playMusic(mDatas.get(position).getPath());
+                MyActivity.application.setmService(mService);
                 break;
             case R.id.list_black_btn:
                 singleChoice(view);

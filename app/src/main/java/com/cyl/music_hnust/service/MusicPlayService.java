@@ -2,7 +2,6 @@ package com.cyl.music_hnust.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.TargetApi;
@@ -20,18 +19,13 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.animation.AnimationUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.MyActivity;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.fragment.MusicListFragment;
-import com.cyl.music_hnust.lyric.LrcProcess;
-import com.cyl.music_hnust.lyric.LrcView;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.RoundCorner;
@@ -43,12 +37,12 @@ public class MusicPlayService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private Context context;
     /* MediaPlayer对象 */
-    private MediaPlayer mMediaPlayer = null;
+    public MediaPlayer mMediaPlayer = null;
     private int currentTime = 0;//歌曲播放进度
     private int currentListItme = -1;//当前播放第几首歌
     private List<MusicInfo> songs;//要播放的歌曲集合
-    public LrcProcess mLrcProcess;
-    public LrcView mLrcView;
+//    public LrcProcess mLrcProcess;
+//    public LrcView mLrcView;
     public Notification notif;
     NotificationManager nm;
 
@@ -174,6 +168,7 @@ public class MusicPlayService extends Service {
     public void nextMusic() {
         if (++currentListItme >= songs.size()) {
             currentListItme = 0;
+//            Log.e()
         }
         if (songs.get(currentListItme).getPath()!=null) {
             playMusic(songs.get(currentListItme).getPath());
@@ -287,10 +282,12 @@ public class MusicPlayService extends Service {
 //        notif = new Notification(R.drawable.notificaplay, m.getName(),
 //                System.currentTimeMillis());
 //
-        Log.e("notify","notify");
         notif.flags = Notification.FLAG_ONGOING_EVENT;
         notif.contentView=rv;
-        nm.notify(0x7f090000,notif);
+        startForeground(1,notif);
+        Log.e("notify","notify");
+//
+//        nm.notify(0x7f090000,notif);
 
 //        notif.setLatestEventInfo(this, from, message, contentIntent);
 //        notif.contentView = rv;
@@ -393,11 +390,6 @@ public class MusicPlayService extends Service {
         public void onReceive(Context context, Intent intent) {
             String str = intent.getAction();
             int control = intent.getIntExtra("control",-1);
-
-            if (str.equals(BROADCAST_ACTION_SERVICE))
-            {
-                control =0;
-            }
             Log.e("Action",str);
             Log.e("ddd",control+"");
             switch (control){

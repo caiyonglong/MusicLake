@@ -11,7 +11,7 @@ SwipeRefreshLayout是伟大的Google在v4包中给出的下拉刷新组件。
     android:id="@+id/id_swiperefreshlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/main_white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <!--
