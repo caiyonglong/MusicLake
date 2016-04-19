@@ -274,6 +274,23 @@ public class JsonParsing {
         }
         return user;
     }
+    public static String getUserimg(String json) {
+
+        String imgurl = null;
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray("userinfo");
+            JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+            imgurl = jsonObject1.getString("user_img");    //获取对象中的一个值
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+            return imgurl;
+        }
+        return imgurl;
+    }
+
 
 
 }

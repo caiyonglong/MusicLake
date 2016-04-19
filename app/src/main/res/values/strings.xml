@@ -44,9 +44,12 @@
     <string name="info_network_setting">网络设置</string>
     <string name="info_network_setting_detail">设置网络请求权限</string>
 
+    <string name="info_music_mode_setting">音乐设置</string>
+    <string name="info_music_mode">播放模式</string>
     <!-- Strings related to Settings -->
 
     <string name="pref_title_social_recommendations">是否只显示昵称</string>
+    <string name="pref_title_social">隐藏真实姓名</string>
 
 
     <string name="pref_title_display_name">设置昵称</string>

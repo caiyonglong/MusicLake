@@ -1,9 +1,14 @@
 package com.cyl.music_hnust;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -24,10 +29,22 @@ import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpByGet;
+import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -47,12 +64,23 @@ public class LoginActivity extends AppCompatActivity {
     Button mEmailSignInButton;
     private ImageButton back;
     private RoundedImageView User_Img;
+    private static ProgressDialog loadingDialog;
+    private static Context mContext;
+    private String urlpath = "http://119.29.27.116/hcyl/music_BBS/operate.php?GetUserinfo&user_id=";
+    private String imgpath = "http://119.29.27.116/hcyl/music_BBS";
+    private static String tempPath =
+            Environment.getExternalStorageDirectory()+"/hkmusic/cache"
+                    + "/temp.png";
+    private boolean LoginSuccess = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        loadingDialog=new ProgressDialog(this);
+        loadingDialog.setTitle("登录中...");
+        mContext =getApplicationContext();
 
 
         // Set up the login form.
@@ -146,16 +174,53 @@ public class LoginActivity extends AppCompatActivity {
             mEmailSignInButton.setText("登录");
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
 
-            // Intent intent =new Intent(this,TestSlindingMenu.class);
+//            if (LoginSuccess){
+//                User user = UserStatus.getUserInfo(getApplicationContext());
+//                if (user.getUser_id()!=null){
+//
+//                    try {
+//                        HttpUtil.get(urlpath + user.getUser_id(), new AsyncHttpResponseHandler() {
+//                            @Override
+//                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                                try {
+//                                    json  = new String(responseBody,"utf-8");
+//
+//                                } catch (UnsupportedEncodingException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//                                json=null;
+//                            }
+//                        });
+//                        if (json!=null) {
+//                            downloadFile(imgpath + JsonParsing.getUserimg(json));
+//                            Log.e("tttt", json + "\n" + imgpath + JsonParsing.getUserimg(json));
+//                            File file = new File(tempPath);
+//                            if (file.exists()) {
+//                                user.setUser_img(tempPath);
+//                                UserStatus.savaUserInfo(getApplicationContext(), user);
+//                                finish();
+//                            }
+//                        }
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }
+
         }
     }
 
+
+    String json=null;
     private boolean isEmailValid(String username) {
         //TODO: Replace this with your own logic
         return username.length() > 9;
@@ -166,20 +231,7 @@ public class LoginActivity extends AppCompatActivity {
         return password.length() > 4;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        } else {
-        }
-    }
 
 
     private interface ProfileQuery {
@@ -212,12 +264,12 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+//            try {
+//                // Simulate network access.
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                return false;
+//            }
             login_status = "网络请求失败";
             userinfo = HttpByGet.LoginByGet(mUsername, mPassword, 1, null);
             Log.e("result ", userinfo + "");
@@ -232,8 +284,10 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("status", status);
                 if ("success".equals(status)) {
                     login_status = "登录成功";
+
                     User userinfo3 = JsonParsing.Userinfo(userinfo);
                     String resultcode = HttpByGet.LoginByGet(mUsername, mPassword, 2, userinfo3);
+
                     Log.e("resultcode", resultcode);
                 } else if ("fail".equals(status)) {
                     login_status = "帐号不存在或密码错误";
@@ -248,13 +302,15 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
+
             if (success) {
                 if ("登录成功".equals(login_status)) {
                     User userinfo2 = JsonParsing.Userinfo(userinfo);
                     //   map.put("pw", mPassword);
+                   // userinfo2.setUser_img(tempPath);
                     UserStatus.savaUserInfo(getApplicationContext(), userinfo2);
-                    finish();
+                    LoginSuccess = true;
+                    loadingDialog.dismiss();
                 } else {
                     mEmailSignInButton.setText("登录");
                     Toast.makeText(getApplicationContext(), login_status, Toast.LENGTH_SHORT).show();
@@ -266,10 +322,102 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog.show();
+        }
+
+        @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
         }
     }
 
+    /**
+     * @param url
+     *            要下载的文件URL
+     * @throws Exception
+     */
+    public static void downloadFile(String url) throws Exception {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        // 指定文件类型
+        String[] allowedContentTypes = new String[] { "image/png", "image/jpeg" };
+        // 获取二进制数据如图片和其他文件
+        client.get(url, new BinaryHttpResponseHandler(allowedContentTypes) {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers,
+                                  byte[] binaryData) {
+
+
+                // TODO Auto-generated method stub
+                // 下载成功后需要做的工作
+           //     progress.setProgress(0);
+                //
+                Log.e("binaryData:", "共下载了：" + binaryData.length);
+                //
+                Bitmap bmp = BitmapFactory.decodeByteArray(binaryData, 0,
+                        binaryData.length);
+
+                File file = new File(tempPath);
+                // 压缩格式
+                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+                // 压缩比例
+                int quality = 100;
+                try {
+                    // 若存在则删除
+                    if (file.exists())
+                        file.delete();
+                    // 创建文件
+                    file.createNewFile();
+                    //
+                    OutputStream stream = new FileOutputStream(file);
+                    // 压缩输出
+                    bmp.compress(format, quality, stream);
+                    // 关闭
+                    stream.close();
+                    //
+                    Toast.makeText(mContext, "下载成功\n" + tempPath,
+                            Toast.LENGTH_LONG).show();
+
+                    loadingDialog.dismiss();
+
+
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers,
+                                  byte[] binaryData, Throwable error) {
+
+                loadingDialog.dismiss();
+                // TODO Auto-generated method stub
+                Toast.makeText(mContext, "下载失败", Toast.LENGTH_LONG).show();
+            }
+
+//            @Override
+//            public void onProgress(int bytesWritten, int totalSize) {
+//                // TODO Auto-generated method stub
+//                super.onProgress(bytesWritten, totalSize);
+//                int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
+//                // 下载进度显示
+//                progress.setProgress(count);
+//                Log.e("下载 Progress>>>>>", bytesWritten + " / " + totalSize);
+//
+//            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // TODO Auto-generated method stub
+                super.onRetry(retryNo);
+                // 返回重试次数
+            }
+
+        });
+    }
 }

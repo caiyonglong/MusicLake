@@ -6,7 +6,9 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="secret_check"
-            android:title="@string/pref_title_social_recommendations" />
+            android:title="@string/pref_title_social_recommendations"
+            android:summary="@string/pref_title_social"
+            />
         <EditTextPreference
             android:dependency="secret_check"
             android:capitalize="words"
@@ -25,6 +27,20 @@
             android:defaultValue="true"
             android:key="wifi_switch"
             android:title="@string/pref_title_wifi" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/info_music_mode_setting">
+
+        <ListPreference
+            android:defaultValue="0"
+
+            android:entries="@array/info_music_mode"
+            android:entryValues="@array/info_music_mode_values"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:key="mode_list"
+            android:title="@string/info_music_mode" />
 
     </PreferenceCategory>
     <PreferenceCategory

@@ -63,7 +63,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private CommentRecyclerViewAdapter adapter;
     private FullyLinearLayoutManager mLayoutManager;
     private RequestQueue mRequestQueue;
-    private ImageLoader imageLoader ;
+    private ImageLoader imageLoader;
 
     private List<Comment> mDatas;
 
@@ -75,23 +75,29 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case 0:
-                    Toast.makeText(getApplicationContext(),"评论成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "评论成功", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
                     mDatas.clear();
-                    mDatas = (List<Comment>) msg.obj;
-                    Log.e("size",mDatas.size()+"");
-                    adapter.mDatas=mDatas;
+                    String response = msg.getData().getString("response");
+                    try {
+                        JSONObject dataJson = new JSONObject(response);
+                        mDatas = JsonParsing.getComment(dataJson);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("size", mDatas.size() + "");
+                    adapter.mDatas = mDatas;
                     adapter.notifyDataSetChanged();
                     break;
                 case 2:
                     String error_code = (String) msg.obj;
-                    Toast.makeText(getApplicationContext(),"评论失败,错误代码为"+error_code,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "评论失败,请检查网络是否正常", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     };
-
 
 
     @Override
@@ -111,24 +117,22 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-        Intent it =getIntent();
-        position = it.getIntExtra("position",-1)+"";
-        dynamic_id = it.getStringExtra("dynamic_id")+"";
+        Intent it = getIntent();
+        position = it.getIntExtra("position", -1) + "";
+        dynamic_id = it.getStringExtra("dynamic_id") + "";
 
-        mDatas =new ArrayList<>();
+        mDatas = new ArrayList<>();
 
         User userinfo = UserStatus.getUserInfo(getApplicationContext());
-        volley_StringRequest_GET(userinfo.getUser_id(),dynamic_id);
+        volley_StringRequest_GET(userinfo.getUser_id(), dynamic_id);
 
         Log.e("====", dynamic_id);
         initView();
         mLayoutManager = new FullyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        adapter = new CommentRecyclerViewAdapter(getApplicationContext(),mDatas);
+        adapter = new CommentRecyclerViewAdapter(getApplicationContext(), mDatas);
         comment_list.setAdapter(adapter);
 
         comment_list.setLayoutManager(mLayoutManager);
-
-
 
 
     }
@@ -138,8 +142,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         user_logo = (NetworkImageView) findViewById(R.id.user_logo);
         content_time = (TextView) findViewById(R.id.content_time);
         content_text = (TextView) findViewById(R.id.content_text);
-        item_action_comment = (TextView) findViewById(R.id.item_action_comment);
-        item_action_love = (TextView) findViewById(R.id.item_action_love);
+        item_action_comment = (TextView) findViewById(R.id.item_comment_num);
+        item_action_love = (TextView) findViewById(R.id.item_love_num);
         back = (ImageButton) findViewById(R.id.backImageButton);
 
         back.setOnClickListener(this);
@@ -156,21 +160,19 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
         content_text.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getContent());
         content_time.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getTime());
-        item_action_comment.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getComment()+"评论");
-        item_action_love.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getLove()+"赞");
+        item_action_comment.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getComment() + "评论");
+        item_action_love.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getLove() + "赞");
 
 
         comment_commit.setOnClickListener(this);
         loadmore.setOnClickListener(this);
 
 
-
-
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.backImageButton:
                 finish();
                 break;
@@ -181,7 +183,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     String datetime = Common.getDate(getApplicationContext());
 
                     User userinfo = UserStatus.getUserInfo(getApplicationContext());
-                    if (userinfo.getUser_name()!=null) {
+                    if (userinfo.getUser_name() != null) {
                         Comment comment = new Comment();
 
                         comment.setUser(userinfo);
@@ -192,10 +194,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         adapter.mDatas.add(comment);
                         adapter.notifyDataSetChanged();
 
-                        volley_Request_GET(userinfo.getUser_id(),dynamic_id,content_comment);
+                        volley_Request_GET(userinfo.getUser_id(), dynamic_id, content_comment);
                         comment_content.setText("");
-                    }else {
-                        Intent it = new Intent(this,LoginActivity.class);
+                    } else {
+                        Intent it = new Intent(this, LoginActivity.class);
                         startActivity(it);
                     }
 
@@ -205,12 +207,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
-    /**http://hcyl.sinaapp.com/music_BBS/operate.php?user_id=5&&newComment&&secret_id=18&&comment=内容
+
+    /**
+     * http://hcyl.sinaapp.com/music_BBS/operate.php?user_id=5&&newComment&&secret_id=18&&comment=内容
      * 利用StringRequest实现Get请求
      */
-    private void volley_StringRequest_GET(String user_id,String secret_id) {
+    private void volley_StringRequest_GET(String user_id, String secret_id) {
 
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id="+user_id+"&&showSecretComment&&secret_id="+secret_id;
+        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&showSecretComment&&secret_id=" + secret_id;
         // 1 创建RequestQueue对象
 
         // 2 创建StringRequest对象
@@ -222,16 +226,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         // VolleyLog.v("Response:%n %s", response.toString());
                         Log.i("log", response.toString());
 
-                        try {
-                            mDatas = new ArrayList<>();
-                            mDatas= JsonParsing.getComment(response);
-                            Message message =new Message();
-                            message.what=1;
-                            message.obj = mDatas;
-                            handler.sendMessage(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putString("response", response.toString());
+                        Message message = new Message();
+                        message.what = 1;
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+
 
                     }
                 }, new Response.ErrorListener() {
@@ -245,10 +246,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         // 3 将StringRequest添加到RequestQueue
         mRequestQueue.add(jsonObjectRequest);
     }
-    private void volley_Request_GET(String user_id,String secret_id,String comment) {
+
+    private void volley_Request_GET(String user_id, String secret_id, String comment) {
 
 
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id="+user_id+"&&newComment&&secret_id="+secret_id+"&&comment="+comment;
+        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&newComment&&secret_id=" + secret_id + "&&comment=" + comment;
         // 1 创建RequestQueue对象
 
         // 2 创建StringRequest对象
@@ -257,16 +259,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.e("jsonobject",response.toString());
+                        Log.e("jsonobject", response.toString());
                         try {
-                            int error_code= response.getInt("error");
-                            Log.e("error_code",error_code+"");
-                            if (error_code==-1){
+                            int error_code = response.getInt("error");
+                            Log.e("error_code", error_code + "");
+                            if (error_code == -1) {
                                 handler.sendEmptyMessage(0);
-                            }else {
-                                Message msg= new Message();
-                                msg.what =2;
-                                msg.obj =error_code;
+                            } else {
+                                Message msg = new Message();
+                                msg.what = 2;
+                                msg.obj = error_code;
                                 handler.sendMessage(msg);
                             }
                         } catch (JSONException e) {

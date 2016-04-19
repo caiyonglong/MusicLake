@@ -6,12 +6,6 @@ import android.util.Log;
 
 import com.cyl.music_hnust.bean.User;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,34 +21,40 @@ public class HttpByGet {
         String json = "";
         try {
             // 新建HttpGet对象
-            HttpGet httpGet = new HttpGet(path);
+            URL url = new URL(path);
+
             // 获取HttpClient对象
-            HttpClient httpClient = new DefaultHttpClient();
-            // 获取HttpResponse实例
-            HttpResponse httpResp = httpClient.execute(httpGet);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+
             // 判断是够请求成功
-            if (httpResp.getStatusLine().getStatusCode() == 200) {
+            if (conn.getResponseCode() == 200) {
                 // 获取返回的数据
 
-                json = EntityUtils.toString(httpResp.getEntity(), "GBK");
+                InputStream is = conn.getInputStream();
+                json = readInputStream(is);
+                //	json = EntityUtils.toString(httpResp.getEntity(), "GBK");
 
 
                 Log.e(TAG_GET, "HttpGet方式请求成功，返回数据如下：");
                 //	JsonParsing.getmusicId(json);
                 //	Log.e(TAG_GET, result);
             } else {
+                json="ERROR";
                 Log.e(TAG_GET, "HttpGet方式请求失败");
             }
         } catch (IOException e) {
+            json="ERROR";
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return json;
+
     }
 
     // HttpURLConnection
-    public static String requestByHttpGet(String key) {
-        String path = "http://suen.pw/interface/music/api.php?operate=search&&key=" + key;
+    public static String requestByHttpGet(String path) {
         String json = "";
         try {
             // 新建HttpGet对象

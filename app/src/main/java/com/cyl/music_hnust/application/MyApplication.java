@@ -15,9 +15,10 @@ import com.cyl.music_hnust.service.MusicPlayService;
 
 public class MyApplication extends Application {
 	MusicPlayService mService;
+	public Intent intent;
 	static RequestQueue mRequestQueue;
 
-	private ServiceConnection mConnection = new ServiceConnection() {
+	public ServiceConnection mConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			mService = ((MusicPlayService.LocalBinder) service).getService();//用绑定方法启动service，就是从这里绑定并得到service，然后就可以操作service了
@@ -35,7 +36,7 @@ public class MyApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-		Intent intent = new Intent(this, MusicPlayService.class);
+		intent = new Intent(this, MusicPlayService.class);
 		startService(intent);
 		System.out.println("intent?"+(null == intent));
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -51,5 +52,10 @@ public class MyApplication extends Application {
 
 	public  RequestQueue getHttpQueues() {
 		return mRequestQueue;
+	}
+
+	@Override
+	public void unbindService(ServiceConnection conn) {
+		super.unbindService(conn);
 	}
 }

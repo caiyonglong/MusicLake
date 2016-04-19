@@ -79,7 +79,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         WeakReference<Activity> mActivityReference;
 
         MyHandler(Activity activity) {
-            mActivityReference= new WeakReference<Activity>(activity);
+            mActivityReference = new WeakReference<Activity>(activity);
         }
 
         @Override
@@ -91,7 +91,15 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
                         break;
                     case 1:
                         dissmissProgressDialog();
-                        mydatas = (List<Location>) msg.obj;
+                        Bundle bundle = new Bundle();
+                        bundle =msg.getData();
+                        try {
+                            JSONObject jsonObject = new JSONObject(bundle.getString("response"));
+                            mydatas = JsonParsing.getLocation(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         adapter.myDatas = mydatas;
                         adapter.notifyDataSetChanged();
                         break;
@@ -154,8 +162,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-    private void getdata(){
+    private void getdata() {
         User user = UserStatus.getUserInfo(getApplicationContext());
         showProgressDialog();
 
@@ -178,6 +185,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
             ToastUtil.show(getApplicationContext(), "暂未登录");
         }
     }
+
     private void initdata() {
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
     }
@@ -335,29 +343,27 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
                     public void onResponse(JSONObject response) {
                         // VolleyLog.v("Response:%n %s", response.toString());
                         Log.i("log", response.toString());
-                        try {
-                            List<Location> mdatas1 = new ArrayList<>();
-
-                            Message message = new Message();
-                            message.what = requestcode;
-                            if (requestcode == 1) {
-
-                                //ToastUtil.show(getApplicationContext(),response.toString()+"");
-
-                                mdatas1 = JsonParsing.getLocation(response);
-                                message.obj = mdatas1;
-
-                                ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
 
 
-                            } else {
-                                //  ToastUtil.show(getApplicationContext(), response.toString() + "");
+                        Message message = new Message();
+                        message.what = requestcode;
+                        if (requestcode == 1) {
 
-                            }
-                            handler.sendMessage(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            //ToastUtil.show(getApplicationContext(),response.toString()+"");
+                            Bundle bundle = new Bundle();
+                            bundle.putString("response", response.toString());
+                            message.setData(bundle);
+
+
+                            //  ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
+
+
+                        } else {
+                            //  ToastUtil.show(getApplicationContext(), response.toString() + "");
+
                         }
+                        handler.sendMessage(message);
+
 
                     }
                 }, new Response.ErrorListener() {

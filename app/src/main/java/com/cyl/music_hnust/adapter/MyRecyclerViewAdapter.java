@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -75,11 +76,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.parent = parent;
         this.viewType = viewType;
         if (viewType == TYPE_ITEM) {
-            View mView = mLayoutInflater.inflate(R.layout.item_main, parent, false);
+            View mView = mLayoutInflater.inflate(R.layout.item_main,parent, false);
+//            mView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                    ViewGroup.LayoutParams.WRAP_CONTENT));
             MyRecyclerViewHolder mViewHolder = new MyRecyclerViewHolder(mView);
             return mViewHolder;
+
         } else if (viewType == TYPE_FOOTER) {
-            View mView = mLayoutInflater.inflate(R.layout.item_foot, parent, false);
+            View mView = mLayoutInflater.inflate(R.layout.item_foot,parent, false);
+//            mView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                    ViewGroup.LayoutParams.WRAP_CONTENT));
             FooterViewHolder footerViewHolder = new FooterViewHolder(mView);
             return footerViewHolder;
         }
@@ -91,10 +97,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (holder instanceof MyRecyclerViewHolder) {
             final MyRecyclerViewHolder holder1 = (MyRecyclerViewHolder) holder;
             if (mOnItemClickListener != null) {
-                holder1.item_action_love_agree.setOnClickListener(new View.OnClickListener() {
+                holder1.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickListener.onItemClick(holder1.item_action_love_agree, position);
+                        mOnItemClickListener.onItemClick(holder1.container, position);
                     }
                 });
                 holder1.item_action_comment.setOnClickListener(new View.OnClickListener() {
@@ -120,25 +126,26 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder1.user_logo.setErrorImageResId(R.mipmap.user_icon_default_main);
             holder1.user_logo.setImageUrl(url_header+myDatas.get(position).getUser().getUser_img(), imageLoader);
 
-            if (myDatas.get(position).isMyLove()){
-                holder1.item_action_love_img.setImageResource(R.mipmap.ic_action_agree1);
-            }else {
-                holder1.item_action_love_img.setImageResource(R.mipmap.ic_action_agree);
-            }
-
-        } else if (holder instanceof FooterViewHolder) {
-            final FooterViewHolder hodler2 = (FooterViewHolder) holder;
-            if (mOnItemClickListener != null) {
-                hodler2.foot_text.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOnItemClickListener.onItemClick(hodler2.foot_text, position);
-                    }
-                });
-            }
-            hodler2.foot_text.setText(loadmore);
+//            if (myDatas.get(position).isMyLove()){
+//                holder1.item_action_love_img.setImageResource(R.mipmap.ic_action_agree1);
+//            }else {
+//                holder1.item_action_love_img.setImageResource(R.mipmap.ic_action_agree);
+//            }
 
         }
+//        else if (holder instanceof FooterViewHolder) {
+//            final FooterViewHolder hodler2 = (FooterViewHolder) holder;
+//            if (mOnItemClickListener != null) {
+//                hodler2.foot_text.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mOnItemClickListener.onItemClick(hodler2.foot_text, position);
+//                    }
+//                });
+//            }
+//            hodler2.foot_text.setText(loadmore);
+//
+//        }
     }
 
 
@@ -172,24 +179,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
 
         public TextView user_name;
+        public RelativeLayout container;
         public NetworkImageView user_logo;
         public TextView content_time;
         public TextView content_text;
         public TextView item_action_comment;
         public TextView item_action_love;
-        public ImageView item_action_love_img;
-        public LinearLayout item_action_love_agree;
+//        public LinearLayout item_action_love_agree;
 
         public MyRecyclerViewHolder(View itemView) {
             super(itemView);
+            container = (RelativeLayout) itemView.findViewById(R.id.container);
             user_name = (TextView) itemView.findViewById(R.id.user_name);
             user_logo = (NetworkImageView) itemView.findViewById(R.id.user_logo);
             content_time = (TextView) itemView.findViewById(R.id.content_time);
             content_text = (TextView) itemView.findViewById(R.id.content_text);
-            item_action_comment = (TextView) itemView.findViewById(R.id.item_action_comment);
-            item_action_love = (TextView) itemView.findViewById(R.id.item_action_love);
-            item_action_love_img = (ImageView) itemView.findViewById(R.id.item_action_love_img);
-            item_action_love_agree = (LinearLayout) itemView.findViewById(R.id.item_action_love_agree);
+            item_action_comment = (TextView) itemView.findViewById(R.id.item_comment_num);
+            item_action_love = (TextView) itemView.findViewById(R.id.item_love_num);
         }
     }
 }

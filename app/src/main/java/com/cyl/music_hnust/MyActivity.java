@@ -264,7 +264,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                         break;
                     case R.id.nav_menu_exit://退出程序
                         close();
-                        unregisterReceiver(musicReceiver);
                         MyActivity.this.finish();
                         break;
                     case R.id.nav_menu_scan:
@@ -355,13 +354,12 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
     private void close() {
-
-        if (mService != null) {
+        if (mService.mMediaPlayer!=null){
             mService.mMediaPlayer.stop();
-            mService.mMediaPlayer.release();
-            mService.stopSelf();
+            mService.mMediaPlayer = null;
         }
-
+        stopService(application.intent);
+        finish();
     }
 
     @Override

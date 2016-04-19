@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
+import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,7 @@ import java.util.List;
  * Created by 永龙 on 2016/3/12.
  */
 public class PlayerActivity extends AppCompatActivity {
-    private ImageButton mFrontImageButton, mPauseImageButton,
+    private ImageButton mModeImageButton,mFrontImageButton, mPauseImageButton,
             mNextImageButton, mFavorImageButton, title_left;
     private ImageView page_icon, mIvBg;
     private TextView tv_songName, tv_singerName, tv_curcentTime, tv_allTime;
@@ -169,6 +172,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void initView() {
 
+        mModeImageButton = (ImageButton) findViewById(R.id.activity_player_ib_mode);
         mFrontImageButton = (ImageButton) findViewById(R.id.activity_player_ib_previous);
         mPauseImageButton = (ImageButton) findViewById(R.id.activity_player_ib_play);
         mNextImageButton = (ImageButton) findViewById(R.id.activity_player_ib_next);
@@ -187,6 +191,16 @@ public class PlayerActivity extends AppCompatActivity {
 
         viewpager_player = (ViewPager) findViewById(R.id.viewpager_player);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String mode=prefs.getString("mode_list","0");
+        if ("0".equals(mode)){
+            mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_normal_style);
+
+        } else if ("1".equals(mode)){
+            mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_random_style);
+        } else if ("2".equals(mode)){
+            mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_repeat_style);
+        }
 
         // 启动
         handler.post(updateThread);
@@ -301,13 +315,6 @@ public class PlayerActivity extends AppCompatActivity {
         // 暂停or开始
         mPauseImageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-//                if (mService.isPlay()) {
-//                    MusicListFragment.iv_album.setAnimation(MusicListFragment.operatingAnim);
-//                } else {
-//                    MusicListFragment.operatingAnim.cancel();
-//                 //   MusicListFragment.iv_album.setAnimation(MusicListFragment.operatingAnim);
-//                }
-//                mService.pausePlay();
                 Intent it = new Intent(CTL_ACTION);
                 it.putExtra("control", 1);
                 sendBroadcast(it);
@@ -338,6 +345,33 @@ public class PlayerActivity extends AppCompatActivity {
                 Intent it = new Intent(CTL_ACTION);
                 it.putExtra("control", 2);
                 sendBroadcast(it);
+            }
+        });
+        mModeImageButton.setOnClickListener(new ImageButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String mode=prefs.getString("mode_list","0");
+                if ("0".equals(mode)){
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("mode_list","1");
+                    mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_random_style);
+                    editor.commit();
+                    ToastUtil.show(getApplicationContext(),"随机播放");
+                } else if ("1".equals(mode)){
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("mode_list","2");
+                    mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_repeat_style);
+                    editor.commit();
+                    ToastUtil.show(getApplicationContext(),"单曲循环");
+                } else if ("2".equals(mode)){
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("mode_list","0");
+                    mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_normal_style);
+                    editor.commit();
+                    ToastUtil.show(getApplicationContext(),"顺序播放");
+                }
+
             }
         });
         mFavorImageButton.setOnClickListener(new ImageButton.OnClickListener() {

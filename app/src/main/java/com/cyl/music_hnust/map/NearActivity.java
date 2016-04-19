@@ -91,11 +91,21 @@ public class NearActivity extends AppCompatActivity {
                     break;
                 case 1:
 
-                    mydatas = (List<Location>) msg.obj;
+                    Bundle bundle = new Bundle();
+                    bundle = msg.getData();
+                    String response = (String) bundle.get("response");
+                    try {
+                        JSONObject json =  new JSONObject(response);
+                        mydatas= JsonParsing.getLocation(json);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     Log.e("tag1", latLonPoint.getLongitude() + "");
                     Log.e("tag1", latLonPoint.getLatitude() + "");
 
-                    adapter.latLonPoint=latLonPoint;
+                    adapter.latLonPoint = latLonPoint;
                     adapter.myDatas = mydatas;
                     adapter.notifyDataSetChanged();
                     break;
@@ -298,8 +308,8 @@ public class NearActivity extends AppCompatActivity {
             String distance = "";
             String distime = "";
 //            if (myDatas.size() > 0) {
-                distance = FormatUtil.Distance(latLonPoint.getLongitude()+0, latLonPoint.getLatitude()+0,
-                        myDatas.get(position).getLocation_longitude()+0, myDatas.get(position).getLocation_latitude()+0);
+            distance = FormatUtil.Distance(latLonPoint.getLongitude() + 0, latLonPoint.getLatitude() + 0,
+                    myDatas.get(position).getLocation_longitude() + 0, myDatas.get(position).getLocation_latitude() + 0);
             distime = FormatUtil.distime(myDatas.get(position).getLocation_time());
 //            }
 //
@@ -362,29 +372,27 @@ public class NearActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         // VolleyLog.v("Response:%n %s", response.toString());
                         Log.i("log", response.toString());
-                        try {
-                            List<Location> mdatas1 = new ArrayList<>();
 
-                            Message message = new Message();
-                            message.what = requestcode;
-                            if (requestcode == 1) {
+                        List<Location> mdatas1 = new ArrayList<>();
 
-                                //ToastUtil.show(getApplicationContext(),response.toString()+"");
+                        Message message = new Message();
+                        message.what = requestcode;
+                        if (requestcode == 1) {
 
-                                mdatas1 = JsonParsing.getLocation(response);
-                                message.obj = mdatas1;
+                            //ToastUtil.show(getApplicationContext(),response.toString()+"");
 
-                                ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
+                            Bundle bundle = new Bundle();
+                            bundle.putString("response", response.toString());
+                            message.setData(bundle);
+
+                            //  ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
 
 
-                            } else {
-                                ToastUtil.show(getApplicationContext(), response.toString() + "");
+                        } else {
+                            //  ToastUtil.show(getApplicationContext(), response.toString() + "");
 
-                            }
-                            handler.sendMessage(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                        handler.sendMessage(message);
 
                     }
                 }, new Response.ErrorListener() {

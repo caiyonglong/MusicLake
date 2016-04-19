@@ -161,7 +161,7 @@
                         android:layout_width="40dp"
                         android:layout_height="70dp"
                         android:layout_margin="10dp"
-                        android:background="@color/white"
+                        android:background="@drawable/player_btn_mode_normal_style"
                         android:contentDescription="@string/app_name" />
 
                     <ImageButton

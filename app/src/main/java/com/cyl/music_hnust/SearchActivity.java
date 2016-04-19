@@ -67,6 +67,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private MusicPlayService mService;
     PopupWindow popuWindow1;
+    private String urlpath = "http://suen.pw/interface/music/api.php?operate=search&&key=";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                         initSearch();
                     } else if (permis.equals("Normal")&&!isOnlyWifi) {
                         show("当前操作会消耗流量,是否继续!");
+                    }  else if (permis.equals("Normal")&&!isOnlyWifi) {
+                        show("wifi未连接,请关闭 仅wifi联网!");
                     } else {
                         pDialog.setTitleText("请检查网络连接");
                         pDialog.setCancelable(true);
@@ -148,7 +152,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             protected Boolean doInBackground(OutputStream... params) {
                 try {
-                    String json = HttpByGet.requestByHttpGet(search_info)
+
+                    String path = urlpath + search_info;
+                    String json = HttpByGet.requestByHttpGet(path)
                             + "";
                     if ("ERROR".equals(json)) {
                         flag = false;

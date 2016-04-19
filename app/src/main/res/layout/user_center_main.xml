@@ -122,10 +122,42 @@
                             android:layout_marginLeft="25dp"
                             android:layout_marginStart="25dp"
                             android:text="demo"
-                            android:textColor="@color/text_color"
+                            android:textColor="@color/setting_blue"
                             android:textSize="16sp" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="13dp">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@mipmap/usercenter_name" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
+                            android:text="昵称"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/usercenter_sign"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginStart="25dp"
+                            android:text="demo"
+                            android:textColor="@color/setting_blue"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -269,7 +301,42 @@
                 app:cardElevation="5dp"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="true"
-                app:contentPadding="16dp">
+                app:contentPadding="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/head_upload"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="头像上传"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/setting_blue" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!--卡片布局-->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="10dp">
 
 
                 <LinearLayout

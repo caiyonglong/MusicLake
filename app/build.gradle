@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile files('libs/cpdetector_1.0.10.jar')
     compile files('libs/antlr-2.7.4.jar')

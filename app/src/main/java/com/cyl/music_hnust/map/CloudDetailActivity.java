@@ -97,7 +97,8 @@ public class CloudDetailActivity extends Activity {
 					.findViewById(R.id.poi_field_id);
 			TextView valueText = (TextView) view
 					.findViewById(R.id.poi_value_id);
-			valueText.setTextColor(getResources().getColor(R.color.black));
+//			valueText.setTextColor(getResources().getColor(R.color.black));
+			valueText.setTextColor(R.color.setting_blue);
 			Map.Entry entry = (Map.Entry) iter.next();
 			fieldText.setText(entry.getKey() + "");
 			valueText.setText(entry.getValue() + "");

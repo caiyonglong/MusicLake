@@ -27,11 +27,12 @@
             android:textSize="18dp" />
     </RelativeLayout>
 
+
     <ScrollView
         android:id="@+id/commit_scroll"
         android:layout_below="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="56dp"
         >
         <LinearLayout
@@ -39,11 +40,129 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-            <include
-                android:id="@+id/comment_item"
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/id_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/item_main" />
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="2dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardElevation="3dp"
+                app:cardMaxElevation="4dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="false"
+
+
+                >
+
+                <RelativeLayout
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:descendantFocusability="blocksDescendants"
+                    android:padding="8dp"
+                    >
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/user_logo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/user_icon_default_main" />
+
+                    <LinearLayout
+                        android:layout_toRightOf="@id/user_logo"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginTop="4dp"
+                        android:layout_alignBottom="@id/user_logo"
+                        android:layout_alignTop="@id/user_logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:id="@+id/user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/user_logo"
+                            android:layout_alignTop="@id/user_logo"
+                            android:layout_toRightOf="@id/user_logo"
+                            android:gravity="center_vertical"
+                            android:text="岁月抚伤" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:gravity="center_vertical"
+                            android:text="发表于" />
+
+                        <TextView
+                            android:id="@+id/content_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/setting_blue"
+                            android:layout_alignBottom="@id/user_logo"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignTop="@id/user_logo"
+                            android:scaleType="centerInside"
+                            android:text="2016-3-15" />
+                    </LinearLayout>
+                    <LinearLayout
+
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/item_comment_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:background="#334A90E2"
+                            android:layout_marginRight="5dp"
+                            android:text="9评论"
+                            android:padding="2dp"
+                            android:textColor="@color/setting_blue" />
+                        <TextView
+
+                            android:layout_weight="1"
+                            android:id="@+id/item_love_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:background="#334A90E2"
+                            android:text="985赞"
+                            android:padding="2dp"
+                            android:textColor="@color/setting_blue" />
+                    </LinearLayout>
+
+
+
+                    <TextView
+                        android:id="@+id/content_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_below="@id/user_logo"
+                        android:textColor="@color/main_black"
+                        android:layout_marginBottom="10dp"
+                        android:layout_margin="4dp"
+                        android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
+
+
+
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

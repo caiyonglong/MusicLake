@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -29,11 +30,18 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.bean.Location;
+import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.DataClearmanager;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -51,33 +59,46 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    MyHandler handler;
-    static class MyHandler extends Handler {
-        WeakReference<Activity> mActivityReference;
 
-        MyHandler(Activity activity) {
-            mActivityReference = new WeakReference<Activity>(activity);
+    private String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateUser&user_email&user_img&user_name=";
+
+    public void UpdateUserinfo(String username) {
+
+
+        User user = UserStatus.getUserInfo(getApplicationContext());
+        if (user.getUser_id() == null) {
+            Toast.makeText(SettingsActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
+            return;
         }
+        url = url + username + "&user_id=" + user.getUser_id();
 
-        @Override
-        public void handleMessage(Message msg) {
-            final Activity activity = mActivityReference.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case 0:
-
-                        //.
-                        break;
-                    case 1:
-
-                    case 2:
-                        break;
+        HttpUtil.get(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+                try {
+                    String str = new String(responseBody, "utf-8");
+                    if (str.endsWith(":10000}")) {
+                        Toast.makeText(SettingsActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SettingsActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
+
+
             }
-        }
+
+            @Override
+            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(SettingsActivity.this, "修改失败，网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
-    private  Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -99,18 +120,24 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // the preference's 'entries' list.
                 SwitchPreference switchPreference = (SwitchPreference) preference;
                 if (switchPreference.isChecked()) {
-                    Toast.makeText(SettingsActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
+
+
                 }
 
 
             } else if (preference instanceof CheckBoxPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
-//                CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-//                if (checkBoxPreference.isChecked()){
-//                    Toast.makeText(SettingsActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
-//                }
+                CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
 
+                //    if (checkBoxPreference.){
+
+                if (stringValue.equals("true")) {
+                    SharedPreferences pers = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    String username = pers.getString("nickname", "呵呵呵");
+                    //  Toast.makeText(SettingsActivity.this, stringValue + "修改成功" + username, Toast.LENGTH_SHORT).show();
+                    UpdateUserinfo(username);
+                }
 
             } else {
                 // For all other preferences, set the summary to the value's
@@ -129,7 +156,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
-    private  void bindPreferenceSummaryToValue(Preference preference) {
+    private void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -163,10 +190,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-//    /**
+    //    /**
 //     * 关闭设置
 //     */
-    public  void end() {
+    public void end() {
         finish();
     }
 
@@ -185,6 +212,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public CheckBoxPreference secret_check;
         public EditTextPreference nikname;
         public SwitchPreference wifi_switch;
+        public ListPreference mode_list;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -197,12 +225,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             secret_check = (CheckBoxPreference) findPreference("secret_check");
             nikname = (EditTextPreference) findPreference("nickname");
             wifi_switch = (SwitchPreference) findPreference("wifi_switch");
+            mode_list = (ListPreference) findPreference("mode_list");
+            String stringValue = mode_list.getValue().toString();
+            int index = mode_list.findIndexOfValue(stringValue);
+
+            // Set the summary to reflect the new value.
+            mode_list.setSummary(
+                    index >= 0
+                            ? mode_list.getEntries()[index]
+                            : null);
             preference_about.setOnPreferenceClickListener(this);
             preference_cache.setOnPreferenceClickListener(this);
 
             bindPreferenceSummaryToValue(nikname);
             bindPreferenceSummaryToValue(wifi_switch);
             bindPreferenceSummaryToValue(secret_check);
+            bindPreferenceSummaryToValue(findPreference("mode_list"));
         }
 
         @Override
@@ -231,5 +269,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
     }
+
 
 }

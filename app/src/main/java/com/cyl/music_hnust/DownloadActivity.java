@@ -88,7 +88,9 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         vPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), fragmentList));
         vPager.setCurrentItem(0);
 
-        vPager.setOnPageChangeListener(new myOnPageChangeListener());
+        vPager.addOnPageChangeListener(new myOnPageChangeListener());
+//        vPager.setOnScrollChangeListener(new myOnPageChangeListener());
+//        vPager.setOnPageChangeListener(new myOnPageChangeListener());
     }
 
     @Override

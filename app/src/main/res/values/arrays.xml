@@ -26,4 +26,19 @@
         <item>添加到下载队列</item>
         <item>歌曲信息</item>
     </string-array>
+    <string-array name="info_music_mode">
+
+        <item>顺序播放</item>
+        <item>随机播放</item>
+        <item>单曲循环</item>
+    </string-array>
+
+    <string-array name="info_music_mode_values">
+
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
 </resources>
