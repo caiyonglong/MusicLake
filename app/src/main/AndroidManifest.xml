@@ -16,8 +16,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!-- 允许读取手机状态相关数据 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 允许访问SD卡 -->
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

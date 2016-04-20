@@ -31,7 +31,6 @@
                 android:layout_height="30.0dip"
                 android:gravity="bottom"
                 android:singleLine="true"
-                android:textColor="@color/gray"
                 android:textSize="16.0sp" />
 
             <RelativeLayout
@@ -45,7 +44,6 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15.0dip"
                     android:singleLine="true"
-                    android:textColor="@color/gray"
                     android:textSize="12.0sp" />
 
                 <TextView
@@ -59,16 +57,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <ImageButton
 
-            android:id="@+id/list_black_btn"
-            android:layout_width="28dp"
-            android:layout_marginRight="10dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dip"
-            android:background="@drawable/list_black_btn_close"
-            android:contentDescription="@string/app_name" />
     </LinearLayout>
 
     <TextView
@@ -79,7 +68,6 @@
         android:paddingLeft="10.0dip"
         android:paddingRight="10.0dip"
         android:singleLine="true"
-        android:textColor="@color/gray"
         android:textSize="16.0sp" />
 
 </RelativeLayout>

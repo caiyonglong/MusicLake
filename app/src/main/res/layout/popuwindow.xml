@@ -55,4 +55,15 @@
             android:textSize="13sp" />
 
     </LinearLayout>
+
+    <SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchView"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="215dp"
+        android:layout_marginEnd="215dp" />
 </RelativeLayout>

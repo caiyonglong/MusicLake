@@ -1,5 +1,6 @@
 package com.cyl.music_hnust;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -31,15 +32,23 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.Json.JsonParsing;
+import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.utils.FormatUtil;
+import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.FullyLinearLayoutManager;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 永龙 on 2016/3/15.
@@ -49,33 +58,46 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public NetworkImageView user_logo;
     public TextView content_time;
     public TextView content_text;
-    public TextView item_action_comment;
-    public TextView item_action_love;
+    public static TextView item_action_comment;
+    public static TextView item_action_love;
     public EditText comment_content;
-    public Button comment_commit;
+    public ImageButton comment_commit;
+    public static ImageButton IsAgree;
     public TextView loadmore;
     private ImageButton back;
 
 
+
     private RecyclerView comment_list;
-    private String position;
+    private static String position;
     private String dynamic_id;
-    private CommentRecyclerViewAdapter adapter;
+    private static CommentRecyclerViewAdapter adapter;
     private FullyLinearLayoutManager mLayoutManager;
     private RequestQueue mRequestQueue;
     private ImageLoader imageLoader;
 
-    private List<Comment> mDatas;
+    private static List<Comment> mDatas;
+    MyHandler handler;
 
+    static int love_num;
+    static int comment_num;
 
-    Handler handler = new Handler() {
+    private static class MyHandler extends Handler {
+        private final WeakReference<Activity> mactivity;
+
+        private MyHandler(Activity activity) {
+            mactivity = new WeakReference<Activity>(activity);
+        }
 
         @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
+        public void handleMessage(Message msg) {
+            final Activity activity = mactivity.get();
             switch (msg.what) {
                 case 0:
-                    Toast.makeText(getApplicationContext(), "评论成功", Toast.LENGTH_SHORT).show();
+                    comment_num=comment_num+1;
+                    item_action_comment.setText(comment_num + "评论");
+
+                    ToastUtil.show(activity, "评论成功");
                     break;
                 case 1:
                     mDatas.clear();
@@ -93,11 +115,38 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case 2:
                     String error_code = (String) msg.obj;
-                    Toast.makeText(getApplicationContext(), "评论失败,请检查网络是否正常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "评论失败,请检查网络是否正常", Toast.LENGTH_SHORT).show();
+                    break;
+                case 3:
+                    Bundle bundle = new Bundle();
+                    bundle = msg.getData();
+                    Log.e("position===handler", position + "");
+                    int isagree = (int) bundle.get("agree");
+                    int num = (int) bundle.get("num");
+                    MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setLove(num);
+                    if (isagree == 1) {
+                        love_num = love_num+1;
+                        Toast.makeText(activity, "已赞", Toast.LENGTH_SHORT).show();
+                        item_action_love.setText(love_num + "赞");
+                        IsAgree.setImageResource(R.mipmap.ic_action_agree1);
+                        MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(true);
+
+                    } else if (isagree == 0) {
+                        love_num = love_num-1;
+                        item_action_love.setText(love_num + "赞");
+
+                        IsAgree.setImageResource(R.mipmap.ic_action_agree);
+                        MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(false);
+                    }
+                    MyFragment.mRecyclerViewAdapter.notifyDataSetChanged();
+
+
                     break;
             }
         }
-    };
+    }
+
+    ;
 
 
     @Override
@@ -105,6 +154,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         mRequestQueue = Volley.newRequestQueue(this);
+        handler= new MyHandler(this);
         imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
 
             @Override
@@ -120,11 +170,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Intent it = getIntent();
         position = it.getIntExtra("position", -1) + "";
         dynamic_id = it.getStringExtra("dynamic_id") + "";
+        love_num = MyFragment.mdatas.get(Integer.parseInt(position)).getLove();
+        comment_num = MyFragment.mdatas.get(Integer.parseInt(position)).getComment();
 
+        Log.e("ee",love_num+"============"+comment_num+"");
         mDatas = new ArrayList<>();
 
         User userinfo = UserStatus.getUserInfo(getApplicationContext());
-        volley_StringRequest_GET(userinfo.getUser_id(), dynamic_id);
+        volley_StringRequest_GET(userinfo.getUser_id(), dynamic_id, 1);
 
         Log.e("====", dynamic_id);
         initView();
@@ -149,22 +202,30 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         back.setOnClickListener(this);
         loadmore = (TextView) findViewById(R.id.loadmore);
         comment_content = (EditText) findViewById(R.id.comment_content);
-        comment_commit = (Button) findViewById(R.id.comment_commit);
+        comment_commit = (ImageButton) findViewById(R.id.comment_commit);
+        IsAgree = (ImageButton) findViewById(R.id.IsAgree);
         comment_list = (RecyclerView) findViewById(R.id.comment_list);
 
         /**
          * 动态详情
          */
+        String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
         user_name.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getUser().getUser_name());
-        user_logo.setImageUrl(MyFragment.mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
+        user_logo.setImageUrl(imgUrl + MyFragment.mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
         user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
         content_text.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getContent());
         content_time.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getTime());
-        item_action_comment.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getComment() + "评论");
-        item_action_love.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getLove() + "赞");
+        item_action_comment.setText(comment_num + "评论");
+        item_action_love.setText(love_num + "赞");
 
+        if (MyFragment.mdatas.get(Integer.parseInt(position)).isMyLove()) {
+            IsAgree.setImageResource(R.mipmap.ic_action_agree1);
+        } else {
+            IsAgree.setImageResource(R.mipmap.ic_action_agree);
+        }
 
         comment_commit.setOnClickListener(this);
+        IsAgree.setOnClickListener(this);
         loadmore.setOnClickListener(this);
 
 
@@ -175,6 +236,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.backImageButton:
                 finish();
+                break;
+            case R.id.IsAgree:
+                User userinfo1 = UserStatus.getUserInfo(getApplicationContext());
+                if (userinfo1.getUser_name() != null) {
+                    volley_StringRequest_GET(userinfo1.getUser_id(), dynamic_id, 2);
+
+                } else {
+                    Intent it = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(it);
+                }
                 break;
             case R.id.comment_commit:
                 String content_comment = comment_content.getText().toString().trim();
@@ -212,9 +283,15 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
      * http://hcyl.sinaapp.com/music_BBS/operate.php?user_id=5&&newComment&&secret_id=18&&comment=内容
      * 利用StringRequest实现Get请求
      */
-    private void volley_StringRequest_GET(String user_id, String secret_id) {
-
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&showSecretComment&&secret_id=" + secret_id;
+    private void volley_StringRequest_GET(String user_id, String secret_id, final int requestcode) {
+        String url = "";
+        if (requestcode == 1) {
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?" +
+                    "user_id=" + user_id +
+                    "&showSecretComment&&secret_id=" + secret_id;
+        } else if (requestcode == 2) {
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&changeAgree&&secret_id=" + secret_id;
+        }
         // 1 创建RequestQueue对象
 
         // 2 创建StringRequest对象
@@ -225,14 +302,32 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     public void onResponse(JSONObject response) {
                         // VolleyLog.v("Response:%n %s", response.toString());
                         Log.i("log", response.toString());
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("response", response.toString());
                         Message message = new Message();
-                        message.what = 1;
-                        message.setData(bundle);
-                        handler.sendMessage(message);
+                        if (requestcode == 1) {
 
+                            message.what = 1;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("response", response.toString());
+
+                            message.setData(bundle);
+
+                        } else {
+
+                            message.what = 3;
+                            try {
+                                int agree = response.getInt("agree");
+
+                                int num = response.getInt("num");
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("agree", agree);
+                                bundle.putInt("num", num);
+                                message.setData(bundle);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        handler.sendMessage(message);
 
                     }
                 }, new Response.ErrorListener() {
@@ -240,7 +335,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO Auto-generated method stub
-                // VolleyLog.e("Error: ", error.getMessage());
+                ToastUtil.show(getApplicationContext(), "网络连接错误，请检查网络");
             }
         });
         // 3 将StringRequest添加到RequestQueue
@@ -249,42 +344,51 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private void volley_Request_GET(String user_id, String secret_id, String comment) {
 
-
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&newComment&&secret_id=" + secret_id + "&&comment=" + comment;
+        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?" +
+                "user_id=" + user_id +
+                "&newComment&secret_id=" + secret_id +
+                "&comment=" + comment +
+                "&secretTime=" + FormatUtil.getTime();
         // 1 创建RequestQueue对象
+        Log.e("path.", url + "");
+        HttpUtil.get(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-        // 2 创建StringRequest对象
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
-                new Response.Listener<JSONObject>() {
+                try {
+                    String str = new String(responseBody, "utf-8");
+                    Log.i("log", str);
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("jsonobject", response.toString());
-                        try {
-                            int error_code = response.getInt("error");
-                            Log.e("error_code", error_code + "");
-                            if (error_code == -1) {
-                                handler.sendEmptyMessage(0);
-                            } else {
-                                Message msg = new Message();
-                                msg.what = 2;
-                                msg.obj = error_code;
-                                handler.sendMessage(msg);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    JSONObject response = new JSONObject(str);
+                    Log.e("jsonobject", response.toString());
+                    try {
+                        int error_code = response.getInt("error");
+                        Log.e("error_code", error_code + "");
+                        if (error_code == -1) {
+                            handler.sendEmptyMessage(0);
+                        } else {
+                            Message msg = new Message();
+                            msg.what = 2;
+                            msg.obj = error_code;
+                            handler.sendMessage(msg);
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO Auto-generated method stub
-                // VolleyLog.e("Error: ", error.getMessage());
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
-        // 3 将StringRequest添加到RequestQueue
-        mRequestQueue.add(jsonObjectRequest);
     }
 
 

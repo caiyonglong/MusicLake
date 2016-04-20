@@ -66,7 +66,6 @@ public class BaseMapActivity extends Activity implements AMapLocationListener, R
 
     private TextView mLocationErrText;
     private FloatingActionsMenu menuMultipleActions;
-    private FloatingActionButton actionA;
     private FloatingActionButton actionB;
 
     private CloudSearch mCloudSearch;
@@ -101,13 +100,7 @@ public class BaseMapActivity extends Activity implements AMapLocationListener, R
 
     private void initView() {
         menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        actionA = (FloatingActionButton) findViewById(R.id.action_a);
-        actionA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
         actionB = (FloatingActionButton) findViewById(R.id.action_b);
         actionB.setOnClickListener(new View.OnClickListener() {
             @Override

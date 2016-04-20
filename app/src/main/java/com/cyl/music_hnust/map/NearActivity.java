@@ -44,17 +44,23 @@ import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 永龙 on 2016/3/20.
@@ -95,8 +101,8 @@ public class NearActivity extends AppCompatActivity {
                     bundle = msg.getData();
                     String response = (String) bundle.get("response");
                     try {
-                        JSONObject json =  new JSONObject(response);
-                        mydatas= JsonParsing.getLocation(json);
+                        JSONObject json = new JSONObject(response);
+                        mydatas = JsonParsing.getLocation(json);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -318,11 +324,12 @@ public class NearActivity extends AppCompatActivity {
             Log.e("tag3", myDatas.get(position).getLocation_time() + "");
 
 
-            holder.location_time.setText(distime + "前");
+            String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
+            holder.location_time.setText(distime);
             holder.user_distance.setText("不超过" + distance);
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
             holder.user_img.setErrorImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
+            holder.user_img.setImageUrl(imgUrl+myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }
 
@@ -357,7 +364,11 @@ public class NearActivity extends AppCompatActivity {
         String url = "";
         if (requestcode == 0) {
             //上传位置
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&newLocation&location_latitude=" + latitude + "&location_longitude=" + longitude;
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id +
+                    "&&newLocation&location_latitude=" + latitude +
+                    "&location_longitude=" + longitude +
+                    "&secretTime=" + FormatUtil.getTime();
+
         } else if (requestcode == 1) {
             //附近的人
             url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&nearLocation";
@@ -365,46 +376,52 @@ public class NearActivity extends AppCompatActivity {
             //清空用户定位信息
             url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&clearLocation";
         }
-        // 2 创建StringRequest对象
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // VolleyLog.v("Response:%n %s", response.toString());
-                        Log.i("log", response.toString());
 
-                        List<Location> mdatas1 = new ArrayList<>();
+        HttpUtil.get(url, new AsyncHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                        Message message = new Message();
-                        message.what = requestcode;
-                        if (requestcode == 1) {
+                try {
+                    String response = new String(responseBody, "utf-8");
+                    Log.i("log", response);
 
-                            //ToastUtil.show(getApplicationContext(),response.toString()+"");
+                    Message message = new Message();
+                    message.what = requestcode;
+                    if (requestcode == 1) {
 
-                            Bundle bundle = new Bundle();
-                            bundle.putString("response", response.toString());
-                            message.setData(bundle);
+                        //ToastUtil.show(getApplicationContext(),response.toString()+"");
 
-                            //  ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("response",response);
+                        message.setData(bundle);
+
+                        //  ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
 
 
-                        } else {
-                            //  ToastUtil.show(getApplicationContext(), response.toString() + "");
-
-                        }
-                        handler.sendMessage(message);
+                    } else if (requestcode ==0) {
+                          ToastUtil.show(getApplicationContext(), "位置上传成功");
 
                     }
-                }, new Response.ErrorListener() {
+                    else if (requestcode ==2) {
+                        ToastUtil.show(getApplicationContext(), "已清空用户位置信息！");
+
+                    }
+                    handler.sendMessage(message);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO Auto-generated method stub
-                // VolleyLog.e("Error: ", error.getMessage());
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                ToastUtil.show(getApplicationContext(),"网络异常，请检查网络！");
             }
         });
-        // 3 将StringRequest添加到RequestQueue
-        mRequestQueue.add(jsonObjectRequest);
+
     }
+
+
 
 }

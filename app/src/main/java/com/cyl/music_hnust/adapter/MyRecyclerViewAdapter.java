@@ -133,19 +133,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 //            }
 
         }
-//        else if (holder instanceof FooterViewHolder) {
-//            final FooterViewHolder hodler2 = (FooterViewHolder) holder;
-//            if (mOnItemClickListener != null) {
-//                hodler2.foot_text.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        mOnItemClickListener.onItemClick(hodler2.foot_text, position);
-//                    }
-//                });
-//            }
-//            hodler2.foot_text.setText(loadmore);
-//
-//        }
+        else if (holder instanceof FooterViewHolder) {
+            final FooterViewHolder hodler2 = (FooterViewHolder) holder;
+//            hodler2.foot.setVisibility(View.GONE);
+            if (mOnItemClickListener != null) {
+                hodler2.foot_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onItemClick(hodler2.foot_text, position);
+                    }
+                });
+            }
+            hodler2.foot_text.setText(loadmore);
+
+        }
     }
 
 

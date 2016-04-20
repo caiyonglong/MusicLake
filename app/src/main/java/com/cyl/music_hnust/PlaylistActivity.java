@@ -1,7 +1,9 @@
 package com.cyl.music_hnust;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.list.MusicList;
+import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanUtil;
 
 import java.util.List;
@@ -98,34 +101,89 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
+    String targetStr="";
     @Override
     public void onItemClick(View view, final int position) {
-        final String targetStr = al_playlist.get(position);
+        targetStr = al_playlist.get(position);
       //  playlistId = MusicUtils.getPlayListId(this, targetStr);
+        show(targetStr,position);
 
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("确认删除歌单?")
-                .setContentText("删除后不能恢复!")
-                .setConfirmText("确定！")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        // reuse previous dialog instance
-                        scanUtil.deleteplaylist(targetStr,-1);
-                        Log.e("删除歌单","dddd");
 
-                        playlistadapter.mDatas.remove(position);
+    }
+    public void show(String msg, final int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage(msg)
+                .setIcon(R.mipmap.ic_launcher);
+        setPositiveButton(builder);
+        setNegativeButton(builder);
+        builder.setNeutralButton("删除歌单",new DialogInterface.OnClickListener(){
 
-                        playlistadapter.notifyDataSetChanged();
-                        sDialog.setTitleText("已删除!")
-                                .setContentText("歌单已经删除!")
-                                .setConfirmText("OK")
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    }
-                })
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                new SweetAlertDialog(getApplicationContext(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("确认删除歌单?")
+                        .setContentText("删除后不能恢复!")
+                        .setConfirmText("确定！")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                // reuse previous dialog instance
+                                scanUtil.deleteplaylist(targetStr,-1);
+                                Log.e("删除歌单","dddd");
+
+                                playlistadapter.mDatas.remove(position);
+
+                                playlistadapter.notifyDataSetChanged();
+                                sDialog.setTitleText("已删除!")
+                                        .setContentText("歌单已经删除!")
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                            }
+                        })
+                        .show();
+
+            }
+        });
+        builder.create()
                 .show();
+    }
+
+    private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
+        return builder.setPositiveButton("分享歌单", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                shareplaylist(targetStr);
+            }
+        });
+    }
+
+    private void shareplaylist(String targetStr) {
+
+        scanUtil.scanPlaylistSongFromDB(targetStr);
+        List<MusicInfo> list = MusicList.list;
+        String sharecontent = "我分享的歌单："+targetStr;
+        if (list.size()>0){
+            for (int i=0;i<list.size() ;i++){
+                sharecontent+="\n"+list.get(i).getName()+"--"+list.get(i).getArtist();
+            }
+        }
+        Log.e("sharecontent",sharecontent);
+        Intent in = new Intent(this,EditActivity.class);
+        in.putExtra("sharecontent",sharecontent);
+        startActivity(in);
+
+    }
+
+    private AlertDialog.Builder setNegativeButton(AlertDialog.Builder builder) {
+        return builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
     }
 
 }

@@ -25,6 +25,7 @@
             android:text="话题评论"
             android:textColor="#ffffff"
             android:textSize="18dp" />
+
     </RelativeLayout>
 
 
@@ -61,6 +62,9 @@
 
                 <RelativeLayout
                     android:id="@+id/container"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
@@ -154,7 +158,6 @@
                         android:layout_below="@id/user_logo"
                         android:textColor="@color/main_black"
                         android:layout_marginBottom="10dp"
-                        android:layout_margin="4dp"
                         android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
 
 
@@ -194,15 +197,30 @@
         android:background="@color/main_white"
         android:gravity="center_vertical"
         >
+        <ImageButton
+            android:id="@+id/IsAgree"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="40dp"
+            android:layout_weight="0"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/white"
+            android:src="@mipmap/ic_action_agree"
+            />
 
         <EditText
             android:id="@+id/comment_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:hint="来评论一句吧"
+            android:paddingStart="5dp"
             android:textColorHint="@color/main_black"
-            android:background="@drawable/selector_edittext"
             android:ems="10"
             android:textColor="@color/main_black"
             android:minHeight="40dp"
@@ -213,11 +231,12 @@
             <requestFocus />
         </EditText>
 
-        <Button
+
+        <ImageButton
             android:id="@+id/comment_commit"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:minWidth="80dp"
+            android:minWidth="50dp"
             android:layout_weight="0"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
@@ -228,6 +247,31 @@
             android:padding="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:background="@color/red_btn_bg_color"/>
+            android:background="@android:drawable/ic_menu_send"
+
+            />
     </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:padding="4dip"-->
+        <!--android:background="@color/main_white"-->
+        <!--android:gravity="center_vertical"-->
+        <!--&gt;-->
+        <!--<ImageButton-->
+            <!--android:layout_weight="1"-->
+            <!--android:src="@mipmap/ic_action_agree"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<ImageButton-->
+            <!--android:layout_weight="1"-->
+            <!---->
+            <!--android:src="@android:drawable/ic_menu_send"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+    <!--</LinearLayout>-->
+
 </RelativeLayout>

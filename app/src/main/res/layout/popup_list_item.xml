@@ -56,6 +56,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@drawable/fx_information_bg" />
+        android:background="@color/gray" />
 
 </LinearLayout>

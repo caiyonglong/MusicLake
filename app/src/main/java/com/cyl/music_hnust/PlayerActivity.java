@@ -41,7 +41,7 @@ import java.util.List;
  * Created by 永龙 on 2016/3/12.
  */
 public class PlayerActivity extends AppCompatActivity {
-    private ImageButton mModeImageButton,mFrontImageButton, mPauseImageButton,
+    private ImageButton mModeImageButton, mFrontImageButton, mPauseImageButton,
             mNextImageButton, mFavorImageButton, title_left;
     private ImageView page_icon, mIvBg;
     private TextView tv_songName, tv_singerName, tv_curcentTime, tv_allTime;
@@ -112,14 +112,15 @@ public class PlayerActivity extends AppCompatActivity {
     private void init() {
         initTitle();
         initBackGround();
-        initLrc(mService.getPath());
+      //  initLrc(mService.getPath());
         initAlbum();
         initFragment();
     }
 
     private void initAlbum() {
 
-        if (mService.getSong().isFavorite())
+
+        if (mService.getSong().isFavorite()&&mService.getSong()!=null)
             mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
         else
             mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_nostar_style);
@@ -128,7 +129,10 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initTitle() {
-        MusicInfo song = mService.getSong();
+        MusicInfo song=null;
+        if (mService.getSong()!=null) {
+            song = mService.getSong();
+        }
         tv_songName.setText(song == null ? "湖科音乐" : song.getName() + " ");
         tv_singerName.setText(song == null ? "属于我的音乐"
                 : song.getArtist() + " " + " - " + song.getAlbum() + " ");
@@ -192,13 +196,13 @@ public class PlayerActivity extends AppCompatActivity {
         viewpager_player = (ViewPager) findViewById(R.id.viewpager_player);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String mode=prefs.getString("mode_list","0");
-        if ("0".equals(mode)){
+        String mode = prefs.getString("mode_list", "0");
+        if ("0".equals(mode)) {
             mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_normal_style);
 
-        } else if ("1".equals(mode)){
+        } else if ("1".equals(mode)) {
             mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_random_style);
-        } else if ("2".equals(mode)){
+        } else if ("2".equals(mode)) {
             mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_repeat_style);
         }
 
@@ -208,14 +212,18 @@ public class PlayerActivity extends AppCompatActivity {
 
     private Bitmap mBgBitmap;
     private Bitmap mAlbumBitmap;
+    MusicInfo song=null;
 
     public void initBackGround() {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... params) {
                 Bitmap original = null;
-                final MusicInfo song = mService.getSongs().get(mService.getCurrentListItme());
+                if (mService.getSongs() != null&&mService.getCurrentListItme()!=-1) {
+                    song = mService.getSongs().get(mService.getCurrentListItme());
+                }
                 if (song == null) {
+
                 }
                 if (song != null
                         && !TextUtils.isEmpty(song.getAlbumPic())) {
@@ -299,13 +307,25 @@ public class PlayerActivity extends AppCompatActivity {
     Runnable updateThread = new Runnable() {
         public void run() {
             // 获得歌曲的长度并设置成播放进度条的最大值
-            seekBar1.setMax(mService.getDuration());
-            // 获得歌曲现在播放位置并设置成播放进度条的值
-            seekBar1.setProgress(mService.getCurrent());
+
+            if (mService.mMediaPlayer!=null){
+                seekBar1.setMax(mService.getDuration());
+                // 获得歌曲现在播放位置并设置成播放进度条的值
+                seekBar1.setProgress(mService.getCurrent());
 
 
-            tv_curcentTime.setText(formatTime(mService.getCurrent()));
-            tv_allTime.setText(formatTime(mService.getDuration()));
+                tv_curcentTime.setText(formatTime(mService.getCurrent()));
+                tv_allTime.setText(formatTime(mService.getDuration()));
+            }else {
+                seekBar1.setMax(0);
+                // 获得歌曲现在播放位置并设置成播放进度条的值
+                seekBar1.setProgress(0);
+
+
+                tv_curcentTime.setText(formatTime(0));
+                tv_allTime.setText(formatTime(0));
+            }
+
             // 每次延迟100毫秒再启动线程
             handler.postDelayed(updateThread, 100);
         }
@@ -332,6 +352,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 //mService.nextMusic();
+
                 Intent it = new Intent(CTL_ACTION);
                 it.putExtra("control", 3);
                 sendBroadcast(it);
@@ -351,25 +372,25 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                String mode=prefs.getString("mode_list","0");
-                if ("0".equals(mode)){
+                String mode = prefs.getString("mode_list", "0");
+                if ("0".equals(mode)) {
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("mode_list","1");
+                    editor.putString("mode_list", "1");
                     mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_random_style);
                     editor.commit();
-                    ToastUtil.show(getApplicationContext(),"随机播放");
-                } else if ("1".equals(mode)){
+                    ToastUtil.show(getApplicationContext(), "随机播放");
+                } else if ("1".equals(mode)) {
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("mode_list","2");
+                    editor.putString("mode_list", "2");
                     mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_repeat_style);
                     editor.commit();
-                    ToastUtil.show(getApplicationContext(),"单曲循环");
-                } else if ("2".equals(mode)){
+                    ToastUtil.show(getApplicationContext(), "单曲循环");
+                } else if ("2".equals(mode)) {
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("mode_list","0");
+                    editor.putString("mode_list", "0");
                     mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_normal_style);
                     editor.commit();
-                    ToastUtil.show(getApplicationContext(),"顺序播放");
+                    ToastUtil.show(getApplicationContext(), "顺序播放");
                 }
 
             }
@@ -378,14 +399,16 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 DBDao dbDao = new DBDao(getApplicationContext());
-                if (!mService.getSong().isFavorite()) {
-                    dbDao.update(mService.getSong().getName(), true);
-                    mService.getSong().setFavorite(true);
-                    mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
-                } else {
-                    dbDao.update(mService.getSong().getName(), false);
-                    mService.getSong().setFavorite(false);
-                    mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_nostar_style);
+                if (mService.getSong()!=null) {
+                    if (!mService.getSong().isFavorite()) {
+                        dbDao.update(mService.getSong().getName(), true);
+                        mService.getSong().setFavorite(true);
+                        mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
+                    } else {
+                        dbDao.update(mService.getSong().getName(), false);
+                        mService.getSong().setFavorite(false);
+                        mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_nostar_style);
+                    }
                 }
 
             }
@@ -467,79 +490,4 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
 
-//    public LrcProcess mLrcProcess;
-
-    public void initLrc(String path) {
-        // /////////////////////// 初始化歌词配置 /////////////////////// //
-
-        Log.e("初始化歌词配置", path + "====");
-//        mLrcProcess = new LrcProcess();
-//        // 读取歌词文件
-//        mLrcProcess.readLRC(path);
-//        // 传回处理后的歌词文件
-//        lrcList = mLrcProcess.getLrcContent();
-////        Log.e("lrcList",lrcList.size()+"====");
-////        if (lrcList!=null) {
-//            MusicListFragment.lyric.setSentenceEntities(lrcList);
-//            // 切换带动画显示歌词
-//            MusicListFragment.lyric.setAnimation(AnimationUtils.loadAnimation(
-//                    getApplicationContext(), R.anim.alpha_z));
-//            // 启动线程
-//            mHandler.post(mRunnable);
-////        }
-        // /////////////////////// 初始化歌词配置 /////////////////////// //
-    }
-
-/**
- Handler mHandler = new Handler();
- // 歌词滚动线程
- Runnable mRunnable = new Runnable() {
-
-@Override public void run() {
-// TODO Auto-generated method stub
-MusicListFragment.lyric.SetIndex(LrcIndex());
-MusicListFragment.lyric.invalidate();
-mHandler.postDelayed(mRunnable, 100);
-}
-};
- // 创建对象
- private List<LrcProcess.LrcContent> lrcList = new ArrayList<LrcProcess.LrcContent>();
- // 初始化歌词检索值
- private int index = 0;
- // 初始化歌曲播放时间的变量
- private int CurrentTime = 0;
- // 初始化歌曲总时间的变量
- private int CountTime = 0;
-
- /**
- * 歌词同步处理类
-
- public int LrcIndex() {
- if (mService.getmMediaPlayer().isPlaying()) {
- // 获得歌曲播放在哪的时间
- CurrentTime = mService.getmMediaPlayer().getCurrentPosition();
- // 获得歌曲总时间长度
- CountTime = mService.getmMediaPlayer().getDuration();
- }
- if (CurrentTime < CountTime) {
-
- for (int i = 0; i < lrcList.size(); i++) {
- if (i < lrcList.size() - 1) {
- if (CurrentTime < lrcList.get(i).getLrc_time() && i == 0) {
- index = i;
- }
- if (CurrentTime > lrcList.get(i).getLrc_time()
- && CurrentTime < lrcList.get(i + 1).getLrc_time()) {
- index = i;
- }
- }
- if (i == lrcList.size() - 1
- && CurrentTime > lrcList.get(i).getLrc_time()) {
- index = i;
- }
- }
- }
- return index;
- }
- */
 }

@@ -354,12 +354,23 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
     private void close() {
-        if (mService.mMediaPlayer!=null){
+     //   System.exit(0);
+        if (mService!=null){
             mService.mMediaPlayer.stop();
-            mService.mMediaPlayer = null;
+
         }
-        stopService(application.intent);
-        finish();
+
+        this.finish();
+
+
+
+
+//        if (mService.mMediaPlayer!=null){
+//            mService.mMediaPlayer.stop();
+//            mService.mMediaPlayer = null;
+//        }
+//        stopService(application.intent);
+//        finish();
     }
 
     @Override
@@ -452,7 +463,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             }
             switch (update) {
                 case 0:
-
                     // MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
                     break;
                 case 1:

@@ -113,6 +113,7 @@ public class JsonParsing {
             String secret_id = item.getString("secret_id");
             String secret_content = item.getString("secret_content");
             String secret_time = item.getString("secret_time");
+            Log.e("ggg",secret_time+"===================");
             String secret_agreeNum = item.getString("secret_agreeNum");
             String secret_replyNum = item.getString("secret_replyNum");
             int isAgree =item.getInt("isAgree");

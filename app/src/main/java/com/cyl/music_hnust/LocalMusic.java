@@ -142,24 +142,42 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                 MyActivity.application.setmService(mService);
                 break;
             case R.id.list_black_btn:
-                singleChoice(view);
+                singleChoice(view, position);
 
                 break;
         }
 
     }
-    public void singleChoice(View source){
-        String[] item= getResources().getStringArray(R.array.song_list);
+
+    public void singleChoice(View source, final int position) {
+        String[] item = getResources().getStringArray(R.array.song_list);
         ListAdapter items = new ArrayAdapter<String>(this,
                 R.layout.item_songs, item);
 //        int items;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌曲")
                 .setIcon(R.mipmap.ic_launcher)
-                .setAdapter(items , new DialogInterface.OnClickListener() {
+                .setAdapter(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ToastUtil.show(getApplicationContext(),"你选择了");
+                        if (which == 0) {
+                            DBDao dbDao = new DBDao(getApplicationContext());
+
+                            if (!songs.get(position).isFavorite()) {
+                                dbDao.update(songs.get(position).getName(), true);
+                                ToastUtil.show(getApplicationContext(), "添加成功");
+                            } else {
+                                ToastUtil.show(getApplicationContext(), "已添加");
+                            }
+
+                        } else {
+                            String msg = "歌曲名: "+songs.get(position).getName() + "\n" +
+                                    "歌手名: "+songs.get(position).getArtist() + "\n"+
+                                    "专辑名: "+ songs.get(position).getAlbum() + "\n"+
+                                    "歌曲路径: "+songs.get(position).getPath() + "\n";
+                            detailsshow(msg);
+                        }
+
                     }
                 });
 //        builder.setPositiveButton();
@@ -167,6 +185,23 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         builder.show();
     }
 
+    public void detailsshow(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("歌曲信息")
+                .setMessage(msg)
+                .setIcon(R.mipmap.ic_launcher);
+        setPositiveButton(builder)
+                .create()
+                .show();
+    }
 
+    private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
+        return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
 
 }

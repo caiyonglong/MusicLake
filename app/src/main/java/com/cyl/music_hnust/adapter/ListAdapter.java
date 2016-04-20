@@ -62,9 +62,6 @@ public class ListAdapter extends BaseAdapter {
                     .findViewById(R.id.music_item_tv_name);
             viewHolder.music_item_tv_artist = (TextView) convertView
                     .findViewById(R.id.music_item_tv_artist);
-            viewHolder.list_black_btn = (ImageButton) convertView
-                    .findViewById(R.id.list_black_btn);
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -89,6 +86,5 @@ public class ListAdapter extends BaseAdapter {
         public ImageView icon;
         public TextView music_item_tv_name;
         public TextView music_item_tv_artist;
-        public ImageButton list_black_btn;
     }
 }

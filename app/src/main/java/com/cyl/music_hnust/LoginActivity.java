@@ -311,6 +311,7 @@ public class LoginActivity extends AppCompatActivity {
                     UserStatus.savaUserInfo(getApplicationContext(), userinfo2);
                     LoginSuccess = true;
                     loadingDialog.dismiss();
+                    finish();
                 } else {
                     mEmailSignInButton.setText("登录");
                     Toast.makeText(getApplicationContext(), login_status, Toast.LENGTH_SHORT).show();

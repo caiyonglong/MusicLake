@@ -80,15 +80,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_icon="@mipmap/iconfont_dingwei"
-            fab:fab_colorNormal="@color/main_white"
-            fab:fab_title="定位当前位置"
-            fab:fab_size="mini"
-            fab:fab_colorPressed="@color/white"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_b"
@@ -97,6 +88,7 @@
             fab:fab_icon="@android:drawable/ic_menu_search"
             fab:fab_colorNormal="@color/main_white"
             fab:fab_title="科大地图"
+            fab:fab_size="mini"
             fab:fab_colorPressed="@color/white"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

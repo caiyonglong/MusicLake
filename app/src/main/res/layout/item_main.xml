@@ -32,6 +32,10 @@
 
     <RelativeLayout
         android:id="@+id/container"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -87,7 +91,6 @@
         <LinearLayout
 
             android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -121,13 +124,12 @@
             android:id="@+id/content_text"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:maxLines="3"
-            android:ellipsize="end"
-
+            android:maxLines="4"
+            android:scaleX="0.96"
+            android:layout_marginTop="5dp"
             android:layout_below="@id/user_logo"
             android:textColor="@color/main_black"
-            android:layout_marginBottom="10dp"
-            android:layout_margin="4dp"
+            android:layout_marginBottom="8dp"
             android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
 
 

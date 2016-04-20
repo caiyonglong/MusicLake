@@ -16,12 +16,16 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ public class MusicPlayService extends Service {
 
     public static final String INTENT_ACTIVITY = "activity";
     public static final String ACTIVITY_MAIN = "myactivity";
+    private static final int NOTIFICATION_ID = 0x1;
     private final IBinder mBinder = new LocalBinder();
     private Context context;
     /* MediaPlayer对象 */
@@ -47,6 +52,8 @@ public class MusicPlayService extends Service {
 //    public LrcProcess mLrcProcess;
 //    public LrcView mLrcView;
     public Notification notif;
+
+    private NotificationManager mNotificationManager;
 
 
 
@@ -62,6 +69,7 @@ public class MusicPlayService extends Service {
         super.onCreate();
         //实例化过滤器，设置广播
         serviceReceiver = new MyReceiver();
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION_SERVICE);
 
@@ -74,6 +82,13 @@ public class MusicPlayService extends Service {
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
         }
+
+        TelephonyManager telephonyManager = (TelephonyManager) this
+                .getSystemService(Context.TELEPHONY_SERVICE);// 获取电话通讯服务
+        telephonyManager.listen(new ServicePhoneStateListener(),
+                PhoneStateListener.LISTEN_CALL_STATE);// 创建一个监听对象，监听电话状态改变事件
+
+
         mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
             public void onCompletion(MediaPlayer arg0) {
                 // 播放完成一首之后进行下一首
@@ -260,7 +275,6 @@ public class MusicPlayService extends Service {
      */
     public void pausePlay() {
 
-
         if (mMediaPlayer.isPlaying()) {
             currentTime = mMediaPlayer.getCurrentPosition();
             mMediaPlayer.pause();
@@ -295,7 +309,7 @@ public class MusicPlayService extends Service {
                 R.layout.notification);
         rv.setOnClickPendingIntent(R.id.notificationnext, nextPendingIntent);
         rv.setOnClickPendingIntent(R.id.notificationplay, nPendingIntent);
-        rv.setTextViewText(R.id.noticationname, m.getName());
+        rv.setTextViewText(R.id.noticationname, m.getName()==null? "湖科音乐" : m.getName());
         rv.setTextViewText(R.id.noticationsinger,
                 m.getArtist().equals("未知艺术家") ? "music" : m.getArtist());
         if (mMediaPlayer.isPlaying()) {
@@ -332,9 +346,15 @@ public class MusicPlayService extends Service {
                 .build();
         notif.flags = Notification.FLAG_AUTO_CANCEL;
         notif.contentView=rv;
-        notif.contentIntent=contentIntent ;
-        startForeground(1,notif);
+
+        startForeground(NOTIFICATION_ID, notif);
+
         Log.e("notify","notify");
+    }
+
+    private void cancelNotification() {
+        stopForeground(true);
+        mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
     @Override
@@ -473,6 +493,33 @@ public class MusicPlayService extends Service {
             it.putExtra("artist",getSingerName()+"");
             it.putExtra("pic",getSong().getAlbumPic()+"");
             sendBroadcast(it);
+        }
+    }
+
+
+    private class ServicePhoneStateListener extends PhoneStateListener {
+
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            // TODO Auto-generated method stub
+            switch (state){
+                case TelephonyManager.CALL_STATE_OFFHOOK:   //通话状态
+                case TelephonyManager.CALL_STATE_RINGING:   //通话状态
+                    pause();
+                    break;
+            }
+        }
+    }
+
+    private void pause() {
+        if (mMediaPlayer.isPlaying()){
+            mMediaPlayer.pause();
+        }
+    }
+    private void stop() {
+        if (mMediaPlayer.isPlaying()){
+            mMediaPlayer.pause();
+            cancelNotification();
         }
     }
 }

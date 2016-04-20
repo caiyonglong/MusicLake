@@ -54,6 +54,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private RequestQueue mRequestQueue;
+    String sharecontent="";
+    Intent in;
 
     static class MyHandler extends Handler {
         WeakReference<Activity > mActivityReference;
@@ -87,6 +89,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         handler =new MyHandler(EditActivity.this);
+        in=getIntent();
+        if (in.getStringExtra("sharecontent")!=null){
+            sharecontent = in.getStringExtra("sharecontent");
+            Log.e("edit",sharecontent);
+        }
 
         mRequestQueue = Volley.newRequestQueue(this);
 
@@ -99,6 +106,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         back = (ImageButton) findViewById(R.id.backImageButton);
         send_info = (EditText) findViewById(R.id.edit_content);
         btn_send_info = (Button) findViewById(R.id.btn_send_info);
+        send_info.setText(sharecontent);
         back.setOnClickListener(this);
         btn_send_info.setOnClickListener(this);
     }
@@ -161,7 +169,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     private void volley_Request_GET(String user_id, String content) {
 
-        String urlString = "http://119.29.27.116/hcyl/music_BBS/operate.php?newSecret&&secretContent=" + content + "&&user_id=" + user_id;
+        String time = FormatUtil.getTime();
+        String urlString = "http://119.29.27.116/hcyl/music_BBS/operate.php?newSecret&" +
+                "secretContent=" + content +
+                "&secretTime=" + time +
+                "&user_id=" + user_id;
 
         Log.e("content", urlString + "");
         HttpUtil.get(urlString, new JsonHttpResponseHandler() {
