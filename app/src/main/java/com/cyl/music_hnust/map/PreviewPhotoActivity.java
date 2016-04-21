@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,11 +54,14 @@ public class PreviewPhotoActivity extends AppCompatActivity {
         getIntentData();
         mQueue = Volley.newRequestQueue(this.getApplicationContext());
         mImageLoader = new ImageLoader(mQueue, new AMApCloudImageCache());
+
         mTitletv = (TextView) findViewById(R.id.title_des_text);
         mTitletv.getPaint().setFakeBoldText(true);
         mpbLoding = (ProgressBar) findViewById(R.id.pb_loading);
         mphtoPager = (ViewPager) findViewById(R.id.viewpager_photo);
+
         mphtoPager.addOnPageChangeListener(pageChangeListener);
+
         mButtonback = (Button) findViewById(R.id.back);
         mButtonback.setOnClickListener(new OnClickListener() {
 
@@ -174,12 +179,19 @@ public class PreviewPhotoActivity extends AppCompatActivity {
             return size;
         }
 
-        public int getItemPosition(Object object) {
-            return POSITION_NONE;
+        public int getItemPosition(int  pos) {
+            return pos;
         }
 //
-//		public void destroyItem(View arg0, int arg1, Object arg2) {// 销毁view对象
-//			//((ViewPager) arg0).removeView(listViews.get(arg1 % size));
+
+//        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+//            container.removeView(listViews.get(position % size));
+        }
+//
+//        public void destroyItem(View arg0, int arg1, Object arg2) {// 销毁view对象
+//			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
 //		}
 //
 //		public void finishUpdate(View arg0) {
@@ -188,7 +200,6 @@ public class PreviewPhotoActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-
             container.addView(listViews.get(position % size), 0);
 
             return listViews.get(position % size);
@@ -199,4 +210,5 @@ public class PreviewPhotoActivity extends AppCompatActivity {
             return arg0 == arg1;
         }
     }
+
 }

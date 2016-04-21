@@ -64,7 +64,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             scanUtil.scanPlaylistFromDB();
             al_playlist = MusicList.playlist;
 
-            mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
 
             playlistadapter = new MyStaggeredViewAdapter(getApplicationContext(), al_playlist, type);
             playlistadapter.setOnItemClickListener(this);
@@ -102,54 +102,37 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
 
 
     String targetStr="";
+    int pos = 0;
     @Override
     public void onItemClick(View view, final int position) {
         targetStr = al_playlist.get(position);
-      //  playlistId = MusicUtils.getPlayListId(this, targetStr);
-        show(targetStr,position);
+        pos= position;
+        show(targetStr);
 
 
     }
-    public void show(String msg, final int position){
+    public void show(String msg){
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("提示")
+                .setTitle("歌单管理")
                 .setMessage(msg)
                 .setIcon(R.mipmap.ic_launcher);
         setPositiveButton(builder);
         setNegativeButton(builder);
-        builder.setNeutralButton("删除歌单",new DialogInterface.OnClickListener(){
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                new SweetAlertDialog(getApplicationContext(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("确认删除歌单?")
-                        .setContentText("删除后不能恢复!")
-                        .setConfirmText("确定！")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                // reuse previous dialog instance
-                                scanUtil.deleteplaylist(targetStr,-1);
-                                Log.e("删除歌单","dddd");
-
-                                playlistadapter.mDatas.remove(position);
-
-                                playlistadapter.notifyDataSetChanged();
-                                sDialog.setTitleText("已删除!")
-                                        .setContentText("歌单已经删除!")
-                                        .setConfirmText("OK")
-                                        .setConfirmClickListener(null)
-                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                            }
-                        })
-                        .show();
-
-            }
-        });
-        builder.create()
+        setNeutralButton(builder)
+                .create()
                 .show();
     }
+
+    private AlertDialog.Builder setNeutralButton(AlertDialog.Builder builder) {
+     return builder.setNeutralButton("删除歌单", new DialogInterface.OnClickListener() {
+         @Override
+         public void onClick(DialogInterface dialog, int which) {
+             showmsg(targetStr);
+         }
+     });
+    }
+
+
 
     private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
         return builder.setPositiveButton("分享歌单", new DialogInterface.OnClickListener() {
@@ -182,6 +165,29 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+            }
+        });
+    }
+
+    public void showmsg(String msg){
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this)
+                .setTitle("删除歌单")
+                .setMessage(msg)
+                .setIcon(R.mipmap.ic_launcher);
+        setPositiveButton1(builder1)
+                .create()
+                .show();
+    }
+
+    private AlertDialog.Builder setPositiveButton1(AlertDialog.Builder builder) {
+        return builder.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // reuse previous dialog instance
+                scanUtil.deleteplaylist(targetStr,-1);
+                Log.e("删除歌单","dddd===="+pos);
+                playlistadapter.mDatas.remove(pos);
+                playlistadapter.notifyDataSetChanged();
             }
         });
     }

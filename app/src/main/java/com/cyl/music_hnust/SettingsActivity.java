@@ -1,6 +1,7 @@
 package com.cyl.music_hnust;
 
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -205,6 +206,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("ValidFragment")
     public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private Preference preference_about;

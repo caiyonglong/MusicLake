@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class HttpByGet {
     private static String TAG_GET = "Log";
@@ -54,11 +55,14 @@ public class HttpByGet {
     }
 
     // HttpURLConnection
-    public static String requestByHttpGet(String path) {
+    public static String requestByHttpGet(String urlpath, String path) {
         String json = "";
         try {
+            Log.e("requestByHttpGet",path);
+            String strURL = URLEncoder.encode(path, "utf-8");
+            Log.e("requestByHttpGet",strURL);
             // 新建HttpGet对象
-            URL url = new URL(path);
+            URL url = new URL(urlpath+strURL);
 
             // 获取HttpClient对象
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -74,7 +78,7 @@ public class HttpByGet {
                 //	json = EntityUtils.toString(httpResp.getEntity(), "GBK");
 
 
-                Log.e(TAG_GET, "HttpGet方式请求成功，返回数据如下：");
+                Log.e(TAG_GET, "HttpGet方式请求成功，返回数据如下："+json);
                 //	JsonParsing.getmusicId(json);
                 //	Log.e(TAG_GET, result);
             } else {

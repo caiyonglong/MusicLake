@@ -46,14 +46,6 @@ public class MusicInfo implements Comparator<Object> {
 		collator = Collator.getInstance();
 	}
 
-	public long getAllSongIndex() {
-		return allSongIndex;
-	}
-
-	public void setAllSongIndex(long allSongIndex) {
-		this.allSongIndex = allSongIndex;
-	}
-
 	public String getId() {
 		return id;
 	}

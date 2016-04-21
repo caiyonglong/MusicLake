@@ -14,33 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.nearby.NearbyInfo;
 import com.amap.api.services.nearby.NearbySearch;
-import com.amap.api.services.nearby.NearbySearchFunctionType;
-import com.amap.api.services.nearby.NearbySearchResult;
-import com.amap.api.services.nearby.UploadInfo;
-import com.amap.api.services.nearby.UploadInfoCallback;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
@@ -48,9 +35,7 @@ import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,10 +93,16 @@ public class NearActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Log.e("tag1", latLonPoint.getLongitude() + "");
-                    Log.e("tag1", latLonPoint.getLatitude() + "");
+//                    Log.e("tag1", latLonPoint.getLongitude() + "");
+//                    Log.e("tag1", latLonPoint.getLatitude() + "");
 
-                    adapter.latLonPoint = latLonPoint;
+                    if(latLonPoint!=null){
+                        adapter.latLonPoint = latLonPoint;
+                    }else {
+                        latLonPoint= new LatLonPoint(0,0);
+                        ToastUtil.show(getApplicationContext(),"定位异常!");
+                        adapter.latLonPoint = latLonPoint;
+                    }
                     adapter.myDatas = mydatas;
                     adapter.notifyDataSetChanged();
                     break;
@@ -164,11 +155,12 @@ public class NearActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 User user = UserStatus.getUserInfo(getApplicationContext());
-                if (user.getUser_id() != null) {
+                if (user.getUser_id() != null&&latLonPoint!=null) {
+
                     volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
                             , latLonPoint.getLongitude(), 0);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "id错误");
+                    ToastUtil.show(getApplicationContext(), "网络连接异常，请检查网络!");
                 }
 
             }
@@ -182,7 +174,7 @@ public class NearActivity extends AppCompatActivity {
                     volley_StringRequest_GET(user.getUser_id(), 0, 0
                             , 2);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "id错误");
+                    ToastUtil.show(getApplicationContext(), "请先登录!");
                 }
 
             }
@@ -196,7 +188,7 @@ public class NearActivity extends AppCompatActivity {
                     volley_StringRequest_GET(user.getUser_id(), 0, 0
                             , 1);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "id错误");
+                    ToastUtil.show(getApplicationContext(), "请先登录!");
                 }
             }
         });

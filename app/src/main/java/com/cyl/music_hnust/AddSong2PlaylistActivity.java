@@ -9,16 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.ListViewAdapter;
-import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
 
 import java.lang.ref.WeakReference;
@@ -111,6 +108,7 @@ public class AddSong2PlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 if (addSongIds.size() > 0) {
+
                     addSongs = new int[addSongIds.size()];
                     for (int i = 0; i < addSongIds.size(); i++) {
                         addSongs[i] = Integer.parseInt(addSongIds.get(i));
@@ -130,7 +128,7 @@ public class AddSong2PlaylistActivity extends AppCompatActivity {
                             boolean playListContain = false;
 
                             for (MusicInfo tempMp3 : songListForPlaylist) {
-                                long sqlId = tempMp3.getAllSongIndex();
+                                long sqlId = Long.parseLong(tempMp3.getId());
                                 Log.i("PLAYLIST", "CHECK: mp3: " + sqlId + " ADDID: " + addSongs[i]);
                                 if (sqlId == addSongs[i]) {
                                     playListContain = true;
@@ -153,7 +151,6 @@ public class AddSong2PlaylistActivity extends AppCompatActivity {
                         Log.e("ADDDDDDDDD===",addSongTemp[i]+"=="+playlist);
                     }
                     scanUtil.addplaylist(playlist,addSongTemp);
-                   // MusicUtils.addToPlaylist(AddSong2PlaylistActivity.this, addSongTemp, playlistId);
                 }
                 finish();
             }

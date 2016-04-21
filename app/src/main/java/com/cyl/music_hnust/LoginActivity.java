@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loadingDialog=new ProgressDialog(this);
         loadingDialog.setTitle("登录中...");
+        loadingDialog.setCancelable(false);
         mContext =getApplicationContext();
 
 
@@ -176,46 +177,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
-
-//            if (LoginSuccess){
-//                User user = UserStatus.getUserInfo(getApplicationContext());
-//                if (user.getUser_id()!=null){
-//
-//                    try {
-//                        HttpUtil.get(urlpath + user.getUser_id(), new AsyncHttpResponseHandler() {
-//                            @Override
-//                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                                try {
-//                                    json  = new String(responseBody,"utf-8");
-//
-//                                } catch (UnsupportedEncodingException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//                                json=null;
-//                            }
-//                        });
-//                        if (json!=null) {
-//                            downloadFile(imgpath + JsonParsing.getUserimg(json));
-//                            Log.e("tttt", json + "\n" + imgpath + JsonParsing.getUserimg(json));
-//                            File file = new File(tempPath);
-//                            if (file.exists()) {
-//                                user.setUser_img(tempPath);
-//                                UserStatus.savaUserInfo(getApplicationContext(), user);
-//                                finish();
-//                            }
-//                        }
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            }
-
         }
     }
 
@@ -239,7 +200,6 @@ public class LoginActivity extends AppCompatActivity {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
                 ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
         };
-
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
     }
@@ -313,10 +273,12 @@ public class LoginActivity extends AppCompatActivity {
                     loadingDialog.dismiss();
                     finish();
                 } else {
+                    loadingDialog.dismiss();
                     mEmailSignInButton.setText("登录");
                     Toast.makeText(getApplicationContext(), login_status, Toast.LENGTH_SHORT).show();
                 }
             } else {
+                loadingDialog.dismiss();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

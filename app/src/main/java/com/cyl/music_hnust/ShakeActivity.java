@@ -168,7 +168,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onSensorChange(float force) {
-                if (force > 9) {
+                if (force > 14) {
                     secondTime = System.currentTimeMillis();
                     jumpActivity();
                     vibrator.vibrate(200);
@@ -184,14 +184,15 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
 
     private void init() {
         Log.e("ddd", secondTime + "+++++" + firstTime);
-        if (secondTime - firstTime > 400) {
+        if (secondTime - firstTime > 700) {
             firstTime = secondTime;
             showProgressDialog("正在搜索......");
             getdata();
 
-        } else if (secondTime - firstTime > 200) {
+        } else if (secondTime - firstTime > 500) {
             shake_result.setVisibility(View.VISIBLE);
             showProgressDialog("能不能缓一缓,我都受不了了！");
+            handler.sendEmptyMessageDelayed(2,2000);
         } else if (secondTime - firstTime > 0) {
             shake_result.setVisibility(View.GONE);
 //            showProgressDialog("能不能缓一缓,我都受不了了！");

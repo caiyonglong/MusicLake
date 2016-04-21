@@ -54,13 +54,7 @@
                     android:layout_toLeftOf="@+id/playlist_delete"
                     android:textColor="@color/main_black"
                     android:textSize="15sp" />
-                <ImageButton
-                    android:id="@+id/playlist_delete"
-                    android:background="@drawable/icon_folder_delete"
-                    android:layout_width="50dp"
-                    android:visibility="gone"
-                    android:gravity="center_vertical"
-                    android:layout_height="50dp" />
+
             </LinearLayout>
         </RelativeLayout>
 

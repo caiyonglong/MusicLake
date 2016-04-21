@@ -49,19 +49,17 @@ public class MusicPlayService extends Service {
     private int currentTime = 0;//歌曲播放进度
     private int currentListItme = -1;//当前播放第几首歌
     private List<MusicInfo> songs;//要播放的歌曲集合
-//    public LrcProcess mLrcProcess;
+    //    public LrcProcess mLrcProcess;
 //    public LrcView mLrcView;
     public Notification notif;
 
     private NotificationManager mNotificationManager;
 
 
-
     MyReceiver serviceReceiver;
     public static final String BROADCAST_ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
     public static final String NOTIFICATION_ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
     public static final String NOTIFICATION_ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
-
 
 
     @Override
@@ -143,7 +141,7 @@ public class MusicPlayService extends Service {
         it.putExtra("update", 1);
         it.putExtra("name", getSongName());
         it.putExtra("artist", getSingerName());
-        it.putExtra("pic",getSong().getAlbumPic()+"");
+        it.putExtra("pic", getSong().getAlbumPic() + "");
         sendBroadcast(it);
 
 
@@ -169,7 +167,7 @@ public class MusicPlayService extends Service {
 //            /* 开始播放 */
 
 
-           // initLrc(path);
+            // initLrc(path);
             mMediaPlayer.start();
             showNotification();
 
@@ -178,39 +176,35 @@ public class MusicPlayService extends Service {
     }
 
 
-
-
-
-
     /* 下一首 */
     public void nextMusic() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String mode=prefs.getString("mode_list","0");
-        switch (mode){
+        String mode = prefs.getString("mode_list", "0");
+        switch (mode) {
             case "0"://顺序
                 if (++currentListItme >= songs.size()) {
                     currentListItme = 0;
                 }
-                if (songs.get(currentListItme).getPath()!=null) {
+                if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
-                }else {
-                    ToastUtil.show(context,"播放列表为空");
+                } else {
+                    ToastUtil.show(context, "播放列表为空");
                 }
                 break;
             case "2"://单曲
-                if (songs.get(currentListItme).getPath()!=null) {
+                if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
-                }else {
-                    ToastUtil.show(context,"播放列表为空");
+                } else {
+                    ToastUtil.show(context, "播放列表为空");
                 }
                 break;
             case "1"://随机
                 currentListItme = (int) (Math.random() * songs.size());
 
-                if (songs.get(currentListItme).getPath()!=null) {
+                if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
-                }else {
-                    ToastUtil.show(context,"播放列表为空");
+                } else {
+                    ToastUtil.show(context, "播放列表为空");
                 }
 
                 break;
@@ -224,32 +218,32 @@ public class MusicPlayService extends Service {
     /* 上一首 */
     public void frontMusic() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String mode=prefs.getString("mode_list","0");
-        switch (mode){
+        String mode = prefs.getString("mode_list", "0");
+        switch (mode) {
             case "0"://顺序
                 if (--currentListItme < 0) {
                     currentListItme = songs.size() - 1;
                 }
-                if (songs.get(currentListItme).getPath()!=null) {
+                if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
-                }else {
-                    ToastUtil.show(context,"播放列表为空");
+                } else {
+                    ToastUtil.show(context, "播放列表为空");
                 }
                 break;
             case "2"://单曲
-                if (songs.get(currentListItme).getPath()!=null) {
+                if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
-                }else {
-                    ToastUtil.show(context,"播放列表为空");
+                } else {
+                    ToastUtil.show(context, "播放列表为空");
                 }
                 break;
             case "1"://随机
                 currentListItme = (int) (Math.random() * songs.size());
 
-                if (songs.get(currentListItme).getPath()!=null) {
+                if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
-                }else {
-                    ToastUtil.show(context,"播放列表为空");
+                } else {
+                    ToastUtil.show(context, "播放列表为空");
                 }
 
                 break;
@@ -259,8 +253,6 @@ public class MusicPlayService extends Service {
         showNotification();
 
     }
-
-
 
 
     /**
@@ -309,7 +301,7 @@ public class MusicPlayService extends Service {
                 R.layout.notification);
         rv.setOnClickPendingIntent(R.id.notificationnext, nextPendingIntent);
         rv.setOnClickPendingIntent(R.id.notificationplay, nPendingIntent);
-        rv.setTextViewText(R.id.noticationname, m.getName()==null? "湖科音乐" : m.getName());
+        rv.setTextViewText(R.id.noticationname, m.getName() == null ? "湖科音乐" : m.getName());
         rv.setTextViewText(R.id.noticationsinger,
                 m.getArtist().equals("未知艺术家") ? "music" : m.getArtist());
         if (mMediaPlayer.isPlaying()) {
@@ -319,9 +311,9 @@ public class MusicPlayService extends Service {
             rv.setImageViewResource(R.id.notificationplay,
                     R.drawable.notificaplay);
         }
-        Bitmap bm=null;
-        if (getSong().getAlbumPic()!=null) {
-             bm = BitmapFactory.decodeFile(getSong().getAlbumPic());
+        Bitmap bm = null;
+        if (getSong().getAlbumPic() != null) {
+            bm = BitmapFactory.decodeFile(getSong().getAlbumPic());
         }
         if (bm != null) {
             try {
@@ -345,11 +337,11 @@ public class MusicPlayService extends Service {
                 .setContentIntent(contentIntent)
                 .build();
         notif.flags = Notification.FLAG_AUTO_CANCEL;
-        notif.contentView=rv;
+        notif.contentView = rv;
 
         startForeground(NOTIFICATION_ID, notif);
 
-        Log.e("notify","notify");
+        Log.e("notify", "notify");
     }
 
     private void cancelNotification() {
@@ -362,13 +354,15 @@ public class MusicPlayService extends Service {
         // TODO Auto-generated method stub
         return mBinder;
     }
-    public MusicInfo getSong(){
+
+    public MusicInfo getSong() {
         return songs.get(currentListItme);
     }
 
     public String getSongName() {
         return songs.get(currentListItme).getName();
     }
+
     public String getPath() {
         return songs.get(currentListItme).getPath();
     }
@@ -441,47 +435,49 @@ public class MusicPlayService extends Service {
     @Override
     public void onDestroy() {
 
+        cancelNotification();
         mMediaPlayer.stop();
         mMediaPlayer.release();
 
         unregisterReceiver(serviceReceiver);
     }
 
-    private class MyReceiver extends BroadcastReceiver{
+    private class MyReceiver extends BroadcastReceiver {
         int status = 0;//0未播放 1正在播放 2暂停
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String str = intent.getAction();
 
-            int control = intent.getIntExtra("control",-1);
-            if (str.equals(NOTIFICATION_ACTION_PLAY)){
+            int control = intent.getIntExtra("control", -1);
+            if (str.equals(NOTIFICATION_ACTION_PLAY)) {
                 control = 1;
-            }else if (str.equals(NOTIFICATION_ACTION_NEXT)){
+            } else if (str.equals(NOTIFICATION_ACTION_NEXT)) {
                 control = 3;
             }
-            Log.e("Action",str);
-            Log.e("ddd",control+"");
-            switch (control){
+            Log.e("Action", str);
+            Log.e("ddd", control + "");
+            switch (control) {
                 case 0:
-                    status = 1 ;
+                    status = 1;
                     break;
                 //播放或暂停
                 case 1:
                     pausePlay();
                     if (mMediaPlayer.isPlaying()) {
-                        status = 1 ;
-                    }else {
-                        status = 2 ;
+                        status = 1;
+                    } else {
+                        status = 2;
                     }
                     break;
                 //上一首歌
                 case 2:
-                    status =1 ;
+                    status = 1;
                     frontMusic();
                     break;
                 //下一首歌
                 case 3:
-                    status =1 ;
+                    status = 1;
                     nextMusic();
                     break;
 
@@ -489,9 +485,9 @@ public class MusicPlayService extends Service {
             Intent it = new Intent(MyActivity.UPDATE_ACTION);
             it.putExtra("update", status);
             it.putExtra("current", currentListItme);
-            it.putExtra("name", getSongName()+"");
-            it.putExtra("artist",getSingerName()+"");
-            it.putExtra("pic",getSong().getAlbumPic()+"");
+            it.putExtra("name", getSongName() + "");
+            it.putExtra("artist", getSingerName() + "");
+            it.putExtra("pic", getSong().getAlbumPic() + "");
             sendBroadcast(it);
         }
     }
@@ -502,7 +498,7 @@ public class MusicPlayService extends Service {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             // TODO Auto-generated method stub
-            switch (state){
+            switch (state) {
                 case TelephonyManager.CALL_STATE_OFFHOOK:   //通话状态
                 case TelephonyManager.CALL_STATE_RINGING:   //通话状态
                     pause();
@@ -512,14 +508,22 @@ public class MusicPlayService extends Service {
     }
 
     private void pause() {
-        if (mMediaPlayer.isPlaying()){
+        if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
         }
     }
-    private void stop() {
-        if (mMediaPlayer.isPlaying()){
+
+    public void mystop() {
+
+
+        if (mMediaPlayer!=null&&mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
             cancelNotification();
+
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
         }
+
+
     }
 }

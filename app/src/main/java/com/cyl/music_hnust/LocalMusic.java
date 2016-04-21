@@ -21,16 +21,11 @@ import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Album;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.cyl.music_hnust.utils.FormatUtil.formatTime;
 
 /**
  * Created by 永龙 on 2016/3/12.
@@ -76,14 +71,18 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         tv_no_songs = (TextView) findViewById(R.id.tv_no_songs);
         music_list = (RecyclerView) findViewById(R.id.music_list);
         back.setOnClickListener(this);
+        tv_no_songs.setOnClickListener(this);
 
         it = getIntent();
         if ("local".equals(it.getStringExtra("action"))) {
             type = LOCAL_LIST;
             title.setText("本地音乐");
+            tv_no_songs.setText("播放列表为空\n请扫描歌曲");
         } else if ("favor".equals(it.getStringExtra("action"))) {
             type = FAVOR_LIST;
             title.setText("我的最爱");
+
+            tv_no_songs.setText("播放列表为空\n请添加喜欢");
         }
 
         initData();
@@ -122,6 +121,10 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.tv_no_songs:
+                Intent intent =new Intent(this,ScanActivity.class);
+                startActivity(intent);
                 break;
 
         }

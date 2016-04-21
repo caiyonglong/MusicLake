@@ -1,26 +1,17 @@
 package com.cyl.music_hnust.fragment;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -54,10 +45,8 @@ import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
-import com.cyl.music_hnust.utils.Album;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ScanUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.ExStaggeredGridLayoutManager;
@@ -78,9 +67,9 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     }
 
     private View mView;
-    private ImageView localmusic; //本地音乐
-    private ImageView downloaded; //下载歌曲
-    private ImageView love; //最喜欢
+    private CardView localmusic; //本地音乐
+    private CardView downloaded; //下载歌曲
+    private CardView love; //最喜欢
     private ImageView playlist_add; //增加歌单
     private TextView playlist_manage; //歌单管理
     private TextView localmusic_num; //本地歌曲数量
@@ -169,7 +158,6 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
         initView();
 
         //获取所有歌单列表
-        //al_playlist = MusicUtils.PlaylistList(getActivity());
         ScanUtil scanUtil = new ScanUtil(getContext());
         scanUtil.scanPlaylistFromDB();
         al_playlist = MusicList.playlist;
@@ -186,10 +174,10 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
 
     private void initView() {
-        localmusic = (ImageView) mView.findViewById(R.id.localmusic); //本地音乐
+        localmusic = (CardView) mView.findViewById(R.id.localmusic); //本地音乐
         localmusic_num = (TextView) mView.findViewById(R.id.localmusic_num); //本地音乐
-        downloaded = (ImageView) mView.findViewById(R.id.downloaded); //下载歌曲
-        love = (ImageView) mView.findViewById(R.id.love); //最喜欢
+        downloaded = (CardView) mView.findViewById(R.id.downloaded); //下载歌曲
+        love = (CardView) mView.findViewById(R.id.love); //最喜欢
         playlist_add = (ImageView) mView.findViewById(R.id.playlist_add); //增加歌单
         playlist_manage = (TextView) mView.findViewById(R.id.playlist_manage); //歌单管理
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.id_recyclerview); //歌单列表

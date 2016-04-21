@@ -76,8 +76,8 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
         ViewGroup.LayoutParams mLayoutParams = holder.playlist_album.getLayoutParams();
         mLayoutParams.height = mHeights.get(position);
         if (type == 2) {
-            holder.playlist_delete.setVisibility(View.VISIBLE);
-            holder.playlist_delete.setOnClickListener(new View.OnClickListener() {
+            holder.playlist_container.setVisibility(View.VISIBLE);
+            holder.playlist_container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mOnItemClickListener.onItemClick(holder.itemView, position);

@@ -114,6 +114,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 NetworkUtil networkUtil = new NetworkUtil(this);
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 String permis = networkUtil.getconnectinfo();
+
                 boolean isOnlyWifi= prefs.getBoolean("wifi_switch", true);
 
                 search_info = search_edit_info.getText().toString().trim();
@@ -125,7 +126,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                         initSearch();
                     } else if (permis.equals("Normal")&&!isOnlyWifi) {
                         show("当前操作会消耗流量,是否继续!");
-                    }  else if (permis.equals("Normal")&&!isOnlyWifi) {
+                    }  else if (permis.equals("Normal")&&isOnlyWifi) {
                         show("wifi未连接,请关闭 仅wifi联网!");
                     } else {
                         pDialog.setTitleText("请检查网络连接");
@@ -154,7 +155,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 try {
 
                     String path = urlpath + search_info;
-                    String json = HttpByGet.requestByHttpGet(path)
+                    Log.e("paht",path);
+                    String json = HttpByGet.requestByHttpGet(urlpath,search_info)
                             + "";
                     if ("ERROR".equals(json)) {
                         flag = false;

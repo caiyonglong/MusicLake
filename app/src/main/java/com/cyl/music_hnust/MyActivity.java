@@ -356,14 +356,15 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     private void close() {
      //   System.exit(0);
         if (mService!=null){
-            mService.mMediaPlayer.stop();
-
+            if (mService.mMediaPlayer!=null)
+            {
+                mService.mMediaPlayer.stop();
+            }
+            mService.mystop();
+            mService.stopSelf();
         }
-
-        this.finish();
-
-
-
+        System.exit(0);
+//        this.finish();
 
 //        if (mService.mMediaPlayer!=null){
 //            mService.mMediaPlayer.stop();

@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
@@ -112,6 +113,9 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("个人中心");
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String nickname = prefs.getString("nickname", "呵呵呵");
+        user_sign.setText(nickname);
 
         User userinfo = UserStatus.getUserInfo(this);
         if (userinfo.getUser_name() != null) {
