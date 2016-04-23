@@ -37,6 +37,7 @@
             android:layout_marginRight="10dp"
             android:textColorHint="@color/gray"
             android:hint="搜索信息"
+
             android:layout_weight="1"
             android:textColor="@color/gray"
             android:inputType="textNoSuggestions"
@@ -46,8 +47,8 @@
         <Button
             android:text="搜索"
             android:id="@+id/search_go_btn"
-
             android:padding="10dp"
+            android:backgroundTint="@color/setting_blue"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"

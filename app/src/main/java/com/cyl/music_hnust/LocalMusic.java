@@ -35,21 +35,13 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
     private RecyclerView music_list;
 
     //    private ListView listView;
-    private Button btn_playlist, btn_allSongs, btn_singers, btn_albums;
     private TextView title;
     private TextView tv_no_songs;
-    boolean isReturePlaylist;
     private int type = -1;
     private List<MusicInfo> songs;// 歌曲集合
-    private List<String> singers;// 歌手集合
-    private List<String> al_playlist;// 播放列表集合
-    private List<Album> albums;// 专辑集合
     private MusicPlayService mService;
     public static final int LOCAL_LIST = 1;//适配器加载的数据是歌曲列表
     public static final int FAVOR_LIST = 2;//适配器加载的数据是歌曲列表
-    public static final int ALL_SINGERS_LIST = 3;//适配器加载的数据是歌手列表
-    public static final int ALL_ALBUMS_LIST = 4;//适配器加载的数据是专辑列表
-    private MyApplication application;
 
 
     private RecyclerView.LayoutManager mLayoutManager;
@@ -62,7 +54,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.local_music);
-        mService = MyActivity.application.getmService();
+        mService = MyActivity.mService;
 
 
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -123,8 +115,11 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.tv_no_songs:
-                Intent intent =new Intent(this,ScanActivity.class);
-                startActivity(intent);
+                if (type == LOCAL_LIST){
+                    Intent intent =new Intent(this,ScanActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
                 break;
 
         }
@@ -142,7 +137,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                 mService.setCurrentListItme(position);
                 mService.setSongs(mDatas);
                 mService.playMusic(mDatas.get(position).getPath());
-                MyActivity.application.setmService(mService);
+                MyActivity.mService =mService;
                 break;
             case R.id.list_black_btn:
                 singleChoice(view, position);

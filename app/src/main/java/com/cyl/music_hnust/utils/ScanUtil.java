@@ -241,14 +241,17 @@ public class ScanUtil {
     public String getAlbumPicPath(final String filePath, String fileName) {
 
         String path = null;
-        Bitmap bitmap;
+        Bitmap bitmap= null;
         //能够获取多媒体文件元数据的类
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
             retriever.setDataSource(filePath); //设置数据源
             byte[] embedPic = retriever.getEmbeddedPicture(); //得到字节型数据
+            if (embedPic!=null)
             bitmap = BitmapFactory.decodeByteArray(embedPic, 0, embedPic.length); //转换为图片
+            if (bitmap!=null)
             path = CommonUtils.imageToLocal(bitmap, fileName);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

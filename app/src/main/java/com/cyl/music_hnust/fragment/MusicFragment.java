@@ -104,7 +104,6 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
     private String TAG = "My_Fragment_Music";
 
-    private MyApplication application;
 
     public static MusicPlayService mService;
     private DBDao dbDao;
@@ -202,6 +201,9 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
         play_buttom.setOnClickListener(this);
         next_buttom.setOnClickListener(this);
         singer_pic.setOnClickListener(this);
+        song_name.setOnClickListener(this);
+        singer_name.setOnClickListener(this);
+
         list_buttom.setOnClickListener(this);
     }
 
@@ -245,7 +247,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                                     playlistadapter.mDatas = al_playlist;
                                     playlistadapter.setmHeights(al_playlist);
                                     handler.sendEmptyMessage(0);
-                            //        playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
+                                    //        playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
 //                                    playlistadapter.setOnItemClickListener(MusicFragment.this);
 //                                    mRecyclerView.setAdapter(playlistadapter);
                                 } else {
@@ -271,7 +273,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
             // FloatingActionButton的点击事件
             case R.id.next_buttom:
-                mService = MyActivity.application.getmService();
+                mService = MyActivity.mService;
                 if (mService.getSongs() != null) {
                     mCallbacks.OnFragmentClick(v);
                 } else {
@@ -280,7 +282,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
                 break;
             case R.id.play_buttom:
-                mService = MyActivity.application.getmService();
+                mService = MyActivity.mService;
 
                 if (mService.getSongs() != null) {
                     mCallbacks.OnFragmentClick(v);
@@ -289,8 +291,11 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 }
 
                 break;
+
             case R.id.singer_pic:
-                mService = MyActivity.application.getmService();
+            case R.id.singer_name:
+            case R.id.song_name:
+                mService = MyActivity.mService;
 
                 if (mService.getSongs() != null) {
                     Intent it5 = new Intent(getActivity(), PlayerActivity.class);
@@ -300,7 +305,6 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 }
                 break;
             case R.id.list_buttom:
-
                 getPopupWindowInstance(v);
                 break;
         }
@@ -334,8 +338,8 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 startActivity(it);
                 break;
             case R.id.listitemBG:
-                mService.setCurrentListItme(position);
-                mService.playMusic(adapter.playlist.get(position).getPath());
+                MyActivity.mService.setCurrentListItme(position);
+                MyActivity.mService.playMusic(adapter.playlist.get(position).getPath());
                 adapter.playIndexPosition = position;
                 adapter.notifyDataSetChanged();
                 break;
@@ -354,8 +358,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
             return;
         } else {
 
-            mService = MyActivity.application.getmService();
-
+            mService = MyActivity.mService;
             List<MusicInfo> playlist = mService.getSongs();
 
             initPopuptWindow(v);
@@ -456,12 +459,17 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
     public static void initBackGround(Context context, String albumpic) {
 
-        Bitmap bitmap = CommonUtils.scaleBitmap(context, albumpic);
-        if (bitmap != null) {
-            singer_pic.setImageBitmap(bitmap);
+        if (albumpic.startsWith("http://")) {
+
         } else {
-            singer_pic.setImageResource(R.drawable.player_cover_default);
+            Bitmap bitmap = CommonUtils.scaleBitmap(context, albumpic);
+            if (bitmap != null) {
+                singer_pic.setImageBitmap(bitmap);
+            } else {
+                singer_pic.setImageResource(R.drawable.player_cover_default);
+            }
         }
+
 
     }
 

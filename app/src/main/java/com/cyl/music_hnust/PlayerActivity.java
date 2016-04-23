@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -27,8 +26,9 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.db.DBDao;
-import com.cyl.music_hnust.fragment.MusicListFragment;
+import com.cyl.music_hnust.fragment.PlayerFragment;
 import com.cyl.music_hnust.http.HttpByGet;
+import com.cyl.music_hnust.lyric.LyricItem;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
@@ -59,13 +59,23 @@ public class PlayerActivity extends AppCompatActivity {
 
     private ArrayList<ObjectAnimator> mAnimList;
 
+    /**
+     * 歌词
+     */
+
+    public boolean hasLyric = false;// 是否有歌词
+
+    public static List<LyricItem> lyricList;// 歌词列表
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_player);
+        mContext = getApplicationContext();
 
-        mService = MyActivity.application.getmService();
+        mService = MyActivity.mService;
+
+        lyricList = new ArrayList<LyricItem>();
 
         //广播
         playerReceiver = new PlayerReceiver();
@@ -73,9 +83,9 @@ public class PlayerActivity extends AppCompatActivity {
         intentFilter.addAction(UPDATE_ACTION);
         registerReceiver(playerReceiver, intentFilter);
 
-        // initFragment();
         initView();
         setListener();
+
         new AsyncTask<Void, Void, Boolean>() {
 
             @Override
@@ -100,37 +110,37 @@ public class PlayerActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean b) {
                 if (!b) return;
                 init();
-                initPlayMode();
                 translateAnim(mControllerRoot);
             }
         }.execute();
     }
 
-    private void initPlayMode() {
-    }
 
-    private void init() {
+    public void init() {
         initTitle();
         initBackGround();
-      //  initLrc(mService.getPath());
         initAlbum();
+        //   initLrc(mService.LrcPath);
         initFragment();
+
     }
 
     private void initAlbum() {
+        if (mService.getSong().isFavorite() && mService.getSong() != null) {
 
-
-        if (mService.getSong().isFavorite()&&mService.getSong()!=null)
             mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
-        else
+        } else {
             mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_nostar_style);
-
+        }
 
     }
 
+    private static Context mContext;
+
+
     private void initTitle() {
-        MusicInfo song=null;
-        if (mService.getSong()!=null) {
+        MusicInfo song = null;
+        if (mService.getSong() != null) {
             song = mService.getSong();
         }
         tv_songName.setText(song == null ? "湖科音乐" : song.getName() + " ");
@@ -147,11 +157,12 @@ public class PlayerActivity extends AppCompatActivity {
         for (int i = 0; i < mTitles.length; i++) {
             Bundle mBundle = new Bundle();
             mBundle.putInt("flag", i);
-            MusicListFragment mFragment = new MusicListFragment();
+            PlayerFragment mFragment = new PlayerFragment();
             mFragment.setArguments(mBundle);
             mFragments.add(i, mFragment);
-
         }
+
+
         myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), mTitles, mFragments);
         viewpager_player.setAdapter(myViewPagerAdapter);
         viewpager_player.setCurrentItem(1);
@@ -171,6 +182,10 @@ public class PlayerActivity extends AppCompatActivity {
 
             }
         });
+//        if (PlayerFragment.lyricView!=null){
+//            PlayerFragment.lyricView.setLrc(null);
+//            PlayerFragment.lyricView.setListener(null);
+//        }
     }
 
 
@@ -206,20 +221,23 @@ public class PlayerActivity extends AppCompatActivity {
             mModeImageButton.setBackgroundResource(R.drawable.player_btn_mode_repeat_style);
         }
 
+//        initFragment();
+
+
         // 启动
         handler.post(updateThread);
     }
 
     private Bitmap mBgBitmap;
     private Bitmap mAlbumBitmap;
-    MusicInfo song=null;
+    MusicInfo song = null;
 
     public void initBackGround() {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... params) {
                 Bitmap original = null;
-                if (mService.getSongs() != null&&mService.getCurrentListItme()!=-1) {
+                if (mService.getSongs() != null && mService.getCurrentListItme() != -1) {
                     song = mService.getSongs().get(mService.getCurrentListItme());
                 }
                 if (song == null) {
@@ -259,6 +277,8 @@ public class PlayerActivity extends AppCompatActivity {
                 recycleBitmap(mIvBg, mBgBitmap);
                 mBgBitmap = bitmap;
                 mIvBg.setImageBitmap(mBgBitmap);
+
+//                PlayerFragment.iv_album.setImageResource(R.mipmap.icon_hnust);
                 alphaAnim(mIvBg, 0);
             }
         }.execute();
@@ -308,19 +328,18 @@ public class PlayerActivity extends AppCompatActivity {
         public void run() {
             // 获得歌曲的长度并设置成播放进度条的最大值
 
-            if (mService.mMediaPlayer!=null){
+            if (mService.mMediaPlayer != null) {
                 seekBar1.setMax(mService.getDuration());
                 // 获得歌曲现在播放位置并设置成播放进度条的值
                 seekBar1.setProgress(mService.getCurrent());
 
-
                 tv_curcentTime.setText(formatTime(mService.getCurrent()));
                 tv_allTime.setText(formatTime(mService.getDuration()));
-            }else {
+            } else {
+
                 seekBar1.setMax(0);
                 // 获得歌曲现在播放位置并设置成播放进度条的值
                 seekBar1.setProgress(0);
-
 
                 tv_curcentTime.setText(formatTime(0));
                 tv_allTime.setText(formatTime(0));
@@ -399,7 +418,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 DBDao dbDao = new DBDao(getApplicationContext());
-                if (mService.getSong()!=null) {
+                if (mService.getSong() != null) {
                     if (!mService.getSong().isFavorite()) {
                         dbDao.update(mService.getSong().getName(), true);
                         mService.getSong().setFavorite(true);
@@ -435,7 +454,7 @@ public class PlayerActivity extends AppCompatActivity {
     /**
      * 格式化时间，将其变成00:00的形式
      */
-    public String formatTime(int time) {
+    public static String formatTime(int time) {
         int secondSum = time / 1000;
         int minute = secondSum / 60;
         int second = secondSum % 60;
@@ -455,6 +474,7 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+//        removeAllMsg();
         recycleBitmap(mIvBg, mBgBitmap);
         unregisterReceiver(playerReceiver);
     }
@@ -469,21 +489,24 @@ public class PlayerActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             int update = intent.getIntExtra("update", -1);
             int current = intent.getIntExtra("current", -1);
-            String name = intent.getStringExtra("name");
-            String artist = intent.getStringExtra("artist");
             if (current >= 0) {
                 initTitle();
             }
             switch (update) {
                 case 1://播放
-                    init();
-                    MusicListFragment.iv_album.setAnimation(MusicListFragment.operatingAnim);
+                    //init();
+                    //               PlayerFragment.iv_album.setAnimation(operatingAnim);
                     mPauseImageButton.setBackgroundResource(R.drawable.player_btn_pause_style);
                     break;
                 case 2: //暂停
-                    init();
-                    MusicListFragment.operatingAnim.cancel();
+//                    init();
+//                    operatingAnim.cancel();
                     mPauseImageButton.setBackgroundResource(R.drawable.player_btn_play_style);
+                    break;
+                case 3: //暂停
+                    init();
+//                    operatingAnim.cancel();
+                    mPauseImageButton.setBackgroundResource(R.drawable.player_btn_pause_style);
                     break;
             }
         }

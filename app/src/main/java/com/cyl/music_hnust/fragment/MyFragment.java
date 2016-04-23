@@ -208,7 +208,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
             public void run() {
                 mSwipeRefreshLayout.setRefreshing(false);
                 User userinfo = UserStatus.getUserInfo(getContext());
-                volley_StringRequest_GET(userinfo.getUser_id(), 0, null, null);
+                volley_StringRequest_GET( 0, null, null);
 
             }
         }, 1000);
@@ -242,13 +242,13 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                 if (loadmoring) {
                     if (position - 1 >= 0) {
                         poi = position - 1;
-                        User userinfo = UserStatus.getUserInfo(getContext());
-                        Log.e("dd", userinfo.getUser_id());
+                        String id= "1305030212";
+
                         String time = mdatas.get(poi).getTime();
-                        moreSecret(userinfo.getUser_id(), 1, time);
+                        moreSecret( 1, time);
                     } else {
                         User userinfo = UserStatus.getUserInfo(getContext());
-                        volley_StringRequest_GET(userinfo.getUser_id(), 0, null, null);
+                        volley_StringRequest_GET( 0, null, null);
                     }
                     mRecyclerViewAdapter.loadmore = "点击加载更多...";
                 } else {
@@ -263,12 +263,12 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     /**
      * 利用StringRequest实现Get请求
      */
-    private void volley_StringRequest_GET(String user_id, final int requestcode, String starttime, String serect_id) {
+    private void volley_StringRequest_GET( final int requestcode, String starttime, String serect_id) {
         String url = "";
         if (requestcode == 0) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateDetail&&user_id=" + user_id;
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateDetail&&user_id=1305030212";
         } else if (requestcode == 1) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&moreSecret&&start=" + starttime;
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=1305030212&moreSecret&&start=" + starttime;
         }
         // 2 创建StringRequest对象
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
@@ -313,9 +313,9 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         // 3 将StringRequest添加到RequestQueue
         mRequestQueue.add(jsonObjectRequest);
     }
-    private void moreSecret(String user_id, final int requestcode, String starttime) {
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id="
-                + user_id + "&moreSecret&start=" + starttime;
+    private void moreSecret( final int requestcode, String starttime) {
+        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=1305030212"
+                 +"&moreSecret&start=" + starttime;
         HttpUtil.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

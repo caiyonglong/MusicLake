@@ -4,28 +4,31 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:background="#33000000"
         android:id="@+id/song_list"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:background="#33000000"
+        android:visibility="gone"></ListView>
 
     <com.cyl.music_hnust.view.RoundedImageView
         android:id="@+id/iv_album"
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
         android:visibility="gone"
         android:src="@drawable/player_cover_default"
-        android:layout_centerInParent="true"
-        android:scaleType="fitCenter" />
+        />
 
-    <com.cyl.music_hnust.lyric.LyricView
-        android:id="@+id/LyricShow"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:visibility="gone"
-         />
+        <com.cyl.music_hnust.lyric.LyricView
+            android:id="@+id/LyricShow"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:textAlignment="center" />
+
+
 
 
 </RelativeLayout>

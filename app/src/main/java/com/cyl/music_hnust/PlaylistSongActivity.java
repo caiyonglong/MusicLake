@@ -78,7 +78,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.local_music);
         MyApplication application = (MyApplication) getApplication();
-        mService = application.getmService();
+        mService =MyActivity.mService;
         idEdit = false;
 
          handler =new MyHandler(PlaylistSongActivity.this);
@@ -221,7 +221,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
             mService.setCurrentListItme(position);
             mService.setSongs(songs);
             mService.playMusic(songs.get(position).getPath());
-            MyActivity.application.setmService(mService);
+            MyActivity.mService= mService;
 //            Intent it = new Intent(PlaylistSongActivity.this, PlayerActivity.class);
 //            startActivity(it);
         }

@@ -160,7 +160,7 @@ public class NearActivity extends AppCompatActivity {
                     volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
                             , latLonPoint.getLongitude(), 0);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "网络连接异常，请检查网络!");
+                    ToastUtil.show(getApplicationContext(), "定位失败!");
                 }
 
             }

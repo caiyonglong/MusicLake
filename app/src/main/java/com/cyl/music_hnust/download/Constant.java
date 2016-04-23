@@ -7,11 +7,6 @@ package com.cyl.music_hnust.download;
  * 
  */
 public class Constant {
-	/**
-	 * 下载的url地址
-	 */
-	public static final String URL1 = "http://downloadc.dewmobile.net/z/kuaiya282.apk";
-	public static final String URL2 = "http://gdown.baidu.com/data/wisegame/1b9392eadc3bddf1/WeChat_480.apk";
 
 	/**
 	 * 本地保存地址

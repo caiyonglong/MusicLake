@@ -2,19 +2,26 @@ package com.cyl.music_hnust;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -22,6 +29,7 @@ import android.widget.RadioGroup;
 
 import com.cyl.music_hnust.adapter.DownloadManageAdapter;
 import com.cyl.music_hnust.adapter.ListAdapter;
+import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.download.Constant;
@@ -31,7 +39,9 @@ import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanInfo;
+import com.cyl.music_hnust.utils.ToastUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,14 +61,13 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
 //    public List<Downloadinfo> downloadinfos = new ArrayList<>();
 
     public static MusicPlayService mService;
-    public int position=0;
+    public int position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
-        MyApplication application = (MyApplication) getApplication();
-        mService = application.getmService();
+        mService = MyActivity.mService;
         initView();
         initViewPager();
 
@@ -175,16 +184,14 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         }
     }
 
-    public static class DownloadedFragment extends Fragment {
+    public static class DownloadedFragment extends Fragment implements MusicRecyclerViewAdapter.OnItemClickListener {
         private static final String FILE_NAME = "/hnustmusic";
         View mView;
-        private ListView list_download;
+        private RecyclerView list_download;
 
         private DBDao dao;
-        private ListAdapter adapter;
-
-        private List<ScanInfo> data;
         private List<MusicInfo> listinfo;
+        private RecyclerView.LayoutManager mLayoutManager;
 
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -196,39 +203,109 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             dao = new DBDao(getActivity());
+
             List<ScanInfo> list = new ArrayList<ScanInfo>();
-            String path= "/storage/emulated/0/hkmusic/";
+
+            String path = "/storage/emulated/0/hkmusic/";
+
             list.add(new ScanInfo(path, true));
             dao.queryAll(list);
-            listinfo  = MusicList.list;
+
+            listinfo = MusicList.list;
+
             initView();
         }
+
         /**
          * 初始化控件
          */
         private void initView() {
-            list_download = (ListView) mView.findViewById(R.id.list_download);
-            adapter = new ListAdapter(getActivity(), listinfo, 0);
+            list_download = (RecyclerView) mView.findViewById(R.id.list_download);
+
+            //adapter = new ListAdapter(getActivity(), listinfo, 0);
+            mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            MusicRecyclerViewAdapter adapter = new MusicRecyclerViewAdapter(getContext(), listinfo);
+            adapter.setOnItemClickListener(this);
             list_download.setAdapter(adapter);
-            list_download.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                   // listinfo.get(position).
-                   // mService.playMusic();
-                    mService.setSongs(listinfo);
-                    mService.setCurrentListItme(position);
-                    mService.playMusic(listinfo.get(position).getPath());
-                    MyActivity.application.setmService(mService);
-                }
-            });
+
+            list_download.setLayoutManager(mLayoutManager);
 
         }
 
+        @Override
+        public void onItemClick(View view, int position) {
+            switch (view.getId()) {
+                case R.id.music_container:
+                    mService.setSongs(listinfo);
+                    mService.setCurrentListItme(position);
+                    mService.playMusic(listinfo.get(position).getPath());
+                    MyActivity.mService = mService;
+                    break;
+                case R.id.list_black_btn:
+                    singleChoice(view, position);
+                    break;
+            }
 
+        }
+
+        public void singleChoice(View source, final int position) {
+            String[] item = getResources().getStringArray(R.array.song_list);
+            android.widget.ListAdapter items = new ArrayAdapter<String>(getActivity(),
+                    R.layout.item_songs, item);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle("歌曲")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setAdapter(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                DBDao dbDao = new DBDao(getContext());
+
+                                if (!listinfo.get(position).isFavorite()) {
+                                    dbDao.update(listinfo.get(position).getName(), true);
+                                    ToastUtil.show(getContext(), "添加成功");
+                                } else {
+                                    ToastUtil.show(getContext(), "已添加");
+                                }
+
+                            } else {
+                                String msg = "歌曲名: "+listinfo.get(position).getName() + "\n" +
+                                        "歌手名: "+listinfo.get(position).getArtist() + "\n"+
+                                        "专辑名: "+ listinfo.get(position).getAlbum() + "\n"+
+                                        "歌曲路径: "+listinfo.get(position).getPath() + "\n";
+                                detailsshow(msg);
+                            }
+                        }
+                    });
+//        builder.setPositiveButton();
+            builder.create();
+            builder.show();
+        }
+
+        public void detailsshow(String msg) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle("歌曲信息")
+                    .setMessage(msg)
+                    .setIcon(R.mipmap.ic_launcher);
+            setPositiveButton(builder)
+                    .create()
+                    .show();
+        }
+
+        private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
+            return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 
-    public static class DownloadingFragment extends Fragment {
-        private ListView list_download;
+    public static class DownloadingFragment extends Fragment implements DownloadManageAdapter.OnItemClickListener {
+        private RecyclerView list_download;
+
+        private RecyclerView.LayoutManager mLayoutManager;
         /**
          * 存放要显示列表的数据
          */
@@ -238,6 +315,27 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         private SqliteDao dao;
 
         View mView;
+        MyHandler handler;
+        private static class MyHandler extends Handler {
+            private final WeakReference<Fragment> myfragment;
+
+            private MyHandler(Fragment fragment) {
+                myfragment = new WeakReference<Fragment>(fragment);
+            }
+
+            @Override
+            public void handleMessage(Message msg) {
+                Fragment downloadingFragment = myfragment.get();
+                if (downloadingFragment != null) {
+                    switch (msg.what) {
+                        case 0:
+                            adapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
+            }
+        }
+
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             mView = inflater.inflate(R.layout.frag_download, container, false);
             return mView;
@@ -248,7 +346,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             dao = new SqliteDao(getActivity());
-
+            handler = new MyHandler(DownloadingFragment.this);
             data = dao.getFileStates();
 
         }
@@ -265,27 +363,50 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
          * 初始化控件
          */
         private void initView() {
-            list_download = (ListView) mView.findViewById(R.id.list_download);
+
+            list_download = (RecyclerView) mView.findViewById(R.id.list_download);
+            mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
             adapter = new DownloadManageAdapter(getActivity(), data, dao);
+            adapter.setOnItemClickListener(this);
+
             list_download.setAdapter(adapter);
+
+            list_download.setLayoutManager(mLayoutManager);
         }
+
         @Override
         public void onDestroy() {
             super.onDestroy();
             dao.updateFileState(data);
         }
 
+        @Override
+        public void onItemClick(View view, int position) {
+            switch (view.getId()){
+                case R.id.btn_stop:
+                    adapter.isPause = true;
+                    adapter.setChange(data.get(position));
+                    handler.sendEmptyMessage(0);
+                    break;
+                case R.id.btn_continue:
+                    adapter.setChange(data.get(position));
+                    adapter.isPause = false;
+                    handler.sendEmptyMessage(0);
+                    break;
+            }
+        }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
     }
+
     /**
-     *
      * 项目名称：MultithreadedDownload 类名称：UpdateReceiver 类描述：
      * 接收器类，用来接收后台service发送过来的下载进度 创建人：wpy 创建时间：2014-10-13 上午10:11:20
-     *
      */
     private class UpdateReceiver extends BroadcastReceiver {
         /**

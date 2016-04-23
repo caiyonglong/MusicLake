@@ -74,8 +74,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        MyApplication application = (MyApplication) getApplication();
-        mService = application.getmService();
+        mService = MyActivity.mService;
 
         initView();
 
@@ -246,10 +245,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     mService.setCurrentListItme(0);
                     mService.setSongs(list);
                     mService.playMusic(infos.get(position).getPath());
+                    MyActivity.mService = mService;
                 } else {
                     int listitem = mService.getCurrentListItme() + 1;
                     list.add(listitem, musicInfo);
                     mService.setSongs(list);
+                    MyActivity.mService = mService;
                     ToastUtil.show(getApplicationContext(), "已添加到播放队列");
                 }
 

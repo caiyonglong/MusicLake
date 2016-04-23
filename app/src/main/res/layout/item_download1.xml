@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30.0dip"
                 android:gravity="bottom"
+                android:textColor="@color/main_white"
                 android:singleLine="true"
                 android:textSize="16.0sp" />
 
@@ -43,6 +44,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingRight="15.0dip"
+                    android:textColor="@color/main_white"
                     android:singleLine="true"
                     android:textSize="12.0sp" />
 
@@ -52,7 +54,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|right"
                     android:singleLine="true"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/main_white"
                     android:textSize="12.0sp" />
             </RelativeLayout>
         </LinearLayout>

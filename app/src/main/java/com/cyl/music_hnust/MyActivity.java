@@ -1,13 +1,13 @@
 package com.cyl.music_hnust;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -36,7 +36,6 @@ import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ImageLoader;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
@@ -88,37 +87,44 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-        regist();//注册广播
-        application = (MyApplication) getApplication();
 
-        if (mService == null) {
-            mService = new MusicPlayService();
-            application.setmService(mService);
-            Log.e("11", "d222d");
-        } else {
-            mService = application.getmService();
-            application.setmService(mService);
-        }
+     //   application = (MyApplication) getApplication();
+
+//        if (mService == null) {
+//            mService = new MusicPlayService();
+//            application.setmService(mService);
+//            Log.e("11", "d222d");
+//        } else {
+//            mService = application.getmService();
+//            application.setmService(mService);
+//        }
+
+        init();
 
 
+
+    }
+
+    private void init() {
         // 初始化各种控件
         initViews();
-
+        regist();//注册广播
+        playIntent = new Intent(getApplicationContext(), MusicPlayService.class);// 绑定服务
         // 初始化mTitles、mFragments等ViewPager需要的数据
         //这里的数据都是模拟出来了，自己手动生成的，在项目中需要从网络获取数据
         initData();
 
         // 对各种控件进行设置、适配、填充数据
         configViews();
-
+        initServiceConnection();
     }
 
     private void regist() {
-        musicReceiver = new MusicReceiver();
+        receiver = new MainReceiver();
         //注册广播
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPDATE_ACTION);
-        registerReceiver(musicReceiver, intentFilter);
+        registerReceiver(receiver, intentFilter);
     }
 
 
@@ -263,8 +269,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                         startActivity(it);
                         break;
                     case R.id.nav_menu_exit://退出程序
-                        close();
-                        MyActivity.this.finish();
+                     //   close();
+                        exitProgram();
+//                        MyActivity.this.finish();
                         break;
                     case R.id.nav_menu_scan:
                         Intent intent1 = new Intent(getApplicationContext(), ScanActivity.class);
@@ -353,33 +360,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         return super.onKeyDown(keyCode, event);
     }
 
-    private void close() {
-     //   System.exit(0);
-        if (mService!=null){
-            if (mService.mMediaPlayer!=null)
-            {
-                mService.mMediaPlayer.stop();
-            }
-            mService.mystop();
-            mService.stopSelf();
-        }
-        System.exit(0);
-//        this.finish();
 
-//        if (mService.mMediaPlayer!=null){
-//            mService.mMediaPlayer.stop();
-//            mService.mMediaPlayer = null;
-//        }
-//        stopService(application.intent);
-//        finish();
-    }
 
-    @Override
-    protected void onDestroy() {
-        close();
-        unregisterReceiver(musicReceiver);
-        super.onDestroy();
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -427,7 +410,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
 
-    MusicReceiver musicReceiver;
+    MainReceiver receiver;
     public static final String CTL_ACTION = "hk.music.action.CTL_ACTION"; //播放控制
     public static final String UPDATE_ACTION = "hk.music.action.UPDATE_ACTION"; //更新UI
 
@@ -447,7 +430,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
 
-    private class MusicReceiver extends BroadcastReceiver {
+    private class MainReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             int update = intent.getIntExtra("update", -1);
@@ -463,8 +446,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
             }
             switch (update) {
-                case 0:
-                    // MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
+                case 3:
+                    MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_pause);
                     break;
                 case 1:
                     MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_pause);
@@ -472,8 +455,88 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 case 2: //暂停
                     MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
                     break;
+
             }
         }
     }
+
+
+    private ServiceConnection serviceConnection;
+
+    private Intent playIntent;
+
+    private boolean bindState = false;// 服务绑定状态
+
+    private boolean canSkip = true;// 防止用户频繁点击造成多次解除服务绑定，true：允许解绑
+    /*
+	 * 初始化服务绑定
+	 */
+    private void initServiceConnection() {
+        serviceConnection = new ServiceConnection() {
+
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                // TODO Auto-generated method stub
+              //  binder = null;
+            }
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                // TODO Auto-generated method stub
+//                binder = (MediaBinder) service;
+
+               mService= ((MusicPlayService.LocalBinder) service).getService();
+                mService.setContext(getApplicationContext());
+//                if (binder != null) {
+//                    canSkip = true;// 重置
+//                    binder.setLyricView(null, true);// 无歌词视图
+//                }
+            }
+        };
+    }
+
+    /*
+	 * 这里的部分本来是写在onStart里的，但是我发现在真机上点击跳转后立即返回不会执行onStart，但会执行onResume，
+	 * 但跳转后空2秒以上再返回，就会执行onStart，这种问题如何解释。各位可以试试，也许我对生命周期理解的不透彻。
+	 */
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+
+//        Intent intent = new Intent(MediaService.BROADCAST_ACTION_SERVICE);
+//        intent.putExtra(MediaService.INTENT_ACTIVITY,
+//                MediaService.ACTIVITY_MAIN);
+//        sendBroadcast(intent);
+
+        bindState = bindService(playIntent, serviceConnection,
+                Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        if (serviceConnection != null) {
+            if (bindState) {
+                unbindService(serviceConnection);// 一定要解除绑定
+            }
+            serviceConnection = null;
+        }
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+    }
+    /**
+     * 退出程序
+     */
+    private void exitProgram() {
+        stopService(playIntent);
+        finish();
+    }
+
+
+
 
 }

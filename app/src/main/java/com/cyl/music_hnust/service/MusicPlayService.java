@@ -1,9 +1,5 @@
 package com.cyl.music_hnust.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,13 +12,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -37,11 +31,13 @@ import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.RoundCorner;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 public class MusicPlayService extends Service {
 
-    public static final String INTENT_ACTIVITY = "activity";
-    public static final String ACTIVITY_MAIN = "myactivity";
-    private static final int NOTIFICATION_ID = 0x1;
+    private static final int NOTIFICATION_ID = 1;
     private final IBinder mBinder = new LocalBinder();
     private Context context;
     /* MediaPlayer对象 */
@@ -52,6 +48,8 @@ public class MusicPlayService extends Service {
     //    public LrcProcess mLrcProcess;
 //    public LrcView mLrcView;
     public Notification notif;
+    public String LrcPath = null;
+    public boolean hasLyric = false;// 是否有歌词
 
     private NotificationManager mNotificationManager;
 
@@ -65,6 +63,8 @@ public class MusicPlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+
         //实例化过滤器，设置广播
         serviceReceiver = new MyReceiver();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -76,6 +76,7 @@ public class MusicPlayService extends Service {
         intentFilter.addAction(NOTIFICATION_ACTION_PLAY);
         //注册广播
         registerReceiver(serviceReceiver, intentFilter);
+
 
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
@@ -113,6 +114,7 @@ public class MusicPlayService extends Service {
 
     }
 
+
     /**
      * 得到当前播放进度
      */
@@ -138,39 +140,34 @@ public class MusicPlayService extends Service {
     public void playMusic(String path) {
         Intent it = new Intent(MyActivity.UPDATE_ACTION);
         it.putExtra("current", currentListItme);
-        it.putExtra("update", 1);
+        it.putExtra("update", 3);
         it.putExtra("name", getSongName());
         it.putExtra("artist", getSingerName());
         it.putExtra("pic", getSong().getAlbumPic() + "");
         sendBroadcast(it);
-
-
+        showNotification();
         try {
-
             /* 重置MediaPlayer */
             mMediaPlayer.reset();
             /* 设置要播放的文件的路径 */
-
             mMediaPlayer.setDataSource(path);
             // mMediaPlayer = MediaPlayer.create(this,
             // R.drawable.bbb);播放资源文件中的歌曲
             /* 准备播放 */
             mMediaPlayer.prepare();
-//            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mp) {
-//                    if (mp == mMediaPlayer) {
-//                        mMediaPlayer.start();
-//                    }
-//                }
-//            });
-//            /* 开始播放 */
-
-
             // initLrc(path);
             mMediaPlayer.start();
-            showNotification();
 
+            if (path.endsWith(".mp3") && !path.startsWith("http")) {
+                String lyricPath = path.replace(".mp3", ".lrc");
+                File file = new File(lyricPath);
+                if (file.exists()) {
+                    hasLyric = true;
+                    LrcPath = lyricPath;
+                } else {
+                    hasLyric = false;
+                }
+            }
         } catch (IOException e) {
         }
     }
@@ -340,14 +337,10 @@ public class MusicPlayService extends Service {
         notif.contentView = rv;
 
         startForeground(NOTIFICATION_ID, notif);
-
-        Log.e("notify", "notify");
+//
+//        Log.e("notify", "notify");
     }
 
-    private void cancelNotification() {
-        stopForeground(true);
-        mNotificationManager.cancel(NOTIFICATION_ID);
-    }
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -435,15 +428,22 @@ public class MusicPlayService extends Service {
     @Override
     public void onDestroy() {
 
-        cancelNotification();
-        mMediaPlayer.stop();
-        mMediaPlayer.release();
-
-        unregisterReceiver(serviceReceiver);
+        if (mMediaPlayer != null) {
+            stopForeground(true);
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+        if (serviceReceiver != null) {
+            unregisterReceiver(serviceReceiver);
+        }
     }
 
+
     private class MyReceiver extends BroadcastReceiver {
-        int status = 0;//0未播放 1正在播放 2暂停
+        int status = 0;//0未播放 1正在播放 2暂停 3下一首，上一首
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -472,12 +472,12 @@ public class MusicPlayService extends Service {
                     break;
                 //上一首歌
                 case 2:
-                    status = 1;
+                    status = 3;
                     frontMusic();
                     break;
                 //下一首歌
                 case 3:
-                    status = 1;
+                    status = 3;
                     nextMusic();
                     break;
 
@@ -513,17 +513,5 @@ public class MusicPlayService extends Service {
         }
     }
 
-    public void mystop() {
 
-
-        if (mMediaPlayer!=null&&mMediaPlayer.isPlaying()) {
-            mMediaPlayer.pause();
-            cancelNotification();
-
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-        }
-
-
-    }
 }

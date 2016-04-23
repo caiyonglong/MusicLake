@@ -140,8 +140,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
-        MyApplication application = (MyApplication) getApplication();
-        mService = application.getmService();
+        mService = MyActivity.mService;
         handler = new MyHandler(ShakeActivity.this);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());

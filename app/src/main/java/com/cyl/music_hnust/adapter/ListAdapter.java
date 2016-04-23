@@ -24,12 +24,10 @@ public class ListAdapter extends BaseAdapter {
     private Context context;
     private List<MusicInfo> files;
     private ViewHolder viewHolder = null;
-    private int i =0;
 
-    public ListAdapter(Context context, List<MusicInfo> files, int i) {
+    public ListAdapter(Context context, List<MusicInfo> files) {
         this.context = context;
         this.files = files;
-        this.i = i;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -68,15 +66,7 @@ public class ListAdapter extends BaseAdapter {
         }
         final MusicInfo file = files.get(position);
         viewHolder.music_item_tv_name.setText(file.getName());
-        viewHolder.music_item_tv_artist.setText(file.getArtist()+"-"+file.getAlbum());
-
-        if (i==1){
-            viewHolder.music_item_tv_name.setTextColor(R.color.main_white);
-            viewHolder.music_item_tv_artist.setTextColor(R.color.main_white);
-        }else if (i==0){
-            viewHolder.music_item_tv_name.setTextColor(R.color.gray);
-            viewHolder.music_item_tv_artist.setTextColor(R.color.gray);
-        }
+        viewHolder.music_item_tv_artist.setText(file.getArtist() + "-" + file.getAlbum());
 
 
         return convertView;

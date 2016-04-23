@@ -35,7 +35,6 @@ public class MusicRecyclerViewAdapter extends RecyclerView.Adapter<MusicRecycler
         this.mOnItemClickListener = listener;
     }
 
-    public boolean mBusy = false;
 
     public Context mContext;
     public List<MusicInfo> mDatas;

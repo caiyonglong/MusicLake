@@ -196,7 +196,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         head_upload.setOnClickListener(this);
     }
 
-
+    boolean upload = false;
     @Override
     public void onClick(View arg0) {
         switch (arg0.getId()) {
@@ -208,6 +208,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
 
                 if (userinfo.getUser_img() != null) {
                     path = userinfo.getUser_img();
+                    upload =true;
                     show("图片上传");
                     //   head.setImageBitmap(getLoacalBitmap(path));
                 } else {
@@ -335,8 +336,10 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 .setTitle("提示")
                 .setMessage(msg)
                 .setIcon(R.mipmap.ic_launcher);
-        setPositiveButton(builder);
-        setNegativeButton(builder)
+        if (upload) {
+            setNegativeButton(builder);
+        }
+        setPositiveButton(builder)
                 .create()
                 .show();
     }
@@ -346,10 +349,15 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                try {
-                    uploadFile(path,url);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (upload) {
+
+                    try {
+                        uploadFile(path, url);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    dialog.dismiss();
                 }
             }
         });
