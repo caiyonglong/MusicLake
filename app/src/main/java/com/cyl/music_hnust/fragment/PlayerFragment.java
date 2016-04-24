@@ -82,7 +82,9 @@ public class PlayerFragment extends Fragment {
     private void initView() {
         iv_album = (RoundedImageView) mView.findViewById(R.id.iv_album);
         song_list = (ListView) mView.findViewById(R.id.song_list);
+        if ( PlayerActivity.mService.getSongs()!=null&& PlayerActivity.mService.getSongs().size()>0)
         datas = PlayerActivity.mService.getSongs();
+
         final ListAdapter adapter = new ListAdapter(getContext(), datas);
         song_list.setAdapter(adapter);
         song_list.setSelection(PlayerActivity.mService.getCurrentListItme());
@@ -120,7 +122,7 @@ public class PlayerFragment extends Fragment {
 //        operatingAnim.setInterpolator(lin);
 
 
-        if (MyActivity.mService.getSong() != null && MyActivity.mService.getSong() != null) {
+        if (MyActivity.mService.getSongs() != null && MyActivity.mService.getSongs().size()>0) {
 
 
             String pic = MyActivity.mService.getSong().getAlbumPic();

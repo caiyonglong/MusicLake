@@ -247,9 +247,6 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                                     playlistadapter.mDatas = al_playlist;
                                     playlistadapter.setmHeights(al_playlist);
                                     handler.sendEmptyMessage(0);
-                                    //        playlistadapter = new MyStaggeredViewAdapter(getContext(), al_playlist, type);
-//                                    playlistadapter.setOnItemClickListener(MusicFragment.this);
-//                                    mRecyclerView.setAdapter(playlistadapter);
                                 } else {
                                     ToastUtil.show(getContext(), "歌单名不能为空！");
                                 }
@@ -297,12 +294,12 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
             case R.id.song_name:
                 mService = MyActivity.mService;
 
-                if (mService.getSongs() != null) {
+               // if (mService.getSongs() != null) {
                     Intent it5 = new Intent(getActivity(), PlayerActivity.class);
                     startActivity(it5);
-                } else {
-                    Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
+//                }
                 break;
             case R.id.list_buttom:
                 getPopupWindowInstance(v);

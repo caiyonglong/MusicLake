@@ -9,17 +9,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
-import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
-import com.cyl.music_hnust.utils.Album;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanUtil;
 import com.cyl.music_hnust.utils.ToastUtil;

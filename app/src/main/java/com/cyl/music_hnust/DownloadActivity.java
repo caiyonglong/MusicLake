@@ -20,17 +20,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.cyl.music_hnust.adapter.DownloadManageAdapter;
-import com.cyl.music_hnust.adapter.ListAdapter;
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
-import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.download.Constant;
 import com.cyl.music_hnust.download.FileState;

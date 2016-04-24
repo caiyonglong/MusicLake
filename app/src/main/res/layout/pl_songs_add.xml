@@ -1,55 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:Android="http://schemas.android.com/apk/res/android"
-    Android:layout_width="fill_parent"
-    Android:layout_height="fill_parent"
-    Android:orientation="horizontal" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:id="@+id/container"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
 
     <!-- 专辑图片 -->
 
     <ImageView
-        Android:id="@+id/albumPicture"
-        Android:layout_width="70dp"
-        Android:layout_height="70dp"
-        Android:layout_alignParentLeft="true"
-        Android:layout_alignParentTop="true"
-        Android:background="@mipmap/main_img_album" />
+        android:id="@+id/albumPicture"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@mipmap/main_img_album" />
 
 
     <ImageView
-        Android:id="@+id/icon"
-        Android:layout_width="24dp"
-        Android:layout_height="24dp"
-        Android:layout_alignParentRight="true"
-        Android:layout_centerVertical="true"
-        Android:layout_marginRight="10dp"
-        Android:layout_marginLeft="6dp"
-        Android:layout_gravity="center" />
+        android:id="@+id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_gravity="center" />
 
 
     <LinearLayout
-        Android:layout_width="wrap_content"
-        Android:layout_height="wrap_content"
-        Android:layout_alignParentTop="true"
-        Android:layout_toRightOf="@id/albumPicture"
-        Android:layout_toLeftOf="@id/icon"
-        Android:layout_marginBottom="6dp"
-        Android:layout_marginLeft="10dp"
-        Android:layout_marginTop="6dp"
-        Android:orientation="vertical" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/albumPicture"
+        android:layout_toLeftOf="@id/icon"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical" >
 
         <TextView
-            Android:id="@+id/songName"
-            Android:layout_width="wrap_content"
-            Android:layout_height="wrap_content"
-            Android:textColor="@color/gray"
-            Android:textSize="18sp" />
+            android:id="@+id/songName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="18sp" />
 
         <TextView
-            Android:id="@+id/singerName"
-            Android:layout_width="wrap_content"
-            Android:layout_height="wrap_content"
-            Android:textColor="@color/gray"
-            Android:textSize="12sp" />
+            android:id="@+id/singerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
     </LinearLayout>
 
 

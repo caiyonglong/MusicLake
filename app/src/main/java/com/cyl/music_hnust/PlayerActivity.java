@@ -126,9 +126,9 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initAlbum() {
-        if (mService.getSong().isFavorite() && mService.getSong() != null) {
-
-            mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
+        if (mService.getSongs() != null && mService.getSongs().size() > 0) {
+            if (mService.getSong().isFavorite())
+                mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_star_style);
         } else {
             mFavorImageButton.setBackgroundResource(R.drawable.player_btn_favorite_nostar_style);
         }
@@ -140,7 +140,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void initTitle() {
         MusicInfo song = null;
-        if (mService.getSong() != null) {
+        if (mService.getSongs() != null && mService.getSongs().size() > 0) {
             song = mService.getSong();
         }
         tv_songName.setText(song == null ? "湖科音乐" : song.getName() + " ");
@@ -224,8 +224,13 @@ public class PlayerActivity extends AppCompatActivity {
 //        initFragment();
 
 
-        // 启动
-        handler.post(updateThread);
+        if (mService.getSongs()!=null&&mService.getSongs().size()>0){
+            // 启动
+            handler.post(updateThread);
+        }else {
+            tv_curcentTime.setText("00:00");
+            tv_allTime.setText("00:00");
+        }
     }
 
     private Bitmap mBgBitmap;
@@ -237,7 +242,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             protected Bitmap doInBackground(Void... params) {
                 Bitmap original = null;
-                if (mService.getSongs() != null && mService.getCurrentListItme() != -1) {
+                if (mService.getSongs() != null &&mService.getSongs().size()>0&& mService.getCurrentListItme() != -1) {
                     song = mService.getSongs().get(mService.getCurrentListItme());
                 }
                 if (song == null) {
@@ -354,9 +359,11 @@ public class PlayerActivity extends AppCompatActivity {
         // 暂停or开始
         mPauseImageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent it = new Intent(CTL_ACTION);
-                it.putExtra("control", 1);
-                sendBroadcast(it);
+                if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                    Intent it = new Intent(CTL_ACTION);
+                    it.putExtra("control", 1);
+                    sendBroadcast(it);
+                }
             }
         });
         title_left.setOnClickListener(new View.OnClickListener() {
@@ -371,10 +378,12 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 //mService.nextMusic();
+                if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                    Intent it = new Intent(CTL_ACTION);
+                    it.putExtra("control", 3);
+                    sendBroadcast(it);
+                }
 
-                Intent it = new Intent(CTL_ACTION);
-                it.putExtra("control", 3);
-                sendBroadcast(it);
             }
         });
         // 上一首
@@ -382,9 +391,12 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 //mService.frontMusic();
-                Intent it = new Intent(CTL_ACTION);
-                it.putExtra("control", 2);
-                sendBroadcast(it);
+                if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                    Intent it = new Intent(CTL_ACTION);
+                    it.putExtra("control", 2);
+                    sendBroadcast(it);
+                }
+
             }
         });
         mModeImageButton.setOnClickListener(new ImageButton.OnClickListener() {
@@ -418,7 +430,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 DBDao dbDao = new DBDao(getApplicationContext());
-                if (mService.getSong() != null) {
+                if (mService.getSongs() != null&&mService.getSongs().size()>0) {
                     if (!mService.getSong().isFavorite()) {
                         dbDao.update(mService.getSong().getName(), true);
                         mService.getSong().setFavorite(true);
@@ -437,7 +449,9 @@ public class PlayerActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // fromUser判断是用户改变的滑块的值
                 if (fromUser == true) {
-                    mService.movePlay(progress);
+                    if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                        mService.movePlay(progress);
+                    }
                 }
             }
 

@@ -36,7 +36,6 @@ public class WelcomeActivity extends AppCompatActivity {
             if (activity != null) {
                 switch (msg.what) {
                     case 0:
-
                         break;
 
                 }

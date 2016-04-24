@@ -1,8 +1,6 @@
 package com.cyl.music_hnust.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,9 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.utils.AlbumUtil;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.view.RoundedImageView;
 
 import java.util.List;
 

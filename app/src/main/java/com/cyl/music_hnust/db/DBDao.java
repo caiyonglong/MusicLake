@@ -347,7 +347,8 @@ public class DBDao {
             ContentValues values = new ContentValues();
             values.put(DBData.PLAYLIST_TITLE, playlist);
             values.put(DBData.MUSIC_ID, music_id[i]);
-            db.insert(DBData.PLAYLIST_TABLENAME, DBData.MUSIC_ID,
+//            db.query()
+            db.insert(DBData.PLAYLIST_TABLENAME, DBData.PLAYLIST_ID,
                     values);
         }
     }
@@ -387,7 +388,6 @@ public class DBDao {
             while (cursor.moveToNext()) {
                 String name =cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_TITLE));
                 MusicList.playlist.add(name);
-
             }
         }
         // 记得关闭游标
@@ -405,18 +405,19 @@ public class DBDao {
         FavoriteList.list.clear();
         LyricList.map.clear();
 
+
         String sql = "select * from "+DBData.PLAYLIST_TABLENAME+" where "+
                 DBData.PLAYLIST_TITLE+" = '"+playlist+"'";
         Cursor cursor_id=db.rawQuery(sql, null);
-//        Cursor cursor_id = db.query(DBData.PLAYLIST_TABLENAME,null,DBData.PLAYLIST_TITLE+"=?",
-//                new String[]{playlist},null,null,null);
+
         List<Integer> music_id = new ArrayList<>();
+
         if (cursor_id!=null&&cursor_id.getCount()>0){
 
             while (cursor_id.moveToNext()){
-                if (cursor_id.getColumnIndex(DBData.MUSIC_ID)!=-1){
-                    music_id.add(cursor_id.getColumnIndex(DBData.MUSIC_ID));
-                    Log.e("TAG_DB_PLAYLIST===",cursor_id.getColumnIndex(DBData.MUSIC_ID)+"");
+
+                if (cursor_id.getInt(cursor_id.getColumnIndex(DBData.MUSIC_ID))!=-1){
+                    music_id.add(cursor_id.getInt(cursor_id.getColumnIndex(DBData.MUSIC_ID)));
                 }
             }
         }
@@ -425,7 +426,7 @@ public class DBDao {
         // 查询各媒体库目录下所有音乐信息
         for (int i = 0; i < music_id.size(); i++) {
             cursor = db.rawQuery("SELECT * FROM " + DBData.MUSIC_TABLENAME
-                            + " WHERE " + DBData.MUSIC_ID + "='" + i + "'",
+                            + " WHERE " + DBData.MUSIC_ID + "='" +music_id.get(i)+ "'",
                     null);
             List<MusicInfo> listInfo = new ArrayList<MusicInfo>();
             if (cursor != null && cursor.getCount() > 0) {

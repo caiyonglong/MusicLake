@@ -99,14 +99,16 @@ public class MusicPlayService extends Service {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 mp.reset();
-                File file = new File(getPath());
-                if (file.exists()) {
-                    Toast.makeText(getApplicationContext(), "播放出错",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "文件已不存在",
-                            Toast.LENGTH_SHORT).show();
+                if (songs != null && songs.size() > 0) {
+                    File file = new File(getPath());
+                    if (file.exists()) {
+                        Toast.makeText(getApplicationContext(), "播放出错",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "文件已不存在",
+                                Toast.LENGTH_SHORT).show();
 
+                    }
                 }
                 return true;
             }
@@ -207,8 +209,6 @@ public class MusicPlayService extends Service {
                 break;
         }
 
-        showNotification();
-
 
     }
 
@@ -247,7 +247,6 @@ public class MusicPlayService extends Service {
         }
         Log.v("itme", currentListItme + "hree");
 
-        showNotification();
 
     }
 
@@ -270,14 +269,21 @@ public class MusicPlayService extends Service {
         } else {
             mMediaPlayer.start();
         }
-        showNotification();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void showNotification() {
-        MusicInfo m = getSong();
-        CharSequence from = m.getName();
-        CharSequence message = m.getArtist();
+        MusicInfo m = null;
+        CharSequence from = "";
+        CharSequence message = "";
+        if (getSongs().size() > 0 && getSongs() != null) {
+            m = getSong();
+            from = m.getName();
+            message = m.getArtist();
+        } else {
+            from="湖科音乐";
+            message="听喜欢的歌";
+        }
         Intent nextIntent2 = new Intent();
         nextIntent2.setAction(NOTIFICATION_ACTION_NEXT); // 为Intent对象设置Action
 

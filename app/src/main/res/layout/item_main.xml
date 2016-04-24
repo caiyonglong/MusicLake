@@ -51,24 +51,26 @@
             android:src="@mipmap/user_icon_default_main" />
 
         <LinearLayout
-            android:layout_toRightOf="@id/user_logo"
             android:orientation="horizontal"
             android:layout_marginLeft="8dip"
             android:layout_marginTop="4dp"
             android:layout_alignBottom="@id/user_logo"
             android:layout_alignTop="@id/user_logo"
+            android:layout_toRightOf="@id/user_logo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
             <TextView
                 android:id="@+id/user_name"
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/user_logo"
-                android:layout_alignTop="@id/user_logo"
-                android:layout_toRightOf="@id/user_logo"
                 android:gravity="center_vertical"
-                android:text="岁月抚伤" />
+                android:text="岁月抚伤"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_width="80dp" />
             <TextView
+                android:layout_weight="1"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
@@ -77,6 +79,7 @@
                 android:text="发表于" />
 
             <TextView
+                android:layout_weight="1"
                 android:id="@+id/content_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,6 +93,7 @@
         </LinearLayout>
         <LinearLayout
 
+            android:id="@+id/comment"
             android:layout_marginTop="5dp"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"

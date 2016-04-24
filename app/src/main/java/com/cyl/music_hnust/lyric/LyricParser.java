@@ -111,7 +111,7 @@ public class LyricParser {
 						}
 						// 歌词添加到列表
 						item.setLyric(msg);
-						if (msg.length()>0)
+						//if (msg.length()>0)
 						lyricList.add(item);
 					}
 					// 如果时间大于列表中最后一个时间直接添加到结尾
@@ -124,7 +124,7 @@ public class LyricParser {
 							msg = temp.substring(timeLength * count);
 						}
 						item.setLyric(msg);
-						if (msg.length()>0)
+						//if (msg.length()>0)
 						lyricList.add(item);
 					}
 					// 否则按大小顺序插入

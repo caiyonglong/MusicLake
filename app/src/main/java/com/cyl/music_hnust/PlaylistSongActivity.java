@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
-import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
@@ -77,11 +76,11 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.local_music);
-        MyApplication application = (MyApplication) getApplication();
+
         mService =MyActivity.mService;
         idEdit = false;
 
-         handler =new MyHandler(PlaylistSongActivity.this);
+        handler =new MyHandler(PlaylistSongActivity.this);
 
         scanUtil =new ScanUtil(this);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -99,7 +98,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
                  */
                 playlist = intent.getStringExtra("playlist");
                 Log.e("==========get",playlist);
-
             }
         }
         initView();
@@ -197,11 +195,15 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onItemClick(View view, final int position) {
         final int positionInt = position;
+
         if (idEdit) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(PlaylistSongActivity.this);
-            dialog.setTitle("移出歌曲!").setMessage("是否将歌曲从"+playlist+"歌单\n移除!").setPositiveButton("是", new DialogInterface.OnClickListener() {
+            dialog.setTitle("移出歌曲!")
+                    .setMessage("是否将歌曲从"+playlist+"歌单\n移除!")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     scanUtil.deleteplaylist(playlist, Integer.parseInt(
                             songs.get(positionInt).getId()
                     ));
@@ -216,14 +218,12 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
                 }
 
             }).create().show();
-        } else {
 
+        } else {
             mService.setCurrentListItme(position);
             mService.setSongs(songs);
             mService.playMusic(songs.get(position).getPath());
             MyActivity.mService= mService;
-//            Intent it = new Intent(PlaylistSongActivity.this, PlayerActivity.class);
-//            startActivity(it);
         }
     }
 }

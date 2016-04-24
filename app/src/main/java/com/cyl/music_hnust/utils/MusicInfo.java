@@ -28,7 +28,6 @@ public class MusicInfo implements Comparator<Object> {
 	private String lrcPath;// 歌词路径
 	private String years;// 年代
 
-	private long  allSongIndex;
 
 
 

@@ -65,6 +65,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
@@ -77,19 +78,22 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:scaleType="centerInside"
+                        android:layout_marginBottom="5dp"
                         android:src="@mipmap/user_icon_default_main" />
 
                     <LinearLayout
+
                         android:layout_toRightOf="@id/user_logo"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_marginLeft="8dip"
-                        android:layout_marginTop="4dp"
+                        android:layout_toLeftOf="@+id/comment"
                         android:layout_alignBottom="@id/user_logo"
                         android:layout_alignTop="@id/user_logo"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
                         <TextView
                             android:id="@+id/user_name"
+                            android:textSize="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@id/user_logo"
@@ -97,28 +101,33 @@
                             android:layout_toRightOf="@id/user_logo"
                             android:gravity="center_vertical"
                             android:text="岁月抚伤" />
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginRight="3dp"
-                            android:gravity="center_vertical"
-                            android:text="发表于" />
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="3dp"
+                                android:textSize="8dp"
+                                android:gravity="center_vertical"
+                                android:text="发表于" />
 
-                        <TextView
-                            android:id="@+id/content_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:textColor="@color/setting_blue"
-                            android:layout_alignBottom="@id/user_logo"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignTop="@id/user_logo"
-                            android:scaleType="centerInside"
-                            android:text="2016-3-15" />
+                            <TextView
+                                android:id="@+id/content_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="8sp"
+                                android:textColor="@color/setting_blue"
+                                android:layout_alignBottom="@id/user_logo"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignTop="@id/user_logo"
+                                android:scaleType="centerInside"
+                                android:text="2016-3-15" />
+                        </LinearLayout>
+
                     </LinearLayout>
                     <LinearLayout
-
+                        android:id="@id/comment"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_alignParentRight="true"
