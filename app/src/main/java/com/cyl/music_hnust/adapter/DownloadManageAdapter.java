@@ -154,11 +154,11 @@ public class DownloadManageAdapter extends
         }
 
         if (isPause) {
-            holder.btn_continue.setVisibility(View.GONE);
-            holder.btn_stop.setVisibility(View.VISIBLE);
-        } else {
             holder.btn_stop.setVisibility(View.GONE);
             holder.btn_continue.setVisibility(View.VISIBLE);
+        } else {
+            holder.btn_continue.setVisibility(View.GONE);
+            holder.btn_stop.setVisibility(View.VISIBLE);
         }
 
 

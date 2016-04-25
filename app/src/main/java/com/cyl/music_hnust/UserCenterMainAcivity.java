@@ -81,7 +81,6 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     private String url = "http://119.29.27.116/hcyl/music_BBS/upload_file.php";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +125,16 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             user_major.setText(userinfo.getUser_major());
             if (userinfo.getUser_img() != null) {
                 path = userinfo.getUser_img();
-                head.setImageBitmap(getLoacalBitmap(path));
+
             }
+            path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
+            File file1 = new File(path);
+            if (file1.exists())
+            head.setImageBitmap(getLoacalBitmap(path));
+            else {
+                head.setImageResource(R.mipmap.user_icon_default_main);
+            }
+
         }
 
         user_logout.setOnClickListener(new View.OnClickListener() {
@@ -197,6 +204,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     }
 
     boolean upload = false;
+
     @Override
     public void onClick(View arg0) {
         switch (arg0.getId()) {
@@ -205,14 +213,15 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.head_upload:
                 User userinfo = UserStatus.getUserInfo(getApplicationContext());
+                path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
 
-                if (userinfo.getUser_img() != null) {
-                    path = userinfo.getUser_img();
-                    upload =true;
+                File file = new File(path);
+                if (file.exists()) {
+                    upload = true;
                     show("图片上传");
                     //   head.setImageBitmap(getLoacalBitmap(path));
                 } else {
-                    show("图片失败");
+                    show("图片地址错误");
                 }
 
                 break;
@@ -286,7 +295,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 uri = data.getData();
                 String[] proj = {MediaStore.Images.Media.DATA};
 //                Cursor cursor = managedQuery(uri, proj, null, null, null);
-                Cursor cursor = getContentResolver().query(uri,proj,null,null,null);
+                Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
 //                Cursor c= CloudSearch.Query();
 
 //                Cursor cursor = manag
@@ -356,7 +365,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else {
+                } else {
                     dialog.dismiss();
                 }
             }
@@ -364,10 +373,8 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * @param path
-     *            要上传的文件路径
-     * @param url
-     *            服务端接收URL
+     * @param path 要上传的文件路径
+     * @param url  服务端接收URL
      * @throws Exception
      */
     public static void uploadFile(String path, String url) throws Exception {
@@ -384,7 +391,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                                       byte[] responseBody) {
                     // 上传成功后要做的工作
                     Toast.makeText(mContext, "上传成功", Toast.LENGTH_LONG).show();
-                 //   progress.setProgress(0);
+                    //   progress.setProgress(0);
                 }
 
                 @Override

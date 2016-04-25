@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@mipmap/logo"
+    android:background="@mipmap/bg"
     android:layout_height="match_parent">
-
-        <TextView
-            android:textSize="25dp"
-            android:text="湖科音乐"
-            android:textColor="@color/main_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="42dp"
-            android:layout_marginStart="42dp"
-            android:layout_marginTop="66dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
 
 </RelativeLayout>

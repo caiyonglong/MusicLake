@@ -245,7 +245,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                                     scanUtil.scanPlaylistFromDB();
                                     al_playlist = MusicList.playlist;
                                     playlistadapter.mDatas = al_playlist;
-                                  //  playlistadapter.setmHeights(al_playlist);
+                                    playlistadapter.setmHeights(al_playlist);
                                     handler.sendEmptyMessage(0);
                                 } else {
                                     ToastUtil.show(getContext(), "歌单名不能为空！");
@@ -318,6 +318,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
             scanUtil.scanPlaylistFromDB();
             al_playlist = MusicList.playlist;
             playlistadapter.mDatas = al_playlist;
+
             playlistadapter.setmHeights(al_playlist);
             handler.sendEmptyMessage(0);
         }

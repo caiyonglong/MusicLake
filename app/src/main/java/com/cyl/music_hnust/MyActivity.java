@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -40,6 +41,7 @@ import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,11 +173,15 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
                     id_header_name.setText(userinfo.getUser_name().toString());
                     signature.setText(userinfo.getUser_id().toString());
+                    String path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
 
                     if (userinfo.getUser_img() != null) {
-                        String path = userinfo.getUser_img();
-                        id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                        path = userinfo.getUser_img();
+
                     }
+                    File file = new File(path);
+                    if (file.exists())
+                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
 
                     UserStatus.saveuserstatus(MyActivity.this, true);
                 } else {
@@ -183,6 +189,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                     UserStatus.saveuserstatus(MyActivity.this, false);
                     id_header_name.setText("未登录");
                     signature.setText("");
+                    id_header_face.setImageResource(R.mipmap.user_icon_default_main);
+
                 }
 
             }
@@ -327,9 +335,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     @Override
     public void onPageSelected(int position) {
         mToolbar.setTitle(mTitles[position]);
-        if (position==1){
+        if (position == 1) {
             mFloatingActionButton.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mFloatingActionButton.setVisibility(View.GONE);
         }
     }

@@ -101,6 +101,7 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
     public int getItemCount() {
         return mDatas.size();
     }
+
     public void setmHeights(List<String> al_playlist) {
         for (int i = 0; i < mDatas.size(); i++) {
             mHeights.add((int) (Math.random() * 100) + 200);

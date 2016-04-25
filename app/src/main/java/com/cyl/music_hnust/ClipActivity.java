@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.clipheadphoto.ClipImageLayout;
 import com.cyl.music_hnust.utils.ImageTools;
 
@@ -30,6 +32,8 @@ public class ClipActivity extends Activity{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_clipimage);
+		final User user =  UserStatus.getUserInfo(this);
+
 		//这步必须要加
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		loadingDialog=new ProgressDialog(this);
@@ -54,7 +58,7 @@ public class ClipActivity extends Activity{
 					@Override
 					public void run() {
 						Bitmap bitmap = mClipImageLayout.clip();
-						String path= Environment.getExternalStorageDirectory()+"/hkmusic/cache/"+System.currentTimeMillis()+ ".png";
+						String path= Environment.getExternalStorageDirectory()+"/hkmusic/cache/"+user.getUser_id()+ ".png";
 						ImageTools.savePhotoToSDCard(bitmap,path);
 						loadingDialog.dismiss();
 						Intent intent = new Intent();

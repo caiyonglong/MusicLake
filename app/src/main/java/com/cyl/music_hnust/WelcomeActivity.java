@@ -1,6 +1,7 @@
 package com.cyl.music_hnust;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +37,9 @@ public class WelcomeActivity extends AppCompatActivity {
             if (activity != null) {
                 switch (msg.what) {
                     case 0:
+
+                        activity.finish();
+
                         break;
 
                 }
@@ -50,5 +54,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
         handler.sendEmptyMessageDelayed(0,5000);
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent intent = new Intent(this,MyActivity.class);
+        startActivity(intent);
     }
 }
