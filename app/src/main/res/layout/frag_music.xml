@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#11000000">
+    android:background="@color/main_white">
 
     <ScrollView
         android:id="@+id/scroll_music"
@@ -227,7 +227,7 @@
     <include
         layout="@layout/cent_menu"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

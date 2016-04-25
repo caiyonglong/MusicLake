@@ -6,6 +6,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/id_coordinatorlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -102,23 +103,21 @@
             app:elevation      ：FAB的阴影效果。
             app:rippleColor    ：设置涟漪的颜色，默认是由背景色生成的暗色调，可以自己指定。
             app:pressedTranslationZ  ：FAB动画效果，在它被按下的时候阴影就会增大。
+-->
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/id_floatingactionbutton"
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_dynamic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_menu_add"
-        app:backgroundTint="@color/main_blue_light"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:rippleColor="@color/main_blue_dark" />
-         -->
+        app:fab_icon="@mipmap/add"
+        fab:fab_colorNormal="@color/setting_blue"
+        fab:fab_colorPressed="@color/setting_blue"
 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"/>
 
-    <!--<include-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--layout="@layout/cent_menu"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="match_parent" />-->
 </RelativeLayout>

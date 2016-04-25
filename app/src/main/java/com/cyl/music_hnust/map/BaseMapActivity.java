@@ -105,7 +105,7 @@ public class BaseMapActivity extends Activity implements AMapLocationListener, R
         actionB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showProgressDialog("searchByLocal");
+                showProgressDialog("科大搜索");
                 items.clear();
                 CloudSearch.SearchBound bound = new CloudSearch.SearchBound(mLocalCityName);
                 try {
@@ -127,7 +127,7 @@ public class BaseMapActivity extends Activity implements AMapLocationListener, R
         progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progDialog.setIndeterminate(false);
         progDialog.setCancelable(true);
-        progDialog.setMessage("正在搜索:\n" + mTableID + "\n搜索方式:" + message);
+        progDialog.setMessage("正在搜索:\n" + message);
         progDialog.show();
     }
 

@@ -1,75 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:descendantFocusability="blocksDescendants"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical">
-
-    <!-- blocksDescendants：viewgroup会覆盖子类控件而直接获得焦点 -->
-    <!-- 用于解决ListView点击事件失效的问题 -->
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/playlist_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/main_white"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="4dp"
+    app:cardMaxElevation="3dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="2dp">
 
     <LinearLayout
-        android:id="@+id/adapter_music_item_view"
         android:layout_width="match_parent"
-        android:layout_height="60.0dip"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/playlist_album"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
-            android:layout_marginLeft="20dp"
-            android:layout_width="0.0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/music_item_tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="30.0dip"
-                android:gravity="bottom"
-                android:singleLine="true"
-                android:textColor="@color/main_white"
-                android:textSize="16.0sp" />
+                android:id="@+id/playlist_name"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="歌单名"
+                android:textColor="@color/gray"
+                android:textSize="15sp" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="25.0dip">
-
-                <TextView
-                    android:id="@+id/music_item_tv_artist"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingRight="15.0dip"
-                    android:singleLine="true"
-                    android:textColor="@color/main_white"
-                    android:textSize="12.0sp" />
-
-                <TextView
-                    android:id="@+id/music_item_tv_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|right"
-                    android:singleLine="true"
-                    android:textColor="@color/gray"
-                    android:textSize="12.0sp" />
-            </RelativeLayout>
         </LinearLayout>
-
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/music_item_tv_folder"
-        android:layout_width="match_parent"
-        android:layout_height="60.0dip"
-        android:gravity="center_vertical"
-        android:paddingLeft="10.0dip"
-        android:paddingRight="10.0dip"
-        android:singleLine="true"
-        android:textColor="@color/main_white"
-        android:textSize="16.0sp" />
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>

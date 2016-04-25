@@ -375,11 +375,11 @@ public class DBDao {
     }
 
     public void queryAllPlaylist() {
-        MusicList.list.clear();
+//        MusicList.list.clear();
         MusicList.playlist.clear();
-        FolderList.list.clear();
-        FavoriteList.list.clear();
-        LyricList.map.clear();
+//        FolderList.list.clear();
+//        FavoriteList.list.clear();
+//        LyricList.map.clear();
 
         String sql = "select distinct "+DBData.PLAYLIST_TITLE+" from "+DBData.PLAYLIST_TABLENAME;
         Cursor cursor=db.rawQuery(sql, null);

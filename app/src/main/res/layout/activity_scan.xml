@@ -48,29 +48,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100.0dip"
+        android:layout_margin="10dp"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/activity_scan_text"
             android:layout_width="match_parent"
-            android:layout_height="50.0dip"
+            android:layout_height="40dp"
             android:gravity="center"
             android:paddingLeft="10.0dip"
             android:paddingRight="10.0dip"
             android:singleLine="true"
             android:textColor="@color/main_black"
             android:textSize="19.0sp" />
-
         <Button
             android:id="@+id/activity_scan_btn_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/scan_finish_btn_bg_style"
-            android:minWidth="120.0dip"
+            android:backgroundTint="@color/setting_blue"
             android:singleLine="true"
+
             android:textColor="@color/main_white"
-            android:textSize="20.0sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 </LinearLayout>

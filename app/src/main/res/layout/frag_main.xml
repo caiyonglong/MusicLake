@@ -8,6 +8,7 @@ SwipeRefreshLayout是伟大的Google在v4包中给出的下拉刷新组件。
 -->
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/id_swiperefreshlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,14 +22,14 @@ SwipeRefreshLayout是伟大的Google在v4包中给出的下拉刷新组件。
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/id_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
     </RelativeLayout>
-
-
 
 
 </android.support.v4.widget.SwipeRefreshLayout>

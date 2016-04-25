@@ -64,7 +64,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             scanUtil.scanPlaylistFromDB();
             al_playlist = MusicList.playlist;
 
-            mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+            mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
 
             playlistadapter = new MyStaggeredViewAdapter(getApplicationContext(), al_playlist, type);
             playlistadapter.setOnItemClickListener(this);

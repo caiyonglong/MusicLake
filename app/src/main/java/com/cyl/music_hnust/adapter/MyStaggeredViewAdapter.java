@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHolder> {
 
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -42,7 +43,9 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
         this.type = type;
         mLayoutInflater = LayoutInflater.from(mContext);
         mHeights = new ArrayList<>();
-        setmHeights(mDatas);
+        for (int i = 0; i < mDatas.size(); i++) {
+            mHeights.add((int) (Math.random() * 100) + 200);
+        }
 
     }
 
@@ -51,7 +54,7 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
      */
     @Override
     public MyRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mView = mLayoutInflater.inflate(R.layout.playlist_item, parent, false);
+        View mView = mLayoutInflater.inflate(R.layout.item_playlist, parent, false);
         MyRecyclerViewHolder mViewHolder = new MyRecyclerViewHolder(mView);
         return mViewHolder;
     }
@@ -98,10 +101,12 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyRecyclerViewH
     public int getItemCount() {
         return mDatas.size();
     }
-
-    public void setmHeights(List<String> mDatas) {
+    public void setmHeights(List<String> al_playlist) {
         for (int i = 0; i < mDatas.size(); i++) {
-            mHeights.add((int) (Math.random() * 200) + 200);
+            mHeights.add((int) (Math.random() * 100) + 200);
         }
+
     }
+
+
 }

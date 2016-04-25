@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -39,6 +38,7 @@ import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-     //   application = (MyApplication) getApplication();
+        //   application = (MyApplication) getApplication();
 
 //        if (mService == null) {
 //            mService = new MusicPlayService();
@@ -100,7 +100,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 //        }
 
         init();
-
 
 
     }
@@ -221,7 +220,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         mTabLayout.setTabsFromPagerAdapter(mViewPagerAdapter);
 
         // 设置FloatingActionButton的点击事件
-        //  mFloatingActionButton.setOnClickListener(this);
+        mFloatingActionButton.setOnClickListener(this);
 
 
     }
@@ -269,7 +268,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                         startActivity(it);
                         break;
                     case R.id.nav_menu_exit://退出程序
-                     //   close();
+                        //   close();
                         exitProgram();
 //                        MyActivity.this.finish();
                         break;
@@ -298,8 +297,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
         mTabLayout = (TabLayout) findViewById(R.id.id_tablayout);
         mViewPager = (ViewPager) findViewById(R.id.id_viewpager);
-        //  mFloatingActionButton = (FloatingActionButton) findViewById(R.id.id_floatingactionbutton);
-
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.add_dynamic);
+        mFloatingActionButton.setVisibility(View.GONE);
 
         mNavigationView = (NavigationView) findViewById(R.id.id_navigationview);
 
@@ -315,11 +314,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
-            Intent it = new Intent(this, EditActivity.class);
-            startActivityForResult(it, 1);
-            return true;
-        }
         if (id == R.id.action_search) {
             Intent it3 = new Intent(this, SearchActivity.class);
             startActivity(it3);
@@ -333,6 +327,11 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     @Override
     public void onPageSelected(int position) {
         mToolbar.setTitle(mTitles[position]);
+        if (position==1){
+            mFloatingActionButton.setVisibility(View.VISIBLE);
+        }else {
+            mFloatingActionButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -348,9 +347,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            close();
-//            this.finish();
-//            return true;
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addCategory(Intent.CATEGORY_HOME);
@@ -359,9 +355,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
-
 
 
     @Override
@@ -405,6 +398,10 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 }
                 mDrawerLayout.closeDrawers();
                 break;
+            case R.id.add_dynamic:
+                Intent it = new Intent(this, EditActivity.class);
+                startActivityForResult(it, 1);
+                break;
 
         }
     }
@@ -447,13 +444,13 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             }
             switch (update) {
                 case 3:
-                    MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_pause);
+                    MusicFragment.play_buttom.setBackgroundResource(android.R.drawable.ic_media_pause);
                     break;
                 case 1:
-                    MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_pause);
+                    MusicFragment.play_buttom.setBackgroundResource(android.R.drawable.ic_media_pause);
                     break;
                 case 2: //暂停
-                    MusicFragment.play_buttom.setBackgroundResource(R.drawable.main_btn_play);
+                    MusicFragment.play_buttom.setBackgroundResource(android.R.drawable.ic_media_play);
                     break;
 
             }
@@ -468,8 +465,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     private boolean bindState = false;// 服务绑定状态
 
     private boolean canSkip = true;// 防止用户频繁点击造成多次解除服务绑定，true：允许解绑
+
     /*
-	 * 初始化服务绑定
+     * 初始化服务绑定
 	 */
     private void initServiceConnection() {
         serviceConnection = new ServiceConnection() {
@@ -478,7 +476,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 // TODO Auto-generated method stub
-              //  binder = null;
+                //  binder = null;
             }
 
             @Override
@@ -486,7 +484,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 // TODO Auto-generated method stub
 //                binder = (MediaBinder) service;
 
-               mService= ((MusicPlayService.LocalBinder) service).getService();
+                mService = ((MusicPlayService.LocalBinder) service).getService();
                 mService.setContext(getApplicationContext());
 //                if (binder != null) {
 //                    canSkip = true;// 重置
@@ -497,7 +495,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
     /*
-	 * 这里的部分本来是写在onStart里的，但是我发现在真机上点击跳转后立即返回不会执行onStart，但会执行onResume，
+     * 这里的部分本来是写在onStart里的，但是我发现在真机上点击跳转后立即返回不会执行onStart，但会执行onResume，
 	 * 但跳转后空2秒以上再返回，就会执行onStart，这种问题如何解释。各位可以试试，也许我对生命周期理解的不透彻。
 	 */
     @Override
@@ -528,6 +526,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             unregisterReceiver(receiver);
         }
     }
+
     /**
      * 退出程序
      */
@@ -535,8 +534,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         stopService(playIntent);
         finish();
     }
-
-
 
 
 }
