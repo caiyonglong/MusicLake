@@ -400,7 +400,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 //                getActivity().getWindowManager().getDefaultDisplay().getHeight()
 //                        - cent_menu.getHeight()-70, true);
         // 实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0x99000000);
+        ColorDrawable dw = new ColorDrawable(0x99ffffff);
         mPopupWindow.setBackgroundDrawable(dw);
 
         // 设置popWindow的显示和消失动画

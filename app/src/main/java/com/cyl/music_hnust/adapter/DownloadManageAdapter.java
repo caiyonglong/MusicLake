@@ -16,6 +16,7 @@ import com.cyl.music_hnust.download.FileState;
 import com.cyl.music_hnust.download.SqliteDao;
 import com.cyl.music_hnust.service.DownloadService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,6 @@ import java.util.List;
  */
 public class DownloadManageAdapter extends
         RecyclerView.Adapter<DownloadManageAdapter.DownloadManageViewHolder> {
-
 
 
     /**
@@ -62,7 +62,7 @@ public class DownloadManageAdapter extends
     public LayoutInflater mLayoutInflater;
     private List<FileState> fileStates;
     private SqliteDao dao;
-    public boolean isPause = false;
+    public boolean[] isPause ;
 
     public DownloadManageAdapter(Context context, List<FileState> fileStates,
                                  SqliteDao dao) {
@@ -70,6 +70,10 @@ public class DownloadManageAdapter extends
         this.fileStates = fileStates;
         this.dao = dao;
         mLayoutInflater = LayoutInflater.from(mContext);
+        isPause = new boolean[fileStates.size()];
+        for (int i =0 ; i<fileStates.size();i++){
+            isPause[i] = false;
+        }
 
     }
 
@@ -121,27 +125,15 @@ public class DownloadManageAdapter extends
             int result = (int) (num * 100);
             holder.progressBar.setProgress(result);
             holder.tv_per.setText(result + "%");
+            
+            if (!isPause[position]){
+                holder.btn_stop.setVisibility(View.VISIBLE);
+                holder.btn_continue.setVisibility(View.GONE);
+            }else {
+                holder.btn_stop.setVisibility(View.GONE);
+                holder.btn_continue.setVisibility(View.VISIBLE);
+            }
 
-        //    Log.e("test>>", "progressBar当前进度：" + result);
-
-//            holder.btn_stop.setOnClickListener(new OnClickListener() {
-//
-//                @Override
-//                public void onClick(View v) {
-//                    setChange(fileState);
-//                    holder.btn_stop.setVisibility(View.GONE);
-//                    holder.btn_continue.setVisibility(View.VISIBLE);
-//                }
-//            });
-//            holder.btn_continue.setOnClickListener(new OnClickListener() {
-//
-//                @Override
-//                public void onClick(View v) {
-//                    setChange(fileState);
-//                    holder.btn_continue.setVisibility(View.GONE);
-//                    holder.btn_stop.setVisibility(View.VISIBLE);
-//                }
-//            });
         }
         // 当文件下载完成
         if (fileState.getCompleteSize() == fileState.getFileSize()) {
@@ -153,13 +145,8 @@ public class DownloadManageAdapter extends
             holder.btn_stop.setClickable(false);
         }
 
-        if (isPause) {
-            holder.btn_stop.setVisibility(View.GONE);
-            holder.btn_continue.setVisibility(View.VISIBLE);
-        } else {
-            holder.btn_continue.setVisibility(View.GONE);
-            holder.btn_stop.setVisibility(View.VISIBLE);
-        }
+
+
 
 
     }

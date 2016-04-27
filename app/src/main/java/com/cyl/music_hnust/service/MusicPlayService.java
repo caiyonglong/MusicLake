@@ -269,6 +269,7 @@ public class MusicPlayService extends Service {
         } else {
             mMediaPlayer.start();
         }
+        showNotification();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

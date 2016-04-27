@@ -381,13 +381,15 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         public void onItemClick(View view, int position) {
             switch (view.getId()){
                 case R.id.btn_stop:
-                    adapter.isPause = true;
+                    ToastUtil.show(getContext(),"点击了暂停");
+                    adapter.isPause[position] = true;
                     adapter.setChange(data.get(position));
                     handler.sendEmptyMessage(0);
                     break;
                 case R.id.btn_continue:
+                    ToastUtil.show(getContext(),"点击了继续");
                     adapter.setChange(data.get(position));
-                    adapter.isPause = false;
+                    adapter.isPause[position] = false;
                     handler.sendEmptyMessage(0);
                     break;
             }

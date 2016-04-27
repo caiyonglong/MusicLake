@@ -64,9 +64,9 @@ public class PopupPlayListAdapter extends  RecyclerView.Adapter<PopupPlayListAda
 
         }
         if (playIndexPosition ==position ){
-            holder.songNameTextView.setTextColor(Color.GREEN);
+            holder.songNameTextView.setTextColor(R.color.setting_blue);
         }else {
-            holder.songNameTextView.setTextColor(Color.WHITE);
+            holder.songNameTextView.setTextColor(Color.GRAY);
         }
         holder.songNameTextView.setText(playlist.get(position).getName());
         holder.singerNameTextView.setText(playlist.get(position).getArtist().toString());

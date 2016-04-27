@@ -6,11 +6,11 @@
     android:layout_height="110dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:descendantFocusability="blocksDescendants"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/main_white"
     app:cardCornerRadius="2dp"
     app:cardElevation="5dp"
+    android:clickable="true"
     app:cardPreventCornerOverlap="true"
 
     app:cardUseCompatPadding="true"

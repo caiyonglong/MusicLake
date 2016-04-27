@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
 
         android:id="@+id/bar"
@@ -198,6 +199,7 @@
     </ScrollView>
     <LinearLayout
         android:id="@+id/area_commit"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -210,7 +212,7 @@
             android:id="@+id/IsAgree"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:minWidth="40dp"
+            android:minWidth="30dp"
             android:layout_weight="0"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -233,8 +235,8 @@
             android:ems="10"
             android:textColor="@color/main_black"
             android:minHeight="40dp"
-            android:layout_marginRight="4dip"
-            android:layout_marginLeft="4dp"
+            android:layout_marginRight="1dip"
+            android:layout_marginLeft="1dp"
             android:paddingLeft="4dip"
             >
             <requestFocus />
@@ -245,7 +247,7 @@
             android:id="@+id/comment_commit"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:minWidth="50dp"
+            android:minWidth="40dp"
             android:layout_weight="0"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
@@ -260,27 +262,18 @@
 
             />
     </LinearLayout>
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:padding="4dip"-->
-        <!--android:background="@color/main_white"-->
-        <!--android:gravity="center_vertical"-->
-        <!--&gt;-->
-        <!--<ImageButton-->
-            <!--android:layout_weight="1"-->
-            <!--android:src="@mipmap/ic_action_agree"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-        <!--<ImageButton-->
-            <!--android:layout_weight="1"-->
-            <!---->
-            <!--android:src="@android:drawable/ic_menu_send"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-
-    <!--</LinearLayout>-->
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_icon="@mipmap/add"
+        fab:fab_colorNormal="@color/setting_blue"
+        fab:fab_colorPressed="@color/setting_blue"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"/>
 
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.FullyLinearLayoutManager;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -65,6 +67,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public static ImageButton IsAgree;
     public TextView loadmore;
     private ImageButton back;
+    private LinearLayout area_commit;
+
+    private FloatingActionButton mFloatingActionButton;
 
 
 
@@ -114,7 +119,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     adapter.notifyDataSetChanged();
                     break;
                 case 2:
-                    String error_code = (String) msg.obj;
                     Toast.makeText(activity, "评论失败,请检查网络是否正常", Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
@@ -198,8 +202,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         item_action_comment = (TextView) findViewById(R.id.item_comment_num);
         item_action_love = (TextView) findViewById(R.id.item_love_num);
         back = (ImageButton) findViewById(R.id.backImageButton);
-
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.add_comment);
+        area_commit = (LinearLayout) findViewById(R.id.area_commit);
         back.setOnClickListener(this);
+        mFloatingActionButton.setOnClickListener(this);
         loadmore = (TextView) findViewById(R.id.loadmore);
         comment_content = (EditText) findViewById(R.id.comment_content);
         comment_commit = (ImageButton) findViewById(R.id.comment_commit);
@@ -236,6 +242,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.backImageButton:
                 finish();
+                break;
+            case R.id.add_comment:
+                mFloatingActionButton.setVisibility(View.GONE);
+                area_commit.setVisibility(View.VISIBLE);
                 break;
             case R.id.IsAgree:
                 User userinfo1 = UserStatus.getUserInfo(getApplicationContext());

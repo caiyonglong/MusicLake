@@ -62,6 +62,8 @@ public class PlayerFragment extends Fragment {
         lyricList = new ArrayList<>();
         mContext = getContext();
         initView();
+        // 启动
+        handler.post(updateThread);
 
         flag = (int) getArguments().get("flag");
         if (flag == 0) {
@@ -73,9 +75,6 @@ public class PlayerFragment extends Fragment {
         else {
             lyricView.setVisibility(View.VISIBLE);
             initLrc();
-
-            // 启动
-            handler.post(updateThread);
         }
     }
 

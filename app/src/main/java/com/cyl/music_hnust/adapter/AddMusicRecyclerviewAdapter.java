@@ -1,25 +1,18 @@
 package com.cyl.music_hnust.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.cyl.music_hnust.PlaylistSongActivity;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.utils.ImageLoader;
 import com.cyl.music_hnust.utils.MusicInfo;
+
+import java.util.List;
 
 
 public class AddMusicRecyclerviewAdapter extends

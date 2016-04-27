@@ -1,11 +1,13 @@
 package com.cyl.music_hnust.map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +29,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
+import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
@@ -96,11 +99,11 @@ public class NearActivity extends AppCompatActivity {
 //                    Log.e("tag1", latLonPoint.getLongitude() + "");
 //                    Log.e("tag1", latLonPoint.getLatitude() + "");
 
-                    if(latLonPoint!=null){
+                    if (latLonPoint != null) {
                         adapter.latLonPoint = latLonPoint;
-                    }else {
-                        latLonPoint= new LatLonPoint(0,0);
-                        ToastUtil.show(getApplicationContext(),"定位异常!");
+                    } else {
+                        latLonPoint = new LatLonPoint(0, 0);
+                        ToastUtil.show(getApplicationContext(), "定位异常!");
                         adapter.latLonPoint = latLonPoint;
                     }
                     adapter.myDatas = mydatas;
@@ -155,7 +158,7 @@ public class NearActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 User user = UserStatus.getUserInfo(getApplicationContext());
-                if (user.getUser_id() != null&&latLonPoint!=null) {
+                if (user.getUser_id() != null && latLonPoint != null) {
 
                     volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
                             , latLonPoint.getLongitude(), 0);
@@ -198,7 +201,6 @@ public class NearActivity extends AppCompatActivity {
 
         adapter = new MyLocationAdapter(getApplicationContext(), mydatas, imageLoader);
         location_near.setAdapter(adapter);
-
         location_near.setLayoutManager(mLayoutManager);
 
     }
@@ -274,6 +276,7 @@ public class NearActivity extends AppCompatActivity {
         //调用销毁功能，在应用的合适生命周期需要销毁附近功能
     }
 
+
     //适配器
     public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.MyLocationViewHolder> {
 
@@ -299,21 +302,31 @@ public class NearActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(MyLocationViewHolder holder, int position) {
+        public void onBindViewHolder(final MyLocationViewHolder holder, final int position) {
 
             holder.user_name.setText(myDatas.get(position).getUser().getUser_name());
             holder.user_signature.setText(myDatas.get(position).getUser().getSignature());
             String distance = "";
             String distime = "";
-//            if (myDatas.size() > 0) {
+
             distance = FormatUtil.Distance(latLonPoint.getLongitude() + 0, latLonPoint.getLatitude() + 0,
                     myDatas.get(position).getLocation_longitude() + 0, myDatas.get(position).getLocation_latitude() + 0);
             distime = FormatUtil.distime(myDatas.get(position).getLocation_time());
-//            }
-//
-            Log.e("tag2", myDatas.get(position).getLocation_latitude() + "");
-            Log.e("tag2", myDatas.get(position).getLocation_latitude() + "");
-            Log.e("tag3", myDatas.get(position).getLocation_time() + "");
+
+
+            holder.id_cardview_foot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(),NearPeopleAcivity.class);
+                    intent.putExtra("name",mydatas.get(position).getUser().getUser_name());
+                    intent.putExtra("num",mydatas.get(position).getUser().getUser_id());
+                    intent.putExtra("class",mydatas.get(position).getUser().getUser_class());
+                    intent.putExtra("college",mydatas.get(position).getUser().getUser_college());
+                    intent.putExtra("major",mydatas.get(position).getUser().getUser_major());
+                    intent.putExtra("img",mydatas.get(position).getUser().getUser_img());
+                    startActivity(intent);
+                }
+            });
 
 
             String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
@@ -321,7 +334,7 @@ public class NearActivity extends AppCompatActivity {
             holder.user_distance.setText("不超过" + distance);
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
             holder.user_img.setErrorImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setImageUrl(imgUrl+myDatas.get(position).getUser().getUser_img(), imageLoader);
+            holder.user_img.setImageUrl(imgUrl + myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }
 
@@ -336,9 +349,11 @@ public class NearActivity extends AppCompatActivity {
             public TextView user_signature;
             public TextView user_distance;
             public TextView location_time;
+            public CardView id_cardview_foot;
 
             public MyLocationViewHolder(View itemView) {
                 super(itemView);
+                id_cardview_foot = (CardView) itemView.findViewById(R.id.id_cardview_foot);
                 user_name = (TextView) itemView.findViewById(R.id.user_name);
                 user_img = (NetworkImageView) itemView.findViewById(R.id.user_img);
                 user_signature = (TextView) itemView.findViewById(R.id.user_signature);
@@ -369,7 +384,7 @@ public class NearActivity extends AppCompatActivity {
             url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&clearLocation";
         }
 
-        HttpUtil.get(url, new AsyncHttpResponseHandler(){
+        HttpUtil.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -384,17 +399,16 @@ public class NearActivity extends AppCompatActivity {
                         //ToastUtil.show(getApplicationContext(),response.toString()+"");
 
                         Bundle bundle = new Bundle();
-                        bundle.putString("response",response);
+                        bundle.putString("response", response);
                         message.setData(bundle);
 
                         //  ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
 
 
-                    } else if (requestcode ==0) {
-                          ToastUtil.show(getApplicationContext(), "位置上传成功");
+                    } else if (requestcode == 0) {
+                        ToastUtil.show(getApplicationContext(), "位置上传成功");
 
-                    }
-                    else if (requestcode ==2) {
+                    } else if (requestcode == 2) {
                         ToastUtil.show(getApplicationContext(), "已清空用户位置信息！");
 
                     }
@@ -408,12 +422,11 @@ public class NearActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-                ToastUtil.show(getApplicationContext(),"网络异常，请检查网络！");
+                ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
 
     }
-
 
 
 }

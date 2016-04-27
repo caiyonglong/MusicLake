@@ -43,7 +43,7 @@ public class ClipActivity extends Activity{
 			Toast.makeText(this, "图片加载失败",Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Bitmap bitmap=ImageTools.convertToBitmap(path, 600,600);
+		Bitmap bitmap= ImageTools.convertToBitmap(path, 600,600);
 		if(bitmap==null){
 			Toast.makeText(this, "图片加载失败",Toast.LENGTH_SHORT).show();
 			return;

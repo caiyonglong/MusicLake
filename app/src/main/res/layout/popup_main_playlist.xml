@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#aa000000"
+    android:background="#aaffffff"
     android:layout_height="290dp" >
 
     <LinearLayout
@@ -25,64 +25,15 @@
                 android:text="播放列表(0)"
 
                 android:textSize="20dp"
-                android:textColor="@color/main_white" />
+                android:textColor="@color/setting_blue" />
 
-            <!--<ImageView-->
-                <!--android:id="@+id/mode_all_buttom"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:layout_toLeftOf="@+id/line"-->
-                <!--android:background="@drawable/buttombg"-->
-                <!--android:src="@drawable/ic_player_mode_all_default" />-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/mode_single_buttom"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:layout_toLeftOf="@+id/line"-->
-                <!--android:background="@drawable/buttombg"-->
-                <!--android:src="@drawable/ic_player_mode_single_default" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/mode_random_buttom"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:layout_toLeftOf="@+id/line"-->
-                <!--android:background="@drawable/buttombg"-->
-                <!--android:src="@drawable/ic_player_mode_random_default" />-->
-
-            <!--<View-->
-                <!--android:id="@+id/line"-->
-                <!--android:layout_width="1dp"-->
-                <!--android:layout_height="fill_parent"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--android:layout_toLeftOf="@+id/dele_list"-->
-                <!--android:background="@drawable/fx_information_bg" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/dele_list"-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:background="@drawable/buttombg"-->
-                <!--android:src="@drawable/kg_skin_src_image_btn_down_delete_default" />-->
         </RelativeLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="0.1dp"
-            android:background="@color/main_white" />
+            android:background="@color/gray" />
 
 
         <RelativeLayout
@@ -110,7 +61,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
-            android:background="@color/main_white" />
+            android:background="@color/gray" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp">
@@ -118,7 +69,7 @@
                 android:id="@+id/btn_close_pop"
                 android:text="关闭"
                 android:textSize="20dp"
-                android:textColor="@color/main_white"
+                android:textColor="@color/setting_blue"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

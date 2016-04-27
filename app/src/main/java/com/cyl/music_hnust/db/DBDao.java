@@ -140,7 +140,6 @@ public class DBDao {
         MusicList.list.clear();
         FolderList.list.clear();
         FavoriteList.list.clear();
-        LyricList.map.clear();
 
         final int listSize = scanList.size();
         Cursor cursor = null;
@@ -234,6 +233,7 @@ public class DBDao {
         FavoriteList.list.clear();
         LyricList.map.clear();
         Cursor cursor = null;
+
         // 查询各媒体库目录下所有音乐信息
         cursor = db.rawQuery("SELECT * FROM " + DBData.MUSIC_TABLENAME,
                 null);
