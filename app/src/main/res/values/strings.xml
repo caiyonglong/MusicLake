@@ -16,6 +16,7 @@
         \n\n"
     </string>
     <string name="xml_activity_scan_title">扫描歌曲</string>
+    <string name="my_dnamic">我的发布</string>
     <!-- Strings related to login -->
     <string name="prompt_email">学号</string>
     <string name="prompt_password">教务网密码</string>

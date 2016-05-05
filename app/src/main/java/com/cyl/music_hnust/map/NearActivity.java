@@ -305,7 +305,7 @@ public class NearActivity extends AppCompatActivity {
         public void onBindViewHolder(final MyLocationViewHolder holder, final int position) {
 
             holder.user_name.setText(myDatas.get(position).getUser().getUser_name());
-            holder.user_signature.setText(myDatas.get(position).getUser().getSignature());
+            holder.user_signature.setText(myDatas.get(position).getUser().getNick());
             String distance = "";
             String distime = "";
 

@@ -46,7 +46,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     public List<String> mDatas;
     public List<Dynamic> myDatas;
     public boolean loadmoring = false;
-    public String loadmore = "点击加载更多数据...";
+    public String loadmore = "下拉加载更多数据...";
     public String url_header = "http://119.29.27.116/hcyl/music_BBS";
     public LayoutInflater mLayoutInflater;
     public ImageLoader imageLoader;
@@ -126,21 +126,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder1.user_logo.setErrorImageResId(R.mipmap.user_icon_default_main);
             holder1.user_logo.setImageUrl(url_header+myDatas.get(position).getUser().getUser_img(), imageLoader);
 
-//            if (myDatas.get(position).isMyLove()){
-//                holder1.item_action_love_img.setImageResource(R.mipmap.ic_action_agree1);
-//            }else {
-//                holder1.item_action_love_img.setImageResource(R.mipmap.ic_action_agree);
-//            }
 
         }
         else if (holder instanceof FooterViewHolder) {
             final FooterViewHolder hodler2 = (FooterViewHolder) holder;
 //            hodler2.foot.setVisibility(View.GONE);
             if (mOnItemClickListener != null) {
-                hodler2.foot_text.setOnClickListener(new View.OnClickListener() {
+                hodler2.foot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickListener.onItemClick(hodler2.foot_text, position);
+                        mOnItemClickListener.onItemClick(hodler2.foot, position);
                     }
                 });
             }

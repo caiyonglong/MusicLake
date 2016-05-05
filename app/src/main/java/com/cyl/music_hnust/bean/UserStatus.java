@@ -25,7 +25,9 @@ public class UserStatus {
 
         editor.putString("user_img", userInfo.getUser_img());
         editor.putString("user_email", userInfo.getUser_email());
-        editor.putString("signature", userInfo.getSignature());
+        editor.putString("user_phone", userInfo.getPhone());
+        editor.putString("nick", userInfo.getNick());
+        editor.putBoolean("secret",userInfo.isSecret());
 
         editor.commit();
         return true;
@@ -43,7 +45,9 @@ public class UserStatus {
 
         String user_img = sp.getString("user_img", null);
         String user_email = sp.getString("user_email", null);
-        String signature = sp.getString("signature", null);
+        String user_phone = sp.getString("user_phone", null);
+        boolean secret = sp.getBoolean("secret", true);
+        String nick = sp.getString("nick", null);
 
         User user =new User();
         user.setUser_id(userID);
@@ -55,7 +59,9 @@ public class UserStatus {
 
         user.setUser_img(user_img);
         user.setUser_email(user_email);
-        user.setSignature(signature);
+        user.setPhone(user_phone);
+        user.setSecret(secret);
+        user.setNick(nick);
         return user;
     }
 

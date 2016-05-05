@@ -94,7 +94,7 @@ public class JsonParsing {
      * "secret_replyNum": "0",
      * "secret_status": "0",
      * "report_num": "0",
-     * "user_name": "张三",
+     * "nick": "张三",
      * "user_img": "http://hcyl.sinaapp."
      * "class": "detail-0",
      * "isAgree": 0
@@ -118,13 +118,13 @@ public class JsonParsing {
             String secret_replyNum = item.getString("secret_replyNum");
             int isAgree =item.getInt("isAgree");
             String user_id = item.getString("user_id");
-            String user_name = item.getString("user_name");
+            String nick = item.getString("nick");
             String user_img = item.getString("user_img");
 
 
             User user1 = new User();
             user1.setUser_id(user_id);
-            user1.setUser_name(user_name);
+            user1.setNick(nick);
             user1.setUser_img(user_img);
 
 
@@ -165,14 +165,14 @@ public class JsonParsing {
             String user_id = itemuser.getString("user_id");
             String user_name = itemuser.getString("user_name");
             String user_img = itemuser.getString("user_img");
-            String signature = itemuser.getString("signature");
+            String nick = itemuser.getString("nick");
             String user_email = itemuser.getString("user_email");
 
             Log.e("位置","location_longitude:"+location_longitude+"location_latitude"+location_latitude);
             User user1 =new User();
             user1.setUser_img(user_img);
             user1.setUser_email(user_email);
-            user1.setSignature(signature);
+            user1.setNick(nick);
             user1.setUser_id(user_id);
             user1.setUser_name(user_name);
 

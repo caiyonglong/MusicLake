@@ -5,16 +5,19 @@ package com.cyl.music_hnust.bean;
  * 个人信息类
  */
 public class User {
-    private String user_id;
-    private String user_name;
-    private String user_sex;
-    private String user_college;
-    private String user_major;
-    private String user_class;
+    private String user_id;  //学号
+    private String user_name;  //姓名
+    private String user_sex;   //性别
+    private String user_college;  //学院
+    private String user_major;  //专业
+    private String user_class;  //班级
 
-    private String user_img;
-    private String user_email;
-    private String signature;
+    private String user_img;   //头像
+    private String user_email;  //邮箱
+    private String phone;  //手机号
+    private String nick;  //昵称
+
+    private boolean IsSecret;  //用户是否保密
 
 
     public String getUser_class() {
@@ -25,12 +28,12 @@ public class User {
         this.user_class = user_class;
     }
 
-    public String getSignature() {
-        return signature;
+    public String getNick() {
+        return nick;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 
     public String getUser_college() {
@@ -87,5 +90,21 @@ public class User {
 
     public void setUser_sex(String user_sex) {
         this.user_sex = user_sex;
+    }
+
+    public boolean isSecret() {
+        return IsSecret;
+    }
+
+    public void setSecret(boolean secret) {
+        IsSecret = secret;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

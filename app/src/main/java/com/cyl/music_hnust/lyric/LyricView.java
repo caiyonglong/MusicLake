@@ -274,9 +274,9 @@ public class LyricView extends View implements ILrcView {
             return;
         }
         LyricItem lrcRow = mLrcRows.get(position);
-   //     if (lrcRow.getLyric().length() > 0) {
+        if (lrcRow.getLyric().length() > 0) {
             mHignlightRow = position;
-     //   }
+        }
         if (position ==mLrcRows.size()-1)
         {
             endTime =duration;

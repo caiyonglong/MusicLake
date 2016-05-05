@@ -29,6 +29,7 @@ import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.adapter.CommentRecyclerViewAdapter;
 import com.cyl.music_hnust.bean.Comment;
 import com.cyl.music_hnust.bean.Common;
+import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.fragment.MyFragment;
@@ -82,6 +83,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private ImageLoader imageLoader;
 
     private static List<Comment> mDatas;
+
+    public static List<Dynamic> mdatas;
     MyHandler handler;
 
     static int love_num;
@@ -172,10 +175,15 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
         Intent it = getIntent();
+        if (it.getIntExtra("flag",0)==0){
+            mdatas =MyFragment.mdatas;
+        }else {
+            mdatas =MynamicActivity.mdatas;
+        }
         position = it.getIntExtra("position", -1) + "";
         dynamic_id = it.getStringExtra("dynamic_id") + "";
-        love_num = MyFragment.mdatas.get(Integer.parseInt(position)).getLove();
-        comment_num = MyFragment.mdatas.get(Integer.parseInt(position)).getComment();
+        love_num = mdatas.get(Integer.parseInt(position)).getLove();
+        comment_num = mdatas.get(Integer.parseInt(position)).getComment();
 
         Log.e("ee",love_num+"============"+comment_num+"");
         mDatas = new ArrayList<>();
@@ -216,15 +224,15 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
          * 动态详情
          */
         String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
-        user_name.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getUser().getUser_name());
-        user_logo.setImageUrl(imgUrl + MyFragment.mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
+        user_name.setText(mdatas.get(Integer.parseInt(position)).getUser().getUser_name());
+        user_logo.setImageUrl(imgUrl + mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
         user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-        content_text.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getContent());
-        content_time.setText(MyFragment.mdatas.get(Integer.parseInt(position)).getTime());
+        content_text.setText(mdatas.get(Integer.parseInt(position)).getContent());
+        content_time.setText(mdatas.get(Integer.parseInt(position)).getTime());
         item_action_comment.setText(comment_num + "评论");
         item_action_love.setText(love_num + "赞");
 
-        if (MyFragment.mdatas.get(Integer.parseInt(position)).isMyLove()) {
+        if (mdatas.get(Integer.parseInt(position)).isMyLove()) {
             IsAgree.setImageResource(R.mipmap.ic_action_agree1);
         } else {
             IsAgree.setImageResource(R.mipmap.ic_action_agree);

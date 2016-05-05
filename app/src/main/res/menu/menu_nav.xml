@@ -6,6 +6,10 @@
         >
 
         <item
+            android:id="@+id/nav_menu_my"
+            android:icon="@mipmap/icon_my"
+            android:title="我的发布" />
+        <item
             android:id="@+id/nav_menu_shake"
             android:icon="@mipmap/icon_shake"
             android:title="摇一摇" />

@@ -19,15 +19,13 @@
     android:layout_gravity="center"
     app:cardBackgroundColor="@color/cardview_light_background"
     app:cardCornerRadius="3dp"
-    app:cardElevation="5dp"
-    app:cardMaxElevation="4dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
+    app:cardElevation="3dp"
+    app:cardMaxElevation="3dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true"
-    app:contentPadding="5dp"
+    app:contentPadding="1dp"
 
     >
 
@@ -45,7 +43,7 @@
             android:textSize="15dp"
             android:id="@+id/foot_text"
             android:layout_centerInParent="true"
-            android:text="加载更多..."
+            android:text="下拉加载更多..."
             android:layout_margin="4dp"
             />
     </RelativeLayout>

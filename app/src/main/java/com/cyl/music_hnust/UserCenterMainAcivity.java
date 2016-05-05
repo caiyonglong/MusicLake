@@ -16,8 +16,8 @@ import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -53,17 +55,13 @@ import cz.msebera.android.httpclient.Header;
  */
 public class UserCenterMainAcivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView user_name;
-    private TextView user_num;
-    private TextView user_departments;
-    private TextView user_class;
-    private TextView head_upload;
-    private TextView user_sign;
-    private TextView user_major;
-    private TextView user_logout;
+    private TextView user_name, user_num, user_departments, user_class,
+            user_nick, user_major, user_email, user_phone;
+    private CardView user_logout;
 
     private ImageView head;
-//    private LinearLayout ll;
+    private FloatingActionButton fab_a,fab_b;
+
 
     private PopupWindow popWindow;
     private LayoutInflater layoutInflater;
@@ -114,7 +112,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String nickname = prefs.getString("nickname", "呵呵呵");
-        user_sign.setText(nickname);
+        user_nick.setText(nickname);
 
         User userinfo = UserStatus.getUserInfo(this);
         if (userinfo.getUser_name() != null) {
@@ -123,6 +121,20 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             user_departments.setText(userinfo.getUser_college());
             user_class.setText(userinfo.getUser_class());
             user_major.setText(userinfo.getUser_major());
+
+            //电话邮箱
+            if (userinfo.getPhone() != null) {
+                user_phone.setText(userinfo.getPhone());
+            } else {
+                user_phone.setText("暂无");
+            }
+            if (userinfo.getUser_email() != null) {
+                user_email.setText(userinfo.getUser_email());
+            } else {
+                user_email.setText("暂无");
+            }
+
+
             if (userinfo.getUser_img() != null) {
                 path = userinfo.getUser_img();
 
@@ -130,7 +142,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
             File file1 = new File(path);
             if (file1.exists())
-            head.setImageBitmap(getLoacalBitmap(path));
+                head.setImageBitmap(getLoacalBitmap(path));
             else {
                 head.setImageResource(R.mipmap.user_icon_default_main);
             }
@@ -195,15 +207,21 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         user_major = (TextView) findViewById(R.id.usercenter_major);
         user_departments = (TextView) findViewById(R.id.usercenter_departments);
         user_num = (TextView) findViewById(R.id.usercenter_num);
-        user_logout = (TextView) findViewById(R.id.usercenter_logout);
-        head_upload = (TextView) findViewById(R.id.head_upload);
-        user_sign = (TextView) findViewById(R.id.usercenter_sign);
+        user_logout = (CardView) findViewById(R.id.usercenter_logout);
+        user_nick = (TextView) findViewById(R.id.usercenter_sign);
+
+        user_email = (TextView) findViewById(R.id.usercenter_email);
+        user_phone = (TextView) findViewById(R.id.usercenter_phone);
+
         head = (ImageView) findViewById(R.id.head);
         head.setOnClickListener(this);
-        head_upload.setOnClickListener(this);
+
+        fab_a = (FloatingActionButton) findViewById(R.id.action_a);
+        fab_b = (FloatingActionButton) findViewById(R.id.action_b);
+        fab_a.setOnClickListener(this);
+        fab_b.setOnClickListener(this);
     }
 
-    boolean upload = false;
 
     @Override
     public void onClick(View arg0) {
@@ -211,20 +229,13 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             case R.id.head:
                 showPopupWindow(head);
                 break;
-            case R.id.head_upload:
-                User userinfo = UserStatus.getUserInfo(getApplicationContext());
-                path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
-
-                File file = new File(path);
-                if (file.exists()) {
-                    upload = true;
-                    show("图片上传");
-                    //   head.setImageBitmap(getLoacalBitmap(path));
-                } else {
-                    show("图片地址错误");
-                }
-
+            case R.id.action_a:
+                modify("123");
                 break;
+            case R.id.action_b:
+                modify("12345");
+                break;
+
         }
     }
 
@@ -319,6 +330,15 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 user.setUser_img(temppath);
                 UserStatus.savaUserInfo(getApplicationContext(), user);
                 head.setImageBitmap(getLoacalBitmap(temppath));
+                path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + user.getUser_id() + ".png";
+
+                try {
+                    uploadFile(path, url);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // 上传失败后要做到工作
+                    Toast.makeText(mContext, "上传失败", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 break;
@@ -340,14 +360,16 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public void show(String msg) {
+    public void modify(String msg) {
+        TableLayout tableLayout =
+                (TableLayout) getLayoutInflater().inflate(R.layout.info_modify,null);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setMessage(msg)
-                .setIcon(R.mipmap.ic_launcher);
-        if (upload) {
-            setNegativeButton(builder);
-        }
+                .setTitle("修改信息")
+                .setIcon(R.mipmap.usercenter_revise)
+                .setView(tableLayout);
+        setNegativeButton(builder);
+
         setPositiveButton(builder)
                 .create()
                 .show();
@@ -357,17 +379,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                if (upload) {
-
-                    try {
-                        uploadFile(path, url);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    dialog.dismiss();
-                }
+                dialog.dismiss();
             }
         });
     }
@@ -400,16 +412,6 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                     // 上传失败后要做到工作
                     Toast.makeText(mContext, "上传失败", Toast.LENGTH_LONG).show();
                 }
-//
-//                @Override
-//                public void onProgress(int bytesWritten, int totalSize) {
-//                    // TODO Auto-generated method stub
-//                    super.onProgress(bytesWritten, totalSize);
-//                    int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
-//                    // 上传进度显示
-//                  //  progress.setProgress(count);
-//                    Log.e("上传 Progress>>>>>", bytesWritten + " / " + totalSize);
-//                }
 
                 @Override
                 public void onRetry(int retryNo) {

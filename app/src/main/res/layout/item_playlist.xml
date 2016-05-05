@@ -21,7 +21,7 @@
 
         <ImageView
             android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/icon"
             android:id="@+id/playlist_album"
             android:layout_width="100dp"
             android:layout_height="100dp"

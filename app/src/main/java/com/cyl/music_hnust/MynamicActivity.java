@@ -1,66 +1,47 @@
-package com.cyl.music_hnust.fragment;
+package com.cyl.music_hnust;
 
-import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.cyl.music_hnust.CommentActivity;
 import com.cyl.music_hnust.Json.JsonParsing;
-import com.cyl.music_hnust.LoginActivity;
-import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.MyRecyclerViewAdapter;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
-import com.cyl.music_hnust.http.HttpUtil;
-import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
-
-import static android.net.Uri.encode;
-
-
 /**
- * Created by Monkey on 2015/6/29.
+ * Created by yonglong on 2016/5/5.
  */
-public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, MyRecyclerViewAdapter.OnItemClickListener {
+public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, MyRecyclerViewAdapter.OnItemClickListener {
 
-    private View mView;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -72,13 +53,14 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     public static List<Dynamic> mdatas;
     public static int position;
     public static boolean loadmoring = true;
+    private User userinfo;
     MyHandler handler;
 
     private static class MyHandler extends Handler {
-        private final WeakReference<MyFragment> myMusicfragment;
+        private final WeakReference<Activity> myMusicfragment;
 
-        private MyHandler(MyFragment myfragment) {
-            myMusicfragment = new WeakReference<MyFragment>(myfragment);
+        private MyHandler(Activity myfragment) {
+            myMusicfragment = new WeakReference<Activity>(myfragment);
         }
 
         @Override
@@ -105,14 +87,14 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                         mRecyclerViewAdapter.myDatas = mdatas;
                         mRecyclerViewAdapter.notifyDataSetChanged();
 
-                        mRecyclerViewAdapter.loadmore = "点击加载更多...";
+                        mRecyclerViewAdapter.loadmore = "下拉加载更多...";
                     } else {
                         mRecyclerViewAdapter.loadmore = "暂无更多";
                     }
                     break;
                 case 1:
                     if (loadmoring) {
-                       // mdatas.clear();
+                        // mdatas.clear();
                         List<Dynamic> newdatas = new ArrayList<>();
                         Bundle bundle = new Bundle();
                         bundle = msg.getData();
@@ -132,7 +114,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                         mRecyclerViewAdapter.myDatas.addAll(newdatas);
                         mRecyclerViewAdapter.notifyDataSetChanged();
 
-                        mRecyclerViewAdapter.loadmore = "点击加载更多...";
+                        mRecyclerViewAdapter.loadmore = "下拉加载更多...";
                     } else {
                         mRecyclerViewAdapter.loadmore = "暂无更多";
                     }
@@ -146,14 +128,16 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         }
     }
 
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.frag_main, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.frag_main);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         myApplication = new MyApplication();
         mdatas = new ArrayList<>();
         mRequestQueue = myApplication.getHttpQueues();
+        userinfo = UserStatus.getUserInfo(this);
 
         imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
             @Override
@@ -165,19 +149,13 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                 return null;
             }
         });
-        return mView;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        handler = new MyHandler(MyFragment.this);
 
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.id_swiperefreshlayout);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.id_recyclerview);
+        handler = new MyHandler(this);
+
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.id_swiperefreshlayout);
+        mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
 
         configRecyclerView();
 //        mLayoutManager = new LinearLayoutManager(getActivity());
@@ -185,14 +163,25 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         mSwipeRefreshLayout.setColorSchemeResources(R.color.main_blue_light, R.color.main_blue_dark,
                 R.color.setting_blue, R.color.setting_blue);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void configRecyclerView() {
 
 
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerViewAdapter = new MyRecyclerViewAdapter(getActivity(), mdatas, imageLoader);
+        mRecyclerViewAdapter = new MyRecyclerViewAdapter(getApplicationContext(), mdatas, imageLoader);
         mRecyclerViewAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
 
@@ -207,8 +196,8 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
             @Override
             public void run() {
                 mSwipeRefreshLayout.setRefreshing(false);
-                User userinfo = UserStatus.getUserInfo(getContext());
-                volley_StringRequest_GET( 0, null, null);
+
+                volley_StringRequest_GET( 0,userinfo.getUser_id());
 
             }
         }, 1000);
@@ -217,45 +206,14 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     @Override
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
-//            case R.id.item_action_love_agree:
-//                User userinfo1 = UserStatus.getUserInfo(getContext());
-//                if (userinfo1.getUser_name() != null) {
-//                    this.position = position;
-//                    volley_StringRequest_GET(userinfo1.getUser_id(), 2, null, mRecyclerViewAdapter.myDatas.get(position).getDynamic_id());
-//
-//                } else {
-//                    Intent it = new Intent(getContext(), LoginActivity.class);
-//                    startActivity(it);
-//                }
-//
-//                break;
             case R.id.container:
             case R.id.content_text:
-                Intent it = new Intent(getContext(), CommentActivity.class);
+                Intent it = new Intent(getApplicationContext(), CommentActivity.class);
                 it.putExtra("position", position);
-                it.putExtra("flag", 0);
+                it.putExtra("flag", 1);
                 it.putExtra("dynamic_id", mdatas.get(position).getDynamic_id());
                 startActivity(it);
                 SnackbarUtil.show(mRecyclerView, "comment+1", 0);
-                break;
-            case R.id.id_cardview_foot:
-                int poi = 0;
-                if (loadmoring) {
-                    if (position - 1 >= 0) {
-                        poi = position - 1;
-                        String id= "1305030212";
-
-                        String time = mdatas.get(poi).getTime();
-                        moreSecret( 1, time);
-                    } else {
-                        User userinfo = UserStatus.getUserInfo(getContext());
-                        volley_StringRequest_GET( 0, null, null);
-                    }
-                    mRecyclerViewAdapter.loadmore = "点击加载更多...";
-                } else {
-                    mRecyclerViewAdapter.loadmore = "暂无更多";
-                }
-                mRecyclerViewAdapter.notifyDataSetChanged();
                 break;
 
         }
@@ -264,12 +222,10 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     /**
      * 利用StringRequest实现Get请求
      */
-    private void volley_StringRequest_GET( final int requestcode, String starttime, String serect_id) {
+    private void volley_StringRequest_GET( final int requestcode, String user_id) {
         String url = "";
         if (requestcode == 0) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateDetail&&user_id=1305030212";
-        } else if (requestcode == 1) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=1305030212&moreSecret&&start=" + starttime;
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?MyDetail&user_id="+user_id;
         }
         // 2 创建StringRequest对象
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
@@ -307,57 +263,13 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO Auto-generated method stub
-                // VolleyLog.e("Error: ", error.getMessage());
+                ToastUtil.show(getApplicationContext(), "网络连接异常，请检查网络！");
             }
         });
         jsonObjectRequest.setTag("info");
         // 3 将StringRequest添加到RequestQueue
         mRequestQueue.add(jsonObjectRequest);
     }
-    private void moreSecret( final int requestcode, String starttime) {
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=1305030212"
-                 +"&moreSecret&start=" + starttime;
-        HttpUtil.get(url, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                // VolleyLog.v("Response:%n %s", response.toString());
-                try {
-                    String responses = new String(responseBody, "utf-8");
-
-                    Log.i("log", responses);
-                    Message message = new Message();
-                    message.what = 1;
-                    JSONObject response = new JSONObject(responses);
-                    JSONArray secretDetail = response.getJSONArray("secretDetail");
-
-                    if (secretDetail.length() == 0) {
-                        loadmoring = false;
-                    } else {
-                        loadmoring = true;
-                        Bundle bundle = new Bundle();
-                        bundle.putString("response", response.toString());
-                        Log.e("response", response.toString());
-                        message.setData(bundle);
-                    }
-                    handler.sendMessage(message);
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                ToastUtil.show(getActivity(), "网络连接异常，请检查网络！");
-            }
-        });
-
-
-    }
 
 
 }
-

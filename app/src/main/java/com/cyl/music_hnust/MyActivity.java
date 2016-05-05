@@ -246,6 +246,15 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 String msgString = "";
 
                 switch (menuItem.getItemId()) {
+                    case R.id.nav_menu_my:
+                        if (!UserStatus.getstatus(getApplicationContext())) {
+                            Intent it = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(it);
+                        } else {
+                            Intent it2 = new Intent(getApplicationContext(), MynamicActivity.class);
+                            startActivity(it2);
+                        }
+                        break;
                     case R.id.nav_menu_shake:
                         if (!UserStatus.getstatus(getApplicationContext())) {
                             msgString = "请登录！";
