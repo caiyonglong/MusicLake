@@ -12,15 +12,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
+import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanUtil;
+import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -194,6 +198,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onItemClick(View view, final int position) {
+
         final int positionInt = position;
 
         if (idEdit) {
@@ -220,10 +225,72 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
             }).create().show();
 
         } else {
-            mService.setCurrentListItme(position);
-            mService.setSongs(songs);
-            mService.playMusic(songs.get(position).getPath());
-            MyActivity.mService= mService;
+            switch (view.getId()) {
+                case R.id.music_container:
+                    mService.setCurrentListItme(position);
+                    mService.setSongs(songs);
+                    mService.playMusic(songs.get(position).getPath());
+                    MyActivity.mService= mService;
+                    break;
+                case R.id.list_black_btn:
+                    singleChoice(view, position);
+                    break;
+            }
         }
+    }
+
+    public void singleChoice(View source, final int position) {
+        String[] item = getResources().getStringArray(R.array.song_list);
+        ListAdapter items = new ArrayAdapter<String>(this,
+                R.layout.item_songs, item);
+//        int items;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("歌曲")
+                .setIcon(R.mipmap.ic_launcher)
+                .setAdapter(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            DBDao dbDao = new DBDao(getApplicationContext());
+
+                            if (!songs.get(position).isFavorite()) {
+                                dbDao.update(songs.get(position).getName(), true);
+                                ToastUtil.show(getApplicationContext(), "添加成功");
+                            } else {
+                                ToastUtil.show(getApplicationContext(), "已添加");
+                            }
+
+                        } else {
+                            String msg = "歌曲名: "+songs.get(position).getName() + "\n" +
+                                    "歌手名: "+songs.get(position).getArtist() + "\n"+
+                                    "专辑名: "+ songs.get(position).getAlbum() + "\n"+
+                                    "歌曲路径: "+songs.get(position).getPath() + "\n";
+                            detailsshow(msg);
+                        }
+
+                    }
+                });
+//        builder.setPositiveButton();
+        builder.create();
+        builder.show();
+    }
+
+    public void detailsshow(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("歌曲信息")
+                .setMessage(msg)
+                .setIcon(R.mipmap.ic_launcher);
+        setPositiveButton(builder)
+                .create()
+                .show();
+    }
+
+    private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
+        return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
     }
 }

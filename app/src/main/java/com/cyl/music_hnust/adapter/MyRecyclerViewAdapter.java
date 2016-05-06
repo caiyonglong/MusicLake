@@ -58,14 +58,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         mLayoutInflater = LayoutInflater.from(mContext);
         this.myDatas = myDatas;
         this.imageLoader = imageLoader;
-//        mDatas = new ArrayList<>();
-//        for (int i = 'A'; i <= 'z'; i++) {
-//            mDatas.add((char) i + "");
-//        }
-//        num = new ArrayList<>();
-//        for (int i = 'A'; i <= 'z'; i++) {
-//            num.add(0);
-//        }
     }
 
     /**
@@ -115,9 +107,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
                         mOnItemClickListener.onItemClick(holder1.content_text, position);
                     }
                 });
+                holder1.user_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onItemClick(holder1.user_name, position);
+                    }
+                });
+                holder1.user_logo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onItemClick(holder1.user_logo, position);
+                    }
+                });
 
             }
-            holder1.user_name.setText(myDatas.get(position).getUser().getUser_name());
+            holder1.user_name.setText(myDatas.get(position).getUser().getNick());
             holder1.item_action_love.setText(myDatas.get(position).getLove() + "赞");
             holder1.item_action_comment.setText(myDatas.get(position).getComment() + "评论");
             holder1.content_text.setText(myDatas.get(position).getContent());

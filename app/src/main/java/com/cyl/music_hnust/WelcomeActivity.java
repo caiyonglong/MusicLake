@@ -29,7 +29,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         Handler x = new Handler();
-        x.postDelayed(new splashhandler(), 3000);
+        x.postDelayed(new splashhandler(), 1000);
 
     }
 

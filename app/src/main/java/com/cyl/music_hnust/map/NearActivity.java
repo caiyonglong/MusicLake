@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.UserCenterMainAcivity;
 import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
@@ -304,8 +305,7 @@ public class NearActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final MyLocationViewHolder holder, final int position) {
 
-            holder.user_name.setText(myDatas.get(position).getUser().getUser_name());
-            holder.user_signature.setText(myDatas.get(position).getUser().getNick());
+            holder.user_name.setText(myDatas.get(position).getUser().getNick());
             String distance = "";
             String distime = "";
 
@@ -317,13 +317,36 @@ public class NearActivity extends AppCompatActivity {
             holder.id_cardview_foot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(),NearPeopleAcivity.class);
-                    intent.putExtra("name",mydatas.get(position).getUser().getUser_name());
-                    intent.putExtra("num",mydatas.get(position).getUser().getUser_id());
-                    intent.putExtra("class",mydatas.get(position).getUser().getUser_class());
-                    intent.putExtra("college",mydatas.get(position).getUser().getUser_college());
-                    intent.putExtra("major",mydatas.get(position).getUser().getUser_major());
-                    intent.putExtra("img",mydatas.get(position).getUser().getUser_img());
+                    Intent intent;
+                    User user = UserStatus.getUserInfo(getApplicationContext());
+                    if (myDatas.get(position).getUser().getUser_id().equals(user.getUser_id())){
+                         intent = new Intent(getApplicationContext(),UserCenterMainAcivity.class);
+                    }else {
+                        intent = new Intent(getApplicationContext(),NearPeopleAcivity.class);
+                    }
+                    if (myDatas.get(position).getUser().isSecret()){
+                        //保密
+                        intent.putExtra("flag",1);
+
+                        intent.putExtra("nick",mydatas.get(position).getUser().getNick());
+                    }else {
+                        intent.putExtra("flag",0);
+
+                        intent.putExtra("name",mydatas.get(position).getUser().getUser_name());
+                        intent.putExtra("num",mydatas.get(position).getUser().getUser_id());
+                        intent.putExtra("class",mydatas.get(position).getUser().getUser_class());
+                        intent.putExtra("college",mydatas.get(position).getUser().getUser_college());
+                        intent.putExtra("major",mydatas.get(position).getUser().getUser_major());
+                        intent.putExtra("img",mydatas.get(position).getUser().getUser_img());
+
+
+                        intent.putExtra("sex",mydatas.get(position).getUser().getUser_sex());
+                        intent.putExtra("phone",mydatas.get(position).getUser().getPhone());
+                        intent.putExtra("email",mydatas.get(position).getUser().getUser_email());
+                        intent.putExtra("nick",mydatas.get(position).getUser().getNick());
+
+
+                    }
                     startActivity(intent);
                 }
             });

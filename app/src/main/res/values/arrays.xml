@@ -20,6 +20,12 @@
         <item>歌曲信息</item>
 
     </string-array>
+    <string-array name="love_list">
+
+        <item>移除喜欢</item>
+        <item>歌曲信息</item>
+
+    </string-array>
     <string-array name="song_download">
 
         <item>添加到下载队列</item>

@@ -92,38 +92,6 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
                         mRecyclerViewAdapter.loadmore = "暂无更多";
                     }
                     break;
-                case 1:
-                    if (loadmoring) {
-                        // mdatas.clear();
-                        List<Dynamic> newdatas = new ArrayList<>();
-                        Bundle bundle = new Bundle();
-                        bundle = msg.getData();
-                        String response = (String) bundle.get("response");
-
-                        JSONObject dataJson = null;
-                        try {
-                            dataJson = new JSONObject(response);
-
-                            newdatas = JsonParsing.getDynamic(dataJson);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.e("size", mdatas.size() + "");
-                        mdatas.addAll(newdatas);
-                        mRecyclerViewAdapter.myDatas.addAll(newdatas);
-                        mRecyclerViewAdapter.notifyDataSetChanged();
-
-                        mRecyclerViewAdapter.loadmore = "下拉加载更多...";
-                    } else {
-                        mRecyclerViewAdapter.loadmore = "暂无更多";
-                    }
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    break;
-
-                case 3:
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    break;
             }
         }
     }
@@ -149,14 +117,11 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
                 return null;
             }
         });
-
-
         handler = new MyHandler(this);
-
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.id_swiperefreshlayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
-
+        volley_StringRequest_GET(0, userinfo.getUser_id());
         configRecyclerView();
 //        mLayoutManager = new LinearLayoutManager(getActivity());
         // 刷新时，指示器旋转后变化的颜色
@@ -165,6 +130,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -197,7 +163,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
             public void run() {
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                volley_StringRequest_GET( 0,userinfo.getUser_id());
+                volley_StringRequest_GET(0, userinfo.getUser_id());
 
             }
         }, 1000);
@@ -208,6 +174,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
         switch (view.getId()) {
             case R.id.container:
             case R.id.content_text:
+
                 Intent it = new Intent(getApplicationContext(), CommentActivity.class);
                 it.putExtra("position", position);
                 it.putExtra("flag", 1);
@@ -222,10 +189,10 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
     /**
      * 利用StringRequest实现Get请求
      */
-    private void volley_StringRequest_GET( final int requestcode, String user_id) {
+    private void volley_StringRequest_GET(final int requestcode, String user_id) {
         String url = "";
         if (requestcode == 0) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?MyDetail&user_id="+user_id;
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?MyDetail&user_id=" + user_id;
         }
         // 2 创建StringRequest对象
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
@@ -236,22 +203,19 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
                         Log.i("log", response.toString());
                         try {
 
-
                             Message message = new Message();
                             message.what = requestcode;
-                            if (requestcode != 2) {
-                                JSONArray secretDetail = response.getJSONArray("secretDetail");
-                                if (secretDetail.length() == 0) {
-                                    loadmoring = false;
-                                } else {
-                                    loadmoring = true;
 
-
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("response", response.toString());
-                                    message.setData(bundle);
-                                }
+                            JSONArray secretDetail = response.getJSONArray("secretDetail");
+                            if (secretDetail.length() == 0) {
+                                loadmoring = false;
+                            } else {
+                                loadmoring = true;
+                                Bundle bundle = new Bundle();
+                                bundle.putString("response", response.toString());
+                                message.setData(bundle);
                             }
+
                             handler.sendMessage(message);
                         } catch (JSONException e) {
                             e.printStackTrace();

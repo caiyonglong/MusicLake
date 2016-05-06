@@ -32,12 +32,12 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.fragment.MusicFragment;
 import com.cyl.music_hnust.fragment.MyFragment;
+import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.view.RoundedImageView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -79,8 +79,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     public static final String PREFERENCES_NAME = "settings";// SharedPreferences名称
     public static final String PREFERENCES_MODE = "mode";// 存储播放模式
     public static final String PREFERENCES_SCAN = "scan";// 存储是否扫描过
-    public static final String PREFERENCES_SKIN = "skin";// 存储背景图
-    public static final String PREFERENCES_LYRIC = "lyric";// 存储歌词高亮颜色
+    public String url_header = "http://119.29.27.116/hcyl/music_BBS";
 
     public static final String BROADCAST_ACTION_SCAN = "com.cwd.cmeplayer.action.scan";// 扫描广播标志
 
@@ -90,16 +89,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        //   application = (MyApplication) getApplication();
-
-//        if (mService == null) {
-//            mService = new MusicPlayService();
-//            application.setmService(mService);
-//            Log.e("11", "d222d");
-//        } else {
-//            mService = application.getmService();
-//            application.setmService(mService);
-//        }
 
         init();
 
@@ -174,15 +163,20 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                     id_header_name.setText(userinfo.getUser_name().toString());
                     signature.setText(userinfo.getUser_id().toString());
                     String path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
-
-                    if (userinfo.getUser_img() != null) {
-                        path = userinfo.getUser_img();
-
-                    }
                     File file = new File(path);
-                    if (file.exists())
-                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-
+                    if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
+                        if (file.exists())
+                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                        else {
+                            try {
+                                HttpByGet.downloadFile(url_header+userinfo.getUser_img(), path);
+                                if (file.exists())
+                                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                     UserStatus.saveuserstatus(MyActivity.this, true);
                 } else {
 
@@ -278,7 +272,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                     case R.id.nav_menu_map:
                         Intent intent = new Intent(getApplicationContext(), BaseMapActivity.class);
                         startActivity(intent);
-                        msgString = (String) menuItem.getTitle();
                         break;
                     case R.id.nav_menu_setting:
                         Intent it = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -299,8 +292,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
 
-                // android-support-design兼容包中新添加的一个类似Toast的控件。
-                SnackbarUtil.show(mViewPager, msgString, 0);
+
 
                 return true;
             }

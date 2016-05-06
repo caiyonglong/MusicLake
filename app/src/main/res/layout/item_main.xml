@@ -62,6 +62,7 @@
             <TextView
                 android:id="@+id/user_name"
                 android:layout_weight="1"
+                android:textColor="@color/setting_blue"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="岁月抚伤"
@@ -70,11 +71,11 @@
                 android:layout_width="80dp" />
             <TextView
                 android:layout_weight="1"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
+                android:textColor="@color/gray"
                 android:gravity="center_vertical"
                 android:text="发表于" />
 

@@ -10,15 +10,18 @@
         android:gravity="center">
 
         <TextView
+            android:textColor="@color/setting_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="昵称：" />
 
         <EditText
+            android:id="@+id/edt_nick"
             android:inputType="textShortMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="我是大师"
+            android:textColor="@color/gray"
+            android:hint="xxxxxxxxxxxx"
             android:selectAllOnFocus="true" />
     </TableRow>
 
@@ -27,15 +30,19 @@
         android:gravity="center">
 
         <TextView
+            android:textColor="@color/setting_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="邮箱：" />
 
         <EditText
+
+            android:id="@+id/edt_email"
+            android:textColor="@color/gray"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="64387280dfasdf7@qq.com"
+            android:hint="xxxxxxxxxxx@xx.com"
             android:selectAllOnFocus="true" />
     </TableRow>
 
@@ -44,15 +51,19 @@
         android:gravity="center">
 
         <TextView
+            android:textColor="@color/setting_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="电话：" />
 
         <EditText
+
+            android:id="@+id/edt_phone"
+            android:textColor="@color/gray"
             android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="15573275970"
+            android:hint="xxxxxxxxxxx"
             android:selectAllOnFocus="true" />
     </TableRow>
 </TableLayout>

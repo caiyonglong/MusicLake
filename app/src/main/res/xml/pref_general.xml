@@ -3,22 +3,16 @@
     <PreferenceCategory
         android:title="@string/info_secret_setting">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
-            android:key="secret_check"
+            android:key="secret_switch"
             android:title="@string/pref_title_social_recommendations"
             android:summary="@string/pref_title_social"
             />
-        <EditTextPreference
-            android:dependency="secret_check"
-            android:capitalize="words"
-            android:defaultValue="@string/pref_default_display_name"
-            android:inputType="textCapWords"
-            android:key="nickname"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_title_display_name" />
+        <Preference
+            android:key="complete_info"
+            android:title="@string/pref_title_info"
+            />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/info_network_setting">

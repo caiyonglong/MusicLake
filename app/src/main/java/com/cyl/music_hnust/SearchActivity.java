@@ -311,12 +311,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                             Log.e("go", infos.get(pos).getName() + ">>>>>" + infos.get(pos).getPath());
                             startService(intent);
                         } else {
-
+                            String msg = "歌曲名: "+infos.get(pos).getName() + "\n" +
+                                    "歌手名: "+infos.get(pos).getArtist() + "\n"+
+                                    "专辑名: "+ infos.get(pos).getAlbum() + "\n"+
+                                    "歌曲路径: "+infos.get(pos).getPath() + "\n";
+                            show(msg);
                         }
                     }
                 });
         builder.create();
         builder.show();
 
+
     }
+
+
+
 }

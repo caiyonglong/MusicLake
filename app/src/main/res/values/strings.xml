@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">湖科音乐</string>
+    <string name="near_people">校友资料</string>
 
     <string name="toolbar_title">湖科音乐</string>
     <string name="action_settings">设置</string>
@@ -39,7 +40,7 @@
 
 
     <string name="title_activity_settings">设置</string>
-    <string name="info_secret_setting">个人设置</string>
+    <string name="info_secret_setting">个人隐私设置</string>
     <string name="info_secret_setting_detail">个人隐私设置,可隐藏真实姓名</string>
 
     <string name="info_network_setting">网络设置</string>
@@ -49,12 +50,11 @@
     <string name="info_music_mode">播放模式</string>
     <!-- Strings related to Settings -->
 
-    <string name="pref_title_social_recommendations">是否只显示昵称</string>
-    <string name="pref_title_social">隐藏真实姓名</string>
+    <string name="pref_title_social_recommendations">禁止他人查看我的信息</string>
+    <string name="pref_title_social">不公开自己的基本信息</string>
 
+    <string name="pref_title_info">完善基本信息</string>
 
-    <string name="pref_title_display_name">设置昵称</string>
-    <string name="pref_default_display_name">少年</string>
 
 
 

@@ -63,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
     Button mEmailSignInButton;
     private ImageButton back;
-    private RoundedImageView User_Img;
     private static ProgressDialog loadingDialog;
     private static Context mContext;
     private String urlpath = "http://119.29.27.116/hcyl/music_BBS/operate.php?GetUserinfo&user_id=";
@@ -86,9 +85,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.username);
-        User_Img = (RoundedImageView) findViewById(R.id.user_img);
-
-
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -224,12 +220,6 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-//            try {
-//                // Simulate network access.
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                return false;
-//            }
             login_status = "网络请求失败";
             userinfo = HttpByGet.LoginByGet(mUsername, mPassword, 1, null);
             Log.e("result ", userinfo + "");
@@ -254,6 +244,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             }
+            if ("登录成功".equals(login_status)) {
+                userinfo = HttpByGet.LoginByGet(mUsername, mPassword, 3, null);
+                Log.e("useringofasdf======", userinfo);
+                User userInfo = JsonParsing.getUserinfo(userinfo);
+                Log.e("useringofasdf======", userInfo.getUser_name()+
+                        userInfo.getUser_id());
+                UserStatus.savaUserInfo(getApplicationContext(), userInfo);
+            }
 
             // TODO: register the new account here.
             return true;
@@ -265,10 +263,10 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 if ("登录成功".equals(login_status)) {
-                    User userinfo2 = JsonParsing.Userinfo(userinfo);
+//                    User userinfo2 = JsonParsing.Userinfo(userinfo);
                     //   map.put("pw", mPassword);
                    // userinfo2.setUser_img(tempPath);
-                    UserStatus.savaUserInfo(getApplicationContext(), userinfo2);
+//                    UserStatus.savaUserInfo(getApplicationContext(), userinfo2);
                     LoginSuccess = true;
                     loadingDialog.dismiss();
                     finish();
@@ -296,91 +294,5 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * @param url
-     *            要下载的文件URL
-     * @throws Exception
-     */
-    public static void downloadFile(String url) throws Exception {
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        // 指定文件类型
-        String[] allowedContentTypes = new String[] { "image/png", "image/jpeg" };
-        // 获取二进制数据如图片和其他文件
-        client.get(url, new BinaryHttpResponseHandler(allowedContentTypes) {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers,
-                                  byte[] binaryData) {
-
-
-                // TODO Auto-generated method stub
-                // 下载成功后需要做的工作
-           //     progress.setProgress(0);
-                //
-                Log.e("binaryData:", "共下载了：" + binaryData.length);
-                //
-                Bitmap bmp = BitmapFactory.decodeByteArray(binaryData, 0,
-                        binaryData.length);
-
-                File file = new File(tempPath);
-                // 压缩格式
-                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-                // 压缩比例
-                int quality = 100;
-                try {
-                    // 若存在则删除
-                    if (file.exists())
-                        file.delete();
-                    // 创建文件
-                    file.createNewFile();
-                    //
-                    OutputStream stream = new FileOutputStream(file);
-                    // 压缩输出
-                    bmp.compress(format, quality, stream);
-                    // 关闭
-                    stream.close();
-                    //
-                    Toast.makeText(mContext, "下载成功\n" + tempPath,
-                            Toast.LENGTH_LONG).show();
-
-                    loadingDialog.dismiss();
-
-
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers,
-                                  byte[] binaryData, Throwable error) {
-
-                loadingDialog.dismiss();
-                // TODO Auto-generated method stub
-                Toast.makeText(mContext, "下载失败", Toast.LENGTH_LONG).show();
-            }
-
-//            @Override
-//            public void onProgress(int bytesWritten, int totalSize) {
-//                // TODO Auto-generated method stub
-//                super.onProgress(bytesWritten, totalSize);
-//                int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
-//                // 下载进度显示
-//                progress.setProgress(count);
-//                Log.e("下载 Progress>>>>>", bytesWritten + " / " + totalSize);
-//
-//            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // TODO Auto-generated method stub
-                super.onRetry(retryNo);
-                // 返回重试次数
-            }
-
-        });
-    }
 }

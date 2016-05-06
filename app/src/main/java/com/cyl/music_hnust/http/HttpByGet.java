@@ -3,15 +3,23 @@ package com.cyl.music_hnust.http;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cyl.music_hnust.bean.User;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import cz.msebera.android.httpclient.Header;
 
 public class HttpByGet {
     private static String TAG_GET = "Log";
@@ -105,6 +113,11 @@ public class HttpByGet {
                     "&user_class=" + userinfo.getUser_class() +
                     "&user_college=" + userinfo.getUser_college() +
                     "&newUser";
+            path = "http://119.29.27.116/hcyl/music_BBS/operate.php?" + param;
+        }
+        else if (flagcode == 3) {
+            String param = "user_id=" + usernumber +
+                    "&GetUserinfo";
             path = "http://119.29.27.116/hcyl/music_BBS/operate.php?" + param;
         }
         try {
@@ -222,6 +235,63 @@ public class HttpByGet {
         } else {
             return false;
         }
+    }
+    /**
+     * @param url
+     *            要下载的文件URL
+     * @throws Exception
+     */
+    public static void downloadFile(String url, final String tempPath) throws Exception {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        // 指定文件类型
+        String[] allowedContentTypes = new String[] { "image/png", "image/jpeg" };
+        // 获取二进制数据如图片和其他文件
+        client.get(url, new BinaryHttpResponseHandler(allowedContentTypes) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers,
+                                  byte[] binaryData) {
+                Log.e("binaryData:", "共下载了：" + binaryData.length);
+                Bitmap bmp = BitmapFactory.decodeByteArray(binaryData, 0,
+                        binaryData.length);
+                File file = new File(tempPath);
+                // 压缩格式
+                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+                // 压缩比例
+                int quality = 100;
+                try {
+                    // 若存在则删除
+                    if (file.exists())
+                        file.delete();
+                    // 创建文件
+                    file.createNewFile();
+                    //
+                    OutputStream stream = new FileOutputStream(file);
+                    // 压缩输出
+                    bmp.compress(format, quality, stream);
+                    // 关闭
+                    stream.close();
+                    //
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers,
+                                  byte[] binaryData, Throwable error) {
+
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // TODO Auto-generated method stub
+                super.onRetry(retryNo);
+                // 返回重试次数
+            }
+        });
     }
 }
 

@@ -38,7 +38,7 @@ public class JsonParsing {
             String song_id = item.getString("song_id");
             String album_title = item.getString("album_title");
             String author = item.getString("author");
-            String Lrcpath = lrcpath+item.getString("lrclink");
+            String Lrcpath = lrcpath + item.getString("lrclink");
 
             Log.e("JsonParsing", "======" + song_id + album_title + author);
             map = new MusicInfo(); // 存放到MAP里面
@@ -68,7 +68,7 @@ public class JsonParsing {
         String size = Jsonobject.getString("size");
         String time = Jsonobject.getString("time");
 
-        Log.e("jsonparsing",songLink+songName+artistName+songPicSmall+size+time+"===");
+        Log.e("jsonparsing", songLink + songName + artistName + songPicSmall + size + time + "===");
 
 
         songinfo.setSize(size);
@@ -113,10 +113,10 @@ public class JsonParsing {
             String secret_id = item.getString("secret_id");
             String secret_content = item.getString("secret_content");
             String secret_time = item.getString("secret_time");
-            Log.e("ggg",secret_time+"===================");
+
             String secret_agreeNum = item.getString("secret_agreeNum");
             String secret_replyNum = item.getString("secret_replyNum");
-            int isAgree =item.getInt("isAgree");
+            int isAgree = item.getInt("isAgree");
             String user_id = item.getString("user_id");
             String nick = item.getString("nick");
             String user_img = item.getString("user_img");
@@ -135,9 +135,9 @@ public class JsonParsing {
             dynamic.setTime(secret_time);
             dynamic.setComment(Integer.parseInt(secret_replyNum));
             dynamic.setLove(Integer.parseInt(secret_agreeNum));
-            if ( isAgree ==1){
+            if (isAgree == 1) {
                 dynamic.setMyLove(true);
-            }else {
+            } else {
                 dynamic.setMyLove(false);
             }
 
@@ -146,6 +146,25 @@ public class JsonParsing {
         }
         return result;
     }
+
+    /**
+     * @param Jsonobject
+     * @return
+     * @throws JSONException "user": [
+     *                       {
+     *                       "user_id": "1305030215",
+     *                       "user_name": "焦儒阳",
+     *                       "user_sex": "男",
+     *                       "user_college": "计算机科学与工程学院",
+     *                       "user_major": "信息安全",
+     *                       "user_class": "13信息安全2班",
+     *                       "user_img": "/img/1305030215.png",
+     *                       "user_email": "",
+     *                       "phone": "",
+     *                       "secret": "1",
+     *                       "nick": "少年"
+     *                       }
+     */
     public static List<Location> getLocation(JSONObject Jsonobject) throws JSONException {
         List<Location> result;
 
@@ -162,19 +181,41 @@ public class JsonParsing {
             double location_latitude = item.getDouble("location_latitude");
             JSONArray user = item.getJSONArray("user");
             JSONObject itemuser = user.getJSONObject(0);
+
             String user_id = itemuser.getString("user_id");
             String user_name = itemuser.getString("user_name");
             String user_img = itemuser.getString("user_img");
             String nick = itemuser.getString("nick");
             String user_email = itemuser.getString("user_email");
 
-            Log.e("位置","location_longitude:"+location_longitude+"location_latitude"+location_latitude);
-            User user1 =new User();
+            String user_sex = itemuser.getString("user_sex");
+            String user_phone = itemuser.getString("phone");
+            int secret = itemuser.getInt("secret");
+            String user_class = itemuser.getString("user_class");
+            String user_major = itemuser.getString("user_major");
+            String user_college = itemuser.getString("user_college");
+
+            Log.e("位置", "location_longitude:" + location_longitude + "location_latitude" + location_latitude);
+            User user1 = new User();
+
+
+            user1.setUser_id(user_id);
+            user1.setUser_name(user_name);
+            user1.setUser_sex(user_sex);
+            user1.setUser_sex(user_sex);
+            user1.setUser_college(user_college);
+            user1.setUser_class(user_class);
+            user1.setUser_major(user_major);
+
+            if (secret == 1)
+                user1.setSecret(true);
+            else
+                user1.setSecret(false);
+
+            user1.setPhone(user_phone);
             user1.setUser_img(user_img);
             user1.setUser_email(user_email);
             user1.setNick(nick);
-            user1.setUser_id(user_id);
-            user1.setUser_name(user_name);
 
 
             Location location = new Location();
@@ -191,17 +232,18 @@ public class JsonParsing {
     }
 
     /**
-     *  "comment": [
-     {
-     "user_id": "10",
-     "secret_id": "5",
-     "comment": "假如没如果",
-     "comment_time": "2016-03-18 12:51:54",
-     "img_id": null,
-     "user_name": "张三"
-     }
-     ],
-      * @param Jsonobject
+     * "comment": [
+     * {
+     * "user_id": "10",
+     * "secret_id": "5",
+     * "comment": "假如没如果",
+     * "comment_time": "2016-03-18 12:51:54",
+     * "img_id": null,
+     * "user_name": "张三"
+     * }
+     * ],
+     *
+     * @param Jsonobject
      * @return
      * @throws JSONException
      */
@@ -214,24 +256,25 @@ public class JsonParsing {
         for (int i = 0; i < comment.length(); i++) {
             JSONObject item = comment.getJSONObject(i); // 得到每个对象
 
-            String user_name = item.getString("user_name");
+            String nick = item.getString("nick");
             String comment_time = item.getString("comment_time");
             String comment1 = item.getString("comment");
 
             Comment comment2 = new Comment();
             comment2.setTime(comment_time);
             comment2.setCommentContent(comment1);
-            User user =new User();
-            user.setUser_name(user_name);
+            User user = new User();
+            user.setNick(nick);
             comment2.setUser(user);
 
             result.add(comment2);
         }
         return result;
     }
+
     public static User Userinfo(String json) {
 
-        User user =new User();
+        User user = new User();
         /**
          * 得到json数据
          *{
@@ -275,23 +318,73 @@ public class JsonParsing {
         }
         return user;
     }
-    public static String getUserimg(String json) {
 
-        String imgurl = null;
+    public static User getUserinfo(String json) {
+
+        User user = new User();
+        /**
+         *{
+         "cur_user": "1305030212",
+         "userinfo": [
+         {
+         "user_id": "1305030212",
+         "user_name": "蔡永龙",
+         "user_sex": "男",
+         "user_college": "计算机科学与工程学院",
+         "user_major": "信息安全",
+         "user_class": "13信息安全2班",
+         "user_img": "/img/1305030212.png",
+         "user_email": "643872807@qq.com",
+         "phone": "15573275970",
+         "secret": "1",
+         "nick": "大师"
+         }
+         ],
+         "error": -1
+         }
+         */
+
         try {
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("userinfo");
-            JSONObject jsonObject1 = jsonArray.getJSONObject(0);
-            imgurl = jsonObject1.getString("user_img");    //获取对象中的一个值
+
+            JSONArray comment = jsonObject.getJSONArray("userinfo");//里面有一个数组数据，可以用getJSONArray获取数组
+
+            JSONObject item = comment.getJSONObject(0); // 得到每个对象
+
+            String num = item.getString("user_id");    //获取对象中的一个值
+            String name = item.getString("user_name");    //获取对象中的一个值
+            String sex = item.getString("user_sex");    //获取对象中的一个值
+            String college = item.getString("user_college");    //获取对象中的一个值
+            String major = item.getString("user_major");    //获取对象中的一个值
+            String class1 = item.getString("user_class");    //获取对象中的一个值
+            String user_img = item.getString("user_img");    //获取对象中的一个值
+            String user_email = item.getString("user_email");    //获取对象中的一个值
+            String phone = item.getString("phone");    //获取对象中的一个值
+            String nick = item.getString("nick");    //获取对象中的一个值
+            int secret = item.getInt("secret");    //获取对象中的一个值
+
+            user.setUser_id(num);
+            user.setUser_name(name);
+            user.setUser_sex(sex);
+            user.setUser_college(college);
+            user.setUser_major(major);
+            user.setUser_class(class1);
+
+            user.setUser_img(user_img);
+            user.setUser_email(user_email);
+            user.setPhone(phone);
+            user.setNick(nick);
+
+            if (secret == 1)
+                user.setSecret(true);
+            else
+                user.setSecret(false);
 
         } catch (JSONException e) {
             e.printStackTrace();
-
-            return imgurl;
+            return user;
         }
-        return imgurl;
+        return user;
     }
-
-
 
 }

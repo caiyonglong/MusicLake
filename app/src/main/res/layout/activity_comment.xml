@@ -35,7 +35,6 @@
         android:layout_below="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -198,6 +197,9 @@
         </LinearLayout>
     </ScrollView>
     <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
         android:id="@+id/area_commit"
         android:visibility="gone"
         android:layout_width="match_parent"

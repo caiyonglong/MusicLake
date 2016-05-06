@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -160,7 +161,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        mRequestQueue = Volley.newRequestQueue(this);
+        ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(CommentActivity.this.getCurrentFocus()
+                        .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                mRequestQueue = Volley.newRequestQueue(this);
         handler= new MyHandler(this);
         imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
 
@@ -224,7 +229,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
          * 动态详情
          */
         String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
-        user_name.setText(mdatas.get(Integer.parseInt(position)).getUser().getUser_name());
+        user_name.setText(mdatas.get(Integer.parseInt(position)).getUser().getNick());
         user_logo.setImageUrl(imgUrl + mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
         user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
         content_text.setText(mdatas.get(Integer.parseInt(position)).getContent());
@@ -308,7 +313,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     "user_id=" + user_id +
                     "&showSecretComment&&secret_id=" + secret_id;
         } else if (requestcode == 2) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&&changeAgree&&secret_id=" + secret_id;
+            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id="
+                    + user_id +
+                    "&&changeAgree&&secret_id=" + secret_id;
         }
         // 1 创建RequestQueue对象
 

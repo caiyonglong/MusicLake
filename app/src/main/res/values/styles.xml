@@ -37,4 +37,8 @@
         <item name="android:textColor">@color/main_white</item>
     </style>
 
+    <style name="Theme.Start" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@mipmap/bg</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

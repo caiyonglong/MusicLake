@@ -61,20 +61,17 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".NearPeopleAcivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="@string/near_people"/>
         <activity
             android:name=".MyActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
         </activity>
         <activity
             android:screenOrientation="portrait"
             android:name=".WelcomeActivity"
+            android:theme="@style/Theme.Start"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -137,7 +134,6 @@
             android:theme="@style/AppTheme" />
 
         <service
-
             android:name=".service.MusicPlayService"
             android:enabled="true" />
         <service

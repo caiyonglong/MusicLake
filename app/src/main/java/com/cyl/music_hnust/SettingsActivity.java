@@ -5,8 +5,11 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -26,8 +29,12 @@ import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.bean.Location;
@@ -35,6 +42,7 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.DataClearmanager;
+import com.cyl.music_hnust.utils.ToastUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
@@ -61,9 +69,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * to reflect its new value.
      */
 
-    private String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateUser&user_email&user_img&user_name=";
-
-    public void UpdateUserinfo(String username) {
+    public void UpdateUserinfo(String issecret) {
 
 
         User user = UserStatus.getUserInfo(getApplicationContext());
@@ -71,9 +77,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Toast.makeText(SettingsActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
             return;
         }
-        url = url + username + "&user_id=" + user.getUser_id();
+        String updateurl = "http://119.29.27.116/hcyl/music_BBS/operate.php?" +
+                "updateUser&nick&user_email&phone&secret="
+                +issecret+"&user_id=" +user.getUser_id();
 
-        HttpUtil.get(url, new AsyncHttpResponseHandler() {
+
+        HttpUtil.get(updateurl, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
                 try {
@@ -120,32 +129,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 SwitchPreference switchPreference = (SwitchPreference) preference;
-                if (switchPreference.isChecked()) {
-
-
+                if (switchPreference.getKey().equals("secret_switch")) {
+                    if (switchPreference.isChecked()){
+                        UpdateUserinfo("2");
+                        Log.e("check+++++++++++++",switchPreference.isChecked()+"");
+                    }else {
+                        Log.e("check+++++++++++++",switchPreference.isChecked()+"");
+                        UpdateUserinfo("1");
+                    }
                 }
 
 
             } else if (preference instanceof CheckBoxPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-
-                //    if (checkBoxPreference.){
-
-                if (stringValue.equals("true")) {
-                    SharedPreferences pers = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String username = pers.getString("nickname", "呵呵呵");
-                    //  Toast.makeText(SettingsActivity.this, stringValue + "修改成功" + username, Toast.LENGTH_SHORT).show();
-                    UpdateUserinfo(username);
-                }
 
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
-
-
             }
             return true;
         }
@@ -198,9 +198,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         finish();
     }
 
-    //;
-
-
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
@@ -211,8 +208,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         private Preference preference_about;
         public Preference preference_cache;
-        public CheckBoxPreference secret_check;
-        public EditTextPreference nikname;
+        public Preference preference_info;
+        public SwitchPreference secret_switch;
         public SwitchPreference wifi_switch;
         public ListPreference mode_list;
 
@@ -224,24 +221,31 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             preference_about = findPreference("key_about");
             preference_cache = findPreference("key_cache");
-            secret_check = (CheckBoxPreference) findPreference("secret_check");
-            nikname = (EditTextPreference) findPreference("nickname");
+            preference_info = findPreference("complete_info");
+            secret_switch = (SwitchPreference) findPreference("secret_switch");
+
             wifi_switch = (SwitchPreference) findPreference("wifi_switch");
             mode_list = (ListPreference) findPreference("mode_list");
             String stringValue = mode_list.getValue().toString();
             int index = mode_list.findIndexOfValue(stringValue);
 
-            // Set the summary to reflect the new value.
+            User user = UserStatus.getUserInfo(getActivity());
+            if (user.getUser_name()!=null&&user.isSecret()){
+                secret_switch.setDefaultValue(false);
+            }else {
+                secret_switch.setDefaultValue(true);
+            }
+
             mode_list.setSummary(
                     index >= 0
                             ? mode_list.getEntries()[index]
                             : null);
             preference_about.setOnPreferenceClickListener(this);
             preference_cache.setOnPreferenceClickListener(this);
+            preference_info.setOnPreferenceClickListener(this);
 
-            bindPreferenceSummaryToValue(nikname);
             bindPreferenceSummaryToValue(wifi_switch);
-            bindPreferenceSummaryToValue(secret_check);
+            bindPreferenceSummaryToValue(secret_switch);
             bindPreferenceSummaryToValue(findPreference("mode_list"));
         }
 
@@ -260,16 +264,62 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceClick(Preference preference) {
             switch (preference.getKey()) {
                 case "key_about":
-                    Toast.makeText(getActivity(), "湖科音乐 1.0", Toast.LENGTH_LONG).show();
+                    try {
+                        modify("当前版本: V"+getVersionName()+
+                                "\n联系与反馈: 请联系作者\n" +
+                                "QQ: 643872807");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case "key_cache":
                     Toast.makeText(getActivity(), "清除成功", Toast.LENGTH_LONG).show();
+                    break;
+                case "complete_info":
+                    User user =UserStatus.getUserInfo(getApplicationContext());
+                    if (user.getUser_name()!=null) {
+                        Intent intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                     break;
 
             }
             return false;
         }
 
+
+    }
+    private String getVersionName() throws Exception
+    {
+        // 获取packagemanager的实例
+        PackageManager packageManager = getPackageManager();
+        // getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
+        String version = packInfo.versionName;
+        return version;
+    }
+    public void modify(String msg) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("关于湖科音乐")
+                .setIcon(R.mipmap.icon)
+                .setMessage(msg);
+
+        setPositiveButton(builder)
+                .create()
+                .show();
+    }
+
+    private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
+        return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
     }
 
 

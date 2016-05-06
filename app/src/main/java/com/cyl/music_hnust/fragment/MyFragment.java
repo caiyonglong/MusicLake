@@ -29,7 +29,9 @@ import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.CommentActivity;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.LoginActivity;
+import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.UserCenterMainAcivity;
 import com.cyl.music_hnust.adapter.MyRecyclerViewAdapter;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Dynamic;
@@ -112,7 +114,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                     break;
                 case 1:
                     if (loadmoring) {
-                       // mdatas.clear();
+                        // mdatas.clear();
                         List<Dynamic> newdatas = new ArrayList<>();
                         Bundle bundle = new Bundle();
                         bundle = msg.getData();
@@ -208,7 +210,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
             public void run() {
                 mSwipeRefreshLayout.setRefreshing(false);
                 User userinfo = UserStatus.getUserInfo(getContext());
-                volley_StringRequest_GET( 0, null, null);
+                volley_StringRequest_GET(0, null, null);
 
             }
         }, 1000);
@@ -217,18 +219,26 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     @Override
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
-//            case R.id.item_action_love_agree:
-//                User userinfo1 = UserStatus.getUserInfo(getContext());
-//                if (userinfo1.getUser_name() != null) {
-//                    this.position = position;
-//                    volley_StringRequest_GET(userinfo1.getUser_id(), 2, null, mRecyclerViewAdapter.myDatas.get(position).getDynamic_id());
-//
-//                } else {
-//                    Intent it = new Intent(getContext(), LoginActivity.class);
-//                    startActivity(it);
-//                }
-//
-//                break;
+            case R.id.user_name:
+            case R.id.user_logo:
+                User user = UserStatus.getUserInfo(getContext());
+                if (user.getUser_id() != null) {
+                    if (user.getUser_id().equals(mdatas.get(position).getUser().getUser_id())) {
+                        Intent it = new Intent(getContext(), UserCenterMainAcivity.class);
+                        startActivity(it);
+                    } else {
+                        Log.e("LOOOOOO+++++0", mdatas.get(position).getUser().getUser_id());
+                        Intent it = new Intent(getContext(), NearPeopleAcivity.class);
+                        it.putExtra("flag", 2);
+                        it.putExtra("user_id", mdatas.get(position).getUser().getUser_id());
+                        startActivity(it);
+                    }
+                }else {
+                    Intent it = new Intent(getContext(), LoginActivity.class);
+                    startActivity(it);
+                }
+
+                break;
             case R.id.container:
             case R.id.content_text:
                 Intent it = new Intent(getContext(), CommentActivity.class);
@@ -243,13 +253,13 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
                 if (loadmoring) {
                     if (position - 1 >= 0) {
                         poi = position - 1;
-                        String id= "1305030212";
+                        String id = "1305030212";
 
                         String time = mdatas.get(poi).getTime();
-                        moreSecret( 1, time);
+                        moreSecret(1, time);
                     } else {
                         User userinfo = UserStatus.getUserInfo(getContext());
-                        volley_StringRequest_GET( 0, null, null);
+                        volley_StringRequest_GET(0, null, null);
                     }
                     mRecyclerViewAdapter.loadmore = "点击加载更多...";
                 } else {
@@ -264,7 +274,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     /**
      * 利用StringRequest实现Get请求
      */
-    private void volley_StringRequest_GET( final int requestcode, String starttime, String serect_id) {
+    private void volley_StringRequest_GET(final int requestcode, String starttime, String serect_id) {
         String url = "";
         if (requestcode == 0) {
             url = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateDetail&&user_id=1305030212";
@@ -314,9 +324,10 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         // 3 将StringRequest添加到RequestQueue
         mRequestQueue.add(jsonObjectRequest);
     }
-    private void moreSecret( final int requestcode, String starttime) {
+
+    private void moreSecret(final int requestcode, String starttime) {
         String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=1305030212"
-                 +"&moreSecret&start=" + starttime;
+                + "&moreSecret&start=" + starttime;
         HttpUtil.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

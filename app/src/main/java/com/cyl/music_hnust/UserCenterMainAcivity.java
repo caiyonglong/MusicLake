@@ -18,11 +18,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -60,7 +62,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     private CardView user_logout;
 
     private ImageView head;
-    private FloatingActionButton fab_a,fab_b;
+    private FloatingActionButton fab_a, fab_b;
 
 
     private PopupWindow popWindow;
@@ -77,7 +79,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     private String path;//图片全路径
     private static Context mContext;//图片全路径
     private String url = "http://119.29.27.116/hcyl/music_BBS/upload_file.php";
-
+    User userinfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +112,8 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("个人中心");
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String nickname = prefs.getString("nickname", "呵呵呵");
-        user_nick.setText(nickname);
 
-        User userinfo = UserStatus.getUserInfo(this);
+        userinfo = UserStatus.getUserInfo(this);
         if (userinfo.getUser_name() != null) {
             user_name.setText(userinfo.getUser_name());
             user_num.setText(userinfo.getUser_id());
@@ -132,6 +131,11 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 user_email.setText(userinfo.getUser_email());
             } else {
                 user_email.setText("暂无");
+            }
+            if (userinfo.getNick() != null) {
+                user_nick.setText(userinfo.getNick());
+            } else {
+                user_nick.setText("暂无");
             }
 
 
@@ -202,6 +206,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     }
 
     private void initView() {
+
         user_name = (TextView) findViewById(R.id.usercenter_name);
         user_class = (TextView) findViewById(R.id.usercenter_class);
         user_major = (TextView) findViewById(R.id.usercenter_major);
@@ -233,7 +238,8 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 modify("123");
                 break;
             case R.id.action_b:
-                modify("12345");
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 break;
 
         }
@@ -360,14 +366,34 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    /**
+     * 修改对话框
+     *
+     * @param msg
+     */
+
+    private TableLayout update;
+    private EditText nick;
+    private EditText email;
+    private EditText phone;
+
+
     public void modify(String msg) {
-        TableLayout tableLayout =
-                (TableLayout) getLayoutInflater().inflate(R.layout.info_modify,null);
+
+        userinfo = UserStatus.getUserInfo(this);
+        update =
+                (TableLayout) getLayoutInflater().inflate(R.layout.info_modify, null);
+        nick = (EditText) update.findViewById(R.id.edt_nick);
+        nick.setText(userinfo.getNick() == null ? "" : userinfo.getNick());
+        email = (EditText) update.findViewById(R.id.edt_email);
+        email.setText(userinfo.getUser_email() == null ? "" : userinfo.getUser_email());
+        phone = (EditText) update.findViewById(R.id.edt_phone);
+        phone.setText(userinfo.getPhone() == null ? "" : userinfo.getPhone());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("修改信息")
                 .setIcon(R.mipmap.usercenter_revise)
-                .setView(tableLayout);
+                .setView(update);
         setNegativeButton(builder);
 
         setPositiveButton(builder)
@@ -376,10 +402,18 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     }
 
     private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
-        return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        return builder.setPositiveButton("修改", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                if (!TextUtils.isEmpty(nick.getText().toString().trim()) &&
+                        !TextUtils.isEmpty(email.getText().toString().trim()) &&
+                        !TextUtils.isEmpty(phone.getText().toString().trim())) {
+                    UpdateUserinfo(nick.getText().toString().trim()
+                            , email.getText().toString().trim(),
+                            phone.getText().toString().trim());
+                } else {
+                    ToastUtil.show(getApplicationContext(), "请输入完整！");
+                }
             }
         });
     }
@@ -435,5 +469,65 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 dialog.dismiss();
             }
         });
+    }
+
+    private String updateurl = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateUser&secret&nick=";
+
+    public void UpdateUserinfo(final String nick, final String email, final String phone) {
+
+
+        final User user = UserStatus.getUserInfo(getApplicationContext());
+
+        updateurl = updateurl + nick + "&user_id=" + user.getUser_id()
+                + "&user_email=" + email
+                + "&phone=" + phone;
+
+        HttpUtil.get(updateurl, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+                try {
+                    String str = new String(responseBody, "utf-8");
+                    if (str.endsWith(":10000}")) {
+                        user.setNick(nick);
+                        user.setUser_email(email);
+                        user.setPhone(phone);
+                        UserStatus.savaUserInfo(getApplicationContext(),user);
+
+                        //电话邮箱
+                        if (userinfo.getPhone() != null) {
+                            user_phone.setText(userinfo.getPhone());
+                        } else {
+                            user_phone.setText("暂无");
+                        }
+                        if (userinfo.getUser_email() != null) {
+                            user_email.setText(userinfo.getUser_email());
+                        } else {
+                            user_email.setText("暂无");
+                        }
+                        if (userinfo.getNick() != null) {
+                            user_nick.setText(userinfo.getNick());
+                        } else {
+                            user_nick.setText("暂无");
+                        }
+
+                        Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "修改失败，网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 }

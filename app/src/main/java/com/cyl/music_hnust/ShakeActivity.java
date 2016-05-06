@@ -336,7 +336,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onBindViewHolder(MyLocationViewHolder holder, int position) {
 
-            holder.user_name.setText(myDatas.get(position).getUser().getUser_name()
+            holder.user_name.setText(myDatas.get(position).getUser().getNick()
             );
             holder.user_signature.setText(myDatas.get(position).getUser_song());
             String distance = "";

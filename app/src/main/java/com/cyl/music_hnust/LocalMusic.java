@@ -42,6 +42,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
 
 
     private RecyclerView.LayoutManager mLayoutManager;
+    private MusicRecyclerViewAdapter adapter;
 
     List<MusicInfo> mDatas;
     Intent it;
@@ -79,7 +80,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
             music_list.setVisibility(View.GONE);
             tv_no_songs.setVisibility(View.VISIBLE);
         }
-        MusicRecyclerViewAdapter adapter = new MusicRecyclerViewAdapter(getApplicationContext(), mDatas);
+        adapter = new MusicRecyclerViewAdapter(getApplicationContext(), mDatas);
         adapter.setOnItemClickListener(this);
         music_list.setAdapter(adapter);
 
@@ -112,8 +113,8 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.tv_no_songs:
-                if (type == LOCAL_LIST){
-                    Intent intent =new Intent(this,ScanActivity.class);
+                if (type == LOCAL_LIST) {
+                    Intent intent = new Intent(this, ScanActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -134,9 +135,10 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                 mService.setCurrentListItme(position);
                 mService.setSongs(mDatas);
                 mService.playMusic(mDatas.get(position).getPath());
-                MyActivity.mService =mService;
+                MyActivity.mService = mService;
                 break;
             case R.id.list_black_btn:
+
                 singleChoice(view, position);
 
                 break;
@@ -145,7 +147,11 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
     }
 
     public void singleChoice(View source, final int position) {
+
         String[] item = getResources().getStringArray(R.array.song_list);
+        if (type == FAVOR_LIST) {
+            item = getResources().getStringArray(R.array.love_list);
+        }
         ListAdapter items = new ArrayAdapter<String>(this,
                 R.layout.item_songs, item);
 //        int items;
@@ -156,21 +162,42 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            DBDao dbDao = new DBDao(getApplicationContext());
-
-                            if (!songs.get(position).isFavorite()) {
-                                dbDao.update(songs.get(position).getName(), true);
-                                ToastUtil.show(getApplicationContext(), "添加成功");
-                            } else {
-                                ToastUtil.show(getApplicationContext(), "已添加");
+                            if (type == LOCAL_LIST) {
+                                DBDao dbDao = new DBDao(getApplicationContext());
+                                if (!songs.get(position).isFavorite()) {
+                                    dbDao.update(songs.get(position).getName(), true);
+                                    ToastUtil.show(getApplicationContext(), "添加成功");
+                                } else {
+                                    ToastUtil.show(getApplicationContext(), "已添加");
+                                }
+                            }else if(type == FAVOR_LIST){
+                                DBDao dbDao = new DBDao(getApplicationContext());
+                                if (mDatas.get(position).isFavorite()) {
+                                    dbDao.update(mDatas.get(position).getName(), false);
+                                    ToastUtil.show(getApplicationContext(), "移除成功");
+                                    initData();
+                                    adapter.mDatas =mDatas;
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    ToastUtil.show(getApplicationContext(), "...");
+                                }
                             }
 
                         } else {
-                            String msg = "歌曲名: "+songs.get(position).getName() + "\n" +
-                                    "歌手名: "+songs.get(position).getArtist() + "\n"+
-                                    "专辑名: "+ songs.get(position).getAlbum() + "\n"+
-                                    "歌曲路径: "+songs.get(position).getPath() + "\n";
-                            detailsshow(msg);
+                            if (type == LOCAL_LIST) {
+                                String msg = "歌曲名: " + songs.get(position).getName() + "\n" +
+                                        "歌手名: " + songs.get(position).getArtist() + "\n" +
+                                        "专辑名: " + songs.get(position).getAlbum() + "\n" +
+                                        "歌曲路径: " + songs.get(position).getPath() + "\n";
+                                detailsshow(msg);
+                            }else if(type == FAVOR_LIST){
+                                String msg = "歌曲名: " + mDatas.get(position).getName() + "\n" +
+                                        "歌手名: " + mDatas.get(position).getArtist() + "\n" +
+                                        "专辑名: " + mDatas.get(position).getAlbum() + "\n" +
+                                        "歌曲路径: " + mDatas.get(position).getPath() + "\n";
+                                detailsshow(msg);
+                            }
+
                         }
 
                     }

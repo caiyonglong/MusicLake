@@ -52,7 +52,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     @Override
     public void onBindViewHolder(final CommentRecyclerViewHolder holder, final int position) {
 
-        holder.userName_comment.setText(mDatas.get(position).getUser().getUser_name().toString());
+        holder.userName_comment.setText(mDatas.get(position).getUser().getNick().toString());
         holder.content_comment.setText(mDatas.get(position).getCommentContent().toString());
         holder.time_comment.setText(mDatas.get(position).getTime().toString());
         holder.index_comment.setText(position+1+"楼");
