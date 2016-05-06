@@ -350,8 +350,6 @@ public class NearActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-
-
             String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
             holder.location_time.setText(distime);
             holder.user_distance.setText("不超过" + distance);
