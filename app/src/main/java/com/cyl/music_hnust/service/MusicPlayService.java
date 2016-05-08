@@ -140,15 +140,15 @@ public class MusicPlayService extends Service {
      * 根据歌曲存储路径播放歌曲
      */
     public void playMusic(String path) {
-        Intent it = new Intent(MyActivity.UPDATE_ACTION);
-        it.putExtra("current", currentListItme);
-        it.putExtra("update", 3);
-        it.putExtra("name", getSongName());
-        it.putExtra("artist", getSingerName());
-        it.putExtra("pic", getSong().getAlbumPic() + "");
-        sendBroadcast(it);
-        showNotification();
         try {
+            Intent it = new Intent(MyActivity.UPDATE_ACTION);
+            it.putExtra("current", currentListItme);
+            it.putExtra("update", 3);
+            it.putExtra("name", getSongName());
+            it.putExtra("artist", getSingerName());
+            it.putExtra("pic", getSong().getAlbumPic() + "");
+            sendBroadcast(it);
+
             /* 重置MediaPlayer */
             mMediaPlayer.reset();
             /* 设置要播放的文件的路径 */
@@ -170,8 +170,12 @@ public class MusicPlayService extends Service {
                     hasLyric = false;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "播放出错",
+                    Toast.LENGTH_SHORT).show();
         }
+
+        showNotification();
     }
 
 
@@ -282,8 +286,8 @@ public class MusicPlayService extends Service {
             from = m.getName();
             message = m.getArtist();
         } else {
-            from="湖科音乐";
-            message="听喜欢的歌";
+            from = "湖科音乐";
+            message = "听喜欢的歌";
         }
         Intent nextIntent2 = new Intent();
         nextIntent2.setAction(NOTIFICATION_ACTION_NEXT); // 为Intent对象设置Action
@@ -318,6 +322,8 @@ public class MusicPlayService extends Service {
         Bitmap bm = null;
         if (getSong().getAlbumPic() != null) {
             bm = BitmapFactory.decodeFile(getSong().getAlbumPic());
+        }else {
+            bm = null;
         }
         if (bm != null) {
             try {

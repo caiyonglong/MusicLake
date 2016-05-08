@@ -6,6 +6,7 @@ import com.cyl.music_hnust.bean.Comment;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;
 
 import org.json.JSONArray;
@@ -34,11 +35,10 @@ public class JsonParsing {
         for (int i = 0; i < length; i++) {
             JSONObject item = jsonArray.getJSONObject(i); // 得到每个对象
 
-            String lrcpath = "http://tingapi.ting.baidu.com";
             String song_id = item.getString("song_id");
             String album_title = item.getString("album_title");
             String author = item.getString("author");
-            String Lrcpath = lrcpath + item.getString("lrclink");
+            String Lrcpath = Constants.DEFAULT_MUSIC_LRCPATH + item.getString("lrclink");
 
             Log.e("JsonParsing", "======" + song_id + album_title + author);
             map = new MusicInfo(); // 存放到MAP里面
@@ -119,7 +119,7 @@ public class JsonParsing {
             int isAgree = item.getInt("isAgree");
             String user_id = item.getString("user_id");
             String nick = item.getString("nick");
-            String user_img = item.getString("user_img");
+            String user_img = Constants.DEFAULT_IMGHEADER+item.getString("user_img");
 
 
             User user1 = new User();
@@ -184,7 +184,7 @@ public class JsonParsing {
 
             String user_id = itemuser.getString("user_id");
             String user_name = itemuser.getString("user_name");
-            String user_img = itemuser.getString("user_img");
+            String user_img = Constants.DEFAULT_IMGHEADER+itemuser.getString("user_img");
             String nick = itemuser.getString("nick");
             String user_email = itemuser.getString("user_email");
 
@@ -357,7 +357,7 @@ public class JsonParsing {
             String college = item.getString("user_college");    //获取对象中的一个值
             String major = item.getString("user_major");    //获取对象中的一个值
             String class1 = item.getString("user_class");    //获取对象中的一个值
-            String user_img = item.getString("user_img");    //获取对象中的一个值
+            String user_img = Constants.DEFAULT_IMGHEADER+item.getString("user_img");    //获取对象中的一个值
             String user_email = item.getString("user_email");    //获取对象中的一个值
             String phone = item.getString("phone");    //获取对象中的一个值
             String nick = item.getString("nick");    //获取对象中的一个值

@@ -1,5 +1,6 @@
 package com.cyl.music_hnust.map;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,13 +30,16 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
+import com.cyl.music_hnust.MyActivity;
 import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.UserCenterMainAcivity;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -55,9 +59,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by 永龙 on 2016/3/20.
  */
 public class NearActivity extends AppCompatActivity {
-    private Button btn_submit;
-    private Button btn_get;
-    private Button btn_clear;
+    private ImageButton btn_clear;
     private ImageButton back;
     private RecyclerView location_near;
     private NearbySearch mNearbySearch;
@@ -69,9 +71,11 @@ public class NearActivity extends AppCompatActivity {
     public AMapLocationClientOption mLocationOption = null;
     private LatLonPoint latLonPoint;
     public List<Location> mydatas;
-
+    private MyApplication application;
     private RequestQueue mRequestQueue;
     private ImageLoader imageLoader;
+    private static ProgressDialog progDialog = null;
+    private User user;
 
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -83,9 +87,10 @@ public class NearActivity extends AppCompatActivity {
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case 0:
+                    dissmissProgressDialog();
                     break;
                 case 1:
-
+                    dissmissProgressDialog();
                     Bundle bundle = new Bundle();
                     bundle = msg.getData();
                     String response = (String) bundle.get("response");
@@ -96,10 +101,6 @@ public class NearActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-//                    Log.e("tag1", latLonPoint.getLongitude() + "");
-//                    Log.e("tag1", latLonPoint.getLatitude() + "");
-
                     if (latLonPoint != null) {
                         adapter.latLonPoint = latLonPoint;
                     } else {
@@ -109,8 +110,10 @@ public class NearActivity extends AppCompatActivity {
                     }
                     adapter.myDatas = mydatas;
                     adapter.notifyDataSetChanged();
+
                     break;
                 case 2:
+                    finish();
                     break;
             }
         }
@@ -122,28 +125,49 @@ public class NearActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near);
         mydatas = new ArrayList<>();
-        mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
+        user = UserStatus.getUserInfo(getApplicationContext());
+        application =new MyApplication();
+        mRequestQueue = application.getHttpQueues();
+        imageLoader =application.getImageLoader();
 
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
         init();
-
+        showProgressDialog("正在确定你的位置");
         initView();
 
 
     }
 
+    private void initfunction() {
+
+        if (latLonPoint != null) {
+            volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
+                    , latLonPoint.getLongitude(), 0);
+        } else {
+            ToastUtil.show(getApplicationContext(), "定位失败!");
+        }
+        Handler x = new Handler();
+        x.postDelayed(new splashhandler(), 500);
+
+    }
+
+
+    class splashhandler implements Runnable {
+
+        public void run() {
+            showProgressDialog("正在查找附近的人");
+            if (user.getUser_id() != null) {
+                volley_StringRequest_GET(user.getUser_id(), 0, 0
+                        , 1);
+            } else {
+                ToastUtil.show(getApplicationContext(), "请先登录!");
+            }
+            dissmissProgressDialog();
+        }
+
+    }
+
     private void initView() {
-        btn_submit = (Button) findViewById(R.id.btn_submit_location);
-        btn_get = (Button) findViewById(R.id.btn_get_location);
-        btn_clear = (Button) findViewById(R.id.btn_clear);
+        btn_clear = (ImageButton) findViewById(R.id.btn_clear);
         back = (ImageButton) findViewById(R.id.backImageButton);
         location_near = (RecyclerView) findViewById(R.id.location_near);
 
@@ -154,27 +178,12 @@ public class NearActivity extends AppCompatActivity {
 
             }
         });
-        btn_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                User user = UserStatus.getUserInfo(getApplicationContext());
-                if (user.getUser_id() != null && latLonPoint != null) {
-
-                    volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
-                            , latLonPoint.getLongitude(), 0);
-                } else {
-                    ToastUtil.show(getApplicationContext(), "定位失败!");
-                }
-
-            }
-        });
         btn_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 User user = UserStatus.getUserInfo(getApplicationContext());
                 if (user.getUser_id() != null) {
-
                     volley_StringRequest_GET(user.getUser_id(), 0, 0
                             , 2);
                 } else {
@@ -183,19 +192,7 @@ public class NearActivity extends AppCompatActivity {
 
             }
         });
-        btn_get.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User user = UserStatus.getUserInfo(getApplicationContext());
-                if (user.getUser_id() != null) {
 
-                    volley_StringRequest_GET(user.getUser_id(), 0, 0
-                            , 1);
-                } else {
-                    ToastUtil.show(getApplicationContext(), "请先登录!");
-                }
-            }
-        });
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -235,7 +232,13 @@ public class NearActivity extends AppCompatActivity {
                         amapLocation.getAoiName();//获取当前定位点的AOI信息
 
                         latLonPoint = new LatLonPoint(amapLocation.getLongitude(), amapLocation.getLatitude());
+                        Log.e("amapLocation", "Location amapLocation, getLongitude:"
+                                + amapLocation.getLongitude() + ", getLatitude:"
+                                +  amapLocation.getLatitude());
+                        initfunction();
                     } else {
+                        dissmissProgressDialog();
+                        initfunction();
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                         Log.e("AmapError", "Location Error, ErrCode:"
                                 + amapLocation.getErrorCode() + ", errInfo:"
@@ -255,13 +258,13 @@ public class NearActivity extends AppCompatActivity {
 //设置是否返回地址信息（默认返回地址信息）
         mLocationOption.setNeedAddress(true);
 //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(false);
+        mLocationOption.setOnceLocation(true);
 //设置是否强制刷新WIFI，默认为强制刷新
         mLocationOption.setWifiActiveScan(true);
 //设置是否允许模拟位置,默认为false，不允许模拟位置
         mLocationOption.setMockEnable(false);
 //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
+        mLocationOption.setInterval(10000);
 //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
 //启动定位
@@ -319,43 +322,42 @@ public class NearActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent;
                     User user = UserStatus.getUserInfo(getApplicationContext());
-                    if (myDatas.get(position).getUser().getUser_id().equals(user.getUser_id())){
-                         intent = new Intent(getApplicationContext(),UserCenterMainAcivity.class);
-                    }else {
-                        intent = new Intent(getApplicationContext(),NearPeopleAcivity.class);
+                    if (myDatas.get(position).getUser().getUser_id().equals(user.getUser_id())) {
+                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
+                    } else {
+                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
                     }
-                    if (myDatas.get(position).getUser().isSecret()){
+                    if (myDatas.get(position).getUser().isSecret()) {
                         //保密
-                        intent.putExtra("flag",1);
+                        intent.putExtra("flag", 1);
 
-                        intent.putExtra("nick",mydatas.get(position).getUser().getNick());
-                    }else {
-                        intent.putExtra("flag",0);
+                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+                    } else {
+                        intent.putExtra("flag", 0);
 
-                        intent.putExtra("name",mydatas.get(position).getUser().getUser_name());
-                        intent.putExtra("num",mydatas.get(position).getUser().getUser_id());
-                        intent.putExtra("class",mydatas.get(position).getUser().getUser_class());
-                        intent.putExtra("college",mydatas.get(position).getUser().getUser_college());
-                        intent.putExtra("major",mydatas.get(position).getUser().getUser_major());
-                        intent.putExtra("img",mydatas.get(position).getUser().getUser_img());
+                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
+                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
+                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
+                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
+                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
+                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
 
 
-                        intent.putExtra("sex",mydatas.get(position).getUser().getUser_sex());
-                        intent.putExtra("phone",mydatas.get(position).getUser().getPhone());
-                        intent.putExtra("email",mydatas.get(position).getUser().getUser_email());
-                        intent.putExtra("nick",mydatas.get(position).getUser().getNick());
+                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
+                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
+                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
+                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
 
 
                     }
                     startActivity(intent);
                 }
             });
-            String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
             holder.location_time.setText(distime);
             holder.user_distance.setText("不超过" + distance);
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
             holder.user_img.setErrorImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setImageUrl(imgUrl + myDatas.get(position).getUser().getUser_img(), imageLoader);
+            holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }
 
@@ -399,10 +401,10 @@ public class NearActivity extends AppCompatActivity {
 
         } else if (requestcode == 1) {
             //附近的人
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&nearLocation";
+            url = Constants.DEFAULT_URL+"user_id=" + user_id + "&nearLocation";
         } else if (requestcode == 2) {
             //清空用户定位信息
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "&clearLocation";
+            url = Constants.DEFAULT_URL+"user_id=" + user_id + "&clearLocation";
         }
 
         HttpUtil.get(url, new AsyncHttpResponseHandler() {
@@ -423,15 +425,6 @@ public class NearActivity extends AppCompatActivity {
                         bundle.putString("response", response);
                         message.setData(bundle);
 
-                        //  ToastUtil.show(getApplicationContext(), mdatas1.size() + "");
-
-
-                    } else if (requestcode == 0) {
-                        ToastUtil.show(getApplicationContext(), "位置上传成功");
-
-                    } else if (requestcode == 2) {
-                        ToastUtil.show(getApplicationContext(), "已清空用户位置信息！");
-
                     }
                     handler.sendMessage(message);
                 } catch (UnsupportedEncodingException e) {
@@ -442,11 +435,33 @@ public class NearActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                dissmissProgressDialog();
                 ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
 
+    }
+
+    /**
+     * 显示进度框
+     */
+    private void showProgressDialog(String msg) {
+        progDialog = new ProgressDialog(NearActivity.this);
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progDialog.setIndeterminate(false);
+        progDialog.setCancelable(true);
+        progDialog.setMessage(msg);
+        progDialog.show();
+
+    }
+
+    /**
+     * 隐藏进度框
+     */
+    private static void dissmissProgressDialog() {
+        if (progDialog != null) {
+            progDialog.dismiss();
+        }
     }
 
 

@@ -21,15 +21,4 @@ public class Common {
         String date =year+"-"+month+"-"+day+" "+hour+":"+minute;
         return date;
     }
-//    public static User getUserinfo(Context context){
-//        User user =new User();
-//        Map userinfo = UserStatus.getUserInfo(context);
-//        user.setUser_name(userinfo.get("userName").toString());
-//        user.setUser_id(userinfo.get("userID").toString());
-//        user.setUser_img("http://1.hcyl.sinaapp.com/music_BBS/img/1138359.png");
-//        user.setSignature("你好");
-//        user.setUser_email("643872807@qq.com");
-//        user.setUser_sex("男");
-//        return user;
-//    }
 }

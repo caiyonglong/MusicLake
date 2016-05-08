@@ -1,12 +1,8 @@
 package com.cyl.music_hnust;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
@@ -29,22 +25,9 @@ import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.http.HttpUtil;
-import com.cyl.music_hnust.view.RoundedImageView;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-
-import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -65,12 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     private ImageButton back;
     private static ProgressDialog loadingDialog;
     private static Context mContext;
-    private String urlpath = "http://119.29.27.116/hcyl/music_BBS/operate.php?GetUserinfo&user_id=";
-    private String imgpath = "http://119.29.27.116/hcyl/music_BBS";
-    private static String tempPath =
-            Environment.getExternalStorageDirectory()+"/hkmusic/cache"
-                    + "/temp.png";
-    private boolean LoginSuccess = false;
 
 
     @Override
@@ -263,11 +240,6 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 if ("登录成功".equals(login_status)) {
-//                    User userinfo2 = JsonParsing.Userinfo(userinfo);
-                    //   map.put("pw", mPassword);
-                   // userinfo2.setUser_img(tempPath);
-//                    UserStatus.savaUserInfo(getApplicationContext(), userinfo2);
-                    LoginSuccess = true;
                     loadingDialog.dismiss();
                     finish();
                 } else {

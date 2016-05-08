@@ -15,6 +15,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.Dynamic;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 
 import java.util.ArrayList;
@@ -47,7 +48,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     public List<Dynamic> myDatas;
     public boolean loadmoring = false;
     public String loadmore = "下拉加载更多数据...";
-    public String url_header = "http://119.29.27.116/hcyl/music_BBS";
     public LayoutInflater mLayoutInflater;
     public ImageLoader imageLoader;
     private static final int TYPE_ITEM = 0;
@@ -128,7 +128,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder1.content_time.setText(FormatUtil.distime(myDatas.get(position).getTime()));
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
             holder1.user_logo.setErrorImageResId(R.mipmap.user_icon_default_main);
-            holder1.user_logo.setImageUrl(url_header+myDatas.get(position).getUser().getUser_img(), imageLoader);
+            holder1.user_logo.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
 
         }

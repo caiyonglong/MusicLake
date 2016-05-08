@@ -1,5 +1,6 @@
 package com.cyl.music_hnust;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,14 +37,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.services.cloud.CloudSearch;
+import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +58,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import cz.msebera.android.httpclient.Header;
@@ -57,8 +68,14 @@ import cz.msebera.android.httpclient.Header;
  */
 public class UserCenterMainAcivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView user_name, user_num, user_departments, user_class,
-            user_nick, user_major, user_email, user_phone;
+    private TextView user_name;
+    private TextView user_num;
+    private TextView user_departments;
+    private TextView user_class;
+    private static TextView user_nick;
+    private TextView user_major;
+    private static TextView user_email;
+    private static TextView user_phone;
     private CardView user_logout;
 
     private ImageView head;
@@ -78,14 +95,54 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     private String photoSaveName;//图pian名
     private String path;//图片全路径
     private static Context mContext;//图片全路径
-    private String url = "http://119.29.27.116/hcyl/music_BBS/upload_file.php";
-    User userinfo;
+    private User userinfo;
+
+    private MyHandler handler;
+
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<Activity> mactivity;
+
+        private MyHandler(Activity activity) {
+            mactivity = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final Activity activity = mactivity.get();
+            switch (msg.what) {
+                case 0:
+                    User userinfo = UserStatus.getUserInfo(activity);
+                    //电话邮箱
+                    if (userinfo.getPhone() != null) {
+                        user_phone.setText(userinfo.getPhone());
+                    } else {
+                        user_phone.setText("暂无");
+                    }
+                    if (userinfo.getUser_email() != null) {
+                        user_email.setText(userinfo.getUser_email());
+                    } else {
+                        user_email.setText("暂无");
+                    }
+                    if (userinfo.getNick() != null) {
+                        user_nick.setText(userinfo.getNick());
+                    } else {
+                        user_nick.setText("暂无");
+                    }
+
+                    Toast.makeText(activity, "修改成功", Toast.LENGTH_SHORT).show();
+
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_center_main);
         mContext = getApplicationContext();
+        handler = new MyHandler(this);
 
         //给页面设置工具栏
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,7 +160,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         File file = new File(Environment.getExternalStorageDirectory(), "hkmusic/cache");
         if (!file.exists())
             file.mkdirs();
-        photoSavePath = Environment.getExternalStorageDirectory() + "/hkmusic/cache/";
+        photoSavePath = Constants.DEFAULT_USERIMG_PATH;
         photoSaveName = System.currentTimeMillis() + ".png";
 
         initView();
@@ -163,6 +220,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismiss();
                                 // reuse previous dialog instance
                                 logout();
 //                                sDialog.setTitleText("注销!")
@@ -336,10 +394,10 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                 user.setUser_img(temppath);
                 UserStatus.savaUserInfo(getApplicationContext(), user);
                 head.setImageBitmap(getLoacalBitmap(temppath));
-                path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + user.getUser_id() + ".png";
+                path = Constants.DEFAULT_USERIMG_PATH + user.getUser_id() + ".png";
 
                 try {
-                    uploadFile(path, url);
+                    uploadFile(path, Constants.DEFAULT_IMG_UPLOAD);
                 } catch (Exception e) {
                     e.printStackTrace();
                     // 上传失败后要做到工作
@@ -412,7 +470,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                             , email.getText().toString().trim(),
                             phone.getText().toString().trim());
                 } else {
-                    ToastUtil.show(getApplicationContext(), "请输入完整！");
+                    ToastUtil.show(getApplicationContext(), "你漏了哦0.0");
                 }
             }
         });
@@ -471,14 +529,12 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    private String updateurl = "http://119.29.27.116/hcyl/music_BBS/operate.php?updateUser&secret&nick=";
-
     public void UpdateUserinfo(final String nick, final String email, final String phone) {
 
 
         final User user = UserStatus.getUserInfo(getApplicationContext());
 
-        updateurl = updateurl + nick + "&user_id=" + user.getUser_id()
+        String updateurl = Constants.DEFAULT_URL+"updateUser&secret&nick=" + nick + "&user_id=" + user.getUser_id()
                 + "&user_email=" + email
                 + "&phone=" + phone;
 
@@ -492,25 +548,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                         user.setUser_email(email);
                         user.setPhone(phone);
                         UserStatus.savaUserInfo(getApplicationContext(),user);
-
-                        //电话邮箱
-                        if (userinfo.getPhone() != null) {
-                            user_phone.setText(userinfo.getPhone());
-                        } else {
-                            user_phone.setText("暂无");
-                        }
-                        if (userinfo.getUser_email() != null) {
-                            user_email.setText(userinfo.getUser_email());
-                        } else {
-                            user_email.setText("暂无");
-                        }
-                        if (userinfo.getNick() != null) {
-                            user_nick.setText(userinfo.getNick());
-                        } else {
-                            user_nick.setText("暂无");
-                        }
-
-                        Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+                        handler.sendEmptyMessage(0);
 
                     } else {
                         Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();

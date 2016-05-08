@@ -31,6 +31,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.DownloadActivity;
 import com.cyl.music_hnust.LocalMusic;
 import com.cyl.music_hnust.MyActivity;
@@ -52,6 +55,7 @@ import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.ExStaggeredGridLayoutManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -109,6 +113,11 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     private DBDao dbDao;
     private MyHandler handler;
 
+    private RequestQueue mRequestQueue;
+    private MyApplication myApplication;
+    private static ImageLoader imageLoader;
+
+
     private static class MyHandler extends Handler {
         private final WeakReference<Fragment> myfragment;
 
@@ -151,6 +160,10 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        myApplication = new MyApplication();
+        mRequestQueue = myApplication.getHttpQueues();
+        imageLoader = myApplication.getImageLoader();
+
         dbDao = new DBDao(getContext());
         handler = new MyHandler(MusicFragment.this);
 
@@ -180,6 +193,8 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
         playlist_add = (ImageView) mView.findViewById(R.id.playlist_add); //增加歌单
         playlist_manage = (TextView) mView.findViewById(R.id.playlist_manage); //歌单管理
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.id_recyclerview); //歌单列表
+
+        //  singer_pic.setDefaultImageResId(R.drawable.playing_bar_default_avatar);
 
         localmusic.setOnClickListener(this);
         downloaded.setOnClickListener(this);
@@ -294,9 +309,9 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
             case R.id.song_name:
                 mService = MyActivity.mService;
 
-               // if (mService.getSongs() != null) {
-                    Intent it5 = new Intent(getActivity(), PlayerActivity.class);
-                    startActivity(it5);
+                // if (mService.getSongs() != null) {
+                Intent it5 = new Intent(getActivity(), PlayerActivity.class);
+                startActivity(it5);
 //                } else {
 //                    Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
 //                }
@@ -456,18 +471,22 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
 
     public static void initBackGround(Context context, String albumpic) {
+        if (albumpic != null) {
+            if (albumpic.startsWith("http://")) {
+                Log.e("网络图片", ">>>>>>>>>>>>>>>>>>" + albumpic);
+                ImageLoader.ImageListener listener = ImageLoader.getImageListener(singer_pic,
+                        R.drawable.playing_bar_default_avatar, R.drawable.playing_bar_default_avatar);
+                imageLoader.get(albumpic, listener);
 
-        if (albumpic.startsWith("http://")) {
 
         } else {
-            Bitmap bitmap = CommonUtils.scaleBitmap(context, albumpic);
-            if (bitmap != null) {
+                Log.e("本地图片", ">>>>>>>>>>>>>>>>>>" + albumpic);
+                Bitmap bitmap = CommonUtils.scaleBitmap(context, albumpic);
                 singer_pic.setImageBitmap(bitmap);
-            } else {
-                singer_pic.setImageResource(R.drawable.playing_bar_default_avatar);
             }
+        }else {
+            singer_pic.setImageResource(R.drawable.playing_bar_default_avatar);
         }
-
 
     }
 

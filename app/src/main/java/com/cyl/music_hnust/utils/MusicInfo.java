@@ -28,10 +28,6 @@ public class MusicInfo implements Comparator<Object> {
 	private String lrcPath;// 歌词路径
 	private String years;// 年代
 
-
-
-
-
 	private int audioSessionId;// 音频会话ID
 	private int mp3Duration;// 精确的音乐时长(用于SeekBar总长度)
 

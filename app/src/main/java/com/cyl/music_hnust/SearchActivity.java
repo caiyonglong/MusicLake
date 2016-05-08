@@ -36,6 +36,7 @@ import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.DownloadService;
 import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ToastUtil;
 
@@ -63,11 +64,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private String search_info;
     public static List<MusicInfo> infos = new ArrayList<MusicInfo>();
 
-    List<Map<String, Object>> mDatas;
-
     private MusicPlayService mService;
-    PopupWindow popuWindow1;
-    private String urlpath = "http://suen.pw/interface/music/api.php?operate=search&&key=";
 
 
     @Override
@@ -153,9 +150,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             protected Boolean doInBackground(OutputStream... params) {
                 try {
 
-                    String path = urlpath + search_info;
+                    String path = Constants.DEFAULT_MUSIC_LIST_URL + search_info;
                     Log.e("paht",path);
-                    String json = HttpByGet.requestByHttpGet(urlpath,search_info)
+                    String json = HttpByGet.requestByHttpGet( Constants.DEFAULT_MUSIC_LIST_URL,search_info)
                             + "";
                     if ("ERROR".equals(json)) {
                         flag = false;
@@ -195,9 +192,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 //                    pDialog.dismiss();
                 if (result) {
                     if (flag) {
-                        pDialog.setTitleText("搜索完成!")
-                                .setConfirmText("OK")
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        pDialog.dismiss();
+//                        pDialog.setTitleText("搜索完成!")
+//                                .setConfirmText("OK")
+//                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                     }else {
                         pDialog.setTitleText("网络连接异常!")
                                 .setConfirmText("OK")

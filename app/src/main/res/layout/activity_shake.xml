@@ -22,7 +22,9 @@
         android:id="@+id/shake_result_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="25dp"
         android:layout_marginTop="50dp"
         android:orientation="vertical">
 

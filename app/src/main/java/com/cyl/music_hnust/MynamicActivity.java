@@ -26,6 +26,7 @@ import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 
@@ -107,16 +108,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
         mRequestQueue = myApplication.getHttpQueues();
         userinfo = UserStatus.getUserInfo(this);
 
-        imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
+        imageLoader = myApplication.getImageLoader();
         handler = new MyHandler(this);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.id_swiperefreshlayout);
@@ -192,7 +184,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
     private void volley_StringRequest_GET(final int requestcode, String user_id) {
         String url = "";
         if (requestcode == 0) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?MyDetail&user_id=" + user_id;
+            url = Constants.DEFAULT_URL+"MyDetail&user_id=" + user_id;
         }
         // 2 创建StringRequest对象
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,

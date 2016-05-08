@@ -2,10 +2,12 @@ package com.cyl.music_hnust.http;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Path;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.utils.Constants;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
@@ -26,7 +28,7 @@ public class HttpByGet {
 
     // HttpGet方式请求
     public static String requestByHttpGet2(String key) {
-        String path = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=" + key;
+        String path = Constants.DEFAULT_MUSIC_INTERFACE+ key;
         String json = "";
         try {
             // 新建HttpGet对象
@@ -113,12 +115,13 @@ public class HttpByGet {
                     "&user_class=" + userinfo.getUser_class() +
                     "&user_college=" + userinfo.getUser_college() +
                     "&newUser";
-            path = "http://119.29.27.116/hcyl/music_BBS/operate.php?" + param;
+            path = Constants.DEFAULT_URL + param;
+
         }
         else if (flagcode == 3) {
             String param = "user_id=" + usernumber +
                     "&GetUserinfo";
-            path = "http://119.29.27.116/hcyl/music_BBS/operate.php?" + param;
+            path = Constants.DEFAULT_URL + param;
         }
         try {
             //创建URL实例
@@ -132,6 +135,7 @@ public class HttpByGet {
                 InputStream is = conn.getInputStream();
                 String text = null;
                 text = readInputStream(is);
+                Log.e("path===",path);
                 Log.e("text", text);
                 return text;
             } else {

@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Comment;
 import com.cyl.music_hnust.bean.Common;
 import com.cyl.music_hnust.bean.Dynamic;
@@ -26,6 +27,7 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -54,6 +56,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private RequestQueue mRequestQueue;
+    private MyApplication application;
     String sharecontent="";
     Intent in;
 
@@ -94,8 +97,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             sharecontent = in.getStringExtra("sharecontent");
             Log.e("edit",sharecontent);
         }
-
-        mRequestQueue = Volley.newRequestQueue(this);
+        application = new MyApplication();
+        mRequestQueue = application.getHttpQueues();
 
         initView();
 
@@ -170,7 +173,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private void volley_Request_GET(String user_id, String content) {
 
         String time = FormatUtil.getTime();
-        String urlString = "http://119.29.27.116/hcyl/music_BBS/operate.php?newSecret&" +
+        String urlString =  Constants.DEFAULT_URL+"newSecret&" +
                 "secretContent=" + content +
                 "&secretTime=" + time +
                 "&user_id=" + user_id;

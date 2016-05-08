@@ -9,11 +9,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.cyl.music_hnust.download.Constant;
 import com.cyl.music_hnust.download.Downloader;
 import com.cyl.music_hnust.download.DownloaderInfo;
 import com.cyl.music_hnust.download.FileState;
 import com.cyl.music_hnust.download.SqliteDao;
+import com.cyl.music_hnust.utils.Constants;
 
 
 /**
@@ -68,7 +68,7 @@ public class DownloadService extends Service {
 				}
 				// 发送广播更新下载管理的进度
 				Intent intent = new Intent();
-				intent.setAction(Constant.DOWNLOADMANAGEACTION);
+				intent.setAction(Constants.DOWNLOADMANAGEACTION);
 				intent.putExtra("completeSize", completeSize);
 				intent.putExtra("url", url);
 				DownloadService.this.sendBroadcast(intent);
@@ -114,8 +114,8 @@ public class DownloadService extends Service {
 		// 初始化一个下载器
 		downloader = downloaders.get(urlPath);
 		if (null == downloader) {
-			downloader = new Downloader(name, urlPath, Constant.LOCALPATH,
-					Constant.THREADCOUNT, this, mHandler);
+			downloader = new Downloader(name, urlPath, Constants.LOCALPATH,
+					Constants.THREADCOUNT, this, mHandler);
 			downloaders.put(urlPath, downloader);
 		}
 		if (downloader.isDownloading()) {

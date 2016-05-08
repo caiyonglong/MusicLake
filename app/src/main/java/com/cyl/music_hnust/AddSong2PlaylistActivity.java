@@ -113,38 +113,18 @@ public class AddSong2PlaylistActivity extends AppCompatActivity implements AddMu
 
     }
 
-    List<MusicInfo> songListForPlaylist;
     ArrayList<Integer> tempSong;
+
     private void initListener() {
         // 完成添加
         tv_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-//                scanUtil.scanPlaylistSongFromDB(playlist);
-//                songListForPlaylist = MusicList.list;
-
-
-
                 for (int i = 0; i < Is_check.size(); i++) {
                     Boolean hasMusic = false;
                     if (Is_check.get(i)) {
-//                        for (int j = 0; j< songListForPlaylist.size(); j++) {
-//                            if (songListForPlaylist.get(j).getId().equals(songs.get(i).getId())) {
-//                                hasMusic = true;
-//                                Log.e("song:",songs.get(i).getId()+"");
-//
-//                                break;
-//                            }
-//                        }
-                        Log.e("songs===",songs.get(i).getId()+"::::"+songs.get(i).getName());
+                        Log.e("songs===", songs.get(i).getId() + "::::" + songs.get(i).getName());
                         tempSong.add(Integer.valueOf(songs.get(i).getId()));
-//                        if (!hasMusic) {
-//                            Log.e("song:",songs.size()+"");
-////                            if (songs!=null){
-////                          //      tempSong.add(Integer.valueOf(songs.get(i).getId()));
-////                            }
-//                         //
-//                        }
                     }
                 }
 

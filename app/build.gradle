@@ -31,4 +31,5 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.android.support:support-v4:23.1.1'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }

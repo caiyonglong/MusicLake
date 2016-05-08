@@ -28,11 +28,11 @@ import android.widget.RadioGroup;
 import com.cyl.music_hnust.adapter.DownloadManageAdapter;
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
 import com.cyl.music_hnust.db.DBDao;
-import com.cyl.music_hnust.download.Constant;
 import com.cyl.music_hnust.download.FileState;
 import com.cyl.music_hnust.download.SqliteDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanInfo;
 import com.cyl.music_hnust.utils.ToastUtil;
@@ -69,7 +69,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
 
 
         receiver = new UpdateReceiver();
-        receiver.registerAction(Constant.DOWNLOADMANAGEACTION);
+        receiver.registerAction(Constants.DOWNLOADMANAGEACTION);
     }
 
     private void initView() {
@@ -420,7 +420,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constant.DOWNLOADMANAGEACTION)) {
+            if (intent.getAction().equals(Constants.DOWNLOADMANAGEACTION)) {
                 String url = intent.getStringExtra("url");
                 int completeSize = intent.getIntExtra("completeSize", 0);
                 for (int i = 0; i < DownloadingFragment.data.size(); i++) {

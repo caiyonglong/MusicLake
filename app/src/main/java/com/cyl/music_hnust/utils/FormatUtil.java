@@ -93,7 +93,7 @@ public class FormatUtil {
 
         int ye = (int) Math.ceil(d);
 
-        if (ye > 100) {
+        if (ye > 1000) {
             return ye / 1000 + " km";
         } else {
             return ye + " m";

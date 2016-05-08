@@ -26,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.http.HttpByGet;
 
@@ -52,8 +53,8 @@ public class NearPeopleAcivity extends AppCompatActivity {
 
     private RequestQueue mRequestQueue;
     private static ImageLoader imageLoader;
+    private MyApplication application;
     private static User userInfo;
-    private static String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
     MyHandler handler;
 
     private static class MyHandler extends Handler {
@@ -80,17 +81,9 @@ public class NearPeopleAcivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_center_near);
-        mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
+        application = new MyApplication();
+        mRequestQueue =application.getHttpQueues();
+        imageLoader = application.getImageLoader();
 
         handler = new MyHandler(this);
         Intent intent = getIntent();
@@ -117,7 +110,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
             textViews[6].setText(intent.getStringExtra("nick").toString() == null ? "暂无" :
                     intent.getStringExtra("nick").toString());
             head.setErrorImageResId(R.mipmap.user_icon_default_main);
-            head.setImageUrl(imgUrl + intent.getStringExtra("img"), imageLoader);
+            head.setImageUrl(intent.getStringExtra("img"), imageLoader);
         } else if (intent.getIntExtra("flag",0)==0) {
 
             textViews[0].setText(intent.getStringExtra("name") == null ? "暂无" :
@@ -142,7 +135,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
 
 //            holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
             head.setErrorImageResId(R.mipmap.user_icon_default_main);
-            head.setImageUrl(imgUrl + intent.getStringExtra("img"), imageLoader);
+            head.setImageUrl(intent.getStringExtra("img"), imageLoader);
 
         } else if (intent.getIntExtra("flag",0)==2) {
 
@@ -198,7 +191,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
 
 //            holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
             head.setErrorImageResId(R.mipmap.user_icon_default_main);
-            head.setImageUrl(imgUrl + userInfo.getUser_img(), imageLoader);
+            head.setImageUrl(userInfo.getUser_img(), imageLoader);
         }else {
             for (int i = 0; i < textViewId.length; i++) {
                 textViews[i].setText("保密");
@@ -206,7 +199,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
             textViews[6].setText(userInfo.getNick() == null ? "暂无" :
                     userInfo.getNick());
             head.setErrorImageResId(R.mipmap.user_icon_default_main);
-            head.setImageUrl(imgUrl + userInfo.getUser_img(), imageLoader);
+            head.setImageUrl(userInfo.getUser_img(), imageLoader);
         }
     }
 

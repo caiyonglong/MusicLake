@@ -41,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
+            android:textColor="@color/gray"
             android:id="@+id/foot_text"
             android:layout_centerInParent="true"
             android:text="下拉加载更多..."

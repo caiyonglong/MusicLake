@@ -25,7 +25,7 @@
         <item
             android:id="@+id/nav_menu_map"
             android:icon="@mipmap/icon_location"
-            android:title="科大地图定位" />
+            android:title="科大地图" />
     </group>
 
     <item

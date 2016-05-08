@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,25 +11,25 @@
         android:background="#33000000"
         android:visibility="gone"></ListView>
 
-    <com.cyl.music_hnust.view.RoundedImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+
         android:id="@+id/iv_album"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_centerInParent="true"
-        android:scaleType="fitCenter"
         android:visibility="gone"
         android:src="@drawable/player_cover_default"
-        />
-
-        <com.cyl.music_hnust.lyric.LyricView
-            android:id="@+id/LyricShow"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:textAlignment="center" />
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="1dp" />
 
 
+    <com.cyl.music_hnust.lyric.LyricView
+        android:id="@+id/LyricShow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

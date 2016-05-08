@@ -3,6 +3,7 @@ package com.cyl.music_hnust;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.view.RoundedImageView;
@@ -77,9 +80,11 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
 
     public static final String PREFERENCES_NAME = "settings";// SharedPreferences名称
-    public static final String PREFERENCES_MODE = "mode";// 存储播放模式
     public static final String PREFERENCES_SCAN = "scan";// 存储是否扫描过
-    public String url_header = "http://119.29.27.116/hcyl/music_BBS";
+    public static final int MENU_SHAKE = 0x123;// 摇一摇
+    public static final int MENU_NEAR_PEOPLE = 0x124;// 附近的人
+    public static final int MENU_CAMPUS_MAP = 0X125;// 科大地图
+    public static int MENU_FLAG;// 标志
 
     public static final String BROADCAST_ACTION_SCAN = "com.cwd.cmeplayer.action.scan";// 扫描广播标志
 
@@ -162,14 +167,14 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
                     id_header_name.setText(userinfo.getUser_name().toString());
                     signature.setText(userinfo.getUser_id().toString());
-                    String path = Environment.getExternalStorageDirectory() + "/hkmusic/cache/" + userinfo.getUser_id() + ".png";
+                    String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
                     File file = new File(path);
                     if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
                         if (file.exists())
                             id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
                         else {
                             try {
-                                HttpByGet.downloadFile(url_header+userinfo.getUser_img(), path);
+                                HttpByGet.downloadFile(userinfo.getUser_img(), path);
                                 if (file.exists())
                                     id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
                             } catch (Exception e) {
@@ -245,8 +250,10 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                             Intent it = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(it);
                         } else {
+
                             Intent it2 = new Intent(getApplicationContext(), MynamicActivity.class);
                             startActivity(it2);
+
                         }
                         break;
                     case R.id.nav_menu_shake:
@@ -255,8 +262,11 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                             Intent it = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(it);
                         } else {
-                            Intent it2 = new Intent(getApplicationContext(), ShakeActivity.class);
-                            startActivity(it2);
+                            MENU_FLAG = MENU_SHAKE;
+                            String msg = "摇一摇功能将获取你正在播放的歌曲\n" +
+                                    "信息，你的歌曲信息将会被保留一段\n" +
+                                    "时间。搜索他人所听歌曲。最后请注意摇动的姿势！";
+                            detailsshow(msg);
                         }
                         break;
                     case R.id.nav_menu_near:
@@ -265,8 +275,12 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                             Intent it = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(it);
                         } else {
-                            Intent it2 = new Intent(getApplicationContext(), NearActivity.class);
-                            startActivity(it2);
+                            MENU_FLAG = MENU_NEAR_PEOPLE;
+                            String msg = "查看附近的人功能将获取你的位置信\n" +
+                                    "息，你的位置信息会被保留一段时\n" +
+                                    "间。通过列表右上角的清除功能可随\n时手动清除位置信息。";
+                            detailsshow(msg);
+
                         }
                         break;
                     case R.id.nav_menu_map:
@@ -291,7 +305,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 // Menu item点击后选中，并关闭Drawerlayout
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
-
 
 
                 return true;
@@ -512,10 +525,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         // TODO Auto-generated method stub
         super.onResume();
 
-//        Intent intent = new Intent(MediaService.BROADCAST_ACTION_SERVICE);
-//        intent.putExtra(MediaService.INTENT_ACTIVITY,
-//                MediaService.ACTIVITY_MAIN);
-//        sendBroadcast(intent);
 
         bindState = bindService(playIntent, serviceConnection,
                 Context.BIND_AUTO_CREATE);
@@ -542,6 +551,47 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     private void exitProgram() {
         stopService(playIntent);
         finish();
+    }
+
+    public void detailsshow(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage(msg)
+                .setIcon(R.mipmap.icon);
+        setNegativeButton(builder);
+        setPositiveButton(builder)
+
+                .create()
+                .show();
+    }
+
+    private AlertDialog.Builder setPositiveButton(AlertDialog.Builder builder) {
+        return builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (MENU_FLAG) {
+                    case MENU_NEAR_PEOPLE:
+                        Intent it2 = new Intent(getApplicationContext(), NearActivity.class);
+                        startActivity(it2);
+                        break;
+
+                    case MENU_SHAKE:
+                        Intent it3 = new Intent(getApplicationContext(), ShakeActivity.class);
+                        startActivity(it3);
+                        break;
+                }
+
+            }
+        });
+    }
+
+    private AlertDialog.Builder setNegativeButton(AlertDialog.Builder builder) {
+        return builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
     }
 
 

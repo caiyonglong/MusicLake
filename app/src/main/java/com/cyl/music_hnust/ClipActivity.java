@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.clipheadphoto.ClipImageLayout;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ImageTools;
 
 import java.io.File;
@@ -58,7 +59,7 @@ public class ClipActivity extends Activity{
 					@Override
 					public void run() {
 						Bitmap bitmap = mClipImageLayout.clip();
-						String path= Environment.getExternalStorageDirectory()+"/hkmusic/cache/"+user.getUser_id()+ ".png";
+						String path= Constants.DEFAULT_USERIMG_PATH+user.getUser_id()+ ".png";
 						ImageTools.savePhotoToSDCard(bitmap,path);
 						loadingDialog.dismiss();
 						Intent intent = new Intent();

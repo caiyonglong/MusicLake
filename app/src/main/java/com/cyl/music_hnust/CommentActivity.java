@@ -2,7 +2,6 @@ package com.cyl.music_hnust;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,7 +12,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,16 +24,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
+import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.adapter.CommentRecyclerViewAdapter;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Comment;
 import com.cyl.music_hnust.bean.Common;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.fragment.MyFragment;
-import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.FullyLinearLayoutManager;
@@ -74,7 +73,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton mFloatingActionButton;
 
 
-
     private RecyclerView comment_list;
     private static String position;
     private String dynamic_id;
@@ -82,6 +80,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private FullyLinearLayoutManager mLayoutManager;
     private RequestQueue mRequestQueue;
     private ImageLoader imageLoader;
+    private MyApplication application;
 
     private static List<Comment> mDatas;
 
@@ -103,7 +102,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             final Activity activity = mactivity.get();
             switch (msg.what) {
                 case 0:
-                    comment_num=comment_num+1;
+                    comment_num = comment_num + 1;
                     item_action_comment.setText(comment_num + "评论");
 
                     ToastUtil.show(activity, "评论成功");
@@ -133,14 +132,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     int num = (int) bundle.get("num");
                     MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setLove(num);
                     if (isagree == 1) {
-                        love_num = love_num+1;
+                        love_num = love_num + 1;
                         Toast.makeText(activity, "已赞", Toast.LENGTH_SHORT).show();
                         item_action_love.setText(love_num + "赞");
                         IsAgree.setImageResource(R.mipmap.ic_action_agree1);
                         MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(true);
 
                     } else if (isagree == 0) {
-                        love_num = love_num-1;
+                        love_num = love_num - 1;
                         item_action_love.setText(love_num + "赞");
 
                         IsAgree.setImageResource(R.mipmap.ic_action_agree);
@@ -161,36 +160,26 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE))
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(CommentActivity.this.getCurrentFocus()
                         .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        application = new MyApplication();
+        mRequestQueue = application.getHttpQueues();
+        handler = new MyHandler(this);
+        imageLoader = application.getImageLoader();
 
-                mRequestQueue = Volley.newRequestQueue(this);
-        handler= new MyHandler(this);
-        imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-
-            }
-        });
         Intent it = getIntent();
-        if (it.getIntExtra("flag",0)==0){
-            mdatas =MyFragment.mdatas;
-        }else {
-            mdatas =MynamicActivity.mdatas;
+        if (it.getIntExtra("flag", 0) == 0) {
+            mdatas = MyFragment.mdatas;
+        } else {
+            mdatas = MynamicActivity.mdatas;
         }
         position = it.getIntExtra("position", -1) + "";
         dynamic_id = it.getStringExtra("dynamic_id") + "";
         love_num = mdatas.get(Integer.parseInt(position)).getLove();
         comment_num = mdatas.get(Integer.parseInt(position)).getComment();
 
-        Log.e("ee",love_num+"============"+comment_num+"");
+        Log.e("ee", love_num + "============" + comment_num + "");
         mDatas = new ArrayList<>();
 
         User userinfo = UserStatus.getUserInfo(getApplicationContext());
@@ -228,9 +217,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         /**
          * 动态详情
          */
-        String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
+
         user_name.setText(mdatas.get(Integer.parseInt(position)).getUser().getNick());
-        user_logo.setImageUrl(imgUrl + mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
+        user_logo.setImageUrl(mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
         user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
         content_text.setText(mdatas.get(Integer.parseInt(position)).getContent());
         content_time.setText(mdatas.get(Integer.parseInt(position)).getTime());
@@ -309,17 +298,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private void volley_StringRequest_GET(String user_id, String secret_id, final int requestcode) {
         String url = "";
         if (requestcode == 1) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?" +
-                    "user_id=" + user_id +
-                    "&showSecretComment&&secret_id=" + secret_id;
+            url = Constants.DEFAULT_URL + "user_id=" + user_id +
+                    "&showSecretComment&secret_id=" + secret_id;
         } else if (requestcode == 2) {
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id="
-                    + user_id +
-                    "&&changeAgree&&secret_id=" + secret_id;
+            url = Constants.DEFAULT_URL + "user_id=" + user_id +
+                    "&changeAgree&secret_id=" + secret_id;
         }
-        // 1 创建RequestQueue对象
-
-        // 2 创建StringRequest对象
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
                 new Response.Listener<JSONObject>() {
 
@@ -369,7 +353,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private void volley_Request_GET(String user_id, String secret_id, String comment) {
 
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?" +
+        String url =  Constants.DEFAULT_URL+
                 "user_id=" + user_id +
                 "&newComment&secret_id=" + secret_id +
                 "&comment=" + comment +

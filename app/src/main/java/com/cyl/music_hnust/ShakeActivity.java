@@ -49,6 +49,7 @@ import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -77,6 +78,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
 
     private RequestQueue mRequestQueue;
     private ImageLoader imageLoader;
+    private MyApplication application;
 
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -142,18 +144,9 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_shake);
         mService = MyActivity.mService;
         handler = new MyHandler(ShakeActivity.this);
-
-        mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
+        application = new MyApplication();
+        mRequestQueue = application.getHttpQueues();
+        imageLoader = application.getImageLoader();
 
         context = getApplicationContext();
 //        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -351,12 +344,11 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
             Log.e("tag2", myDatas.get(position).getLocation_latitude() + "");
             Log.e("tag3", myDatas.get(position).getLocation_time() + "");
 
-            String imgUrl = "http://119.29.27.116/hcyl/music_BBS";
-            holder.location_time.setText(distime + "前");
+            holder.location_time.setText(distime );
             holder.user_distance.setVisibility(View.GONE);
             holder.user_img.setDefaultImageResId(R.mipmap.user_icon_default_main);
             holder.user_img.setErrorImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setImageUrl(imgUrl + myDatas.get(position).getUser().getUser_img(), imageLoader);
+            holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }
 
@@ -392,12 +384,12 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         String time = FormatUtil.getTime();
         if (requestcode == 0) {
             //上传歌曲名
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id + "" +
+            url = Constants.DEFAULT_URL+"user_id=" + user_id + "" +
                     "&newShake&user_song=" + song +
                     "&secretTime=" + time;
         } else if (requestcode == 1) {
             //附近的人
-            url = "http://119.29.27.116/hcyl/music_BBS/operate.php?user_id=" + user_id +
+            url = Constants.DEFAULT_URL+"user_id=" + user_id +
                     "&nearLocation" +
                     "&secretTime=" + time;
         }

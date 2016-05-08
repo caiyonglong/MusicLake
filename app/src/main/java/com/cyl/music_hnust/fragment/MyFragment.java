@@ -157,16 +157,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         mdatas = new ArrayList<>();
         mRequestQueue = myApplication.getHttpQueues();
 
-        imageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-            }
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return null;
-            }
-        });
+        imageLoader = myApplication.getImageLoader();
         return mView;
     }
 
@@ -182,7 +173,7 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.id_recyclerview);
 
         configRecyclerView();
-//        mLayoutManager = new LinearLayoutManager(getActivity());
+        volley_StringRequest_GET(0, null, null);
         // 刷新时，指示器旋转后变化的颜色
         mSwipeRefreshLayout.setColorSchemeResources(R.color.main_blue_light, R.color.main_blue_dark,
                 R.color.setting_blue, R.color.setting_blue);
@@ -209,7 +200,6 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
             @Override
             public void run() {
                 mSwipeRefreshLayout.setRefreshing(false);
-                User userinfo = UserStatus.getUserInfo(getContext());
                 volley_StringRequest_GET(0, null, null);
 
             }

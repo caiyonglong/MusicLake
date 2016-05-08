@@ -41,6 +41,7 @@ import com.cyl.music_hnust.bean.Location;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.DataClearmanager;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -77,7 +78,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Toast.makeText(SettingsActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
             return;
         }
-        String updateurl = "http://119.29.27.116/hcyl/music_BBS/operate.php?" +
+        String updateurl =  Constants.DEFAULT_URL +
                 "updateUser&nick&user_email&phone&secret="
                 +issecret+"&user_id=" +user.getUser_id();
 
