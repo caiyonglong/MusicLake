@@ -384,6 +384,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                 mpLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
                 popPlayListView.setAdapter(adapter);
+                
                 popPlayListView.setLayoutManager(mpLayoutManager);
                 //添加分割线
                 popPlayListView.addItemDecoration(new DividerItemDecoration(

@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -24,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.fragment.PlayerFragment;
 import com.cyl.music_hnust.http.HttpByGet;
@@ -66,15 +69,18 @@ public class PlayerActivity extends AppCompatActivity {
     public boolean hasLyric = false;// 是否有歌词
 
     public static List<LyricItem> lyricList;// 歌词列表
+    private MyApplication application;
+    private ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_player);
         mContext = getApplicationContext();
-
         mService = MyActivity.mService;
+        application = new MyApplication();
 
+        imageLoader =application.getImageLoader();
         lyricList = new ArrayList<LyricItem>();
 
         //广播
@@ -224,10 +230,10 @@ public class PlayerActivity extends AppCompatActivity {
 //        initFragment();
 
 
-        if (mService.getSongs()!=null&&mService.getSongs().size()>0){
+        if (mService.getSongs() != null && mService.getSongs().size() > 0) {
             // 启动
             handler.post(updateThread);
-        }else {
+        } else {
             tv_curcentTime.setText("00:00");
             tv_allTime.setText("00:00");
         }
@@ -238,55 +244,65 @@ public class PlayerActivity extends AppCompatActivity {
     MusicInfo song = null;
 
     public void initBackGround() {
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(Void... params) {
-                Bitmap original = null;
-                if (mService.getSongs() != null &&mService.getSongs().size()>0&& mService.getCurrentListItme() != -1) {
-                    song = mService.getSongs().get(mService.getCurrentListItme());
-                }
-                if (song == null) {
+        if (mService.getSongs() != null && mService.getSongs().size() > 0 && mService.getCurrentListItme() != -1) {
+            song = mService.getSongs().get(mService.getCurrentListItme());
+        }
+        if (song.getAlbumPic() != null) {
+            if (song.getAlbumPic().startsWith("http://")) {
 
-                }
-                if (song != null
-                        && !TextUtils.isEmpty(song.getAlbumPic())) {
-                    if (HttpByGet.isURL(song.getAlbumPic())) {
-                        final Bitmap[] bitmap = {null};
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                bitmap[0] = HttpByGet.getHttpBitmap(song.getAlbumPic());
-                            }
-                        }).start();
-                        original = bitmap[0];
-                    } else {
-                        original = CommonUtils.scaleBitmap(getApplicationContext(), song.getAlbumPic());
-                    }
+                Bitmap bitmap =BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
+                Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
+                mIvBg.setImageBitmap(result);
 
-                }
-                if (original == null) {
-                    original = BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
-                }
-                Bitmap result = null;
-                try {
-                    result = CommonUtils.doBlur(original, 50, false);
-                } catch (Error e) {
-                    e.printStackTrace();
-                }
-                original.recycle();
-                return result;
+            } else {
+                Log.e("本地图片", ">>>>>>>>>>>>>>>>>>" + song.getAlbumPic());
+                Bitmap bitmap = CommonUtils.scaleBitmap(mContext, song.getAlbumPic());
+                Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
+                mIvBg.setImageBitmap(result);
             }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                recycleBitmap(mIvBg, mBgBitmap);
-                mBgBitmap = bitmap;
-                mIvBg.setImageBitmap(mBgBitmap);
-
-//                PlayerFragment.iv_album.setImageResource(R.mipmap.icon_hnust);
-                alphaAnim(mIvBg, 0);
-            }
-        }.execute();
+        } else {
+            mIvBg.setImageResource(R.drawable.playing_bar_default_avatar);
+        }
+//        new AsyncTask<Void, Void, Bitmap>() {
+//            @Override
+//            protected Bitmap doInBackground(Void... params) {
+//                Bitmap original = null;
+//
+//                if (song == null) {
+//
+//                }
+//                if (song != null
+//                        && !TextUtils.isEmpty(song.getAlbumPic())) {
+//                    if (song.getAlbumPic().startsWith("http://")) {
+//
+//                    } else {
+//                        original = CommonUtils.scaleBitmap(getApplicationContext(), song.getAlbumPic());
+//                    }
+//
+//                }
+//                if (original == null) {
+//                    original = BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
+//                }
+//                Bitmap result = null;
+//                try {
+//                    result = CommonUtils.doBlur(original, 50, false);
+//                } catch (Error e) {
+//                    e.printStackTrace();
+//                }
+//                original.recycle();
+//                return result;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Bitmap bitmap) {
+//                recycleBitmap(mIvBg, mBgBitmap);
+//                mBgBitmap = bitmap;
+//                mIvBg.setImageBitmap(mBgBitmap);
+//
+////                PlayerFragment.iv_album.setImageResource(R.mipmap.icon_hnust);
+//                alphaAnim(mIvBg, 0);
+//            }
+//        }.execute();
     }
 
     private void recycleBitmap(ImageView iv, Bitmap bitmap) {
@@ -359,7 +375,7 @@ public class PlayerActivity extends AppCompatActivity {
         // 暂停or开始
         mPauseImageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                if (mService.getSongs() != null && mService.getSongs().size() > 0) {
                     Intent it = new Intent(CTL_ACTION);
                     it.putExtra("control", 1);
                     sendBroadcast(it);
@@ -378,7 +394,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 //mService.nextMusic();
-                if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                if (mService.getSongs() != null && mService.getSongs().size() > 0) {
                     Intent it = new Intent(CTL_ACTION);
                     it.putExtra("control", 3);
                     sendBroadcast(it);
@@ -391,7 +407,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 //mService.frontMusic();
-                if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                if (mService.getSongs() != null && mService.getSongs().size() > 0) {
                     Intent it = new Intent(CTL_ACTION);
                     it.putExtra("control", 2);
                     sendBroadcast(it);
@@ -430,7 +446,7 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 DBDao dbDao = new DBDao(getApplicationContext());
-                if (mService.getSongs() != null&&mService.getSongs().size()>0) {
+                if (mService.getSongs() != null && mService.getSongs().size() > 0) {
                     if (!mService.getSong().isFavorite()) {
                         dbDao.update(mService.getSong().getName(), true);
                         mService.getSong().setFavorite(true);
@@ -449,7 +465,7 @@ public class PlayerActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // fromUser判断是用户改变的滑块的值
                 if (fromUser == true) {
-                    if (mService.getSongs() != null &&mService.getSongs().size()>0){
+                    if (mService.getSongs() != null && mService.getSongs().size() > 0) {
                         mService.movePlay(progress);
                     }
                 }

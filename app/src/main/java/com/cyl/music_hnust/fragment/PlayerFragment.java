@@ -106,8 +106,9 @@ public class PlayerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PlayerActivity.mService.setCurrentListItme(position);
                 PlayerActivity.mService.playMusic(datas.get(position).getPath());
-//                PlayerActivity.init();
-                //   adapter.getView(position, view, parent).setAlpha((float) 0.5);
+
+                song_list.setSelection(position);
+
             }
         });
         lyricView = (LyricView) mView.findViewById(R.id.LyricShow);
