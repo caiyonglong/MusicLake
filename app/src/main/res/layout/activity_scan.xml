@@ -64,11 +64,10 @@
             android:textSize="19.0sp" />
         <Button
             android:id="@+id/activity_scan_btn_scan"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/setting_blue"
+            android:background="@drawable/btn_bg"
             android:singleLine="true"
-
             android:textColor="@color/main_white"
             android:textSize="20sp" />
     </LinearLayout>

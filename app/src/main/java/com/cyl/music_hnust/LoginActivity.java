@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loadingDialog=new ProgressDialog(this);
+        loadingDialog=new ProgressDialog(LoginActivity.this);
         loadingDialog.setTitle("登录中...");
         loadingDialog.setCancelable(false);
         mContext =getApplicationContext();
@@ -205,10 +205,11 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     final JSONObject jsonObject = new JSONObject(userinfo);
                     status = jsonObject.getString("status");
+
+                    Log.e("status", status);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.e("status", status);
                 if ("success".equals(status)) {
                     login_status = "登录成功";
 

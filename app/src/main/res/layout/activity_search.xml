@@ -33,6 +33,7 @@
         <EditText
             android:id="@+id/search_edit_info"
             android:padding="10dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:textColorHint="@color/gray"
@@ -47,8 +48,7 @@
         <Button
             android:text="搜索"
             android:id="@+id/search_go_btn"
-            android:padding="10dp"
-            android:backgroundTint="@color/setting_blue"
+            android:background="@drawable/btn_bg"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"

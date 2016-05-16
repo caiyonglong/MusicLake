@@ -28,15 +28,15 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        Handler x = new Handler();
-        x.postDelayed(new splashhandler(), 1000);
+        new Handler().postDelayed(new splashhandler(), 1000);
 
     }
 
     class splashhandler implements Runnable{
 
         public void run() {
-            startActivity(new Intent(getApplication(),MyActivity.class));
+            Intent intent =new Intent(WelcomeActivity.this,MyActivity.class);
+            startActivity(intent);
             WelcomeActivity.this.finish();
         }
 

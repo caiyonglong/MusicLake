@@ -15,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -30,8 +29,6 @@ import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.fragment.PlayerFragment;
-import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.lyric.LyricItem;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
@@ -68,7 +65,6 @@ public class PlayerActivity extends AppCompatActivity {
 
     public boolean hasLyric = false;// 是否有歌词
 
-    public static List<LyricItem> lyricList;// 歌词列表
     private MyApplication application;
     private ImageLoader imageLoader;
 
@@ -81,7 +77,6 @@ public class PlayerActivity extends AppCompatActivity {
         application = new MyApplication();
 
         imageLoader =application.getImageLoader();
-        lyricList = new ArrayList<LyricItem>();
 
         //广播
         playerReceiver = new PlayerReceiver();
@@ -261,7 +256,9 @@ public class PlayerActivity extends AppCompatActivity {
                 mIvBg.setImageBitmap(result);
             }
         } else {
-            mIvBg.setImageResource(R.drawable.playing_bar_default_avatar);
+            Bitmap bitmap =BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
+            Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
+            mIvBg.setImageBitmap(result);
         }
 //        new AsyncTask<Void, Void, Bitmap>() {
 //            @Override

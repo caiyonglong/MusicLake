@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,21 +18,19 @@ import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.MyActivity;
 import com.cyl.music_hnust.PlayerActivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.ListAdapter;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.http.HttpByGet;
+import com.cyl.music_hnust.lyric.LrcParser;
 import com.cyl.music_hnust.lyric.ILrcViewListener;
-import com.cyl.music_hnust.lyric.LyricItem;
-import com.cyl.music_hnust.lyric.LyricParser;
+import com.cyl.music_hnust.lyric.LrcRow;
 import com.cyl.music_hnust.lyric.LyricView;
 import com.cyl.music_hnust.utils.CommonUtils;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.view.RoundedImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +52,7 @@ public class PlayerFragment extends Fragment {
      */
     public static boolean hasLyric = false;// 是否有歌词
 
-    public static List<LyricItem> lyricList;// 歌词列表
+    public static List<LrcRow> lyricList;// 歌词列表
 
     private RequestQueue mRequestQueue;
     private MyApplication myApplication;
@@ -172,12 +169,25 @@ public class PlayerFragment extends Fragment {
 
     public static void initLrc() {
         String lyricpath = null;
-        if (MyActivity.mService.hasLyric) {
-            lyricpath = MyActivity.mService.LrcPath;
+
+        String path =null;
+        try {
+
+            path=MyActivity.mService.getPath();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if (path.endsWith(".mp3") && !path.startsWith("http")) {
+            String lyricPath = path.replace(".mp3", ".lrc");
+            File file = new File(lyricPath);
+            if (file.exists()) {
+                lyricpath = lyricPath;
+            }
+        }
+        if (lyricpath!=null) {
             if (lyricpath.endsWith(".lrc")) {
                 initLrc(lyricpath);
             }
-
         }
 
 
@@ -191,19 +201,19 @@ public class PlayerFragment extends Fragment {
         lyricList = null;
         if (lyricPath != null && lyricPath.endsWith(".lrc")) {
             try {
-                LyricParser parser = new LyricParser(lyricPath);
-                lyricList = parser.parser();
+                LrcParser parser = new LrcParser();
+                lyricList = parser.getLrcRows(lyricPath);
                 if (lyricList.size() > 0) {
                     hasLyric = true;
                     PlayerFragment.lyricView.setLrc(lyricList);
                     //设置自定义的LrcView上下拖动歌词时监听
                     PlayerFragment.lyricView.setListener(new ILrcViewListener() {
                         //当歌词被用户上下拖动的时候回调该方法,从高亮的那一句歌词开始播放
-                        public void onLrcSeeked(int newPosition, LyricItem row) {
+                        public void onLrcSeeked(int newPosition, LrcRow row) {
                             if (MyActivity.mService.mMediaPlayer != null) {
 
-                                Log.d("当歌词被用户上下拖动的时候", "onLrcSeeked:" + row.getTime());
-                                MyActivity.mService.movePlay(row.getTime());
+                                Log.d("当歌词被用户上下拖动的时候", "onLrcSeeked:" + row.strTime);
+                                MyActivity.mService.movePlay((int) row.time);
                             }
                         }
                     });

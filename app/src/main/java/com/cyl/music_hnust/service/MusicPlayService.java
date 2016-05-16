@@ -160,16 +160,7 @@ public class MusicPlayService extends Service {
             // initLrc(path);
             mMediaPlayer.start();
 
-            if (path.endsWith(".mp3") && !path.startsWith("http")) {
-                String lyricPath = path.replace(".mp3", ".lrc");
-                File file = new File(lyricPath);
-                if (file.exists()) {
-                    hasLyric = true;
-                    LrcPath = lyricPath;
-                } else {
-                    hasLyric = false;
-                }
-            }
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "播放出错",
                     Toast.LENGTH_SHORT).show();

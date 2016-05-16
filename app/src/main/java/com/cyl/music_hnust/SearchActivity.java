@@ -67,6 +67,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private MusicPlayService mService;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,6 +14,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -76,7 +77,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     public static MyApplication application;
 
     public static MusicPlayService mService;
-    public static List<MusicInfo> songs;
+    private User userinfo;
 
 
     public static final String PREFERENCES_NAME = "settings";// SharedPreferences名称
@@ -100,7 +101,10 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
     }
 
+
     private void init() {
+
+        userinfo = UserStatus.getUserInfo(getApplicationContext());
         // 初始化各种控件
         initViews();
         regist();//注册广播
@@ -147,56 +151,11 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
 
+
     private void configViews() {
 
         // 设置显示Toolbar
         setSupportActionBar(mToolbar);
-
-        // 设置Drawerlayout开关指示器，即Toolbar最左边的那个icon
-        ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-
-                // Boolean status =UserStatus.getstatus(getApplicationContext());
-                User userinfo = UserStatus.getUserInfo(getApplicationContext());
-                if (userinfo.getUser_name() != null) {
-//
-//                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//                    String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
-
-                    id_header_name.setText(userinfo.getUser_name().toString());
-                    signature.setText(userinfo.getUser_id().toString());
-                    String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
-                    File file = new File(path);
-                    if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
-                        if (file.exists())
-                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-                        else {
-                            try {
-                                HttpByGet.downloadFile(userinfo.getUser_img(), path);
-                                if (file.exists())
-                                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    UserStatus.saveuserstatus(MyActivity.this, true);
-                } else {
-
-                    UserStatus.saveuserstatus(MyActivity.this, false);
-                    id_header_name.setText("未登录");
-                    signature.setText("");
-                    id_header_face.setImageResource(R.mipmap.user_icon_default_main);
-
-                }
-
-            }
-        };
-        mActionBarDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-
         //给NavigationView填充顶部区域，也可在xml中使用app:headerLayout="@layout/header_nav"来设置
         View view = mNavigationView.inflateHeaderView(R.layout.header_nav);
         //给NavigationView填充Menu菜单，也可在xml中使用app:menu="@menu/menu_nav"来设置
@@ -211,6 +170,41 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
 
         // 自己写的方法，设置NavigationView中menu的item被选中后要执行的操作
         onNavgationViewMenuItemSelected(mNavigationView);
+
+
+        // 设置Drawerlayout开关指示器，即Toolbar最左边的那个icon
+        ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolbar, R.string.open, R.string.close);
+        mActionBarDrawerToggle.syncState();
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        if (userinfo.getUser_name() != null) {
+
+            id_header_name.setText(userinfo.getUser_name().toString());
+            signature.setText(userinfo.getUser_id().toString());
+            String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
+            File file = new File(path);
+            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
+                if (file.exists())
+                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                else {
+                    try {
+                        HttpByGet.downloadFile(userinfo.getUser_img(), path);
+                        if (file.exists())
+                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            UserStatus.saveuserstatus(MyActivity.this, true);
+        } else {
+
+            UserStatus.saveuserstatus(MyActivity.this, false);
+            id_header_name.setText("未登录");
+            signature.setText("");
+            id_header_face.setImageResource(R.mipmap.user_icon_default_main);
+
+        }
 
         // 初始化ViewPager的适配器，并设置给它
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), mTitles, mFragments);
@@ -313,6 +307,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     }
 
     private void initViews() {
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerlayout);
         //   mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.id_coordinatorlayout);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.id_appbarlayout);
@@ -386,7 +381,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         if (resultCode == 1) {
             if (requestCode == 1) {
                 Dynamic dynamic = new Dynamic();
-                User userinfo = UserStatus.getUserInfo(getApplicationContext());
 
                 dynamic.setLove(0);
                 dynamic.setMyLove(false);
@@ -410,7 +404,6 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_header_face:
-                User userinfo = UserStatus.getUserInfo(getApplicationContext());
                 if (userinfo.getUser_name() != null) {
                     Intent it = new Intent(this, UserCenterMainAcivity.class);
                     startActivity(it);
@@ -418,7 +411,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                     Intent it = new Intent(this, LoginActivity.class);
                     startActivity(it);
                 }
-                mDrawerLayout.closeDrawers();
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
                 break;
             case R.id.add_dynamic:
                 Intent it = new Intent(this, EditActivity.class);
@@ -525,6 +520,35 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         // TODO Auto-generated method stub
         super.onResume();
 
+        userinfo = UserStatus.getUserInfo(getApplicationContext());
+        if (userinfo.getUser_name() != null) {
+
+            id_header_name.setText(userinfo.getUser_name().toString());
+            signature.setText(userinfo.getUser_id().toString());
+            String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
+            File file = new File(path);
+            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
+                if (file.exists())
+                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                else {
+                    try {
+                        HttpByGet.downloadFile(userinfo.getUser_img(), path);
+                        if (file.exists())
+                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            UserStatus.saveuserstatus(MyActivity.this, true);
+        } else {
+
+            UserStatus.saveuserstatus(MyActivity.this, false);
+            id_header_name.setText("未登录");
+            signature.setText("");
+            id_header_face.setImageResource(R.mipmap.user_icon_default_main);
+
+        }
 
         bindState = bindService(playIntent, serviceConnection,
                 Context.BIND_AUTO_CREATE);

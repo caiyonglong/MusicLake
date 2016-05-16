@@ -45,7 +45,7 @@ public class LyricView extends View implements ILrcView {
     /**
      * 歌词集合，包含所有行的歌词
      */
-    private List<LyricItem> mLrcRows;
+    private List<LrcRow> mLrcRows;
     /**
      * 最小移动的距离，当拖动歌词时如果小于该距离不做处理
      */
@@ -176,7 +176,7 @@ public class LyricView extends View implements ILrcView {
          *	第3步：画出正在播放的那句歌词的下面的可以展示出来的歌词
          */
         // 1、 高亮地画出正在要高亮的的那句歌词
-        String highlightText = mLrcRows.get(mHignlightRow).getLyric();
+        String highlightText = mLrcRows.get(mHignlightRow).content;
         int highlightRowY = height / 2 - mSeekLineTextSize;
         currentPaint.setColor(mHignlightRowColor);
         currentPaint.setTextSize(mSeekLineTextSize);
@@ -213,7 +213,7 @@ public class LyricView extends View implements ILrcView {
 
 
             canvas.drawText(
-                    PlayerActivity.formatTime(mLrcRows.get(mHignlightRow).getTime())
+                    PlayerActivity.formatTime((int) mLrcRows.get(mHignlightRow).time)
                             + "", 0, highlightRowY, mPaint);
         }
 
@@ -230,7 +230,7 @@ public class LyricView extends View implements ILrcView {
         while (rowY > -mLrcFontSize && rowNum >= 0) {
 
 
-            String text = mLrcRows.get(rowNum).getLyric();
+            String text = mLrcRows.get(rowNum).content;
             canvas.drawText(text, rowX, rowY, mPaint);
             rowY -= (mPaddingY + mLrcFontSize);
             rowNum--;
@@ -252,7 +252,7 @@ public class LyricView extends View implements ILrcView {
         //画出正在播放的那句歌词的所有下面的可以展示出来的歌词
         while (rowY < height && rowNum < mLrcRows.size()) {
 
-            String text = mLrcRows.get(rowNum).getLyric();
+            String text = mLrcRows.get(rowNum).content;
             canvas.drawText(text, rowX, rowY, mPaint);
             rowY += (mPaddingY + mLrcFontSize);
             rowNum++;
@@ -273,17 +273,17 @@ public class LyricView extends View implements ILrcView {
         if (mLrcRows == null || position < 0 || position > mLrcRows.size()) {
             return;
         }
-        LyricItem lrcRow = mLrcRows.get(position);
-        if (lrcRow.getLyric().length() > 0) {
+        LrcRow lrcRow = mLrcRows.get(position);
+        if (lrcRow.content.length() > 0) {
             mHignlightRow = position;
         }
         if (position ==mLrcRows.size()-1)
         {
             endTime =duration;
         }else if (position <mLrcRows.size()-1) {
-            endTime = mLrcRows.get(position + 1).getTime();
+            endTime = (int) mLrcRows.get(position + 1).time;
         }
-        starttime = lrcRow.getTime();
+        starttime = (int) lrcRow.time;
         //	mHignlightRow = position;
         currentTime = time;
         invalidate();
@@ -512,7 +512,7 @@ public class LyricView extends View implements ILrcView {
      *
      * @param lrcRows
      */
-    public void setLrc(List<LyricItem> lrcRows) {
+    public void setLrc(List<LrcRow> lrcRows) {
         invalidate();
         mLrcRows = lrcRows;
         mHignlightRow = 0;
@@ -534,14 +534,14 @@ public class LyricView extends View implements ILrcView {
         duration =duration;
         for (int i = 0; i < mLrcRows.size(); i++) {
 
-            LyricItem current = mLrcRows.get(i);
-            LyricItem next = i + 1 == mLrcRows.size() ? null : mLrcRows.get(i + 1);
+            LrcRow current = mLrcRows.get(i);
+            LrcRow next = i + 1 == mLrcRows.size() ? null : mLrcRows.get(i + 1);
             /**
              *  正在播放的时间大于current行的歌词的时间而小于next行歌词的时间， 设置要高亮的行为current行
              *  正在播放的时间大于current行的歌词，而current行为最后一句歌词时，设置要高亮的行为current行
              */
-            if ((time >= current.getTime() && next != null && time < next.getTime())
-                    || (time > current.getTime() && next == null)) {
+            if ((time >= current.time && next != null && time < next.time)
+                    || (time > current.time && next == null)) {
                 seekLrc(i, false, (int) time);
                 return;
             }

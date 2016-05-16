@@ -20,7 +20,8 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="wifi_switch"
-            android:title="@string/pref_title_wifi" />
+            android:title="@string/pref_title_wifi"
+            android:summary="@string/pref_title_wifi_summary"/>
 
     </PreferenceCategory>
     <PreferenceCategory

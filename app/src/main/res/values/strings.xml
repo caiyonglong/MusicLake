@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">湖科音乐</string>
     <string name="near_people">校友资料</string>
+    <string name="detail_position">位置详情</string>
 
     <string name="toolbar_title">湖科音乐</string>
     <string name="action_settings">设置</string>
@@ -9,8 +10,8 @@
     <string name="header_author_name">用户名</string>
     <string name="header_author_url">学号</string>
     <string name="plusone">+1</string>
-    <string name="item_clicked">item clicked！</string>
-    <string name="item_longclicked">item long clicked！</string>
+    <string name="item_clicked" translatable="false">item clicked！</string>
+    <string name="item_longclicked" translatable="false">item long clicked！</string>
     <string name="action_edit">发布动态</string>
     <string name="title_activity_playlist_song">PlaylistSongActivity</string>
     <string name="large_text">
@@ -65,7 +66,8 @@
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">网络设置</string>
 
-    <string name="pref_title_wifi">仅WIFI联网</string>
+    <string name="pref_title_wifi">省流量模式</string>
+    <string name="pref_title_wifi_summary">避免在线搜歌消耗过多的流量</string>
     <string name="pref_title_about">关于</string>
     <string name="pref_title_clear">清除缓存</string>
 

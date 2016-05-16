@@ -1,7 +1,6 @@
 package com.cyl.music_hnust;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,23 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.AddMusicRecyclerviewAdapter;
-import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class AddSong2PlaylistActivity extends AppCompatActivity implements AddMusicRecyclerviewAdapter.OnItemClickListener {
 

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
@@ -22,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,11 +34,8 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.services.cloud.CloudSearch;
-import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
-import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ToastUtil;
@@ -49,14 +44,9 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 
@@ -86,6 +76,8 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     private LayoutInflater layoutInflater;
     private TextView photograph, albums;
     private LinearLayout cancel;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private Toolbar toolbar;
 
     public static final int PHOTOZOOM = 0; // 相册/拍照
     public static final int PHOTOTAKE = 1; // 相册/拍照
@@ -141,20 +133,62 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_center_main);
+        //实例化
         mContext = getApplicationContext();
         handler = new MyHandler(this);
+        initView();
+
+    }
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+        UserStatus.saveuserstatus(this, false);
+        finish();
+    }
+
+    private void initView() {
 
         //给页面设置工具栏
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //  getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        user_name = (TextView) findViewById(R.id.usercenter_name);
+        user_class = (TextView) findViewById(R.id.usercenter_class);
+        user_major = (TextView) findViewById(R.id.usercenter_major);
+        user_departments = (TextView) findViewById(R.id.usercenter_departments);
+        user_num = (TextView) findViewById(R.id.usercenter_num);
+        user_logout = (CardView) findViewById(R.id.usercenter_logout);
+        user_nick = (TextView) findViewById(R.id.usercenter_sign);
+
+        user_email = (TextView) findViewById(R.id.usercenter_email);
+        user_phone = (TextView) findViewById(R.id.usercenter_phone);
+
+        head = (ImageView) findViewById(R.id.head);
+        head.setOnClickListener(this);
+
+        fab_a = (FloatingActionButton) findViewById(R.id.action_a);
+        fab_b = (FloatingActionButton) findViewById(R.id.action_b);
+        fab_a.setOnClickListener(this);
+        fab_b.setOnClickListener(this);
+        user_logout.setOnClickListener(this);
+        toolbar.setNavigationOnClickListener(this);
 
         layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         File file = new File(Environment.getExternalStorageDirectory(), "hkmusic/cache");
@@ -163,10 +197,9 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         photoSavePath = Constants.DEFAULT_USERIMG_PATH;
         photoSaveName = System.currentTimeMillis() + ".png";
 
-        initView();
 
         //设置工具栏标题
-        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("个人中心");
 
 
@@ -210,79 +243,6 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
 
         }
 
-        user_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SweetAlertDialog(UserCenterMainAcivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("确认注销?")
-                        .setContentText("注销后不能享有更多功能!")
-                        .setConfirmText("注销")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                                // reuse previous dialog instance
-                                logout();
-//                                sDialog.setTitleText("注销!")
-//                                        .setContentText("Your imaginary file has been deleted!")
-//                                        .setConfirmText("OK")
-//                                        .setConfirmClickListener(null)
-//                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                            }
-                        })
-                        .setCancelText("取消")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .show();
-            }
-        });
-
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void logout() {
-        SharedPreferences sp = getApplicationContext().getSharedPreferences("data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.commit();
-        UserStatus.saveuserstatus(this, false);
-        finish();
-    }
-
-    private void initView() {
-
-        user_name = (TextView) findViewById(R.id.usercenter_name);
-        user_class = (TextView) findViewById(R.id.usercenter_class);
-        user_major = (TextView) findViewById(R.id.usercenter_major);
-        user_departments = (TextView) findViewById(R.id.usercenter_departments);
-        user_num = (TextView) findViewById(R.id.usercenter_num);
-        user_logout = (CardView) findViewById(R.id.usercenter_logout);
-        user_nick = (TextView) findViewById(R.id.usercenter_sign);
-
-        user_email = (TextView) findViewById(R.id.usercenter_email);
-        user_phone = (TextView) findViewById(R.id.usercenter_phone);
-
-        head = (ImageView) findViewById(R.id.head);
-        head.setOnClickListener(this);
-
-        fab_a = (FloatingActionButton) findViewById(R.id.action_a);
-        fab_b = (FloatingActionButton) findViewById(R.id.action_b);
-        fab_a.setOnClickListener(this);
-        fab_b.setOnClickListener(this);
     }
 
 
@@ -298,6 +258,31 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             case R.id.action_b:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.toolbar:
+                finish();
+                break;
+            case R.id.usercenter_logout:
+                new SweetAlertDialog(UserCenterMainAcivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("确认注销?")
+                        .setContentText("注销后不能享有更多功能!")
+                        .setConfirmText("注销")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismiss();
+                                // reuse previous dialog instance
+                                logout();
+                            }
+                        })
+                        .setCancelText("取消")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
 
         }
@@ -463,9 +448,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
         return builder.setPositiveButton("修改", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (!TextUtils.isEmpty(nick.getText().toString().trim()) &&
-                        !TextUtils.isEmpty(email.getText().toString().trim()) &&
-                        !TextUtils.isEmpty(phone.getText().toString().trim())) {
+                if (!TextUtils.isEmpty(nick.getText().toString().trim())) {
                     UpdateUserinfo(nick.getText().toString().trim()
                             , email.getText().toString().trim(),
                             phone.getText().toString().trim());

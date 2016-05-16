@@ -9,10 +9,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,7 +35,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.R;
 
-public class CloudDetailActivity extends Activity {
+public class CloudDetailActivity extends AppCompatActivity {
 	private GridView mgridView;
 	private TextView mPoiTextView;
 	private TextView mNameTextView;
@@ -42,6 +45,7 @@ public class CloudDetailActivity extends Activity {
 	private TextView mUpdateTextView;
 	private TextView mDistanceTextView;
 	private LinearLayout mContainer;
+	private Toolbar toolbar;
 
 	private CloudItem mItem;
 	private List<CloudImage> mImageitem;
@@ -52,6 +56,9 @@ public class CloudDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cloud_detail);
+		toolbar= (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mgridView = (GridView) findViewById(R.id.grid);
 		mPoiTextView = (TextView) findViewById(R.id.poiid_text);
@@ -62,6 +69,7 @@ public class CloudDetailActivity extends Activity {
 		mUpdateTextView = (TextView) findViewById(R.id.update_time_text);
 		mDistanceTextView = (TextView) findViewById(R.id.distance_text);
 		mContainer = (LinearLayout) findViewById(R.id.container);
+
 
 		mItem = (CloudItem) getIntent().getParcelableExtra("clouditem");
 		if (mItem == null) {
@@ -183,5 +191,14 @@ public class CloudDetailActivity extends Activity {
 			intent.putExtra("position", position);
 			startActivity(intent);
 		}
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
