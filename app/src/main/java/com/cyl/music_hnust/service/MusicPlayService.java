@@ -32,7 +32,6 @@ import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.RoundCorner;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class MusicPlayService extends Service {
@@ -121,9 +120,15 @@ public class MusicPlayService extends Service {
      * 得到当前播放进度
      */
     public int getCurrent() {
-        if (mMediaPlayer.isPlaying()) {
-            return mMediaPlayer.getCurrentPosition();
-        } else {
+        try {
+            if (mMediaPlayer.isPlaying()) {
+                return mMediaPlayer.getCurrentPosition();
+            } else {
+                return currentTime;
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "播放出错",
+                    Toast.LENGTH_SHORT).show();
             return currentTime;
         }
     }
@@ -132,8 +137,13 @@ public class MusicPlayService extends Service {
      * 跳到输入的进度
      */
     public void movePlay(int progress) {
-        mMediaPlayer.seekTo(progress);
-        currentTime = progress;
+        try {
+            mMediaPlayer.seekTo(progress);
+            currentTime = progress;
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "播放出错",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -313,7 +323,7 @@ public class MusicPlayService extends Service {
         Bitmap bm = null;
         if (getSong().getAlbumPic() != null) {
             bm = BitmapFactory.decodeFile(getSong().getAlbumPic());
-        }else {
+        } else {
             bm = null;
         }
         if (bm != null) {
@@ -399,7 +409,17 @@ public class MusicPlayService extends Service {
     }
 
     public int getDuration() {
-        return mMediaPlayer.getDuration();
+        try {
+            if (mMediaPlayer!=null){
+
+                return mMediaPlayer.getDuration();
+            }else {
+                return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     public List<MusicInfo> getSongs() {

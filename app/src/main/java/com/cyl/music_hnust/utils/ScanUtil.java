@@ -105,7 +105,7 @@ public class ScanUtil {
                             false, musicInfo.getTime(),
                             musicInfo.getSize(), musicInfo.getArtist(),
                             musicInfo.getFormat(),
-                            musicInfo.getAlbum(),musicInfo.getAlbumPic(), musicInfo.getYears());
+                            musicInfo.getAlbum(), musicInfo.getAlbumPic(), musicInfo.getYears());
                     // 加入所有歌曲列表
                     MusicList.list.add(musicInfo);
                     count++;
@@ -143,6 +143,7 @@ public class ScanUtil {
         db.queryAll(searchAllDirectory());
         db.close();
     }
+
     /**
      * 查新数据库记录的所有歌单
      */
@@ -151,6 +152,7 @@ public class ScanUtil {
         db.queryAllPlaylist();
         db.close();
     }
+
     /**
      * 查新数据库记录的歌单中所有的歌曲
      */
@@ -159,20 +161,22 @@ public class ScanUtil {
         db.queryAllPlaylist(playlist);
         db.close();
     }
+
     /**
      * 删除数据库记录的歌单中所有的歌曲
      */
-    public void deleteplaylist(String playlist,int music_id) {
+    public void deleteplaylist(String playlist, int music_id) {
         db = new DBDao(context);
         db.deletePlaylist(playlist, music_id);
         db.close();
     }
+
     /**
      * 增加数据库记录的歌单中歌曲
      */
-    public void addplaylist(String playlist,int[] music_id) {
+    public void addplaylist(String playlist, int[] music_id) {
         db = new DBDao(context);
-        db.addPlaylist(playlist,music_id);
+        db.addPlaylist(playlist, music_id);
         db.close();
     }
 
@@ -215,46 +219,34 @@ public class ScanUtil {
             info.setMp3Duration(c.getInt(c.getColumnIndex(MediaStore.Audio.Media.DURATION)));
             info.setFile(c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
 
-            String displayName =c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+            String displayName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
 
             if (displayName.contains(".mp3")) {
                 String[] displayNameArr = displayName.split(".mp3");
                 displayName = displayNameArr[0].trim();
             }
             info.setAlbumPic(getAlbumPicPath(c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA))
-            ,displayName));
+                    , displayName));
 
             infos.add(info);
         }
 
         return infos;
     }
+
     public String getAlbumPicPath(final String filePath, String fileName) {
 
         String path = null;
-        Bitmap bitmap= null;
+        Bitmap bitmap = null;
+        try {
+            bitmap = AlbumUtil.scanAlbumImage(filePath);
 
-        bitmap = AlbumUtil.scanAlbumImage(filePath);
-//        //能够获取多媒体文件元数据的类
-//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        try {
-//            retriever.setDataSource(filePath); //设置数据源
-//            byte[] embedPic = retriever.getEmbeddedPicture(); //得到字节型数据
-//
-//            bitmap = BitmapFactory.decodeByteArray(embedPic, 0, embedPic.length); //转换为图片
+            if (bitmap != null)
+                path = CommonUtils.imageToLocal(bitmap, fileName);
 
-            if (bitmap!=null)
-            path = CommonUtils.imageToLocal(bitmap, fileName);
-
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                retriever.release();
-//            } catch (Exception e2) {
-//                e2.printStackTrace();
-//            }
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return path;
     }

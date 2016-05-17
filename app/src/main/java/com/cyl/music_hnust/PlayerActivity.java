@@ -239,67 +239,35 @@ public class PlayerActivity extends AppCompatActivity {
     MusicInfo song = null;
 
     public void initBackGround() {
-        if (mService.getSongs() != null && mService.getSongs().size() > 0 && mService.getCurrentListItme() != -1) {
-            song = mService.getSongs().get(mService.getCurrentListItme());
-        }
-        if (song.getAlbumPic() != null) {
-            if (song.getAlbumPic().startsWith("http://")) {
+        try {
+            if (mService.getSongs() != null && mService.getSongs().size() > 0 && mService.getCurrentListItme() != -1) {
+                song = mService.getSongs().get(mService.getCurrentListItme());
+            }
+            if (song.getAlbumPic() != null) {
+                if (song.getAlbumPic().startsWith("http://")) {
 
+                    Bitmap bitmap =BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
+                    Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
+                    mIvBg.setImageBitmap(result);
+
+                } else {
+                    Log.e("本地图片", ">>>>>>>>>>>>>>>>>>" + song.getAlbumPic());
+                    Bitmap bitmap = CommonUtils.scaleBitmap(mContext, song.getAlbumPic());
+                    Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
+                    mIvBg.setImageBitmap(result);
+                }
+            } else {
                 Bitmap bitmap =BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
                 Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
                 mIvBg.setImageBitmap(result);
-
-            } else {
-                Log.e("本地图片", ">>>>>>>>>>>>>>>>>>" + song.getAlbumPic());
-                Bitmap bitmap = CommonUtils.scaleBitmap(mContext, song.getAlbumPic());
-                Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
-                mIvBg.setImageBitmap(result);
             }
-        } else {
+        }catch (Exception e){
+            e.printStackTrace();
             Bitmap bitmap =BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
             Bitmap result = CommonUtils.doBlur(bitmap, 50, false);
             mIvBg.setImageBitmap(result);
         }
-//        new AsyncTask<Void, Void, Bitmap>() {
-//            @Override
-//            protected Bitmap doInBackground(Void... params) {
-//                Bitmap original = null;
-//
-//                if (song == null) {
-//
-//                }
-//                if (song != null
-//                        && !TextUtils.isEmpty(song.getAlbumPic())) {
-//                    if (song.getAlbumPic().startsWith("http://")) {
-//
-//                    } else {
-//                        original = CommonUtils.scaleBitmap(getApplicationContext(), song.getAlbumPic());
-//                    }
-//
-//                }
-//                if (original == null) {
-//                    original = BitmapFactory.decodeResource(getResources(), R.drawable.base_bg);
-//                }
-//                Bitmap result = null;
-//                try {
-//                    result = CommonUtils.doBlur(original, 50, false);
-//                } catch (Error e) {
-//                    e.printStackTrace();
-//                }
-//                original.recycle();
-//                return result;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Bitmap bitmap) {
-//                recycleBitmap(mIvBg, mBgBitmap);
-//                mBgBitmap = bitmap;
-//                mIvBg.setImageBitmap(mBgBitmap);
-//
-////                PlayerFragment.iv_album.setImageResource(R.mipmap.icon_hnust);
-//                alphaAnim(mIvBg, 0);
-//            }
-//        }.execute();
+
     }
 
     private void recycleBitmap(ImageView iv, Bitmap bitmap) {

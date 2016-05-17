@@ -174,21 +174,22 @@ public class PlayerFragment extends Fragment {
         try {
 
             path=MyActivity.mService.getPath();
+            if (path.endsWith(".mp3") && !path.startsWith("http")) {
+                String lyricPath = path.replace(".mp3", ".lrc");
+                File file = new File(lyricPath);
+                if (file.exists()) {
+                    lyricpath = lyricPath;
+                }
+            }
+            if (lyricpath!=null) {
+                if (lyricpath.endsWith(".lrc")) {
+                    initLrc(lyricpath);
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        if (path.endsWith(".mp3") && !path.startsWith("http")) {
-            String lyricPath = path.replace(".mp3", ".lrc");
-            File file = new File(lyricPath);
-            if (file.exists()) {
-                lyricpath = lyricPath;
-            }
-        }
-        if (lyricpath!=null) {
-            if (lyricpath.endsWith(".lrc")) {
-                initLrc(lyricpath);
-            }
-        }
+
 
 
     }
@@ -236,25 +237,30 @@ public class PlayerFragment extends Fragment {
     Runnable updateThread = new Runnable() {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         public void run() {
-            // 获得歌曲的长度并设置成播放进度条的最大值
-            //获取歌曲播放的位置
-            final long timePassed = MyActivity.mService.getCurrent();
-            //滚动歌词
-            if (lyricView != null)
-                lyricView.seekLrcToTime(timePassed,
-                        MyActivity.mService.getDuration());
-            if (MyActivity.mService.mMediaPlayer.isPlaying()) {
-                if (operatingAnim.isPaused()) {
-                    operatingAnim.resume();
+            try {
+                // 获得歌曲的长度并设置成播放进度条的最大值
+                //获取歌曲播放的位置
+                final long timePassed = MyActivity.mService.getCurrent();
+                //滚动歌词
+                if (lyricView != null)
+                    lyricView.seekLrcToTime(timePassed,
+                            MyActivity.mService.getDuration());
+                if (MyActivity.mService.mMediaPlayer.isPlaying()) {
+                    if (!operatingAnim.isRunning()) {
+                        operatingAnim.resume();
+                    }
+                } else {
+                    if (operatingAnim.isRunning()) {
+                        operatingAnim.cancel();
+                    }
+                    //  iv_album.clearAnimation();
                 }
-            } else {
-                if (operatingAnim.isRunning()) {
-                    operatingAnim.pause();
-                }
-                //  iv_album.clearAnimation();
+                // 每次延迟100毫秒再启动线程
+                handler.postDelayed(updateThread, 100);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            // 每次延迟100毫秒再启动线程
-            handler.postDelayed(updateThread, 100);
+
         }
     };
 }

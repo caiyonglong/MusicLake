@@ -285,36 +285,48 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
 
             // FloatingActionButton的点击事件
             case R.id.next_buttom:
-                mService = MyActivity.mService;
-                if (mService.getSongs() != null) {
-                    mCallbacks.OnFragmentClick(v);
-                } else {
-                    Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
+                try {
+                    mService = MyActivity.mService;
+                    if (mService.getSongs() != null) {
+                        mCallbacks.OnFragmentClick(v);
+                    } else {
+                        Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 break;
             case R.id.play_buttom:
-                mService = MyActivity.mService;
+                try {
+                    mService = MyActivity.mService;
 
-                if (mService.getSongs() != null) {
-                    mCallbacks.OnFragmentClick(v);
-                } else {
+                    if (mService.getSongs() != null) {
+                        mCallbacks.OnFragmentClick(v);
+                    } else {
+                        Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
                 }
+
 
                 break;
 
             case R.id.singer_pic:
             case R.id.singer_name:
             case R.id.song_name:
-                mService = MyActivity.mService;
+                try {
+                    mService = MyActivity.mService;
+                    Intent it5 = new Intent(getActivity(), PlayerActivity.class);
+                    startActivity(it5);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
+                }
 
-                // if (mService.getSongs() != null) {
-                Intent it5 = new Intent(getActivity(), PlayerActivity.class);
-                startActivity(it5);
-//                } else {
-//                    Toast.makeText(getContext(), "播放列表为空", Toast.LENGTH_SHORT).show();
-//                }
+
                 break;
             case R.id.list_buttom:
                 getPopupWindowInstance(v);
@@ -345,10 +357,15 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.playlist_album:
-                Intent it = new Intent(getActivity(), PlaylistSongActivity.class);
-                it.putExtra("playlist", al_playlist.get(position));
-                Log.e(TAG, "playlist:" + al_playlist.get(position));
-                startActivity(it);
+                try {
+                    Intent it = new Intent(getActivity(), PlaylistSongActivity.class);
+                    it.putExtra("playlist", al_playlist.get(position));
+                    Log.e(TAG, "playlist:" + al_playlist.get(position));
+                    startActivity(it);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
             case R.id.listitemBG:
                 MyActivity.mService.setCurrentListItme(position);
@@ -479,13 +496,15 @@ public class MusicFragment extends Fragment implements View.OnClickListener, MyS
                         R.drawable.playing_bar_default_avatar, R.drawable.playing_bar_default_avatar);
                 imageLoader.get(albumpic, listener);
 
-
-        } else {
+            } else {
                 Log.e("本地图片", ">>>>>>>>>>>>>>>>>>" + albumpic);
                 Bitmap bitmap = CommonUtils.scaleBitmap(context, albumpic);
-                singer_pic.setImageBitmap(bitmap);
+                if (bitmap != null)
+                    singer_pic.setImageBitmap(bitmap);
+                else
+                    singer_pic.setImageResource(R.drawable.playing_bar_default_avatar);
             }
-        }else {
+        } else {
             singer_pic.setImageResource(R.drawable.playing_bar_default_avatar);
         }
 

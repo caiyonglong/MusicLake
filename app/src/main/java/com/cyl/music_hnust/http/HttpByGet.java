@@ -145,9 +145,9 @@ public class HttpByGet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("text", "异常");
+            Log.e("text", "网络异常");
         }
-        Log.e("text", "异常2");
+        Log.e("text", "网络异常");
         return null;
     }
 

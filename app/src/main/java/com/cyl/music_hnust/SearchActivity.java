@@ -124,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     } else if (permis.equals("Normal")&&!isOnlyWifi) {
                         show("当前操作会消耗流量,是否继续!");
                     }  else if (permis.equals("Normal")&&isOnlyWifi) {
-                        show("wifi未连接,请关闭 仅wifi联网!");
+                        show("如要继续,请关闭省流量模式!");
                     } else {
                         pDialog.setTitleText("请检查网络连接");
                         pDialog.setCancelable(true);
