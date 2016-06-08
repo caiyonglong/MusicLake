@@ -28,6 +28,11 @@
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
     <color name="bg_green">#13d910</color>
 
+    <color name="line_color_blue">#3C8EAE</color>
+    <color name="bg_color_pink">#FF90A2</color>
+    <color name="bg_color_blue">#43D5FF</color>
+    <color name="bg_color_blue_light">#84B5CA</color>
+
 
     <color name="clouds">#ecf0f1</color>
     <!-- 黑色 -->

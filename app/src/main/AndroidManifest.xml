@@ -54,6 +54,10 @@
 
             android:screenOrientation="portrait" />
         <activity
+            android:name=".map.RadarActivity"
+
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".map.CloudDetailActivity"
             android:screenOrientation="portrait"
             android:label="@string/detail_position"/>

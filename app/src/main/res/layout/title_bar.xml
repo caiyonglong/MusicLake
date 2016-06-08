@@ -15,7 +15,7 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_common_title_bar_back"
-            android:onClick="back" />
+             />
 
         <TextView
             android:id="@+id/title"

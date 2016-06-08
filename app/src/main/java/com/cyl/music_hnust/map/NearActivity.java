@@ -312,11 +312,6 @@ public class NearActivity extends AppCompatActivity {
             String distance = "";
             String distime = "";
 
-            distance = FormatUtil.Distance(latLonPoint.getLongitude() + 0, latLonPoint.getLatitude() + 0,
-                    myDatas.get(position).getLocation_longitude() + 0, myDatas.get(position).getLocation_latitude() + 0);
-            distime = FormatUtil.distime(myDatas.get(position).getLocation_time());
-
-
             holder.id_cardview_foot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

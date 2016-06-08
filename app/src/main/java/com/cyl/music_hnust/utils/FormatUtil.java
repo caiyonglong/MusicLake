@@ -74,7 +74,7 @@ public class FormatUtil {
         return s;
     }
 
-    public static String Distance(double long1, double lat1, double long2,
+    public static float Distance(double long1, double lat1, double long2,
                                   double lat2) {
         double a, b, R;
         R = 6378137; // 地球半径
@@ -91,13 +91,9 @@ public class FormatUtil {
                 * Math.asin(Math.sqrt(sa2 * sa2 + Math.cos(lat1)
                 * Math.cos(lat2) * sb2 * sb2));
 
-        int ye = (int) Math.ceil(d);
+        float ye = (float) Math.ceil(d);
 
-        if (ye > 1000) {
-            return ye / 1000 + " km";
-        } else {
-            return ye + " m";
-        }
+        return ye;
     }
 
     public static String distime(String pre) {

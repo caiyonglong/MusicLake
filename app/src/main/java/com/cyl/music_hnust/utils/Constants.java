@@ -18,7 +18,7 @@ public class Constants {
     public static final String DEFAULT_MUSIC_LIST_URL = "http://suen.pw/interface/music/api.php?operate=search&&key=";
     //音乐歌词根网址
     public static final String DEFAULT_MUSIC_LRCPATH = "http://tingapi.ting.baidu.com";
-    //音乐歌词根网址
+    //图片地址
     public static final String DEFAULT_USERIMG_PATH = Environment.getExternalStorageDirectory() + "/hkmusic/cache/";
 
     //头像上传网址

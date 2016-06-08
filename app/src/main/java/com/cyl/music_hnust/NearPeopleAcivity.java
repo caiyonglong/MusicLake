@@ -1,22 +1,16 @@
 package com.cyl.music_hnust;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,16 +18,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.http.HttpByGet;
+import com.cyl.music_hnust.utils.Constants;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
@@ -133,8 +125,11 @@ public class NearPeopleAcivity extends AppCompatActivity {
                     intent.getStringExtra("email"));
 
 
-//            holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            head.setErrorImageResId(R.mipmap.user_icon_default_main);
+
+
+
+            head.setDefaultImageResId(R.drawable.circle_photo);
+            head.setErrorImageResId(R.drawable.circle_photo);
             head.setImageUrl(intent.getStringExtra("img"), imageLoader);
 
         } else if (intent.getIntExtra("flag",0)==2) {
@@ -209,7 +204,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
     private void volley_StringRequest_GET(String user_id) {
         String param = "user_id=" + user_id +
                 "&GetUserinfo";
-        String url = "http://119.29.27.116/hcyl/music_BBS/operate.php?" + param;
+        String url = Constants.DEFAULT_URL + param;
         // 2 创建StringRequest对象
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
                 new Response.Listener<JSONObject>() {

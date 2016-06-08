@@ -38,6 +38,7 @@ import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.NearActivity;
+import com.cyl.music_hnust.map.RadarActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -595,7 +596,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             public void onClick(DialogInterface dialog, int which) {
                 switch (MENU_FLAG) {
                     case MENU_NEAR_PEOPLE:
-                        Intent it2 = new Intent(getApplicationContext(), NearActivity.class);
+//                        Intent it2 = new Intent(getApplicationContext(), NearActivity.class);
+                        Intent it2 = new Intent(getApplicationContext(), RadarActivity.class);
+
                         startActivity(it2);
                         break;
 

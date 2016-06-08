@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/lkd"
+    >
+    <RelativeLayout
+
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:background="@color/setting_blue"
+        android:layout_height="50dp">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_common_title_bar_back"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="附近的人"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+        <ImageButton
+            android:text="清除位置信息并退出"
+            android:textColor="@color/main_white"
+            android:id="@+id/btn_clear"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@android:drawable/ic_menu_delete"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <com.cyl.music_hnust.custom.RadarViewGroup
+        android:id="@+id/radar"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp">
+
+        <com.cyl.music_hnust.custom.RadarView
+            android:id="@id/id_scan_circle"
+            android:layout_width="280dp"
+            android:layout_height="280dp"/>
+    </com.cyl.music_hnust.custom.RadarViewGroup>
+
+    <RelativeLayout
+        android:id="@+id/ry_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:clipChildren="false">
+        <TextView
+            android:id="@+id/no_result"
+            android:text="搜索中..."
+            android:textSize="20dp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/main_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.cyl.music_hnust.custom.CustomViewPager
+            android:id="@+id/vp"
+            android:layout_width="130dp"
+            android:layout_height="160dp"
+
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="120dp"
+            android:layout_marginRight="120dp"
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>

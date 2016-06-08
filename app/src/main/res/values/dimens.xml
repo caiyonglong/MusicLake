@@ -31,4 +31,6 @@
     <dimen name="title_height">55dp</dimen>
 
     <dimen name="play_btn_width">40dp</dimen>
+
+    <dimen name="viewpager_margin">2dp</dimen>
 </resources>
