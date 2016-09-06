@@ -5,4 +5,7 @@
 [91安卓下载](http://apk.91.com/Soft/Android/com.cyl.music_hnust-1-1.0.html)
 [安卓市场](http://apk.hiapk.com/search?key=%E6%B9%96%E7%A7%91%E9%9F%B3%E4%B9%90&pid=0)
 [百度手机助手](http://shouji.baidu.com/software/9359208.html)
+# 更新
+目前正在修改版本2.5.
+主要修改主界面，引用一些第三方框架，适配android6.0
 
