@@ -111,11 +111,12 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     }
 
     /**
-     *
+     *  耗时操作
      */
     Runnable GMRunable = new Runnable() {
         @Override
         public void run() {
+            //查询所有音乐
             musicInfos = MusicUtils.scanMusic(getActivity());
             myHandler.sendEmptyMessage(0);
         }
@@ -146,7 +147,7 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         }
         return super.onOptionsItemSelected(item);
     }
-
+    //recyclerview item点击事件
     @Override
     public void onItemClick(View view, int position) {
         MainActivity.mPlayService.setMyMusicList(musicInfos);
