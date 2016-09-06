@@ -83,11 +83,27 @@ public class MusicUtils {
         return uri;
     }
 
+    /**
+     * 扫描歌单
+     * @param context
+     * @return
+     */
     public static List<String> scanPlaylist(Context context){
         List<String> playlists = new ArrayList<>();
         DBDao dbDao = new DBDao(context);
         playlists = dbDao.getPlaylist();
         return playlists;
+    }
+
+    /**
+     * 新增歌单
+     * @param context
+     * @param playlist
+     * @return
+     */
+    public static Boolean addPlaylist(Context context,String playlist){
+        DBDao dbDao = new DBDao(context);
+        return dbDao.newPlaylist(playlist);
     }
 
 }

@@ -5,7 +5,7 @@
 
     <EditText
         android:layout_margin="10dp"
-        android:id="@+id/edt_playlist"
+        android:id="@+id/et_playlist"
         android:hint="请输入歌单名"
         android:paddingLeft="10dp"
         android:shadowColor="@color/blue_btn_bg_color"

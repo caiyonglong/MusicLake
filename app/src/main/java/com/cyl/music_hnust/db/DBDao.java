@@ -102,7 +102,7 @@ public class DBDao {
     public boolean newPlaylist(String title) {
         String sql = "select * from "
                 + DBData.PLAYLIST_TABLENAME + " where "
-                + DBData.PLAYLIST_TITLE + " = " + title;
+                + DBData.PLAYLIST_TITLE + " = "+'"' + title+'"';
 
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.getCount() == 0) {
@@ -128,7 +128,7 @@ public class DBDao {
 
     public List<String> getPlaylist() {
         List<String> playlists = new ArrayList<>();
-        String sql = "select distinct " + DBData.PLAYLIST_TITLE + " from " + DBData.PLAYLIST_TABLENAME;
+        String sql = "select distinct "+'"'+DBData.PLAYLIST_TITLE+'"'+" from " + DBData.PLAYLIST_TABLENAME;
         Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToFirst()) {
             String title = cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_TITLE));

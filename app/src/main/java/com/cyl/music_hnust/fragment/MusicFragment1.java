@@ -241,7 +241,7 @@ public class MusicFragment1 extends Fragment implements View.OnClickListener, My
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                EditText edt_playlist = (EditText) playlistForm.findViewById(R.id.edt_playlist);
+                                EditText edt_playlist = (EditText) playlistForm.findViewById(R.id.et_playlist);
                                 String name = edt_playlist.getText().toString().trim();
                                 if (!TextUtils.isEmpty(name)) {
                                     int[] musicid = {-1};

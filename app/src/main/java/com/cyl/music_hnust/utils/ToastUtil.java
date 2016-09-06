@@ -1,21 +1,21 @@
-/**
- * 
- */
 package com.cyl.music_hnust.utils;
-
-import com.amap.api.services.core.AMapException;
 
 import android.content.Context;
 import android.widget.Toast;
 
+import com.amap.api.services.core.AMapException;
+
+/**
+ * 提示工具类
+ */
 public class ToastUtil {
 
 	public static void show(Context context, String info) {
-		Toast.makeText(context, info, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, info, Toast.LENGTH_SHORT).show();
 	}
 
 	public static void show(Context context, int info) {
-		Toast.makeText(context, info, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, info, Toast.LENGTH_SHORT).show();
 	}
 	
 	public static void showerror(Context context, int rCode){

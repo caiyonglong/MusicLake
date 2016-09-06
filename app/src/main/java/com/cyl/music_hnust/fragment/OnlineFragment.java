@@ -12,6 +12,7 @@ import com.cyl.music_hnust.activity.OnlineMusicActivity;
 import com.cyl.music_hnust.adapter.OnlineAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.OnlinePlaylistMusic;
+import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.DividerItemDecoration;
 
 import java.io.Serializable;
@@ -71,6 +72,7 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
 
     @Override
     public void onItemClick(View view, int position) {
+        ToastUtil.show(getContext(),"===="+position);
         OnlinePlaylistMusic songListInfo = onlinePlaylistMusics.get(position);
         Intent intent = new Intent(getActivity(), OnlineMusicActivity.class);
         intent.putExtra("online_list_type", (Serializable) songListInfo);
