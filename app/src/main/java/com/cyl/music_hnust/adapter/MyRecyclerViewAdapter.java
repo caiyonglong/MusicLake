@@ -6,8 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,13 +13,11 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.Dynamic;
-import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.v7.widget.RecyclerView.*;
+import static android.support.v7.widget.RecyclerView.ViewHolder;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -127,7 +123,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder1.content_text.setText(myDatas.get(position).getContent());
             holder1.content_time.setText(FormatUtil.distime(myDatas.get(position).getTime()));
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            holder1.user_logo.setErrorImageResId(R.mipmap.user_icon_default_main);
+            holder1.user_logo.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
             holder1.user_logo.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
 

@@ -18,7 +18,6 @@ import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ScanUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -91,8 +90,6 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
     }
 
     private void initData() {
-        ScanUtil scanUtil = new ScanUtil(this);
-        scanUtil.scanMusicFromDB();
         songs = MusicList.list;
         mDatas = new ArrayList<>();
         for (int i = 0; i < songs.size(); i++) {
@@ -157,7 +154,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
 //        int items;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌曲")
-                .setIcon(R.mipmap.ic_launcher)
+                .setIcon(R.mipmap.icon)
                 .setAdapter(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -165,7 +162,6 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                             if (type == LOCAL_LIST) {
                                 DBDao dbDao = new DBDao(getApplicationContext());
                                 if (!songs.get(position).isFavorite()) {
-                                    dbDao.update(songs.get(position).getName(), true);
                                     ToastUtil.show(getApplicationContext(), "添加成功");
                                 } else {
                                     ToastUtil.show(getApplicationContext(), "已添加");
@@ -173,7 +169,6 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                             }else if(type == FAVOR_LIST){
                                 DBDao dbDao = new DBDao(getApplicationContext());
                                 if (mDatas.get(position).isFavorite()) {
-                                    dbDao.update(mDatas.get(position).getName(), false);
                                     ToastUtil.show(getApplicationContext(), "移除成功");
                                     initData();
                                     adapter.mDatas =mDatas;
@@ -211,7 +206,7 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌曲信息")
                 .setMessage(msg)
-                .setIcon(R.mipmap.ic_launcher);
+                .setIcon(R.mipmap.icon);
         setPositiveButton(builder)
                 .create()
                 .show();

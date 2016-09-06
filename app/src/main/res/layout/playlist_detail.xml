@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/playlist_img"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_header"
+        android:transitionName="@string/transition_name"/>
+
+    <TextView
+        android:layout_margin="16dp"
+        android:id="@+id/playlist_detail"
+        android:text="歌单创建以生石灰又爱上对方就看见啥地方呢的
+        "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        android:id="@+id/view_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/blueGrey"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

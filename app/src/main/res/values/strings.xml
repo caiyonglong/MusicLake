@@ -8,7 +8,7 @@
     <string name="open">打开</string>
     <string name="close">关闭</string>
     <string name="header_author_name">用户名</string>
-    <string name="header_author_url">学号</string>
+    <string name="header_author_url">个性标签</string>
     <string name="plusone">+1</string>
     <string name="item_clicked" translatable="false">item clicked！</string>
     <string name="item_longclicked" translatable="false">item long clicked！</string>
@@ -75,5 +75,30 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">自动下载歌词图片</string>
+    <string name="navigation_drawer_open">打开</string>
+    <string name="navigation_drawer_close">关闭</string>
+
+    <!--version 2.5-->
+    <string name="unknown">未知</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="Username">用户名</string>
+    <string name="Password">密码</string>
+    <string name="forgot_your_password">忘记密码?</string>
+    <string name="repeat_password">重复密码</string>
+    <string name="next">下一步</string>
+    <string name="go">登录</string>
+
+    <!-- Transitions -->
+    <string name="transition_avatar">AvatarTransition</string>
+    <string name="transition_morph_view" translatable="false">morph_view_transition</string>
+    <string name="transition_name" translatable="false">square_transition</string>
+    <string name="transition_toolbar_name" translatable="false">toolbar_transition</string>
+    <string name="transition_shared_toolbar" translatable="false">shared_toolbar_transition</string>
+
+
+    <string name="song_list_item_title_1">1.%1$s - %2$s</string>
+    <string name="song_list_item_title_2">2.%1$s - %2$s</string>
+    <string name="song_list_item_title_3">3.%1$s - %2$s</string>
 
 </resources>

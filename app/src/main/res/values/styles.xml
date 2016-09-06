@@ -1,5 +1,12 @@
 <resources>
 
+
+    <attr format="reference" name="windowBackground"/>
+    <attr format="reference" name="progressBackgroundColor"/>
+    <attr format="reference" name="progressDrawable"/>
+    <attr format="reference" name="progressDrawableWithBackground" />
+
+
     <style name="AppTheme" parent="MyThemeBlue">
         <item name="android:listDivider">@drawable/divider_bg</item>
 
@@ -13,7 +20,13 @@
         <item name="colorPrimaryDark">@color/setting_blue</item>
         <item name="colorAccent">@color/setting_blue</item>
         <!--正常状态下字体颜色和icon颜色-->
-        <item name="android:textColorPrimary">@color/main_white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="windowBackground">@color/window_background</item>
+        <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
+        <item name="progressDrawable">@drawable/progress_drawable</item>
+        <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground</item>
 
     </style>
 
@@ -34,11 +47,50 @@
 
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/main_white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="Theme.Start" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@mipmap/bg</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <!--<style name="AppTheme.Splash" parent="MyTheme">-->
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+    <!--</style>-->
+
+    <style name="AppTheme.Search" parent="MyTheme">
+        <item name="colorAccent">@color/main_white</item>
+    </style>
+
+    <style name="AppTheme.Divider">
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="AppTheme.Text" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="FabStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">6dp</item>
+        <item name="pressedTranslationZ">12dp</item>
+        <item name="rippleColor">@android:color/white</item>
+    </style>
+
+    <style name="TextApperance.Album.Title" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:textSize">29sp</item>
+    </style>
+
+    <style name="TextApperance.Artist.Title" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:textSize">29sp</item>
+    </style>
+
+    <style name="TransparentText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#00666666</item>
+    </style>
+
 </resources>

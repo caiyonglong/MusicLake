@@ -20,7 +20,7 @@
             android:inputType="textShortMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray"
+            android:textColor="@color/grey"
             android:hint="xxxxxxxxxxxx"
             android:selectAllOnFocus="true" />
     </TableRow>
@@ -38,7 +38,7 @@
         <EditText
 
             android:id="@+id/edt_email"
-            android:textColor="@color/gray"
+            android:textColor="@color/grey"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         <EditText
 
             android:id="@+id/edt_phone"
-            android:textColor="@color/gray"
+            android:textColor="@color/grey"
             android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

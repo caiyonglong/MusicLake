@@ -3,7 +3,6 @@ package com.cyl.music_hnust.map;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -28,9 +26,7 @@ import com.amap.api.services.nearby.NearbySearch;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
-import com.cyl.music_hnust.MyActivity;
 import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.UserCenterMainAcivity;
@@ -127,8 +123,8 @@ public class NearActivity extends AppCompatActivity {
         mydatas = new ArrayList<>();
         user = UserStatus.getUserInfo(getApplicationContext());
         application =new MyApplication();
-        mRequestQueue = application.getHttpQueues();
-        imageLoader =application.getImageLoader();
+//        mRequestQueue = application.getHttpQueues();
+//        imageLoader =application.getImageLoader();
 
         init();
         showProgressDialog("正在确定你的位置");
@@ -351,7 +347,7 @@ public class NearActivity extends AppCompatActivity {
             holder.location_time.setText(distime);
             holder.user_distance.setText("不超过" + distance);
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setErrorImageResId(R.mipmap.user_icon_default_main);
+            holder.user_img.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
             holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }

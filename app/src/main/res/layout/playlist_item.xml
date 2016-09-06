@@ -25,8 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher" />
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,7 +41,7 @@
                 android:layout_gravity="center"
                 android:singleLine="true"
                 android:text="歌单名"
-                android:textColor="@color/gray"
+                android:textColor="@color/grey"
                 android:textSize="15sp" />
 
         </LinearLayout>

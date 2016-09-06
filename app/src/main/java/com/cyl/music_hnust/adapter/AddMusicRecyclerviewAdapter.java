@@ -66,11 +66,11 @@ public class AddMusicRecyclerviewAdapter extends
 
         }
         // 设置文字和图片
-        if (Is_check.get(position)) {
-            holder.icon.setBackgroundResource(R.drawable.checkbox_checked);
-        } else {
-            holder.icon.setBackgroundResource(R.drawable.checkbox_default);
-        }
+//        if (Is_check.get(position)) {
+//            holder.icon.setBackgroundResource(R.drawable.checkbox_checked);
+//        } else {
+//            holder.icon.setBackgroundResource(R.drawable.checkbox_default);
+//        }
 
         if (mDatas.get(position).getName() != null)
             holder.songName.setText(position + 1 + "." + mDatas.get(position).getName().toString());

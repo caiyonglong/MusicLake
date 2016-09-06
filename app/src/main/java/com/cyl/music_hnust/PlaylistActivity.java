@@ -17,11 +17,8 @@ import android.widget.TextView;
 import com.cyl.music_hnust.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ScanUtil;
 
 import java.util.List;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by 永龙 on 2016/3/13.
@@ -44,7 +41,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
     private StaggeredGridLayoutManager mLayoutManager;
 
     private MyStaggeredViewAdapter playlistadapter;
-    private ScanUtil scanUtil;
 
 
     @Override
@@ -52,7 +48,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist_manage);
 
-        scanUtil =new ScanUtil(getApplicationContext());
         initView();
         it = getIntent();
         String info = it.getStringExtra("action");
@@ -61,7 +56,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             type = 2;
             tv_finish.setVisibility(View.GONE);
 
-            scanUtil.scanPlaylistFromDB();
             al_playlist = MusicList.playlist;
 
             mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -114,8 +108,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
     public void show(String msg){
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌单管理")
-                .setMessage(msg)
-                .setIcon(R.mipmap.ic_launcher);
+                .setMessage(msg);
         setPositiveButton(builder);
         setNegativeButton(builder);
         setNeutralButton(builder)
@@ -145,7 +138,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
 
     private void shareplaylist(String targetStr) {
 
-        scanUtil.scanPlaylistSongFromDB(targetStr);
         List<MusicInfo> list = MusicList.list;
         String sharecontent = "我分享的歌单："+targetStr;
         if (list.size()>0){
@@ -172,8 +164,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
     public void showmsg(String msg){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this)
                 .setTitle("删除歌单")
-                .setMessage(msg)
-                .setIcon(R.mipmap.ic_launcher);
+                .setMessage(msg);
         setPositiveButton1(builder1)
                 .create()
                 .show();
@@ -184,7 +175,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // reuse previous dialog instance
-                scanUtil.deleteplaylist(targetStr,-1);
                 Log.e("删除歌单","dddd===="+pos);
                 playlistadapter.mDatas.remove(pos);
                 playlistadapter.notifyDataSetChanged();

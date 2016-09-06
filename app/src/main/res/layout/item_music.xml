@@ -15,6 +15,7 @@
     app:cardUseCompatPadding="true"
     app:contentPadding="12dp">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,7 +57,7 @@
                         android:gravity="center_vertical"
                         android:paddingRight="15.0dip"
                         android:singleLine="true"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/grey"
                         android:textSize="12.0sp" />
 
                     <TextView
@@ -78,7 +79,6 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="5.0dip"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/chose_style"
                 android:contentDescription="@string/app_name" />
             <ImageButton
 

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -28,21 +27,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
-import com.cyl.music_hnust.fragment.MusicFragment;
+import com.cyl.music_hnust.fragment.MusicFragment1;
 import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
-import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.map.RadarActivity;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.view.RoundedImageView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -53,7 +51,7 @@ import java.util.List;
 import static android.support.design.widget.TabLayout.MODE_SCROLLABLE;
 
 public class MyActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
-        View.OnClickListener, MusicFragment.Callbacks {
+        View.OnClickListener, MusicFragment1.Callbacks {
 
     //初始化各种控件，照着xml中的顺序写
     private DrawerLayout mDrawerLayout;
@@ -143,7 +141,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 mFragment.setArguments(mBundle);
                 mFragments.add(i, mFragment);
             } else if (i == 0) {
-                MusicFragment mFragment = new MusicFragment();
+                MusicFragment1 mFragment = new MusicFragment1();
                 mFragment.setArguments(mBundle);
                 mFragments.add(i, mFragment);
             }
@@ -177,7 +175,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.open, R.string.close);
         mActionBarDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         if (userinfo.getUser_name() != null) {
 
             id_header_name.setText(userinfo.getUser_name().toString());
@@ -203,7 +201,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             UserStatus.saveuserstatus(MyActivity.this, false);
             id_header_name.setText("未登录");
             signature.setText("");
-            id_header_face.setImageResource(R.mipmap.user_icon_default_main);
+            id_header_face.setImageResource(R.drawable.ic_account_circle_black_24dp);
 
         }
 
@@ -219,7 +217,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         // 将TabLayout和ViewPager进行关联，让两者联动起来
         mTabLayout.setupWithViewPager(mViewPager);
         // 设置Tablayout的Tab显示ViewPager的适配器中的getPageTitle函数获取到的标题
-        mTabLayout.setTabsFromPagerAdapter(mViewPagerAdapter);
+//        mTabLayout.setTabsFromPagerAdapter(mViewPagerAdapter);
 
         // 设置FloatingActionButton的点击事件
         mFloatingActionButton.setOnClickListener(this);
@@ -437,9 +435,9 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             case R.id.next_buttom:
                 it.putExtra("control", 3);
                 break;
-            case R.id.play_buttom:
-                it.putExtra("control", 1);
-                break;
+//            case R.id.play_buttom:
+//                it.putExtra("control", 1);
+//                break;
         }
         sendBroadcast(it);
     }
@@ -455,20 +453,20 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             String pic = intent.getStringExtra("pic");
             if (current >= 0) {
                 Log.e("==", pic + "");
-                MusicFragment.initBackGround(getApplicationContext(), pic);
-                MusicFragment.song_name.setText(name);
-                MusicFragment.singer_name.setText(artist);
+//                MusicFragment1.initBackGround(getApplicationContext(), pic);
+                MusicFragment1.song_name.setText(name);
+                MusicFragment1.singer_name.setText(artist);
 
             }
             switch (update) {
                 case 3:
-                    MusicFragment.play_buttom.setBackgroundResource(android.R.drawable.ic_media_pause);
+                    MusicFragment1.play_buttom.setBackgroundResource(android.R.drawable.ic_media_pause);
                     break;
                 case 1:
-                    MusicFragment.play_buttom.setBackgroundResource(android.R.drawable.ic_media_pause);
+                    MusicFragment1.play_buttom.setBackgroundResource(android.R.drawable.ic_media_pause);
                     break;
                 case 2: //暂停
-                    MusicFragment.play_buttom.setBackgroundResource(android.R.drawable.ic_media_play);
+                    MusicFragment1.play_buttom.setBackgroundResource(android.R.drawable.ic_media_play);
                     break;
 
             }
@@ -547,7 +545,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             UserStatus.saveuserstatus(MyActivity.this, false);
             id_header_name.setText("未登录");
             signature.setText("");
-            id_header_face.setImageResource(R.mipmap.user_icon_default_main);
+            id_header_face.setImageResource(R.drawable.ic_account_circle_black_24dp);
 
         }
 

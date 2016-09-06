@@ -16,6 +16,7 @@ public class Constants {
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";
    //根据关键词获取音乐接口
     public static final String DEFAULT_MUSIC_LIST_URL = "http://suen.pw/interface/music/api.php?operate=search&&key=";
+
     //音乐歌词根网址
     public static final String DEFAULT_MUSIC_LRCPATH = "http://tingapi.ting.baidu.com";
     //图片地址
@@ -23,6 +24,29 @@ public class Constants {
 
     //头像上传网址
     public static final String DEFAULT_IMG_UPLOAD = "http://119.29.27.116/hcyl/music_BBS/upload_file.php";
+
+    public static final String FORMAT = "json";
+
+    //在线音乐
+    public static final String FILENAME_MP3 = ".mp3";
+    public static final String FILENAME_LRC = ".lrc";
+    public static final int MUSIC_LIST_SIZE = 20;
+
+    public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting";
+    public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
+    public static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
+    public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
+    public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.catalogSug";
+    public static final String METHOD_LRC = "baidu.ting.song.lry";
+    public static final String PARAM_METHOD = "method";
+    public static final String PARAM_TYPE = "type";
+    public static final String PARAM_SIZE = "size";
+    public static final String PARAM_OFFSET = "offset";
+    public static final String PARAM_SONG_ID = "songid";
+    public static final String PARAM_TING_UID = "tinguid";
+    public static final String PARAM_QUERY = "query";
+
+
 
     /**
      * 本地保存地址

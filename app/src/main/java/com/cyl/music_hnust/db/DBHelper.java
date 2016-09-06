@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by 永龙 on 2016/2/23.
+ * 版本: 2016-8-12  v2.5 只建一个歌单表，存放歌单歌曲信息
+ *
  */
 public class DBHelper extends SQLiteOpenHelper {
     /**
@@ -22,36 +24,27 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
-        // 创建音乐表
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + DBData.MUSIC_TABLENAME
-                + " (" + DBData.MUSIC_ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DBData.MUSIC_FILE
-                + " NVARCHAR(100), " + DBData.MUSIC_NAME + " NVARCHAR(100), "
-                + DBData.MUSIC_PATH + " NVARCHAR(300), " + DBData.MUSIC_FOLDER
-                + " NVARCHAR(300), " + DBData.MUSIC_FAVORITE + " INTEGER, "
-                + DBData.MUSIC_TIME + " NVARCHAR(100), " + DBData.MUSIC_SIZE
-                + " NVARCHAR(100), " + DBData.MUSIC_ARTIST + " NVARCHAR(100), "
-                + DBData.MUSIC_FORMAT + " NVARCHAR(100), " + DBData.MUSIC_ALBUM
-                + " NVARCHAR(100), " +DBData.MUSIC_ALBUM_PIC
-                        + " NVARCHAR(100), "+ DBData.MUSIC_YEARS + " NVARCHAR(100)) "
-                );
-        // 创建歌词表
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + DBData.LYRIC_TABLENAME
-                + " (" + DBData.LYRIC_ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DBData.LYRIC_FILE
-                + " NVARCHAR(100), " + DBData.LYRIC_PATH + " NVARCHAR(300))");
         // 创建歌单表
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + DBData.PLAYLIST_TABLENAME
-                + " (" + DBData.PLAYLIST_ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DBData.PLAYLIST_TITLE
-                + " NVARCHAR(100), " + DBData.MUSIC_ID + " INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + DBData.PLAYLIST_TABLENAME + " ("
+                + DBData.PLAYLIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DBData.PLAYLIST_TITLE + " VARCHAR(100), "
+                + DBData.MUSIC_ID + " VARCHAR(100), "
+                + DBData.MUSIC_NAME + " VARCHAR(100), "
+                + DBData.MUSIC_FILENAME + " VARCHAR(100), "
+                + DBData.MUSIC_PATH + " VARCHAR(300), "
+                + DBData.MUSIC_TIME + " VARCHAR(100), "
+                + DBData.MUSIC_SIZE + " VARCHAR(100), "
+                + DBData.MUSIC_ARTIST + " VARCHAR(100), "
+                + DBData.MUSIC_ALBUM + " VARCHAR(100), "
+                + DBData.MUSIC_ALBUM_PIC + " VARCHAR(100), "
+                + DBData.MUSIC_YEARS + " VARCHAR(100)) "
+                );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        db.execSQL("DROP TABLE IF EXISTS " + DBData.MUSIC_TABLENAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DBData.LYRIC_TABLENAME);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.PLAYLIST_TABLENAME);
     }
 

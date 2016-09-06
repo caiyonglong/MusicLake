@@ -2,7 +2,6 @@ package com.cyl.music_hnust;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -100,15 +99,15 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.frag_main);
+        setContentView(R.layout.frag_my);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         myApplication = new MyApplication();
         mdatas = new ArrayList<>();
-        mRequestQueue = myApplication.getHttpQueues();
+//        mRequestQueue = myApplication.getHttpQueues();
         userinfo = UserStatus.getUserInfo(this);
 
-        imageLoader = myApplication.getImageLoader();
+//        imageLoader = myApplication.getImageLoader();
         handler = new MyHandler(this);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.id_swiperefreshlayout);

@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,26 +13,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
-import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.DownloadService;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
@@ -42,9 +32,7 @@ import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -264,8 +252,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     public void show(String msg){
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("提示")
-                .setMessage(msg)
-                .setIcon(R.mipmap.ic_launcher);
+                .setMessage(msg);
                 setPositiveButton(builder);
                 setNegativeButton(builder)
                 .create()
@@ -296,7 +283,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 //        int items;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌曲下载")
-                .setIcon(R.mipmap.ic_launcher)
                 .setAdapter(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

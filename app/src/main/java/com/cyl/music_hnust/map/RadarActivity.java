@@ -8,8 +8,6 @@ import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -21,17 +19,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.nearby.NearbySearch;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
@@ -133,8 +128,8 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
 
         user = UserStatus.getUserInfo(getApplicationContext());
         application = new MyApplication();
-        mRequestQueue = application.getHttpQueues();
-        imageLoader = application.getImageLoader();
+//        mRequestQueue = application.getHttpQueues();
+//        imageLoader = application.getImageLoader();
 
 
         init();

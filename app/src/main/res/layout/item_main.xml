@@ -15,7 +15,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/id_cardview"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="2dp"
     android:layout_gravity="center"
@@ -23,80 +23,95 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="#FFFFFF"
     app:cardElevation="3dp"
-    app:cardMaxElevation="4dp"
+    app:cardMaxElevation="5dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="false"
-
-
     >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/container"
-
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
         android:descendantFocusability="blocksDescendants"
-        android:padding="8dp"
         >
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/user_logo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/user_icon_default_main" />
-
         <LinearLayout
+            android:layout_margin="5dp"
             android:orientation="horizontal"
-            android:layout_marginLeft="8dip"
-            android:layout_marginTop="4dp"
-            android:layout_alignBottom="@id/user_logo"
-            android:layout_alignTop="@id/user_logo"
-            android:layout_toRightOf="@id/user_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_weight="1"
-                android:textColor="@color/setting_blue"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="岁月抚伤"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:layout_width="80dp" />
-            <TextView
-                android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/user_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:textColor="@color/gray"
-                android:gravity="center_vertical"
-                android:text="发表于" />
+                android:layout_height="40dp">
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textColor="@color/setting_blue"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="岁月抚伤"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="80dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_weight="1"
-                android:id="@+id/content_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/setting_blue"
-                android:layout_alignBottom="@id/user_logo"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/user_logo"
-                android:scaleType="centerInside"
-                android:text="2016-3-15" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_query_builder_blue_grey_400_18dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/content_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/setting_blue"
+                        android:scaleType="centerInside"
+                        android:text="08-21" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
         </LinearLayout>
         <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/content_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="5"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/main_black"
+                android:layout_marginBottom="8dp"
+                android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
 
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/comment"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
@@ -107,7 +122,7 @@
                 android:layout_gravity="bottom"
                 android:background="#334A90E2"
                 android:layout_marginRight="5dp"
-                android:text="9评论"
+                android:text="9·评论"
                 android:padding="2dp"
                 android:textColor="@color/setting_blue" />
             <TextView
@@ -118,28 +133,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="#334A90E2"
-                android:text="985赞"
+                android:text="985·赞"
                 android:padding="2dp"
                 android:textColor="@color/setting_blue" />
         </LinearLayout>
 
-
-
-        <TextView
-            android:id="@+id/content_text"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:maxLines="4"
-            android:scaleX="0.96"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/user_logo"
-            android:textColor="@color/main_black"
-            android:layout_marginBottom="8dp"
-            android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
-
-
-
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

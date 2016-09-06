@@ -34,6 +34,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
@@ -238,7 +239,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             if (file1.exists())
                 head.setImageBitmap(getLoacalBitmap(path));
             else {
-                head.setImageResource(R.mipmap.user_icon_default_main);
+                head.setImageResource(R.drawable.ic_account_circle_black_24dp);
             }
 
         }

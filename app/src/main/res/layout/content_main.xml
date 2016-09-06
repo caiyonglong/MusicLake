@@ -91,20 +91,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-
-
-    <!--
-        这是一个浮动按钮。由于FloatingActionButton是重写ImageView的，
-        所有FloatingActionButton拥有ImageView的一切属性。
-
-        属性介绍：
-            app:backgroundTint : FAB的背景色。
-            app:elevation      ：FAB的阴影效果。
-            app:rippleColor    ：设置涟漪的颜色，默认是由背景色生成的暗色调，可以自己指定。
-            app:pressedTranslationZ  ：FAB动画效果，在它被按下的时候阴影就会增大。
--->
-
+z
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_dynamic"
         android:layout_width="wrap_content"

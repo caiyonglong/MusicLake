@@ -205,7 +205,6 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
             String path = "/storage/emulated/0/hkmusic/";
 
             list.add(new ScanInfo(path, true));
-            dao.queryAll(list);
 
             listinfo = MusicList.list;
 
@@ -220,7 +219,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
 
             //adapter = new ListAdapter(getActivity(), listinfo, 0);
             mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            MusicRecyclerViewAdapter adapter = new MusicRecyclerViewAdapter(getContext(), listinfo);
+            MusicRecyclerViewAdapter adapter = new MusicRecyclerViewAdapter(getActivity(), listinfo);
             adapter.setOnItemClickListener(this);
             list_download.setAdapter(adapter);
 
@@ -250,7 +249,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
                     R.layout.item_songs, item);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle("歌曲")
-                    .setIcon(R.mipmap.ic_launcher)
+                    .setIcon(R.mipmap.icon)
                     .setAdapter(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -258,10 +257,9 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
                                 DBDao dbDao = new DBDao(getContext());
 
                                 if (!listinfo.get(position).isFavorite()) {
-                                    dbDao.update(listinfo.get(position).getName(), true);
-                                    ToastUtil.show(getContext(), "添加成功");
+                                    ToastUtil.show(getActivity(), "添加成功");
                                 } else {
-                                    ToastUtil.show(getContext(), "已添加");
+                                    ToastUtil.show(getActivity(), "已添加");
                                 }
 
                             } else {
@@ -282,7 +280,7 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle("歌曲信息")
                     .setMessage(msg)
-                    .setIcon(R.mipmap.ic_launcher);
+                    .setIcon(R.mipmap.icon);
             setPositiveButton(builder)
                     .create()
                     .show();
@@ -381,13 +379,13 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         public void onItemClick(View view, int position) {
             switch (view.getId()){
                 case R.id.btn_stop:
-                    ToastUtil.show(getContext(),"点击了暂停");
+                    ToastUtil.show(getActivity(),"点击了暂停");
                     adapter.isPause[position] = true;
                     adapter.setChange(data.get(position));
                     handler.sendEmptyMessage(0);
                     break;
                 case R.id.btn_continue:
-                    ToastUtil.show(getContext(),"点击了继续");
+                    ToastUtil.show(getActivity(),"点击了继续");
                     adapter.setChange(data.get(position));
                     adapter.isPause[position] = false;
                     handler.sendEmptyMessage(0);

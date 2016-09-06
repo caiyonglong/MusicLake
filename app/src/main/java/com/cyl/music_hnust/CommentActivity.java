@@ -164,9 +164,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 .hideSoftInputFromWindow(CommentActivity.this.getCurrentFocus()
                         .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         application = new MyApplication();
-        mRequestQueue = application.getHttpQueues();
+//        mRequestQueue = application.getHttpQueues();
         handler = new MyHandler(this);
-        imageLoader = application.getImageLoader();
+//        imageLoader = application.getImageLoader();
 
         Intent it = getIntent();
         if (it.getIntExtra("flag", 0) == 0) {
@@ -220,7 +220,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         user_name.setText(mdatas.get(Integer.parseInt(position)).getUser().getNick());
         user_logo.setImageUrl(mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
-        user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
+        user_logo.setDefaultImageResId(R.drawable.ic_account_circle_black_24dp);
         content_text.setText(mdatas.get(Integer.parseInt(position)).getContent());
         content_time.setText(mdatas.get(Integer.parseInt(position)).getTime());
         item_action_comment.setText(comment_num + "评论");

@@ -24,7 +24,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="歌名 "
-                android:textColor="@color/gray"
+                android:textColor="@color/grey"
                 android:textSize="18dp" />
             <TextView
                 android:layout_width="wrap_content"
@@ -56,6 +56,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/gray" />
+        android:background="@color/grey" />
 
 </LinearLayout>

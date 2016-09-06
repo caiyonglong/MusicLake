@@ -26,7 +26,7 @@
             android:layout_marginLeft="10dp"
             android:background="@color/red"
             android:text="TextView"
-            android:textColor="@color/darkgrey"
+            android:textColor="@color/blueGrey"
             android:visibility="gone" />
 
         <RadioGroup

@@ -32,7 +32,6 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/icon_hnust"
                 app:layout_collapseMode="parallax" />
 
             <FrameLayout
@@ -45,7 +44,7 @@
                     android:id="@+id/head"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@mipmap/user_icon_default_main" />
+                    android:src="@drawable/ic_account_circle_black_24dp" />
 
             </FrameLayout>
 

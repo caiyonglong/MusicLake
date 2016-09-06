@@ -25,8 +25,9 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.MyActivity;
-import com.cyl.music_hnust.PlayerActivity;
+//import com.cyl.music_hnust.PlayerActivity;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.cyl.music_hnust.view.RoundCorner;
@@ -303,7 +304,7 @@ public class MusicPlayService extends Service {
                 MusicPlayService.this, 0, StartIntent2, 0);
 
         Intent intent = new Intent();
-        intent.setClass(this, PlayerActivity.class);
+        intent.setClass(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 intent, 0);
         RemoteViews rv = new RemoteViews(getPackageName(),
@@ -315,10 +316,10 @@ public class MusicPlayService extends Service {
                 m.getArtist().equals("未知艺术家") ? "music" : m.getArtist());
         if (mMediaPlayer.isPlaying()) {
             rv.setImageViewResource(R.id.notificationplay,
-                    R.drawable.notificapause);
+                    R.drawable.ic_pause_white_18dp);
         } else {
             rv.setImageViewResource(R.id.notificationplay,
-                    R.drawable.notificaplay);
+                    R.drawable.ic_play_arrow_white_18dp);
         }
         Bitmap bm = null;
         if (getSong().getAlbumPic() != null) {
@@ -336,13 +337,13 @@ public class MusicPlayService extends Service {
                         R.drawable.ic_launcher);
             }
         } else {
-            rv.setImageViewResource(R.id.gfdhstrdsga, R.mipmap.ic_launcher);
+            rv.setImageViewResource(R.id.gfdhstrdsga, R.mipmap.icon);
         }
 
         notif = new Notification.Builder(this)
                 .setAutoCancel(false)
                 .setTicker(from)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.icon)
                 .setContentTitle(from)
                 .setContentText(message)
                 .setContentIntent(contentIntent)

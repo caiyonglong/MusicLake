@@ -12,43 +12,34 @@ public class DBData {
      * 音乐数据库版本号
      */
     public static final int MUSIC_DB_VERSION = 1;
-    /**
-     * 音乐信息表
-     */
-    public static final String MUSIC_TABLENAME = "music";
-    /**
-     * 歌词信息表
-     */
-    public static final String LYRIC_TABLENAME = "lyric";
+
     /**
      * 歌单信息表
      */
     public static final String PLAYLIST_TABLENAME = "playlist";
 
     /**
+     * 歌单ID字段
+     */
+    public static final String PLAYLIST_ID = "id";
+    /**
+     * 歌单文件名字段(作为判断是否唯一存在)
+     */
+    public static final String PLAYLIST_TITLE = "name";
+
+
+    /**
      * 音乐ID字段
      */
     public static final String MUSIC_ID = "music_id";
     /**
-     * 音乐文件名称字段(作为判断是否唯一存在)
-     */
-    public static final String MUSIC_FILE = "file";
-    /**
      * 音乐名称字段
      */
-    public static final String MUSIC_NAME = "name";
+    public static final String MUSIC_NAME = "title";
     /**
      * 音乐路径字段
      */
-    public static final String MUSIC_PATH = "path";
-    /**
-     * 音乐所属文件夹字段
-     */
-    public static final String MUSIC_FOLDER = "folder";
-    /**
-     * 是否最喜爱音乐字段
-     */
-    public static final String MUSIC_FAVORITE = "favorite";
+    public static final String MUSIC_PATH = "uri";
     /**
      * 音乐时长字段
      */
@@ -62,10 +53,6 @@ public class DBData {
      */
     public static final String MUSIC_ARTIST = "artist";
     /**
-     * 音乐格式(编码类型)字段
-     */
-    public static final String MUSIC_FORMAT = "format";
-    /**
      * 音乐专辑字段
      */
     public static final String MUSIC_ALBUM = "album";
@@ -74,29 +61,13 @@ public class DBData {
      */
     public static final String MUSIC_ALBUM_PIC = "albumPic";
     /**
-     * 音乐艺术家字段
+     * 发行日期
      */
     public static final String MUSIC_YEARS = "years";
     /**
-     * 歌词ID字段
+     * 发行日期
      */
-    public static final String LYRIC_ID = "id";
-    /**
-     * 歌词文件名字段(作为判断是否唯一存在)
-     */
-    public static final String LYRIC_FILE = "file";
-    /**
-     * 歌词路径字段
-     */
-    public static final String LYRIC_PATH = "path";
+    public static final String MUSIC_FILENAME= "filename";
 
-    /**
-     * 歌单ID字段
-     */
-    public static final String PLAYLIST_ID = "id";
-    /**
-     * 歌单文件名字段(作为判断是否唯一存在)
-     */
-    public static final String PLAYLIST_TITLE = "name";
 
 }

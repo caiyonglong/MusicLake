@@ -25,7 +25,6 @@ import com.cyl.music_hnust.utils.Constants;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
@@ -74,8 +73,8 @@ public class NearPeopleAcivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_center_near);
         application = new MyApplication();
-        mRequestQueue =application.getHttpQueues();
-        imageLoader = application.getImageLoader();
+//        mRequestQueue =application.getHttpQueues();
+//        imageLoader = application.getImageLoader();
 
         handler = new MyHandler(this);
         Intent intent = getIntent();
@@ -101,7 +100,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
             }
             textViews[6].setText(intent.getStringExtra("nick").toString() == null ? "暂无" :
                     intent.getStringExtra("nick").toString());
-            head.setErrorImageResId(R.mipmap.user_icon_default_main);
+            head.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
             head.setImageUrl(intent.getStringExtra("img"), imageLoader);
         } else if (intent.getIntExtra("flag",0)==0) {
 
@@ -185,7 +184,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
 
 
 //            holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            head.setErrorImageResId(R.mipmap.user_icon_default_main);
+            head.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
             head.setImageUrl(userInfo.getUser_img(), imageLoader);
         }else {
             for (int i = 0; i < textViewId.length; i++) {
@@ -193,7 +192,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
             }
             textViews[6].setText(userInfo.getNick() == null ? "暂无" :
                     userInfo.getNick());
-            head.setErrorImageResId(R.mipmap.user_icon_default_main);
+            head.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
             head.setImageUrl(userInfo.getUser_img(), imageLoader);
         }
     }

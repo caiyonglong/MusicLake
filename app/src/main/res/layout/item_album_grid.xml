@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
+    android:layout_marginTop="2dp"
+    android:background="@drawable/bg_card"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/item_img"
+        android:layout_margin="5dp"
+        android:src="@drawable/bg_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+
+        <TextView
+            android:id="@+id/album_title"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:text="默认歌单"
+            android:layout_marginRight="15dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        <TextView
+            android:id="@+id/album_artist"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:singleLine="true"
+            android:text="创建时间：2016/8/14 14:50"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+    </LinearLayout>
+
+
+</LinearLayout>
+

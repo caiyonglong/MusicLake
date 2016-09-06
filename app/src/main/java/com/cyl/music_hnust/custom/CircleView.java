@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -81,7 +80,8 @@ public class CircleView extends View {
 
     private void init() {
         mPaint = new Paint();
-        mPaint.setColor(ContextCompat.getColor(mContext,R.color.bg_color_pink));
+//        mPaint.setColor(ContextCompat.getColor(mContext,R.color.bg_color_pink));
+        mPaint.setColor(R.color.bg_color_pink);
         mPaint.setAntiAlias(true);
     }
 

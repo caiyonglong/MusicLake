@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ public class LrcParser implements ILrcBuilder {
 
     public List<LrcRow> getLrcRows(String path) {
         String rawLrc = null;
-        rawLrc = converfile(path);
+//        rawLrc = converfile(path);
         Log.d(TAG, "getLrcRows by rawString\n"+rawLrc);
         if (rawLrc == null || rawLrc.length() == 0) {
             Log.e(TAG, "getLrcRows rawLrc null or empty");
@@ -46,18 +45,18 @@ public class LrcParser implements ILrcBuilder {
                 Log.d(TAG, "lrc raw line: " + line);
                 if (line != null && line.length() > 0) {
                     //解析每一行歌词 得到每行歌词的集合，因为有些歌词重复有多个时间，就可以解析出多个歌词行来
-                    List<LrcRow> lrcRows = LrcRow.createRows(line);
-                    if (lrcRows != null && lrcRows.size() > 0) {
-                        for (LrcRow row : lrcRows) {
-                            rows.add(row);
-                        }
-                    }
+//                    List<LrcRow> lrcRows = LrcRow.createRows(line);
+//                    if (lrcRows != null && lrcRows.size() > 0) {
+//                        for (LrcRow row : lrcRows) {
+//                            rows.add(row);
+//                        }
+//                    }
                 }
             } while (line != null);
 
             if (rows.size() > 0) {
                 // 根据歌词行的时间排序
-                Collections.sort(rows);
+//                Collections.sort(rows);
                 if (rows != null && rows.size() > 0) {
                     for (LrcRow lrcRow : rows) {
                         Log.d(TAG, "lrcRow:" + lrcRow.toString());
@@ -78,7 +77,7 @@ public class LrcParser implements ILrcBuilder {
         return rows;
     }
 
-    public String converfile(String filepath) {
+    public static String getStrignFromFile(String filepath) {
         System.out.println("ConvertFileCode--------->" + filepath);
         File file = new File(filepath);
         FileInputStream fis = null;

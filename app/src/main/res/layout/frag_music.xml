@@ -57,8 +57,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
                                 android:layout_centerInParent="true"
-                                android:layout_marginBottom="10dp"
-                                android:background="@mipmap/iconfont_music" />
+                                android:layout_marginBottom="10dp" />
 
                             <TextView
                                 android:id="@+id/localmusic_num"
@@ -66,7 +65,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:text="本地歌曲"
-                                android:textColor="@color/gray"
+                                android:textColor="@color/grey"
                                 android:textSize="20dp" />
 
                         </LinearLayout>
@@ -106,8 +105,7 @@
                             <ImageView
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_centerInParent="true"
-                                android:background="@drawable/mymusic_icon_download" />
+                                android:layout_centerInParent="true"/>
 
                             <TextView
 
@@ -115,7 +113,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:text="下载歌曲"
-                                android:textColor="@color/gray" />
+                                android:textColor="@color/grey" />
 
                         </LinearLayout>
 
@@ -147,15 +145,14 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_centerInParent="true"
-                                android:background="@drawable/mymusic_icon_favorite" />
-
+                              />
                             <TextView
                                 android:id="@+id/love_num"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:text="我的最爱"
-                                android:textColor="@color/gray" />
+                                android:textColor="@color/grey" />
 
                         </LinearLayout>
 
@@ -187,7 +184,7 @@
                         android:text="我的歌单"
                         android:layout_marginLeft="10dp"
                         android:layout_centerVertical="true"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/grey"
                         android:textSize="20sp" />
 
                     <ImageView
@@ -197,7 +194,7 @@
                         android:layout_marginRight="10dp"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/playlist_manage"
-                        android:background="@drawable/ic_add_folder" />
+                        android:background="@drawable/ic_add_white_24dp" />
 
                     <TextView
                         android:id="@+id/playlist_manage"
@@ -207,7 +204,7 @@
                         android:layout_centerVertical="true"
                         android:text="管理"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/grey"
                         android:textSize="20sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>

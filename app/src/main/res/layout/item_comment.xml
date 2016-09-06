@@ -26,17 +26,6 @@
             android:textColor="@color/main_black"
             android:text = "2016-3-16 0:13发表"
             />
-        <TextView
-            android:id="@+id/index_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text = "1楼"
-            android:gravity="center"
-            android:textColor="#888888"
-            android:layout_marginRight="4dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bg_comment_floor"
-            />
     </RelativeLayout>
     <TextView
         android:id="@+id/content_comment"

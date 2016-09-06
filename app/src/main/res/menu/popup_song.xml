@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_song_play"
+        android:title="播放" />
+
+    <item
+        android:id="@+id/popup_song_detail"
+        android:title="查看歌曲信息" />
+
+    <item
+        android:id="@+id/popup_song_goto_album"
+        android:title="查看专辑" />
+
+    <item
+        android:id="@+id/popup_song_goto_artist"
+        android:title="查看歌手信息" />
+
+    <item
+        android:id="@+id/popup_song_addto_queue"
+        android:title="添加到歌单" />
+</menu>

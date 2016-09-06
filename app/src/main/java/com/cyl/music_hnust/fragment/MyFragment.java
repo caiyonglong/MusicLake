@@ -2,30 +2,22 @@ package com.cyl.music_hnust.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.CommentActivity;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.LoginActivity;
@@ -37,8 +29,8 @@ import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.http.HttpUtil;
-import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -54,15 +46,12 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-import static android.net.Uri.encode;
-
 
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, MyRecyclerViewAdapter.OnItemClickListener {
+public class MyFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MyRecyclerViewAdapter.OnItemClickListener {
 
-    private View mView;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -75,6 +64,15 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     public static int position;
     public static boolean loadmoring = true;
     MyHandler handler;
+
+    public static MyFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        MyFragment fragment = new MyFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     private static class MyHandler extends Handler {
         private final WeakReference<MyFragment> myMusicfragment;
@@ -149,16 +147,28 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
     }
 
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.frag_main, container, false);
+    protected void listener() {
+
+    }
+
+    @Override
+    protected void initDatas() {
+
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.frag_my;
+    }
+
+    @Override
+    public void initViews() {
         myApplication = new MyApplication();
         mdatas = new ArrayList<>();
-        mRequestQueue = myApplication.getHttpQueues();
-
-        imageLoader = myApplication.getImageLoader();
-        return mView;
+//        mRequestQueue = myApplication.getHttpQueues();
+//
+//        imageLoader = myApplication.getImageLoader();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -169,8 +179,8 @@ public class MyFragment extends Fragment implements SwipeRefreshLayout.OnRefresh
         handler = new MyHandler(MyFragment.this);
 
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.id_swiperefreshlayout);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.id_recyclerview);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.id_swiperefreshlayout);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.id_recyclerview);
 
         configRecyclerView();
         volley_StringRequest_GET(0, null, null);

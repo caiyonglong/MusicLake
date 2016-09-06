@@ -36,13 +36,13 @@
 
             <TextView
                 android:id="@+id/tv_name"
-                android:textColor="@color/gray"
+                android:textColor="@color/grey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="文件名称" />
             <TextView
                 android:id="@+id/tv_per"
-                android:textColor="@color/gray"
+                android:textColor="@color/grey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10%" />

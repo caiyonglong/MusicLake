@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000" >
+    android:background="#000000" >
 
     <ImageView
         android:id="@+id/gfdhstrdsga"
@@ -10,8 +10,7 @@
         android:layout_height="49dp"
         android:layout_centerVertical="true"
         android:paddingLeft="2sp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher" />
+        android:scaleType="fitXY"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,15 +63,15 @@
 
         <ImageView
             android:id="@+id/notificationplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/notificapause" />
+            android:background="@drawable/ic_play_arrow_white_18dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
 
         <ImageView
             android:id="@+id/notificationnext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/notificanext" />
+            android:src="@drawable/ic_skip_next_white_24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
     </LinearLayout>
 
 </RelativeLayout>

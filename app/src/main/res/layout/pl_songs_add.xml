@@ -43,14 +43,14 @@
             android:id="@+id/songName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray"
+            android:textColor="@color/grey"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/singerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray"
+            android:textColor="@color/grey"
             android:textSize="12sp" />
     </LinearLayout>
 

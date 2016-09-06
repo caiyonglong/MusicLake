@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.cyl.music_hnust.adapter.AddMusicRecyclerviewAdapter;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ScanUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,7 +36,6 @@ public class AddSong2PlaylistActivity extends AppCompatActivity implements AddMu
 
     private final int UPDATEADAPTER = 111;
 
-    private ScanUtil scanUtil;
     private MyHandler handler;
 
 
@@ -78,7 +76,6 @@ public class AddSong2PlaylistActivity extends AppCompatActivity implements AddMu
 
         tempSong = new ArrayList<Integer>();
 
-        scanUtil = new ScanUtil(this);
         handler = new MyHandler(this);
 
         Intent it = getIntent();
@@ -130,7 +127,6 @@ public class AddSong2PlaylistActivity extends AppCompatActivity implements AddMu
                 for (int i = 0; i < tempSong.size(); i++) {
                     addSongTemp[i] = tempSong.get(i);
                 }
-                scanUtil.addplaylist(playlist, addSongTemp);
 
                 handler.sendEmptyMessage(1);
 
@@ -159,7 +155,6 @@ public class AddSong2PlaylistActivity extends AppCompatActivity implements AddMu
         /**
          * 获取数据库中所有的歌曲
          */
-        scanUtil.scanMusicFromDB();
         songs = MusicList.list;
 
         for (int i = 0; i < songs.size(); i++) {

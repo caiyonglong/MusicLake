@@ -15,34 +15,20 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.bean.Comment;
 import com.cyl.music_hnust.bean.Common;
-import com.cyl.music_hnust.bean.Dynamic;
 import com.cyl.music_hnust.bean.User;
 import com.cyl.music_hnust.bean.UserStatus;
-import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static android.net.Uri.encode;
 
 
 /**
@@ -98,7 +84,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             Log.e("edit",sharecontent);
         }
         application = new MyApplication();
-        mRequestQueue = application.getHttpQueues();
+//        mRequestQueue = application.getHttpQueues();
 
         initView();
 

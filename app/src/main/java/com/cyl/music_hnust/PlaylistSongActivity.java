@@ -23,7 +23,6 @@ import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ScanUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
@@ -50,7 +49,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
     private TimerTask myTimerTask;//定时器任务
     private final static int SETADAPTER = 111;
     private MusicPlayService mService;
-    private static ScanUtil scanUtil;
     MyHandler handler;
 
     private static RecyclerView.LayoutManager mLayoutManager;
@@ -86,7 +84,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
 
         handler =new MyHandler(PlaylistSongActivity.this);
 
-        scanUtil =new ScanUtil(this);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         Intent intent = getIntent();
@@ -190,7 +187,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
      */
     private static List<MusicInfo> getListItems() {
 
-        scanUtil.scanPlaylistSongFromDB(playlist);
         List<MusicInfo> list = MusicList.list;
         Log.e("result____list",list.size()+"");
         return list;
@@ -209,9 +205,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    scanUtil.deleteplaylist(playlist, Integer.parseInt(
-                            songs.get(positionInt).getId()
-                    ));
                     songs= getListItems();
                     adapter.mDatas = songs;
                     adapter.notifyDataSetChanged();
@@ -246,7 +239,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
 //        int items;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌曲")
-                .setIcon(R.mipmap.ic_launcher)
                 .setAdapter(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -254,7 +246,6 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
                             DBDao dbDao = new DBDao(getApplicationContext());
 
                             if (!songs.get(position).isFavorite()) {
-                                dbDao.update(songs.get(position).getName(), true);
                                 ToastUtil.show(getApplicationContext(), "添加成功");
                             } else {
                                 ToastUtil.show(getApplicationContext(), "已添加");
@@ -278,8 +269,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
     public void detailsshow(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("歌曲信息")
-                .setMessage(msg)
-                .setIcon(R.mipmap.ic_launcher);
+                .setMessage(msg);
         setPositiveButton(builder)
                 .create()
                 .show();

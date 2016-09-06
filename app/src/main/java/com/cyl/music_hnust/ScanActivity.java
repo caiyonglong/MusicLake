@@ -2,7 +2,6 @@ package com.cyl.music_hnust;
 
 import java.lang.ref.WeakReference;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.adapter.ScanAdapter;
-import com.cyl.music_hnust.utils.ScanUtil;
 
 
 /**
@@ -55,7 +53,6 @@ public class ScanActivity extends AppCompatActivity {
 	private ListView scanList;// 媒体库目录列表
 
 	private ScanHandler handler;
-	private ScanUtil manager;
 	private ScanAdapter adapter;
 
 	@Override
@@ -71,9 +68,6 @@ public class ScanActivity extends AppCompatActivity {
 		btnScan.setText(INFO_NORMAL);
 		scanText.setText(INFO_WAIT);
 
-		manager = new ScanUtil(getApplicationContext());
-		adapter = new ScanAdapter(getApplicationContext(),
-				manager.searchAllDirectory());
 		scanList.setAdapter(adapter);
 
 		// 页面结束
@@ -164,7 +158,6 @@ public class ScanActivity extends AppCompatActivity {
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 
-			manager.scanMusicFromSD(adapter.getPath(), handler);
 
 			return null;
 		}

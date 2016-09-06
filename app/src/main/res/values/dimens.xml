@@ -33,4 +33,9 @@
     <dimen name="play_btn_width">40dp</dimen>
 
     <dimen name="viewpager_margin">2dp</dimen>
+
+    <!--湖科音乐 3.0-->
+    <dimen name="play_bar_height">57dp</dimen>
+    <dimen name="text_size_common">16sp</dimen>
+    <dimen name="divider_height">0.5dp</dimen>
 </resources>

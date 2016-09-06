@@ -14,7 +14,7 @@
             android:layout_weight="1"
             android:visibility="gone"
             android:textColor="@color/main_black"
-            android:background="@drawable/btn_bg_style"
+            android:background="@drawable/btn_login"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="退出编辑"
@@ -25,7 +25,7 @@
 
             android:textColor="@color/main_black"
             android:visibility="gone"
-            android:background="@drawable/btn_bg_style"
+            android:background="@drawable/btn_login"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="添加歌曲"

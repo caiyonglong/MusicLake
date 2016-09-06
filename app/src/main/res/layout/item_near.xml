@@ -36,8 +36,7 @@
                 android:layout_margin="10dp"
                 android:layout_marginRight="10dp"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/user_icon_default_main" />
-
+/>
             <LinearLayout
 
                 android:layout_width="wrap_content"

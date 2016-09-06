@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "com.cyl.music_hnust"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.5.1"
+        versionCode 4
+        versionName "2.5"
     }
     buildTypes {
         release {
@@ -20,16 +20,36 @@ android {
 }
 
 dependencies {
-//    testCompile 'junit:junit:4.12'
+    //  testCompile 'junit:junit:4.12'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:cardview-v7:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:design:+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:cardview-v7:+'
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:support-v4:+'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'cn.pedant.sweetalert:library:1.3'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'com.android.support:support-v4:23.3.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    //RxJava and RxAndroid
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    //rxpermissions 6.0权限管理
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    //RxLifecycle 内存泄露
+    compile 'com.trello:rxlifecycle-components:0.6.1'
+    //黄油刀
+    compile 'com.jakewharton:butterknife:7.0.1'
+    //播放按钮
+    compile 'com.github.recruit-lifestyle:PlayPauseButton:1.0'
+    //    compile('com.afollestad.material-dialogs:core:0.8.5.3@aar') {
+    //        transitive = true
+    //    }
+    //    compile('com.afollestad.material-dialogs:commons:0.8.5.3@aar') {
+    //        transitive = true
+    //    }
+    compile 'com.zhy:okhttputils:2.3.8'
+    compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
+    compile 'com.google.code.gson:gson:2.6.2'
 }

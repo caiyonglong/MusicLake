@@ -1,18 +1,12 @@
 package com.cyl.music_hnust;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.audiofx.LoudnessEnhancer;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,16 +23,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.services.core.LatLonPoint;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
@@ -57,13 +46,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -145,8 +132,8 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         mService = MyActivity.mService;
         handler = new MyHandler(ShakeActivity.this);
         application = new MyApplication();
-        mRequestQueue = application.getHttpQueues();
-        imageLoader = application.getImageLoader();
+//        mRequestQueue = application.getHttpQueues();
+//        imageLoader = application.getImageLoader();
 
         context = getApplicationContext();
 //        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -346,8 +333,6 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
 
             holder.location_time.setText(distime );
             holder.user_distance.setVisibility(View.GONE);
-            holder.user_img.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setErrorImageResId(R.mipmap.user_icon_default_main);
             holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }

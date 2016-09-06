@@ -9,7 +9,7 @@
         android:id="@+id/back"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_common_title_bar_back" />
+        android:background="@drawable/ic_chevron_left_white_18dp" />
 
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/shake"

@@ -15,7 +15,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_common_title_bar_back"
+            android:background="@drawable/ic_chevron_left_white_18dp"
             />
 
         <TextView
