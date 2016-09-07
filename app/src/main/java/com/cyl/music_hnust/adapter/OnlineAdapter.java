@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.OnlineMusic;
+import com.cyl.music_hnust.model.OnlineMusicInfo;
 import com.cyl.music_hnust.model.OnlineMusicList;
 import com.cyl.music_hnust.model.OnlinePlaylistMusic;
 import com.cyl.music_hnust.utils.Constants;
@@ -69,10 +69,6 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
             });
         }
 
-//        holder.tv_1.setText(mData.get(position).getMusic1());
-//        holder.tv_2.setText(mData.get(position).getMusic2());
-//        holder.tv_3.setText(mData.get(position).getMusic3());
-//        holder.iv_cover.setImageBitmap();
         getMusicListInfo(mData.get(position),holder);
     }
 
@@ -131,7 +127,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
         }
     }
     private void parse(OnlineMusicList response, OnlinePlaylistMusic songListInfo) {
-        List<OnlineMusic> OnlineMusics = response.getSong_list();
+        List<OnlineMusicInfo> OnlineMusics = response.getSong_list();
         songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
         if (OnlineMusics.size() >= 1) {
             songListInfo.setMusic1(mContext.getString(R.string.song_list_item_title_1,

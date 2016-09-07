@@ -4,7 +4,7 @@ package com.cyl.music_hnust.model;
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
-public class OnlineMusic {
+public class OnlineMusicInfo {
     private String pic_big;
     private String pic_small;
     private String lrclink;

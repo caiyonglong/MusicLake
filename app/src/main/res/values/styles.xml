@@ -57,6 +57,7 @@
 
     <style name="AppTheme.Splash" parent="MyTheme">
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.Search" parent="MyTheme">

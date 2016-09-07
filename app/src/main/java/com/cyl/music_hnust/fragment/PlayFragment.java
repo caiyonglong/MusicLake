@@ -229,22 +229,22 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void setCoverAndBg(Music music) {
 
-        if (music.getType() == Music.Type.LOCAL) {
-//            if (music.getCoverUri().length()>0) {
-//                ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(music.getCoverUri())).toString(), civ_cover);
-//            }
-        } else {
-//            if (music.getCover() == null) {
-//                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
-//                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
-//            } else {
-//                Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
-//                cover = ImageUtils.createCircleImage(cover);
-//                mAlbumCoverView.setCoverBitmap(cover);
-//                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
-//                ivPlayingBg.setImageBitmap(bg);
-//            }
-        }
+//        if (music.getType() == Music.Type.LOCAL) {
+////            if (music.getCoverUri().length()>0) {
+////                ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(music.getCoverUri())).toString(), civ_cover);
+////            }
+//        } else {
+////            if (music.getCover() == null) {
+////                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
+////                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
+////            } else {
+////                Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
+////                cover = ImageUtils.createCircleImage(cover);
+////                mAlbumCoverView.setCoverBitmap(cover);
+////                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
+////                ivPlayingBg.setImageBitmap(bg);
+////            }
+//        }
         initAlbumpic();
     }
 
@@ -284,14 +284,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onStatusChange(View view, boolean state) {
         if (state){
             getmPlayService().playPause();
-            if (!operatingAnim.isRunning()) {
-                operatingAnim.resume();
-            }
         }else {
             getmPlayService().pause();
-            if (operatingAnim.isRunning()) {
-                operatingAnim.cancel();
-            }
         }
     }
 

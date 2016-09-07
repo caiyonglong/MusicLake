@@ -7,14 +7,14 @@ import java.util.List;
  * Created by wcy on 2015/12/20.
  */
 public class OnlineMusicList {
-    private List<OnlineMusic> song_list;
+    private List<OnlineMusicInfo> song_list;
     private JBillboard billboard;
 
-    public List<OnlineMusic> getSong_list() {
+    public List<OnlineMusicInfo> getSong_list() {
         return song_list;
     }
 
-    public void setSong_list(List<OnlineMusic> song_list) {
+    public void setSong_list(List<OnlineMusicInfo> song_list) {
         this.song_list = song_list;
     }
 
