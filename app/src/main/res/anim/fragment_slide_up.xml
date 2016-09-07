@@ -2,6 +2,6 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:duration="300"
-        android:fromXDelta="100%p"
-        android:toXDelta="0" />
+        android:fromYDelta="100%p"
+        android:toYDelta="0" />
 </set>

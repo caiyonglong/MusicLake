@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 功能：本地歌曲item
  * 作者：yonglong on 2016/8/8 19:44
  * 邮箱：643872807@qq.com
  * 版本：2.5

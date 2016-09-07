@@ -50,14 +50,14 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="Theme.Start" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@mipmap/bg</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <!--<style name="AppTheme.Splash" parent="MyTheme">-->
-        <!--<item name="android:windowIsTranslucent">true</item>-->
+    <!--<style name="Theme.Start" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--<item name="android:windowBackground">@mipmap/bg</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
     <!--</style>-->
+
+    <style name="AppTheme.Splash" parent="MyTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 
     <style name="AppTheme.Search" parent="MyTheme">
         <item name="colorAccent">@color/main_white</item>

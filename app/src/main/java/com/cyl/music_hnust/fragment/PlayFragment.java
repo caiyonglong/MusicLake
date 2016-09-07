@@ -1,18 +1,17 @@
 package com.cyl.music_hnust.fragment;
 
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -27,25 +26,31 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import jp.co.recruit_lifestyle.android.widget.PlayPauseButton;
 
 /**
+ * 功能：歌曲播放详情页
  * 作者：yonglong on 2016/8/21 23:12
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, PlayPauseButton.OnControlStatusChangeListener {
 
-    Toolbar toolbar;
-    RelativeLayout container;
-    ImageView skip_prev, skip_next;
+    //整个容器
+    LinearLayout container;
+    //图片按钮
+    ImageView skip_prev, skip_next ,iv_back;
+    //播放暂停按钮
     PlayPauseButton play_pause;
+    //textView
     TextView tv_title, tv_artist, tv_time, tv_duration;
     SeekBar sk_progress;
     List<View> mViewPagerContent;
     ViewPager mViewPager;
 
     private LrcView mLrcView;
+    private static CircleImageView civ_cover;
 
 
     @Override
@@ -53,26 +58,27 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         return R.layout.acitvity_player;
     }
 
+    /**
+     * 初始化控件
+     */
     @Override
     public void initViews() {
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        //初始化控件
         tv_title = (TextView) rootView.findViewById(R.id.song_title);
         tv_artist = (TextView) rootView.findViewById(R.id.song_artist);
         tv_time = (TextView) rootView.findViewById(R.id.song_elapsed_time);
         tv_duration = (TextView) rootView.findViewById(R.id.song_duration);
         sk_progress = (SeekBar) rootView.findViewById(R.id.song_progress);
         skip_prev = (ImageView) rootView.findViewById(R.id.previous);
+        iv_back = (ImageView) rootView.findViewById(R.id.iv_back);
         skip_next = (ImageView) rootView.findViewById(R.id.next);
         play_pause = (PlayPauseButton) rootView.findViewById(R.id.play_pause);
-        container = (RelativeLayout) rootView.findViewById(R.id.container);
+        container = (LinearLayout) rootView.findViewById(R.id.container);
         mViewPager = (ViewPager) rootView.findViewById(R.id.viewpager_player);
 
-        if (toolbar != null) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            final ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle("");
-        }
+        //初始化沉淀式标题栏
+        initSystemBar();
+        //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
             mViewPager.setOffscreenPageLimit(3);
@@ -80,22 +86,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_my, menu);
-//    }
 
+    /**
+     * 一些监听事件
+     */
     @Override
     protected void listener() {
         skip_next.setOnClickListener(this);
         skip_prev.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
         sk_progress.setOnSeekBarChangeListener(this);
         play_pause.setOnControlStatusChangeListener(this);
     }
@@ -106,21 +105,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         onPlay(getmPlayService().getPlayingMusic());
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            getActivity().onBackPressed();
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toolbar.setEnabled(true);
-                }
-            }, 300);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onUpdate(int progress) {
         sk_progress.setProgress(progress);
@@ -141,6 +125,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         sk_progress.setMax((int) music.getDuration());
         sk_progress.setProgress(0);
         setLrc(music);
+        setCoverAndBg(music);
 
     }
 
@@ -153,6 +138,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.next:
                 getmPlayService().next();
                 break;
+            case R.id.iv_back:
+                onBackPressed();;
+                break;
         }
 
     }
@@ -164,6 +152,20 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             int top = StatusBarCompat.getStatusBarHeight(getActivity());
             container.setPadding(0, top, 0, 0);
         }
+    }
+
+    /**
+     * 退出播放页
+     */
+    private void onBackPressed() {
+        getActivity().onBackPressed();
+        iv_back.setEnabled(false);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                iv_back.setEnabled(true);
+            }
+        }, 300);
     }
 
     @Override
@@ -188,7 +190,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
+    /**
+     * 设置歌词路径
+     * @param music
+     */
     private void setLrc(final Music music) {
         if (music.getType() == Music.Type.LOCAL) {
             String uri = music.getUri();
@@ -202,31 +207,91 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 loadLrc("");
             }
         }
-//        else {
+        else {
 //            String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
 //            loadLrc(lrcPath);
-//        }
+        }
     }
 
+    /**
+     * 歌词视图加载歌词
+     * @param path
+     */
     private void loadLrc(String path) {
         mLrcView.loadLrc(path);
         // 清除tag
 //        mLrcView.setTag(null);
     }
+
+    /**
+     * 初始化歌词图片
+     * @param music
+     */
+    private void setCoverAndBg(Music music) {
+
+        if (music.getType() == Music.Type.LOCAL) {
+//            if (music.getCoverUri().length()>0) {
+//                ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(music.getCoverUri())).toString(), civ_cover);
+//            }
+        } else {
+//            if (music.getCover() == null) {
+//                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
+//                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
+//            } else {
+//                Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
+//                cover = ImageUtils.createCircleImage(cover);
+//                mAlbumCoverView.setCoverBitmap(cover);
+//                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
+//                ivPlayingBg.setImageBitmap(bg);
+//            }
+        }
+        initAlbumpic();
+    }
+
+    private static Context mContext;
+    public static ObjectAnimator operatingAnim;
+
+
+    public static void initAlbumpic() {
+        /**
+         * 旋转动画
+         */
+        LinearInterpolator lin = new LinearInterpolator();
+
+        operatingAnim = ObjectAnimator.ofFloat(civ_cover, "rotation", 0, 360);
+        operatingAnim.setDuration(10000);
+        operatingAnim.setRepeatCount(-1);
+        operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
+        operatingAnim.setInterpolator(lin);
+
+        operatingAnim.start();
+    }
     private void setupViewPager(ViewPager viewPager) {
+        //歌词视图
         View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_lrcview, null);
         mLrcView  = (LrcView) lrcView.findViewById(R.id.LyricShow);
-        mViewPagerContent = new ArrayList<>(1);
+        //专辑视图
+        View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_coverview, null);
+        civ_cover  = (CircleImageView) lrcView.findViewById(R.id.civ_cover);
+        mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(lrcView);
+        mViewPagerContent.add(coverView);
         viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onStatusChange(View view, boolean state) {
         if (state){
             getmPlayService().playPause();
+            if (!operatingAnim.isRunning()) {
+                operatingAnim.resume();
+            }
         }else {
             getmPlayService().pause();
+            if (operatingAnim.isRunning()) {
+                operatingAnim.cancel();
+            }
         }
     }
 
@@ -236,7 +301,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     public void onPlayerPause() {
         play_pause.setPlayed(false);
+
+
     }
+
+
 
 
     //适配viewpager

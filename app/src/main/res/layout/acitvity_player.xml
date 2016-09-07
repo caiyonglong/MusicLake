@@ -1,29 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/container"
-    android:background="@drawable/p4">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/p6" />
 
-        <ImageView
-            android:id="@+id/album_art"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucent_black"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="top"
-            android:background="@android:color/transparent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/play_page_back_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_down" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/song_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="无音乐"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_common" />
+
+                <TextView
+                    android:id="@+id/song_artist"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/center_View"
@@ -53,34 +88,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_gravity="left"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/song_title"
-                        android:textColor="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="130dp"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:id="@+id/song_artist"
-                        android:textColor="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingTop="3dp"
-
-                        android:textSize="14sp" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -193,5 +200,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </RelativeLayout>
-</RelativeLayout>
+    </LinearLayout>
+</FrameLayout>
