@@ -5,39 +5,66 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
+
 /**
  * Created by 永龙 on 2016/3/19.
  */
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BaseActivity {
 
     RelativeLayout container;
+    private PermissionCallback permissionReadstorageCallback = new PermissionCallback() {
+        @Override
+        public void permissionGranted() {
+            loadEverything();
+
+        }
+
+        @Override
+        public void permissionRefused() {
+            finish();
+        }
+    };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-        container = (RelativeLayout) findViewById(R.id.container);
-        initSystemBar();
-        new Handler().postDelayed(new splashhandler(), 1000);
-
+    protected void listener() {
 
     }
 
-    private void init() {
-        String[] mPermissionList = new String[]{Manifest.permission.CHANGE_CONFIGURATION,Manifest.permission.CHANGE_WIFI_STATE,Manifest.permission.WAKE_LOCK,Manifest.permission.WRITE_SETTINGS,Manifest.permission.VIBRATE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE};
-        if(Build.VERSION.SDK_INT>=23){
-            requestPermissions(mPermissionList,100);
+    @Override
+    protected void initDatas() {
+        Nammu.init(this);
+        new Handler().postDelayed(new splashhandler(), 1000);
 
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_welcome;
+    }
+
+    @Override
+    public void initViews(Bundle savedInstanceState) {
+        container = (RelativeLayout) findViewById(R.id.container);
+        initSystemBar();
+    }
+
+    private void loadEverything() {
+       init();
+    }
+
+    private void init() {
             Intent intent =new Intent(WelcomeActivity.this,MainActivity.class);
             startActivity(intent);
             WelcomeActivity.this.finish();
-        }
     }
     /**
      * 沉浸式状态栏
@@ -49,13 +76,36 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    class splashhandler implements Runnable{
+    private void checkPermissionAndThenLoad() {
 
-        public void run() {
-            init();
+        //check for permission
+        if (Nammu.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            loadEverything();
+        } else {
+            if (Nammu.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Snackbar.make(container, "软件必须获取相关权限",
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Nammu.askForPermission(WelcomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, permissionReadstorageCallback);
+                            }
+                        }).show();
+            } else {
+                Nammu.askForPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, permissionReadstorageCallback);
+            }
         }
-
     }
 
 
+    private class splashhandler implements Runnable{
+        @Override
+        public void run() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                checkPermissionAndThenLoad();
+            } else {
+                loadEverything();
+            }
+        }
+    }
 }

@@ -21,7 +21,13 @@ import java.io.File;
 
 
 public class MyApplication extends Application {
+	private static MyApplication sInstance;
 	private static Resources sRes;
+
+
+	public static MyApplication getInstance() {
+		return sInstance;
+	}
 
 	@Override
 	public void onCreate() {

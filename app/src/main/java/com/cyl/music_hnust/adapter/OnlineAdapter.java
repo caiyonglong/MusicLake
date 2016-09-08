@@ -12,7 +12,7 @@ import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.OnlineMusicInfo;
 import com.cyl.music_hnust.model.OnlineMusicList;
-import com.cyl.music_hnust.model.OnlinePlaylistMusic;
+import com.cyl.music_hnust.model.OnlinePlaylist;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,7 +31,7 @@ import okhttp3.Call;
 public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder> {
 
     private Context mContext;
-    public List<OnlinePlaylistMusic> mData = new ArrayList<>();
+    public List<OnlinePlaylist> mData = new ArrayList<>();
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -43,7 +43,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
     }
 
 
-    public OnlineAdapter(Context context, RecyclerView mRecyclerView, List<OnlinePlaylistMusic> mData) {
+    public OnlineAdapter(Context context, RecyclerView mRecyclerView, List<OnlinePlaylist> mData) {
         this.mContext = context;
         this.mData = mData;
     }
@@ -92,16 +92,16 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     }
 
-    private void getMusicListInfo(final OnlinePlaylistMusic songListInfo, final ItemHolder holder) {
-        if (songListInfo.getCoverUrl() == null) {
-            holder.iv_cover.setTag(songListInfo.getTitle());
+    private void getMusicListInfo(final OnlinePlaylist mPlaylist, final ItemHolder holder) {
+        if (mPlaylist.getCoverUrl() == null) {
+            holder.iv_cover.setTag(mPlaylist.getTitle());
             holder.iv_cover.setImageResource(R.drawable.ic_account_circle_black_24dp);
             holder.tv_1.setText("1.加载中…");
             holder.tv_2.setText("2.加载中…");
             holder.tv_3.setText("3.加载中…");
             OkHttpUtils.get().url(Constants.BASE_URL)
                     .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
-                    .addParams(Constants.PARAM_TYPE, songListInfo.getType())
+                    .addParams(Constants.PARAM_TYPE, mPlaylist.getType())
                     .addParams(Constants.PARAM_SIZE, "3")
                     .build()
                     .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
@@ -110,11 +110,11 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
                             if (response == null || response.getSong_list() == null) {
                                 return;
                             }
-                            if (!songListInfo.getTitle().equals(holder.iv_cover.getTag())) {
+                            if (!mPlaylist.getTitle().equals(holder.iv_cover.getTag())) {
                                 return;
                             }
-                            parse(response, songListInfo);
-                            setData(songListInfo, holder);
+                            parse(response, mPlaylist);
+                            setData(mPlaylist, holder);
                         }
 
                         @Override
@@ -122,37 +122,37 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
                         }
                     });
         } else {
-            //holder.ivCover.setTag(null);
-            setData(songListInfo, holder);
+            holder.iv_cover.setTag(null);
+            setData(mPlaylist, holder);
         }
     }
-    private void parse(OnlineMusicList response, OnlinePlaylistMusic songListInfo) {
+    private void parse(OnlineMusicList response, OnlinePlaylist mPlaylist) {
         List<OnlineMusicInfo> OnlineMusics = response.getSong_list();
-        songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
+        mPlaylist.setCoverUrl(response.getBillboard().getPic_s260());
         if (OnlineMusics.size() >= 1) {
-            songListInfo.setMusic1(mContext.getString(R.string.song_list_item_title_1,
+            mPlaylist.setMusic1(mContext.getString(R.string.song_list_item_title_1,
                     OnlineMusics.get(0).getTitle(), OnlineMusics.get(0).getArtist_name()));
         } else {
-            songListInfo.setMusic1("");
+            mPlaylist.setMusic1("");
         }
         if (OnlineMusics.size() >= 2) {
-            songListInfo.setMusic2(mContext.getString(R.string.song_list_item_title_2,
+            mPlaylist.setMusic2(mContext.getString(R.string.song_list_item_title_2,
                     OnlineMusics.get(1).getTitle(), OnlineMusics.get(1).getArtist_name()));
         } else {
-            songListInfo.setMusic2("");
+            mPlaylist.setMusic2("");
         }
         if (OnlineMusics.size() >= 3) {
-            songListInfo.setMusic3(mContext.getString(R.string.song_list_item_title_3,
+            mPlaylist.setMusic3(mContext.getString(R.string.song_list_item_title_3,
                     OnlineMusics.get(2).getTitle(), OnlineMusics.get(2).getArtist_name()));
         } else {
-            songListInfo.setMusic3("");
+            mPlaylist.setMusic3("");
         }
     }
-    private void setData(OnlinePlaylistMusic songListInfo, ItemHolder holder) {
-        ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
-        holder.tv_1.setText(songListInfo.getMusic1());
-        holder.tv_2.setText(songListInfo.getMusic2());
-        holder.tv_3.setText(songListInfo.getMusic3());
+    private void setData(OnlinePlaylist mPlaylist, ItemHolder holder) {
+        ImageLoader.getInstance().displayImage(mPlaylist.getCoverUrl(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
+        holder.tv_1.setText(mPlaylist.getMusic1());
+        holder.tv_2.setText(mPlaylist.getMusic2());
+        holder.tv_3.setText(mPlaylist.getMusic3());
     }
 
 

@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.OnlineMusicInfo;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
         this.mOnItemClickListener = listener;
     }
 
-    public OnlineMusicAdapter(Context context, RecyclerView mRecyclerView, List<OnlineMusicInfo> musicInfos) {
+    public OnlineMusicAdapter(Context context, List<OnlineMusicInfo> musicInfos) {
         this.context = context;
         this.musicInfos = musicInfos;
     }
@@ -52,7 +54,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         OnlineMusicInfo localItem = musicInfos.get(position);
-//        ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(localItem.geta())).toString(), holder.albumArt, ImageUtils.getAlbumDisplayOptions());
+        ImageLoader.getInstance().displayImage(localItem.getPic_small(), holder.albumArt, ImageUtils.getCoverDisplayOptions());
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist_name());
 

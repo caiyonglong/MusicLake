@@ -105,5 +105,8 @@ public class MusicUtils {
         DBDao dbDao = new DBDao(context);
         return dbDao.newPlaylist(playlist);
     }
+    /**
+     * 扫描本地歌曲
+     */
 
 }

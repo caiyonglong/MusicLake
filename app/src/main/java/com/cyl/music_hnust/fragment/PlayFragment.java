@@ -274,8 +274,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_coverview, null);
         civ_cover  = (CircleImageView) lrcView.findViewById(R.id.civ_cover);
         mViewPagerContent = new ArrayList<>(2);
-        mViewPagerContent.add(lrcView);
+
         mViewPagerContent.add(coverView);
+        mViewPagerContent.add(lrcView);
         viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
     }
 

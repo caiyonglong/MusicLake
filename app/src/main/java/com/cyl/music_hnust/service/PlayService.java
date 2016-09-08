@@ -14,6 +14,7 @@ import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.OnlinePlaylist;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.Preferences;
 
@@ -28,6 +29,7 @@ import java.util.Random;
  * 版本：2.5 播放service
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
+
 
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -58,6 +60,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     private OnPlayerListener mListener;
     private NotificationManager mNotificationManager;
+
+    //缓存的歌单
+    public List<OnlinePlaylist> mSongLists = new ArrayList<>();
 
     @Override
     public void onCreate() {

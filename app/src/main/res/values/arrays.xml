@@ -58,7 +58,6 @@
 
         <item>KTV热歌榜</item>
         <item>Billboard</item>
-        <item>Hito中文榜</item>
         <item>叱咤歌曲榜</item>
     </string-array>
     <string-array name="online_music_list_type">
@@ -75,7 +74,6 @@
 
     <item>6</item>
     <item>8</item>
-    <item>18</item>
     <item>7</item>
     </string-array>
 

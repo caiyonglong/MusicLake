@@ -1,11 +1,13 @@
 package com.cyl.music_hnust.model;
 
+import java.io.Serializable;
+
 /**
  * 作者：yonglong on 2016/8/16 23:36
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class OnlinePlaylistMusic {
+public class OnlinePlaylist implements Serializable {
     private String title;
     /**
      * 1.新歌榜
@@ -21,7 +23,6 @@ public class OnlinePlaylistMusic {
      *
      * 6.KTV热歌榜
      * 8.Billboard
-     * 18.Hito中文榜
      * 7.叱咤歌曲榜
      */
     private String type;

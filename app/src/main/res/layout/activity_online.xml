@@ -35,15 +35,6 @@
                 android:orientation="vertical"/>
 
 
-            <!--<FrameLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_margin="@dimen/fab_margin">-->
-
-            <!--</FrameLayout>-->
-
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -58,19 +49,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <!--第二部分：主要内容，NestedScrollView和ScrollView基本功能一致，只不过NestedScrollView可以兼容新的控件-->
-    <android.support.v4.widget.NestedScrollView
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/xrecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-        </android.support.v7.widget.RecyclerView>
 
-    </android.support.v4.widget.NestedScrollView>
+    </com.jcodecraeer.xrecyclerview.XRecyclerView>
 
 
 
