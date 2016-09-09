@@ -69,6 +69,7 @@ public class OnlineMusicActivity extends BaseActivity {
         mRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -77,7 +78,12 @@ public class OnlineMusicActivity extends BaseActivity {
 
     @Override
     protected void listener() {
-
+        mAdapter.setOnItemClickListener(new OnlineMusicAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                play(mMusicLists.get(position - 1));
+            }
+        });
     }
 
     @Override
