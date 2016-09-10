@@ -69,6 +69,8 @@ public class OnlineMusicActivity extends BaseActivity {
         mRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.loading));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
@@ -81,7 +83,7 @@ public class OnlineMusicActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new OnlineMusicAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                play(mMusicLists.get(position - 1));
+                play(mMusicLists.get(position));
             }
         });
     }
@@ -115,12 +117,14 @@ public class OnlineMusicActivity extends BaseActivity {
             public void onRefresh() {
                 //refresh data here
                 getMusic(mOffset);
+                mRecyclerView.refreshComplete();
             }
 
             @Override
             public void onLoadMore() {
                 // load more data here
                 getMusic(mOffset);
+                mRecyclerView.loadMoreComplete();
             }
         });
     }

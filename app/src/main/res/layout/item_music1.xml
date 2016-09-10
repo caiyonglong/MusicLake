@@ -21,6 +21,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:scaleType="fitXY"
+        android:elevation="1dp"
         android:src="@drawable/default_cover" />
 
     <FrameLayout

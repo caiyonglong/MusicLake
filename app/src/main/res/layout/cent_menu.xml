@@ -4,14 +4,14 @@
     android:id="@+id/play_control"
     android:layout_width="fill_parent"
     android:layout_height="57dp"
-    android:layout_gravity="top"
-    android:background="?attr/windowBackground">
+    android:elevation="3dp"
+    android:layout_gravity="top">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:background="#aaf5f5f5"
+        android:background="?attr/windowBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -20,7 +20,7 @@
             android:layout_width="57dp"
             android:layout_height="57dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_empty_music2" />
+            android:src="@drawable/default_cover" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:maxHeight="5dp"
+                android:maxHeight="3dp"
                 android:progress="30"
                 android:tag="tint_accent_color" />
 

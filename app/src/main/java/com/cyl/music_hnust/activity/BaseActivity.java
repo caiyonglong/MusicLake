@@ -3,6 +3,7 @@ package com.cyl.music_hnust.activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -17,16 +18,22 @@ import butterknife.ButterKnife;
  * @date 2016/8/3
  */
 public abstract class BaseActivity extends RxAppCompatActivity {
+
+    protected Handler mHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //设置布局内容
         setContentView(getLayoutId());
 
+
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
         //初始化控件
         initViews(savedInstanceState);
+        mHandler = new Handler();
+
         initDatas();
         listener();
 

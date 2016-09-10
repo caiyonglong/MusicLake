@@ -77,6 +77,6 @@
 
     <color name="window_background">#FFF5F5F5</color>
     <color name="progressBackgroundColorLight">#33000000</color>
-    <color name="progressBackgroundColorDark">#33ffffff</color>
+    <color name="progressBackgroundColorDark">#ffffff</color>
 
 </resources>

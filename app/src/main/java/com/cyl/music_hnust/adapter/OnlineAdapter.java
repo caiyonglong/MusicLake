@@ -1,6 +1,7 @@
 package com.cyl.music_hnust.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_online, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_online_large, null);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -79,10 +80,11 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     public class ItemHolder extends RecyclerView.ViewHolder {
         protected TextView title, tv_1,tv_2,tv_3;
-        protected ImageView iv_cover;
+        protected ImageView iv_cover,iv_bg_cover;
 
         public ItemHolder(View view) {
             super(view);
+            this.iv_bg_cover = (ImageView) view.findViewById(R.id.iv_bg_cover);
             this.iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
             this.title = (TextView) view.findViewById(R.id.tv_music);
             this.tv_1 = (TextView) view.findViewById(R.id.tv_music_1);
@@ -149,7 +151,10 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
         }
     }
     private void setData(OnlinePlaylist mPlaylist, ItemHolder holder) {
-        ImageLoader.getInstance().displayImage(mPlaylist.getCoverUrl(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(mPlaylist.getCoverUrl(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
+        Bitmap bmp = imageLoader.loadImageSync(mPlaylist.getCoverUrl());
+        holder.iv_bg_cover.setImageBitmap(ImageUtils.fastBlur(mContext,bmp,2,1));
         holder.tv_1.setText(mPlaylist.getMusic1());
         holder.tv_2.setText(mPlaylist.getMusic2());
         holder.tv_3.setText(mPlaylist.getMusic3());

@@ -11,6 +11,7 @@ import com.cyl.music_hnust.activity.OnlineMusicActivity;
 import com.cyl.music_hnust.adapter.OnlineAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.OnlinePlaylist;
+import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.view.DividerItemDecoration;
 
 import java.util.ArrayList;
@@ -46,11 +47,12 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     }
     @Override
     protected void initDatas() {
-//        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-//            tv_empty.setVisibility(View.VISIBLE);
-//            tv_empty.setText("网络连接异常\\(^o^)/~");
-//            return;
-//        }
+        if (!NetworkUtils.isAvailable(getActivity())) {
+            tv_empty.setVisibility(View.VISIBLE);
+            tv_empty.setText("网络连接异常\\(^o^)/~");
+            recyclerView.setVisibility(View.GONE);
+            return;
+        }
 //        mPlaylists = getmPlayService().mSongLists;
         if (mPlaylists.isEmpty()) {
             String[] titles=getResources().getStringArray(R.array.online_music_list_title);

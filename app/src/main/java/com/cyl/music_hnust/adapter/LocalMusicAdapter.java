@@ -57,7 +57,11 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-        ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(localItem.getCoverUri())).toString(), holder.albumArt, ImageUtils.getAlbumDisplayOptions());
+        try {
+            ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(localItem.getCoverUri())).toString(), holder.albumArt, ImageUtils.getAlbumDisplayOptions());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist());
 

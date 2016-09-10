@@ -112,5 +112,6 @@
     <string name="cancel">取消</string>
     <string name="now_play">正在播放</string>
     <string name="unable_to_play">无法播放播放</string>
+    <string name="loading">努力加载中...</string>
 
 </resources>

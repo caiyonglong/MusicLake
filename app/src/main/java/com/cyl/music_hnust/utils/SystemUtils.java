@@ -1,6 +1,7 @@
 package com.cyl.music_hnust.utils;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -53,6 +54,18 @@ public class SystemUtils {
                 .build();
         return builder;
     }
+    //判断是否是android 6.0
+    public static boolean isMarshmallow() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+    //判断是否是android 5.0
+    public static boolean isLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+    //判断是否是android 4.0
+    public static boolean isKITKAT() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
 
     /**
      * 格式化时间
@@ -90,6 +103,19 @@ public class SystemUtils {
             fileSize = df.format((double) size / 1073741824) + "GB";
         }
         return fileSize;
+    }
+
+    /**
+     * 判断Service是否在运行
+     */
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
