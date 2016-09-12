@@ -22,7 +22,7 @@
         android:layout_marginRight="10dp" />
 
     <include
-        layout="@layout/cent_menu"
+        layout="@layout/play_control_menu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/play_bar_height"
         android:layout_alignParentBottom="true" />

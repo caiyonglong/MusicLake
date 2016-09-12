@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +16,7 @@ import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.MusicUtils;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnItemClickListener {
 
-    RecyclerView recyclerView;
+    XRecyclerView recyclerView;
     TextView tv_empty;
 
     private static LocalMusicAdapter mAdapter;
@@ -66,7 +66,9 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     @Override
     protected void initDatas() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new LocalMusicAdapter(getActivity(), recyclerView, musicInfos);
+        recyclerView.setRefreshing(false);
+        recyclerView.setLoadingMoreEnabled(false);
+        mAdapter = new LocalMusicAdapter(getActivity(), musicInfos);
 
         if (musicInfos.size() == 0) {
             tv_empty.setText("请稍后，本地音乐加载中...");
@@ -89,7 +91,8 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
      */
     @Override
     public void initViews() {
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+        recyclerView = (XRecyclerView) rootView.findViewById(R.id.recyclerview);
+
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
     }
 

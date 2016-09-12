@@ -27,9 +27,18 @@ public class OnlinePlaylist implements Serializable {
      */
     private String type;
     private String coverUrl;
+    private String coverbgUrl;
     private String music1;
     private String music2;
     private String music3;
+
+    public String getCoverbgUrl() {
+        return coverbgUrl;
+    }
+
+    public void setCoverbgUrl(String coverbgUrl) {
+        this.coverbgUrl = coverbgUrl;
+    }
 
     public String getCoverUrl() {
         return coverUrl;

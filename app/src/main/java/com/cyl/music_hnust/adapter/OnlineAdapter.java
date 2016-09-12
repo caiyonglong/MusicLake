@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +43,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
     }
 
 
-    public OnlineAdapter(Context context, RecyclerView mRecyclerView, List<OnlinePlaylist> mData) {
+    public OnlineAdapter(Context context, List<OnlinePlaylist> mData) {
         this.mContext = context;
         this.mData = mData;
     }
@@ -60,7 +59,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
 
-        holder.title.setText(mData.get(position).getTitle());
+//        holder.tv_1.setText(mData.get(position).getTitle());
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,7 +68,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
                 }
             });
         }
-
+//        setData(mData.get(position),holder);
         getMusicListInfo(mData.get(position),holder);
     }
 
@@ -86,7 +85,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
             super(view);
             this.iv_bg_cover = (ImageView) view.findViewById(R.id.iv_bg_cover);
             this.iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
-            this.title = (TextView) view.findViewById(R.id.tv_music);
+//            this.title = (TextView) view.findViewById(R.id.tv_music);
             this.tv_1 = (TextView) view.findViewById(R.id.tv_music_1);
             this.tv_2 = (TextView) view.findViewById(R.id.tv_music_2);
             this.tv_3 = (TextView) view.findViewById(R.id.tv_music_3);
@@ -150,11 +149,9 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
             mPlaylist.setMusic3("");
         }
     }
-    private void setData(OnlinePlaylist mPlaylist, ItemHolder holder) {
+    private void setData(OnlinePlaylist mPlaylist, final ItemHolder holder) {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(mPlaylist.getCoverUrl(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
-        Bitmap bmp = imageLoader.loadImageSync(mPlaylist.getCoverUrl());
-        holder.iv_bg_cover.setImageBitmap(ImageUtils.fastBlur(mContext,bmp,2,1));
         holder.tv_1.setText(mPlaylist.getMusic1());
         holder.tv_2.setText(mPlaylist.getMusic2());
         holder.tv_3.setText(mPlaylist.getMusic3());

@@ -42,8 +42,6 @@ dependencies {
     compile 'com.trello:rxlifecycle-components:0.6.1'
     //黄油刀
     compile 'com.jakewharton:butterknife:7.0.1'
-    //播放按钮
-    compile 'com.github.recruit-lifestyle:PlayPauseButton:1.0'
     //    compile('com.afollestad.material-dialogs:core:0.8.5.3@aar') {
     //        transitive = true
     //    }

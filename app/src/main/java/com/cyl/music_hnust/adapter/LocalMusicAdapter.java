@@ -41,7 +41,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         this.mOnItemClickListener = listener;
     }
 
-    public LocalMusicAdapter(Context context, RecyclerView mRecyclerView, List<Music> musicInfos) {
+    public LocalMusicAdapter(Context context, List<Music> musicInfos) {
         this.context = context;
         this.musicInfos = musicInfos;
     }

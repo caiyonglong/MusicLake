@@ -179,12 +179,18 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1">
-                    <jp.co.recruit_lifestyle.android.widget.PlayPauseButton
+                    <com.cyl.music_hnust.view.PlayPauseButton
                         android:id="@+id/play_pause"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@color/setting_blue"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
                         android:layout_gravity="center" />
+
+                    <View
+                        android:id="@+id/playpausewrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
                 </FrameLayout>
 
                 <ImageView

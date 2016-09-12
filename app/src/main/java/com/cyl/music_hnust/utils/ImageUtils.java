@@ -1,20 +1,8 @@
 package com.cyl.music_hnust.utils;
 
-import android.annotation.TargetApi;
 import android.content.ContentUris;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
-import android.os.Build;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 
 import com.cyl.music_hnust.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -57,96 +45,45 @@ public class ImageUtils {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), paramInt);
     }
 
-    /**
-     * 快速模糊
-     * <p>先缩小原图，对小图进行模糊，再放大回原先尺寸</p>
-     *
-     * @param context 上下文
-     * @param src     源图片
-     * @param scale   缩小倍数
-     * @param radius  模糊半径
-     * @return 模糊后的图片
-     */
-    public static Bitmap fastBlur(Context context, Bitmap src, int scale, float radius) {
-        if (isEmptyBitmap(src)) return null;
-        int width = src.getWidth();
-        int height = src.getHeight();
-        int scaleWidth = width / scale;
-        int scaleHeight = height / scale;
-        if (scaleWidth == 0 || scaleHeight == 0) return null;
-        Bitmap scaled = Bitmap.createBitmap(scaleWidth, scaleHeight, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(scaled);
-        canvas.scale(1 / (float) scale, 1 / (float) scale);
-        Paint paint = new Paint();
-        paint.setFlags(Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG);
-        PorterDuffColorFilter filter = new PorterDuffColorFilter(
-                Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
-        paint.setColorFilter(filter);
-        canvas.drawBitmap(src, 0, 0, paint);
-        if (!src.isRecycled()) src.recycle();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            scaled = renderScriptBlur(context, scaled, radius);
-        } else {
-            scaled = stackBlur(scaled, (int) radius, true);
-        }
-        if (scale == 1) return scaled;
-        Bitmap res = Bitmap.createScaledBitmap(scaled, width, height, true);
-        if (scaled != null && !scaled.isRecycled()) scaled.recycle();
-        return res;
-    }
+    public static final int BLUR_RADIUS = 50;
 
     /**
-     * renderScript模糊图片
-     * <p>API大于17</p>
-     *
-     * @param context 上下文
-     * @param src     源图片
-     * @param radius  模糊度(0...25)
-     * @return 模糊后的图片
+     * 模糊图片
+     * @param sentBitmap
+     * @param radius
+     * @return
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static Bitmap renderScriptBlur(Context context, Bitmap src, float radius) {
-        if (isEmptyBitmap(src)) return null;
-        RenderScript rs = null;
-        try {
-            rs = RenderScript.create(context);
-            rs.setMessageHandler(new RenderScript.RSMessageHandler());
-            Allocation input = Allocation.createFromBitmap(rs, src, Allocation.MipmapControl.MIPMAP_NONE, Allocation
-                    .USAGE_SCRIPT);
-            Allocation output = Allocation.createTyped(rs, input.getType());
-            ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-            if (radius > 25) {
-                radius = 25.0f;
-            } else if (radius <= 0) {
-                radius = 1.0f;
-            }
-            blurScript.setInput(input);
-            blurScript.setRadius(radius);
-            blurScript.forEach(output);
-            output.copyTo(src);
-        } finally {
-            if (rs != null) {
-                rs.destroy();
-            }
-        }
-        return src;
-    }
+    public static Bitmap blur(Bitmap sentBitmap, int radius) {
 
-    /**
-     * stack模糊图片
-     *
-     * @param src              源图片
-     * @param radius           模糊半径
-     * @param canReuseInBitmap 是否回收
-     * @return stackBlur模糊图片
-     */
-    public static Bitmap stackBlur(Bitmap src, int radius, boolean canReuseInBitmap) {
-        Bitmap bitmap;
-        if (canReuseInBitmap) {
-            bitmap = src;
-        } else {
-            bitmap = src.copy(src.getConfig(), true);
-        }
+        // Stack Blur v1.0 from
+        // http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
+        //
+        // Java Author: Mario Klingemann <mario at quasimondo.com>
+        // http://incubator.quasimondo.com
+        // created Feburary 29, 2004
+        // Android port : Yahel Bouaziz <yahel at kayenko.com>
+        // http://www.kayenko.com
+        // ported april 5th, 2012
+
+        // This is a compromise between Gaussian Blur and Box blur
+        // It creates much better looking blurs than Box Blur, but is
+        // 7x faster than my Gaussian Blur implementation.
+        //
+        // I called it Stack Blur because this describes best how this
+        // filter works internally: it creates a kind of moving stack
+        // of colors whilst scanning through the image. Thereby it
+        // just has to add one new block of color to the right side
+        // of the stack and remove the leftmost color. The remaining
+        // colors on the topmost layer of the stack are either added on
+        // or reduced by one, depending on if they are on the right or
+        // on the left side of the stack.
+        //
+        // If you are using this algorithm in your code please add
+        // the following line:
+        //
+        // Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
+
+        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
         if (radius < 1) {
             return (null);
@@ -340,7 +277,9 @@ public class ImageUtils {
                 yi += w;
             }
         }
+
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+
         return (bitmap);
     }
 

@@ -76,6 +76,26 @@ public class WelcomeActivity extends BaseActivity {
     private void checkPermissionAndThenLoad() {
         Nammu.init(this);
         //check for permission
+        String[] mPermissionList = new String[]{
+                Manifest.permission.CHANGE_CONFIGURATION,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.WAKE_LOCK,
+                Manifest.permission.WRITE_SETTINGS,
+                Manifest.permission.VIBRATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_LOGS,
+                Manifest.permission.READ_PHONE_STATE,
+
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+
+                //定位权限
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
         if (Nammu.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             checkService();
         } else {
@@ -89,7 +109,7 @@ public class WelcomeActivity extends BaseActivity {
                             }
                         }).show();
             } else {
-                Nammu.askForPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, permissionReadstorageCallback);
+                Nammu.askForPermission(this, mPermissionList, permissionReadstorageCallback);
             }
         }
     }

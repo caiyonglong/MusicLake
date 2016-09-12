@@ -161,14 +161,11 @@ public class OnlineMusicActivity extends BaseActivity {
                     public void onResponse(OnlineMusicList response) {
                         mMusicList = response;
                         if (offset == 0 && response == null) {
-//                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                             return;
                         } else if (offset == 0) {
 //                            initHeader();
-//                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         }
                         if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
-//                            lvOnlineMusic.setEnable(false);
                             mRecyclerView.loadMoreComplete();
                             return;
                         }
@@ -179,15 +176,13 @@ public class OnlineMusicActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e) {
-//                        lvOnlineMusic.onLoadComplete();
+                        mRecyclerView.loadMoreComplete();
                         if (e instanceof RuntimeException) {
                             // 歌曲全部加载完成
-//                            lvOnlineMusic.setEnable(false);
-                            mRecyclerView.loadMoreComplete();
+                            mRecyclerView.setLoadingMoreEnabled(false);
                             return;
                         }
                         if (offset == 0) {
-//                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                         } else {
 //                            ToastUtils.show(R.string.load_fail);
                         }

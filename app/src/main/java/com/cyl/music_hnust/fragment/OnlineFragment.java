@@ -1,18 +1,21 @@
 package com.cyl.music_hnust.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.OnlineMusicActivity;
 import com.cyl.music_hnust.adapter.OnlineAdapter;
+import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.OnlinePlaylist;
-import com.cyl.music_hnust.utils.NetworkUtils;
-import com.cyl.music_hnust.view.DividerItemDecoration;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.List;
  */
 public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItemClickListener {
 
-    RecyclerView recyclerView;
+    XRecyclerView mRecyclerView;
     //适配器
     private OnlineAdapter mAdapter;
     //排行榜集合
@@ -34,26 +37,66 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview;
+        return R.layout.frag_recyclerview_online;
     }
 
     @Override
     public void initViews() {
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (XRecyclerView) rootView.findViewById(R.id.xrecyclerview);
+
 
 
     }
     @Override
     protected void initDatas() {
-        if (!NetworkUtils.isAvailable(getActivity())) {
+        init();
+
+        //初始化列表
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        //适配器
+        mAdapter = new OnlineAdapter(getActivity(), mPlaylists);
+
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                init();
+                mAdapter.notifyDataSetChanged();
+                //refresh data here
+                mRecyclerView.refreshComplete();
+            }
+
+            @Override
+            public void onLoadMore() {
+                // load more data here
+                mRecyclerView.loadMoreComplete();
+            }
+        });
+
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener(this);
+    }
+
+    /**
+     * 初始化列表,当无数据时显示提示
+     */
+    private void init() {
+        if (!NetworkUtil.isNetworkAvailable(getContext())) {
+            tv_empty.setText("暂无音乐!");
             tv_empty.setVisibility(View.VISIBLE);
-            tv_empty.setText("网络连接异常\\(^o^)/~");
-            recyclerView.setVisibility(View.GONE);
-            return;
+            mRecyclerView.setVisibility(View.GONE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            tv_empty.setVisibility(View.GONE);
         }
-//        mPlaylists = getmPlayService().mSongLists;
         if (mPlaylists.isEmpty()) {
             String[] titles=getResources().getStringArray(R.array.online_music_list_title);
             String[] types=getResources().getStringArray(R.array.online_music_list_type);
@@ -64,19 +107,32 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
                 mPlaylists.add(info);
             }
         }
-        //适配器
-        mAdapter = new OnlineAdapter(getActivity(),recyclerView, mPlaylists);
-        mAdapter.setOnItemClickListener(this);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST, R.drawable.item_divider_white));
-
     }
 
     @Override
-    protected void listener() {
-
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_my, menu);
+    }
+
+    /**
+     * 菜单点击事件
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onItemClick(View view, int position) {

@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -138,7 +137,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         layoutParams.setMargins(0, -(mProgressBar.getMeasuredHeight() / 2), 0, 0);
         mProgressBar.setLayoutParams(layoutParams);
         mProgressBar.setProgress(0);
-        mProgressBar.setBackgroundColor(Color.WHITE);
 
 
         setNavigationView();

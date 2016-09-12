@@ -222,7 +222,7 @@
     </ScrollView>
 
     <include
-        layout="@layout/cent_menu"
+        layout="@layout/play_control_menu"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true" />

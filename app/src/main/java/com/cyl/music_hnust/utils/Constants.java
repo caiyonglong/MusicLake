@@ -11,6 +11,7 @@ public class Constants {
 
     //社区后台操作php
     public static final String DEFAULT_URL = "http://119.29.27.116/hcyl/music_BBS/operate.php?";
+    public static final String DEFAULT_USER_URL = "http://119.29.27.116/hcyl/music_BBS/operate.php";
 
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";

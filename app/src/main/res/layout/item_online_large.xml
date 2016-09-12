@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="130dp"
     android:background="@drawable/bg_card"
-    android:layout_margin="2dp">
+    android:layout_margin="1dp">
     <ImageView
         android:id="@+id/iv_bg_cover"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="10dp">
@@ -34,14 +35,13 @@
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
                 android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tv_music_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:text="1.加载中…"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_music_2"
@@ -50,7 +50,7 @@
                 android:layout_marginTop="5dp"
                 android:singleLine="true"
                 android:text="2.加载中…"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_music_3"
@@ -59,9 +59,9 @@
                 android:layout_marginTop="5dp"
                 android:singleLine="true"
                 android:text="3.加载中…"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

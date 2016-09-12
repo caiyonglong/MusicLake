@@ -27,12 +27,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         //设置布局内容
         setContentView(getLayoutId());
 
+        mHandler = new Handler();
 
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
         //初始化控件
         initViews(savedInstanceState);
-        mHandler = new Handler();
 
         initDatas();
         listener();

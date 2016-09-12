@@ -414,7 +414,7 @@ public class MusicFragment1 extends Fragment implements View.OnClickListener, My
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
 //        mPopupWindow = new PopupWindow(popupWindow, ViewGroup.LayoutParams.MATCH_PARENT,
 //                getActivity().getWindowManager().getDefaultDisplay().getHeight()
-//                        - cent_menu.getHeight()-70, true);
+//                        - play_control_menu.getHeight()-70, true);
         // 实例化一个ColorDrawable颜色为半透明
         ColorDrawable dw = new ColorDrawable(0x99ffffff);
         mPopupWindow.setBackgroundDrawable(dw);

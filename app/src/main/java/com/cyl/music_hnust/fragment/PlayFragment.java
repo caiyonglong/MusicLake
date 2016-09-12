@@ -21,13 +21,13 @@ import com.cyl.music_hnust.lyric.LrcView;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.cyl.music_hnust.view.PlayPauseButton;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import jp.co.recruit_lifestyle.android.widget.PlayPauseButton;
 
 /**
  * 功能：歌曲播放详情页

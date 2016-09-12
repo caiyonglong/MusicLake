@@ -10,7 +10,6 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +26,7 @@ import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ToastUtil;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class PlaylistFragment extends BaseFragment {
 
-    RecyclerView recyclerView;
+    XRecyclerView recyclerView;
     TextView tv_empty;
     EditText et_playlist;
     private GridLayoutManager mLayoutManager;
@@ -68,7 +68,7 @@ public class PlaylistFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+        recyclerView = (XRecyclerView) rootView.findViewById(R.id.recyclerview);
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
@@ -80,12 +80,35 @@ public class PlaylistFragment extends BaseFragment {
 
         mAdapter = new PlaylistAdapter(getActivity(),recyclerView,musicInfos,onRecyclerItemClick);
         recyclerView.setAdapter(mAdapter);
-        if (musicInfos.size()==0){
-            tv_empty.setVisibility(View.VISIBLE);
-            tv_empty.setText("暂无歌单，请新建歌单！\n点击右上角菜单\\(^o^)/~");
-        }else {
-            tv_empty.setVisibility(View.GONE);
-        }
+
+        recyclerView.setLoadingMoreEnabled(false);
+        recyclerView.setEmptyView(tv_empty);
+        recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                recyclerView.refreshComplete();
+                if (musicInfos.size()==0){
+                    tv_empty.setVisibility(View.VISIBLE);
+                    tv_empty.setText("暂无歌单，请新建歌单！\n点击右上角菜单\\(^o^)/~");
+                }else {
+                    tv_empty.setVisibility(View.GONE);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (musicInfos.size()==0){
+                    tv_empty.setVisibility(View.VISIBLE);
+                    tv_empty.setText("暂无歌单，请新建歌单！\n点击右上角菜单\\(^o^)/~");
+                }else {
+                    tv_empty.setVisibility(View.GONE);
+                }
+                recyclerView.loadMoreComplete();
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
 
     }
     @Override

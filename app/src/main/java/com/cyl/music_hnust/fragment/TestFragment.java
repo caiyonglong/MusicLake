@@ -95,7 +95,7 @@ public class TestFragment extends BaseFragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new LocalMusicAdapter(getContext(),mRecyclerView, musicInfos);
+        mAdapter = new LocalMusicAdapter(getContext(), musicInfos);
         mRecyclerView.setAdapter(mAdapter);
     }
 
