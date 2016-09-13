@@ -120,7 +120,7 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         @Override
         public void run() {
             //查询所有音乐
-            musicInfos = MusicUtils.scanMusic(getActivity());
+            MusicUtils.scanMusic(getActivity(),musicInfos);
             myHandler.sendEmptyMessage(0);
         }
     };

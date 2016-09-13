@@ -1,6 +1,8 @@
 package com.cyl.music_hnust.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 
 import com.cyl.music_hnust.R;
 
@@ -9,31 +11,11 @@ import com.cyl.music_hnust.R;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class CommunityActivity extends BaseActivity{
-
-
-    @Override
-    protected void listener() {
-
-    }
+public class CommunityActivity extends FragmentActivity{
 
     @Override
-    protected void initDatas() {
-
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.acitvity_community);
     }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.acitvity_community;
-    }
-
-    @Override
-    public void initViews(Bundle savedInstanceState) {
-        /**以下代码为demo中使用，开发者使用不需要添加**/
-
-
-
-    }
-
-
 }

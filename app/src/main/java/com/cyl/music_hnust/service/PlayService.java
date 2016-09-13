@@ -99,7 +99,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 每次启动时扫描音乐
      */
     public void updateMusicList() {
-        myMusicList= MusicUtils.scanMusic(this);
+        MusicUtils.scanMusic(this,myMusicList);
         if (getMusicList().isEmpty()) {
             return;
         }

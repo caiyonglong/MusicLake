@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -33,8 +34,7 @@ import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.service.OnPlayerListener;
 import com.cyl.music_hnust.service.PlayService;
-import com.cyl.music_hnust.utils.ImageUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.cyl.music_hnust.utils.CoverLoader;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -191,14 +191,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_com:
                 item.setChecked(true);
-                runnable= new Runnable() {
-                    public void run() {
-                        if (myFragment==null) {
-                            myFragment = new MyFragment();
-                        }
-                        switchFragment(mainFragment);
-                    }
-                };
+                Intent intent4 = new Intent(this,RegisterActivity.class);
+                startActivity(intent4);
                 break;
             case R.id.nav_menu_msg:
                 item.setChecked(true);
@@ -292,7 +286,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return;
         }
         play_state(true);
-        ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(music.getCoverUri())).toString(),album, ImageUtils.getAlbumDisplayOptions());
+        Bitmap cover;
+        if (music.getCover() == null) {
+            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+        } else {
+            cover = music.getCover();
+        }
+        album.setImageBitmap(cover);
         tv_title.setText(music.getTitle());
         tv_artist.setText(music.getArtist());
         mProgressBar.setMax((int) music.getDuration());

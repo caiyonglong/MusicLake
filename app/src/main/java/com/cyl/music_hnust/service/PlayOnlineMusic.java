@@ -35,8 +35,8 @@ public abstract class PlayOnlineMusic {
     private int mCounter = 0;
 
     public PlayOnlineMusic(Context context, OnlineMusicInfo mOnlineMusic) {
-        mContext = context;
-        mOnlineMusic = mOnlineMusic;
+        this.mContext = context;
+        this.mOnlineMusic = mOnlineMusic;
     }
 
     public void execute() {

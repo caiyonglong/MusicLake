@@ -6,14 +6,22 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
@@ -25,8 +33,15 @@ import com.cyl.music_hnust.model.OnlinePlaylist;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.SizeUtils;
+import com.cyl.music_hnust.utils.StatusBarCompat;
+import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
@@ -39,11 +54,12 @@ import okhttp3.Call;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class OnlineMusicActivity extends BaseActivity {
+public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdapter.OnItemClickListener {
 
 
     private OnlinePlaylist mListInfo;
     private OnlineMusicList mMusicList;
+    LinearLayout main_content;
 
     private List<OnlineMusicInfo> mMusicLists = new ArrayList<>();
     private OnlineMusicAdapter mAdapter;
@@ -68,7 +84,7 @@ public class OnlineMusicActivity extends BaseActivity {
 
         mRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        main_content = (LinearLayout) findViewById(R.id.main_content);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
 
@@ -80,12 +96,7 @@ public class OnlineMusicActivity extends BaseActivity {
 
     @Override
     protected void listener() {
-        mAdapter.setOnItemClickListener(new OnlineMusicAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                play(mMusicLists.get(position));
-            }
-        });
+        mAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -105,12 +116,16 @@ public class OnlineMusicActivity extends BaseActivity {
     @Override
     protected void initDatas() {
         bindService();
-
+        vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_header, null);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this,150));
+        vHeader.setLayoutParams(params);
+        initSystemBar();
         mAdapter = new OnlineMusicAdapter(this, mMusicLists);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addHeaderView(vHeader);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -128,6 +143,16 @@ public class OnlineMusicActivity extends BaseActivity {
             }
         });
     }
+    /**
+     * 沉浸式状态栏
+     */
+    private void initSystemBar() {
+        if (SystemUtils.isKITKAT()) {
+            int top = StatusBarCompat.getStatusBarHeight(this);
+            main_content.setPadding(0, top, 0, 0);
+        }
+    }
+
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
@@ -163,7 +188,7 @@ public class OnlineMusicActivity extends BaseActivity {
                         if (offset == 0 && response == null) {
                             return;
                         } else if (offset == 0) {
-//                            initHeader();
+                            initHeader();
                         }
                         if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
                             mRecyclerView.loadMoreComplete();
@@ -202,8 +227,9 @@ public class OnlineMusicActivity extends BaseActivity {
             @Override
             public void onSuccess(Music music) {
                 mProgressDialog.cancel();
+                Log.e("***********",music.toString());
                 mPlayService.playMusic(music);
-                ToastUtil.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
+//                ToastUtil.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
             }
 
             @Override
@@ -218,5 +244,30 @@ public class OnlineMusicActivity extends BaseActivity {
     protected void onDestroy() {
         unbindService(mPlayServiceConnection);
         super.onDestroy();
+    }
+
+    @SuppressLint("StringFormatInvalid")
+    private void initHeader() {
+        final ImageView ivHeaderBg = (ImageView) vHeader.findViewById(R.id.iv_header_bg);
+        final ImageView ivCover = (ImageView) vHeader.findViewById(R.id.iv_cover);
+        TextView tvTitle = (TextView) vHeader.findViewById(R.id.tv_title);
+        TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
+        TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
+        tvTitle.setText(mMusicList.getBillboard().getName());
+        tvUpdateDate.setText(getString(R.string.recent_update, mMusicList.getBillboard().getUpdate_date()));
+        tvComment.setText(mMusicList.getBillboard().getComment());
+        ImageSize imageSize = new ImageSize(200, 200);
+        ImageLoader.getInstance().loadImage(mMusicList.getBillboard().getPic_s640(), imageSize,
+                ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        ivCover.setImageBitmap(loadedImage);
+                        ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
+                    }
+                });
+    }
+    @Override
+    public void onItemClick(View view, int position) {
+        play(mMusicLists.get(position));
     }
 }

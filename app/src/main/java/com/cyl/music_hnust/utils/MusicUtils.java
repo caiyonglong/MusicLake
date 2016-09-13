@@ -22,14 +22,13 @@ public class MusicUtils {
     /**
      * 扫描本地歌曲
      */
-    public static List<Music> scanMusic(Context context){
-        List<Music> musicList=new ArrayList<>();
+    public static void scanMusic(Context context, List<Music> musicList){
         musicList.clear();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {
-            return musicList;
+            return;
         }
         while (cursor.moveToNext()) {
             // 是否为音乐
@@ -46,8 +45,8 @@ public class MusicUtils {
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-//            String coverUri = getCoverUri(context, albumId);
-            String coverUri = String.valueOf(albumId);
+            String coverUri = getCoverUri(context, albumId);
+//            String coverUri = String.valueOf(albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
             String year = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)));
@@ -66,7 +65,6 @@ public class MusicUtils {
             musicList.add(music);
         }
         cursor.close();
-        return musicList;
     }
 
     private static String getCoverUri(Context context, long albumId) {
@@ -79,7 +77,7 @@ public class MusicUtils {
             uri = cursor.getString(0);
             cursor.close();
         }
-//        CoverLoader.getInstance().loadThumbnail(uri);
+        CoverLoader.getInstance().loadThumbnail(uri);
         return uri;
     }
 

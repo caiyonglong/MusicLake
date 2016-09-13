@@ -5,6 +5,7 @@ buildscript {
         jcenter()
 
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.3'
 
@@ -23,8 +24,8 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
-
 }
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

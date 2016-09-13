@@ -1,6 +1,10 @@
 package com.cyl.music_hnust.utils;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+
+import com.cyl.music_hnust.application.MyApplication;
 
 /**
  * 作者：yonglong on 2016/8/22 19:20
@@ -8,6 +12,18 @@ import android.content.Context;
  * 版本：2.5
  */
 public class SizeUtils {
+
+    /**
+     * 获取屏幕的宽度px
+     *
+     */
+    public static int getScreenWidth() {
+        WindowManager windowManager = (WindowManager) MyApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();// 创建了一张白纸
+        windowManager.getDefaultDisplay().getMetrics(outMetrics);// 给白纸设置宽高
+        return outMetrics.widthPixels;
+    }
+
     /**
      * dp转px
      *
@@ -41,7 +57,7 @@ public class SizeUtils {
      */
     public static float sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return  (spValue * fontScale + 0.5f);
+        return (spValue * fontScale + 0.5f);
     }
 
     /**
@@ -53,6 +69,6 @@ public class SizeUtils {
      */
     public static float px2sp(Context context, float pxValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return  (pxValue / fontScale + 0.5f);
+        return (pxValue / fontScale + 0.5f);
     }
 }

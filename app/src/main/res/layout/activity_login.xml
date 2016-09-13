@@ -52,13 +52,13 @@
                 android:layout_height="wrap_content">
                 <android.support.design.widget.TextInputLayout
 
+                    android:id="@+id/usernameWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText
                         android:hint="@string/Username"
                         android:textSize="16sp"
                         android:textColor="@color/black"
-                        android:id="@+id/et_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
@@ -72,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/passwordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText

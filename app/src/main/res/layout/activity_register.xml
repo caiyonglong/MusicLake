@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.LoginActivity">
+    >
 
     <FrameLayout
         android:layout_centerInParent="true"
@@ -37,12 +36,34 @@
                     android:textStyle="bold"
                     />
                 <LinearLayout
+                    android:paddingStart="50dp"
+                    android:paddingEnd="30dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/emailWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:textSize="13sp"
+                            android:textColor="#f0f7f4"
+                            android:hint="请输入有效邮箱，便于找回密码"
+                            android:id="@+id/et_repeatpassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_marginTop="10dp"
                     android:paddingStart="50dp"
                     android:paddingEnd="30dp"
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/userNameWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -63,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
                     <android.support.design.widget.TextInputLayout
-
+                        android:id="@+id/passWordWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -77,26 +98,7 @@
                            />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
-                <LinearLayout
-                    android:paddingStart="50dp"
-                    android:paddingEnd="30dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <EditText
-                            android:textSize="13sp"
-                            android:textColor="#f0f7f4"
-                            android:hint="@string/repeat_password"
-                            android:id="@+id/et_repeatpassword"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                           />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
+
                 <Button
                     android:layout_marginTop="20dp"
                     android:layout_gravity="center_horizontal"

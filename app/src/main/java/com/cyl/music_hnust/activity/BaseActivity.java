@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected Handler mHandler;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

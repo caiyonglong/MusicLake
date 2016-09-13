@@ -1,6 +1,7 @@
 package com.cyl.music_hnust.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,10 +15,9 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,11 +57,8 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-        try {
-            ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(localItem.getCoverUri())).toString(), holder.albumArt, ImageUtils.getAlbumDisplayOptions());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
+        holder.albumArt.setImageBitmap(cover);
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist());
 

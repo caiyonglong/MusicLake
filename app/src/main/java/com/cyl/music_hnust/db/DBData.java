@@ -17,6 +17,10 @@ public class DBData {
      * 歌单信息表
      */
     public static final String PLAYLIST_TABLENAME = "playlist";
+    /**
+     * 歌单信息表
+     */
+    public static final String MUSIC_TABLENAME = "music";
 
     /**
      * 歌单ID字段
