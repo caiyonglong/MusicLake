@@ -2,12 +2,14 @@ package com.cyl.music_hnust.model;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * 作者：yonglong on 2016/8/9 10:50
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Music {
+public class Music implements Serializable {
     // 歌曲类型 本地/网络
     private Type type;
     // [本地歌曲]歌曲id
@@ -18,6 +20,8 @@ public class Music {
     private String artist;
     // 专辑
     private String album;
+    // 专辑id
+    private long albumId;
     // 持续时间
     private long duration;
     // 音乐路径
@@ -32,6 +36,14 @@ public class Music {
     private long fileSize;
     // 发行日期
     private String year;
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
 
     public String getAlbum() {
         return album;

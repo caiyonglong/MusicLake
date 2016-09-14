@@ -99,7 +99,7 @@ public class MusicSimpleFragment extends BaseFragment {
 //        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new LocalMusicAdapter(getContext(), musicInfos);
+//        mAdapter = new LocalMusicAdapter(getContext(), musicInfos);
         mRecyclerView.setAdapter(mAdapter);
     }
 

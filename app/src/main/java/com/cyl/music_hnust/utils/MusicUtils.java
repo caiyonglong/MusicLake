@@ -4,12 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.db.DBDao;
+import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,6 +57,7 @@ public class MusicUtils {
             music.setTitle(title);
             music.setArtist(artist);
             music.setAlbum(album);
+            music.setAlbumId(albumId);
             music.setDuration(duration);
             music.setUri(uri);
             music.setCoverUri(coverUri);
@@ -82,15 +84,13 @@ public class MusicUtils {
     }
 
     /**
-     * 扫描歌单
+     * 全部歌单
      * @param context
      * @return
      */
-    public static List<String> scanPlaylist(Context context){
-        List<String> playlists = new ArrayList<>();
+    public static List<LocalPlaylist> scanPlaylist(Context context){
         DBDao dbDao = new DBDao(context);
-        playlists = dbDao.getPlaylist();
-        return playlists;
+        return dbDao.getPlaylist();
     }
 
     /**
@@ -99,12 +99,27 @@ public class MusicUtils {
      * @param playlist
      * @return
      */
-    public static Boolean addPlaylist(Context context,String playlist){
+    public static Boolean newPlaylist(Context context,LocalPlaylist playlist){
         DBDao dbDao = new DBDao(context);
         return dbDao.newPlaylist(playlist);
     }
     /**
      * 扫描本地歌曲
      */
-
+    public static void getMusicForPlaylist(Context context,String playlist_id, List<Music> musicList){
+        musicList.clear();
+        DBDao dbDao = new DBDao(context);
+        dbDao.queryPlaylist(playlist_id,musicList);
+        dbDao.close();
+    }
+    /**
+     * 添加歌曲到歌单
+     */
+    public static void addToPlaylist(Context context,String playlist_id, Music music){
+        DBDao dbDao = new DBDao(context);
+        dbDao.add(playlist_id,music);
+        dbDao.close();
+        final String message = "添加成功！";
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 }

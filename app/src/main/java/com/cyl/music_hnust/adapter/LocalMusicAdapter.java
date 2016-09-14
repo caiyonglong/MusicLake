@@ -1,9 +1,9 @@
 package com.cyl.music_hnust.adapter;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +14,14 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
+import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.utils.CoverLoader;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.cyl.music_hnust.view.AddPlaylistDialog;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,8 +35,8 @@ import java.util.List;
  */
 public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.ItemHolder> {
 
-    private Context context;
-    public List<Music> musicInfos = new ArrayList<>();
+    private AppCompatActivity context;
+    private List<Music> musicInfos = new ArrayList<>();
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -41,8 +45,12 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         this.mOnItemClickListener = listener;
     }
 
-    public LocalMusicAdapter(Context context, List<Music> musicInfos) {
+    public LocalMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
         this.context = context;
+        this.musicInfos = musicInfos;
+    }
+
+    public void setMusicInfos(List<Music> musicInfos) {
         this.musicInfos = musicInfos;
     }
 
@@ -57,8 +65,14 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
-        holder.albumArt.setImageBitmap(cover);
+        String uri = ImageUtils.getAlbumArtUri(localItem.getAlbumId()).toString();
+        File file = new File(uri);
+        Log.e("**********",uri);
+        try {
+            ImageLoader.getInstance().displayImage(uri, holder.albumArt, new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnFail(R.drawable.default_cover).resetViewBeforeLoading(true).build());
+        }catch (Exception e){
+
+        }
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist());
 
@@ -93,7 +107,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                             case R.id.popup_song_goto_artist:
                                 break;
                             case R.id.popup_song_addto_queue:
-                                getPlaylistInfo(musicInfos.get(position));
+                                AddPlaylistDialog.newInstance(musicInfos.get(position)).show(context.getSupportFragmentManager(), "ADD_PLAYLIST");
                                 break;
                         }
                         return false;
@@ -131,14 +145,14 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     }
     private void getPlaylistInfo(Music music) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        List<String> playlists= MusicUtils.scanPlaylist(context);
+        List<LocalPlaylist> playlists= MusicUtils.scanPlaylist(context);
         dialog.setTitle("歌单列表");
         if (playlists.size()==0) {
             dialog.setMessage("暂无歌单,请新建!");
         }else {
             String msg="";
             for (int i=0; i<playlists.size();i++){
-                msg=playlists.get(i)+"\n";
+                msg+=playlists.get(i).getName()+"\n";
             }
             dialog.setMessage(msg);
         }
@@ -150,7 +164,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         return (null != musicInfos ? musicInfos.size() : 0);
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ItemHolder extends RecyclerView.ViewHolder {
         protected TextView title, artist;
         protected ImageView albumArt;
         protected ImageView popupmenu;
@@ -163,12 +177,6 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
             this.albumArt = (ImageView) view.findViewById(R.id.iv_cover);
             this.popupmenu = (ImageView) view.findViewById(R.id.iv_more);
             this.v_playing = view.findViewById(R.id.v_playing);
-//            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-//
         }
     }
 }

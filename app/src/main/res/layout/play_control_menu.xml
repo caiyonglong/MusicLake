@@ -4,7 +4,6 @@
     android:id="@+id/play_control"
     android:layout_width="fill_parent"
     android:layout_height="57dp"
-    android:elevation="3dp"
     android:layout_gravity="top">
 
     <RelativeLayout
@@ -43,7 +42,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <LinearLayout
-
                     android:layout_marginLeft="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -81,8 +79,8 @@
                 <RelativeLayout
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp">
+                    android:layout_width="30dp"
+                    android:layout_height="30dp">
                     <ImageButton
                         android:id="@+id/play_pause"
                         android:layout_width="match_parent"
@@ -99,8 +97,8 @@
 
                 <ImageButton
                     android:id="@+id/next_buttom"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:background="@drawable/ic_skip_next_black_18dp" />

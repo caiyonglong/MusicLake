@@ -12,6 +12,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.OnlineMusicInfo;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
@@ -116,14 +117,14 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
     }
     private void getPlaylistInfo(OnlineMusicInfo onlineMusicInfo) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        List<String> playlists= MusicUtils.scanPlaylist(context);
+        List<LocalPlaylist> playlists= MusicUtils.scanPlaylist(context);
         dialog.setTitle("歌单列表");
         if (playlists.size()==0) {
             dialog.setMessage("暂无歌单,请新建!");
         }else {
             String msg="";
             for (int i=0; i<playlists.size();i++){
-                msg=playlists.get(i)+"\n";
+                msg=playlists.get(i).getName()+"\n";
             }
             dialog.setMessage(msg);
         }

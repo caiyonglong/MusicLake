@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
 
 import java.util.ArrayList;
@@ -30,12 +31,11 @@ public class DBDao {
 
     /**
      * 新增音乐到歌单
-     *
      */
 
-    public void add(String playlist,Music music) {
+    public void add(String playlist_id, Music music) {
         ContentValues values = new ContentValues();
-        values.put(DBData.PLAYLIST_TITLE, playlist);
+        values.put(DBData.PLAYLIST_ID, playlist_id);
         values.put(DBData.MUSIC_ID, music.getId());
         values.put(DBData.MUSIC_NAME, music.getTitle());
         values.put(DBData.MUSIC_PATH, music.getUri());
@@ -44,10 +44,11 @@ public class DBDao {
         values.put(DBData.MUSIC_SIZE, music.getFileSize());
         values.put(DBData.MUSIC_ARTIST, music.getArtist());
         values.put(DBData.MUSIC_ALBUM, music.getAlbum());
+        values.put(DBData.MUSIC_ALBUM_ID, music.getAlbumId());
         values.put(DBData.MUSIC_YEARS, music.getYear());
         values.put(DBData.MUSIC_ALBUM_PIC, music.getCoverUri());
 
-        db.insert(DBData.PLAYLIST_TABLENAME, null,
+        db.insert(DBData.MUSIC_TABLENAME, null,
                 values);
     }
 
@@ -55,19 +56,18 @@ public class DBDao {
      * 查询歌单中所有音乐信息
      * flag 0 升序 1 降序
      */
-    private String[] order={"ASC","DESC"};
-    public List<Music> queryPlaylist(String title,String orderBy,int flag) {
-        List<Music> musicInfos = new ArrayList<>();
+    private String[] order = {"ASC", "DESC"};
+
+    public void queryPlaylist(String playlist_id,List<Music> musicInfos) {
         Cursor cursor = null;
 
         // 查询歌单
-        cursor = db.rawQuery("SELECT * FROM " + DBData.PLAYLIST_TABLENAME
-                +" where "+DBData.PLAYLIST_TITLE +" = " +title+" order by "+ orderBy +"  "+order[flag],
-                null);
+        cursor = db.rawQuery("select * from "+DBData.MUSIC_TABLENAME +" where "+DBData.PLAYLIST_ID+" =? ",
+                new String[]{playlist_id});
 
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME))!=null) {
+                if (cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME)) != null) {
                     Music music = new Music();
                     music.setId(cursor.getInt(cursor.getColumnIndex(DBData.MUSIC_ID)));
                     music.setTitle(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME)));
@@ -90,7 +90,6 @@ public class DBDao {
             cursor.close();
         }
 
-        return musicInfos;
     }
 
 
@@ -99,25 +98,19 @@ public class DBDao {
      *
      * @return
      */
-    public boolean newPlaylist(String title) {
-        String sql = "select * from "
-                + DBData.PLAYLIST_TABLENAME + " where "
-                + DBData.PLAYLIST_TITLE + " = "+'"' + title+'"';
+    public boolean newPlaylist(LocalPlaylist localPlaylist) {
+        try {
+            ContentValues values = new ContentValues();
+            // 开始组装第一条数据
+            values.put(DBData.PLAYLIST_ID, localPlaylist.getId());
+            values.put(DBData.PLAYLIST_TITLE,localPlaylist.getName());
+            db.insert(DBData.PLAYLIST_TABLENAME, null, values);
 
-        Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.getCount() == 0) {
-            try {
-                ContentValues values = new ContentValues();
-                values.put(DBData.PLAYLIST_TITLE, title);
-                db.insert(DBData.PLAYLIST_TABLENAME, null, values);
-                return true;
-            } catch (Exception e) {
-
-                return false;
-            }
-        } else {
+            return true;
+        }catch (Exception e){
             return false;
         }
+
     }
 
     /**
@@ -126,19 +119,35 @@ public class DBDao {
      * @return
      */
 
-    public List<String> getPlaylist() {
-        List<String> playlists = new ArrayList<>();
-        String sql = "select distinct "+'"'+DBData.PLAYLIST_TITLE+'"'+" from " + DBData.PLAYLIST_TABLENAME;
-        Cursor cursor = db.rawQuery(sql, null);
-        while (cursor.moveToFirst()) {
-            String title = cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_TITLE));
-            playlists.add(title);
+    public List<LocalPlaylist> getPlaylist() {
+        List<LocalPlaylist> localPlaylists = new ArrayList<>();
+
+        // 查询music表中所有的数据
+        Cursor cursor = db.query(DBData.PLAYLIST_TABLENAME, null, null, null, null, null, null);
+        //再遍历游标cursor，获取数据库中的值
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_ID));
+                String name = cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_TITLE));
+
+                LocalPlaylist localPlaylist = new LocalPlaylist();
+                localPlaylist.setId(id);
+                localPlaylist.setName(name);
+
+                Cursor cursor1 = db.rawQuery("select * from "+DBData.MUSIC_TABLENAME +" where "+DBData.PLAYLIST_ID+" =? ",
+                        new String[]{id});
+
+                int count = cursor1.getCount();
+                localPlaylist.setCount(count);
+
+                localPlaylists.add(localPlaylist);
+            }
         }
         // 记得关闭游标
         if (cursor != null) {
             cursor.close();
         }
-        return playlists;
+        return localPlaylists;
     }
 
     /**
@@ -146,17 +155,9 @@ public class DBDao {
      *
      * @return
      */
-    public int deletePlaylist(String playlist, int music_id) {
-
-        if (music_id == -1) {
-            int result = db.delete(DBData.PLAYLIST_TABLENAME, DBData.PLAYLIST_TITLE + " = ? "
-                    , new String[]{playlist});
-            return result;
-        } else {
-            int result = db.delete(DBData.PLAYLIST_TABLENAME, DBData.MUSIC_ID + "='"
-                    + music_id + "'", null);
-            return result;
-        }
+    public void deletePlaylist(String playlist_id) {
+        db.delete(DBData.PLAYLIST_TABLENAME, DBData.PLAYLIST_ID +" = ?", new String[] { playlist_id });
+        db.delete(DBData.MUSIC_TABLENAME, DBData.PLAYLIST_ID+" = ?", new String[] { playlist_id });
     }
 
     /**

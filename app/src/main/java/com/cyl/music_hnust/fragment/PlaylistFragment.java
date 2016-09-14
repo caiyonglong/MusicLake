@@ -20,10 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.activity.PlaylistDetail;
+import com.cyl.music_hnust.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.adapter.PlaylistAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
+import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ToastUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -43,7 +45,7 @@ public class PlaylistFragment extends BaseFragment {
     EditText et_playlist;
     private GridLayoutManager mLayoutManager;
     private PlaylistAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
+    private List<LocalPlaylist> localplaylists = new ArrayList<>();
     List<List<Music>> playlist;
     private FloatingActionButton mFloatingActionButton;
 
@@ -58,7 +60,8 @@ public class PlaylistFragment extends BaseFragment {
 
     @Override
     protected void initDatas() {
-
+        localplaylists = MusicUtils.scanPlaylist(getContext());
+        initData();
     }
 
     @Override
@@ -73,12 +76,12 @@ public class PlaylistFragment extends BaseFragment {
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
         recyclerView.setLayoutManager(mLayoutManager);
-        initData();
+
     }
 
     private void initData() {
 
-        mAdapter = new PlaylistAdapter(getActivity(),recyclerView,musicInfos,onRecyclerItemClick);
+        mAdapter = new PlaylistAdapter(getActivity(),localplaylists,onRecyclerItemClick);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.setLoadingMoreEnabled(false);
@@ -87,23 +90,17 @@ public class PlaylistFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 recyclerView.refreshComplete();
-                if (musicInfos.size()==0){
-                    tv_empty.setVisibility(View.VISIBLE);
-                    tv_empty.setText("暂无歌单，请新建歌单！\n点击右上角菜单\\(^o^)/~");
-                }else {
-                    tv_empty.setVisibility(View.GONE);
-                }
+                recyclerView.setEmptyView(tv_empty);
+                localplaylists = MusicUtils.scanPlaylist(getContext());
+                mAdapter.setLocalplaylists(localplaylists);
                 mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLoadMore() {
-                if (musicInfos.size()==0){
-                    tv_empty.setVisibility(View.VISIBLE);
-                    tv_empty.setText("暂无歌单，请新建歌单！\n点击右上角菜单\\(^o^)/~");
-                }else {
-                    tv_empty.setVisibility(View.GONE);
-                }
+                recyclerView.setEmptyView(tv_empty);
+                localplaylists = MusicUtils.scanPlaylist(getContext());
+                mAdapter.setLocalplaylists(localplaylists);
                 recyclerView.loadMoreComplete();
                 mAdapter.notifyDataSetChanged();
             }
@@ -153,9 +150,18 @@ public class PlaylistFragment extends BaseFragment {
                 if (playlist.length()<2){
                     ToastUtil.show(getContext(),"歌单名长度不少于3");
                 }else {
-                    isNewPlaylist =MusicUtils.addPlaylist(getContext(),playlist);
+                    LocalPlaylist localPlaylist = new LocalPlaylist();
+                    localPlaylist.setName(playlist);
+                    localPlaylist.setId(System.currentTimeMillis()+"hk");
+                    isNewPlaylist =MusicUtils.newPlaylist(getContext(),localPlaylist);
                     if (isNewPlaylist){
-                        ToastUtil.show(getContext(),"已新建");
+                        ToastUtil.show(getContext(),"操作成功");
+
+                        localplaylists = MusicUtils.scanPlaylist(getContext());
+                        mAdapter.setLocalplaylists(localplaylists);
+                        mAdapter.notifyDataSetChanged();
+                    }else {
+                        ToastUtil.show(getContext(),"操作失败，歌单已存在！");
                     }
                 }
             }
@@ -171,9 +177,8 @@ public class PlaylistFragment extends BaseFragment {
         return isNewPlaylist;
     }
     private PlaylistAdapter.OnRecyclerItemClick onRecyclerItemClick = new PlaylistAdapter.OnRecyclerItemClick() {
-
         @Override
-        public void onItemClick(View view) {
+        public void onItemClick(View view, LocalPlaylist localPlaylist) {
             Pair squareParticipant = new Pair<>(view, ViewCompat.getTransitionName(view));
             ActivityOptions transitionActivityOptions =
                     null;
@@ -181,14 +186,15 @@ public class PlaylistFragment extends BaseFragment {
                 transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
                         getActivity(),view,"share");
                 Intent intent = new Intent(
-                        getActivity(), PlaylistDetail.class);
+                        getActivity(), PlaylistDetailActivity.class);
+                intent.putExtra(Constants.PLAYLIST_ID,localPlaylist.getId());
                 startActivity(intent, transitionActivityOptions.toBundle());
             }else {
                 Intent intent = new Intent(
-                        getActivity(), PlaylistDetail.class);
+                        getActivity(), PlaylistDetailActivity.class);
+                intent.putExtra(Constants.PLAYLIST_ID,localPlaylist.getId());
                 startActivity(intent);
             }
-
         }
     };
 

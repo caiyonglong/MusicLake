@@ -32,7 +32,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         //初始化控件
         initViews(savedInstanceState);
-
         initDatas();
         listener();
 

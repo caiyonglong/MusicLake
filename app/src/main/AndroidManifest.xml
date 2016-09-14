@@ -64,7 +64,7 @@
         </activity>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.RegisterActivity"/>
-        <activity android:name=".activity.PlaylistDetail"/>
+        <activity android:name=".activity.PlaylistDetailActivity"/>
 
 
         <activity

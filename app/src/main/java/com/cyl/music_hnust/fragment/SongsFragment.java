@@ -3,6 +3,7 @@ package com.cyl.music_hnust.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +45,7 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         //重写handleMessage方法,根据msg中what的值判断是否执行后续操作
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
-                mAdapter.musicInfos = musicInfos;
+                mAdapter.setMusicInfos(musicInfos);
                 mAdapter.notifyDataSetChanged();
                 init();
             }
@@ -68,7 +69,7 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setRefreshing(false);
         recyclerView.setLoadingMoreEnabled(false);
-        mAdapter = new LocalMusicAdapter(getActivity(), musicInfos);
+        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
 
         if (musicInfos.size() == 0) {
             tv_empty.setText("请稍后，本地音乐加载中...");

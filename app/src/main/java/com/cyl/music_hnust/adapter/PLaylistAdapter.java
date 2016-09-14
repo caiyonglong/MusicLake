@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.LocalPlaylist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +21,20 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHolder> {
 
     private Context context;
-    public List<Music> musicInfos = new ArrayList<>();
+    private List<LocalPlaylist> localplaylists = new ArrayList<>();
     private OnRecyclerItemClick mOnRecyclerItemClickListener;
 
+    public List<LocalPlaylist> getLocalplaylists() {
+        return localplaylists;
+    }
 
-    public PlaylistAdapter(Context context, RecyclerView mRecyclerView, List<Music> musicInfos, OnRecyclerItemClick mOnRecyclerItemClickListener) {
+    public void setLocalplaylists(List<LocalPlaylist> localplaylists) {
+        this.localplaylists = localplaylists;
+    }
+
+    public PlaylistAdapter(Context context, List<LocalPlaylist> localplaylists, OnRecyclerItemClick mOnRecyclerItemClickListener) {
         this.context = context;
-        this.musicInfos = musicInfos;
+        this.localplaylists = localplaylists;
         this.mOnRecyclerItemClickListener = mOnRecyclerItemClickListener;
     }
 
@@ -40,37 +47,37 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHo
     }
 
     @Override
-    public void onBindViewHolder(ItemHolder holder, int position) {
-        Music localItem = musicInfos.get(position);
+    public void onBindViewHolder(ItemHolder holder, final int position) {
+        LocalPlaylist localItem = localplaylists.get(position);
 
-        holder.title.setText(localItem.getAlbum());
-        holder.artist.setText(localItem.getArtist());
+        holder.title.setText(localItem.getName());
+        holder.artist.setText(localItem.getId());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnRecyclerItemClickListener!=null){
+                    mOnRecyclerItemClickListener.onItemClick(v,localplaylists.get(position));
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return (null != musicInfos ? musicInfos.size() : 0);
+        return (null != localplaylists ? localplaylists.size() : 0);
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ItemHolder extends RecyclerView.ViewHolder{
         protected TextView title, artist;
 
         public ItemHolder(View view) {
             super(view);
             this.title = (TextView) view.findViewById(R.id.album_title);
             this.artist = (TextView) view.findViewById(R.id.album_artist);
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if(mOnRecyclerItemClickListener!=null){
-                mOnRecyclerItemClickListener.onItemClick(itemView);
-            }
         }
     }
 
     public interface OnRecyclerItemClick {
-        void onItemClick(View View);
+        void onItemClick(View View,LocalPlaylist localPlaylist);
     }
 }

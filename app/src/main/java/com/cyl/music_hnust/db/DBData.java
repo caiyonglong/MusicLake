@@ -25,12 +25,11 @@ public class DBData {
     /**
      * 歌单ID字段
      */
-    public static final String PLAYLIST_ID = "id";
+    public static final String PLAYLIST_ID = "playlist_id";
     /**
      * 歌单文件名字段(作为判断是否唯一存在)
      */
-    public static final String PLAYLIST_TITLE = "name";
-
+    public static final String PLAYLIST_TITLE = "playlist_name";
 
     /**
      * 音乐ID字段
@@ -60,6 +59,10 @@ public class DBData {
      * 音乐专辑字段
      */
     public static final String MUSIC_ALBUM = "album";
+    /**
+     * 音乐专辑id字段
+     */
+    public static final String MUSIC_ALBUM_ID = "albumId";
     /**
      * 音乐专辑图片路径字段
      */

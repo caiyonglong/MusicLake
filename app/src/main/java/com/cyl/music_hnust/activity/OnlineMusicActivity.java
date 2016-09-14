@@ -246,7 +246,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         super.onDestroy();
     }
 
-    @SuppressLint("StringFormatInvalid")
+
     private void initHeader() {
         final ImageView ivHeaderBg = (ImageView) vHeader.findViewById(R.id.iv_header_bg);
         final ImageView ivCover = (ImageView) vHeader.findViewById(R.id.iv_cover);

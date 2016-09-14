@@ -42,14 +42,12 @@ dependencies {
     compile 'com.trello:rxlifecycle-components:0.6.1'
     //黄油刀
     compile 'com.jakewharton:butterknife:7.0.1'
-    //    compile('com.afollestad.material-dialogs:core:0.8.5.3@aar') {
-    //        transitive = true
-    //    }
-    //    compile('com.afollestad.material-dialogs:commons:0.8.5.3@aar') {
-    //        transitive = true
-    //    }
+
     compile 'com.github.tajchert:nammu:1.1.1'
     compile 'com.zhy:okhttputils:2.3.8'
     compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
     compile 'com.google.code.gson:gson:2.6.2'
+
+    compile 'com.afollestad.material-dialogs:core:0.9.0.1'
+    
 }
