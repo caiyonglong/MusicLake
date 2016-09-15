@@ -115,4 +115,6 @@
     <string name="loading">努力加载中...</string>
     <string name="recent_update">最近更新：%s</string>
 
+    <string name="search">搜索</string>
+
 </resources>

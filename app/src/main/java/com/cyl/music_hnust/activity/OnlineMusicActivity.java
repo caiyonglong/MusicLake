@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -64,7 +63,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private List<OnlineMusicInfo> mMusicLists = new ArrayList<>();
     private OnlineMusicAdapter mAdapter;
     XRecyclerView mRecyclerView;
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     private View vHeader;
     private PlayService mPlayService;
@@ -83,13 +82,14 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         setTitle(mListInfo.getTitle());
 
         mRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         main_content = (LinearLayout) findViewById(R.id.main_content);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -106,11 +106,12 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.home){
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
             finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     @Override

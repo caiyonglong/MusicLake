@@ -3,10 +3,11 @@ package com.cyl.music_hnust.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,28 +27,29 @@ import java.util.List;
  */
 public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAdapter.OnItemClickListener {
 
-    RecyclerView mRecyclerView ;
+    RecyclerView mRecyclerView;
     TextView tv_empty;
+    Toolbar mToolbar;
 
     private static LocalMusicAdapter mAdapter;
     private static List<Music> musicInfos = new ArrayList<>();
     private String playlist_id;
 
     /**
-     *   新建一个线程更新UI
+     * 新建一个线程更新UI
      */
 
     final Handler myHandler = new Handler() {
-                @Override
-                //重写handleMessage方法,根据msg中what的值判断是否执行后续操作
-                public void handleMessage(Message msg) {
-                    if (msg.what == 0) {
-                        mAdapter.setMusicInfos(musicInfos);
-                        mAdapter.notifyDataSetChanged();
-                        init();
-                    }
-                }
-            };
+        @Override
+        //重写handleMessage方法,根据msg中what的值判断是否执行后续操作
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                mAdapter.setMusicInfos(musicInfos);
+                mAdapter.notifyDataSetChanged();
+                init();
+            }
+        }
+    };
 
     /**
      * 初始化列表,当无数据时显示提示
@@ -60,14 +62,15 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
             tv_empty.setVisibility(View.GONE);
         }
     }
+
     /**
-     *  耗时操作
+     * 耗时操作
      */
     Runnable GMRunable = new Runnable() {
         @Override
         public void run() {
             //查询所有音乐
-            MusicUtils.getMusicForPlaylist(PlaylistDetailActivity.this,playlist_id,musicInfos);
+            MusicUtils.getMusicForPlaylist(PlaylistDetailActivity.this, playlist_id, musicInfos);
             myHandler.sendEmptyMessage(0);
         }
     };
@@ -83,8 +86,8 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
 
     @Override
     protected void initDatas() {
-        playlist_id=getIntent().getStringExtra(Constants.PLAYLIST_ID);
-        if (playlist_id!=null) {
+        playlist_id = getIntent().getStringExtra(Constants.PLAYLIST_ID);
+        if (playlist_id != null) {
             Log.e("歌单id++++++", playlist_id + "");
             MusicUtils.getMusicForPlaylist(this, playlist_id, musicInfos);
         }
@@ -105,9 +108,12 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
 
     @Override
     public void initViews(Bundle savedInstanceState) {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setTitle("歌单列表");
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+
         tv_empty = (TextView) findViewById(R.id.tv_empty);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -115,7 +121,18 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        MainActivity.mPlayService.setMyMusicList(musicInfos);
+        MainActivity.mPlayService.playMusic(position);
     }
 }

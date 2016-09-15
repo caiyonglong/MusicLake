@@ -97,6 +97,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.popup_song_play:
+                                MainActivity.mPlayService.setMyMusicList(musicInfos);
                                 MainActivity.mPlayService.playMusic(position);
                                 break;
                             case R.id.popup_song_detail:

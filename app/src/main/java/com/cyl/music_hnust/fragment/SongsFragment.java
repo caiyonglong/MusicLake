@@ -1,5 +1,6 @@
 package com.cyl.music_hnust.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
+import com.cyl.music_hnust.activity.SearchActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.Music;
@@ -147,7 +149,11 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.action_search:
+                final Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
