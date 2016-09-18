@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.Json.JsonParsing;
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.http.HttpByGet;
 
 import org.json.JSONException;

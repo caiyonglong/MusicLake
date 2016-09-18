@@ -1,11 +1,8 @@
-package com.cyl.music_hnust.bean;
+package com.cyl.music_hnust.model;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by 永龙 on 2016/3/16.

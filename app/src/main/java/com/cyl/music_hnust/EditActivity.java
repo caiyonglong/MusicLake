@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.bean.Common;
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.model.Common;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;

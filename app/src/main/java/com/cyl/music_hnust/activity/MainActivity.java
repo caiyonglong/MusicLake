@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +34,11 @@ import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.service.OnPlayerListener;
 import com.cyl.music_hnust.service.PlayService;
-import com.cyl.music_hnust.utils.CoverLoader;
+import com.cyl.music_hnust.utils.ImageUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -49,7 +53,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         View.OnClickListener, OnPlayerListener{
 
 
-
+    @Bind(R.id.song_progress_normal)
     ProgressBar mProgressBar;
     TextView tv_title,tv_artist;
     @Bind(R.id.play_control)
@@ -80,6 +84,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
     @Bind(R.id.pause_play)
     ImageButton pause_play;
+    @Bind(R.id.nav_view)
+    NavigationView mNavigationView;
     @OnClick(R.id.pause_play)
     public void pause_play(){
         //点击后进入到暂停状态
@@ -100,6 +106,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.MyBinder) service).getService();
             mPlayService.setOnPlayEventListener(MainActivity.this);
+            init();
             mPlayService.updateMusicList();
         }
 
@@ -109,8 +116,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     };
 
-    @Bind(R.id.nav_view)
-    NavigationView mNavigationView;
 
 
     @Override
@@ -126,8 +131,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         tv_title= (TextView) findViewById(R.id.title);
         tv_artist= (TextView) findViewById(R.id.artist);
-        mProgressBar= (ProgressBar) findViewById(R.id.song_progress_normal);
-
     }
     @Override
     protected void initDatas() {
@@ -145,6 +148,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void listener() {
     }
+    private void init() {
+        initFragment();
+        onPlay(mPlayService.getPlayingMusic());
+    }
+
 
     public static DrawerLayout getmDrawerLayout() {
         return mDrawerLayout;
@@ -191,7 +199,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_com:
                 item.setChecked(true);
-                Intent intent4 = new Intent(this,RegisterActivity.class);
+                Intent intent4 = new Intent(this,CommunityActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.nav_menu_msg:
@@ -286,17 +294,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return;
         }
         play_state(true);
-        Bitmap cover;
-        if (music.getCover() == null) {
-            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
-        } else {
-            cover = music.getCover();
+//        Bitmap cover;
+        String uri = ImageUtils.getAlbumArtUri(music.getAlbumId()).toString();
+//        if (music.getCover() == null) {
+//            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+//        } else {
+//            cover = music.getCover();
+//        }
+        Log.e("*******",uri+"====");
+        File e = new File(uri);
+        if(e != null && e.exists() && e.length() > 0L) {
+            Log.e("exist++++++++++++++","YES");
+        }else {
+            Log.e("exist++++++++++++++","NO");
         }
-        album.setImageBitmap(cover);
+        ImageLoader.getInstance().displayImage(uri, album, new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnFail(R.drawable.default_cover).resetViewBeforeLoading(true).build());
+
+//        album.setImageBitmap(cover);
         tv_title.setText(music.getTitle());
         tv_artist.setText(music.getArtist());
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
+
     }
 
     @Override

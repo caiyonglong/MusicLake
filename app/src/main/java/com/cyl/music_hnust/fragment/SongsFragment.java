@@ -18,7 +18,6 @@ import com.cyl.music_hnust.activity.SearchActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.utils.MusicUtils;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -41,16 +40,11 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     /**
      *   新建一个线程更新UI
      */
-
     final Handler myHandler = new Handler() {
         @Override
         //重写handleMessage方法,根据msg中what的值判断是否执行后续操作
         public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                mAdapter.setMusicInfos(musicInfos);
-                mAdapter.notifyDataSetChanged();
-                init();
-            }
+
         }
     };
 
@@ -71,13 +65,13 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setRefreshing(false);
         recyclerView.setLoadingMoreEnabled(false);
+        musicInfos = getmPlayService().getMusicList();
         mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
 
         if (musicInfos.size() == 0) {
             tv_empty.setText("请稍后，本地音乐加载中...");
             tv_empty.setVisibility(View.VISIBLE);
         }
-        mHandler.post(GMRunable);
     }
 
     /**
@@ -116,19 +110,6 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         super.onResume();
     }
 
-    /**
-     *  耗时操作
-     */
-    Runnable GMRunable = new Runnable() {
-        @Override
-        public void run() {
-            //查询所有音乐
-            MusicUtils.scanMusic(getActivity(),musicInfos);
-            myHandler.sendEmptyMessage(0);
-        }
-    };
-
-
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -140,7 +121,6 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_my, menu);
     }
-
     /**
      * 菜单点击事件
      * @param item

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.bean.Comment;
+import com.cyl.music_hnust.model.Comment;
 
 import java.util.List;
 

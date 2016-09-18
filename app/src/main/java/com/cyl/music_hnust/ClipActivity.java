@@ -13,8 +13,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.clipheadphoto.ClipImageLayout;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ImageTools;

@@ -26,8 +26,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.*;
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.loopj.android.http.AsyncHttpResponseHandler;

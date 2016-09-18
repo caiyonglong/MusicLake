@@ -20,7 +20,6 @@
         <item name="colorPrimaryDark">@color/setting_blue</item>
         <item name="colorAccent">@color/setting_blue</item>
         <!--正常状态下字体颜色和icon颜色-->
-        <item name="android:textColorPrimary">@color/white</item>
 
         <item name="android:windowBackground">@color/window_background</item>
         <item name="windowBackground">@color/window_background</item>
@@ -30,15 +29,37 @@
 
     </style>
 
-    <style name="MyTheme" parent="Theme.AppCompat.Light">
+    <!--<style name="ThemeBaseDark" parent="Theme.AppCompat.NoActionBar">-->
+        <!--<item name="colorPrimary">@color/colorPrimaryDarkTheme</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDarkDarkTheme</item>-->
+        <!--<item name="colorAccent">@color/colorAccentDarkTheme</item>-->
+        <!--<item name="android:windowBackground">@color/window_background_dark</item>-->
+        <!--<item name="cardStyle">@style/CardViewStyle.Dark</item>-->
+        <!--<item name="accentColor">@color/colorAccentDarkTheme</item>-->
+        <!--<item name="iconColor">@android:color/white</item>-->
+        <!--<item name="windowBackground">@color/window_background_dark</item>-->
+        <!--<item name="stateSelector">@color/state_selector_dark</item>-->
+        <!--<item name="progressBackgroundColor">@color/progressBackgroundColorDark</item>-->
+        <!--<item name="progressDrawable">@drawable/progress_drawable_dark</item>-->
+        <!--<item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground_dark</item>-->
+        <!--<item name="ate_key">dark_theme</item>-->
 
-        <!--选中状态icon的颜色和字体颜色-->
-        <item name="colorPrimary">@color/setting_blue</item>
-        <item name="colorPrimaryDark">@color/setting_blue</item>
-        <item name="colorAccent">@color/setting_blue</item>
-        <!--正常状态下字体颜色和icon颜色-->
-        <item name="android:textColorPrimary">@color/white</item>
-    </style>
+    <!--</style>-->
+    <!--<style name="ThemeBaseBlack" parent="Theme.AppCompat.NoActionBar">-->
+        <!--<item name="colorPrimary">@color/colorPrimaryBlack</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDarkBlack</item>-->
+        <!--<item name="colorAccent">@color/colorAccentBlack</item>-->
+        <!--<item name="android:windowBackground">@color/window_background_black</item>-->
+        <!--<item name="cardStyle">@style/CardViewStyle.Black</item>-->
+        <!--<item name="accentColor">@color/colorAccentBlack</item>-->
+        <!--<item name="iconColor">@android:color/white</item>-->
+        <!--<item name="windowBackground">@color/window_background_black</item>-->
+        <!--<item name="stateSelector">@color/state_selector_black</item>-->
+        <!--<item name="progressBackgroundColor">@color/progressBackgroundColorDark</item>-->
+        <!--<item name="progressDrawable">@drawable/progress_drawable_black</item>-->
+        <!--<item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground_black</item>-->
+
+    <!--</style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -58,7 +79,7 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="AppTheme.Search" parent="MyTheme">
+    <style name="AppTheme.Search" parent="MyThemeBlue">
         <item name="colorAccent">@color/main_white</item>
     </style>
 

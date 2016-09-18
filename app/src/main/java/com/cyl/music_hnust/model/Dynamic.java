@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.bean;
+package com.cyl.music_hnust.model;
 
 
 /**

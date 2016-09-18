@@ -20,7 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.utils.Constants;
 
 import org.json.JSONObject;

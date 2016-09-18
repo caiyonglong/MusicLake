@@ -2,10 +2,10 @@ package com.cyl.music_hnust.Json;
 
 import android.util.Log;
 
-import com.cyl.music_hnust.bean.Comment;
-import com.cyl.music_hnust.bean.Dynamic;
-import com.cyl.music_hnust.bean.Location;
-import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.model.Comment;
+import com.cyl.music_hnust.model.Dynamic;
+import com.cyl.music_hnust.model.Location;
+import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;
 

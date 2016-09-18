@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.bean.Dynamic;
+import com.cyl.music_hnust.model.Dynamic;
 import com.cyl.music_hnust.utils.FormatUtil;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import static android.support.v7.widget.RecyclerView.ViewHolder;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class CommunityAdapter1 extends RecyclerView.Adapter<ViewHolder> {
 
     private ViewGroup parent;
     private int viewType;
@@ -49,7 +49,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
 
-    public MyRecyclerViewAdapter(Context mContext, List<Dynamic> myDatas, ImageLoader imageLoader) {
+    public CommunityAdapter1(Context mContext, List<Dynamic> myDatas, ImageLoader imageLoader) {
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.myDatas = myDatas;
@@ -67,7 +67,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             View mView = mLayoutInflater.inflate(R.layout.item_main,parent, false);
 //            mView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 //                    ViewGroup.LayoutParams.WRAP_CONTENT));
-            MyRecyclerViewHolder mViewHolder = new MyRecyclerViewHolder(mView);
+            ItemHolder mViewHolder = new ItemHolder(mView);
             return mViewHolder;
 
         } else if (viewType == TYPE_FOOTER) {
@@ -82,8 +82,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        if (holder instanceof MyRecyclerViewHolder) {
-            final MyRecyclerViewHolder holder1 = (MyRecyclerViewHolder) holder;
+        if (holder instanceof ItemHolder) {
+            final ItemHolder holder1 = (ItemHolder) holder;
             if (mOnItemClickListener != null) {
                 holder1.container.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -172,7 +172,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
+    public class ItemHolder extends RecyclerView.ViewHolder {
 
         public TextView user_name;
         public RelativeLayout container;
@@ -183,7 +183,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         public TextView item_action_love;
 //        public LinearLayout item_action_love_agree;
 
-        public MyRecyclerViewHolder(View itemView) {
+        public ItemHolder(View itemView) {
             super(itemView);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             user_name = (TextView) itemView.findViewById(R.id.user_name);

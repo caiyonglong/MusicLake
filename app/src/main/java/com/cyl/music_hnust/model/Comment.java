@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.bean;
+package com.cyl.music_hnust.model;
 
 /**
  * Created by 永龙 on 2016/3/15.

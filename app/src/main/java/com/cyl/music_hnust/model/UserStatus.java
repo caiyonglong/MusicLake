@@ -1,11 +1,7 @@
-package com.cyl.music_hnust.bean;
+package com.cyl.music_hnust.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by 永龙 on 2015/12/22.

@@ -107,8 +107,7 @@
         <activity
             android:screenOrientation="portrait"
             android:name=".MynamicActivity"
-            android:label="@string/my_dnamic"
-            android:theme="@style/MyTheme"/>
+            android:label="@string/my_dnamic"/>
         <activity
             android:screenOrientation="portrait"
             android:name=".ShakeActivity"
@@ -178,12 +177,10 @@
         <activity
             android:screenOrientation="portrait"
             android:name=".activity.SettingsActivity"
-            android:theme="@style/MyTheme"
             android:label="@string/title_activity_settings"></activity>
         <activity
             android:screenOrientation="portrait"
             android:name=".ClipActivity"
-            android:theme="@style/MyTheme"
             android:label="@string/title_activity_settings"></activity>
 
         <!--社区-->

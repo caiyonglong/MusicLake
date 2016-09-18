@@ -2,11 +2,9 @@ package com.cyl.music_hnust.http;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Path;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.cyl.music_hnust.bean.User;
+import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.utils.Constants;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;

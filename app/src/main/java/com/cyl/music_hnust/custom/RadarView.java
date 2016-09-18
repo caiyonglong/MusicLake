@@ -16,10 +16,8 @@ import android.view.View;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.UserCenterMainAcivity;
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
-import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.map.RadarActivity;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 
 import java.io.File;

@@ -24,11 +24,11 @@ import com.cyl.music_hnust.LoginActivity;
 import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.UserCenterMainAcivity;
-import com.cyl.music_hnust.adapter.MyRecyclerViewAdapter;
+import com.cyl.music_hnust.adapter.CommunityAdapter1;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.bean.Dynamic;
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.model.Dynamic;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.SnackbarUtil;
@@ -50,13 +50,13 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class MyFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MyRecyclerViewAdapter.OnItemClickListener {
+public class MyFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, CommunityAdapter1.OnItemClickListener {
 
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     //    private LinearLayoutManager mLayoutManager;
-    public static MyRecyclerViewAdapter mRecyclerViewAdapter;
+    public static CommunityAdapter1 mRecyclerViewAdapter;
     private RequestQueue mRequestQueue;
     private MyApplication myApplication;
     private ImageLoader imageLoader;
@@ -195,7 +195,7 @@ public class MyFragment extends BaseFragment implements SwipeRefreshLayout.OnRef
 
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerViewAdapter = new MyRecyclerViewAdapter(getActivity(), mdatas, imageLoader);
+        mRecyclerViewAdapter = new CommunityAdapter1(getActivity(), mdatas, imageLoader);
         mRecyclerViewAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
 

@@ -20,11 +20,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.cyl.music_hnust.Json.JsonParsing;
-import com.cyl.music_hnust.adapter.MyRecyclerViewAdapter;
+import com.cyl.music_hnust.adapter.CommunityAdapter1;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.bean.Dynamic;
-import com.cyl.music_hnust.bean.User;
-import com.cyl.music_hnust.bean.UserStatus;
+import com.cyl.music_hnust.model.Dynamic;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.utils.ToastUtil;
@@ -40,13 +40,13 @@ import java.util.List;
 /**
  * Created by yonglong on 2016/5/5.
  */
-public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, MyRecyclerViewAdapter.OnItemClickListener {
+public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, CommunityAdapter1.OnItemClickListener {
 
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     //    private LinearLayoutManager mLayoutManager;
-    public static MyRecyclerViewAdapter mRecyclerViewAdapter;
+    public static CommunityAdapter1 mRecyclerViewAdapter;
     private RequestQueue mRequestQueue;
     private MyApplication myApplication;
     private ImageLoader imageLoader;
@@ -138,7 +138,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerViewAdapter = new MyRecyclerViewAdapter(getApplicationContext(), mdatas, imageLoader);
+        mRecyclerViewAdapter = new CommunityAdapter1(getApplicationContext(), mdatas, imageLoader);
         mRecyclerViewAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
 
