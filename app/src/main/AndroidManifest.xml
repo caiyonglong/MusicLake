@@ -53,6 +53,7 @@
 
         </activity>
         <activity android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             >
             <!--<intent-filter>-->

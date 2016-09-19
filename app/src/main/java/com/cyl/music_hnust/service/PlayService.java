@@ -1,18 +1,16 @@
 package com.cyl.music_hnust.service;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -20,8 +18,6 @@ import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
@@ -32,7 +28,6 @@ import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SystemUtils;
-import com.cyl.music_hnust.view.RoundCorner;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
@@ -67,6 +62,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private int DELAY_TIME = 1000;
 
     private int curTime = 0;
+    //广播接收者
+    ServiceReceiver mServiceReceiver;
+    public static final String ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
+    public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
+    public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 广播标志
+    public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
+
+    public Notification notif;
 
 
     private IBinder mBinder = new MyBinder();
@@ -84,6 +87,17 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //实例化过滤器，设置广播
+        mServiceReceiver = new ServiceReceiver();
+        IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
+
+        intentFilter.addAction(ACTION_NEXT);
+        intentFilter.addAction(ACTION_PREV);
+        intentFilter.addAction(ACTION_PLAY);
+        //注册广播
+        registerReceiver(mServiceReceiver, intentFilter);
+
 
         mediaPlayer.setOnCompletionListener(this);
         TelephonyManager telephonyManager = (TelephonyManager) this
@@ -213,13 +227,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         } else {
             playMusic(getmPlayingPosition());
         }
+        showNotification();
     }
 
     private void start() {
         mediaPlayer.start();
         isPause = false;
         mHandler.post(mRunnable);
-//        updateNotification(mPlayingMusic);
+        showNotification();
     }
 
     /**
@@ -376,168 +391,80 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     /**
      * 更新通知栏
      */
-//    private void updateNotification(Music music) {
-//        mNotificationManager.cancel(NOTIFICATION_ID);
-//        startForeground(NOTIFICATION_ID, SystemUtils.createNotification(this, music));
-//    }
-//
-//    private void cancelNotification(Music music) {
-//        stopForeground(true);
-//        mNotificationManager.notify(NOTIFICATION_ID, SystemUtils.createNotification(this, music));
-//    }
-
-    public static final String BROADCAST_ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
-    public static final String NOTIFICATION_ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
-    public static final String NOTIFICATION_ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 广播标志
-    public static final String NOTIFICATION_ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
-
-    public Notification notif;
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void showNotification() {
-        Music m = null;
-        CharSequence from = "";
-        CharSequence message = "";
-        if (getMusicList().size() > 0 && getMusicList() != null) {
-            m = getPlayingMusic();
-            from = m.getTitle();
-            message = m.getArtist();
-        } else {
-            from = "湖科音乐";
-            message = "听喜欢的歌";
-        }
-        Intent nextIntent2 = new Intent();
-        nextIntent2.setAction(NOTIFICATION_ACTION_NEXT); // 为Intent对象设置Action
-
-        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(
-                PlayService.this, 0, nextIntent2, 0);
-
-        Intent StartIntent2 = new Intent();
-        StartIntent2.setAction(NOTIFICATION_ACTION_PLAY); // 为Intent对象设置Action
-
-        PendingIntent nPendingIntent = PendingIntent.getBroadcast(
-                PlayService.this, 0, StartIntent2, 0);
-
-        Intent intent = new Intent();
-        intent.setClass(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                intent, 0);
-        RemoteViews rv = new RemoteViews(getPackageName(),
-                R.layout.notification);
-        rv.setOnClickPendingIntent(R.id.notificationnext, nextPendingIntent);
-        rv.setOnClickPendingIntent(R.id.notificationplay, nPendingIntent);
-        rv.setTextViewText(R.id.noticationname, m.getTitle() == null ? "湖科音乐" : m.getTitle());
-        rv.setTextViewText(R.id.noticationsinger,
-                m.getArtist().equals("未知艺术家") ? "music" : m.getArtist());
-        if (mediaPlayer.isPlaying()) {
-            rv.setImageViewResource(R.id.notificationplay,
-                    R.drawable.ic_pause_white_18dp);
-        } else {
-            rv.setImageViewResource(R.id.notificationplay,
-                    R.drawable.ic_play_arrow_white_18dp);
-        }
-        Bitmap bm = null;
-        if (getPlayingMusic().getCoverUri() != null) {
-            try {
-                bm = BitmapFactory.decodeFile(getPlayingMusic().getCoverUri());
-            }catch (Exception e){
-                Log.e("BitmapFactory++++++++","e");
-            }
-        } else {
-            bm = null;
-        }
-        if (bm != null) {
-            try {
-                rv.setImageViewBitmap(R.id.gfdhstrdsga, RoundCorner
-                        .toRoundCorner(bm, bm
-                                .getHeight() / 6));
-            } catch (Exception e) {
-                rv.setImageViewResource(R.id.gfdhstrdsga,
-                        R.drawable.ic_launcher);
-            }
-        } else {
-            rv.setImageViewResource(R.id.gfdhstrdsga, R.mipmap.icon);
-        }
-
-//        notif = new Notification.Builder(this)
-//                .setAutoCancel(false)
-//                .setTicker(from)
-//                .setSmallIcon(R.mipmap.icon)
-//                .setContentTitle(from)
-//                .setContentText(message)
-//                .setContentIntent(contentIntent)
-//                .build();
-//        notif.flags = Notification.FLAG_AUTO_CANCEL;
-//        notif.contentView = rv;
         notif = buildNotification();
         startForeground(NOTIFICATION_ID, notif);
     }
     private Notification buildNotification() {
         Music music = getPlayingMusic();
-        final String albumName = music.getTitle();
+        final String title = music.getTitle();
+        final String albumName = music.getAlbum();
         final String artistName = music.getArtist();
         final boolean isPlaying = isPlaying();
-        String text = TextUtils.isEmpty(albumName)
+        String text = TextUtils.isEmpty(artistName)
                 ? artistName : artistName + " - " + albumName;
 
         int playButtonResId = isPlaying
                 ? R.drawable.ic_pause_white_18dp : R.drawable.ic_play_arrow_white_18dp;
 
         Intent nowPlayingIntent = new Intent(this,MainActivity.class);
+        nowPlayingIntent.putExtra(ACTION_SERVICE,true);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Bitmap artwork;
-        artwork = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString());
+        artwork = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),ImageUtils.getAlbumDisplayOptions());
 
         if (artwork == null) {
-            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2);
+            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2,ImageUtils.getNotifyDisplayOptions());
         }
-
-//        if (mNotificationPostTime == 0) {
-//            mNotificationPostTime = System.currentTimeMillis();
-//        }
 
         android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_empty_music2)
                 .setLargeIcon(artwork)
                 .setContentIntent(clickIntent)
-//                .setContentTitle(getTrackName())
+                .setContentTitle(title)
                 .setContentText(text)
-//                .setWhen(mNotificationPostTime)
                 .addAction(R.drawable.ic_skip_previous_white_24dp,
                         "",
-                        retrievePlaybackAction(NOTIFICATION_ACTION_PREV))
+                        retrievePlaybackAction(ACTION_PREV))
                 .addAction(playButtonResId, "",
-                        retrievePlaybackAction(NOTIFICATION_ACTION_PLAY))
+                        retrievePlaybackAction(ACTION_PLAY))
                 .addAction(R.drawable.ic_skip_next_white_24dp,
                         "",
-                        retrievePlaybackAction(NOTIFICATION_ACTION_NEXT));
+                        retrievePlaybackAction(ACTION_NEXT));
 
-//        if (TimberUtils.isJellyBeanMR1()) {
-//            builder.setShowWhen(false);
-//        }
         if (SystemUtils.isLollipop()) {
             builder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
-//                    .setMediaSession(mSession.getSessionToken())
                     .setShowActionsInCompactView(0, 1, 2, 3);
             builder.setStyle(style);
         }
-//        if (artwork != null && SystemUtils.isLollipop())
-//            builder.setColor(Palette.from(artwork).generate().getVibrantColor(Color.parseColor("#403f4d")));
         Notification n = builder.build();
-
-//        if (PreferencesUtility.getInstance(this).getXPosedTrackselectorEnabled()) {
-//            addXTrackSelector(n);
-//        }
 
         return n;
     }
     private final PendingIntent retrievePlaybackAction(final String action) {
-        final ComponentName serviceName = new ComponentName(this, PlayService.class);
         Intent intent = new Intent(action);
-        intent.setComponent(serviceName);
-
-        return PendingIntent.getService(this, 0, intent, 0);
+        return PendingIntent.getBroadcast(this, 0, intent, 0);
     }
 
+    private class ServiceReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            final String command = intent.getStringExtra(CMDNAME);
+            handleCommandIntent(intent);
+        }
+    }
+
+    private void handleCommandIntent(Intent intent) {
+        final String action = intent.getAction();
+
+
+        if (ACTION_NEXT.equals(action)) {
+            next();
+        } else if (ACTION_PREV.equals(action)){
+            prev();
+        } else if (ACTION_PLAY.equals(action)) {
+            playPause();
+        }
+    }
 }

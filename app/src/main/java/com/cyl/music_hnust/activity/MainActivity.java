@@ -34,14 +34,22 @@ import com.cyl.music_hnust.map.NearActivity;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.service.OnPlayerListener;
 import com.cyl.music_hnust.service.PlayService;
+import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 描述
@@ -254,7 +262,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_shuffle:
-
+                getDynamic();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -392,5 +400,39 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     public static PlayService getmPlayService() {
         return mPlayService;
+    }
+
+    private void getDynamic(){
+        OkHttpUtils.get().url(Constants.DEFAULT_USER_URL)
+                .addParams("user_id","1305030212")
+                .addParams("updateDetail","")
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response) throws Exception {
+
+                        Log.e("Response",response.toString());
+                        JSONObject dataJson = null;
+                        try {
+                            dataJson = new JSONObject(String.valueOf(response));
+
+//                            mdatas = JsonParsing.getDynamic(dataJson);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e) {
+
+                        Log.e("Exception",e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(Object response) {
+                    }
+                });
+
     }
 }
