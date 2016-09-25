@@ -63,45 +63,53 @@ public class CoverLoader {
     }
 
     public Bitmap loadThumbnail(String uri) {
-        Bitmap bitmap;
-        if (TextUtils.isEmpty(uri)) {
-            bitmap = mThumbnailCache.get(KEY_NULL);
-            if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
-                mThumbnailCache.put(KEY_NULL, bitmap);
-            }
-        } else {
-            bitmap = mThumbnailCache.get(uri);
-            if (bitmap == null) {
-                bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 10);
+        Bitmap bitmap = null;
+        try{
+            if (TextUtils.isEmpty(uri)) {
+                bitmap = mThumbnailCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = loadThumbnail(null);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    mThumbnailCache.put(KEY_NULL, bitmap);
                 }
-                mThumbnailCache.put(uri, bitmap);
+            } else {
+                bitmap = mThumbnailCache.get(uri);
+                if (bitmap == null) {
+                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 10);
+                    if (bitmap == null) {
+                        bitmap = loadThumbnail(null);
+                    }
+                    mThumbnailCache.put(uri, bitmap);
+                }
             }
+        }catch (Exception e){
+            
         }
         return bitmap;
     }
 
     public Bitmap loadBlur(String uri) {
-        Bitmap bitmap;
-        if (TextUtils.isEmpty(uri)) {
-            bitmap = mBlurCache.get(KEY_NULL);
-            if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.play_page_default_bg);
-                mBlurCache.put(KEY_NULL, bitmap);
-            }
-        } else {
-            bitmap = mBlurCache.get(uri);
-            if (bitmap == null) {
-                bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
+        Bitmap bitmap = null;
+        try {
+            if (TextUtils.isEmpty(uri)) {
+                bitmap = mBlurCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = loadBlur(null);
-                } else {
-                    bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.play_page_default_bg);
+                    mBlurCache.put(KEY_NULL, bitmap);
                 }
-                mBlurCache.put(uri, bitmap);
+            } else {
+                bitmap = mBlurCache.get(uri);
+                if (bitmap == null) {
+                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
+                    if (bitmap == null) {
+                        bitmap = loadBlur(null);
+                    } else {
+                        bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
+                    }
+                    mBlurCache.put(uri, bitmap);
+                }
             }
+        }catch (Exception e){
+            
         }
         return bitmap;
     }

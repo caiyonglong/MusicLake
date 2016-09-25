@@ -29,7 +29,7 @@ import com.cyl.music_hnust.MyActivity;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.RoundCorner;
 
 import java.io.File;
@@ -193,14 +193,14 @@ public class MusicPlayService extends Service {
                 if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
                 } else {
-                    ToastUtil.show(context, "播放列表为空");
+                    ToastUtils.show(context, "播放列表为空");
                 }
                 break;
             case "2"://单曲
                 if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
                 } else {
-                    ToastUtil.show(context, "播放列表为空");
+                    ToastUtils.show(context, "播放列表为空");
                 }
                 break;
             case "1"://随机
@@ -209,7 +209,7 @@ public class MusicPlayService extends Service {
                 if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
                 } else {
-                    ToastUtil.show(context, "播放列表为空");
+                    ToastUtils.show(context, "播放列表为空");
                 }
 
                 break;
@@ -230,14 +230,14 @@ public class MusicPlayService extends Service {
                 if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
                 } else {
-                    ToastUtil.show(context, "播放列表为空");
+                    ToastUtils.show(context, "播放列表为空");
                 }
                 break;
             case "2"://单曲
                 if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
                 } else {
-                    ToastUtil.show(context, "播放列表为空");
+                    ToastUtils.show(context, "播放列表为空");
                 }
                 break;
             case "1"://随机
@@ -246,7 +246,7 @@ public class MusicPlayService extends Service {
                 if (songs.get(currentListItme).getPath() != null) {
                     playMusic(songs.get(currentListItme).getPath());
                 } else {
-                    ToastUtil.show(context, "播放列表为空");
+                    ToastUtils.show(context, "播放列表为空");
                 }
 
                 break;

@@ -16,9 +16,9 @@
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--选中状态icon的颜色和字体颜色-->
-        <item name="colorPrimary">@color/setting_blue</item>
-        <item name="colorPrimaryDark">@color/setting_blue</item>
-        <item name="colorAccent">@color/setting_blue</item>
+        <item name="colorPrimary">@color/grean</item>
+        <item name="colorPrimaryDark">@color/grean</item>
+        <item name="colorAccent">@color/grean</item>
         <!--正常状态下字体颜色和icon颜色-->
 
         <item name="android:windowBackground">@color/window_background</item>
@@ -26,6 +26,7 @@
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground</item>
+
 
     </style>
 
@@ -80,7 +81,7 @@
     </style>
 
     <style name="AppTheme.Search" parent="MyThemeBlue">
-        <item name="colorAccent">@color/main_white</item>
+        <!--<item name="colorAccent">@color/main_white</item>-->
     </style>
 
     <style name="AppTheme.Divider">

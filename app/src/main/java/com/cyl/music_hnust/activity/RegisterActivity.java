@@ -11,6 +11,8 @@ import com.cyl.music_hnust.R;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -22,8 +24,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     FloatingActionButton fab;
     Button bt_go;
+    @Bind(R.id.emailWrapper)
     TextInputLayout emailWrapper;
+
+    @Bind(R.id.userNameWrapper)
     TextInputLayout userNameWrapper;
+
+    @Bind(R.id.passWordWrapper)
     TextInputLayout passWordWrapper;
 
 
@@ -33,8 +40,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         bt_go.setOnClickListener(this);
     }
 
-    @Override
-    protected void initDatas() {
+    private void initData() {
 
         emailWrapper.setHint("邮箱");
         userNameWrapper.setHint("昵称");
@@ -42,17 +48,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_register;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+
+//初始化黄油刀控件绑定框架
+        ButterKnife.bind(this);
+        initData();
     }
 
-    @Override
-    public void initViews(Bundle savedInstanceState) {
-        emailWrapper = (TextInputLayout) findViewById(R.id.emailWrapper);
-        userNameWrapper = (TextInputLayout) findViewById(R.id.userNameWrapper);
-        passWordWrapper = (TextInputLayout) findViewById(R.id.passWordWrapper);
-
-    }
     @OnClick({R.id.fab,R.id.bt_go})
     public void onClick(View view) {
         switch (view.getId()) {

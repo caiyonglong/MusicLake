@@ -18,7 +18,7 @@ import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,19 +162,19 @@ public class LocalMusic extends AppCompatActivity implements View.OnClickListene
                             if (type == LOCAL_LIST) {
                                 DBDao dbDao = new DBDao(getApplicationContext());
                                 if (!songs.get(position).isFavorite()) {
-                                    ToastUtil.show(getApplicationContext(), "添加成功");
+                                    ToastUtils.show(getApplicationContext(), "添加成功");
                                 } else {
-                                    ToastUtil.show(getApplicationContext(), "已添加");
+                                    ToastUtils.show(getApplicationContext(), "已添加");
                                 }
                             }else if(type == FAVOR_LIST){
                                 DBDao dbDao = new DBDao(getApplicationContext());
                                 if (mDatas.get(position).isFavorite()) {
-                                    ToastUtil.show(getApplicationContext(), "移除成功");
+                                    ToastUtils.show(getApplicationContext(), "移除成功");
                                     initData();
                                     adapter.mDatas =mDatas;
                                     adapter.notifyDataSetChanged();
                                 } else {
-                                    ToastUtil.show(getApplicationContext(), "...");
+                                    ToastUtils.show(getApplicationContext(), "...");
                                 }
                             }
 

@@ -4,13 +4,13 @@
     android:id="@+id/play_control"
     android:layout_width="fill_parent"
     android:layout_height="57dp"
+    android:background="?attr/windowBackground"
     android:layout_gravity="top">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:background="?attr/windowBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

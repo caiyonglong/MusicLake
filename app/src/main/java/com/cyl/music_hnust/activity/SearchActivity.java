@@ -37,17 +37,15 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     }
 
     @Override
-    protected void initDatas() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.acitvity_search);
 
+        initView();
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.acitvity_search;
-    }
 
-    @Override
-    public void initViews(Bundle savedInstanceState) {
+    private void initView() {
         mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

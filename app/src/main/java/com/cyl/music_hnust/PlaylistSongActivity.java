@@ -23,7 +23,7 @@ import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -246,9 +246,9 @@ public class PlaylistSongActivity extends AppCompatActivity implements View.OnCl
                             DBDao dbDao = new DBDao(getApplicationContext());
 
                             if (!songs.get(position).isFavorite()) {
-                                ToastUtil.show(getApplicationContext(), "添加成功");
+                                ToastUtils.show(getApplicationContext(), "添加成功");
                             } else {
-                                ToastUtil.show(getApplicationContext(), "已添加");
+                                ToastUtils.show(getApplicationContext(), "已添加");
                             }
 
                         } else {

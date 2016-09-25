@@ -35,7 +35,7 @@ import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;
 import com.cyl.music_hnust.utils.ScanInfo;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -257,9 +257,9 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
                                 DBDao dbDao = new DBDao(getContext());
 
                                 if (!listinfo.get(position).isFavorite()) {
-                                    ToastUtil.show(getActivity(), "添加成功");
+                                    ToastUtils.show(getActivity(), "添加成功");
                                 } else {
-                                    ToastUtil.show(getActivity(), "已添加");
+                                    ToastUtils.show(getActivity(), "已添加");
                                 }
 
                             } else {
@@ -379,13 +379,13 @@ public class DownloadActivity extends FragmentActivity implements View.OnClickLi
         public void onItemClick(View view, int position) {
             switch (view.getId()){
                 case R.id.btn_stop:
-                    ToastUtil.show(getActivity(),"点击了暂停");
+                    ToastUtils.show(getActivity(),"点击了暂停");
                     adapter.isPause[position] = true;
                     adapter.setChange(data.get(position));
                     handler.sendEmptyMessage(0);
                     break;
                 case R.id.btn_continue:
-                    ToastUtil.show(getActivity(),"点击了继续");
+                    ToastUtils.show(getActivity(),"点击了继续");
                     adapter.setChange(data.get(position));
                     adapter.isPause[position] = false;
                     handler.sendEmptyMessage(0);

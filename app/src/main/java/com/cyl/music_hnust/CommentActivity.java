@@ -36,7 +36,7 @@ import com.cyl.music_hnust.fragment.MyFragment;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.FullyLinearLayoutManager;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -105,7 +105,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     comment_num = comment_num + 1;
                     item_action_comment.setText(comment_num + "评论");
 
-                    ToastUtil.show(activity, "评论成功");
+                    ToastUtils.show(activity, "评论成功");
                     break;
                 case 1:
                     mDatas.clear();
@@ -344,7 +344,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO Auto-generated method stub
-                ToastUtil.show(getApplicationContext(), "网络连接错误，请检查网络");
+                ToastUtils.show(getApplicationContext(), "网络连接错误，请检查网络");
             }
         });
         // 3 将StringRequest添加到RequestQueue
@@ -395,7 +395,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-                ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
+                ToastUtils.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
     }

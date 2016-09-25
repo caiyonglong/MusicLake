@@ -2,6 +2,7 @@ package com.cyl.music_hnust.fragment;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -20,7 +21,9 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.lyric.LrcView;
 import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
@@ -42,7 +45,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     //整个容器
     LinearLayout container;
     //图片按钮
-    ImageView skip_prev, skip_next ,iv_back;
+    ImageView skip_prev, skip_next ,iv_back,ivPlayingBg;
     //播放暂停按钮
     PlayPauseButton mPlayPause;
     View playPauseWrapper;
@@ -74,6 +77,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         sk_progress = (SeekBar) rootView.findViewById(R.id.song_progress);
         skip_prev = (ImageView) rootView.findViewById(R.id.previous);
         iv_back = (ImageView) rootView.findViewById(R.id.iv_back);
+        ivPlayingBg = (ImageView) rootView.findViewById(R.id.iv_play_page_bg);
         skip_next = (ImageView) rootView.findViewById(R.id.next);
         mPlayPause = (PlayPauseButton) rootView.findViewById(R.id.play_pause);
         playPauseWrapper = rootView.findViewById(R.id.playpausewrapper);
@@ -209,26 +213,27 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 String lrcPath = uri.replace(".mp3", ".lrc");
                 File file = new File(lrcPath);
                 if (file.exists()) {
-                    loadLrc(lrcPath);
+                    loadLrc(lrcPath,Music.Type.LOCAL);
                 }else {
-                    loadLrc("");
+                    loadLrc("", Music.Type.LOCAL);
                 }
             }else {
-                loadLrc("");
+                loadLrc("", Music.Type.LOCAL);
             }
         }
         else {
             String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-            loadLrc(lrcPath);
+            loadLrc(lrcPath, Music.Type.ONLINE);
         }
     }
 
     /**
      * 歌词视图加载歌词
      * @param path
+     * @param type
      */
-    private void loadLrc(String path) {
-        mLrcView.loadLrc(path);
+    private void loadLrc(String path, Music.Type type) {
+        mLrcView.loadLrc(path,type);
         // 清除tag
         mLrcView.setTag(null);
     }
@@ -239,22 +244,21 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void setCoverAndBg(Music music) {
 
-//        if (music.getType() == Music.Type.LOCAL) {
-////            if (music.getCoverUri().length()>0) {
-////                ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(Long.parseLong(music.getCoverUri())).toString(), civ_cover);
-////            }
-//        } else {
-////            if (music.getCover() == null) {
-////                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
-////                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
-////            } else {
-////                Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
-////                cover = ImageUtils.createCircleImage(cover);
-////                mAlbumCoverView.setCoverBitmap(cover);
-////                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
-////                ivPlayingBg.setImageBitmap(bg);
-////            }
-//        }
+        if (music.getType() == Music.Type.LOCAL) {
+//            civ_cover.setImageBitmap(CoverLoader.getInstance().loadThumbnail(music.getCoverUri()));
+            ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
+        } else {
+            if (music.getCover() == null) {
+//                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
+                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
+            } else {
+//                Bitmap cover = ImageUtils.resizeImage(music.getCover(), SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
+//                cover = ImageUtils.createCircleImage(cover);
+//                civ_cover.setImageBitmap(cover);
+                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
+                ivPlayingBg.setImageBitmap(bg);
+            }
+        }
         initAlbumpic();
     }
 

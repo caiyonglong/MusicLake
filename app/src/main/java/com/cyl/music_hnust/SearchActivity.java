@@ -28,7 +28,7 @@ import com.cyl.music_hnust.service.DownloadService;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -238,7 +238,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     list.add(listitem, musicInfo);
                     mService.setSongs(list);
                     MyActivity.mService = mService;
-                    ToastUtil.show(getApplicationContext(), "已添加到播放队列");
+                    ToastUtils.show(getApplicationContext(), "已添加到播放队列");
                 }
 
                 break;
@@ -287,7 +287,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            ToastUtil.show(getApplicationContext(), "已添加到下载队列");
+                            ToastUtils.show(getApplicationContext(), "已添加到下载队列");
                             Intent intent = new Intent();
                             intent.setClass(getApplicationContext(), DownloadService.class);
                             intent.putExtra("downloadUrl", infos.get(pos).getPath());

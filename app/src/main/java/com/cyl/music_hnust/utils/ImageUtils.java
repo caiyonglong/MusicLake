@@ -1,19 +1,23 @@
 package com.cyl.music_hnust.utils;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.cyl.music_hnust.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.io.File;
+import java.io.FileDescriptor;
 
 /**
  * 作者：yonglong on 2016/8/24 20:14
@@ -21,6 +25,7 @@ import java.io.File;
  * 版本：2.5
  */
 public class ImageUtils {
+
     public static DisplayImageOptions getCoverDisplayOptions() {
         return new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.default_cover) // 设置图片下载期间显示的图片
@@ -355,6 +360,45 @@ public class ImageUtils {
                 path.endsWith(".JPEG") || path.endsWith(".BMP");
     }
 
+
+    public static Bitmap getArtworkFromFile(Context context2, long songID, long albumID) {
+        Bitmap bitmap = null;
+        if (songID < 0 && albumID < 0) {
+            throw new IllegalArgumentException(
+                    "Must specify an album or a song id");
+        }
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            FileDescriptor fd = null;
+            if (albumID < 0) {
+                Uri uri = Uri.parse("content://media/external/audio/media/" + songID + "/albumart");
+                ParcelFileDescriptor dfd = context2.getContentResolver().openFileDescriptor(uri, "r");
+                if (dfd != null) {
+                    fd = dfd.getFileDescriptor();
+                }
+
+            } else {
+                Uri uri = getAlbumArtUri(albumID);
+                ParcelFileDescriptor dfd = context2.getContentResolver().openFileDescriptor(uri, "r");
+                if (dfd != null) {
+                    fd = dfd.getFileDescriptor();
+                }
+
+            }
+            options.inSampleSize = 1;
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFileDescriptor(fd, null, options);
+
+            options.inSampleSize = 500;
+            options.inJustDecodeBounds = false;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
+
+        } catch (Exception e) {
+            e.printStackTrace() ;
+        }
+        return bitmap;
+    }
 
 
 }

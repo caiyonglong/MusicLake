@@ -45,7 +45,7 @@ import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -219,7 +219,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
                     volley_StringRequest_GET(user.getUser_id(), 0, 0
                             , 2);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "请先登录!");
+                    ToastUtils.show(getApplicationContext(), "请先登录!");
                 }
             }
         });
@@ -234,7 +234,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
             volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
                     , latLonPoint.getLongitude(), 0);
         } else {
-            ToastUtil.show(getApplicationContext(), "定位失败!");
+            ToastUtils.show(getApplicationContext(), "定位失败!");
         }
         Handler x = new Handler();
         x.postDelayed(new splashhandler(), 500);
@@ -249,7 +249,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
                 volley_StringRequest_GET(user.getUser_id(), 0, 0
                         , 1);
             } else {
-                ToastUtil.show(getApplicationContext(), "请先登录!");
+                ToastUtils.show(getApplicationContext(), "请先登录!");
             }
 
         }
@@ -363,7 +363,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
                     message.what = requestcode;
                     if (requestcode == 1) {
 
-                        //ToastUtil.show(getApplicationContext(),response.toString()+"");
+                        //ToastUtils.show(getApplicationContext(),response.toString()+"");
 
                         Bundle bundle = new Bundle();
                         bundle.putString("response", response);
@@ -379,7 +379,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
+                ToastUtils.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
 

@@ -45,7 +45,7 @@ import com.cyl.music_hnust.db.DBDao;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.MusicInfo;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.DividerItemDecoration;
 import com.cyl.music_hnust.view.ExStaggeredGridLayoutManager;
 
@@ -251,7 +251,7 @@ public class MusicFragment1 extends Fragment implements View.OnClickListener, My
                                     playlistadapter.setmHeights(al_playlist);
                                     handler.sendEmptyMessage(0);
                                 } else {
-                                    ToastUtil.show(getContext(), "歌单名不能为空！");
+                                    ToastUtils.show(getContext(), "歌单名不能为空！");
                                 }
                             }
                         })

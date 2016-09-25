@@ -3,22 +3,29 @@ package com.cyl.music_hnust.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.OnlineMusicActivity;
 import com.cyl.music_hnust.adapter.OnlineAdapter;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.OnlinePlaylist;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.cyl.music_hnust.model.OnlinePlaylists;
+import com.cyl.music_hnust.model.OnlinePlaylists.Billboard;
+import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.Extras;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * 功能：在线排行榜
@@ -28,11 +35,11 @@ import java.util.List;
  */
 public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItemClickListener {
 
-    XRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     //适配器
     private OnlineAdapter mAdapter;
     //排行榜集合
-    private List<OnlinePlaylist> mPlaylists = new ArrayList<>();
+    private List<Billboard> mBillboards = new ArrayList<>();
     private TextView tv_empty;
 
     @Override
@@ -43,40 +50,20 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     @Override
     public void initViews() {
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
-        mRecyclerView = (XRecyclerView) rootView.findViewById(R.id.xrecyclerview);
-
-
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
 
     }
     @Override
     protected void initDatas() {
-        init();
 
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         //适配器
-        mAdapter = new OnlineAdapter(getActivity(), mPlaylists);
-
-
+        mAdapter = new OnlineAdapter(getActivity(), mBillboards);
         mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                init();
-                mAdapter.notifyDataSetChanged();
-                //refresh data here
-                mRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-                // load more data here
-                mRecyclerView.loadMoreComplete();
-            }
-        });
+        init();
 
     }
 
@@ -96,17 +83,27 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             tv_empty.setVisibility(View.GONE);
-        }
-        if (mPlaylists.isEmpty()) {
-            String[] titles=getResources().getStringArray(R.array.online_music_list_title);
-            String[] types=getResources().getStringArray(R.array.online_music_list_type);
-            for (int i = 0; i < titles.length; i++) {
-                OnlinePlaylist info = new OnlinePlaylist();
-                info.setTitle(titles[i]);
-                info.setType(types[i]);
-                mPlaylists.add(info);
+            if (mBillboards.isEmpty()) {
+                OkHttpUtils.get().url(Constants.BASE_MUSIC_URL)
+                        .build()
+                        .execute(new JsonCallback<OnlinePlaylists>(OnlinePlaylists.class) {
+                            @Override
+                            public void onResponse(OnlinePlaylists response) {
+                                if (response == null || response.getContent() == null) {
+                                    return;
+                                }
+                                mBillboards= response.getContent();
+                                mAdapter.setmBillboards(mBillboards);
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onError(Call call, Exception e) {
+                            }
+                        });
             }
         }
+
     }
 
     @Override
@@ -137,9 +134,10 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     @Override
     public void onItemClick(View view, int position) {
 //        ToastUtil.show(getContext(),"===="+position);
-        OnlinePlaylist songListInfo = mPlaylists.get(position);
+        Billboard billboard = mBillboards.get(position);
         Intent intent = new Intent(getActivity(), OnlineMusicActivity.class);
-        intent.putExtra("online_list_type", songListInfo);
+        intent.putExtra(Extras.BILLBOARD_TITLE, billboard.getName());
+        intent.putExtra(Extras.BILLBOARD_TYPE, billboard.getType());
         startActivity(intent);
     }
 }

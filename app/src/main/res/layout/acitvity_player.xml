@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:lines="1"
                     android:text="无音乐"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_common" />

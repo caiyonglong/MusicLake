@@ -28,15 +28,13 @@ import com.cyl.music_hnust.adapter.OnlineMusicAdapter;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.model.OnlineMusicInfo;
 import com.cyl.music_hnust.model.OnlineMusicList;
-import com.cyl.music_hnust.model.OnlinePlaylist;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SizeUtils;
-import com.cyl.music_hnust.utils.StatusBarCompat;
-import com.cyl.music_hnust.utils.SystemUtils;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
@@ -46,6 +44,8 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 
 /**
@@ -55,79 +55,60 @@ import okhttp3.Call;
  */
 public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdapter.OnItemClickListener {
 
-
-    private OnlinePlaylist mListInfo;
     private OnlineMusicList mMusicList;
-    LinearLayout main_content;
 
     private List<OnlineMusicInfo> mMusicLists = new ArrayList<>();
     private OnlineMusicAdapter mAdapter;
+
+    @Bind(R.id.main_content)
+    LinearLayout main_content;
+    @Bind(R.id.xrecyclerview)
     XRecyclerView mRecyclerView;
+
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
     private View vHeader;
     private PlayService mPlayService;
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
-
+    private String title;
+    private String type;
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_online;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_online);
+
+//初始化黄油刀控件绑定框架
+        ButterKnife.bind(this);
+
+        title = getIntent().getStringExtra(Extras.BILLBOARD_TITLE);
+        type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
+
+        setTitle(title);
+        init();
     }
 
-    @Override
-    public void initViews(Bundle savedInstanceState) {
+    private void init() {
 
-        mListInfo = (OnlinePlaylist) getIntent().getSerializableExtra("online_list_type");
-        setTitle(mListInfo.getTitle());
-
-        mRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        bindService();
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        main_content = (LinearLayout) findViewById(R.id.main_content);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
 
-
-    }
-
-
-    @Override
-    protected void listener() {
-        mAdapter.setOnItemClickListener(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void initDatas() {
-        bindService();
         vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_header, null);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this,150));
         vHeader.setLayoutParams(params);
-        initSystemBar();
         mAdapter = new OnlineMusicAdapter(this, mMusicLists);
-
+        mAdapter.setOnItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addHeaderView(vHeader);
         mRecyclerView.setAdapter(mAdapter);
+
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -143,15 +124,28 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
                 mRecyclerView.loadMoreComplete();
             }
         });
+
     }
-    /**
-     * 沉浸式状态栏
-     */
-    private void initSystemBar() {
-        if (SystemUtils.isKITKAT()) {
-            int top = StatusBarCompat.getStatusBarHeight(this);
-            main_content.setPadding(0, top, 0, 0);
+
+
+
+    @Override
+    protected void listener() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void bindService() {
@@ -178,7 +172,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private void getMusic(final int offset) {
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
-                .addParams(Constants.PARAM_TYPE, mListInfo.getType())
+                .addParams(Constants.PARAM_TYPE, type)
                 .addParams(Constants.PARAM_SIZE, String.valueOf(Constants.MUSIC_LIST_SIZE))
                 .addParams(Constants.PARAM_OFFSET, String.valueOf(offset))
                 .build()
@@ -230,13 +224,13 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
                 mProgressDialog.cancel();
                 Log.e("***********",music.toString());
                 mPlayService.playMusic(music);
-//                ToastUtil.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
+//                ToastUtils.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
             }
 
             @Override
             public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
-                ToastUtil.show(getApplicationContext(),R.string.unable_to_play);
+                ToastUtils.show(getApplicationContext(),R.string.unable_to_play);
             }
         }.execute();
     }
@@ -262,8 +256,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
                 ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        ivCover.setImageBitmap(loadedImage);
-                        ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
+                        if(loadedImage!=null) {
+                            ivCover.setImageBitmap(loadedImage);
+                            ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
+                        }
                     }
                 });
     }

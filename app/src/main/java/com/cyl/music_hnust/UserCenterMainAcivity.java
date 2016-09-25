@@ -39,7 +39,7 @@ import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -454,7 +454,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
                             , email.getText().toString().trim(),
                             phone.getText().toString().trim());
                 } else {
-                    ToastUtil.show(getApplicationContext(), "你漏了哦0.0");
+                    ToastUtils.show(getApplicationContext(), "你漏了哦0.0");
                 }
             }
         });

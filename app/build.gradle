@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    //  testCompile 'junit:junit:4.12'
+      testCompile 'junit:junit:4.12'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:+'
     compile 'com.android.support:appcompat-v7:+'
@@ -49,5 +49,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
 
     compile 'com.afollestad.material-dialogs:core:0.9.0.1'
-    
+//    compile 'im.fir:fir-sdk:latest.integration@aar'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
+
 }

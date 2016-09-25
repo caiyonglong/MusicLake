@@ -16,6 +16,8 @@ import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 
@@ -24,6 +26,7 @@ import pl.tajchert.nammu.PermissionCallback;
  */
 public class WelcomeActivity extends BaseActivity {
 
+    @Bind(R.id.container)
     RelativeLayout container;
 
     private ServiceConnection mPlayServiceConnection;
@@ -46,21 +49,17 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     @Override
-    protected void initDatas() {
-
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_welcome;
-    }
-
-    @Override
-    public void initViews(Bundle savedInstanceState) {
-        container = (RelativeLayout) findViewById(R.id.container);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_welcome);
+//初始化黄油刀控件绑定框架
+        ButterKnife.bind(this);
+        SystemUtils.setSystemBarTransparent(this);
         initSystemBar();
         checkPermissionAndThenLoad();
+
     }
+
 
     /**
      * 沉浸式状态栏
@@ -74,21 +73,60 @@ public class WelcomeActivity extends BaseActivity {
 
     //检查权限
     private void checkPermissionAndThenLoad() {
+
+//        RxPermissions.getInstance(this)
+//                .request(
+//                        Manifest.permission.READ_PHONE_STATE,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//
+//                        //网络
+//                        Manifest.permission.INTERNET,
+//                        Manifest.permission.ACCESS_NETWORK_STATE,
+//                        Manifest.permission.ACCESS_WIFI_STATE,
+//                        Manifest.permission.CHANGE_WIFI_STATE,
+//                        //获取电话状态
+//                        Manifest.permission.READ_PHONE_STATE,
+//                        //传感器
+//                        Manifest.permission.VIBRATE,
+//                        Manifest.permission.LOCATION_HARDWARE,
+//                        //定位权限
+//                        Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+//                        Manifest.permission.ACCESS_FINE_LOCATION
+//
+//                        )//这里申请了两组权限
+//                .subscribe(new Action1<Boolean>() {
+//                    @Override
+//                    public void call(Boolean granted) {
+//                        if (granted) {
+//                            //同意后跳转
+//                            checkService();
+//                        } else {
+//                            //不同意，给提示
+//                            Toast.makeText(WelcomeActivity.this, "请同意软件的权限，才能继续提供服务", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                });
+
         Nammu.init(this);
         //check for permission
-        String[] mPermissionList = new String[]{
-                Manifest.permission.CHANGE_CONFIGURATION,
-                Manifest.permission.CHANGE_WIFI_STATE,
-                Manifest.permission.WAKE_LOCK,
-                Manifest.permission.WRITE_SETTINGS,
-                Manifest.permission.VIBRATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.READ_LOGS,
+        final String[] mPermissionList = new String[]{
                 Manifest.permission.READ_PHONE_STATE,
-
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
 
+                //网络
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                //获取电话状态
+                Manifest.permission.READ_PHONE_STATE,
+                //传感器
+                Manifest.permission.VIBRATE,
+                Manifest.permission.LOCATION_HARDWARE,
                 //定位权限
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -105,7 +143,7 @@ public class WelcomeActivity extends BaseActivity {
                         .setAction("OK", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Nammu.askForPermission(WelcomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, permissionReadstorageCallback);
+                                Nammu.askForPermission(WelcomeActivity.this, mPermissionList, permissionReadstorageCallback);
                             }
                         }).show();
             } else {
@@ -121,10 +159,10 @@ public class WelcomeActivity extends BaseActivity {
             finish();
         } else {
             startService();
-
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+//                    startMainActivity();
                     bindService();
                 }
             }, 1000);

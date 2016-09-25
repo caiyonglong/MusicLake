@@ -55,6 +55,8 @@
         <activity android:name=".activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+
+            android:theme="@style/MyThemeBlue"
             >
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
@@ -193,83 +195,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
 
-
-        <activity
-            android:name="com.umeng.simplify.ui.activities.FeedDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-
-
-        <activity android:name="com.umeng.common.ui.activities.SettingActivity" />
-
-        <activity android:name="com.umeng.common.ui.activities.AlbumActivity" />
-
-        <activity android:name="com.umeng.common.ui.imagepicker.PhotoSelectorActivity" />
-        <activity android:name="com.umeng.common.ui.imagepicker.PhotoPreviewActivity" />
-        <activity
-            android:name="com.umeng.common.ui.activities.MessageChatActivity"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!--精简版-->
-        <activity
-            android:name="com.umeng.simplify.ui.activities.FindActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.NewMsgActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.SettingActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.UserInfoActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.TopicDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.PostFeedActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.LoginSimplifyActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustNothing" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.RegisterActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustNothing" />
-        <activity
-            android:name="com.umeng.simplify.ui.activities.FeedsActivity"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-
-        <activity
-            android:name="com.umeng.common.ui.activities.BrowserActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="57b44364e0f55a7d7a002aa1"></meta-data>
-        <meta-data
-            android:name="UMENG_MESSAGE_SECRET"
-            android:value="96445cf632d4c495d325a01b94212550"></meta-data>
-
+        <!--<meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" />-->
     </application>
 
 </manifest>

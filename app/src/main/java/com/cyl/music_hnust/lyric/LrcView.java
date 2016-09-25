@@ -12,11 +12,14 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.SizeUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -320,7 +323,7 @@ public class LrcView extends View implements ILrcView {
      *
      * @param path 歌词文件路径
      */
-    public void loadLrc(String path) {
+    public void loadLrc(String path, Music.Type type) {
         reset();
 
         if (TextUtils.isEmpty(path) || !new File(path).exists()) {
@@ -333,8 +336,12 @@ public class LrcView extends View implements ILrcView {
         StringReader reader=null;
         BufferedReader br=null;
         try {
-            reader = new StringReader(text);
-            br = new BufferedReader(reader);
+            if (type == Music.Type.LOCAL){
+                reader = new StringReader(text);
+                br = new BufferedReader(reader);
+            }else {
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));
+            }
             String line;
             while ((line = br.readLine()) != null) {
                 String[] arr = parseLine(line);

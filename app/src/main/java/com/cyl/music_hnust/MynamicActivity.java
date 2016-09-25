@@ -27,7 +27,7 @@ import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.SnackbarUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -218,7 +218,7 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO Auto-generated method stub
-                ToastUtil.show(getApplicationContext(), "网络连接异常，请检查网络！");
+                ToastUtils.show(getApplicationContext(), "网络连接异常，请检查网络！");
             }
         });
         jsonObjectRequest.setTag("info");

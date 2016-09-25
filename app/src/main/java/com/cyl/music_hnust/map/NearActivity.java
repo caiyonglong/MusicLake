@@ -37,7 +37,7 @@ import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -101,7 +101,7 @@ public class NearActivity extends AppCompatActivity {
                         adapter.latLonPoint = latLonPoint;
                     } else {
                         latLonPoint = new LatLonPoint(0, 0);
-                        ToastUtil.show(getApplicationContext(), "定位异常!");
+                        ToastUtils.show(getApplicationContext(), "定位异常!");
                         adapter.latLonPoint = latLonPoint;
                     }
                     adapter.myDatas = mydatas;
@@ -139,7 +139,7 @@ public class NearActivity extends AppCompatActivity {
             volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
                     , latLonPoint.getLongitude(), 0);
         } else {
-            ToastUtil.show(getApplicationContext(), "定位失败!");
+            ToastUtils.show(getApplicationContext(), "定位失败!");
         }
         Handler x = new Handler();
         x.postDelayed(new splashhandler(), 500);
@@ -155,7 +155,7 @@ public class NearActivity extends AppCompatActivity {
                 volley_StringRequest_GET(user.getUser_id(), 0, 0
                         , 1);
             } else {
-                ToastUtil.show(getApplicationContext(), "请先登录!");
+                ToastUtils.show(getApplicationContext(), "请先登录!");
             }
             dissmissProgressDialog();
         }
@@ -183,7 +183,7 @@ public class NearActivity extends AppCompatActivity {
                     volley_StringRequest_GET(user.getUser_id(), 0, 0
                             , 2);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "请先登录!");
+                    ToastUtils.show(getApplicationContext(), "请先登录!");
                 }
 
             }
@@ -410,7 +410,7 @@ public class NearActivity extends AppCompatActivity {
                     message.what = requestcode;
                     if (requestcode == 1) {
 
-                        //ToastUtil.show(getApplicationContext(),response.toString()+"");
+                        //ToastUtils.show(getApplicationContext(),response.toString()+"");
 
                         Bundle bundle = new Bundle();
                         bundle.putString("response", response);
@@ -427,7 +427,7 @@ public class NearActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 dissmissProgressDialog();
-                ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
+                ToastUtils.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
 

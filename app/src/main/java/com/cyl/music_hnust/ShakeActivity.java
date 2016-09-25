@@ -40,7 +40,7 @@ import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -157,7 +157,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         });
 
 
-        //ToastUtil.show(this, "『摇一{摇』搜索");
+        //ToastUtils.show(this, "『摇一{摇』搜索");
 
     }
 
@@ -217,11 +217,11 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
             } else {
 
                 handler.sendEmptyMessage(2);
-                ToastUtil.show(getApplicationContext(), "未播放歌曲");
+                ToastUtils.show(getApplicationContext(), "未播放歌曲");
             }
         } else {
             handler.sendEmptyMessage(2);
-            ToastUtil.show(getApplicationContext(), "暂未登录");
+            ToastUtils.show(getApplicationContext(), "暂未登录");
         }
     }
 
@@ -393,12 +393,12 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
                     Message message = new Message();
                     message.what = requestcode;
                     if (requestcode == 1) {
-                        //ToastUtil.show(getApplicationContext(),response.toString()+"");
+                        //ToastUtils.show(getApplicationContext(),response.toString()+"");
                         Bundle bundle = new Bundle();
                         bundle.putString("response", response.toString());
                         message.setData(bundle);
                     } else {
-                        //ToastUtil.show(getApplicationContext(), response.toString() + "");
+                        //ToastUtils.show(getApplicationContext(), response.toString() + "");
                     }
                     handler.sendMessage(message);
                 } catch (UnsupportedEncodingException e) {
@@ -410,7 +410,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-                ToastUtil.show(getApplicationContext(), "网络异常，请检查网络！");
+                ToastUtils.show(getApplicationContext(), "网络异常，请检查网络！");
             }
         });
 

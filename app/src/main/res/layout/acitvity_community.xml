@@ -10,6 +10,7 @@
 
 
     <android.support.design.widget.AppBarLayout
+        android:elevation="5dp"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
         <android.support.v7.widget.Toolbar
@@ -17,10 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:fitsSystemWindows="true"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="音乐社区" />
     </android.support.design.widget.AppBarLayout>
-
 
     <!--第二部分：主要内容，NestedScrollView和ScrollView基本功能一致，只不过NestedScrollView可以兼容新的控件-->
     <com.jcodecraeer.xrecyclerview.XRecyclerView

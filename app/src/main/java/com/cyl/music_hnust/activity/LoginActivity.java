@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -37,26 +38,21 @@ public class LoginActivity extends BaseActivity {
     TextInputLayout passwordWrapper;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+//初始化黄油刀控件绑定框架
+        ButterKnife.bind(this);
+        usernameWrapper.setHint("用户名");
+        usernameWrapper.setHint("密码");
+    }
+
+    @Override
     protected void listener() {
 
     }
 
-    @Override
-    protected void initDatas() {
-        usernameWrapper.setHint("用户名");
-        usernameWrapper.setHint("密码");
-
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_login;
-    }
-
-    @Override
-    public void initViews(Bundle savedInstanceState) {
-
-    }
 
     @OnClick({R.id.bt_go, R.id.fab})
     public void onClick(View view) {
@@ -74,12 +70,6 @@ public class LoginActivity extends BaseActivity {
                 } else {
                     usernameWrapper.setErrorEnabled(false);
                     passwordWrapper.setErrorEnabled(false);
-//                    CommUser user = new CommUser();
-//                    user.id = "123456789";
-//                    user.name = username;
-//                    // TODO：注册
-//                    doRegister(user,password);
-
                 }
 
                 break;
@@ -98,26 +88,4 @@ public class LoginActivity extends BaseActivity {
     public boolean validatePassword(String password) {
         return password.length() > 5&&password.length() <= 18;
     }
-
-//    private void doRegister(CommUser commUser,String password) {
-//        CommunitySDKImpl.getInstance().registerToWsq(this, commUser, new LoginListener() {
-//            @Override
-//            public void onStart() {}
-//
-//            @Override
-//            public void onComplete(int i, CommUser commUser) {
-//                if(i == 0 || i == 10013) {
-//                    Log.e("xxxxxx", "finish!!!!!!!");
-//                    Log.e("++++++",commUser.toString());
-////                    RegisterActivity.this.finish();
-//                    if(i == 0) {
-////                        To.showShortMsgByResName("umeng_comm_register_success");
-//                    }
-//
-////                    RegisterActivity.mRegisterListener.onComplete(stCode, userInfo);
-//                }
-//            }
-//        },password);
-//    }
-
 }

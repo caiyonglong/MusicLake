@@ -21,7 +21,7 @@ import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * 功能：社区
@@ -48,37 +48,45 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
 
     CommunityAdapter MyAdapter;
 
-    public static List<Dynamic> mdatas;
+    private static List<Dynamic> mdatas =new ArrayList<>();
 
     @Override
     protected void listener() {
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.acitvity_community);
+        //初始化黄油刀控件绑定框架
+        ButterKnife.bind(this);
+
+        initView();
+        init();
+
+    }
+
+    private void init() {
+
+        getDynamic();
+
+        MyAdapter = new CommunityAdapter(this,mdatas);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(MyAdapter);
+
+
         MyAdapter.setOnItemClickListener(this);
         mRecyclerView.setLoadingListener(this);
     }
 
-    @Override
-    protected void initDatas() {
-        mdatas = new ArrayList<>();
-        getDynamic();
-        MyAdapter = new CommunityAdapter(this,mdatas);
-        mRecyclerView.setAdapter(MyAdapter);
-    }
-
-    @Override
-    public int getLayoutId() {
-
-        return R.layout.acitvity_community;
-    }
-
-    @Override
-    public void initViews(Bundle savedInstanceState) {
+    private void initView() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -96,18 +104,13 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
      */
     @Override
     public void onRefresh() {
-        getDynamic();
         mRecyclerView.setRefreshing(true);
-        MyAdapter.myDatas = mdatas;
-        MyAdapter.notifyDataSetChanged();
-
     }
     /**
      * 上拉加载更多
      */
     @Override
     public void onLoadMore() {
-
         mRecyclerView.setLoadingMoreEnabled(true);
     }
 
@@ -145,35 +148,31 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
         }
     }
     private void getDynamic(){
-        OkHttpUtils.get().url(Constants.DEFAULT_URL)
+        OkHttpUtils.get().url(Constants.DEFAULT_USER_URL)
                 .addParams("user_id","1305030212")
                 .addParams("updateDetail",null)
                 .build()
-                .execute(new Callback() {
+                .execute(new StringCallback() {
                     @Override
-                    public Object parseNetworkResponse(Response response) throws Exception {
+                    public void onError(Call call, Exception e) {
 
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
                         Log.e("Response",response.toString());
                         JSONObject dataJson = null;
                         try {
                             dataJson = new JSONObject(String.valueOf(response));
 
                             mdatas = JsonParsing.getDynamic(dataJson);
+
+                            MyAdapter.myDatas = mdatas;
+
+                            MyAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        return null;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e) {
-
-                        Log.e("Exception",e.toString());
-                    }
-
-                    @Override
-                    public void onResponse(Object response) {
-                        Log.e("OBject",response.toString());
                     }
                 });
 

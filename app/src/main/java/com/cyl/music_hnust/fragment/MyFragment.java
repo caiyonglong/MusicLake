@@ -32,7 +32,7 @@ import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.SnackbarUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -362,7 +362,7 @@ public class MyFragment extends BaseFragment implements SwipeRefreshLayout.OnRef
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                ToastUtil.show(getActivity(), "网络连接异常，请检查网络！");
+                ToastUtils.show(getActivity(), "网络连接异常，请检查网络！");
             }
         });
 

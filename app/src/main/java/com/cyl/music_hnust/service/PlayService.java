@@ -24,11 +24,10 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.model.OnlinePlaylist;
-import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SystemUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -410,16 +409,22 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         Intent nowPlayingIntent = new Intent(this,MainActivity.class);
         nowPlayingIntent.putExtra(ACTION_SERVICE,true);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Bitmap artwork;
-        artwork = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),ImageUtils.getAlbumDisplayOptions());
-
-        if (artwork == null) {
-            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2,ImageUtils.getNotifyDisplayOptions());
+//        Bitmap artwork;
+//        artwork = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),ImageUtils.getAlbumDisplayOptions());
+//
+//        if (artwork == null) {
+//            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2);
+//        }
+        Bitmap cover;
+        if (music.getCover() == null) {
+            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+        } else {
+            cover = music.getCover();
         }
 
         android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_empty_music2)
-                .setLargeIcon(artwork)
+                .setLargeIcon(cover)
                 .setContentIntent(clickIntent)
                 .setContentTitle(title)
                 .setContentText(text)

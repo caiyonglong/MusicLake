@@ -10,6 +10,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +28,7 @@ import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicUtils;
-import com.cyl.music_hnust.utils.ToastUtil;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class PlaylistFragment extends BaseFragment {
 
-    XRecyclerView recyclerView;
+    RecyclerView mRecyclerView;
     TextView tv_empty;
     EditText et_playlist;
     private GridLayoutManager mLayoutManager;
@@ -71,41 +71,17 @@ public class PlaylistFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        recyclerView = (XRecyclerView) rootView.findViewById(R.id.recyclerview);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
-        recyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
     }
 
     private void initData() {
-
         mAdapter = new PlaylistAdapter(getActivity(),localplaylists,onRecyclerItemClick);
-        recyclerView.setAdapter(mAdapter);
-
-        recyclerView.setLoadingMoreEnabled(false);
-        recyclerView.setEmptyView(tv_empty);
-        recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                recyclerView.refreshComplete();
-                recyclerView.setEmptyView(tv_empty);
-                localplaylists = MusicUtils.scanPlaylist(getContext());
-                mAdapter.setLocalplaylists(localplaylists);
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onLoadMore() {
-                recyclerView.setEmptyView(tv_empty);
-                localplaylists = MusicUtils.scanPlaylist(getContext());
-                mAdapter.setLocalplaylists(localplaylists);
-                recyclerView.loadMoreComplete();
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-
+        mRecyclerView.setAdapter(mAdapter);
 
     }
     @Override
@@ -148,20 +124,20 @@ public class PlaylistFragment extends BaseFragment {
             public void onClick(DialogInterface dialog, int which) {
                 String playlist = et_playlist.getText().toString();
                 if (playlist.length()<2){
-                    ToastUtil.show(getContext(),"歌单名长度不少于3");
+                    ToastUtils.show(getContext(),"歌单名长度不少于3");
                 }else {
                     LocalPlaylist localPlaylist = new LocalPlaylist();
                     localPlaylist.setName(playlist);
                     localPlaylist.setId(System.currentTimeMillis()+"hk");
                     isNewPlaylist =MusicUtils.newPlaylist(getContext(),localPlaylist);
                     if (isNewPlaylist){
-                        ToastUtil.show(getContext(),"操作成功");
+                        ToastUtils.show(getContext(),"操作成功");
 
                         localplaylists = MusicUtils.scanPlaylist(getContext());
                         mAdapter.setLocalplaylists(localplaylists);
                         mAdapter.notifyDataSetChanged();
                     }else {
-                        ToastUtil.show(getContext(),"操作失败，歌单已存在！");
+                        ToastUtils.show(getContext(),"操作失败，歌单已存在！");
                     }
                 }
             }

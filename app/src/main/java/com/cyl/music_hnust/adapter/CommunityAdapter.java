@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.Dynamic;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -103,7 +103,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Item
         holder.user_name.setText(dynamic.getUser().getNick());
         holder.item_action_love.setText(dynamic.getLove() + "赞");
         holder.item_action_comment.setText(dynamic.getComment() + "评论");
-        holder.content_text.setText(dynamic.getContent());
+        String text =dynamic.getContent().replace("\n"," ");
+        holder.content_text.setText(text);
         holder.content_time.setText(FormatUtil.distime(dynamic.getTime()));
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(
                 dynamic.getUser().getUser_img(),holder.user_logo, ImageUtils.getAlbumDisplayOptions());
@@ -120,8 +121,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Item
     public class ItemHolder extends ViewHolder {
 
         public TextView user_name;
-        public RelativeLayout container;
-        public NetworkImageView user_logo;
+        public LinearLayout container;
+        public ImageView user_logo;
         public TextView content_time;
         public TextView content_text;
         public TextView item_action_comment;
@@ -130,9 +131,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Item
 
         public ItemHolder(View itemView) {
             super(itemView);
-            container = (RelativeLayout) itemView.findViewById(R.id.container);
+            container = (LinearLayout) itemView.findViewById(R.id.container);
             user_name = (TextView) itemView.findViewById(R.id.user_name);
-            user_logo = (NetworkImageView) itemView.findViewById(R.id.user_logo);
+            user_logo = (ImageView) itemView.findViewById(R.id.user_logo);
             content_time = (TextView) itemView.findViewById(R.id.content_time);
             content_text = (TextView) itemView.findViewById(R.id.content_text);
             item_action_comment = (TextView) itemView.findViewById(R.id.item_comment_num);

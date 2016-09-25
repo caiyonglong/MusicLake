@@ -1,17 +1,12 @@
 package com.cyl.music_hnust.utils;
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
-
-import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.activity.MainActivity;
-import com.cyl.music_hnust.model.Music;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.WindowManager;
 
 import java.text.DecimalFormat;
 
@@ -22,38 +17,7 @@ import java.text.DecimalFormat;
  */
 public class SystemUtils {
 
-    private NotificationManager mNotificationManager;
-    public static final String BROADCAST_ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
-    public static final String NOTIFICATION_ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
-    public static final String NOTIFICATION_ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
 
-
-    public NotificationManager getmNotificationManager() {
-        return mNotificationManager;
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static Notification createNotification(Context context, Music music) {
-        String title = music.getTitle();
-        String subtitle = music.getArtist()==null ? music.getArtist(): music.getAlbum();
-//        Bitmap cover;
-//        if (music.getType() == Music.Type.LOCAL) {
-//            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
-//        } else {
-//            cover = music.getCover();
-//        }
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("notify", true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        Notification builder = new Notification.Builder(context)
-                .setContentIntent(pendingIntent)
-                .setContentTitle(title)
-                .setContentText(subtitle)
-                .setSmallIcon(R.drawable.ic_launcher)
-//                .setLargeIcon(cover)
-                .build();
-        return builder;
-    }
     //判断是否是android 6.0
     public static boolean isMarshmallow() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
@@ -65,6 +29,21 @@ public class SystemUtils {
     //判断是否是android 4.0
     public static boolean isKITKAT() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
+    /**
+     * 初始化透明状态栏
+     */
+    public static void setSystemBarTransparent(AppCompatActivity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // LOLLIPOP解决方案
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // KITKAT解决方案
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 
     /**

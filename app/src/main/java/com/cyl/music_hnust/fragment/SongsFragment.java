@@ -1,11 +1,13 @@
 package com.cyl.music_hnust.fragment;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +20,7 @@ import com.cyl.music_hnust.activity.SearchActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.Music;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.cyl.music_hnust.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +33,14 @@ import java.util.List;
  */
 public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnItemClickListener {
 
-    XRecyclerView recyclerView;
+    RecyclerView mRecyclerView;
     TextView tv_empty;
 
     private static LocalMusicAdapter mAdapter;
     private static List<Music> musicInfos = new ArrayList<>();
 
     /**
-     *   新建一个线程更新UI
+     * 新建一个线程更新UI
      */
     final Handler myHandler = new Handler() {
         @Override
@@ -54,7 +56,6 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener(this);
-        recyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -62,20 +63,16 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
      */
     @Override
     protected void initDatas() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setRefreshing(false);
-        recyclerView.setLoadingMoreEnabled(false);
-        musicInfos = getmPlayService().getMusicList();
-        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(),musicInfos);
+        reloadAdapter();
+        mRecyclerView.setAdapter(mAdapter);
 
-        if (musicInfos.size() == 0) {
-            tv_empty.setText("请稍后，本地音乐加载中...");
-            tv_empty.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
      * 初始化视图
+     *
      * @return
      */
     @Override
@@ -88,22 +85,11 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
      */
     @Override
     public void initViews() {
-        recyclerView = (XRecyclerView) rootView.findViewById(R.id.recyclerview);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
 
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
     }
 
-    /**
-     * 初始化列表,当无数据时显示提示
-     */
-    private void init() {
-        if (musicInfos.size() == 0) {
-            tv_empty.setText("本地暂无音乐!");
-            tv_empty.setVisibility(View.VISIBLE);
-        } else {
-            tv_empty.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onResume() {
@@ -121,8 +107,10 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_my, menu);
     }
+
     /**
      * 菜单点击事件
+     *
      * @param item
      * @return
      */
@@ -137,10 +125,34 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         }
         return super.onOptionsItemSelected(item);
     }
+
     //recyclerview item点击事件
     @Override
     public void onItemClick(View view, int position) {
         MainActivity.mPlayService.setMyMusicList(musicInfos);
         MainActivity.mPlayService.playMusic(position);
     }
+
+    private void reloadAdapter() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... unused) {
+                musicInfos = MusicUtils.getAllSongs(getActivity());
+                mAdapter.setMusicInfos(musicInfos);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (musicInfos.size() == 0) {
+                    tv_empty.setText("请稍后，本地音乐加载中...");
+                    tv_empty.setVisibility(View.VISIBLE);
+                }else {
+                    tv_empty.setVisibility(View.GONE);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }.execute();
+    }
+
 }

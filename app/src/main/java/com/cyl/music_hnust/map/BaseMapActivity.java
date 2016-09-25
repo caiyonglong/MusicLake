@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -43,7 +39,7 @@ import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.AMapUtil;
-import com.cyl.music_hnust.utils.ToastUtil;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -359,7 +355,7 @@ public class BaseMapActivity extends Activity implements AMapLocationListener, R
                 Log.d(TAG, key + "   " + val);
             }
         } else {
-            ToastUtil.showerror(this, rCode);
+            ToastUtils.showerror(this, rCode);
         }
 
     }
@@ -437,14 +433,14 @@ public class BaseMapActivity extends Activity implements AMapLocationListener, R
                         }
 
                     } else {
-                        ToastUtil.show(this, R.string.no_result);
+                        ToastUtils.show(this, R.string.no_result);
                     }
                 }
             } else {
-                ToastUtil.show(this, R.string.no_result);
+                ToastUtils.show(this, R.string.no_result);
             }
         } else {
-            ToastUtil.showerror(this, rCode);
+            ToastUtils.showerror(this, rCode);
         }
 
     }

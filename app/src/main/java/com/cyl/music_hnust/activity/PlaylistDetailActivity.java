@@ -16,6 +16,7 @@ import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicUtils;
+import com.cyl.music_hnust.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,12 +81,18 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
      */
     @Override
     protected void listener() {
-        mAdapter.setOnItemClickListener(this);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
-    protected void initDatas() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.playlist_detail);
+        SystemUtils.setSystemBarTransparent(this);
+        initView();
+        initData();
+    }
+
+    private void initData() {
         playlist_id = getIntent().getStringExtra(Constants.PLAYLIST_ID);
         if (playlist_id != null) {
             Log.e("歌单id++++++", playlist_id + "");
@@ -93,6 +100,8 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new LocalMusicAdapter(this, musicInfos);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(this);
 
         if (musicInfos.size() == 0) {
             tv_empty.setText("请稍后，本地音乐加载中...");
@@ -101,13 +110,9 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
         mHandler.post(GMRunable);
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.playlist_detail;
-    }
 
-    @Override
-    public void initViews(Bundle savedInstanceState) {
+    private void initView() {
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

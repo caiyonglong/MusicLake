@@ -47,6 +47,9 @@ public class Constants {
     public static final String PARAM_TING_UID = "tinguid";
     public static final String PARAM_QUERY = "query";
 
+    public static final String BASE_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
+            "from=android&version=5.8.2.0&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2";
+
 
 
     /**
