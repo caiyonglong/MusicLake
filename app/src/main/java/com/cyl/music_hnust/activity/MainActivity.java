@@ -15,15 +15,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.map.BaseMapActivity;
@@ -58,6 +59,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void show() {
         showPlayingFragment();
     }
+
+
 
 
     @Bind(R.id.album)
@@ -97,11 +100,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static FloatingActionButton mFloatingActionButton;
     public static PlayService mPlayService;
 
-
     private MainFragment mainFragment = null;
     private PlayFragment mPlayFragment = null;
-
-
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -122,6 +122,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
         SystemUtils.setSystemBarTransparent(this);
@@ -136,15 +138,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tv_artist = (TextView) findViewById(R.id.artist);
 
         //进度条样式
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mProgressBar.getLayoutParams();
-        mProgressBar.measure(0, 0);
-        layoutParams.setMargins(0, -(mProgressBar.getMeasuredHeight() / 2), 0, 0);
-        mProgressBar.setLayoutParams(layoutParams);
         mProgressBar.setProgress(0);
 
 
         bindService();
         setNavigationView();
+
+        play_control.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
 
     }
 
@@ -208,8 +213,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_com:
                 item.setChecked(true);
-                Intent intent4 = new Intent(this, CommunityActivity.class);
-                startActivity(intent4);
+
+                runnable = new Runnable() {
+                    public void run() {
+                        CommunityFragment communityFragment = new CommunityFragment();
+                        switchFragment(communityFragment);
+                    }
+                };
+
+//                Intent intent4 = new Intent(this, CommunityActivity.class);
+//                startActivity(intent4);
                 break;
             case R.id.nav_menu_msg:
                 item.setChecked(true);

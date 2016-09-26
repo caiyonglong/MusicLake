@@ -274,7 +274,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
         operatingAnim = ObjectAnimator.ofFloat(civ_cover, "rotation", 0, 360);
         operatingAnim.setDuration(10000);
-        operatingAnim.setRepeatCount(-1);
         operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
         operatingAnim.setInterpolator(lin);
 

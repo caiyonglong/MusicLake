@@ -64,7 +64,7 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     @Override
     protected void initDatas() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(),musicInfos);
+        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
         reloadAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
@@ -88,6 +88,13 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
 
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
+
+        if (musicInfos.size() == 0) {
+            tv_empty.setText("请稍后，本地音乐加载中...");
+            tv_empty.setVisibility(View.VISIBLE);
+        } else {
+            tv_empty.setVisibility(View.GONE);
+        }
     }
 
 
@@ -138,18 +145,18 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
             @Override
             protected Void doInBackground(final Void... unused) {
                 musicInfos = MusicUtils.getAllSongs(getActivity());
-                mAdapter.setMusicInfos(musicInfos);
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (musicInfos.size() == 0) {
-                    tv_empty.setText("请稍后，本地音乐加载中...");
+                    tv_empty.setText("暂无音乐");
                     tv_empty.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     tv_empty.setVisibility(View.GONE);
                 }
+                mAdapter.setMusicInfos(musicInfos);
                 mAdapter.notifyDataSetChanged();
             }
         }.execute();

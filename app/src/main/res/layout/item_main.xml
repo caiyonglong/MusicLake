@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="2dp"
-    android:layout_gravity="center"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="#FFFFFF"
@@ -21,19 +20,20 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:descendantFocusability="blocksDescendants"
         >
         <LinearLayout
             android:layout_margin="5dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize">
+            android:layout_height="45dp">
             <ImageView
                 android:id="@+id/user_logo"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
                 />
             <LinearLayout
@@ -45,14 +45,14 @@
                 <TextView
                     android:id="@+id/user_name"
                     android:layout_weight="1"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/setting_blue"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:text="岁月抚伤"
-                    android:singleLine="true"
+                    android:lines="1"
                     android:ellipsize="end"
-                    android:layout_width="80dp" />
+                    android:layout_width="wrap_content" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -67,7 +67,7 @@
                         android:id="@+id/content_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:layout_marginLeft="5dp"
                         android:textColor="@color/setting_blue"
                         android:scaleType="centerInside"
@@ -88,17 +88,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="5"
-                android:layout_marginTop="5dp"
                 android:textColor="@color/main_black"
                 android:layout_marginBottom="8dp"
                 android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
 
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/comment"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
@@ -113,7 +110,6 @@
                 android:padding="2dp"
                 android:textColor="@color/setting_blue" />
             <TextView
-
                 android:layout_weight="1"
                 android:id="@+id/item_love_num"
                 android:layout_width="wrap_content"

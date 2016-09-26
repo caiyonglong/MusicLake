@@ -8,7 +8,11 @@ package com.cyl.music_hnust.utils;
 
 public class Extras {
     public static String BILLBOARD_TYPE ="billboard_type";
-        public static String BILLBOARD_TITLE ="billboard_title";
-        public static String BILLBOARD_ALBUM ="billboard_album";
+    public static String BILLBOARD_TITLE ="billboard_title";
+    public static String BILLBOARD_ALBUM ="billboard_album";
+
+    public static final String PLAYLIST_ID = "playlistID";
+    public static final String ALBUM = "album";
+    public static final String ALBUM_ID = "albumID";
 
 }

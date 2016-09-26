@@ -27,13 +27,12 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.adapter.CommentRecyclerViewAdapter;
 import com.cyl.music_hnust.application.MyApplication;
+import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.model.Comment;
 import com.cyl.music_hnust.model.Common;
 import com.cyl.music_hnust.model.Dynamic;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.fragment.MyFragment;
-import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtils;
@@ -129,23 +128,23 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     bundle = msg.getData();
                     Log.e("position===handler", position + "");
                     int isagree = (int) bundle.get("agree");
-                    int num = (int) bundle.get("num");
-                    MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setLove(num);
-                    if (isagree == 1) {
-                        love_num = love_num + 1;
-                        Toast.makeText(activity, "已赞", Toast.LENGTH_SHORT).show();
-                        item_action_love.setText(love_num + "赞");
-                        IsAgree.setImageResource(R.mipmap.ic_action_agree1);
-                        MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(true);
-
-                    } else if (isagree == 0) {
-                        love_num = love_num - 1;
-                        item_action_love.setText(love_num + "赞");
-
-                        IsAgree.setImageResource(R.mipmap.ic_action_agree);
-                        MyFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(false);
-                    }
-                    MyFragment.mRecyclerViewAdapter.notifyDataSetChanged();
+//                    int num = (int) bundle.get("num");
+//                    CommunityFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setLove(num);
+//                    if (isagree == 1) {
+//                        love_num = love_num + 1;
+//                        Toast.makeText(activity, "已赞", Toast.LENGTH_SHORT).show();
+//                        item_action_love.setText(love_num + "赞");
+//                        IsAgree.setImageResource(R.mipmap.ic_action_agree1);
+//                        CommunityFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(true);
+//
+//                    } else if (isagree == 0) {
+//                        love_num = love_num - 1;
+//                        item_action_love.setText(love_num + "赞");
+//
+//                        IsAgree.setImageResource(R.mipmap.ic_action_agree);
+//                        CommunityFragment.mRecyclerViewAdapter.myDatas.get(Integer.parseInt(position)).setMyLove(false);
+//                    }
+//                    CommunityFragment.mRecyclerViewAdapter.notifyDataSetChanged();
 
 
                     break;
@@ -170,7 +169,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         Intent it = getIntent();
         if (it.getIntExtra("flag", 0) == 0) {
-            mdatas = MyFragment.mdatas;
+//            mdatas = CommunityFragment.mdatas;
         } else {
             mdatas = MynamicActivity.mdatas;
         }

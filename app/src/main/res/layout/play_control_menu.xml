@@ -4,8 +4,9 @@
     android:id="@+id/play_control"
     android:layout_width="fill_parent"
     android:layout_height="57dp"
+    android:layout_gravity="top"
     android:background="?attr/windowBackground"
-    android:layout_gravity="top">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,79 +32,96 @@
                 android:id="@+id/song_progress_normal"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="2dp"
                 android:layout_gravity="top"
-                android:maxHeight="3dp"
-                android:progress="30"
+                android:progress="10"
+                android:progressDrawable="@drawable/progress_drawable"
                 android:tag="tint_accent_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                >
+
                 <LinearLayout
-                    android:layout_marginLeft="12dp"
+                    android:id="@+id/linear_con"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp">
+
+
+                    <RelativeLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/play_pause"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/ic_play_arrow_black_18dp" />
+
+                        <ImageButton
+                            android:id="@+id/pause_play"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/ic_pause_black_18dp"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <ImageButton
+                        android:id="@+id/next_buttom"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_skip_next_black_18dp" />
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_more_vert_grey_900_48dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_toLeftOf="@+id/linear_con"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:lines="1"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
-                    android:text="方圆几里"
-                    android:textSize="15sp" />
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
-                <TextView
-                    android:id="@+id/artist"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:maxLength="20"
-                    android:maxLines="1"
-                    android:text="薛之谦"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true">
-
-                <RelativeLayout
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="10dp"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp">
-                    <ImageButton
-                        android:id="@+id/play_pause"
+                    <TextView
+                        android:id="@+id/title"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/ic_play_arrow_black_18dp" />
-                    <ImageButton
-                        android:id="@+id/pause_play"
-                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:lines="1"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:maxLines="1"
+                        android:text="方圆几里"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/artist"
+                        style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/ic_pause_black_18dp" />
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:text="薛之谦"
+                        android:textSize="13sp" />
 
-                </RelativeLayout>
-
-                <ImageButton
-                    android:id="@+id/next_buttom"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/ic_skip_next_black_18dp" />
-
-            </LinearLayout>
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
 

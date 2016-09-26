@@ -75,7 +75,7 @@
     <color name="translucent_grey_700_96p">#F5616161</color>
 
 
-    <color name="window_background">#FFF5F5F5</color>
+    <color name="window_background">#EEF5F5F5</color>
     <color name="progressBackgroundColorLight">#33000000</color>
     <color name="progressBackgroundColorDark">#ffffff</color>
 

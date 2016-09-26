@@ -1,7 +1,7 @@
 package com.cyl.music_hnust.adapter;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +15,11 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
+import com.cyl.music_hnust.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.CoverLoader;
-import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.AddPlaylistDialog;
@@ -68,16 +69,9 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-        Uri uri = ImageUtils.getAlbumArtUri(localItem.getAlbumId());
-//        ImageLoader.getInstance().displayImage(uri.toString(), holder.albumArt, new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnFail(R.drawable.ic_empty_music2).resetViewBeforeLoading(true).build());
+
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
         holder.albumArt.setImageBitmap(cover);
-//        Bitmap artwork;
-//        artwork = ImageUtils.getArtworkFromFile(context, localItem.getId(), localItem.getAlbumId());
-//        if (artwork == null) {
-//            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2);
-//        }
-//        holder.albumArt.setImageBitmap(artwork);
 
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist());
@@ -110,6 +104,9 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                                 getMusicInfo(musicInfos.get(position));
                                 break;
                             case R.id.popup_song_goto_album:
+                                Intent intent = new Intent(context, PlaylistDetailActivity.class);
+                                intent.putExtra(Extras.ALBUM_ID,musicInfos.get(position).getAlbumId());
+                                context.startActivity(intent);
                                 break;
                             case R.id.popup_song_goto_artist:
                                 break;

@@ -1,10 +1,10 @@
 package com.cyl.music_hnust.map;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -51,7 +51,7 @@ import java.util.Map;
 /**
  * Created by 永龙 on 2016/3/20.
  */
-public class BaseMapActivity extends Activity implements AMapLocationListener, RadioGroup.OnCheckedChangeListener, LocationSource, AMap.OnMarkerClickListener, AMap.OnPOIClickListener, CloudSearch.OnCloudSearchListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
+public class BaseMapActivity extends AppCompatActivity implements AMapLocationListener, RadioGroup.OnCheckedChangeListener, LocationSource, AMap.OnMarkerClickListener, AMap.OnPOIClickListener, CloudSearch.OnCloudSearchListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
     private AMap aMap;
     private MapView mapView;
     private UiSettings mUiSettings;

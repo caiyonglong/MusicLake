@@ -26,7 +26,7 @@ import com.cyl.music_hnust.adapter.PlaylistAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.LocalPlaylist;
 import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 
@@ -163,12 +163,14 @@ public class PlaylistFragment extends BaseFragment {
                         getActivity(),view,"share");
                 Intent intent = new Intent(
                         getActivity(), PlaylistDetailActivity.class);
-                intent.putExtra(Constants.PLAYLIST_ID,localPlaylist.getId());
+                intent.putExtra(Extras.PLAYLIST_ID,localPlaylist.getId());
+                intent.putExtra(Extras.ALBUM,false);
                 startActivity(intent, transitionActivityOptions.toBundle());
             }else {
                 Intent intent = new Intent(
                         getActivity(), PlaylistDetailActivity.class);
-                intent.putExtra(Constants.PLAYLIST_ID,localPlaylist.getId());
+                intent.putExtra(Extras.PLAYLIST_ID,localPlaylist.getId());
+                intent.putExtra(Extras.ALBUM,false);
                 startActivity(intent);
             }
         }

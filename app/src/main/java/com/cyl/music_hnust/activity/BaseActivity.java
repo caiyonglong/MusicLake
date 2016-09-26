@@ -34,6 +34,4 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
 
-
-
 }

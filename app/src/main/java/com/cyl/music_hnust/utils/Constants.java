@@ -65,5 +65,5 @@ public class Constants {
      */
     public static final String DOWNLOADMANAGEACTION = "com.cyl.multithreadeddownload.DownloadActivity";
 
-    public static final String PLAYLIST_ID = "playlistID";
+
 }

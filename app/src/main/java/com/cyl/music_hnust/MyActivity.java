@@ -34,7 +34,7 @@ import com.cyl.music_hnust.model.Dynamic;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.fragment.MusicFragment1;
-import com.cyl.music_hnust.fragment.MyFragment;
+import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.RadarActivity;
@@ -137,7 +137,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             Bundle mBundle = new Bundle();
             mBundle.putInt("flag", i);
             if (i == 1) {
-                MyFragment mFragment = new MyFragment();
+                CommunityFragment mFragment = new CommunityFragment();
                 mFragment.setArguments(mBundle);
                 mFragments.add(i, mFragment);
             } else if (i == 0) {
@@ -389,8 +389,8 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
                 dynamic.setContent(data.getStringExtra("content"));
                 dynamic.setUser(userinfo);
                 //   dynamic = (Dynamic) data.getSerializableExtra("comment");
-                MyFragment.mdatas.add(0, dynamic);
-                MyFragment.mRecyclerViewAdapter.notifyDataSetChanged();
+//                CommunityFragment.mdatas.add(0, dynamic);
+//                CommunityFragment.mRecyclerViewAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(1);
                 Log.e("-----", dynamic.getContent());
 
