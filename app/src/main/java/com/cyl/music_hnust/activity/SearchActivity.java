@@ -1,21 +1,24 @@
 package com.cyl.music_hnust.activity;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
+import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.adapter.SearchAdapter;
+import com.cyl.music_hnust.model.SearchMusic;
+import com.cyl.music_hnust.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
 
-import java.util.Collections;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * 作者：yonglong on 2016/9/15 12:32
@@ -27,10 +30,10 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private InputMethodManager mImm;
     private String queryString;
 
-//    private SearchAdapter adapter;
+    private SearchAdapter adapter;
     private RecyclerView recyclerView;
 
-    private List searchResults = Collections.emptyList();
+    private List<SearchMusic.Song> searchResults = new ArrayList<>();
     @Override
     protected void listener() {
 
@@ -40,63 +43,25 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_search);
-
-        initView();
-    }
-
-
-    private void initView() {
-        mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        adapter = new SearchAdapter(this);
-//        recyclerView.setAdapter(adapter);
     }
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-
-        mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
-
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQueryHint("搜索");
-
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setIconified(false);
-
-        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.menu_search), new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                finish();
-                return false;
-            }
-        });
-
-        menu.findItem(R.id.menu_search).expandActionView();
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                break;
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.onActionViewExpanded();
+        searchView.setQueryHint(getString(R.string.search_tips));
+        searchView.setOnQueryTextListener(this);
+        searchView.setSubmitButtonEnabled(true);
+        try {
+            Field field = searchView.getClass().getDeclaredField("mGoButton");
+            field.setAccessible(true);
+            ImageView mGoButton = (ImageView) field.get(searchView);
+            mGoButton.setImageResource(R.drawable.ic_search_white_18dp);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return super.onOptionsItemSelected(item);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -108,21 +73,27 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     public boolean onQueryTextChange(String newText) {
         return false;
     }
+    private void searchMusic(String keyword) {
+        OkHttpUtils.get().url(Constants.BASE_URL)
+                .addParams(Constants.PARAM_METHOD, Constants.METHOD_SEARCH_MUSIC)
+                .addParams(Constants.PARAM_QUERY, keyword)
+                .build()
+                .execute(new JsonCallback<SearchMusic>(SearchMusic.class) {
+                    @Override
+                    public void onError(Call call, Exception e) {
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        hideInputManager();
-        return super.onTouchEvent(event);
-    }
+                    }
 
-    public void hideInputManager() {
-        if (mSearchView != null) {
-            if (mImm != null) {
-                mImm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
-            }
-            mSearchView.clearFocus();
-
-//            SearchHistory.getInstance(this).addSearchString(queryString);
-        }
+                    @Override
+                    public void onResponse(SearchMusic response) {
+                        if (response == null || response.getSong() == null) {
+                            return;
+                        }
+                        searchResults.clear();
+                        searchResults.addAll(response.getSong());
+//                        adapter.notifyDataSetChanged();
+//                        lvSearchMusic.requestFocus();
+                        }
+                    });
     }
 }

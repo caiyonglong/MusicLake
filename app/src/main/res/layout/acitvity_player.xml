@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
@@ -33,7 +34,8 @@
                 android:src="@drawable/ic_arrow_down" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:orientation="vertical">
@@ -54,10 +56,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:lines="1"
                     android:textColor="@color/grey"
                     android:textSize="12sp" />
             </LinearLayout>
+            <ImageView
+                android:id="@+id/skip_mode"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/ic_shuffle_white_24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,29 +98,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/page_icon"
+                    android:src="@drawable/page_icon_mid"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
 
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/shuffle"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:scaleType="center" />
-
-                    <ImageView
-                        android:id="@+id/repeat"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:paddingLeft="5dp"
-                        android:scaleType="center" />
-                </LinearLayout>
             </RelativeLayout>
 
             <SeekBar
@@ -134,22 +128,26 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/song_elapsed_time"
-                    android:textColor="@color/white"
-                    android:text="00:00"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    />
-
-                <TextView
                     android:id="@+id/song_duration"
                     android:text="00:00"
+                    android:paddingRight="20dp"
                     android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                      />
+
+                <TextView
+                    android:id="@+id/song_elapsed_time"
+                    android:textColor="@color/white"
+                    android:text="00:00"
+
+                    android:paddingLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
             </RelativeLayout>
 
 
@@ -179,17 +177,15 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1">
-                    <com.cyl.music_hnust.view.PlayPauseButton
-                        android:id="@+id/play_pause"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:layout_gravity="center" />
 
-                    <View
-                        android:id="@+id/playpausewrapper"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/playpausefloating"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:scaleType="fitCenter"
+                        android:tag="bg_tint_accent_color" />
 
                 </FrameLayout>
 
@@ -203,6 +199,7 @@
                     android:layout_weight="0.6"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center" />
+
             </LinearLayout>
 
         </LinearLayout>

@@ -45,7 +45,6 @@ public class SystemUtils {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
-
     /**
      * 格式化时间
      *

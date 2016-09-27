@@ -11,7 +11,7 @@
         android:layout_width="3dp"
         android:layout_height="50dp"
         android:layout_marginRight="3dp"
-        android:background="@color/setting_blue"
+        android:background="?attr/colorPrimary"
         android:contentDescription="@null"
         android:visibility="invisible" />
 

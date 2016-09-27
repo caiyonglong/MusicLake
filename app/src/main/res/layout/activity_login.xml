@@ -55,6 +55,7 @@
                     android:id="@+id/usernameWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <EditText
                         android:hint="@string/Username"
                         android:textSize="16sp"
@@ -62,7 +63,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        />
+                        android:id="@+id/editText" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
@@ -70,7 +71,7 @@
                 android:paddingEnd="30dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content">
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/passwordWrapper"
                     android:layout_width="match_parent"
@@ -93,6 +94,7 @@
                 android:layout_height="50dp">
                 <Button
                     android:id="@+id/bt_go"
+                    android:elevation="6dp"
                     android:background="@drawable/btn_login"
                     android:layout_width="150dp"
                     android:layout_height="50dp"

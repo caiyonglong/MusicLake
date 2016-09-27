@@ -356,6 +356,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public Music getPlayingMusic() {
         return mPlayingMusic;
     }
+    /**
+     * 获取正在播放的歌曲[本地|网络]
+     */
+    public long getmPlayingMusicId() {
+        if (mPlayingMusic != null) {
+            try {
+                return mPlayingMusic.getId();
+            } catch (Exception e) {
+            }
+        }
+        return -1;
+    }
 
     public class MyBinder extends Binder {
         public PlayService getService() {

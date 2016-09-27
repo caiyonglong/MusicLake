@@ -79,17 +79,17 @@ public class RadarView extends View {
 
     public RadarView(Context context) {
         this(context, null);
-        this.mContext= context;
+        this.mContext = context;
     }
 
     public RadarView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        this.mContext= context;
+        this.mContext = context;
     }
 
     public RadarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mContext= context;
+        this.mContext = context;
         init();
         post(run);
     }
@@ -97,7 +97,7 @@ public class RadarView extends View {
 
     private void init() {
         mPaintLine = new Paint();
-        mPaintLine.setColor(ContextCompat.getColor(mContext,R.color.line_color_blue));
+        mPaintLine.setColor(ContextCompat.getColor(mContext, R.color.line_color_blue));
         mPaintLine.setAntiAlias(true);
         mPaintLine.setStrokeWidth(1);
         mPaintLine.setStyle(Paint.Style.STROKE);
@@ -129,11 +129,10 @@ public class RadarView extends View {
                 }
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             centerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_photo);
         }
-
 
 
         //设置扫描渲染的shader
@@ -195,9 +194,12 @@ public class RadarView extends View {
      * @param canvas
      */
     private void drawCenterIcon(Canvas canvas) {
-        canvas.drawBitmap(centerBitmap, null,
-                new Rect((int) (mWidth / 2 - mWidth * circleProportion[0]), (int) (mHeight / 2 - mWidth * circleProportion[0]),
-                        (int) (mWidth / 2 + mWidth * circleProportion[0]), (int) (mHeight / 2 + mWidth * circleProportion[0])), mPaintCircle);
+        if (canvas != null) {
+            canvas.drawBitmap(centerBitmap, null,
+                    new Rect((int) (mWidth / 2 - mWidth * circleProportion[0]), (int) (mHeight / 2 - mWidth * circleProportion[0]),
+                            (int) (mWidth / 2 + mWidth * circleProportion[0]), (int) (mHeight / 2 + mWidth * circleProportion[0])), mPaintCircle);
+
+        }
     }
 
 

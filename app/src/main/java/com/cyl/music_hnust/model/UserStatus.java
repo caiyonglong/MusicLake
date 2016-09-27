@@ -31,13 +31,13 @@ public class UserStatus {
     //从data.xml文件中取出个人信息
     public static User getUserInfo(Context context){
         SharedPreferences sp=context.getSharedPreferences("data", Context.MODE_PRIVATE);
-        String userID = sp.getString("userID", null);
+        String userID = sp.getString("userID", "1305030212");
      //    String pw = sp.getString("userPW",null);
-        String userName = sp.getString("userName",null);
-        String userSex = sp.getString("userSex",null);
-        String userCollege = sp.getString("userCollege",null);
-        String userMajor = sp.getString("userMajor",null);
-        String userClass = sp.getString("userClass", null);
+        String userName = sp.getString("userName","123213");
+        String userSex = sp.getString("userSex","男");
+        String userCollege = sp.getString("userCollege","====");
+        String userMajor = sp.getString("userMajor","21132");
+        String userClass = sp.getString("userClass", "121321");
 
         String user_img = sp.getString("user_img", null);
         String user_email = sp.getString("user_email", null);

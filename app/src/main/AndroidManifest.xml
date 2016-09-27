@@ -72,7 +72,9 @@
 
         <activity
             android:name=".map.BaseMapActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeDark"
+            />
         <activity
             android:name=".map.NearActivity"
 

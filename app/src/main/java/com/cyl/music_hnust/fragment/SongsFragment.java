@@ -138,6 +138,7 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     public void onItemClick(View view, int position) {
         MainActivity.mPlayService.setMyMusicList(musicInfos);
         MainActivity.mPlayService.playMusic(position);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void reloadAdapter() {

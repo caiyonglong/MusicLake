@@ -28,7 +28,7 @@ import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.map.BaseMapActivity;
-import com.cyl.music_hnust.map.NearActivity;
+import com.cyl.music_hnust.map.RadarActivity;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.service.OnPlayerListener;
 import com.cyl.music_hnust.service.PlayService;
@@ -234,7 +234,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_near:
                 mDrawerLayout.closeDrawers();
-                Intent intent = new Intent(MainActivity.this, NearActivity.class);
+                Intent intent = new Intent(MainActivity.this, RadarActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_menu_setting:
