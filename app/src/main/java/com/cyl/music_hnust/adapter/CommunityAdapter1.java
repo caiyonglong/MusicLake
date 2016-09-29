@@ -123,7 +123,7 @@ public class CommunityAdapter1 extends RecyclerView.Adapter<ViewHolder> {
             holder1.content_text.setText(myDatas.get(position).getContent());
             holder1.content_time.setText(FormatUtil.distime(myDatas.get(position).getTime()));
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            holder1.user_logo.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
+            holder1.user_logo.setErrorImageResId(R.drawable.ic_account_circle);
             holder1.user_logo.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
 

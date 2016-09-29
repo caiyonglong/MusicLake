@@ -478,29 +478,29 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
                     } else {
                         intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
                     }
-                    if (mydatas.get(position).getUser().isSecret()) {
-                        //保密
-                        intent.putExtra("flag", 1);
-
-                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
-                    } else {
-                        intent.putExtra("flag", 0);
-
-                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
-                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
-                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
-                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
-                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
-                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
-
-
-                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
-                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
-                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
-                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
-
-
-                    }
+//                    if (mydatas.get(position).getUser().isSecret()) {
+//                        //保密
+//                        intent.putExtra("flag", 1);
+//
+//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                    } else {
+//                        intent.putExtra("flag", 0);
+//
+//                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
+//                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
+//                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
+//                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
+//                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
+//                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
+//
+//
+//                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
+//                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
+//                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
+//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//
+//
+//                    }
                     startActivity(intent);
                 }
             });
@@ -514,29 +514,29 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
                     } else {
                         intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
                     }
-                    if (mydatas.get(position).getUser().isSecret()) {
-                        //保密
-                        intent.putExtra("flag", 1);
-
-                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
-                    } else {
-                        intent.putExtra("flag", 0);
-
-                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
-                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
-                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
-                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
-                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
-                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
-
-
-                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
-                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
-                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
-                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
-
-
-                    }
+//                    if (mydatas.get(position).getUser().isSecret()) {
+//                        //保密
+//                        intent.putExtra("flag", 1);
+//
+//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                    } else {
+//                        intent.putExtra("flag", 0);
+//
+//                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
+//                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
+//                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
+//                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
+//                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
+//                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
+//
+//
+//                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
+//                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
+//                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
+//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//
+//
+//                    }
                     startActivity(intent);
 //                    Toast.makeText(RadarActivity.this, "这是 " + info.getName() + " >.<", Toast.LENGTH_SHORT).show();
                 }

@@ -20,24 +20,31 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.UserCenterMainAcivity;
 import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.RadarActivity;
 import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.service.OnPlayerListener;
 import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.CoverLoader;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 描述
@@ -46,7 +53,7 @@ import butterknife.OnClick;
  * @date 2016/8/3
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-         OnPlayerListener {
+        OnPlayerListener {
 
 
     @Bind(R.id.song_progress_normal)
@@ -59,9 +66,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void show() {
         showPlayingFragment();
     }
-
-
-
 
     @Bind(R.id.album)
     ImageView album;
@@ -99,6 +103,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static DrawerLayout mDrawerLayout;
     private static FloatingActionButton mFloatingActionButton;
     public static PlayService mPlayService;
+    private PopupWindow mPopupWindow;
+    private ImageView iv_bg;
+    private CircleImageView user_face;
+    private TextView tv_nick,tv_name;
+
+
 
     private MainFragment mainFragment = null;
     private PlayFragment mPlayFragment = null;
@@ -185,13 +195,61 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
         View headerView = mNavigationView.inflateHeaderView(R.layout.header_nav);
+        iv_bg = (ImageView) headerView.findViewById(R.id.header_bg);
+        user_face = (CircleImageView) headerView.findViewById(R.id.header_face);
+        tv_name = (TextView) headerView.findViewById(R.id.header_name);
+        tv_nick = (TextView) headerView.findViewById(R.id.header_nick);
+        initNav();
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                boolean status= UserStatus.getstatus(MainActivity.this);
+                Intent intent =null;
+                if (status){
+                    intent = new Intent(MainActivity.this, UserCenterMainAcivity.class);
+                }else {
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                }
                 startActivity(intent);
             }
         });
+    }
+
+    private void initNav() {
+        Music music = null;
+        if (getmPlayService()!=null){
+            music = getmPlayService().getPlayingMusic();
+        }
+        if (music!=null){
+            if (music.getType() == Music.Type.LOCAL) {
+                iv_bg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
+            } else {
+                if (music.getCover() == null) {
+                    iv_bg.setImageResource(R.drawable.bg_header);
+                } else {
+                    Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
+                    iv_bg.setImageBitmap(bg);
+                }
+            }
+        }
+        boolean status= UserStatus.getstatus(this);
+        if (status){
+            User user = UserStatus.getUserInfo(this);
+            if (user.getUser_name()!=null&&user.getUser_name().length()>0){
+                tv_name.setText(user.getUser_name());
+            }else {
+                tv_name.setText("佚名");
+            }
+            if (user.getUser_email()!=null&&user.getUser_name().length()>0){
+                tv_nick.setText(user.getUser_email());
+            }
+            if (user.getUser_img()!=null){
+                ImageLoader.getInstance().displayImage(user.getUser_img(),user_face, ImageUtils.getAlbumDisplayOptions());
+            }
+        }else {
+            tv_name.setText("暂无登录！");
+            tv_nick.setText("湖科音乐湖");
+        }
     }
 
     Runnable runnable = null;
@@ -289,9 +347,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return;
         }
         play_state(true);
-        if (music.getCover()!=null){
+        if (music.getCover() != null) {
             album.setImageBitmap(music.getCover());
-        }else {
+        } else {
             Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
             album.setImageBitmap(cover);
         }
@@ -368,6 +426,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         isPlayFragmentShow = true;
     }
 
+    View view = null;
+
+
     //底部播放按钮状态显示控制
     private void play_state(boolean isPlaying) {
         if (isPlaying) {
@@ -383,4 +444,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return mPlayService;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initNav();
+    }
 }

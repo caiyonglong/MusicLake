@@ -52,8 +52,8 @@
 
 
                     <RelativeLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="center">
 
                         <ImageButton
@@ -73,16 +73,10 @@
 
                     <ImageButton
                         android:id="@+id/next_buttom"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_skip_next_black_18dp" />
-
-                    <ImageButton
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/ic_more_vert_grey_900_48dp" />
+                        android:background="@drawable/ic_skip_next_black_18dp" />
 
 
                 </LinearLayout>

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <corners android:radius="3dp" />
+    <item android:state_pressed="true" android:drawable="?attr/selectableItemBackgroundBorderless"/>
+    <item android:state_pressed="false" android:drawable="@drawable/btn_login_nomal"/>
 
-    <stroke  android:width="1dp"
-        android:color="#f0f0f0" />
-
-</shape>
+</selector>

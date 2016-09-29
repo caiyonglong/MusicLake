@@ -142,7 +142,7 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
         }
     }
     private void getDynamic(){
-        OkHttpUtils.get().url(Constants.DEFAULT_USER_URL)
+        OkHttpUtils.get().url(Constants.DEFAULT_URL)
                 .addParams("user_id","1305030212")
                 .addParams("updateDetail",null)
                 .build()

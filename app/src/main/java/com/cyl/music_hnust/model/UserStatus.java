@@ -3,61 +3,49 @@ package com.cyl.music_hnust.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.cyl.music_hnust.utils.Constants;
+
 /**
  * Created by 永龙 on 2015/12/22.
  */
 public class UserStatus {
-    //保存个人信息到data.xml文件中
+    //保存个人信息到user.xml文件中
     public static boolean savaUserInfo(Context context, User userInfo){
-        SharedPreferences sp=context.getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences sp=context.getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor =sp.edit();
-        editor.putString("userID",userInfo.getUser_id());
-    //    editor.putString("userPW", pw);
-        editor.putString("userName", userInfo.getUser_name());
-        editor.putString("userSex", userInfo.getUser_sex());
-        editor.putString("userCollege", userInfo.getUser_college());
-        editor.putString("userMajor", userInfo.getUser_major());
-        editor.putString("userClass", userInfo.getUser_class());
+        editor.putString(Constants.USER_ID,userInfo.getUser_id());
+        editor.putString(Constants.PASSWORD, userInfo.getPassword());
+        editor.putString(Constants.USERNAME, userInfo.getUser_name());
+        editor.putString(Constants.USER_SEX, userInfo.getUser_sex());
+        editor.putString(Constants.USER_COLLEGE, userInfo.getUser_college());
+        editor.putString(Constants.USER_MAJOR, userInfo.getUser_major());
+        editor.putString(Constants.USER_CLASS, userInfo.getUser_class());
 
-        editor.putString("user_img", userInfo.getUser_img());
-        editor.putString("user_email", userInfo.getUser_email());
-        editor.putString("user_phone", userInfo.getPhone());
-        editor.putString("nick", userInfo.getNick());
-        editor.putBoolean("secret",userInfo.isSecret());
+        editor.putString(Constants.USER_IMG, userInfo.getUser_img());
+        editor.putString(Constants.USER_EMAIL, userInfo.getUser_email());
+        editor.putString(Constants.PHONE, userInfo.getPhone());
+        editor.putString(Constants.NICK, userInfo.getNick());
+        editor.putInt(Constants.SECRET,userInfo.getSecret());
 
         editor.commit();
         return true;
     }
     //从data.xml文件中取出个人信息
     public static User getUserInfo(Context context){
-        SharedPreferences sp=context.getSharedPreferences("data", Context.MODE_PRIVATE);
-        String userID = sp.getString("userID", "1305030212");
-     //    String pw = sp.getString("userPW",null);
-        String userName = sp.getString("userName","123213");
-        String userSex = sp.getString("userSex","男");
-        String userCollege = sp.getString("userCollege","====");
-        String userMajor = sp.getString("userMajor","21132");
-        String userClass = sp.getString("userClass", "121321");
-
-        String user_img = sp.getString("user_img", null);
-        String user_email = sp.getString("user_email", null);
-        String user_phone = sp.getString("user_phone", null);
-        boolean secret = sp.getBoolean("secret", true);
-        String nick = sp.getString("nick", null);
-
+        SharedPreferences sp=context.getSharedPreferences("user", Context.MODE_PRIVATE);
         User user =new User();
-        user.setUser_id(userID);
-        user.setUser_name(userName);
-        user.setUser_sex(userSex);
-        user.setUser_college(userCollege);
-        user.setUser_major(userMajor);
-        user.setUser_class(userClass);
-
-        user.setUser_img(user_img);
-        user.setUser_email(user_email);
-        user.setPhone(user_phone);
-        user.setSecret(secret);
-        user.setNick(nick);
+        user.setUser_id(sp.getString(Constants.USER_ID,null));
+        user.setUser_name(sp.getString(Constants.USERNAME,null));
+        user.setPassword(sp.getString(Constants.PASSWORD,null));
+        user.setUser_sex(sp.getString(Constants.USER_SEX,null));
+        user.setUser_college(sp.getString(Constants.USER_COLLEGE,null));
+        user.setUser_major(sp.getString(Constants.USER_MAJOR,null));
+        user.setUser_class(sp.getString(Constants.USER_CLASS,null));
+        user.setUser_img(sp.getString(Constants.USER_IMG,null));
+        user.setUser_email(sp.getString(Constants.USER_EMAIL,null));
+        user.setPhone(sp.getString(Constants.PHONE,null));
+        user.setNick(sp.getString(Constants.NICK,null));
+        user.setSecret(sp.getInt(Constants.SECRET,0));
         return user;
     }
 
@@ -71,7 +59,7 @@ public class UserStatus {
     }
     public static boolean getstatus(Context context){
         SharedPreferences sp=context.getSharedPreferences("status", Context.MODE_PRIVATE);
-        Boolean user_status = sp.getBoolean("status", Boolean.parseBoolean(null));
+        Boolean user_status = sp.getBoolean("status", false);
         return user_status;
     }
 

@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#aaffffff"
-    android:layout_height="290dp" >
+    >
 
     <LinearLayout
         android:id="@+id/pop_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
+            android:background="@color/grean"
             android:layout_width="match_parent"
-            android:layout_height="45dp" >
+            android:layout_height="?attr/actionBarSize" >
 
+            <ImageView
+                android:id="@+id/skip_mode"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/ic_shuffle_white_24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="center" />
             <TextView
-                android:id="@+id/playsumText"
+                android:text="正在播放列表"
+                android:layout_centerInParent="true"
+                android:textSize="18sp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="播放列表(0)"
-
-                android:textSize="20dp"
-                android:textColor="@color/setting_blue" />
-
-
+                android:layout_height="wrap_content" />
         </RelativeLayout>
 
         <View
@@ -38,18 +45,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="199.8dp">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/playlistView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cacheColorHint="#00000000"
-                android:fadingEdge="none"
-                android:listSelector="#00000000"
-                android:overScrollMode="never" />
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tv_no"
+                android:id="@+id/tv_empty"
                 android:visibility="gone"
                 android:layout_centerInParent="true"
                 android:text="暂无歌曲"
@@ -57,25 +56,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.1dp"
-            android:background="@color/grey" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp">
-            <Button
-                android:id="@+id/btn_close_pop"
-                android:text="关闭"
-                android:textSize="20dp"
-                android:textColor="@color/setting_blue"
-                android:background="@color/white"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/playlistView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

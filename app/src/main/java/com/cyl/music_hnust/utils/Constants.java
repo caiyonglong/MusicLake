@@ -7,11 +7,53 @@ import android.os.Environment;
  */
 public class Constants {
     //社区根目录(头像图片网址前缀)
-    public static final String DEFAULT_IMGHEADER = "http://119.29.27.116/hcyl/music_BBS";
+    public static final String DEFAULT_IMGHEADER = "http://119.29.27.116/hkmusic";
 
     //社区后台操作php
-    public static final String DEFAULT_URL = "http://119.29.27.116/hcyl/music_BBS/operate.php?";
-    public static final String DEFAULT_USER_URL = "http://119.29.27.116/hcyl/music_BBS/operate.php";
+    public static final String DEFAULT_URL = "http://119.29.27.116/hkmusic/operate.php";
+    public static final String LOGIN_URL = "http://119.29.27.116/hkmusic/login.php";
+    public static final String REGISTER_URL = "http://119.29.27.116/hkmusic/register.php";
+
+    //用户邮箱
+    public static final String USER_EMAIL = "email";
+    //用户登录密码
+    public static final String PASSWORD = "password";
+    //用户名
+    public static final String USERNAME = "username";
+    //性别
+    public static final String USER_SEX = "username";
+    //性别
+    public static final String USER_IMG = "user_img";
+    public static final String USER_COLLEGE = "user_college";
+    public static final String USER_MAJOR = "user_major";
+    public static final String USER_CLASS = "user_class";
+    public static final String NICK = "nick";
+    public static final String PHONE = "phone";
+    public static final String SECRET = "secret";
+
+
+
+    //用户id
+    public static final String USER_ID = "user_id";
+    //动态id
+    public static final String SECRET_ID = "secret_id";
+    //内容[动态内容|评论内容]
+    public static final String CONTENT = "content";
+
+    //功能
+    public static final String FUNC = "func";
+    //动态secret
+    public static final String SECRET_ADD = "add";
+    public static final String GET_SECRET_LIST = "getSecretList";
+    public static final String PAGENUM = "pageNum";
+    //点赞
+    public static final String CHANGE_AGREE = "changeAgree";
+    //评论
+    public static final String GET_COMMENT_LIST = "getCommentList";
+
+
+
+
 
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";

@@ -33,7 +33,7 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlayingQueueAdapter extends RecyclerView.Adapter<LocalMusicAdapter.ItemHolder> {
+public class PlayingQueueAdapter extends RecyclerView.Adapter<PlayingQueueAdapter.ItemHolder> {
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
@@ -58,15 +58,15 @@ public class PlayingQueueAdapter extends RecyclerView.Adapter<LocalMusicAdapter.
     }
 
     @Override
-    public LocalMusicAdapter.ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PlayingQueueAdapter.ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music1, null);
-        LocalMusicAdapter.ItemHolder itemHolder = new PlayingQueueAdapter.ItemHolder(v);
+        PlayingQueueAdapter.ItemHolder itemHolder = new PlayingQueueAdapter.ItemHolder(v);
         return itemHolder;
 
     }
 
     @Override
-    public void onBindViewHolder(final LocalMusicAdapter.ItemHolder holder, final int position) {
+    public void onBindViewHolder(final PlayingQueueAdapter.ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
 
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
@@ -89,7 +89,7 @@ public class PlayingQueueAdapter extends RecyclerView.Adapter<LocalMusicAdapter.
         setOnPopupMenuListener(holder, position);
     }
 
-    private void setOnPopupMenuListener(LocalMusicAdapter.ItemHolder holder, final int position) {
+    private void setOnPopupMenuListener(PlayingQueueAdapter.ItemHolder holder, final int position) {
         holder.popupmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

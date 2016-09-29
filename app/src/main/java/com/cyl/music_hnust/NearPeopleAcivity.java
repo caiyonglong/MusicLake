@@ -100,7 +100,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
             }
             textViews[6].setText(intent.getStringExtra("nick").toString() == null ? "暂无" :
                     intent.getStringExtra("nick").toString());
-            head.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
+            head.setErrorImageResId(R.drawable.ic_account_circle);
             head.setImageUrl(intent.getStringExtra("img"), imageLoader);
         } else if (intent.getIntExtra("flag",0)==0) {
 
@@ -161,7 +161,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
     }
 
     private static void initData(){
-        if (!userInfo.isSecret()) {
+        if (true) {
 
             textViews[0].setText(userInfo.getUser_name() == null ? "暂无" :
                     userInfo.getUser_name());
@@ -184,7 +184,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
 
 
 //            holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            head.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
+            head.setErrorImageResId(R.drawable.ic_account_circle);
             head.setImageUrl(userInfo.getUser_img(), imageLoader);
         }else {
             for (int i = 0; i < textViewId.length; i++) {
@@ -192,7 +192,7 @@ public class NearPeopleAcivity extends AppCompatActivity {
             }
             textViews[6].setText(userInfo.getNick() == null ? "暂无" :
                     userInfo.getNick());
-            head.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
+            head.setErrorImageResId(R.drawable.ic_account_circle);
             head.setImageUrl(userInfo.getUser_img(), imageLoader);
         }
     }

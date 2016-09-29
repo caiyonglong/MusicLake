@@ -2,7 +2,6 @@ package com.cyl.music_hnust.map;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,14 +26,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.cyl.music_hnust.Json.JsonParsing;
-import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.UserCenterMainAcivity;
 import com.cyl.music_hnust.application.MyApplication;
+import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.model.Location;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.http.HttpUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtils;
@@ -308,46 +305,46 @@ public class NearActivity extends AppCompatActivity {
             String distance = "";
             String distime = "";
 
-            holder.id_cardview_foot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent;
-                    User user = UserStatus.getUserInfo(getApplicationContext());
-                    if (myDatas.get(position).getUser().getUser_id().equals(user.getUser_id())) {
-                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
-                    } else {
-                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
-                    }
-                    if (myDatas.get(position).getUser().isSecret()) {
-                        //保密
-                        intent.putExtra("flag", 1);
-
-                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
-                    } else {
-                        intent.putExtra("flag", 0);
-
-                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
-                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
-                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
-                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
-                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
-                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
-
-
-                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
-                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
-                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
-                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
-
-
-                    }
-                    startActivity(intent);
-                }
-            });
+//            holder.id_cardview_foot.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent;
+//                    User user = UserStatus.getUserInfo(getApplicationContext());
+//                    if (myDatas.get(position).getUser().getUser_id().equals(user.getUser_id())) {
+//                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
+//                    } else {
+//                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
+////                    }
+//                    if (myDatas.get(position).getUser().isSecret()) {
+//                        //保密
+//                        intent.putExtra("flag", 1);
+//
+//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                    } else {
+//                        intent.putExtra("flag", 0);
+//
+//                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
+//                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
+//                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
+//                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
+//                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
+//                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
+//
+//
+//                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
+//                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
+//                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
+//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//
+//
+//                    }
+//                    startActivity(intent);
+//                }
+//            });
             holder.location_time.setText(distime);
             holder.user_distance.setText("不超过" + distance);
             //  holder1.user_logo.setDefaultImageResId(R.mipmap.user_icon_default_main);
-            holder.user_img.setErrorImageResId(R.drawable.ic_account_circle_black_24dp);
+            holder.user_img.setErrorImageResId(R.drawable.ic_account_circle);
             holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
 
         }

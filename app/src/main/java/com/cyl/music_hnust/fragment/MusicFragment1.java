@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -456,18 +455,18 @@ public class MusicFragment1 extends Fragment implements View.OnClickListener, My
         popPlayListView = (RecyclerView) popupWindow
                 .findViewById(R.id.playlistView);
 
-        popPlaysumTextTextView = (TextView) popupWindow
-                .findViewById(R.id.playsumText);
-        tv_no = (TextView) popupWindow
-                .findViewById(R.id.tv_no);
-
-        Button pop_Close = (Button) popupWindow.findViewById(R.id.btn_close_pop);
-        pop_Close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindow.dismiss();
-            }
-        });
+//        popPlaysumTextTextView = (TextView) popupWindow
+//                .findViewById(R.id.playsumText);
+//        tv_no = (TextView) popupWindow
+//                .findViewById(R.id.tv_no);
+//
+////        Button pop_Close = (Button) popupWindow.findViewById(R.id.btn_close_pop);
+//        pop_Close.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPopupWindow.dismiss();
+//            }
+//        });
     }
 
 

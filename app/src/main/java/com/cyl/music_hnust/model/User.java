@@ -5,7 +5,7 @@ package com.cyl.music_hnust.model;
  * 个人信息类
  */
 public class User {
-    private String user_id;  //学号
+    private String user_id;  //id
     private String user_name;  //姓名
     private String user_sex;   //性别
     private String user_college;  //学院
@@ -16,8 +16,9 @@ public class User {
     private String user_email;  //邮箱
     private String phone;  //手机号
     private String nick;  //昵称
+    private String password;  //密码
 
-    private boolean IsSecret;  //用户是否保密
+    private int secret;  //用户是否保密
 
 
     public String getUser_class() {
@@ -92,12 +93,20 @@ public class User {
         this.user_sex = user_sex;
     }
 
-    public boolean isSecret() {
-        return IsSecret;
+    public int getSecret() {
+        return secret;
     }
 
-    public void setSecret(boolean secret) {
-        IsSecret = secret;
+    public void setSecret(int secret) {
+        this.secret = secret;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhone() {
@@ -106,5 +115,23 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "nick='" + nick + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", user_name='" + user_name + '\'' +
+                ", user_sex='" + user_sex + '\'' +
+                ", user_college='" + user_college + '\'' +
+                ", user_major='" + user_major + '\'' +
+                ", user_class='" + user_class + '\'' +
+                ", user_img='" + user_img + '\'' +
+                ", user_email='" + user_email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", secret=" + secret +
+                '}';
     }
 }

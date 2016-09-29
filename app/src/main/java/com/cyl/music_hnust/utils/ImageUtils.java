@@ -57,7 +57,7 @@ public class ImageUtils {
     public static DisplayImageOptions getAlbumDisplayOptions() {
         return new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
-                .showImageOnFail(R.drawable.default_cover)
+                .showImageOnFail(R.drawable.ic_account_circle)
                 .resetViewBeforeLoading(true)
                 .build();
     }

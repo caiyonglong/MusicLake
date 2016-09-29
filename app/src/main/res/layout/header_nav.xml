@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/bg_header"
     android:layout_height="190dp"
     android:orientation="vertical">
+    <ImageView
+        android:id="@+id/header_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="190dp"
@@ -19,11 +24,12 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp">
 
-        <com.cyl.music_hnust.view.RoundedImageView
-            android:id="@+id/id_header_face"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:elevation="10dp"
+            android:src="@drawable/ic_account_circle"
+            android:id="@+id/header_face"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="fitXY" />
+            android:layout_height="80dp" />
     </FrameLayout>
 
     <LinearLayout
@@ -34,7 +40,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/id_header_name"
+            android:id="@+id/header_name"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +50,7 @@
             android:textColor="@android:color/white" />
 
         <TextView
-            android:id="@+id/signature"
+            android:id="@+id/header_nick"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

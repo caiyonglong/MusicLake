@@ -219,7 +219,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         user_name.setText(mdatas.get(Integer.parseInt(position)).getUser().getNick());
         user_logo.setImageUrl(mdatas.get(Integer.parseInt(position)).getUser().getUser_img(), imageLoader);
-        user_logo.setDefaultImageResId(R.drawable.ic_account_circle_black_24dp);
+        user_logo.setDefaultImageResId(R.drawable.ic_account_circle);
         content_text.setText(mdatas.get(Integer.parseInt(position)).getContent());
         content_time.setText(mdatas.get(Integer.parseInt(position)).getTime());
         item_action_comment.setText(comment_num + "评论");

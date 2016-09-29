@@ -13,7 +13,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,14 +29,14 @@ import android.widget.TextView;
 import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.model.Dynamic;
-import com.cyl.music_hnust.model.User;
-import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.fragment.MusicFragment1;
 import com.cyl.music_hnust.fragment.CommunityFragment;
+import com.cyl.music_hnust.fragment.MusicFragment1;
 import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.RadarActivity;
+import com.cyl.music_hnust.model.Dynamic;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -161,10 +160,10 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
         mNavigationView.inflateMenu(R.menu.menu_nav);
         mNavigationView.setItemIconTintList(null);
 
-        id_header_face = (RoundedImageView) view.findViewById(R.id.id_header_face);
-        signature = (TextView) view.findViewById(R.id.signature);
-        id_header_name = (TextView) view.findViewById(R.id.id_header_name);
-        id_header_face.setOnClickListener(this);
+//        id_header_face = (RoundedImageView) view.findViewById(R.id.id_header_face);
+//        signature = (TextView) view.findViewById(R.id.signature);
+//        id_header_name = (TextView) view.findViewById(R.id.id_header_name);
+//        id_header_face.setOnClickListener(this);
 
 
         // 自己写的方法，设置NavigationView中menu的item被选中后要执行的操作
@@ -201,7 +200,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             UserStatus.saveuserstatus(MyActivity.this, false);
             id_header_name.setText("未登录");
             signature.setText("");
-            id_header_face.setImageResource(R.drawable.ic_account_circle_black_24dp);
+            id_header_face.setImageResource(R.drawable.ic_account_circle);
 
         }
 
@@ -402,18 +401,18 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.id_header_face:
-                if (userinfo.getUser_name() != null) {
-                    Intent it = new Intent(this, UserCenterMainAcivity.class);
-                    startActivity(it);
-                } else {
-                    Intent it = new Intent(this, LoginActivity.class);
-                    startActivity(it);
-                }
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
-                }
-                break;
+//            case R.id.id_header_face:
+//                if (userinfo.getUser_name() != null) {
+//                    Intent it = new Intent(this, UserCenterMainAcivity.class);
+//                    startActivity(it);
+//                } else {
+//                    Intent it = new Intent(this, LoginActivity.class);
+//                    startActivity(it);
+//                }
+//                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+//                    mDrawerLayout.closeDrawer(GravityCompat.START);
+//                }
+//                break;
             case R.id.add_dynamic:
                 Intent it = new Intent(this, EditActivity.class);
                 startActivityForResult(it, 1);
@@ -545,7 +544,7 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             UserStatus.saveuserstatus(MyActivity.this, false);
             id_header_name.setText("未登录");
             signature.setText("");
-            id_header_face.setImageResource(R.drawable.ic_account_circle_black_24dp);
+            id_header_face.setImageResource(R.drawable.ic_account_circle);
 
         }
 

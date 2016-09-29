@@ -212,11 +212,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             int index = mode_list.findIndexOfValue(stringValue);
 
             User user = UserStatus.getUserInfo(getActivity());
-            if (user.getUser_name()!=null&&user.isSecret()){
-                secret_switch.setDefaultValue(false);
-            }else {
-                secret_switch.setDefaultValue(true);
-            }
+//            if (user.getUser_name()!=null&&user.isSecret()){
+//                secret_switch.setDefaultValue(false);
+//            }else {
+//                secret_switch.setDefaultValue(true);
+//            }
 
             mode_list.setSummary(
                     index >= 0

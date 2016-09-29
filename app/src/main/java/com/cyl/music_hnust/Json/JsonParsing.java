@@ -206,11 +206,11 @@ public class JsonParsing {
             user1.setUser_college(user_college);
             user1.setUser_class(user_class);
             user1.setUser_major(user_major);
-
-            if (secret == 1)
-                user1.setSecret(true);
-            else
-                user1.setSecret(false);
+//
+//            if (secret == 1)
+//                user1.setSecret(true);
+//            else
+//                user1.setSecret(false);
 
             user1.setPhone(user_phone);
             user1.setUser_img(user_img);
@@ -374,11 +374,11 @@ public class JsonParsing {
             user.setUser_email(user_email);
             user.setPhone(phone);
             user.setNick(nick);
-
-            if (secret == 1)
-                user.setSecret(true);
-            else
-                user.setSecret(false);
+//
+//            if (secret == 1)
+//                user.setSecret(true);
+//            else
+//                user.setSecret(false);
 
         } catch (JSONException e) {
             e.printStackTrace();

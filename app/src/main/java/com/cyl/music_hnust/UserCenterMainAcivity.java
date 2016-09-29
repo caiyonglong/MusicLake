@@ -239,7 +239,7 @@ public class UserCenterMainAcivity extends AppCompatActivity implements View.OnC
             if (file1.exists())
                 head.setImageBitmap(getLoacalBitmap(path));
             else {
-                head.setImageResource(R.drawable.ic_account_circle_black_24dp);
+                head.setImageResource(R.drawable.ic_account_circle);
             }
 
         }

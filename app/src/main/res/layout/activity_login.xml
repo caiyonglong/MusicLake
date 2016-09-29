@@ -11,7 +11,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="6dp"
         app:cardElevation="3dp"
         app:cardUseCompatPadding="true"
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:text="@string/login"
-                    android:textColor="@color/setting_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     />
@@ -72,6 +72,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/passwordWrapper"
                     android:layout_width="match_parent"
@@ -87,31 +88,45 @@
                         />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-            <RelativeLayout
-                android:layout_marginTop="25dp"
+            <LinearLayout
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
-                <Button
-                    android:id="@+id/bt_go"
-                    android:elevation="6dp"
-                    android:background="@drawable/btn_login"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:text="@string/go"
-                    android:textColor="@color/colorPrimary"
-                    >
-                </Button>
-            </RelativeLayout>
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_gravity="center_horizontal"
-                android:textColor="#9a9a9a"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/forgot_your_password"
-                />
+                >
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#9a9a9a"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forgot_your_password"
+                    />
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#9a9a9a"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="|"
+                    />
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#9a9a9a"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -120,11 +135,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:fabSize="normal"
-        android:src="@drawable/ic_add_white_24dp"
+        android:src="@drawable/ic_arrow_forward"
         android:transitionName="loginFab"
         android:layout_alignTop="@+id/cv"
         android:layout_marginTop="25dp"
         android:layout_alignEnd="@id/cv"
         android:layout_marginEnd="-20dp"
         />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:elevation="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
 </RelativeLayout>
