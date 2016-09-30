@@ -8,6 +8,36 @@
     android:orientation="vertical"
     android:background="@drawable/bg_login"
     tools:context=".activity.LoginActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_chevron_left_black_18dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:src="@drawable/ic_send_white_18dp"
+        android:transitionName="loginFab"
+        android:layout_alignTop="@+id/cv"
+        android:layout_marginTop="25dp"
+        android:layout_alignEnd="@id/cv"
+        android:layout_marginEnd="-20dp"
+        />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:elevation="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="300dp"
@@ -15,8 +45,9 @@
         app:cardCornerRadius="6dp"
         app:cardElevation="3dp"
         app:cardUseCompatPadding="true"
-        android:layout_centerInParent="true"
-        android:id="@+id/cv">
+        android:id="@+id/cv"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -50,6 +81,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <android.support.design.widget.TextInputLayout
 
                     android:id="@+id/usernameWrapper"
@@ -91,63 +123,24 @@
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 >
-                <TextView
+                <Button
+                    android:id="@+id/register"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="10dp"
                     android:layout_gravity="center_horizontal"
                     android:textColor="#9a9a9a"
                     android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/forgot_your_password"
-                    />
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#9a9a9a"
-                    android:textSize="12sp"
+                    android:background="@drawable/btn_bg"
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="|"
-                    />
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#9a9a9a"
-                    android:textSize="12sp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="@string/register"
                     />
             </LinearLayout>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fabSize="normal"
-        android:src="@drawable/ic_arrow_forward"
-        android:transitionName="loginFab"
-        android:layout_alignTop="@+id/cv"
-        android:layout_marginTop="25dp"
-        android:layout_alignEnd="@id/cv"
-        android:layout_marginEnd="-20dp"
-        />
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:elevation="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone"/>
 </RelativeLayout>

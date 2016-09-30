@@ -1,11 +1,13 @@
 package com.cyl.music_hnust.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.cyl.music_hnust.R;
@@ -37,6 +39,8 @@ public class LoginActivity extends BaseActivity {
     CardView cv;
     @Bind(R.id.fab)
     FloatingActionButton fab;
+    @Bind(R.id.register)
+    Button register;
 
     @Bind(R.id.usernameWrapper)
     TextInputLayout usernameWrapper;
@@ -87,11 +91,11 @@ public class LoginActivity extends BaseActivity {
         }
     }
 //
-//    @OnClick(R.id.fab)
-//    public void tofab(){
-//        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-//        startActivity(intent);
-//    }
+    @OnClick(R.id.register)
+    public void tofab(){
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+    }
 
     private void login(String username, String password) {
 

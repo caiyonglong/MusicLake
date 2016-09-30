@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
-    android:orientation="vertical">
+    android:layout_height="220dp">
     <ImageView
         android:id="@+id/header_bg"
         android:scaleType="centerCrop"
@@ -11,7 +10,7 @@
         android:layout_height="match_parent" />
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="190dp"
+        android:layout_height="220dp"
         android:gravity="center"
         android:orientation="vertical"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -26,6 +25,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:elevation="10dp"
+            android:translationZ="10dp"
             android:src="@drawable/ic_account_circle"
             android:id="@+id/header_face"
             android:layout_width="80dp"
@@ -41,7 +41,6 @@
 
         <TextView
             android:id="@+id/header_name"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -51,7 +50,6 @@
 
         <TextView
             android:id="@+id/header_nick"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -115,7 +115,8 @@ public class CoverLoader {
     }
 
     public Bitmap loadRound(String uri) {
-        Bitmap bitmap;
+        Bitmap bitmap=null;
+        try{
         if (TextUtils.isEmpty(uri)) {
             bitmap = mRoundCache.get(KEY_NULL);
             if (bitmap == null) {
@@ -135,6 +136,27 @@ public class CoverLoader {
                 }
                 mRoundCache.put(uri, bitmap);
             }
+        }}catch (Exception e){
+
+        }
+        return bitmap;
+    }
+    public Bitmap loadNormal(String uri) {
+        Bitmap bitmap=null;
+        try{
+            if (TextUtils.isEmpty(uri)) {
+                bitmap = mRoundCache.get(KEY_NULL);
+                if (bitmap == null) {
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.bg_header);
+                    bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
+                    mRoundCache.put(KEY_NULL, bitmap);
+                }
+            } else {
+                if (bitmap == null) {
+                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
+                }
+            }}catch (Exception e){
+
         }
         return bitmap;
     }
@@ -143,19 +165,26 @@ public class CoverLoader {
      * 获得指定大小的bitmap
      */
     private Bitmap loadBitmap(String uri, int length) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        // 仅获取大小
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(uri, options);
-        int maxLength = options.outWidth > options.outHeight ? options.outWidth : options.outHeight;
-        // 压缩尺寸，避免卡顿
-        int inSampleSize = maxLength / length;
-        if (inSampleSize < 1) {
-            inSampleSize = 1;
+        try {
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            // 仅获取大小
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(uri, options);
+            int maxLength = options.outWidth > options.outHeight ? options.outWidth : options.outHeight;
+            // 压缩尺寸，避免卡顿
+            int inSampleSize = maxLength / length;
+            if (inSampleSize < 1) {
+                inSampleSize = 1;
+            }
+            options.inSampleSize = inSampleSize;
+            // 获取bitmap
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeFile(uri, options);
         }
-        options.inSampleSize = inSampleSize;
-        // 获取bitmap
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(uri, options);
+        catch (Exception e){
+            return null;
+        }
     }
+
 }

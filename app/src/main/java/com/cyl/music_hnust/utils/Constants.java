@@ -21,7 +21,7 @@ public class Constants {
     //用户名
     public static final String USERNAME = "username";
     //性别
-    public static final String USER_SEX = "username";
+    public static final String USER_SEX = "use_sex";
     //性别
     public static final String USER_IMG = "user_img";
     public static final String USER_COLLEGE = "user_college";

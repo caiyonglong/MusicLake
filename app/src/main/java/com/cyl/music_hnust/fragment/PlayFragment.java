@@ -24,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.lyric.LrcView;
@@ -49,7 +50,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
+public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener, LocalMusicAdapter.OnItemClickListener {
 
     //整个容器
     LinearLayout container;
@@ -307,6 +308,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
         reloadAdapter();
         recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(this);
     }
 
 
@@ -435,6 +437,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        MainActivity.mPlayService.setMyMusicList(musicInfos);
+        MainActivity.mPlayService.playMusic(position);
+        mAdapter.notifyDataSetChanged();
     }
 
 

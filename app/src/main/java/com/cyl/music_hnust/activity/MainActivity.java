@@ -210,6 +210,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }else {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                 }
+                mDrawerLayout.closeDrawers();
                 startActivity(intent);
             }
         });
@@ -221,15 +222,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             music = getmPlayService().getPlayingMusic();
         }
         if (music!=null){
-            if (music.getType() == Music.Type.LOCAL) {
-                iv_bg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
+            if (music.getCover() != null) {
+                iv_bg.setImageBitmap(music.getCover());
             } else {
-                if (music.getCover() == null) {
-                    iv_bg.setImageResource(R.drawable.bg_header);
-                } else {
-                    Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
-                    iv_bg.setImageBitmap(bg);
-                }
+                Bitmap cover = CoverLoader.getInstance().loadNormal(music.getCoverUri());
+                iv_bg.setImageBitmap(cover);
             }
         }
         boolean status= UserStatus.getstatus(this);
@@ -336,6 +333,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onChange(Music music) {
         onPlay(music);
+        initNav();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlay(music);
         }
@@ -364,6 +362,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onPlayerPause() {
         play_state(false);
+        initNav();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerPause();
         }
@@ -373,6 +372,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onPlayerResume() {
         play_state(true);
+        initNav();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerResume();
         }
