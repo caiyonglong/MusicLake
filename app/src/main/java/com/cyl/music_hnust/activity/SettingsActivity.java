@@ -263,7 +263,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         Intent intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
                         startActivity(intent);
                     }else {
-                        Intent intent = new Intent(getApplicationContext(), com.cyl.music_hnust.LoginActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                         startActivity(intent);
                     }
                     break;

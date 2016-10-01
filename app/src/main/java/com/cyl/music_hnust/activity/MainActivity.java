@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.UserCenterMainAcivity;
-import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.map.BaseMapActivity;
@@ -268,16 +267,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_com:
                 item.setChecked(true);
+//
+//                runnable = new Runnable() {
+//                    public void run() {
+//                        CommunityFragment communityFragment = new CommunityFragment();
+//                        switchFragment(communityFragment);
+//                    }
+//                };
 
-                runnable = new Runnable() {
-                    public void run() {
-                        CommunityFragment communityFragment = new CommunityFragment();
-                        switchFragment(communityFragment);
-                    }
-                };
-
-//                Intent intent4 = new Intent(this, CommunityActivity.class);
-//                startActivity(intent4);
+                Intent intent4 = new Intent(this, CommunityActivity.class);
+                startActivity(intent4);
                 break;
             case R.id.nav_menu_msg:
                 item.setChecked(true);

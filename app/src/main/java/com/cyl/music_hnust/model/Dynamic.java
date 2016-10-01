@@ -7,6 +7,16 @@ package com.cyl.music_hnust.model;
  */
 public class Dynamic {
     private User user;
+    private String user_id;
+    private String secret_id;
+    private String secret_content;
+    private String secret_time;
+    private String secret_agreeNum;
+    private String secret_replyNum;
+    private String secret_status;
+    private String report_num;
+    private int isAgree;
+
     private String content;
     private String time;
     private int love;

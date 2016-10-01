@@ -15,4 +15,6 @@ public class Extras {
     public static final String ALBUM = "album";
     public static final String ALBUM_ID = "albumID";
 
+    public static final String SECRET_ID = "secret_id";
+
 }

@@ -55,7 +55,7 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
     protected void initDatas() {
         getDynamic();
 
-        MyAdapter = new CommunityAdapter(getActivity(),mdatas);
+//        MyAdapter = new CommunityAdapter(getActivity(),mdatas);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -161,7 +161,7 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
 
                             mdatas = JsonParsing.getDynamic(dataJson);
 
-                            MyAdapter.myDatas = mdatas;
+//                            MyAdapter.myDatas = mdatas;
 
                             MyAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {

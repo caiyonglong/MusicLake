@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cyl.music_hnust.activity.LoginActivity;
 import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.application.MyApplication;

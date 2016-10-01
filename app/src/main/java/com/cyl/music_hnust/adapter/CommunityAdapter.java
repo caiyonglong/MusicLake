@@ -9,9 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.Dynamic;
+import com.cyl.music_hnust.model.Secret;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
 
@@ -39,11 +38,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Item
     }
 
     public Context mContext;
-    public List<Dynamic> myDatas;
+    public List<Secret> myDatas;
     public LayoutInflater mLayoutInflater;
-    public ImageLoader imageLoader;
 
-    public CommunityAdapter(Context mContext, List<Dynamic> myDatas) {
+    public CommunityAdapter(Context mContext, List<Secret> myDatas) {
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.myDatas = myDatas;
@@ -98,14 +96,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Item
             });
 
         }
-        Dynamic dynamic = myDatas.get(position);
+        Secret dynamic = myDatas.get(position);
 
-        holder.user_name.setText(dynamic.getUser().getNick());
-        holder.item_action_love.setText(dynamic.getLove() + "赞");
-        holder.item_action_comment.setText(dynamic.getComment() + "评论");
-        String text =dynamic.getContent().replace("\n"," ");
+        holder.user_name.setText(dynamic.getUser().getUser_name());
+        holder.item_action_love.setText(dynamic.getSecret_agreeNum() + "赞");
+        holder.item_action_comment.setText(dynamic.getSecret_replyNum() + "评论");
+        String text =dynamic.getSecret_content().replace("\n"," ");
         holder.content_text.setText(text);
-        holder.content_time.setText(FormatUtil.distime(dynamic.getTime()));
+        holder.content_time.setText(FormatUtil.distime(dynamic.getSecret_time()));
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(
                 dynamic.getUser().getUser_img(),holder.user_logo, ImageUtils.getAlbumDisplayOptions());
 
