@@ -260,8 +260,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 case "complete_info":
                     User user =UserStatus.getUserInfo(getApplicationContext());
                     if (user.getUser_name()!=null) {
-                        Intent intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
+//                        startActivity(intent);
                     }else {
                         Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                         startActivity(intent);

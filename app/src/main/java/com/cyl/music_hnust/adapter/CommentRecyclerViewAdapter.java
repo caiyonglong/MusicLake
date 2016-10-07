@@ -29,12 +29,12 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     }
 
     public Context mContext;
-    public List<Comment> mDatas;
+    public List<Comment> comments;
     public LayoutInflater mLayoutInflater;
 
-    public CommentRecyclerViewAdapter(Context mContext, List<Comment> mDatas) {
+    public CommentRecyclerViewAdapter(Context mContext, List<Comment> comments) {
         this.mContext = mContext;
-        this.mDatas = mDatas;
+        this.comments = comments;
         mLayoutInflater = LayoutInflater.from(mContext);
 
     }
@@ -52,29 +52,27 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     @Override
     public void onBindViewHolder(final CommentRecyclerViewHolder holder, final int position) {
 
-        holder.userName_comment.setText(mDatas.get(position).getUser().getNick().toString());
-        holder.content_comment.setText(mDatas.get(position).getCommentContent().toString());
-        holder.time_comment.setText(mDatas.get(position).getTime().toString());
-//        holder.index_comment.setText(position+1+"楼");
+        holder.user_comment.setText(comments.get(position).getUser().getUser_name().toString());
+        holder.content_comment.setText(comments.get(position).getComment().toString());
+        holder.time_comment.setText(comments.get(position).getComment_time().toString());
 
     }
 
 
     @Override
     public int getItemCount() {
-        return mDatas.size();
+        return comments.size();
     }
 
     public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView userName_comment;
+        public TextView user_comment;
         public TextView content_comment;
         public TextView time_comment;
-//        public TextView index_comment;
 
         public CommentRecyclerViewHolder(View mView) {
             super(mView);
-            userName_comment = (TextView) mView.findViewById(R.id.userName_comment);
+            user_comment = (TextView) mView.findViewById(R.id.user_comment);
             content_comment = (TextView) mView.findViewById(R.id.content_comment);
             time_comment = (TextView) mView.findViewById(R.id.time_comment);
 //            index_comment = (TextView) mView.findViewById(R.id.index_comment);

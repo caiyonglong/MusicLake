@@ -2,7 +2,9 @@ package com.cyl.music_hnust.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import com.cyl.music_hnust.model.SecretInfo;
 import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -24,6 +27,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 
 /**
@@ -38,12 +42,21 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
     XRecyclerView mRecyclerView;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+
+    @OnClick(R.id.fab)
+    public void setFab() {
+        Intent intent = new Intent(this, EditActivity.class);
+        startActivity(intent);
+    }
+
 
     CommunityAdapter MyAdapter;
-    private int pagenum =1;
-    private String user_id ="";
+    private int pagenum = 1;
+    private String user_id = "";
 
-    private static List<Secret> mdatas =new ArrayList<>();
+    private static List<Secret> mdatas = new ArrayList<>();
 
     @Override
     protected void listener() {
@@ -55,26 +68,44 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
         setContentView(R.layout.acitvity_community);
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
-
+        pagenum =1;
         initView();
         init();
 
     }
 
     private void init() {
-        MyAdapter = new CommunityAdapter(this,mdatas);
+        MyAdapter = new CommunityAdapter(this, mdatas);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(MyAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                boolean is = Math.abs(dy) > 4;
 
+                if (is) {
+                    if (dy > 0) {
+                        fab.hide();
+                    } else {
+                        fab.show();
+                    }
+                }
+            }
+        });
 
         MyAdapter.setOnItemClickListener(this);
         mRecyclerView.setLoadingListener(this);
-        if (UserStatus.getstatus(this)){
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
+        if (UserStatus.getstatus(this)) {
             user_id = UserStatus.getUserInfo(this).getUser_id();
+        }else {
+            user_id="";
         }
-        getSecret(pagenum,user_id);
+        getSecret(pagenum);
     }
 
     private void initView() {
@@ -93,24 +124,25 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
         }
         return super.onOptionsItemSelected(item);
     }
-
-
     /**
      * 下拉刷新
      */
     @Override
     public void onRefresh() {
         Log.e("111====1", String.valueOf(pagenum));
-        getSecret(pagenum,user_id);
+        MyAdapter.myDatas.clear();
+        pagenum = 1;
+        getSecret(pagenum);
         mRecyclerView.refreshComplete();
     }
+
     /**
      * 上拉加载更多
      */
     @Override
     public void onLoadMore() {
         Log.e("111======1", String.valueOf(pagenum));
-        getSecret(pagenum,user_id);
+        getSecret(pagenum);
         mRecyclerView.loadMoreComplete();
     }
 
@@ -122,33 +154,40 @@ public class CommunityActivity extends BaseActivity implements XRecyclerView.Loa
                 break;
             case R.id.container:
             case R.id.content_text:
-                Intent it = new Intent(this, CommentActivity1.class);
-                it.putExtra(Extras.SECRET_ID,mdatas.get(position).getSecret_id());
-                startActivity(it);
+                Intent it = new Intent(this, CommentActivity.class);
+                it.putExtra(Extras.SECRET_ID, mdatas.get(position).getSecret_id());
+                it.putExtra(Extras.USER_ID, user_id);
+                startActivityForResult(it,1);
                 break;
         }
     }
-    private void getSecret(int PageNum , String user_id){
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    private void getSecret(int PageNum) {
         OkHttpUtils.post().url(Constants.DEFAULT_URL)
-                .addParams(Constants.FUNC,Constants.GET_SECRET_LIST)
+                .addParams(Constants.FUNC, Constants.GET_SECRET_LIST)
                 .addParams(Constants.PAGENUM, String.valueOf(PageNum))
-                .addParams(Constants.USER_ID,user_id)
+                .addParams(Constants.USER_ID, user_id)
                 .build()
                 .execute(new SecretCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.e("dddd","err");
+                        Log.e("dddd", "err");
                     }
+
                     @Override
                     public void onResponse(SecretInfo response) {
-
-                        if (response.getData() == null || response.getData().size()==0) {
+                        if (response.getData() == null || response.getData().size() == 0) {
                             mRecyclerView.loadMoreComplete();
                             return;
                         }
-                        pagenum = pagenum+1;
-                        mdatas = response.getData();
-                        MyAdapter.myDatas.addAll(mdatas);
+                        pagenum = pagenum + 1;
+                        mdatas.addAll(response.getData());
                         MyAdapter.notifyDataSetChanged();
                     }
                 });

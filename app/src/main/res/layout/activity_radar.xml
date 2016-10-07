@@ -1,43 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login"
-    >
-    <RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_login">
 
-        android:id="@+id/bar"
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:background="@color/setting_blue"
-        android:layout_height="50dp">
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="5dp">
 
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_chevron_left_white_18dp"
-            />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
+            app:title="附近的人" />
+    </android.support.design.widget.AppBarLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="附近的人"
-            android:textColor="#ffffff"
-            android:textSize="18dp" />
-        <ImageButton
-            android:text="清除位置信息并退出"
-            android:textColor="@color/main_white"
-            android:id="@+id/btn_clear"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@android:drawable/ic_menu_delete"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
 
     <com.cyl.music_hnust.custom.RadarViewGroup
         android:id="@+id/radar"
@@ -45,24 +27,27 @@
         android:layout_height="280dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
+        android:elevation="10dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp">
 
         <com.cyl.music_hnust.custom.RadarView
             android:id="@id/id_scan_circle"
-            android:layout_width="280dp"
-            android:layout_height="280dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </com.cyl.music_hnust.custom.RadarViewGroup>
 
     <RelativeLayout
         android:id="@+id/ry_container"
+        android:background="@color/grean"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp"
+        android:padding="20dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:elevation="5dp">
         <TextView
             android:id="@+id/no_result"
             android:text="搜索中..."
@@ -74,12 +59,11 @@
 
         <com.cyl.music_hnust.custom.CustomViewPager
             android:id="@+id/vp"
-            android:layout_width="130dp"
-            android:layout_height="160dp"
-
+            android:layout_width="160dp"
+            android:layout_height="200dp"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="120dp"
-            android:layout_marginRight="120dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
             />
     </RelativeLayout>
 

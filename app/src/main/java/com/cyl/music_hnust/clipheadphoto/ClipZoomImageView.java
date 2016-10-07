@@ -401,9 +401,9 @@ public class ClipZoomImageView extends ImageView implements
 		Canvas canvas = new Canvas(bitmap);
 		draw(canvas);
 		//若为裁剪为方形区域，则去掉getCircleBitmap方法即可
-		return getCircleBitmap(Bitmap.createBitmap(bitmap, mHorizontalPadding,
+		return Bitmap.createBitmap(bitmap, mHorizontalPadding,
 				mVerticalPadding, getWidth() - 2 * mHorizontalPadding,
-				getWidth() - 2 * mHorizontalPadding));
+				getWidth() - 2 * mHorizontalPadding);
 	}
 
 	/**

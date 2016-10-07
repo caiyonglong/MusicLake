@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.cyl.music_hnust.activity.EditActivity;
 import com.cyl.music_hnust.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.utils.MusicInfo;

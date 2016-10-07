@@ -72,8 +72,8 @@ public class LoginActivity extends BaseActivity {
         final String username = usernameWrapper.getEditText().getText().toString();
         final String password = passwordWrapper.getEditText().getText().toString();
         // TODO: 检查　
-        if (!validateEmail(username)) {
-            passwordWrapper.setError("请输入正确的邮箱");
+        if (!validatePassword(username)) {
+            passwordWrapper.setError("邮箱或者学号");
         } else if (!validatePassword(password)) {
             passwordWrapper.setError("密码需为6~18位的数字和字母");
         } else {
@@ -136,7 +136,7 @@ public class LoginActivity extends BaseActivity {
 
     //判断邮箱是否合法
     public boolean validateEmail(String email) {
-        matcher = pattern.matcher(email);
+//        matcher = pattern.matcher(email);
         return matcher.matches();
     }
 

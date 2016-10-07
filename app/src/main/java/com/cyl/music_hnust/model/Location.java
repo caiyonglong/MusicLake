@@ -5,6 +5,7 @@ package com.cyl.music_hnust.model;
  */
 public class Location {
     private User user;
+    private String user_id;
     private String user_song;
     private String location_time;
     private double location_longitude; //纬度
@@ -48,5 +49,13 @@ public class Location {
 
     public void setUser_song(String user_song) {
         this.user_song = user_song;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

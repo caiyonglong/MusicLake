@@ -1,5 +1,6 @@
 package com.cyl.music_hnust.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -90,6 +91,18 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
+            return true;
+        }
+        if (id == R.id.share) {
+            Intent intent =new Intent(this,EditActivity.class);
+
+            String content = "分享歌单\n";
+            for (int i=0; i <musicInfos.size();i++){
+                content +=musicInfos.get(i).getTitle()+"---"+musicInfos.get(i).getArtist();
+            }
+            intent.putExtra("content",content);
+
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

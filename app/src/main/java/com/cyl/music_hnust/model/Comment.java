@@ -7,23 +7,34 @@ package com.cyl.music_hnust.model;
 public class Comment {
 
     private User user;
-    private String commentContent;
-    private String time;
+    private String user_id;
+    private String secret_id;
+    private String comment;
+    private String comment_time;
+    private String img_id;
 
-    public String getTime() {
-        return time;
+    public String getComment() {
+        return comment;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getCommentContent() {
-        return commentContent;
+    public String getComment_time() {
+        return comment_time;
     }
 
-    public void setCommentContent(String commentContent) {
-        this.commentContent = commentContent;
+    public void setComment_time(String comment_time) {
+        this.comment_time = comment_time;
+    }
+
+    public String getSecret_id() {
+        return secret_id;
+    }
+
+    public void setSecret_id(String secret_id) {
+        this.secret_id = secret_id;
     }
 
     public User getUser() {
@@ -32,5 +43,33 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getImg_id() {
+        return img_id;
+    }
+
+    public void setImg_id(String img_id) {
+        this.img_id = img_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "comment='" + comment + '\'' +
+                ", user=" + user +
+                ", user_id='" + user_id + '\'' +
+                ", secret_id='" + secret_id + '\'' +
+                ", comment_time='" + comment_time + '\'' +
+                ", img_id='" + img_id + '\'' +
+                '}';
     }
 }

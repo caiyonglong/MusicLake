@@ -13,6 +13,7 @@ public class Constants {
     public static final String DEFAULT_URL = "http://119.29.27.116/hkmusic/operate.php";
     public static final String LOGIN_URL = "http://119.29.27.116/hkmusic/login.php";
     public static final String REGISTER_URL = "http://119.29.27.116/hkmusic/register.php";
+    public static final String UPLOAD_URL = "http://119.29.27.116/hkmusic/upload_file.php";
 
     //用户邮箱
     public static final String USER_EMAIL = "email";
@@ -44,12 +45,28 @@ public class Constants {
     public static final String FUNC = "func";
     //动态secret
     public static final String SECRET_ADD = "add";
+    public static final String COMMENT_ADD = "addComment";
     public static final String GET_SECRET_LIST = "getSecretList";
+    public static final String GET_MYSECRET_LIST = "getMySecretList";
     public static final String PAGENUM = "pageNum";
     //点赞
     public static final String CHANGE_AGREE = "changeAgree";
     //评论
     public static final String GET_COMMENT_LIST = "getCommentList";
+    //位置信息
+    public static final String LOCATION = "location";
+    public static final String LAT = "lat";//location_latitude
+    public static final String LON = "lon";//location_longitude
+    //清理位置信息
+    public static final String CLEARN = "clearLocation";
+    //附近
+    public static final String NEAR = "near";
+    //摇一摇歌曲
+    public static final String SONG_ADD = "addSong";
+    public static final String SONG = "song";
+
+
+
 
 
 

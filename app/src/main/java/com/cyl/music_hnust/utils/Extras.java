@@ -17,4 +17,6 @@ public class Extras {
 
     public static final String SECRET_ID = "secret_id";
 
+    public static final String USER_ID = "user_id";
+
 }

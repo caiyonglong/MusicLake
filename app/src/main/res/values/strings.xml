@@ -81,7 +81,7 @@
     <!--version 2.5-->
     <string name="unknown">未知</string>
     <string name="login">登录</string>
-    <string name="register">注册</string>
+    <string name="register">暂无账号？去注册</string>
     <string name="Username">用户名</string>
     <string name="Password">密码</string>
     <string name="forgot_your_password">忘记密码?</string>

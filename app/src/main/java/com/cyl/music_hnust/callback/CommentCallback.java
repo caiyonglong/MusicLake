@@ -2,7 +2,7 @@ package com.cyl.music_hnust.callback;
 
 import android.util.Log;
 
-import com.cyl.music_hnust.model.SecretInfo;
+import com.cyl.music_hnust.model.CommentInfo;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -16,14 +16,14 @@ import okhttp3.Response;
  * 版本：2.5
  */
 
-public abstract class SecretCallback extends Callback<SecretInfo>
+public abstract class CommentCallback extends Callback<CommentInfo>
 {
     @Override
-    public SecretInfo parseNetworkResponse(Response response) throws IOException
+    public CommentInfo parseNetworkResponse(Response response) throws IOException
     {
         String string = response.body().string();
-        Log.e("2222222",string);
-        SecretInfo secretInfo = new Gson().fromJson(string, SecretInfo.class);
-        return secretInfo;
+        Log.e("eee",string);
+        CommentInfo commentInfo = new Gson().fromJson(string, CommentInfo.class);
+        return commentInfo;
     }
 }

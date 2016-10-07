@@ -1,7 +1,6 @@
 package com.cyl.music_hnust;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,7 +25,6 @@ import com.cyl.music_hnust.model.Dynamic;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
-import com.cyl.music_hnust.utils.SnackbarUtil;
 import com.cyl.music_hnust.utils.ToastUtils;
 
 import org.json.JSONArray;
@@ -166,12 +164,12 @@ public class MynamicActivity extends AppCompatActivity implements SwipeRefreshLa
             case R.id.container:
             case R.id.content_text:
 
-                Intent it = new Intent(getApplicationContext(), CommentActivity.class);
-                it.putExtra("position", position);
-                it.putExtra("flag", 1);
-                it.putExtra("dynamic_id", mdatas.get(position).getDynamic_id());
-                startActivity(it);
-                SnackbarUtil.show(mRecyclerView, "comment+1", 0);
+//                Intent it = new Intent(getApplicationContext(), CommentActivity.class);
+//                it.putExtra("position", position);
+//                it.putExtra("flag", 1);
+//                it.putExtra("dynamic_id", mdatas.get(position).getDynamic_id());
+//                startActivity(it);
+//                SnackbarUtil.show(mRecyclerView, "comment+1", 0);
                 break;
 
         }

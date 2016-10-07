@@ -2,38 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#F7F7F7">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+    android:padding="16dp">
         <TextView
-            android:id="@+id/userName_comment"
+            android:id="@+id/user_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="@color/red_btn_bg_color"
             android:text = "userName"
+            android:textColor="@color/main_black"
             />
         <TextView
             android:id="@+id/time_comment"
+            android:layout_marginRight="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text = "20:38"
             android:textSize="16sp"
-            android:layout_below="@+id/userName_comment"
-            android:textColor="@color/main_black"
-            android:text = "2016-3-16 0:13发表"
+            android:textColor="#666666"
             />
-    </RelativeLayout>
-    <TextView
-        android:id="@+id/content_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dip"
-        android:text = "评论"
-        android:textSize="16sp"
-        android:textColor="#666666"
-        />
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/content_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "评论"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            />
 </LinearLayout>

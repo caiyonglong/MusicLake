@@ -2,258 +2,80 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="top"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:elevation="5dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
+            app:title="评论" />
+    </android.support.design.widget.AppBarLayout>
+
 
     <ScrollView
+        android:layout_below="@+id/app_bar"
         android:id="@+id/commit_scroll"
-        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/id_cardview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="2dp"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardElevation="3dp"
-                app:cardMaxElevation="5dp"
-                app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="false"
-                >
+            android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:layout_margin="10dp"
-                    android:descendantFocusability="blocksDescendants"
-                    >
-                    <LinearLayout
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="?actionBarSize">
-                        <com.android.volley.toolbox.NetworkImageView
-                            android:id="@+id/user_logo"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_gravity="center_vertical"
-                            />
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_marginLeft="15dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp">
-                            <TextView
-                                android:id="@+id/user_name"
-                                android:layout_weight="1"
-                                android:textSize="16sp"
-                                android:textColor="@color/setting_blue"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:text="岁月抚伤"
-                                android:singleLine="true"
-                                android:ellipsize="end"
-                                android:layout_width="80dp" />
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+            <include layout="@layout/item_main" />
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_query_builder_blue_grey_400_18dp"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/content_time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="13sp"
-                                    android:layout_marginLeft="5dp"
-                                    android:textColor="@color/setting_blue"
-                                    android:scaleType="centerInside"
-                                    android:text="08-21" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:id="@+id/content_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="5"
-                            android:layout_marginTop="5dp"
-                            android:textColor="@color/main_black"
-                            android:layout_marginBottom="8dp"
-                            android:text="十年之前，我不认识你 你不属于我，我们还是一样，陪在一个陌生人左右，走过渐渐熟悉的街头;十年之后，我们是朋友， 还可以问候，只是那种温柔，再也找不到拥抱的理由，情人最后难免沦为朋友。" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/comment"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_weight="1"
-                            android:id="@+id/item_comment_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:background="#334A90E2"
-                            android:layout_marginRight="5dp"
-                            android:text="9·评论"
-                            android:padding="2dp"
-                            android:textColor="@color/setting_blue" />
-                        <TextView
-
-                            android:layout_weight="1"
-                            android:id="@+id/item_love_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:background="#334A90E2"
-                            android:text="985·赞"
-                            android:padding="2dp"
-                            android:textColor="@color/setting_blue" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dddddd"
-                />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/comment_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                ></android.support.v7.widget.RecyclerView>
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/loadmore"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="暂无更多评论"
-                android:padding="12dip"
-                android:gravity="center"
-                />
+            </android.support.v7.widget.RecyclerView>
+
         </LinearLayout>
     </ScrollView>
     <LinearLayout
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-
         android:id="@+id/area_commit"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:padding="4dip"
-        android:background="@color/main_white"
+        android:background="#f0f0f0"
         android:gravity="center_vertical"
-        >
-        <ImageButton
-            android:id="@+id/IsAgree"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_edit"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/et_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="发表评论\(^o^)/~"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/send_comment"
+            android:text="发送"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_bg"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:minWidth="30dp"
-            android:layout_weight="0"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@color/white"
-            android:src="@mipmap/ic_action_agree"
-            />
-
-        <EditText
-            android:id="@+id/comment_content"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="来评论一句吧"
-            android:paddingStart="5dp"
-            android:textColorHint="@color/main_black"
-            android:ems="10"
-            android:textColor="@color/main_black"
-            android:minHeight="40dp"
-            android:layout_marginRight="1dip"
-            android:layout_marginLeft="1dp"
-            android:paddingLeft="4dip"
-            >
-            <requestFocus />
-        </EditText>
-
-
-        <ImageButton
-            android:id="@+id/comment_commit"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:minWidth="40dp"
-            android:layout_weight="0"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
-            android:text="评论"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:drawable/ic_menu_send"
-
-            />
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fab_icon="@mipmap/add"
-        fab:fab_colorNormal="@color/setting_blue"
-        fab:fab_colorPressed="@color/setting_blue"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"/>
 
 </RelativeLayout>

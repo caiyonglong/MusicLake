@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.cyl.music_hnust.R;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -24,7 +23,7 @@ public class CircleView extends View {
     private Paint mPaint;
     private Bitmap mBitmap;
     private Context mContext;
-    private float radius = DisplayUtils.dp2px(getContext(),9);//半径
+    private float radius = DisplayUtils.dp2px(getContext(), 9);//半径
     private float disX;//位置X
     private float disY;//位置Y
     private float angle;//旋转的角度
@@ -64,17 +63,17 @@ public class CircleView extends View {
 
     public CircleView(Context context) {
         this(context, null);
-        this.mContext= context;
+        this.mContext = context;
     }
 
     public CircleView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        this.mContext= context;
+        this.mContext = context;
     }
 
     public CircleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mContext= context;
+        this.mContext = context;
         init();
     }
 
@@ -98,7 +97,7 @@ public class CircleView extends View {
         if (specMode == MeasureSpec.EXACTLY) {
             result = specSize;
         } else {
-            result = DisplayUtils.dp2px(getContext(),18);
+            result = DisplayUtils.dp2px(getContext(), 18);
             if (specMode == MeasureSpec.AT_MOST) {
                 result = Math.min(result, specSize);
             }
@@ -120,19 +119,15 @@ public class CircleView extends View {
         invalidate();
     }
 
-    public void setPortraitIcon(String imgpath) {
-        File file = new File(imgpath);
-        if (file.exists()){
-            mBitmap =getLoacalBitmap(imgpath);
-        }else {
-            mBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.circle_photo);
-        }
+    public void setPortraitIcon(String imgurl) {
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_account_circle);
         invalidate();
     }
-    public void clearPortaitIcon(){
+    public void clearPortaitIcon() {
         mBitmap = null;
         invalidate();
     }
+
     /**
      * @param url
      * @return

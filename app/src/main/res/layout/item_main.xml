@@ -25,9 +25,8 @@
         android:layout_marginBottom="10dp"
         android:descendantFocusability="blocksDescendants"
         >
-        <LinearLayout
+        <RelativeLayout
             android:layout_margin="5dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="45dp">
             <ImageView
@@ -36,8 +35,15 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 />
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                />
             <LinearLayout
                 android:orientation="vertical"
+                android:layout_toRightOf="@+id/user_logo"
                 android:layout_marginLeft="15dp"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -78,7 +84,7 @@
             </LinearLayout>
 
 
-        </LinearLayout>
+        </RelativeLayout>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"

@@ -28,30 +28,33 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
+import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.application.MyApplication;
+import com.cyl.music_hnust.callback.NearCallback;
 import com.cyl.music_hnust.model.Location;
+import com.cyl.music_hnust.model.LocationInfo;
+import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.model.ShakeManager;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.http.HttpUtil;
-import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Call;
 
 /**
  * Created by 永龙 on 2016/3/22.
@@ -72,10 +75,11 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
     private static MyLocationAdapter adapter;
 
 
-    private MusicPlayService mService;
+    private PlayService mService;
 
     private static ProgressDialog progDialog = null;
     private static MyHandler handler;
+    private static String user_id;
 
 
     static class MyHandler extends Handler {
@@ -129,7 +133,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
-        mService = MyActivity.mService;
+        mService = MainActivity.getmPlayService();
         handler = new MyHandler(ShakeActivity.this);
         application = new MyApplication();
 //        mRequestQueue = application.getHttpQueues();
@@ -171,7 +175,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         } else if (secondTime - firstTime > 500) {
             shake_result.setVisibility(View.VISIBLE);
             showProgressDialog("能不能缓一缓,我都受不了了！");
-            handler.sendEmptyMessageDelayed(2,2000);
+            handler.sendEmptyMessageDelayed(2, 2000);
         } else if (secondTime - firstTime > 0) {
             shake_result.setVisibility(View.GONE);
 //            showProgressDialog("能不能缓一缓,我都受不了了！");
@@ -207,13 +211,12 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
 
         if (user.getUser_id() != null) {
 
-            if (mService.isPlay()) {
+            if (mService.isPlaying()) {
+                Music music = mService.getPlayingMusic();
                 //上传正在听的歌曲
-                Log.e("Tag", mService.getSongName().toString());
-                String song = mService.getSongName().toString() + "";
-                volley_StringRequest_GET(user.getUser_id(), song, 0);
-                volley_StringRequest_GET(user.getUser_id(), "", 1);
-
+                Log.e("Tag", music.getTitle().toString());
+                String song = music.getArtist().toString() + "";
+                uploadsong(song);
             } else {
 
                 handler.sendEmptyMessage(2);
@@ -316,7 +319,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onBindViewHolder(MyLocationViewHolder holder, int position) {
 
-            holder.user_name.setText(myDatas.get(position).getUser().getNick()
+            holder.user_name.setText(myDatas.get(position).getUser().getUser_name()
             );
             holder.user_signature.setText(myDatas.get(position).getUser_song());
             String distance = "";
@@ -331,9 +334,11 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
             Log.e("tag2", myDatas.get(position).getLocation_latitude() + "");
             Log.e("tag3", myDatas.get(position).getLocation_time() + "");
 
-            holder.location_time.setText(distime );
+            holder.location_time.setText(distime);
             holder.user_distance.setVisibility(View.GONE);
-            holder.user_img.setImageUrl(myDatas.get(position).getUser().getUser_img(), imageLoader);
+            com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(
+                    myDatas.get(position).getUser().getUser_img(),holder.user_img, ImageUtils.getAlbumDisplayOptions()
+            );
 
         }
 
@@ -343,7 +348,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         }
 
         public class MyLocationViewHolder extends RecyclerView.ViewHolder {
-            public NetworkImageView user_img;
+            public ImageView user_img;
             public TextView user_name;
             public TextView user_signature;
             public TextView user_distance;
@@ -352,7 +357,7 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
             public MyLocationViewHolder(View itemView) {
                 super(itemView);
                 user_name = (TextView) itemView.findViewById(R.id.user_name);
-                user_img = (NetworkImageView) itemView.findViewById(R.id.user_img);
+                user_img = (ImageView) itemView.findViewById(R.id.user_img);
                 user_signature = (TextView) itemView.findViewById(R.id.user_signature);
                 user_distance = (TextView) itemView.findViewById(R.id.user_distance);
                 location_time = (TextView) itemView.findViewById(R.id.location_time);
@@ -360,59 +365,49 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void uploadsong(String song) {
 
-    /**
-     * 利用StringRequest实现Get请求
-     */
-    private void volley_StringRequest_GET(String user_id, String song, final int requestcode) {
-        String url = "";
-        String time = FormatUtil.getTime();
-        if (requestcode == 0) {
-            //上传歌曲名
-            url = Constants.DEFAULT_URL+"user_id=" + user_id + "" +
-                    "&newShake&user_song=" + song +
-                    "&secretTime=" + time;
-        } else if (requestcode == 1) {
-            //附近的人
-            url = Constants.DEFAULT_URL+"user_id=" + user_id +
-                    "&nearLocation" +
-                    "&secretTime=" + time;
-        }
-        HttpUtil.get(url, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        user_id = UserStatus.getUserInfo(this).getUser_id();
 
-                try {
-                    String response = new String(responseBody, "utf-8");
-                    Log.i("log", response);
-
-                    // VolleyLog.v("Response:%n %s", response.toString());
-                    Log.i("log", response.toString());
-
-
-                    Message message = new Message();
-                    message.what = requestcode;
-                    if (requestcode == 1) {
-                        //ToastUtils.show(getApplicationContext(),response.toString()+"");
-                        Bundle bundle = new Bundle();
-                        bundle.putString("response", response.toString());
-                        message.setData(bundle);
-                    } else {
-                        //ToastUtils.show(getApplicationContext(), response.toString() + "");
+        OkHttpUtils.post()//
+                .url(Constants.DEFAULT_URL)//
+                .addParams(Constants.FUNC, Constants.SECRET_ADD)//
+                .addParams(Constants.USER_ID, user_id)//
+                .addParams(Constants.SONG, song)//
+                .build()//
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.e("ccc","ddd");
+                        ToastUtils.show(getApplicationContext(),"网络连接错误！");
                     }
-                    handler.sendMessage(message);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
 
-            }
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("ccc",response);
+                    }
+                });
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        OkHttpUtils.post()//
+                .url(Constants.DEFAULT_URL)//
+                .addParams(Constants.FUNC, Constants.NEAR)//
+                .addParams(Constants.USER_ID, user_id)//
+                .build()//
+                .execute(new NearCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.e("ccc",":aa");
 
-                ToastUtils.show(getApplicationContext(), "网络异常，请检查网络！");
-            }
-        });
+                    }
+
+                    @Override
+                    public void onResponse(LocationInfo response) {
+                        Log.e("ccc",":bb");
+                        adapter.myDatas = response.getData();
+                        adapter.notifyDataSetChanged();
+                        shake_result.setVisibility(View.VISIBLE);
+                    }
+                });
 
     }
 

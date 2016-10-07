@@ -171,7 +171,7 @@ public class JsonParsing {
         result = new ArrayList<>();
 
 
-        JSONArray nearLocation = Jsonobject.getJSONArray("nearLocation");//里面有一个数组数据，可以用getJSONArray获取数组
+        JSONArray nearLocation = Jsonobject.getJSONArray("data");//里面有一个数组数据，可以用getJSONArray获取数组
         for (int i = 0; i < nearLocation.length(); i++) {
             JSONObject item = nearLocation.getJSONObject(i); // 得到每个对象
 
@@ -261,8 +261,8 @@ public class JsonParsing {
             String comment1 = item.getString("comment");
 
             Comment comment2 = new Comment();
-            comment2.setTime(comment_time);
-            comment2.setCommentContent(comment1);
+//            comment2.setTime(comment_time);
+//            comment2.setCommentContent(comment1);
             User user = new User();
             user.setNick(nick);
             comment2.setUser(user);

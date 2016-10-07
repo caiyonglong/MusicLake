@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -13,13 +12,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.cyl.music_hnust.clipheadphoto.ClipImageLayout;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.clipheadphoto.ClipImageLayout;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ImageTools;
-
-import java.io.File;
 
 public class ClipActivity extends Activity{
 	private ClipImageLayout mClipImageLayout;
@@ -38,10 +35,10 @@ public class ClipActivity extends Activity{
 		loadingDialog=new ProgressDialog(this);
 		loadingDialog.setTitle("请稍后...");
 		path=getIntent().getStringExtra("path");
-		if(TextUtils.isEmpty(path)||!(new File(path).exists())){
-			Toast.makeText(this, "图片加载失败",Toast.LENGTH_SHORT).show();
-			return;
-		}
+//		if(TextUtils.isEmpty(path)||!(new File(path).exists())){
+//			Toast.makeText(this, "图片加载失败",Toast.LENGTH_SHORT).show();
+//			return;
+//		}
 		Bitmap bitmap= ImageTools.convertToBitmap(path, 600,600);
 		if(bitmap==null){
 			Toast.makeText(this, "图片加载失败",Toast.LENGTH_SHORT).show();

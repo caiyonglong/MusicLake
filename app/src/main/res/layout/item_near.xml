@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/user_img"
                 android:layout_width="45dp"
                 android:layout_height="45dp"

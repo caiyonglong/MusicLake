@@ -2,47 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_white"
-    >
-
-    <RelativeLayout
-
-        android:id="@+id/bar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/main_white">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:background="@color/setting_blue"
-        android:layout_height="50dp">
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="5dp">
 
-        <ImageButton
-            android:id="@+id/backImageButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_chevron_left_white_18dp"
-             />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="动态发布"
-            android:textColor="#ffffff"
-            android:textSize="18dp" />
-        <ImageButton
-            android:id="@+id/btn_send_info"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_send_white_18dp"
-            android:layout_centerVertical="true"
-            android:layout_width="40dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"/>
-    </RelativeLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
+            app:title="音乐社区" />
+    </android.support.design.widget.AppBarLayout>
 
     <EditText
         android:textColor="@color/main_black"
         android:id="@+id/edit_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/bar"
+        android:layout_below="@+id/app_bar"
         android:layout_margin="16dp"
         android:background="@drawable/selector_edittext"
         android:gravity="left|top"

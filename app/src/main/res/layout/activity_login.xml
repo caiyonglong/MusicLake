@@ -128,11 +128,13 @@
                 >
                 <Button
                     android:id="@+id/register"
+                    android:padding="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="10dp"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="#9a9a9a"
+                    android:textColor="@color/white"
                     android:textSize="12sp"
+                    android:visibility="gone"
                     android:background="@drawable/btn_bg"
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
@@ -140,7 +142,21 @@
                     android:text="@string/register"
                     />
             </LinearLayout>
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                >
+               <TextView
+                   android:layout_gravity="center"
+                   android:text="提示：用户名为注册邮箱或者学号"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+            </LinearLayout>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
+
 </RelativeLayout>

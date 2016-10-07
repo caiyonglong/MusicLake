@@ -15,12 +15,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.UserCenterMainAcivity;
-import com.cyl.music_hnust.model.User;
-import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.utils.Constants;
-
-import java.io.File;
 
 
 /**
@@ -30,6 +24,7 @@ import java.io.File;
 public class RadarView extends View {
 
     private Context mContext;
+    Canvas canvas;
     private Paint mPaintLine;//画圆线需要用到的paint
     private Paint mPaintCircle;//画圆需要用到的paint
     private Paint mPaintScan;//画扫描需要用到的paint
@@ -39,7 +34,7 @@ public class RadarView extends View {
     private Matrix matrix = new Matrix();//旋转需要的矩阵
     private int scanAngle;//扫描旋转的角度
     private Shader scanShader;//扫描渲染shader
-    private Bitmap centerBitmap;//最中间icon
+    private Bitmap centerBitmap =null;//最中间icon
 
     //每个圆圈所占的比例
     private static float[] circleProportion = {1 / 13f, 2 / 13f, 3 / 13f, 4 / 13f, 5 / 13f, 6 / 13f};
@@ -117,23 +112,7 @@ public class RadarView extends View {
         mHeight = getMeasuredHeight();
         mWidth = mHeight = Math.min(mWidth, mHeight);
 
-        try {
-            User userinfo = UserStatus.getUserInfo(getContext());
-            String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
-            File file = new File(path);
-            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
-                if (file.exists()) {
-                    centerBitmap = UserCenterMainAcivity.getLoacalBitmap(path);
-                } else {
-                    centerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_photo);
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            centerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_photo);
-        }
-
+        centerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_account_circle);
 
         //设置扫描渲染的shader
         scanShader = new SweepGradient(mWidth / 2, mHeight / 2,
@@ -157,6 +136,7 @@ public class RadarView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        this.canvas = canvas;
         drawCircle(canvas);
         drawScan(canvas);
         drawCenterIcon(canvas);
@@ -194,7 +174,7 @@ public class RadarView extends View {
      * @param canvas
      */
     private void drawCenterIcon(Canvas canvas) {
-        if (canvas != null) {
+        if (canvas != null&& centerBitmap!=null) {
             canvas.drawBitmap(centerBitmap, null,
                     new Rect((int) (mWidth / 2 - mWidth * circleProportion[0]), (int) (mHeight / 2 - mWidth * circleProportion[0]),
                             (int) (mWidth / 2 + mWidth * circleProportion[0]), (int) (mHeight / 2 + mWidth * circleProportion[0])), mPaintCircle);

@@ -1,21 +1,21 @@
 package com.cyl.music_hnust.map;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,41 +25,33 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.services.core.LatLonPoint;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.cyl.music_hnust.Json.JsonParsing;
-import com.cyl.music_hnust.NearPeopleAcivity;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.UserCenterMainAcivity;
-import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.model.Location;
-import com.cyl.music_hnust.model.User;
-import com.cyl.music_hnust.model.UserStatus;
+import com.cyl.music_hnust.callback.NearCallback;
 import com.cyl.music_hnust.custom.CustomViewPager;
 import com.cyl.music_hnust.custom.FixedSpeedScroller;
 import com.cyl.music_hnust.custom.Info;
 import com.cyl.music_hnust.custom.LogUtil;
 import com.cyl.music_hnust.custom.RadarViewGroup;
 import com.cyl.music_hnust.custom.ZoomOutPageTransformer;
-import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.http.HttpUtil;
+import com.cyl.music_hnust.model.Location;
+import com.cyl.music_hnust.model.LocationInfo;
+import com.cyl.music_hnust.model.User;
+import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FormatUtil;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Call;
 
 /**
  * Created by yonglong on 2016/5/20.
@@ -69,14 +61,12 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
     private CustomViewPager viewPager;
     private RelativeLayout ryContainer;
     private RadarViewGroup radarViewGroup;
-    private ImageButton back,btn_clear;
+    Toolbar mToolbar;
     private TextView no_result;
     private int mPosition;
     private FixedSpeedScroller scroller;
     private SparseArray<Info> mDatas = new SparseArray<>();
 
-    private RequestQueue mRequestQueue;
-    private ImageLoader imageLoader;
     private static ProgressDialog progDialog = null;
     private User user;
     //声明AMapLocationClient类对象
@@ -87,38 +77,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
     public AMapLocationClientOption mLocationOption = null;
     private LatLonPoint latLonPoint;
 
-    private MyApplication application;
-    public List<Location> mydatas = new ArrayList<>();
-
-    Handler handler = new Handler() {
-
-        @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    break;
-                case 1:
-                    Bundle bundle = new Bundle();
-                    bundle = msg.getData();
-                    String response = (String) bundle.get("response");
-                    try {
-                        JSONObject json = new JSONObject(response);
-                        mydatas = JsonParsing.getLocation(json);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    no_result.setVisibility(View.GONE);
-                    initData();
-
-                    break;
-                case 2:
-                    finish();
-                    break;
-            }
-        }
-    };
+    public List<Location> mLocationInfo = new ArrayList<>();
 
 
     @Override
@@ -127,10 +86,6 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
         setContentView(R.layout.activity_radar);
 
         user = UserStatus.getUserInfo(getApplicationContext());
-        application = new MyApplication();
-//        mRequestQueue = application.getHttpQueues();
-//        imageLoader = application.getImageLoader();
-
 
         init();
 
@@ -142,34 +97,24 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
 
     private void initData() {
 
-        for (int i = 0; i < mydatas.size(); i++) {
+        for (int i = 0; i < mLocationInfo.size(); i++) {
             Info info = new Info();
-            String path = Constants.DEFAULT_USERIMG_PATH + mydatas.get(i).getUser().getUser_id() + ".png";
-            info.setPortraitId(path);
-            File file = new File(path);
-            if (!file.exists()) {
-                try {
-                    HttpByGet.downloadFile(mydatas.get(i).getUser().getUser_img(), path);
-                    Log.e("online", "下载成功！");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("online", "网络异常！");
-                }
-            }
-            if (mydatas.get(i).getUser().getNick() != null
-                    && mydatas.get(i).getUser().getNick().length() != 0){
-                info.setName(mydatas.get(i).getUser().getNick());
-            }else {
-                info.setName(mydatas.get(i).getUser().getUser_name());
-            }
-            if (mydatas.get(i).getUser().getUser_sex().equals("男")) {
+            info.setPortraitId(mLocationInfo.get(i).getUser().getUser_img());
+            Log.e("ddddd", mLocationInfo.get(i).getUser().getUser_img());
+//            if (mLocationInfo.get(i).getUser().getNick() != null
+//                    && mLocationInfo.get(i).getUser().getNick().length() != 0) {
+//                info.setName(mLocationInfo.get(i).getUser().getNick());
+//            } else {
+            info.setName(mLocationInfo.get(i).getUser().getUser_name());
+//            }
+            if (mLocationInfo.get(i).getUser().getUser_sex().equals("男")) {
                 info.setSex(false);
             } else {
                 info.setSex(true);
             }
             if (latLonPoint != null) {
                 info.setDistance(FormatUtil.Distance(latLonPoint.getLongitude(), latLonPoint.getLatitude(),
-                        mydatas.get(i).getLocation_longitude(), mydatas.get(i).getLocation_latitude()));
+                        mLocationInfo.get(i).getLocation_longitude(), mLocationInfo.get(i).getLocation_latitude()));
             } else {
                 info.setDistance(Math.round((Math.random() * 10) * 100) / 100);
             }
@@ -201,28 +146,12 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
         viewPager = (CustomViewPager) findViewById(R.id.vp);
         radarViewGroup = (RadarViewGroup) findViewById(R.id.radar);
         ryContainer = (RelativeLayout) findViewById(R.id.ry_container);
-        btn_clear = (ImageButton) findViewById(R.id.btn_clear);
         no_result = (TextView) findViewById(R.id.no_result);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        back = (ImageButton) findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        btn_clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User user = UserStatus.getUserInfo(getApplicationContext());
-                if (user.getUser_id() != null) {
-                    volley_StringRequest_GET(user.getUser_id(), 0, 0
-                            , 2);
-                } else {
-                    ToastUtils.show(getApplicationContext(), "请先登录!");
-                }
-            }
-        });
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
     }
@@ -231,8 +160,8 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
     private void initfunction() {
 
         if (latLonPoint != null) {
-            volley_StringRequest_GET(user.getUser_id(), latLonPoint.getLatitude()
-                    , latLonPoint.getLongitude(), 0);
+            uploadLocation(user.getUser_id(), latLonPoint.getLatitude()
+                    , latLonPoint.getLongitude());
         } else {
             ToastUtils.show(getApplicationContext(), "定位失败!");
         }
@@ -246,8 +175,7 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
 
         public void run() {
             if (user.getUser_id() != null) {
-                volley_StringRequest_GET(user.getUser_id(), 0, 0
-                        , 1);
+                nearLocation(user.getUser_id());
             } else {
                 ToastUtils.show(getApplicationContext(), "请先登录!");
             }
@@ -256,6 +184,31 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_radar, menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        if (id == R.id.action_delete) {
+            User user = UserStatus.getUserInfo(getApplicationContext());
+            if (user.getUser_id() != null) {
+                clearLocation(user.getUser_id());
+            } else {
+                ToastUtils.show(getApplicationContext(), "请先登录!");
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void init() {
 
@@ -332,56 +285,80 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
     }
 
     /**
-     * 利用StringRequest实现Get请求
+     * 上传位置信息
+     *
+     * @param user_id
+     * @param latitude
+     * @param longitude
      */
-    private void volley_StringRequest_GET(String user_id, double latitude, double longitude, final int requestcode) {
-        String url = "";
-        if (requestcode == 0) {
-            //上传位置
-            url = Constants.DEFAULT_URL + "user_id=" + user_id +
-                    "&&newLocation&location_latitude=" + latitude +
-                    "&location_longitude=" + longitude +
-                    "&secretTime=" + FormatUtil.getTime();
+    private void uploadLocation(String user_id, double latitude, double longitude) {
+        OkHttpUtils.post()//
+                .url(Constants.DEFAULT_URL)//
+                .addParams(Constants.FUNC, Constants.LOCATION)//
+                .addParams(Constants.USER_ID, user_id)//
+                .addParams(Constants.LON, String.valueOf(longitude))//
+                .addParams(Constants.LAT, String.valueOf(latitude))//
+                .build()//
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        ToastUtils.show(getApplicationContext(), "网络连接异常，请稍后重试!");
+                    }
 
-        } else if (requestcode == 1) {
-            //附近的人
-            url = Constants.DEFAULT_URL + "user_id=" + user_id + "&nearLocation";
-        } else if (requestcode == 2) {
-            //清空用户定位信息
-            url = Constants.DEFAULT_URL + "user_id=" + user_id + "&clearLocation";
-        }
-
-        HttpUtil.get(url, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                try {
-                    String response = new String(responseBody, "utf-8");
-                    Log.i("log", response);
-
-                    Message message = new Message();
-                    message.what = requestcode;
-                    if (requestcode == 1) {
-
-                        //ToastUtils.show(getApplicationContext(),response.toString()+"");
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("response", response);
-                        message.setData(bundle);
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("eeee", response);
 
                     }
-                    handler.sendMessage(message);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                });
+    }
 
-            }
+    private void clearLocation(String user_id) {
+        OkHttpUtils.post()//
+                .url(Constants.DEFAULT_URL)//
+                .addParams(Constants.FUNC, Constants.CLEARN)//
+                .addParams(Constants.USER_ID, user_id)
+                .build()//
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                ToastUtils.show(getApplicationContext(), "网络异常，请检查网络！");
-            }
-        });
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("eeee", response);
+                        ToastUtils.show(getApplicationContext(), "已清除位置!");
+                        finish();
+                    }
+                });
+    }
+
+    private void nearLocation(String user_id) {
+        OkHttpUtils.post()//
+                .url(Constants.DEFAULT_URL)//
+                .addParams(Constants.FUNC, Constants.NEAR)//
+                .addParams(Constants.USER_ID, user_id)
+                .build()//
+                .execute(new NearCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        no_result.setText("网络连接异常，请稍后重试！");
+                    }
+
+                    @Override
+                    public void onResponse(LocationInfo response) {
+                        Log.e("+++", response.getStatus() + "");
+                        Log.e("+++", response.getData().size() + "");
+                        mLocationInfo = response.getData();
+                        if (mLocationInfo.size() > 0) {
+                            no_result.setVisibility(View.GONE);
+                        } else {
+                            no_result.setText("暂无数据");
+                        }
+                        initData();
+                    }
+                });
 
     }
 
@@ -450,17 +427,15 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
             TextView tvName = (TextView) view.findViewById(R.id.tv_name);
             TextView details = (TextView) view.findViewById(R.id.details);
             TextView tvDistance = (TextView) view.findViewById(R.id.tv_distance);
-            tvName.setText(info.getName() == null ? "kong" : info.getName());
+            tvName.setText(info.getName() == null ? "佚名" : info.getName());
             if (info.getDistance() > 1000) {
                 tvDistance.setText(info.getDistance() / 1000 + "km");
             } else {
                 tvDistance.setText(info.getDistance() + "m");
             }
-            File file = new File(info.getPortraitId());
-            if (file.exists()) {
-                ivPortrait.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(info.getPortraitId()));
-            } else {
-                ivPortrait.setImageResource(R.drawable.circle_photo);
+            String img_url = info.getPortraitId();
+            if (img_url != null && img_url.length() > 0) {
+                ImageLoader.getInstance().displayImage(img_url, ivPortrait, ImageUtils.getAlbumDisplayOptions());
             }
 
             if (info.getSex()) {
@@ -471,73 +446,73 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
             details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent;
-                    User user = UserStatus.getUserInfo(getApplicationContext());
-                    if (mydatas.get(position).getUser().getUser_id().equals(user.getUser_id())) {
-                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
-                    } else {
-                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
-                    }
-//                    if (mydatas.get(position).getUser().isSecret()) {
+//                    Intent intent;
+//                    User user = UserStatus.getUserInfo(getApplicationContext());
+//                    if (mLocationInfo.get(position).getUser().getUser_id().equals(user.getUser_id())) {
+//                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
+//                    } else {
+//                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
+//                    }
+//                    if (mLocationInfo.get(position).getUser().isSecret()) {
 //                        //保密
 //                        intent.putExtra("flag", 1);
 //
-//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                        intent.putExtra("nick", mLocationInfo.get(position).getUser().getNick());
 //                    } else {
 //                        intent.putExtra("flag", 0);
 //
-//                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
-//                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
-//                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
-//                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
-//                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
-//                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
+//                        intent.putExtra("name", mLocationInfo.get(position).getUser().getUser_name());
+//                        intent.putExtra("num", mLocationInfo.get(position).getUser().getUser_id());
+//                        intent.putExtra("class", mLocationInfo.get(position).getUser().getUser_class());
+//                        intent.putExtra("college", mLocationInfo.get(position).getUser().getUser_college());
+//                        intent.putExtra("major", mLocationInfo.get(position).getUser().getUser_major());
+//                        intent.putExtra("img", mLocationInfo.get(position).getUser().getUser_img());
 //
 //
-//                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
-//                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
-//                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
-//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                        intent.putExtra("sex", mLocationInfo.get(position).getUser().getUser_sex());
+//                        intent.putExtra("phone", mLocationInfo.get(position).getUser().getPhone());
+//                        intent.putExtra("email", mLocationInfo.get(position).getUser().getUser_email());
+//                        intent.putExtra("nick", mLocationInfo.get(position).getUser().getNick());
 //
 //
 //                    }
-                    startActivity(intent);
+//                    startActivity(intent);
                 }
             });
             ivPortrait.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent;
-                    User user = UserStatus.getUserInfo(getApplicationContext());
-                    if (mydatas.get(position).getUser().getUser_id().equals(user.getUser_id())) {
-                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
-                    } else {
-                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
-                    }
-//                    if (mydatas.get(position).getUser().isSecret()) {
+//                    Intent intent;
+//                    User user = UserStatus.getUserInfo(getApplicationContext());
+//                    if (mLocationInfo.get(position).getUser().getUser_id().equals(user.getUser_id())) {
+//                        intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
+//                    } else {
+//                        intent = new Intent(getApplicationContext(), NearPeopleAcivity.class);
+//                    }
+//                    if (mLocationInfo.get(position).getUser().isSecret()) {
 //                        //保密
 //                        intent.putExtra("flag", 1);
 //
-//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                        intent.putExtra("nick", mLocationInfo.get(position).getUser().getNick());
 //                    } else {
 //                        intent.putExtra("flag", 0);
 //
-//                        intent.putExtra("name", mydatas.get(position).getUser().getUser_name());
-//                        intent.putExtra("num", mydatas.get(position).getUser().getUser_id());
-//                        intent.putExtra("class", mydatas.get(position).getUser().getUser_class());
-//                        intent.putExtra("college", mydatas.get(position).getUser().getUser_college());
-//                        intent.putExtra("major", mydatas.get(position).getUser().getUser_major());
-//                        intent.putExtra("img", mydatas.get(position).getUser().getUser_img());
+//                        intent.putExtra("name", mLocationInfo.get(position).getUser().getUser_name());
+//                        intent.putExtra("num", mLocationInfo.get(position).getUser().getUser_id());
+//                        intent.putExtra("class", mLocationInfo.get(position).getUser().getUser_class());
+//                        intent.putExtra("college", mLocationInfo.get(position).getUser().getUser_college());
+//                        intent.putExtra("major", mLocationInfo.get(position).getUser().getUser_major());
+//                        intent.putExtra("img", mLocationInfo.get(position).getUser().getUser_img());
 //
 //
-//                        intent.putExtra("sex", mydatas.get(position).getUser().getUser_sex());
-//                        intent.putExtra("phone", mydatas.get(position).getUser().getPhone());
-//                        intent.putExtra("email", mydatas.get(position).getUser().getUser_email());
-//                        intent.putExtra("nick", mydatas.get(position).getUser().getNick());
+//                        intent.putExtra("sex", mLocationInfo.get(position).getUser().getUser_sex());
+//                        intent.putExtra("phone", mLocationInfo.get(position).getUser().getPhone());
+//                        intent.putExtra("email", mLocationInfo.get(position).getUser().getUser_email());
+//                        intent.putExtra("nick", mLocationInfo.get(position).getUser().getNick());
 //
 //
 //                    }
-                    startActivity(intent);
+//                    startActivity(intent);
 //                    Toast.makeText(RadarActivity.this, "这是 " + info.getName() + " >.<", Toast.LENGTH_SHORT).show();
                 }
             });

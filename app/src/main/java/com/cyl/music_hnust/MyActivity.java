@@ -26,13 +26,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cyl.music_hnust.activity.EditActivity;
 import com.cyl.music_hnust.activity.LoginActivity;
 import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.fragment.MusicFragment1;
-import com.cyl.music_hnust.http.HttpByGet;
 import com.cyl.music_hnust.map.BaseMapActivity;
 import com.cyl.music_hnust.map.RadarActivity;
 import com.cyl.music_hnust.model.Dynamic;
@@ -182,19 +182,19 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             signature.setText(userinfo.getUser_id().toString());
             String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
             File file = new File(path);
-            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
-                if (file.exists())
-                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-                else {
-                    try {
-                        HttpByGet.downloadFile(userinfo.getUser_img(), path);
-                        if (file.exists())
-                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+//            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
+//                if (file.exists())
+//                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+//                else {
+//                    try {
+//                        HttpByGet.downloadFile(userinfo.getUser_img(), path);
+//                        if (file.exists())
+//                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
             UserStatus.saveuserstatus(MyActivity.this, true);
         } else {
 
@@ -526,19 +526,19 @@ public class MyActivity extends AppCompatActivity implements ViewPager.OnPageCha
             signature.setText(userinfo.getUser_id().toString());
             String path = Constants.DEFAULT_USERIMG_PATH + userinfo.getUser_id() + ".png";
             File file = new File(path);
-            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
-                if (file.exists())
-                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-                else {
-                    try {
-                        HttpByGet.downloadFile(userinfo.getUser_img(), path);
-                        if (file.exists())
-                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+//            if (userinfo.getUser_img() != null && userinfo.getUser_img().length() > 0) {
+//                if (file.exists())
+//                    id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+//                else {
+//                    try {
+//                        HttpByGet.downloadFile(userinfo.getUser_img(), path);
+//                        if (file.exists())
+//                            id_header_face.setImageBitmap(UserCenterMainAcivity.getLoacalBitmap(path));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
             UserStatus.saveuserstatus(MyActivity.this, true);
         } else {
 

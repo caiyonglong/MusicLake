@@ -25,7 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.UserCenterMainAcivity;
+import com.cyl.music_hnust.ShakeActivity;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.map.BaseMapActivity;
@@ -205,7 +205,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 boolean status= UserStatus.getstatus(MainActivity.this);
                 Intent intent =null;
                 if (status){
-                    intent = new Intent(MainActivity.this, UserCenterMainAcivity.class);
+                    intent = new Intent(MainActivity.this, UserCenterAcivity.class);
                 }else {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                 }
@@ -224,8 +224,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if (music.getCover() != null) {
                 iv_bg.setImageBitmap(music.getCover());
             } else {
-                Bitmap cover = CoverLoader.getInstance().loadNormal(music.getCoverUri());
-                iv_bg.setImageBitmap(cover);
+                iv_bg.setImageResource(R.drawable.ic_empty_music2);
             }
         }
         boolean status= UserStatus.getstatus(this);
@@ -278,8 +277,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Intent intent4 = new Intent(this, CommunityActivity.class);
                 startActivity(intent4);
                 break;
-            case R.id.nav_menu_msg:
+            case R.id.nav_menu_shake:
                 item.setChecked(true);
+                Intent intent2 = new Intent(this, ShakeActivity.class);
+                startActivity(intent2);
                 break;
             case R.id.nav_menu_map:
                 item.setChecked(true);

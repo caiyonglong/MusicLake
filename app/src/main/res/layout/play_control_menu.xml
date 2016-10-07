@@ -5,6 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="57dp"
     android:layout_gravity="top"
+    android:elevation="10dp"
     android:background="?attr/windowBackground"
     >
 
@@ -19,8 +20,9 @@
             android:id="@+id/album"
             android:layout_width="57dp"
             android:layout_height="57dp"
+            android:scaleType="fitXY"
             android:layout_centerVertical="true"
-            android:src="@drawable/default_cover" />
+            android:src="@drawable/ic_empty_music2" />
 
         <LinearLayout
             android:layout_width="match_parent"

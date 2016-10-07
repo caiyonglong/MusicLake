@@ -13,6 +13,11 @@
         android:orderInCategory="101"
         android:title="新建歌单"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/share"
+        android:orderInCategory="101"
+        android:title="分享歌单"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_search"
