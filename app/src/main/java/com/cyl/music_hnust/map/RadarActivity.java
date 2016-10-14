@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
@@ -26,6 +25,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.services.core.LatLonPoint;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.activity.BaseActivity;
 import com.cyl.music_hnust.callback.NearCallback;
 import com.cyl.music_hnust.custom.CustomViewPager;
 import com.cyl.music_hnust.custom.FixedSpeedScroller;
@@ -56,7 +56,7 @@ import okhttp3.Call;
 /**
  * Created by yonglong on 2016/5/20.
  */
-public class RadarActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, RadarViewGroup.IRadarClickListener {
+public class RadarActivity extends BaseActivity implements ViewPager.OnPageChangeListener, RadarViewGroup.IRadarClickListener {
 
     private CustomViewPager viewPager;
     private RelativeLayout ryContainer;
@@ -92,6 +92,11 @@ public class RadarActivity extends AppCompatActivity implements ViewPager.OnPage
         initView();
         initData();
 
+
+    }
+
+    @Override
+    protected void listener() {
 
     }
 

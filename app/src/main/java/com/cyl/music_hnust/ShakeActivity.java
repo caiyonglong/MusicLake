@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.cyl.music_hnust.Json.JsonParsing;
+import com.cyl.music_hnust.activity.BaseActivity;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.callback.NearCallback;
@@ -59,7 +59,7 @@ import okhttp3.Call;
 /**
  * Created by 永龙 on 2016/3/22.
  */
-public class ShakeActivity extends AppCompatActivity implements View.OnClickListener {
+public class ShakeActivity extends BaseActivity implements View.OnClickListener {
     private ImageButton back;
     private static ImageView imgBackground;
     private Button btn_result_show;
@@ -162,6 +162,11 @@ public class ShakeActivity extends AppCompatActivity implements View.OnClickList
 
 
         //ToastUtils.show(this, "『摇一{摇』搜索");
+
+    }
+
+    @Override
+    protected void listener() {
 
     }
 

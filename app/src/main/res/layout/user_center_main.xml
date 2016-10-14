@@ -32,7 +32,7 @@
                 android:layout_height="220dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:background="@color/lightGreen"
+                android:background="@drawable/bg_header"
                 app:layout_collapseMode="pin" />
             <FrameLayout
                 android:layout_width="match_parent"

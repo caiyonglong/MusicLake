@@ -58,6 +58,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private OnlineMusicList mMusicList;
 
     private List<OnlineMusicInfo> mMusicLists = new ArrayList<>();
+    private List<Music> mMusicls = new ArrayList<>();
     private OnlineMusicAdapter mAdapter;
 
     @Bind(R.id.main_content)
@@ -190,6 +191,9 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
                             return;
                         }
                         mOffset += Constants.MUSIC_LIST_SIZE;
+                        conver(response.getSong_list());
+
+                        Log.e("ddd11111111111",mMusicls.size()+""+"=====");
                         mMusicLists.addAll(response.getSong_list());
                         mAdapter.notifyDataSetChanged();
                     }
@@ -241,6 +245,32 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         super.onDestroy();
     }
 
+    private void conver(List<OnlineMusicInfo> mMusicLists){
+
+        for (int i=0;i<mMusicLists.size();i++) {
+            new PlayOnlineMusic(this, mMusicLists.get(i)) {
+
+                @Override
+                public void onPrepare() {
+                    mProgressDialog.show();
+                }
+
+                @SuppressLint("StringFormatInvalid")
+                @Override
+                public void onSuccess(Music music) {
+                    mProgressDialog.cancel();
+//                    Log.e("***********", music.toString());
+                    mMusicls.add(music);
+                    Log.e("mMusicls",mMusicls.size()+""+"=====");
+                }
+                @Override
+                public void onFail(Call call, Exception e) {
+                    mProgressDialog.cancel();
+                    ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+                }
+            }.execute();
+        }
+    }
 
     private void initHeader() {
         final ImageView ivHeaderBg = (ImageView) vHeader.findViewById(R.id.iv_header_bg);
@@ -265,6 +295,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     }
     @Override
     public void onItemClick(View view, int position) {
-        play(mMusicLists.get(position));
+//        play(mMusicLists.get(position));
+        mPlayService.setMyMusicList(mMusicls);
+        mPlayService.playMusic(mMusicls.get(position));
     }
 }

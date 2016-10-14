@@ -22,12 +22,15 @@ import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
+import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.model.OnlinePlaylist;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.MusicUtils;
+import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +43,6 @@ import java.util.Random;
  * 版本：2.5 播放service
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
-
 
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -129,7 +131,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 每次启动时扫描音乐
      */
     public void updateMusicList() {
-        MusicUtils.scanMusic(this,getMusicList());
+        MusicUtils.scanMusic(this, getMusicList());
         if (getMusicList().isEmpty()) {
             return;
         }
@@ -141,18 +143,45 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 下一首
      */
     public void next() {
+
+
         play_mode = Preferences.getPlayMode();
         switch (play_mode) {
             case PLAY_MODE_ORDER:
-                playMusic(mPlayingPosition+1);
+                if (checkNetwork(mPlayingPosition + 1))
+                    playMusic(mPlayingPosition + 1);
                 break;
             case PLAY_MODE_RANDOM:
                 Random random = new Random();
-                playMusic(random.nextInt(myMusicList.size()));
+                if (checkNetwork(random.nextInt(getMusicList().size())))
+                    playMusic(random.nextInt(myMusicList.size()));
                 break;
             case PLAY_MODE_LOOP:
                 playMusic(mPlayingPosition);
                 break;
+        }
+    }
+
+    public boolean checkNetwork(int position) {
+
+        if (position < 0) {
+            position = getMusicList().size() - 1;
+        } else if (position >= getMusicList().size()) {
+            position = 0;
+        }
+
+        boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
+
+        if (getMusicList().get(position).getType() == Music.Type.LOCAL) {
+            return true;
+        } else if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
+            ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+            return false;
+        } else if (NetworkUtil.isNetworkAvailable(getApplicationContext())){
+            return true;
+        }else {
+            ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+            return false;
         }
     }
 
@@ -163,11 +192,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         play_mode = Preferences.getPlayMode();
         switch (play_mode) {
             case PLAY_MODE_ORDER:
-                playMusic(mPlayingPosition-1);
+                if (checkNetwork(mPlayingPosition - 1))
+                    playMusic(mPlayingPosition - 1);
                 break;
             case PLAY_MODE_RANDOM:
+
                 Random random = new Random();
-                playMusic(random.nextInt(getMusicList().size()));
+                if (checkNetwork(random.nextInt(getMusicList().size())))
+                    playMusic(random.nextInt(getMusicList().size()));
                 break;
             case PLAY_MODE_LOOP:
                 playMusic(mPlayingPosition);
@@ -212,7 +244,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
         }
 
 
@@ -356,6 +388,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public Music getPlayingMusic() {
         return mPlayingMusic;
     }
+
     /**
      * 获取正在播放的歌曲[本地|网络]
      */
@@ -406,6 +439,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         notif = buildNotification();
         startForeground(NOTIFICATION_ID, notif);
     }
+
     private Notification buildNotification() {
         Music music = getPlayingMusic();
         final String title = music.getTitle();
@@ -418,8 +452,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         int playButtonResId = isPlaying
                 ? R.drawable.ic_pause_white_18dp : R.drawable.ic_play_arrow_white_18dp;
 
-        Intent nowPlayingIntent = new Intent(this,MainActivity.class);
-        nowPlayingIntent.putExtra(ACTION_SERVICE,true);
+        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+        nowPlayingIntent.putExtra(ACTION_SERVICE, true);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //        Bitmap artwork;
 //        artwork = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),ImageUtils.getAlbumDisplayOptions());
@@ -459,6 +493,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
         return n;
     }
+
     private final PendingIntent retrievePlaybackAction(final String action) {
         Intent intent = new Intent(action);
         return PendingIntent.getBroadcast(this, 0, intent, 0);
@@ -478,7 +513,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
         if (ACTION_NEXT.equals(action)) {
             next();
-        } else if (ACTION_PREV.equals(action)){
+        } else if (ACTION_PREV.equals(action)) {
             prev();
         } else if (ACTION_PLAY.equals(action)) {
             playPause();

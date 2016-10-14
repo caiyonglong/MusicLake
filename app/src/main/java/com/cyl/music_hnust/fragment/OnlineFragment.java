@@ -77,7 +77,7 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
      */
     private void init() {
         if (!NetworkUtil.isNetworkAvailable(getContext())) {
-            tv_empty.setText("暂无音乐!");
+            tv_empty.setText("网络不给力，请检查连接!");
             tv_empty.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
         } else {
@@ -139,5 +139,11 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
         intent.putExtra(Extras.BILLBOARD_TITLE, billboard.getName());
         intent.putExtra(Extras.BILLBOARD_TYPE, billboard.getType());
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
     }
 }

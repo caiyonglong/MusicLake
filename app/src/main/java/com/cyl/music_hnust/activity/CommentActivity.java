@@ -67,6 +67,7 @@ public class CommentActivity extends BaseActivity{
 
     @OnClick(R.id.send_comment)
     public void send(){
+
         String message = mEditText.getText().toString().trim();
         if (message==null||message.length()<=0){
             ToastUtils.show(this,"不能发送空");
@@ -210,5 +211,6 @@ public class CommentActivity extends BaseActivity{
                     }
                 });
     }
+
 
 }

@@ -6,7 +6,7 @@
     android:layout_marginLeft="1dp"
     android:layout_marginRight="1dp"
     android:layout_marginTop="2dp"
-    android:background="@drawable/bg_card"
+    android:background="?cardColor"
     android:clickable="true"
     android:orientation="vertical">
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:singleLine="true"
+            android:lines="1"
             android:text="默认歌单"
             android:layout_marginRight="15dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:singleLine="true"
+            android:lines="1"
             android:text="创建时间：2016/8/14 14:50"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
     </LinearLayout>

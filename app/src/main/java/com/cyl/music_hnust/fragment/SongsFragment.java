@@ -3,8 +3,6 @@ package com.cyl.music_hnust.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,16 +37,6 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     private static LocalMusicAdapter mAdapter;
     private static List<Music> musicInfos = new ArrayList<>();
 
-    /**
-     * 新建一个线程更新UI
-     */
-    final Handler myHandler = new Handler() {
-        @Override
-        //重写handleMessage方法,根据msg中what的值判断是否执行后续操作
-        public void handleMessage(Message msg) {
-
-        }
-    };
 
     /**
      * 设置监听事件
@@ -101,6 +89,8 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(getmPlayService().getmPlayingPosition());
     }
 
     @Override
@@ -162,5 +152,6 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
             }
         }.execute();
     }
+
 
 }

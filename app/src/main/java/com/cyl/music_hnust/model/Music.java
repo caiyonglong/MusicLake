@@ -145,4 +145,23 @@ public class Music implements Serializable {
         ONLINE,
         LOCAL
     }
+
+    @Override
+    public String toString() {
+        return "Music{" +
+                "album='" + album + '\'' +
+                ", type=" + type +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", albumId=" + albumId +
+                ", duration=" + duration +
+                ", uri='" + uri + '\'' +
+                ", coverUri='" + coverUri + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", cover=" + cover +
+                ", fileSize=" + fileSize +
+                ", year='" + year + '\'' +
+                '}';
+    }
 }

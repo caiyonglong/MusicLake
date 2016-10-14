@@ -37,7 +37,6 @@
                 android:layout_height="2dp"
                 android:layout_gravity="top"
                 android:progress="10"
-                android:progressDrawable="@drawable/progress_drawable"
                 android:tag="tint_accent_color" />
 
             <RelativeLayout

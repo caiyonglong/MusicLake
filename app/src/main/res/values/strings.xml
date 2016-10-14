@@ -41,7 +41,7 @@
 
 
     <string name="title_activity_settings">设置</string>
-    <string name="info_secret_setting">个人隐私设置</string>
+    <string name="info_secret_setting">个性化设置</string>
     <string name="info_secret_setting_detail">个人隐私设置,可隐藏真实姓名</string>
 
     <string name="info_network_setting">网络设置</string>
@@ -111,7 +111,7 @@
 
     <string name="cancel">取消</string>
     <string name="now_play">正在播放</string>
-    <string name="unable_to_play">无法播放播放</string>
+    <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="loading">努力加载中...</string>
     <string name="recent_update">最近更新：%s</string>
 

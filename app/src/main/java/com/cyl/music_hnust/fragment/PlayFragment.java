@@ -33,6 +33,7 @@ import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.Preferences;
+import com.cyl.music_hnust.utils.SizeUtils;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
@@ -120,7 +121,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mViewPager.setCurrentItem(1);
         updatePlayMode();
 
-
+        setRecyclerView();
     }
 
 
@@ -143,6 +144,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     protected void initDatas() {
         sk_progress.setProgress(0);
         onPlay(getmPlayService().getPlayingMusic());
+
+
     }
 
 
@@ -167,7 +170,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         sk_progress.setProgress(0);
         setLrc(music);
         setCoverAndBg(music);
-        setRecyclerView();
+
+        mAdapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(getmPlayService().getmPlayingPosition());
+
 
     }
 
@@ -293,21 +299,24 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 civ_cover.setImageResource(R.drawable.ic_empty_music2);
                 ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
             } else {
-//                Bitmap cover = ImageUtils.resizeImage(music.getCover(), SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
+                Bitmap cover = ImageUtils.resizeImage(music.getCover(), SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
 //                cover = ImageUtils.createCircleImage(cover);
-//                civ_cover.setImageBitmap(cover);
+                civ_cover.setImageBitmap(cover);
                 Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
                 ivPlayingBg.setImageBitmap(bg);
             }
         }
         initAlbumpic();
+
     }
 
     private void setRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
+
         reloadAdapter();
         recyclerView.setAdapter(mAdapter);
+
         mAdapter.setOnItemClickListener(this);
     }
 
@@ -441,8 +450,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onItemClick(View view, int position) {
-        MainActivity.mPlayService.setMyMusicList(musicInfos);
-        MainActivity.mPlayService.playMusic(position);
+        if (getmPlayService().checkNetwork(position)) {
+            MainActivity.mPlayService.setMyMusicList(musicInfos);
+            MainActivity.mPlayService.playMusic(position);
+
+        }
         mAdapter.notifyDataSetChanged();
     }
 

@@ -5,13 +5,6 @@
 
 
     <item
-        android:id="@+id/action_shuffle"
-        android:orderInCategory="10"
-        android:title="@string/pref_title_about"
-        app:showAsAction="never" />
-
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="101"
         android:title="@string/action_settings"

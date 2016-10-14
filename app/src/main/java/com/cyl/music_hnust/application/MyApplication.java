@@ -2,10 +2,9 @@ package com.cyl.music_hnust.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.util.DisplayMetrics;
 
+import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.Preferences;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -29,7 +28,7 @@ public class MyApplication extends Application {
 		Preferences.init(this);
 		initImageLoader(this);
 
-		updateNightMode(true);
+
 	}
 
 
@@ -41,12 +40,14 @@ public class MyApplication extends Application {
 		ImageLoader.getInstance().init(configuration);
 	}
 
-	public static void updateNightMode(boolean on) {
-		DisplayMetrics dm = sRes.getDisplayMetrics();
-		Configuration config = sRes.getConfiguration();
-		config.uiMode &= ~Configuration.UI_MODE_NIGHT_MASK;
-		config.uiMode |= on ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO;
-		sRes.updateConfiguration(config, dm);
+	public static void updateNightMode(Context context,boolean on) {
+		if (on){
+			context.setTheme(R.style.MyThemeDark);
+		}else {
+			context.setTheme(R.style.MyThemeBlue);
+		}
+
 	}
+
 
 }

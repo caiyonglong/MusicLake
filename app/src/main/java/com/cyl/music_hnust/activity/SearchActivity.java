@@ -7,18 +7,13 @@ import android.view.Menu;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
-import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.SearchAdapter;
 import com.cyl.music_hnust.model.SearchMusic;
-import com.cyl.music_hnust.utils.Constants;
-import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
 
 /**
  * 作者：yonglong on 2016/9/15 12:32
@@ -44,6 +39,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_search);
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
@@ -73,27 +70,5 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     public boolean onQueryTextChange(String newText) {
         return false;
     }
-    private void searchMusic(String keyword) {
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams(Constants.PARAM_METHOD, Constants.METHOD_SEARCH_MUSIC)
-                .addParams(Constants.PARAM_QUERY, keyword)
-                .build()
-                .execute(new JsonCallback<SearchMusic>(SearchMusic.class) {
-                    @Override
-                    public void onError(Call call, Exception e) {
 
-                    }
-
-                    @Override
-                    public void onResponse(SearchMusic response) {
-                        if (response == null || response.getSong() == null) {
-                            return;
-                        }
-                        searchResults.clear();
-                        searchResults.addAll(response.getSong());
-//                        adapter.notifyDataSetChanged();
-//                        lvSearchMusic.requestFocus();
-                        }
-                    });
-    }
 }

@@ -68,7 +68,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mThumbnailCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.ic_empty_music2);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
                     mThumbnailCache.put(KEY_NULL, bitmap);
                 }
             } else {

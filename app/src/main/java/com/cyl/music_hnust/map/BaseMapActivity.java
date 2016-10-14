@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -39,6 +39,7 @@ import com.amap.api.services.cloud.CloudSearch;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.activity.BaseActivity;
 import com.cyl.music_hnust.utils.AMapUtil;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -52,8 +53,9 @@ import java.util.Map;
 /**
  * Created by 永龙 on 2016/3/20.
  */
-public class BaseMapActivity extends AppCompatActivity implements AMapLocationListener, RadioGroup.OnCheckedChangeListener, LocationSource, AMap.OnMarkerClickListener, AMap.OnPOIClickListener, CloudSearch.OnCloudSearchListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
+public class BaseMapActivity extends BaseActivity implements AMapLocationListener, RadioGroup.OnCheckedChangeListener, LocationSource, AMap.OnMarkerClickListener, AMap.OnPOIClickListener, CloudSearch.OnCloudSearchListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
     private AMap aMap;
+    private Toolbar mToolbar;
     private MapView mapView;
     private UiSettings mUiSettings;
     private LocationSource.OnLocationChangedListener mListener;
@@ -87,12 +89,19 @@ public class BaseMapActivity extends AppCompatActivity implements AMapLocationLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basemap);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         init();
         initView();
 
+
+    }
+
+    @Override
+    protected void listener() {
 
     }
 

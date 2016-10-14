@@ -13,29 +13,20 @@
             android:key="complete_info"
             android:title="@string/pref_title_info"
             />
+        <CheckBoxPreference
+            android:key="night_mode"
+            android:title="夜间模式"
+            android:summary="应用夜间模式到整个应用"
+            />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/info_network_setting">
 
         <SwitchPreference
-            android:defaultValue="true"
-            android:key="wifi_switch"
+            android:defaultValue="false"
+            android:key="@string/setting_key_mobile_network_play"
             android:title="@string/pref_title_wifi"
             android:summary="@string/pref_title_wifi_summary"/>
-
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/info_music_mode_setting">
-
-        <ListPreference
-            android:defaultValue="0"
-
-            android:entries="@array/info_music_mode"
-            android:entryValues="@array/info_music_mode_values"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:key="mode_list"
-            android:title="@string/info_music_mode" />
 
     </PreferenceCategory>
     <PreferenceCategory

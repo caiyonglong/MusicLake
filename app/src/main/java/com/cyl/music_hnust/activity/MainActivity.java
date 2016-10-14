@@ -108,6 +108,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private TextView tv_nick,tv_name;
 
 
+    boolean login_status;
 
     private MainFragment mainFragment = null;
     private PlayFragment mPlayFragment = null;
@@ -198,13 +199,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         user_face = (CircleImageView) headerView.findViewById(R.id.header_face);
         tv_name = (TextView) headerView.findViewById(R.id.header_name);
         tv_nick = (TextView) headerView.findViewById(R.id.header_nick);
+
         initNav();
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean status= UserStatus.getstatus(MainActivity.this);
+                login_status =UserStatus.getstatus(MainActivity.this);
                 Intent intent =null;
-                if (status){
+                if (login_status){
                     intent = new Intent(MainActivity.this, UserCenterAcivity.class);
                 }else {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -217,6 +219,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initNav() {
         Music music = null;
+        login_status =UserStatus.getstatus(this);
         if (getmPlayService()!=null){
             music = getmPlayService().getPlayingMusic();
         }
@@ -227,8 +230,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 iv_bg.setImageResource(R.drawable.ic_empty_music2);
             }
         }
-        boolean status= UserStatus.getstatus(this);
-        if (status){
+        if (login_status){
             User user = UserStatus.getUserInfo(this);
             if (user.getUser_name()!=null&&user.getUser_name().length()>0){
                 tv_name.setText(user.getUser_name());
@@ -266,21 +268,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_com:
                 item.setChecked(true);
-//
-//                runnable = new Runnable() {
-//                    public void run() {
-//                        CommunityFragment communityFragment = new CommunityFragment();
-//                        switchFragment(communityFragment);
-//                    }
-//                };
-
                 Intent intent4 = new Intent(this, CommunityActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
-                Intent intent2 = new Intent(this, ShakeActivity.class);
-                startActivity(intent2);
+                if (login_status) {
+                    Intent intent2 = new Intent(this, ShakeActivity.class);
+                    startActivity(intent2);
+                }else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.nav_menu_map:
                 item.setChecked(true);
@@ -289,8 +288,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_near:
                 mDrawerLayout.closeDrawers();
-                Intent intent = new Intent(MainActivity.this, RadarActivity.class);
-                startActivity(intent);
+                if (login_status){
+                    Intent intent = new Intent(MainActivity.this, RadarActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.nav_menu_setting:
                 Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
@@ -448,5 +453,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onResume() {
         super.onResume();
         initNav();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 }

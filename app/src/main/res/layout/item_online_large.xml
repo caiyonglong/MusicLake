@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="130dp"
     android:layout_margin="1dp"
-    android:background="@drawable/bg_card">
+    android:elevation="5dp"
+    android:background="?cardColor">
 
     <ImageView
         android:id="@+id/iv_bg_cover"

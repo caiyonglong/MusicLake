@@ -1,199 +1,73 @@
 package com.cyl.music_hnust.activity;
 
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.SwitchPreference;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.cyl.music_hnust.*;
+import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.application.MyApplication;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
-import com.cyl.music_hnust.http.HttpUtil;
-import com.cyl.music_hnust.utils.Constants;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.cyl.music_hnust.utils.Preferences;
 
-import java.io.UnsupportedEncodingException;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-/**
- * A {@link PreferenceActivity} that presents a set of application settings. On
- * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
- * the list of settings.
- * <p/>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
- */
-public class SettingsActivity extends AppCompatPreferenceActivity {
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
+public class SettingsActivity extends BaseActivity {
 
-    public void UpdateUserinfo(String issecret) {
-
-
-        User user = UserStatus.getUserInfo(getApplicationContext());
-        if (user.getUser_id() == null) {
-            Toast.makeText(SettingsActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String updateurl =  Constants.DEFAULT_URL +
-                "updateUser&nick&user_email&phone&secret="
-                +issecret+"&user_id=" +user.getUser_id();
-
-
-        HttpUtil.get(updateurl, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
-                try {
-                    String str = new String(responseBody, "utf-8");
-                    if (str.endsWith(":10000}")) {
-                        Toast.makeText(SettingsActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(SettingsActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(SettingsActivity.this, "修改失败，网络异常", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    }
-
-    private Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
-
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
-
-            } else if (preference instanceof SwitchPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                SwitchPreference switchPreference = (SwitchPreference) preference;
-                if (switchPreference.getKey().equals("secret_switch")) {
-                    if (switchPreference.isChecked()){
-                        UpdateUserinfo("2");
-                        Log.e("check+++++++++++++",switchPreference.isChecked()+"");
-                    }else {
-                        Log.e("check+++++++++++++",switchPreference.isChecked()+"");
-                        UpdateUserinfo("1");
-                    }
-                }
-
-
-            } else if (preference instanceof CheckBoxPreference) {
-
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
-
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    private void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        if (preference instanceof EditTextPreference) {
-            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getString(preference.getKey(), ""));
-        }
-    }
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
+        setContentView(R.layout.activity_setting);
+        ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new GeneralPreferenceFragment())
+                .replace(R.id.container, new GeneralPreferenceFragment())
                 .commit();
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    @Override
+    protected void listener() {
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    //    /**
-//     * 关闭设置
-//     */
-    public void end() {
-        finish();
-    }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @SuppressLint("ValidFragment")
+
     public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private Preference preference_about;
         public Preference preference_cache;
         public Preference preference_info;
         public SwitchPreference secret_switch;
-        public SwitchPreference wifi_switch;
-        public ListPreference mode_list;
+        public CheckBoxPreference night_mode;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -205,40 +79,65 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             preference_cache = findPreference("key_cache");
             preference_info = findPreference("complete_info");
             secret_switch = (SwitchPreference) findPreference("secret_switch");
+            night_mode = (CheckBoxPreference) findPreference("night_mode");
 
-            wifi_switch = (SwitchPreference) findPreference("wifi_switch");
-            mode_list = (ListPreference) findPreference("mode_list");
-            String stringValue = mode_list.getValue().toString();
-            int index = mode_list.findIndexOfValue(stringValue);
 
             User user = UserStatus.getUserInfo(getActivity());
-//            if (user.getUser_name()!=null&&user.isSecret()){
-//                secret_switch.setDefaultValue(false);
-//            }else {
-//                secret_switch.setDefaultValue(true);
-//            }
 
-            mode_list.setSummary(
-                    index >= 0
-                            ? mode_list.getEntries()[index]
-                            : null);
             preference_about.setOnPreferenceClickListener(this);
             preference_cache.setOnPreferenceClickListener(this);
             preference_info.setOnPreferenceClickListener(this);
 
-            bindPreferenceSummaryToValue(wifi_switch);
-            bindPreferenceSummaryToValue(secret_switch);
-            bindPreferenceSummaryToValue(findPreference("mode_list"));
-        }
+            night_mode.setChecked(Preferences.isNightMode());
+            night_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Log.e("sss",newValue.toString());
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                end();
-                return true;
+                    final boolean on = !Preferences.isNightMode();
+                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+
+                    night_mode.setChecked(Preferences.isNightMode());
+                    dialog.setCancelable(false);
+                    dialog.show();
+                    MyApplication.updateNightMode(getActivity(),on);
+                    Preferences.saveNightMode(on);
+                    Handler handler = new Handler(getActivity().getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.cancel();
+                            getActivity().recreate();
+                        }
+                    }, 500);
+                    return false;
+                }
+            });
+
+        }
+        public class AboutPreferenceFragment extends PreferenceFragment {
+
+
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                addPreferencesFromResource(R.xml.pref_about);
+                setHasOptionsMenu(true);
+
             }
-            return super.onOptionsItemSelected(item);
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+                int id = item.getItemId();
+                if (id == android.R.id.home) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, new GeneralPreferenceFragment())
+                            .commit();
+                    return true;
+                }
+                return super.onOptionsItemSelected(item);
+            }
+
+
         }
 
 
@@ -246,22 +145,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceClick(Preference preference) {
             switch (preference.getKey()) {
                 case "key_about":
-                    try {
-                        modify("当前版本: V"+getVersionName()+
-                                "\n联系与反馈: 请联系作者\n" +
-                                "QQ: 643872807");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, new AboutPreferenceFragment())
+                            .commit();
                     break;
                 case "key_cache":
                     Toast.makeText(getActivity(), "清除成功", Toast.LENGTH_LONG).show();
                     break;
                 case "complete_info":
-                    User user =UserStatus.getUserInfo(getApplicationContext());
-                    if (user.getUser_name()!=null) {
-//                        Intent intent = new Intent(getApplicationContext(), UserCenterMainAcivity.class);
-//                        startActivity(intent);
+                    boolean status = UserStatus.getstatus(getApplicationContext());
+                    if (status) {
+                        Intent intent = new Intent(getApplicationContext(), UserCenterAcivity.class);
+                        startActivity(intent);
                     }else {
                         Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                         startActivity(intent);
@@ -273,15 +168,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
 
-    }
-    private String getVersionName() throws Exception
-    {
-        // 获取packagemanager的实例
-        PackageManager packageManager = getPackageManager();
-        // getPackageName()是你当前类的包名，0代表是获取版本信息
-        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
-        String version = packInfo.versionName;
-        return version;
     }
     public void modify(String msg) {
 

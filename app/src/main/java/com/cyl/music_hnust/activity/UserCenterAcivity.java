@@ -31,9 +31,11 @@ import com.cyl.music_hnust.fragment.UserFragment;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -80,6 +82,7 @@ public class UserCenterAcivity extends BaseActivity {
     private String photoSavePath;//保存路径
     private String photoSaveName;//图pian名
     private String path;//图片全路径
+    private User user;//图片全路径
 
 
 
@@ -114,6 +117,8 @@ public class UserCenterAcivity extends BaseActivity {
         mToolbar.setTitle("个人中心");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        user = UserStatus.getUserInfo(this);
+        ImageLoader.getInstance().displayImage(user.getUser_img(),header_img, ImageUtils.getAlbumDisplayOptions());
 
         layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

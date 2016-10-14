@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
+import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.utils.Preferences;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -17,13 +19,20 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected Handler mHandler;
+    boolean  on = Preferences.isNightMode();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (on){
+            this.setTheme(R.style.MyThemeDark);
+        }else {
+            this.setTheme(R.style.MyThemeBlue);
+        }
         mHandler = new Handler();
         listener();
     }
+
 
     protected abstract void listener();
 
@@ -32,6 +41,4 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         super.onDestroy();
         ButterKnife.unbind(this);
     }
-
-
 }

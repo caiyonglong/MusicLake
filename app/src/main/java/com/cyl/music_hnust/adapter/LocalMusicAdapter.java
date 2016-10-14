@@ -69,14 +69,22 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
-        holder.albumArt.setImageBitmap(cover);
+        if (localItem.getCover() != null) {
+            holder.albumArt.setImageBitmap(localItem.getCover());
+        } else {
+            Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
+            holder.albumArt.setImageBitmap(cover);
+        }
 
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist());
-        if(MainActivity.mPlayService.getmPlayingMusicId()==localItem.getAlbumId()){
+
+        if(MainActivity.mPlayService.getPlayingMusic().getArtist().equals(localItem.getArtist())
+                && MainActivity.mPlayService.getPlayingMusic().getTitle().equals(localItem.getTitle()))
+        {
             holder.v_playing.setVisibility(View.VISIBLE);
+        }else {
+            holder.v_playing.setVisibility(View.GONE);
         }
 
         if (mOnItemClickListener != null) {
