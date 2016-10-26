@@ -9,6 +9,8 @@ import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.User;
 import com.cyl.music_hnust.model.UserStatus;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * 作者：yonglong on 2016/8/8 17:47
  * 邮箱：643872807@qq.com
@@ -21,7 +23,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     private CardView user_logout;
 
-    private User user ;
+    private User user;
 
 
     @Override
@@ -66,7 +68,36 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.logout:
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("确认注销?")
+                        .setContentText("注销后不能享有更多功能!")
+                        .setConfirmText("注销")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismiss();
+                                // reuse previous dialog instance
+                                logout();
+                            }
+                        })
+                        .setCancelText("取消")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .show();
+                break;
+        }
+    }
 
+    private void logout() {
+        UserStatus.clearUserInfo(getActivity());
+        UserStatus.saveuserstatus(getActivity(), false);
+        getActivity().finish();
     }
 }
 

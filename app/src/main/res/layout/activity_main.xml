@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/content_main1" />
+    <include layout="@layout/content_main" />
 
 
 

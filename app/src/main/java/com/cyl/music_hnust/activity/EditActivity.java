@@ -41,7 +41,7 @@ public class EditActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         content = getIntent().getStringExtra("content");
-
+        mEditText.setText(content+"");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

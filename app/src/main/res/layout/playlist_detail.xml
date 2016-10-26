@@ -21,10 +21,10 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:theme="@style/Theme.AppCompat"
-            app:contentScrim="@color/colorPrimary"
+            app:contentScrim="@color/grean"
             app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorPrimaryDark">
+            app:statusBarScrim="@color/grean">
 
             <ImageView
                 android:id="@+id/album_art"
@@ -81,6 +81,7 @@
         style="@style/FabStyle"
         android:tag="bg_tint_accent_color"
         app:layout_anchor="@id/app_bar"
+        android:src="@drawable/ic_share_white"
         app:layout_anchorGravity="bottom|right|end" />
 
 

@@ -53,18 +53,20 @@
 
 
                     <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center">
 
                         <ImageButton
                             android:id="@+id/play_pause"
+                            android:backgroundTint="@color/grean"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/ic_play_arrow_black_18dp" />
 
                         <ImageButton
                             android:id="@+id/pause_play"
+                            android:backgroundTint="@color/grean"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/ic_pause_black_18dp"
@@ -74,9 +76,10 @@
 
                     <ImageButton
                         android:id="@+id/next_buttom"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
+                        android:backgroundTint="@color/grean"
                         android:background="@drawable/ic_skip_next_black_18dp" />
 
 
@@ -102,7 +105,6 @@
                         android:lines="1"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:maxLines="1"
-                        android:text="方圆几里"
                         android:textSize="15sp" />
 
                     <TextView
@@ -113,7 +115,6 @@
                         android:ellipsize="marquee"
                         android:maxLength="20"
                         android:maxLines="1"
-                        android:text="薛之谦"
                         android:textSize="13sp" />
 
                 </LinearLayout>

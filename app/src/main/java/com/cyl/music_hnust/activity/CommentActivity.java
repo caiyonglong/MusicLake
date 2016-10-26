@@ -69,8 +69,8 @@ public class CommentActivity extends BaseActivity{
     public void send(){
 
         String message = mEditText.getText().toString().trim();
-        if (message==null||message.length()<=0){
-            ToastUtils.show(this,"不能发送空");
+        if (message==null||message.length()<=3){
+            ToastUtils.show(this,"评论不足五字");
             return;
         }
         if (user_id==null||user_id.length()==0){

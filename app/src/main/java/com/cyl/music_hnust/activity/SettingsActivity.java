@@ -29,7 +29,6 @@ public class SettingsActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +37,9 @@ public class SettingsActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, new GeneralPreferenceFragment())
-                .commit();
+        android.app.FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container,new  GeneralPreferenceFragment().newInstance()).commit();
     }
 
     @Override
@@ -59,15 +58,58 @@ public class SettingsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public static class AboutPreferenceFragment extends PreferenceFragment {
+
+        public final AboutPreferenceFragment newInstance() {
+            
+            Bundle args = new Bundle();
+            
+            final AboutPreferenceFragment fragment =  new AboutPreferenceFragment();
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_about);
+            setHasOptionsMenu(true);
+
+        }
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container, new GeneralPreferenceFragment().newInstance())
+                        .commit();
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
 
 
-    public class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+    }
+
+    public static class GeneralPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private Preference preference_about;
         public Preference preference_cache;
         public Preference preference_info;
         public SwitchPreference secret_switch;
         public CheckBoxPreference night_mode;
+
+        public GeneralPreferenceFragment() {
+        }
+
+        public static GeneralPreferenceFragment newInstance() {
+            
+            Bundle args = new Bundle();
+            
+            GeneralPreferenceFragment fragment = new GeneralPreferenceFragment();
+            fragment.setArguments(args);
+            return fragment;
+        }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -100,14 +142,17 @@ public class SettingsActivity extends BaseActivity {
                     night_mode.setChecked(Preferences.isNightMode());
                     dialog.setCancelable(false);
                     dialog.show();
-                    MyApplication.updateNightMode(getActivity(),on);
-                    Preferences.saveNightMode(on);
+//                    MyApplication.updateNightMode(getActivity(),on);
+
+                    MyApplication.updateNightMode(on);
+
                     Handler handler = new Handler(getActivity().getMainLooper());
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             dialog.cancel();
                             getActivity().recreate();
+                            Preferences.saveNightMode(on);
                         }
                     }, 500);
                     return false;
@@ -115,50 +160,25 @@ public class SettingsActivity extends BaseActivity {
             });
 
         }
-        public class AboutPreferenceFragment extends PreferenceFragment {
-
-
-            @Override
-            public void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                addPreferencesFromResource(R.xml.pref_about);
-                setHasOptionsMenu(true);
-
-            }
-            @Override
-            public boolean onOptionsItemSelected(MenuItem item) {
-                int id = item.getItemId();
-                if (id == android.R.id.home) {
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.container, new GeneralPreferenceFragment())
-                            .commit();
-                    return true;
-                }
-                return super.onOptionsItemSelected(item);
-            }
-
-
-        }
-
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
             switch (preference.getKey()) {
                 case "key_about":
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.container, new AboutPreferenceFragment())
+                            .replace(R.id.container, new AboutPreferenceFragment().newInstance())
                             .commit();
                     break;
                 case "key_cache":
                     Toast.makeText(getActivity(), "清除成功", Toast.LENGTH_LONG).show();
                     break;
                 case "complete_info":
-                    boolean status = UserStatus.getstatus(getApplicationContext());
+                    boolean status = UserStatus.getstatus(getActivity());
                     if (status) {
-                        Intent intent = new Intent(getApplicationContext(), UserCenterAcivity.class);
+                        Intent intent = new Intent(getActivity(), UserCenterAcivity.class);
                         startActivity(intent);
                     }else {
-                        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                        Intent intent = new Intent(getActivity(),LoginActivity.class);
                         startActivity(intent);
                     }
                     break;

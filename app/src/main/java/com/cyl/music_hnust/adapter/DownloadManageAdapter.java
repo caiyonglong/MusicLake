@@ -14,9 +14,8 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.download.FileState;
 import com.cyl.music_hnust.download.SqliteDao;
-import com.cyl.music_hnust.service.DownloadService;
+import com.cyl.music_hnust.download.DownloadService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -76,11 +76,10 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     public class ItemHolder extends RecyclerView.ViewHolder {
         protected TextView title, tv_1, tv_2, tv_3;
-        protected ImageView iv_cover, iv_bg_cover;
+        protected ImageView iv_cover;
 
         public ItemHolder(View view) {
             super(view);
-            this.iv_bg_cover = (ImageView) view.findViewById(R.id.iv_bg_cover);
             this.iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
             this.title = (TextView) view.findViewById(R.id.title);
             this.tv_1 = (TextView) view.findViewById(R.id.tv_music_1);

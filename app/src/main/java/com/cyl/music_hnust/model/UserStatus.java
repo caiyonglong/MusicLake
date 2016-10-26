@@ -48,6 +48,13 @@ public class UserStatus {
         user.setSecret(sp.getInt(Constants.SECRET,0));
         return user;
     }
+    //从data.xml文件中清空个人信息
+    public static void clearUserInfo(Context context){
+        SharedPreferences sp=context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+    }
 
     //登录状态、
     public static boolean saveuserstatus(Context context, boolean status){

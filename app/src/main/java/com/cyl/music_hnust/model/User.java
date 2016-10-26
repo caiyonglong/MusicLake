@@ -5,20 +5,20 @@ package com.cyl.music_hnust.model;
  * 个人信息类
  */
 public class User {
-    private String user_id;  //id
-    private String user_name;  //姓名
-    private String user_sex;   //性别
-    private String user_college;  //学院
-    private String user_major;  //专业
-    private String user_class;  //班级
+    private String user_id="";  //id
+    private String user_name="";  //姓名
+    private String user_sex="";   //性别
+    private String user_college="";  //学院
+    private String user_major="";  //专业
+    private String user_class="";  //班级
 
-    private String user_img;   //头像
-    private String user_email;  //邮箱
-    private String phone;  //手机号
-    private String nick;  //昵称
-    private String password;  //密码
+    private String user_img="";   //头像
+    private String user_email="";  //邮箱
+    private String phone="";  //手机号
+    private String nick="";  //昵称
+    private String password="";  //密码
 
-    private int secret;  //用户是否保密
+    private int secret=0;  //用户是否保密
 
 
     public String getUser_class() {

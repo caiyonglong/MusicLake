@@ -7,7 +7,7 @@
     <include
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
-        layout="@layout/content_main" />
+        layout="@layout/content_main_lost" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/id_navigationview"

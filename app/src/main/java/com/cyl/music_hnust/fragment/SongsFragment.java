@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.activity.SearchActivity;
+import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.Music;
@@ -90,7 +91,9 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     public void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(getmPlayService().getmPlayingPosition());
+        if (getmPlayService()!= null) {
+            mRecyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
+        }
     }
 
     @Override
@@ -118,6 +121,10 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
                 final Intent intent = new Intent(getActivity(), SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
+                break;
+            case R.id.action_settings:
+                final Intent intent1 = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent1);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -8,16 +8,18 @@
     android:orientation="vertical"
     android:background="@drawable/bg_login"
     tools:context=".activity.LoginActivity">
-    <FrameLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_chevron_left_black_18dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-    </FrameLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="5dp">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </android.support.design.widget.AppBarLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -29,6 +31,21 @@
         android:layout_marginTop="25dp"
         android:layout_alignEnd="@id/cv"
         android:layout_marginEnd="-20dp"
+        />
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/qqlogin"
+        android:elevation="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        app:fab_icon="@drawable/qq"
+        app:fab_colorNormal="@color/grean"
+        app:fab_colorPressed="@color/lightGreen"
+        android:transitionName="loginFab"
+        android:layout_alignBottom="@+id/cv"
+        android:layout_marginBottom="25dp"
+        android:layout_alignEnd="@id/cv"
+        android:layout_marginEnd="-30dp"
         />
     <ProgressBar
         android:id="@+id/progressBar"
@@ -75,7 +92,7 @@
                     />
             </RelativeLayout>
             <LinearLayout
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:paddingStart="40dp"
                 android:paddingEnd="30dp"
                 android:orientation="horizontal"
@@ -95,10 +112,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        android:id="@+id/editText" />
+                        />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
+                android:layout_marginTop="10dp"
                 android:paddingStart="40dp"
                 android:paddingEnd="30dp"
                 android:orientation="horizontal"
@@ -113,7 +131,6 @@
                         android:hint="@string/Password"
                         android:textColor="#2fa881"
                         android:textSize="16sp"
-                        android:id="@+id/et_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
@@ -134,7 +151,6 @@
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    android:visibility="gone"
                     android:background="@drawable/btn_bg"
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
@@ -144,14 +160,13 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:paddingStart="40dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 >
                <TextView
-                   android:layout_gravity="center"
-                   android:text="提示：用户名为注册邮箱或者学号"
+                   android:text="提示：用户名为注册邮箱or学号\n支持qq登录"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content" />
             </LinearLayout>

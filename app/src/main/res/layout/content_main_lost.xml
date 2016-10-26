@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    CoordinatorLayout是这次新添加的一个增强型的FrameLayout，通过它可以实现很多东西：
+        例如：
+            1.界面向上滚动逐渐隐藏Toolbar；
+            2.在其中可以放置浮动的View，就像Floating Action Button。
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/id_coordinatorlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+
+    <!--
+        AppBarLayout跟它的名字一样，把容器类的组件全部作为AppBar。
+            将AppBarLayout放在CoordinatorLayout中，就可以实现滚动效果。
+            本例中，TabLayout在界面滚动时，随着Toolbar的逐渐隐藏，将占据Toolbar的位置，
+                达到节省屏幕空间，界面动画效果的目的。
+    -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/id_appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <!--
+
+        属性解析：
+            app:theme：指定Toolbar的样式，包括ActionbarToggle和popupMenu的指示图标颜色
+            app:popupTheme：指定popupMenu溢出后的样式
+            app:title:    指定Toolbar中主Title的内容
+        -->
+
+        <!--
+            app:layout_scrollFlags的意思是：
+
+                设置的layout_scrollFlags有如下几种选项：
+                    scroll: 所有想滚动出屏幕的view都需要设置这个flag- 没有设置这个flag的view将被固定在屏幕顶部。
+                    enterAlways: 这个flag让任意向下的滚动都会导致该view变为可见，启用快速“返回模式”。
+                    enterAlwaysCollapsed: 当你的视图已经设置minHeight属性又使用此标志时，你的视图只能以最小高度进入，只有当滚动视图到达顶部时才扩大到完整高度。
+                    exitUntilCollapsed: 当视图会在滚动时，它一直滚动到设置的minHeight时完全隐藏。
+
+            需要注意的是，后面两种模式基本只有在CollapsingToolbarLayout才有用，
+            而前面两种模式基本是需要一起使用的，也就是说，这些flag的使用场景，基本已经固定了。
+        -->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/id_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/setting_blue"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:title="@string/toolbar_title" >
+            <android.support.design.widget.TabLayout
+                android:id="@+id/id_tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/main_white" />
+        </android.support.v7.widget.Toolbar>
+
+        <!--
+            Tabs选项卡，和ViewPager搭配使用可以增大界面的内容展示量，实现各种个性化分类内容展示而不互相干扰！
+            Google在Design support library中提供官方的Tab组件，它就是TabLayout。
+            相比Github上面开源的第三方库，这个更加简单易用。
+
+            有以下常用属性：
+                app:tabGravity="fill"  表示TabLayout中的Tabs要占满屏幕的width；
+                app:tabSelectedTextColor：Tab被选中字体的颜色；
+                app:tabTextColor：Tab未被选中字体的颜色；
+                app:tabIndicatorColor：Tab指示器下标的颜色；
+        -->
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <!--
+        我们常用的ViewPager，不多说了。你会发现多了一个 app:layout_behavior 属性，没错，
+            如果你使用CoordinatorLayout来实现Toolbar滚动渐变消失动画效果，那就必须在它下面的那个控件中加入这个属性，
+            并且下面的这个控件必须是可滚动的。
+        当设置了layout_behavior的控件滑动时，就会触发设置了layout_scrollFlags的控件发生状态的改变。
+    -->
+    <android.support.v4.view.ViewPager
+        android:background="@color/backgroundColor"
+        android:id="@+id/id_viewpager"
+        android:layout_below="@+id/id_appbarlayout"
+        android:layout_above="@+id/cent_menu"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+z
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_dynamic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_icon="@mipmap/add"
+        fab:fab_colorNormal="@color/setting_blue"
+        fab:fab_colorPressed="@color/setting_blue"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"/>
+
+</RelativeLayout>

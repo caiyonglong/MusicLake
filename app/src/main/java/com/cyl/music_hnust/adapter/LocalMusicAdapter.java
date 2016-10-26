@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,7 +61,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music1, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, null);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -115,8 +116,10 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                                 getMusicInfo(musicInfos.get(position));
                                 break;
                             case R.id.popup_song_goto_album:
+                                Log.e("album",musicInfos.get(position).getAlbumId()+"");
                                 Intent intent = new Intent(context, PlaylistDetailActivity.class);
-                                intent.putExtra(Extras.ALBUM_ID,musicInfos.get(position).getAlbumId());
+                                intent.putExtra(Extras.ALBUM_ID,musicInfos.get(position).getAlbumId()+"");
+                                intent.putExtra(Extras.ALBUM,true);
                                 context.startActivity(intent);
                                 break;
                             case R.id.popup_song_goto_artist:

@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/setting_blue">
+        android:background="?attr/colorPrimary">
 
         <ImageButton
             android:id="@+id/backImageButton"

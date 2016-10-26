@@ -5,134 +5,158 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_login"
-    tools:context=".activity.RegisterActivity"
-    >
+    tools:context=".activity.RegisterActivity">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="5dp">
 
-    <FrameLayout
-        android:layout_centerInParent="true"
-        android:layout_width="320dp"
-        android:layout_height="390dp">
-        <android.support.v7.widget.CardView
-            android:id="@+id/cv_add"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:elevation="10dp"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            app:cardCornerRadius="6dp"
-            app:cardElevation="3dp"
-            app:cardUseCompatPadding="true"
-            >
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <RelativeLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp">
-                    <View
-                        android:layout_alignParentStart="true"
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent"
-                        android:background="#2fa881"
-                        />
-                    <TextView
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
-                        android:text="@string/register"
-                        android:textColor="@color/setting_blue"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        />
-                </RelativeLayout>
-                <LinearLayout
-                    android:paddingStart="50dp"
-                    android:paddingEnd="30dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/emailWrapper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <EditText
-                            android:textSize="13sp"
-                            android:textColor="@color/black"
-                            android:hint="请输入有效邮箱，便于找回密码"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="30dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/userNameWrapper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <EditText
-                            android:textSize="14sp"
-                            android:hint="@string/Username"
-                            android:textColor="@color/black"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                           />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:paddingStart="50dp"
-                    android:paddingEnd="30dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/passWordWrapper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <EditText
-                            android:textSize="13sp"
-                            android:hint="@string/Password"
-                            android:textColor="@color/black"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                           />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-
-                <Button
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="center_horizontal"
-                    android:id="@+id/bt_go"
-                    android:elevation="6dp"
-                    android:background="@drawable/btn_login"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:text="@string/next"
-                    >
-                </Button>
-
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabSize="normal"
-            android:src="@drawable/ic_clear_white_24dp"
-            app:layout_anchor="@id/cv_add"
-            android:layout_gravity="top|center"
+            android:layout_height="match_parent"
+            android:title="湖科音乐"
+            android:titleTextColor="@color/white"
             />
-    </FrameLayout>
+    </android.support.design.widget.AppBarLayout>
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-25dp"
+        android:elevation="5dp"
+        app:fab_icon="@drawable/ic_clear_white_24dp"
+        app:fabSize="normal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/cv_add"/>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:elevation="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_add"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp">
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:background="#2fa881" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="30dp"
+                    android:text="用户注册"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:paddingEnd="30dp"
+                android:paddingStart="30dp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/emailWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入有效邮箱，便于找回密码"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:paddingEnd="30dp"
+                android:paddingStart="30dp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/userNameWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/Username"
+                        android:inputType="textPersonName"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:paddingEnd="30dp"
+                android:paddingStart="30dp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/passWordWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/Password"
+                        android:inputType="textPassword"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/success"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_bg"
+                android:elevation="6dp"
+                android:text="@string/next" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
 
 
 </RelativeLayout>

@@ -1,16 +1,19 @@
 package com.cyl.music_hnust.fragment;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.activity.MainActivity;
-import com.cyl.music_hnust.adapter.ViewPagerAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者：yonglong on 2016/8/8 17:47
@@ -32,14 +35,11 @@ public class MainFragment extends BaseFragment {
     protected void initDatas() {
         mToolbar.setTitle("湖科音乐");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        DrawerLayout mDrawerLayout = MainActivity.getmDrawerLayout();
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                getActivity(), mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        final ActionBar toggle = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
+        toggle.setDisplayHomeAsUpEnabled(true);
+
 
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -69,7 +69,7 @@ public class MainFragment extends BaseFragment {
 
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new SongsFragment(), "本地音乐");
         adapter.addFragment(new OnlineFragment(), "在线音乐");
         adapter.addFragment(new PlaylistFragment(), "我的歌单");
@@ -93,5 +93,33 @@ public class MainFragment extends BaseFragment {
         super.onStart();
     }
 
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
+    }
 }
 

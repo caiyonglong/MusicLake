@@ -24,7 +24,7 @@ import com.cyl.music_hnust.Json.JsonParsing;
 import com.cyl.music_hnust.adapter.MusicRecyclerViewAdapter;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.http.HttpByGet;
-import com.cyl.music_hnust.service.DownloadService;
+import com.cyl.music_hnust.download.DownloadService;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.MusicInfo;

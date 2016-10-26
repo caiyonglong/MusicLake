@@ -8,43 +8,70 @@ import java.util.List;
  * 版本：2.5
  */
 public class SearchMusic {
-    private List<Song> song;
+    private List<SongList> song_list;
 
-    public List<Song> getSong() {
-        return song;
+    public List<SongList> getSong_list() {
+        return song_list;
     }
 
-    public void setSong(List<Song> song) {
-        this.song = song;
+    public void setSong_list(List<SongList> song_list) {
+        this.song_list = song_list;
     }
 
-    public static class Song {
-        String songname;
-        String artistname;
-        String songid;
+    public static class SongList {
+        String  song_id;
+        String  title="未知";
+        String  artist_id;
+        String  author="未知";
+        String  album_title="未知";
+        String  lrclink;
 
-        public String getSongname() {
-            return songname;
+        public String getAlbum_title() {
+            return album_title;
         }
 
-        public void setSongname(String songname) {
-            this.songname = songname;
+        public void setAlbum_title(String album_title) {
+            this.album_title = album_title;
         }
 
-        public String getArtistname() {
-            return artistname;
+        public String getArtist_id() {
+            return artist_id;
         }
 
-        public void setArtistname(String artistname) {
-            this.artistname = artistname;
+        public void setArtist_id(String artist_id) {
+            this.artist_id = artist_id;
         }
 
-        public String getSongid() {
-            return songid;
+        public String getAuthor() {
+            return author;
         }
 
-        public void setSongid(String songid) {
-            this.songid = songid;
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public String getLrclink() {
+            return lrclink;
+        }
+
+        public void setLrclink(String lrclink) {
+            this.lrclink = lrclink;
+        }
+
+        public String getSong_id() {
+            return song_id;
+        }
+
+        public void setSong_id(String song_id) {
+            this.song_id = song_id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
         }
     }
 }

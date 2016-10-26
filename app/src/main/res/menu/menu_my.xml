@@ -9,11 +9,6 @@
         android:orderInCategory="101"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_add"
-        android:orderInCategory="101"
-        android:title="新建歌单"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_search"

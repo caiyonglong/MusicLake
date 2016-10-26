@@ -23,12 +23,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         if (on){
             this.setTheme(R.style.MyThemeDark);
         }else {
             this.setTheme(R.style.MyThemeBlue);
         }
+        super.onCreate(savedInstanceState);
         mHandler = new Handler();
         listener();
     }

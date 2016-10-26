@@ -1,7 +1,4 @@
-package com.cyl.music_hnust.service;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.cyl.music_hnust.download;
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,11 +6,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.cyl.music_hnust.download.Downloader;
-import com.cyl.music_hnust.download.DownloaderInfo;
-import com.cyl.music_hnust.download.FileState;
-import com.cyl.music_hnust.download.SqliteDao;
 import com.cyl.music_hnust.utils.Constants;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

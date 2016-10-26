@@ -8,14 +8,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -55,23 +55,33 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         OnPlayerListener {
 
 
+    //底部控制的进度条
     @Bind(R.id.song_progress_normal)
     ProgressBar mProgressBar;
-    TextView tv_title, tv_artist;
+    //底部控制的歌名
+    @Bind(R.id.title)
+    TextView tv_title;
+    //底部控制的歌手
+    @Bind(R.id.artist)
+    TextView tv_artist;
+    //底部控制的整个frame
     @Bind(R.id.play_control)
     FrameLayout play_control;
-
+    //底部控制的整个frame点击事件
     @OnClick(R.id.play_control)
     public void show() {
         showPlayingFragment();
     }
 
+
+
+    //底部控制的音乐专辑图片
     @Bind(R.id.album)
     ImageView album;
-
+    //底部控制的下一首按钮
     @Bind(R.id.next_buttom)
     ImageButton next_buttom;
-
+    //底部控制的下一首点击事件
     @OnClick(R.id.next_buttom)
     public void onclik() {
         mPlayService.next();
@@ -89,8 +99,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Bind(R.id.pause_play)
     ImageButton pause_play;
+
     @Bind(R.id.nav_view)
     NavigationView mNavigationView;
+
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
 
     @OnClick(R.id.pause_play)
     public void pause_play() {
@@ -99,8 +114,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mPlayService.pause();
     }
 
-    private static DrawerLayout mDrawerLayout;
-    private static FloatingActionButton mFloatingActionButton;
     public static PlayService mPlayService;
     private PopupWindow mPopupWindow;
     private ImageView iv_bg;
@@ -132,34 +145,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
         SystemUtils.setSystemBarTransparent(this);
         initView();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     private void initView() {
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        tv_title = (TextView) findViewById(R.id.title);
-        tv_artist = (TextView) findViewById(R.id.artist);
-
         //进度条样式
         mProgressBar.setProgress(0);
 
-
         bindService();
         setNavigationView();
-
-        play_control.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
 
     }
 
@@ -173,10 +178,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         onPlay(mPlayService.getPlayingMusic());
     }
 
-
-    public static DrawerLayout getmDrawerLayout() {
-        return mDrawerLayout;
-    }
 
     private void initFragment() {
         if (mainFragment == null) {
@@ -227,7 +228,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if (music.getCover() != null) {
                 iv_bg.setImageBitmap(music.getCover());
             } else {
-                iv_bg.setImageResource(R.drawable.ic_empty_music2);
+                ImageLoader.getInstance().displayImage(music.getCoverUri(), iv_bg, ImageUtils.getCoverDisplayOptions());
+
+//                iv_bg.setImageResource(R.drawable.ic_empty_music2);
             }
         }
         if (login_status){
@@ -353,11 +356,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (music.getCover() != null) {
             album.setImageBitmap(music.getCover());
         } else {
+
             Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
             album.setImageBitmap(cover);
         }
-        tv_title.setText(music.getTitle());
-        tv_artist.setText(music.getArtist());
+        tv_title.setText(Html.fromHtml(music.getTitle()));
+        tv_artist.setText(Html.fromHtml(music.getArtist()));
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
 
@@ -367,7 +371,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onPlayerPause() {
         play_state(false);
-        initNav();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerPause();
         }
@@ -377,7 +380,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onPlayerResume() {
         play_state(true);
-        initNav();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerResume();
         }
@@ -456,8 +458,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+//                if (isNavigatingMain()) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+//                } else super.onBackPressed();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

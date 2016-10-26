@@ -7,17 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.PlaylistSongActivity;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.list.MusicList;
 import com.cyl.music_hnust.utils.MusicInfo;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -52,7 +48,7 @@ public class MusicRecyclerViewAdapter extends RecyclerView.Adapter<MusicRecycler
      */
     @Override
     public MusicRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mView = mLayoutInflater.inflate(R.layout.item_music, parent, false);
+        View mView = mLayoutInflater.inflate(R.layout.item_music_search, parent, false);
         MusicRecyclerViewHolder mViewHolder = new MusicRecyclerViewHolder(mView);
         return mViewHolder;
     }

@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.cyl.music_hnust.Json.JsonCallback;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.OnlineMusicActivity;
+import com.cyl.music_hnust.activity.SearchActivity;
+import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.OnlineAdapter;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
@@ -126,7 +128,13 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.action_search:
+                final Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            case R.id.action_settings:
+                final Intent intent1 = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent1);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -4,8 +4,8 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
@@ -22,10 +22,10 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.PlaylistDetailActivity;
+import com.cyl.music_hnust.activity.SearchActivity;
 import com.cyl.music_hnust.adapter.PlaylistAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.LocalPlaylist;
-import com.cyl.music_hnust.model.Music;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
@@ -46,8 +46,6 @@ public class PlaylistFragment extends BaseFragment {
     private GridLayoutManager mLayoutManager;
     private PlaylistAdapter mAdapter;
     private List<LocalPlaylist> localplaylists = new ArrayList<>();
-    List<List<Music>> playlist;
-    private FloatingActionButton mFloatingActionButton;
 
     //判断新增歌单是否存在
     Boolean isNewPlaylist = false;
@@ -60,8 +58,10 @@ public class PlaylistFragment extends BaseFragment {
 
     @Override
     protected void initDatas() {
-        localplaylists = MusicUtils.scanPlaylist(getContext());
-        initData();
+        mAdapter = new PlaylistAdapter(getActivity(),localplaylists,onRecyclerItemClick);
+        reloadAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -74,16 +74,9 @@ public class PlaylistFragment extends BaseFragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
         mLayoutManager = new GridLayoutManager(getActivity(),2);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
-
     }
 
-    private void initData() {
-        mAdapter = new PlaylistAdapter(getActivity(),localplaylists,onRecyclerItemClick);
-        mRecyclerView.setAdapter(mAdapter);
-
-    }
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -101,6 +94,11 @@ public class PlaylistFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.new_playlist:
                 toAddPlaylist();
+                break;
+            case R.id.action_search:
+                final Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -132,10 +130,7 @@ public class PlaylistFragment extends BaseFragment {
                     isNewPlaylist =MusicUtils.newPlaylist(getContext(),localPlaylist);
                     if (isNewPlaylist){
                         ToastUtils.show(getContext(),"操作成功");
-
-                        localplaylists = MusicUtils.scanPlaylist(getContext());
-                        mAdapter.setLocalplaylists(localplaylists);
-                        mAdapter.notifyDataSetChanged();
+                        reloadAdapter();
                     }else {
                         ToastUtils.show(getContext(),"操作失败，歌单已存在！");
                     }
@@ -175,6 +170,32 @@ public class PlaylistFragment extends BaseFragment {
             }
         }
     };
+
+    private void reloadAdapter() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... unused) {
+                try {
+                    localplaylists = MusicUtils.scanPlaylist(getContext());
+                }catch (Exception e){
+                    localplaylists.clear();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (localplaylists.size() == 0) {
+                    tv_empty.setText("赶快去新建歌单吧！");
+                    tv_empty.setVisibility(View.VISIBLE);
+                } else {
+                    tv_empty.setVisibility(View.GONE);
+                }
+                mAdapter.setLocalplaylists(localplaylists);
+                mAdapter.notifyDataSetChanged();
+            }
+        }.execute();
+    }
 
 
 }

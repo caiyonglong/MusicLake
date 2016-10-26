@@ -1,5 +1,7 @@
 package com.cyl.music_hnust.Json;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -24,6 +26,7 @@ public abstract class JsonCallback<T> extends Callback<T> {
     public T parseNetworkResponse(Response response) throws IOException {
         try {
             String jsonString = response.body().string();
+            Log.e("eeeeeee",jsonString);
             return mGson.fromJson(jsonString, mClass);
         } catch (Exception e) {
             e.printStackTrace();

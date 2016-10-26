@@ -3,6 +3,7 @@ package com.cyl.music_hnust.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,10 +33,11 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
     RecyclerView mRecyclerView;
     TextView tv_empty;
     Toolbar mToolbar;
+    FloatingActionButton fab;
 
     private static LocalMusicAdapter mAdapter;
     private static List<Music> musicInfos = new ArrayList<>();
-    private String playlist_id;
+    private String playlist_id, album_id;
     private boolean isAlbum;
 
     /**
@@ -51,14 +53,19 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
         setContentView(R.layout.playlist_detail);
         SystemUtils.setSystemBarTransparent(this);
 
+        playlist_id = getIntent().getStringExtra(Extras.PLAYLIST_ID);
+        isAlbum = getIntent().getBooleanExtra(Extras.ALBUM, false);
+        album_id = getIntent().getStringExtra(Extras.ALBUM_ID);
+        Log.e("playlist_id", playlist_id + "===" + isAlbum + "+++" + album_id + "00");
+
+
         initView();
         initData();
     }
 
     private void initData() {
 
-        playlist_id = getIntent().getStringExtra(Extras.PLAYLIST_ID);
-        isAlbum = getIntent().getBooleanExtra(Extras.ALBUM,false);
+
         reloadAdapter();
         mAdapter = new LocalMusicAdapter(this, musicInfos);
         mRecyclerView.setAdapter(mAdapter);
@@ -75,42 +82,56 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
         mToolbar.setTitle("歌单列表");
         tv_empty = (TextView) findViewById(R.id.tv_empty);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (musicInfos.size() == 0) {
             tv_empty.setText("请稍后，本地音乐加载中...");
             tv_empty.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             tv_empty.setVisibility(View.GONE);
         }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaylistDetailActivity.this, EditActivity.class);
+                String content = "";
+                if (musicInfos.size() > 0) {
+                    content = "分享歌单\n";
+                }
+                for (int i = 0; i < musicInfos.size(); i++) {
+                    content += musicInfos.get(i).getTitle() + "---" + musicInfos.get(i).getArtist();
+                    content += "\n";
+                }
+                intent.putExtra("content", content);
 
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_search:
+                final Intent intent = new Intent(this, SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            case R.id.action_settings:
+                final Intent intent1 = new Intent(this, SettingsActivity.class);
+                startActivity(intent1);
         }
-        if (id == R.id.share) {
-            Intent intent =new Intent(this,EditActivity.class);
 
-            String content = "分享歌单\n";
-            for (int i=0; i <musicInfos.size();i++){
-                content +=musicInfos.get(i).getTitle()+"---"+musicInfos.get(i).getArtist();
-            }
-            intent.putExtra("content",content);
-
-            startActivity(intent);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_playlist, menu);
+        getMenuInflater().inflate(R.menu.menu_my, menu);
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -121,14 +142,12 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
             @Override
             protected Void doInBackground(final Void... unused) {
                 musicInfos.clear();
-                if (playlist_id != null ) {
-                    if (isAlbum){
-                        Log.e("歌单id++++++", playlist_id + "");
-                        musicInfos= MusicUtils.getAlbumSongs(PlaylistDetailActivity.this,playlist_id);
-                    }else {
-                        Log.e("歌单id++++++", playlist_id + "");
-                        MusicUtils.getMusicForPlaylist(PlaylistDetailActivity.this, playlist_id, musicInfos);
-                    }
+                if (isAlbum) {
+                    Log.e("歌单id++++++", album_id + "");
+                    musicInfos = MusicUtils.getAlbumSongs(PlaylistDetailActivity.this, album_id);
+                } else {
+                    Log.e("歌单id++++++", playlist_id + "");
+                    MusicUtils.getMusicForPlaylist(PlaylistDetailActivity.this, playlist_id, musicInfos);
                 }
                 return null;
             }
@@ -138,7 +157,7 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
                 if (musicInfos.size() == 0) {
                     tv_empty.setText("暂无音乐");
                     tv_empty.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     tv_empty.setVisibility(View.GONE);
                 }
 

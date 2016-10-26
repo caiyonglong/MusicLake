@@ -46,7 +46,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music1, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, null);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 

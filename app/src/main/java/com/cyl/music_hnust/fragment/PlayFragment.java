@@ -171,9 +171,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setLrc(music);
         setCoverAndBg(music);
 
+        reloadAdapter();
         mAdapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(getmPlayService().getmPlayingPosition());
-
+        recyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
 
     }
 

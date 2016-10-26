@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/music_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardBackgroundColor="@color/main_white"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="3dp"
+    app:cardMaxElevation="2dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="12dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+
+        <LinearLayout
+            android:id="@+id/adapter_music_item_view"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip">
+
+
+            <LinearLayout
+                android:layout_width="0.0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="adfasdf"
+                    android:id="@+id/music_item_tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30.0dip"
+                    android:gravity="bottom"
+                    android:lines="1"
+                    android:textColor="@color/main_black"
+                    android:textSize="16.0sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="25.0dip">
+
+                    <TextView
+                        android:text="adfasdf"
+                        android:id="@+id/music_item_tv_artist"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingRight="15.0dip"
+                        android:lines="1"
+                        android:textColor="@color/grey"
+                        android:textSize="12.0sp" />
+
+                    <TextView
+                        android:id="@+id/music_item_tv_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:lines="1"
+                        android:textColor="@color/main_black"
+                        android:textSize="12.0sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ImageButton
+
+                android:visibility="gone"
+                android:id="@+id/music_item_ib_select"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="5.0dip"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/app_name" />
+            <ImageButton
+
+                android:id="@+id/list_black_btn"
+                android:layout_width="28dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="5.0dip"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/list_black_btn_close"
+                android:contentDescription="@string/app_name" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/music_item_tv_folder"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip"
+            android:gravity="center_vertical"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip"
+            android:lines="1"
+            android:textColor="@color/main_black"
+            android:textSize="16.0sp" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
