@@ -4,22 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.cyl.music_hnust.Json.JsonCallback;
+import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.OnlineMusicActivity;
-import com.cyl.music_hnust.activity.SearchActivity;
-import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.OnlineAdapter;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.OnlinePlaylists;
-import com.cyl.music_hnust.model.OnlinePlaylists.Billboard;
+import com.cyl.music_hnust.model.music.OnlinePlaylists;
+import com.cyl.music_hnust.model.music.OnlinePlaylists.Billboard;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -43,6 +40,8 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     //排行榜集合
     private List<Billboard> mBillboards = new ArrayList<>();
     private TextView tv_empty;
+    private ProgressBar progress;
+    private LinearLayout loading;
 
     @Override
     public int getLayoutId() {
@@ -52,6 +51,8 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     @Override
     public void initViews() {
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
+        loading = (LinearLayout) rootView.findViewById(R.id.loading);
+        progress = (ProgressBar) rootView.findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
 
     }
@@ -80,11 +81,10 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     private void init() {
         if (!NetworkUtil.isNetworkAvailable(getContext())) {
             tv_empty.setText("网络不给力，请检查连接!");
-            tv_empty.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
+            loading.setVisibility(View.VISIBLE);
         } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            tv_empty.setVisibility(View.GONE);
+            loading.setVisibility(View.GONE);
             if (mBillboards.isEmpty()) {
                 OkHttpUtils.get().url(Constants.BASE_MUSIC_URL)
                         .build()
@@ -111,33 +111,8 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_my, menu);
-    }
-
-    /**
-     * 菜单点击事件
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                final Intent intent = new Intent(getActivity(), SearchActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-            case R.id.action_settings:
-                final Intent intent1 = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent1);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onItemClick(View view, int position) {

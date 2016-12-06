@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.cyl.music_hnust.application.MyApplication;
+import com.cyl.music_hnust.MyApplication;
 
 /**
  * 作者：yonglong on 2016/8/22 19:20

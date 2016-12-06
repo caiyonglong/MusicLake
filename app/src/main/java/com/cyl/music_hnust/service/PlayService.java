@@ -18,19 +18,21 @@ import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.download.NetworkUtil;
-import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.model.OnlinePlaylist;
-import com.cyl.music_hnust.utils.CoverLoader;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.OnlinePlaylist;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -131,7 +133,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 每次启动时扫描音乐
      */
     public void updateMusicList() {
-        MusicUtils.scanMusic(this, getMusicList());
+//        MusicUtils.getAllSongs(this, getMusicList());
+        myMusicList = MusicUtils.getAllSongs(this);
         if (getMusicList().isEmpty()) {
             return;
         }
@@ -164,23 +167,28 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public boolean checkNetwork(int position) {
 
-        if (position < 0) {
+        Log.e("----Service", getMusicList().size() + "====");
+
+        if (position <= 0) {
             position = getMusicList().size() - 1;
         } else if (position >= getMusicList().size()) {
             position = 0;
         }
 
         boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
-
-        if (getMusicList().get(position).getType() == Music.Type.LOCAL) {
-            return true;
-        } else if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
-            ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
-            return false;
-        } else if (NetworkUtil.isNetworkAvailable(getApplicationContext())){
-            return true;
-        }else {
-            ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+        try {
+            if (getMusicList().get(position).getType() == Music.Type.LOCAL) {
+                return true;
+            } else if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
+                ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+                return false;
+            } else if (NetworkUtil.isNetworkAvailable(getApplicationContext())) {
+                return true;
+            } else {
+                ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
     }
@@ -196,7 +204,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                     playMusic(mPlayingPosition - 1);
                 break;
             case PLAY_MODE_RANDOM:
-
                 Random random = new Random();
                 if (checkNetwork(random.nextInt(getMusicList().size())))
                     playMusic(random.nextInt(getMusicList().size()));
@@ -217,12 +224,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         if (getMusicList().isEmpty()) {
             return -1;
         }
-
         if (position < 0) {
             position = getMusicList().size() - 1;
         } else if (position >= getMusicList().size()) {
             position = 0;
         }
+
 
         mPlayingPosition = position;
         playMusic(getMusicList().get(mPlayingPosition));
@@ -233,7 +240,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void playMusic(Music music) {
         mPlayingMusic = music;
-
         try {
             mediaPlayer.reset();
             mediaPlayer.setDataSource(mPlayingMusic.getUri());
@@ -284,6 +290,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             mListener.onPlayerPause();
         }
     }
+
 
     public boolean isPlaying() {
         return mediaPlayer.isPlaying() && mediaPlayer != null;
@@ -359,6 +366,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * @return
      */
     public List<Music> getMusicList() {
+
+        Log.e("----Service", myMusicList.size() + "====");
         return myMusicList;
     }
 
@@ -370,6 +379,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     public void setMyMusicList(List<Music> myMusicList) {
         this.myMusicList = myMusicList;
+        Log.e("----Service", myMusicList.size() + "====");
     }
 
 
@@ -461,9 +471,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 //        if (artwork == null) {
 //            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2);
 //        }
-        Bitmap cover;
+        Bitmap cover = null;
         if (music.getCover() == null) {
-            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+            cover = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(), ImageUtils.getAlbumDisplayOptions());
+//            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         } else {
             cover = music.getCover();
         }

@@ -6,12 +6,12 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
-import com.cyl.music_hnust.Json.JsonCallback;
+import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.DownloadInfo;
-import com.cyl.music_hnust.model.Lrc;
-import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.model.SearchMusic;
+import com.cyl.music_hnust.model.download.DownloadInfo;
+import com.cyl.music_hnust.model.music.Lrc;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.SearchMusic;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;

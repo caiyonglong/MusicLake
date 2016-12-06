@@ -1,8 +1,11 @@
 package com.cyl.music_hnust.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,14 +15,24 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.LocalPlaylist;
-import com.cyl.music_hnust.model.OnlineMusicInfo;
+import com.cyl.music_hnust.activity.ArtistInfoActivity;
+import com.cyl.music_hnust.download.DownloadService;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.model.music.OnlineMusicInfo;
+import com.cyl.music_hnust.service.PlayOnlineMusic;
+import com.cyl.music_hnust.utils.Extras;
+import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
+import com.cyl.music_hnust.utils.Preferences;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * 功能：在线音乐列表适配器
@@ -31,10 +44,13 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 
     private Context context;
     public List<OnlineMusicInfo> musicInfos = new ArrayList<>();
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
+
     public OnItemClickListener mOnItemClickListener;
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
@@ -46,7 +62,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent,false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -55,7 +71,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         OnlineMusicInfo localItem = musicInfos.get(position);
-        ImageLoader.getInstance().displayImage(localItem.getPic_small(), holder.albumArt, ImageUtils.getCoverDisplayOptions());
+        ImageLoader.getInstance().displayImage(localItem.getPic_small().trim(), holder.albumArt, ImageUtils.getCoverDisplayOptions());
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist_name());
 
@@ -63,22 +79,22 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(holder.itemView,position);
+                    mOnItemClickListener.onItemClick(holder.itemView, position);
                 }
             });
         }
-        setOnPopupMenuListener(holder,position);
+        setOnPopupMenuListener(holder, position);
     }
 
     private void setOnPopupMenuListener(ItemHolder holder, final int position) {
         holder.popupmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu mPopupmenu = new PopupMenu(context,v);
+                PopupMenu mPopupmenu = new PopupMenu(context, v);
                 mPopupmenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
+                        switch (item.getItemId()) {
                             case R.id.popup_song_play:
 //                                MainActivity.mPlayService.playMusic(position);
                                 break;
@@ -86,6 +102,12 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
                                 getMusicInfo(musicInfos.get(position));
                                 break;
                             case R.id.popup_song_goto_artist:
+                                Intent intent =new Intent(context, ArtistInfoActivity.class);
+                                intent.putExtra(Extras.TING_UID,musicInfos.get(position).getTing_uid());
+                                context.startActivity(intent);
+                                break;
+                            case R.id.popup_song_download:
+                                conver(musicInfos.get(position));
                                 break;
                         }
                         return false;
@@ -97,6 +119,8 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
         });
 
     }
+
+
     private void getMusicInfo(OnlineMusicInfo onlineMusicInfo) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle(onlineMusicInfo.getTitle());
@@ -115,21 +139,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
         dialog.setMessage(sb.toString());
         dialog.show();
     }
-    private void getPlaylistInfo(OnlineMusicInfo onlineMusicInfo) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        List<LocalPlaylist> playlists= MusicUtils.scanPlaylist(context);
-        dialog.setTitle("歌单列表");
-        if (playlists.size()==0) {
-            dialog.setMessage("暂无歌单,请新建!");
-        }else {
-            String msg="";
-            for (int i=0; i<playlists.size();i++){
-                msg=playlists.get(i).getName()+"\n";
-            }
-            dialog.setMessage(msg);
-        }
-        dialog.show();
-    }
+
 
     @Override
     public int getItemCount() {
@@ -156,5 +166,35 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
         public void onClick(View v) {
 //
         }
+    }
+
+
+    private void conver(OnlineMusicInfo onlineMusicInfo) {
+
+        new PlayOnlineMusic(context, onlineMusicInfo) {
+            @Override
+            public void onPrepare() {
+
+            }
+
+            @SuppressLint("StringFormatInvalid")
+            @Override
+            public void onSuccess(Music music) {
+
+                ToastUtils.show(context,"正在下载");
+//                Preferences.
+                Intent intent = new Intent(context, DownloadService.class);
+                intent.putExtra("downloadUrl", music.getUri());
+                intent.putExtra("name", FileUtils.getMp3FileName(music.getArtist(),music.getTitle()));
+                intent.putExtra("flag", "startDownload");
+
+                context.startService(intent);
+            }
+
+            @Override
+            public void onFail(Call call, Exception e) {
+                ToastUtils.show(context, "00000");
+            }
+        }.execute();
     }
 }

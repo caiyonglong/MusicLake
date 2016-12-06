@@ -22,12 +22,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.cyl.music_hnust.Json.JsonCallback;
+import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.OnlineMusicAdapter;
-import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.model.OnlineMusicInfo;
-import com.cyl.music_hnust.model.OnlineMusicList;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.OnlineMusicInfo;
+import com.cyl.music_hnust.model.music.OnlineMusicList;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.Constants;
@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.Call;
 
 /**
@@ -79,22 +78,27 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online);
+    }
 
-//初始化黄油刀控件绑定框架
-        ButterKnife.bind(this);
+    @Override
+    protected void initView() {
 
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void initData() {
         title = getIntent().getStringExtra(Extras.BILLBOARD_TITLE);
         type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
+        mToolbar.setTitle(title);
 
-        setTitle(title);
         init();
     }
 
     private void init() {
 
         bindService();
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
@@ -127,7 +131,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         });
 
     }
-
 
 
     @Override

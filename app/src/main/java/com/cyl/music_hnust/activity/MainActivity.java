@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,31 +19,34 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ShakeActivity;
+import com.cyl.music_hnust.fragment.DownloadFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
-import com.cyl.music_hnust.map.BaseMapActivity;
-import com.cyl.music_hnust.map.RadarActivity;
-import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.model.User;
-import com.cyl.music_hnust.model.UserStatus;
+import com.cyl.music_hnust.fragment.PlaylistFragment;
+import com.cyl.music_hnust.activity.map.BaseMapActivity;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.user.User;
+import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.service.OnPlayerListener;
 import com.cyl.music_hnust.service.PlayService;
-import com.cyl.music_hnust.utils.CoverLoader;
+import com.cyl.music_hnust.utils.Extras;
+import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.cyl.music_hnust.view.PlayPauseButton;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -66,13 +71,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     TextView tv_artist;
     //底部控制的整个frame
     @Bind(R.id.play_control)
-    FrameLayout play_control;
+    RelativeLayout play_control;
+
     //底部控制的整个frame点击事件
     @OnClick(R.id.play_control)
     public void show() {
         showPlayingFragment();
     }
-
 
 
     //底部控制的音乐专辑图片
@@ -81,6 +86,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //底部控制的下一首按钮
     @Bind(R.id.next_buttom)
     ImageButton next_buttom;
+
     //底部控制的下一首点击事件
     @OnClick(R.id.next_buttom)
     public void onclik() {
@@ -88,17 +94,68 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Bind(R.id.play_pause)
-    ImageButton play_pause;
+    PlayPauseButton mPlayPause;
 
-    @OnClick(R.id.play_pause)
-    public void play_pause() {
+    @Bind(R.id.playpausewrapper)
+    View playpausewrapper;
+
+
+    Boolean duetoplaypause = false;
+
+    @OnClick(R.id.playpausewrapper)
+    public void playpausewrapper() {
         //点击后进入到播放状态
-        play_state(true);
-        mPlayService.playPause();
+        duetoplaypause = true;
+        if (!mPlayPause.isPlayed()) {
+            mPlayPause.setPlayed(true);
+            mPlayPause.startAnimation();
+        } else {
+            mPlayPause.setPlayed(false);
+            mPlayPause.startAnimation();
+        }
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                playOrPause();
+            }
+        }, 200);
+
     }
 
-    @Bind(R.id.pause_play)
-    ImageButton pause_play;
+    /**
+     * 播放OR暂停
+     */
+    public void playOrPause() {
+        try {
+            if (mPlayService != null) {
+                if (mPlayService.isPlaying()) {
+                    mPlayService.pause();
+                } else {
+                    mPlayService.playPause();
+                }
+            }
+        } catch (final Exception ignored) {
+        }
+    }
+
+    /**
+     * 更新播放按钮状态
+     */
+    public void updateState() {
+        if (mPlayService.isPlaying()) {
+            if (!mPlayPause.isPlayed()) {
+                mPlayPause.setPlayed(true);
+                mPlayPause.startAnimation();
+            }
+        } else {
+            if (mPlayPause.isPlayed()) {
+                mPlayPause.setPlayed(false);
+                mPlayPause.startAnimation();
+            }
+        }
+    }
+
 
     @Bind(R.id.nav_view)
     NavigationView mNavigationView;
@@ -107,31 +164,53 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout mDrawerLayout;
 
 
-    @OnClick(R.id.pause_play)
-    public void pause_play() {
-        //点击后进入到暂停状态
-        play_state(false);
-        mPlayService.pause();
-    }
-
     public static PlayService mPlayService;
-    private PopupWindow mPopupWindow;
     private ImageView iv_bg;
     private CircleImageView user_face;
-    private TextView tv_nick,tv_name;
-
+    private TextView tv_nick, tv_name;
 
     boolean login_status;
 
-    private MainFragment mainFragment = null;
-    private PlayFragment mPlayFragment = null;
+    boolean on = Preferences.isNightMode();
 
+    PlayFragment mPlayFragment = null;
+    PlaylistFragment playlistFragment = null;
+
+    //替换Mainfragment
+    Runnable main = new Runnable() {
+        @Override
+        public void run() {
+            MainFragment mainFragment = new MainFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content, mainFragment).commitAllowingStateLoss();
+        }
+    };
+    //替换Mainfragment
+    Runnable playlist = new Runnable() {
+        @Override
+        public void run() {
+            playlistFragment = new PlaylistFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content, playlistFragment).commitAllowingStateLoss();
+        }
+    };
+    //替换Mainfragment
+    Runnable download = new Runnable() {
+        @Override
+        public void run() {
+            DownloadFragment fragment = new DownloadFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commitAllowingStateLoss();
+        }
+    };
+
+
+    /**
+     * service 连接
+     */
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.MyBinder) service).getService();
             mPlayService.setOnPlayEventListener(MainActivity.this);
-            init();
+
             mPlayService.updateMusicList();
         }
 
@@ -141,31 +220,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //初始化黄油刀控件绑定框架
-        ButterKnife.bind(this);
-        SystemUtils.setSystemBarTransparent(this);
-        initView();
 
+        SystemUtils.setSystemBarTransparent(this);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void initView() {
     }
 
-    private void initView() {
-
+    @Override
+    protected void initData() {
         //进度条样式
         mProgressBar.setProgress(0);
-
+        mPlayPause.setColor(Color.parseColor("#259b24"));
         bindService();
         setNavigationView();
-
+        init();
     }
 
     @Override
@@ -173,18 +248,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+    /**
+     * 初始化加载MainFragment
+     */
     private void init() {
-        initFragment();
-        onPlay(mPlayService.getPlayingMusic());
+        main.run();
+//        onPlay(mPlayService.getPlayingMusic());
     }
 
-
-    private void initFragment() {
-        if (mainFragment == null) {
-            mainFragment = new MainFragment();
-        }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, mainFragment).commit();
-    }
 
     private void bindService() {
         Intent intent = new Intent();
@@ -205,11 +276,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login_status =UserStatus.getstatus(MainActivity.this);
-                Intent intent =null;
-                if (login_status){
+                login_status = UserStatus.getstatus(MainActivity.this);
+                Intent intent = null;
+                if (login_status) {
                     intent = new Intent(MainActivity.this, UserCenterAcivity.class);
-                }else {
+                } else {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                 }
                 mDrawerLayout.closeDrawers();
@@ -218,37 +289,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
+    /**
+     * 初始化菜单栏的头部
+     */
     private void initNav() {
-        Music music = null;
-        login_status =UserStatus.getstatus(this);
-        if (getmPlayService()!=null){
-            music = getmPlayService().getPlayingMusic();
-        }
-        if (music!=null){
-            if (music.getCover() != null) {
-                iv_bg.setImageBitmap(music.getCover());
-            } else {
-                ImageLoader.getInstance().displayImage(music.getCoverUri(), iv_bg, ImageUtils.getCoverDisplayOptions());
-
-//                iv_bg.setImageResource(R.drawable.ic_empty_music2);
-            }
-        }
-        if (login_status){
+        login_status = UserStatus.getstatus(this);
+        if (login_status) {
             User user = UserStatus.getUserInfo(this);
-            if (user.getUser_name()!=null&&user.getUser_name().length()>0){
+            if (user.getUser_name() != null && user.getUser_name().length() > 0) {
                 tv_name.setText(user.getUser_name());
-            }else {
-                tv_name.setText("佚名");
+            } else if (user.getUser_email() != null && user.getUser_email().length() > 0) {
+                tv_name.setText(user.getUser_email());
+            } else {
+                tv_name.setText(user.getUser_id());
             }
-            if (user.getUser_email()!=null&&user.getUser_name().length()>0){
-                tv_nick.setText(user.getUser_email());
+            if (user.getNick() != null && user.getNick().length() > 0) {
+                tv_nick.setText(user.getNick());
+            } else {
+                tv_nick.setText("湖科音乐湖");
             }
-            if (user.getUser_img()!=null){
-                ImageLoader.getInstance().displayImage(user.getUser_img(),user_face, ImageUtils.getAlbumDisplayOptions());
+            if (user.getUser_img() != null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getImageDir() + user.getUser_id() + ".png");
+                if (bitmap != null) {
+                    user_face.setImageBitmap(bitmap);
+                    bitmap.recycle();
+                } else
+                    ImageLoader.getInstance().displayImage(user.getUser_img(), user_face, ImageUtils.getAlbumDisplayOptions());
             }
-        }else {
-            tv_name.setText("暂无登录！");
-            tv_nick.setText("湖科音乐湖");
+        } else {
+            user_face.setImageResource(R.drawable.ic_account_circle);
+            tv_name.setText("湖科音乐湖");
+            tv_nick.setText("未登录?去登录/注册吧!");
         }
     }
 
@@ -260,45 +331,52 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (item.getItemId()) {
             case R.id.nav_menu_music:
                 item.setChecked(true);
-                runnable = new Runnable() {
-                    public void run() {
-                        if (mainFragment == null) {
-                            mainFragment = new MainFragment();
-                        }
-                        switchFragment(mainFragment);
-                    }
-                };
+                mHandler.postDelayed(main, 100);
+//                main.run();
                 break;
-            case R.id.nav_menu_com:
+            case R.id.nav_menu_playlist:
                 item.setChecked(true);
-                Intent intent4 = new Intent(this, CommunityActivity.class);
-                startActivity(intent4);
+                mHandler.postDelayed(playlist, 100);
+//                .run();
+                break;
+            case R.id.nav_menu_download:
+                item.setChecked(true);
+                mHandler.postDelayed(download, 100);
+//                download.run();
+//                runnable = new Runnable() {
+//                    public void run() {
+//                Intent intent = new Intent(MainActivity.this, DownloadActivity1.class);
+//                startActivity(intent);
+//                    }
+//                };
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
+//                runnable = new Runnable() {
+//                    public void run() {
                 if (login_status) {
-                    Intent intent2 = new Intent(this, ShakeActivity.class);
+                    Intent intent2 = new Intent(MainActivity.this, ShakeActivity.class);
                     startActivity(intent2);
-                }else {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
+                } else {
+                    Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent1);
                 }
-                break;
-            case R.id.nav_menu_map:
-                item.setChecked(true);
-                Intent intent1 = new Intent(this, BaseMapActivity.class);
-                startActivity(intent1);
+//                    }
+//                };
                 break;
             case R.id.nav_menu_near:
-                mDrawerLayout.closeDrawers();
-                if (login_status){
-                    Intent intent = new Intent(MainActivity.this, RadarActivity.class);
-                    startActivity(intent);
-                }else {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
+//                runnable = new Runnable() {
+//                    public void run() {
+                if (login_status) {
+                    Intent intent2 = new Intent(MainActivity.this, BaseMapActivity.class);
+                    intent2.putExtra("fromActivity", "Near");
+                    startActivity(intent2);
+                } else {
+                    Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent1);
                 }
-
+//                    }
+//                };
                 break;
             case R.id.nav_menu_setting:
                 Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
@@ -307,26 +385,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_exit:
                 finish();
                 break;
-        }
-        if (runnable != null) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    runnable.run();
-                }
-            }, 350);
-
+            case R.id.nav_menu_help:
+                Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                Uri data = Uri.parse("mailto:643872807@qq.com");
+                intent1.setData(data);
+                startActivity(intent1);
+                break;
         }
         return true;
 
 
     }
 
-    public void switchFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
-
-    }
 
     //更新进度条
     @Override
@@ -341,7 +411,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onChange(Music music) {
         onPlay(music);
-        initNav();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlay(music);
         }
@@ -352,16 +421,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (music == null) {
             return;
         }
-        play_state(true);
-        if (music.getCover() != null) {
-            album.setImageBitmap(music.getCover());
-        } else {
+        updateState();
+        //更换控制条的显示
+        if (music.getType() == Music.Type.LOCAL) {
+            ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),
+                    album,
+                    new DisplayImageOptions.Builder()
+                            .cacheInMemory(true)
+                            .showImageOnFail(R.drawable.default_cover)
+                            .showImageForEmptyUri(R.drawable.default_cover)
+                            .showImageOnLoading(R.drawable.default_cover)
+                            .build());
+            ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),
+                    iv_bg,
+                    new DisplayImageOptions.Builder()
+                            .cacheInMemory(true)
+                            .showImageOnFail(R.drawable.default_cover)
+                            .showImageForEmptyUri(R.drawable.default_cover)
+                            .showImageOnLoading(R.drawable.default_cover)
+                            .build());
 
-            Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
-            album.setImageBitmap(cover);
+        } else {
+            if (music.getCover() != null) {
+                album.setImageBitmap(music.getCover());
+                iv_bg.setImageBitmap(music.getCover());
+            } else {
+                album.setImageResource(R.drawable.default_cover);
+                iv_bg.setImageResource(R.drawable.bg_header);
+            }
         }
-        tv_title.setText(Html.fromHtml(music.getTitle()));
-        tv_artist.setText(Html.fromHtml(music.getArtist()));
+        tv_title.setText(FileUtils.getTitle(music.getTitle()));
+        tv_artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
 
@@ -370,7 +460,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onPlayerPause() {
-        play_state(false);
+        updateState();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerPause();
         }
@@ -379,12 +469,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onPlayerResume() {
-        play_state(true);
+        updateState();
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerResume();
         }
-        play_pause.setVisibility(View.GONE);
-        pause_play.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -414,7 +502,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(0, R.anim.fragment_slide_down);
         ft.hide(mPlayFragment);
-        ft.commit();
+        ft.commitAllowingStateLoss();
         isPlayFragmentShow = false;
     }
 
@@ -429,23 +517,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             ft.show(mPlayFragment);
         }
-        ft.commit();
+        ft.commitAllowingStateLoss();
         isPlayFragmentShow = true;
     }
 
     View view = null;
 
-
-    //底部播放按钮状态显示控制
-    private void play_state(boolean isPlaying) {
-        if (isPlaying) {
-            pause_play.setVisibility(View.VISIBLE);
-            play_pause.setVisibility(View.GONE);
-        } else {
-            pause_play.setVisibility(View.GONE);
-            play_pause.setVisibility(View.VISIBLE);
-        }
-    }
 
     public static PlayService getmPlayService() {
         return mPlayService;
@@ -454,26 +531,49 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onResume() {
         super.onResume();
+        on = Preferences.isNightMode();
         initNav();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_my, menu);
         return true;
     }
 
+    /**
+     * 菜单点击事件
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: {
-//                if (isNavigatingMain()) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-//                } else super.onBackPressed();
-                return true;
-            }
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.action_search:
+                final Intent intent = new Intent(this, SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == Extras.TO_PLAYLISTDETAIL) {
+            if (playlistFragment != null) {
+                playlistFragment.updatePlaylists();
+            }
+        }
     }
 
 }

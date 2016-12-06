@@ -1,49 +1,40 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/info_secret_setting">
+    <PreferenceCategory android:title="@string/info_common_settings">
+
+        <CheckBoxPreference
+            android:key="night_mode"
+            android:summary="应用夜间模式到整个应用"
+            android:title="夜间模式" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="secret_switch"
-            android:title="@string/pref_title_social_recommendations"
-            android:summary="@string/pref_title_social"
-            />
-        <Preference
-            android:key="complete_info"
-            android:title="@string/pref_title_info"
-            />
-        <CheckBoxPreference
-            android:key="night_mode"
-            android:title="夜间模式"
-            android:summary="应用夜间模式到整个应用"
-            />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/info_network_setting">
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/setting_key_mobile_network_play"
-            android:title="@string/pref_title_wifi"
-            android:summary="@string/pref_title_wifi_summary"/>
+            android:key="wifi_mode"
+            android:summary="@string/pref_title_wifi_summary"
+            android:title="@string/pref_title_wifi" />
 
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_header_data_sync">
+    <PreferenceCategory android:title="反馈VS提升">
+        <EditTextPreference
+            android:title="用户反馈"
+            android:defaultValue="湖科音乐有什么缺点"
+            android:key="key_feedback"
+            android:summary="提bug，帮助改善app"
+           />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_data_sync">
 
-        <Preference android:title="@string/pref_title_clear"
+        <PreferenceScreen
             android:key="key_cache"
-            >
-        </Preference>
-        <Preference android:title="@string/pref_title_about"
+            android:title="@string/pref_title_clear"></PreferenceScreen>
+        <PreferenceScreen
+            android:key="key_update"
+            android:title="@string/pref_title_update"></PreferenceScreen>
+        <PreferenceScreen
             android:key="key_about"
-            >
-        </Preference>
+            android:title="@string/pref_title_about"></PreferenceScreen>
 
     </PreferenceCategory>
-
-
 
 
 </PreferenceScreen>

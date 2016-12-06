@@ -22,61 +22,32 @@ public final class ImageTools {
      * @param photoName
      * @param path
      */
-    public static void savePhotoToSDCard(Bitmap photoBitmap, String path, String photoName) {
-        if (checkSDCardAvailable()) {
-            File photoFile = new File(path, photoName);
-            FileOutputStream fileOutputStream = null;
-            try {
-                fileOutputStream = new FileOutputStream(photoFile);
-                if (photoBitmap != null) {
-                    if (photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
-                        fileOutputStream.flush();
-                    }
-                }
-            } catch (Exception e) {
-                photoFile.delete();
-                e.printStackTrace();
-            } finally {
-                try {
-                    fileOutputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+    public static boolean savePhotoToSDCard(Bitmap photoBitmap, String path, String photoName) {
+        boolean success=false;
+        File photoFile = new File(path, photoName);
+        if (photoFile.exists()){
+            photoFile.delete();
+        }
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(photoFile);
+            if (photoBitmap != null) {
+                if (photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
+                    fileOutputStream.flush();
+                    success=true;
                 }
             }
-        }
-    }
-
-    public static void savePhotoToSDCard(Bitmap photoBitmap, String path) {
-        if (checkSDCardAvailable()) {
-            File photoFile = new File(path);
-            FileOutputStream fileOutputStream = null;
+        } catch (Exception e) {
+            photoFile.delete();
+            e.printStackTrace();
+        } finally {
             try {
-                fileOutputStream = new FileOutputStream(photoFile);
-                if (photoBitmap != null) {
-                    if (photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
-                        fileOutputStream.flush();
-                    }
-                }
+                fileOutputStream.close();
             } catch (Exception e) {
-                photoFile.delete();
                 e.printStackTrace();
-            } finally {
-                try {
-                    fileOutputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
-    }
-
-    /**
-     * Check the SD card
-     *
-     * @return
-     */
-    public static boolean checkSDCardAvailable() {
-        return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+        return success;
     }
 
     /**
@@ -89,12 +60,13 @@ public final class ImageTools {
      */
     public static final Bitmap convertToBitmap(String path, int w, int h) {
         try {
+            Bitmap bitmap = null;
             BitmapFactory.Options opts = new BitmapFactory.Options();
             // 设置为ture只获取图片大小
             opts.inJustDecodeBounds = true;
             opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
             // 返回为空
-            BitmapFactory.decodeFile(path, opts);
+            bitmap = BitmapFactory.decodeFile(path, opts);
             int width = opts.outWidth;
             int height = opts.outHeight;
             float scaleWidth = 0.f, scaleHeight = 0.f;

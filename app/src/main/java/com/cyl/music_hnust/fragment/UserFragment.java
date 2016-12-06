@@ -1,15 +1,15 @@
 package com.cyl.music_hnust.fragment;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.User;
-import com.cyl.music_hnust.model.UserStatus;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import com.cyl.music_hnust.model.user.User;
+import com.cyl.music_hnust.model.user.UserStatus;
 
 /**
  * 作者：yonglong on 2016/8/8 17:47
@@ -18,8 +18,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class UserFragment extends BaseFragment implements View.OnClickListener {
 
-    private TextView user_name, user_num, user_college,
-            user_class, user_major, nick, email, phone;
+    private TextView nick, email, phone;
 
     private CardView user_logout;
 
@@ -34,13 +33,13 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void initDatas() {
         if (UserStatus.getstatus(getActivity())) {
+
             user = UserStatus.getUserInfo(getActivity());
-            user_num.setText(user.getUser_id());
-            user_name.setText(user.getUser_name());
-            user_class.setText(user.getUser_class());
-            user_major.setText(user.getUser_major());
-            user_college.setText(user.getUser_college());
-            nick.setText(user.getNick());
+            if (user.getNick()==null||user.getNick().length()<=0){
+                nick.setText("");
+            }else {
+                nick.setText(user.getNick());
+            }
             email.setText(user.getUser_email());
             phone.setText(user.getPhone());
         }
@@ -53,11 +52,6 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void initViews() {
-        user_num = (TextView) rootView.findViewById(R.id.user_num);
-        user_name = (TextView) rootView.findViewById(R.id.user_name);
-        user_class = (TextView) rootView.findViewById(R.id.user_class);
-        user_major = (TextView) rootView.findViewById(R.id.user_major);
-        user_college = (TextView) rootView.findViewById(R.id.user_college);
 
         nick = (TextView) rootView.findViewById(R.id.nick);
         email = (TextView) rootView.findViewById(R.id.email);
@@ -70,23 +64,15 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.logout:
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("确认注销?")
-                        .setContentText("注销后不能享有更多功能!")
-                        .setConfirmText("注销")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("是否注销？")
+                        .setMessage("注销后不能享有更多功能！")
+                        .setNegativeButton("取消",null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                                // reuse previous dialog instance
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                                 logout();
-                            }
-                        })
-                        .setCancelText("取消")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
                             }
                         })
                         .show();

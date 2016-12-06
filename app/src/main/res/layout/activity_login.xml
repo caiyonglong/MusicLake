@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@drawable/bg_login"
+    android:background="@drawable/music_five"
     tools:context=".activity.LoginActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -30,23 +30,11 @@
         android:layout_alignTop="@+id/cv"
         android:layout_marginTop="25dp"
         android:layout_alignEnd="@id/cv"
+        android:layout_alignRight="@+id/cv"
+        android:layout_marginRight="-20dp"
         android:layout_marginEnd="-20dp"
         />
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/qqlogin"
-        android:elevation="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fabSize="normal"
-        app:fab_icon="@drawable/qq"
-        app:fab_colorNormal="@color/grean"
-        app:fab_colorPressed="@color/lightGreen"
-        android:transitionName="loginFab"
-        android:layout_alignBottom="@+id/cv"
-        android:layout_marginBottom="25dp"
-        android:layout_alignEnd="@id/cv"
-        android:layout_marginEnd="-30dp"
-        />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:elevation="10dp"
@@ -65,6 +53,7 @@
         android:id="@+id/cv"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -76,6 +65,7 @@
                 android:layout_height="45dp">
                 <View
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_width="8dp"
                     android:layout_height="match_parent"
                     android:background="#2fa881"
@@ -85,6 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
                     android:text="@string/login"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="20sp"
@@ -92,9 +83,11 @@
                     />
             </RelativeLayout>
             <LinearLayout
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:paddingStart="40dp"
+                android:paddingLeft="40dp"
                 android:paddingEnd="30dp"
+                android:paddingRight="30dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -118,7 +111,9 @@
             <LinearLayout
                 android:layout_marginTop="10dp"
                 android:paddingStart="40dp"
+                android:paddingLeft="40dp"
                 android:paddingEnd="30dp"
+                android:paddingRight="30dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -137,33 +132,15 @@
                         />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                >
-                <Button
-                    android:id="@+id/register"
-                    android:padding="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:background="@drawable/btn_bg"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/register"
-                    />
-            </LinearLayout>
+
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:paddingStart="40dp"
+                android:paddingLeft="40dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
+                android:orientation="vertical"
                 >
                <TextView
                    android:text="提示：用户名为注册邮箱or学号\n支持qq登录"
@@ -172,6 +149,41 @@
             </LinearLayout>
 
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/qqlogin"
+        android:elevation="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        app:fab_icon="@drawable/qq"
+        app:fab_colorNormal="@color/grean"
+        app:fab_colorPressed="@color/lightGreen"
+        android:transitionName="loginFab"
+        android:layout_above="@+id/cv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp" />
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/cv"
+        android:layout_marginTop="12dp">
+        <Button
+            android:id="@+id/register"
+            android:padding="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:background="@drawable/btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/register" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

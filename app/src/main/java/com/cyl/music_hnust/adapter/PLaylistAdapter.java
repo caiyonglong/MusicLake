@@ -2,13 +2,15 @@ package com.cyl.music_hnust.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.LocalPlaylist;
+import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.utils.FormatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,26 +23,32 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHolder> {
 
     private Context context;
-    private List<LocalPlaylist> localplaylists = new ArrayList<>();
-    private OnRecyclerItemClick mOnRecyclerItemClickListener;
+    private List<Playlist> localplaylists = new ArrayList<>();
+    private int VIEWTYPE = 1;
 
-    public List<LocalPlaylist> getLocalplaylists() {
-        return localplaylists;
+    public interface OnItemClickListener {
+        void onItemClick(View view, Playlist playlist);
     }
 
-    public void setLocalplaylists(List<LocalPlaylist> localplaylists) {
+    public OnItemClickListener mOnItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
+
+
+    public void setLocalplaylists(List<Playlist> localplaylists) {
         this.localplaylists = localplaylists;
     }
 
-    public PlaylistAdapter(Context context, List<LocalPlaylist> localplaylists, OnRecyclerItemClick mOnRecyclerItemClickListener) {
+    public PlaylistAdapter(Context context, List<Playlist> localplaylists) {
         this.context = context;
         this.localplaylists = localplaylists;
-        this.mOnRecyclerItemClickListener = mOnRecyclerItemClickListener;
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_grid, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_grid, parent,false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -48,18 +56,23 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHo
 
     @Override
     public void onBindViewHolder(ItemHolder holder, final int position) {
-        LocalPlaylist localItem = localplaylists.get(position);
 
+        Playlist localItem = localplaylists.get(position);
+        String time =localItem.getId();
+
+        Log.e("时间====","===="+time+"===="+localItem.getId());
         holder.title.setText(localItem.getName());
-        holder.artist.setText(localItem.getId());
+        holder.time.setText(FormatUtil.distime(Long.parseLong(time)));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnRecyclerItemClickListener!=null){
-                    mOnRecyclerItemClickListener.onItemClick(v,localplaylists.get(position));
+                if(mOnItemClickListener!=null){
+                    mOnItemClickListener.onItemClick(v,localplaylists.get(position));
                 }
+
             }
         });
+
     }
 
     @Override
@@ -68,16 +81,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHo
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder{
-        protected TextView title, artist;
+        protected TextView title, time;
 
         public ItemHolder(View view) {
             super(view);
             this.title = (TextView) view.findViewById(R.id.album_title);
-            this.artist = (TextView) view.findViewById(R.id.album_artist);
+            this.time = (TextView) view.findViewById(R.id.album_artist);
         }
-    }
-
-    public interface OnRecyclerItemClick {
-        void onItemClick(View View,LocalPlaylist localPlaylist);
     }
 }

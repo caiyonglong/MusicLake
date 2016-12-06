@@ -79,25 +79,7 @@ public class DataClearmanager {
         deleteFilesByDirectory(new File(filePath));
     }
 
-    /**
-     * * 清除本应用所有的数据 * *
-     *
-     * @param context
-     * @param filepath
-     */
-    public static void cleanApplicationData(Context context, String... filepath) {
-        cleanInternalCache(context);
-        cleanExternalCache(context);
-        cleanDatabases(context);
-        cleanSharedPreference(context);
-        cleanFiles(context);
-        if (filepath == null) {
-            return;
-        }
-        for (String filePath : filepath) {
-            cleanCustomCache(filePath);
-        }
-    }
+
 
     /**
      * * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * *
@@ -214,4 +196,23 @@ public class DataClearmanager {
         }
         return getFormatSize(cacheSize);
     }
+
+    /**
+     * * 清除本应用中的所有缓存数据
+     *
+     * @param context
+     */
+    public static void cleanApplicationData(Context context) {
+        cleanInternalCache(context);
+        cleanExternalCache(context);
+        cleanFiles(context);
+//        cleanDatabases(context); 数据库暂时不清
+//        cleanSharedPreference(context);
+        cleanFiles(context);
+        //清除缓存的歌词
+        cleanCustomCache(FileUtils.getLrcDir());
+        //清除缓存的用户头像
+        cleanCustomCache(FileUtils.getImageDir());
+    }
+
 }

@@ -66,7 +66,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:text="基本信息"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/poi_field_size" />
 
                 <LinearLayout
@@ -80,7 +80,7 @@
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="POI ID(_id)"
                         android:visibility="gone"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="地理位置"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="经纬度"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="TextView"
-                        android:textColor="@color/text_color" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="当前地址"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -159,7 +159,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="TextView"
-                        android:textColor="@color/text_color" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -173,7 +173,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="位置信息创建时间"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -182,7 +182,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="TextView"
-                        android:textColor="@color/text_color" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="位置信息更新时间"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -219,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:text="距当前距离"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/poi_title_size" />
 
                     <TextView
@@ -239,7 +239,7 @@
                     android:background="@color/grey"
                     android:visibility="gone"
                     android:text="自定义字段"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/poi_field_size" />
             </LinearLayout>
 

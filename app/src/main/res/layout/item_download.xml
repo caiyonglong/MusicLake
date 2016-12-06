@@ -3,49 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/music_container"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
+    android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/main_white"
     app:cardCornerRadius="2dp"
     app:cardElevation="5dp"
-    android:clickable="true"
     app:cardPreventCornerOverlap="true"
-
     app:cardUseCompatPadding="true"
     app:contentPadding="16dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_icon"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ico" />-->
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/btn_control"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_name"
-                android:textColor="@color/grey"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="文件名称" />
+                android:text="文件名称"
+                android:textColor="@color/black" />
+
             <TextView
                 android:id="@+id/tv_per"
-                android:textColor="@color/grey"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10%" />
+                android:text="10%"
+                android:textColor="@color/grey" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -55,19 +55,16 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_stop"
-            android:backgroundTint="@color/setting_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="暂停" />
 
-        <Button
-            android:id="@+id/btn_continue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="继续"
-            android:visibility="gone" />
+            android:id="@+id/btn_control"
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_bg"
+            android:text="下载中"
+            android:textColor="@color/white" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

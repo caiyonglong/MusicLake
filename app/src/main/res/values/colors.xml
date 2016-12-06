@@ -34,8 +34,8 @@
     <color name="bg_color_blue_light">#84B5CA</color>
 
     <!--应用基础色-->
-    <color name="colorPrimary">#4A90E2</color>
-    <color name="colorPrimaryDark">#2196F3</color>
+    <color name="colorPrimary">#259b24</color>
+    <color name="colorPrimaryDark">#259b24</color>
     <color name="colorAccent">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="gray">#9e9e9e</color>
@@ -47,6 +47,16 @@
     <color name="colorPrimaryBlack">#000000</color>
     <color name="colorPrimaryDarkBlack">#000000</color>
     <color name="colorAccentBlack">#ffffff</color>
+
+
+
+    <color name="pink_transparent">#44700d39</color>
+    <color name="green_transparent">#44375a1f</color>
+    <color name="blue_transparent">#44293576</color>
+    <color name="red_transparent">#447f3907</color>
+    <color name="purple_transparent">#44432677</color>
+
+    <color name="black_translucent">#66000000</color>
 
 
 

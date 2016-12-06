@@ -22,7 +22,7 @@ public class Constants {
     //用户名
     public static final String USERNAME = "username";
     //性别
-    public static final String USER_SEX = "use_sex";
+    public static final String USER_SEX = "user_sex";
     //性别
     public static final String USER_IMG = "user_img";
     public static final String USER_COLLEGE = "user_college";
@@ -33,6 +33,9 @@ public class Constants {
     public static final String SECRET = "secret";
 
 
+    //更新用户信息
+
+    public static final String UPDATE_USER = "updateUserInfo";
 
     //用户id
     public static final String USER_ID = "user_id";
@@ -65,6 +68,11 @@ public class Constants {
     public static final String SONG_ADD = "addSong";
     public static final String SONG = "song";
 
+    //下载
+    public static final String UPDATEAPP = "updateApp";
+
+    //歌单
+    public static final String PLAYLIST_ID = "playlist";
 
 
 
@@ -126,4 +134,5 @@ public class Constants {
     public static final String DOWNLOADMANAGEACTION = "com.cyl.multithreadeddownload.DownloadActivity";
 
 
+    public static final String DOWNLOAD_FILENAME = "hkmusic.apk";
 }

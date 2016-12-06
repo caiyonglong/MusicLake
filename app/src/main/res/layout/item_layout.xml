@@ -13,6 +13,7 @@
 
     <TextView
         android:id="@+id/poi_value_id"
+        android:textColor="@color/setting_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_left" />

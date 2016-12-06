@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login"
+    android:background="@drawable/music_five"
     tools:context=".activity.RegisterActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -27,8 +27,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-25dp"
         android:elevation="5dp"
+        app:fab_colorNormal="@color/grean"
+        app:fab_colorPressed="@color/lightGreen"
         app:fab_icon="@drawable/ic_clear_white_24dp"
         app:fabSize="normal"
+        android:transitionName="transition_fab"
         android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/cv_add"/>
     <ProgressBar
@@ -41,17 +44,17 @@
         android:visibility="gone"/>
     <android.support.v7.widget.CardView
         android:id="@+id/cv_add"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="6dp"
         app:cardElevation="3dp"
+        android:transitionName="transition_cardView"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
+            android:id="@+id/first"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -61,26 +64,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp">
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:background="#2fa881" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
                     android:text="用户注册"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="match_parent"
+                    android:background="#2fa881"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/view" />
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingEnd="30dp"
                 android:paddingStart="30dp">
@@ -93,17 +100,18 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="请输入有效邮箱，便于找回密码"
+                        android:hint="请输入有效邮箱"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/black"
                         android:textSize="13sp" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:paddingEnd="30dp"
                 android:paddingStart="30dp">
 
@@ -116,15 +124,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/Username"
-                        android:inputType="textPersonName"
+                        android:inputType="text"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="13sp"
+                        android:id="@+id/editText" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingEnd="30dp"
                 android:paddingStart="30dp">
@@ -145,17 +153,105 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/success"
+                android:id="@+id/publish"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/btn_bg"
                 android:elevation="6dp"
-                android:text="@string/next" />
+                android:transitionName="transition_next"
+                android:text="@string/register_publish" />
 
         </LinearLayout>
+
+        <!--<LinearLayout-->
+
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/second"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="20dp">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="45dp">-->
+
+                <!--<View-->
+                    <!--android:layout_width="8dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:background="#2fa881" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginStart="30dp"-->
+                    <!--android:text="完善资料"-->
+                    <!--android:textColor="?attr/colorPrimary"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:textStyle="bold" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:paddingEnd="30dp"-->
+                <!--android:paddingStart="30dp">-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--<EditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="电话"-->
+                        <!--android:inputType="text"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="13sp" />-->
+                <!--</android.support.design.widget.TextInputLayout>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:paddingEnd="30dp"-->
+                <!--android:paddingStart="30dp">-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--<EditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="昵称"-->
+                        <!--android:inputType="text"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="13sp" />-->
+                <!--</android.support.design.widget.TextInputLayout>-->
+            <!--</LinearLayout>-->
+
+
+            <!--<Button-->
+                <!--android:id="@+id/success"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:background="@drawable/btn_bg"-->
+                <!--android:elevation="6dp"-->
+                <!--android:text="@string/register_publish" />-->
+
+        <!--</LinearLayout>-->
+
     </android.support.v7.widget.CardView>
+
+
 
 
 

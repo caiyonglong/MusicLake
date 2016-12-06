@@ -1,16 +1,15 @@
 package com.cyl.music_hnust.utils;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.widget.Toast;
+import android.text.TextUtils;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.db.DBDao;
-import com.cyl.music_hnust.model.LocalPlaylist;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.dataloaders.db.DBDao;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.Playlist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +21,17 @@ import java.util.List;
  * 音乐扫描工具类
  */
 public class MusicUtils {
+
+
     /**
      * 扫描本地歌曲
      */
-    public static void scanMusic(Context context, List<Music> musicList){
-        musicList.clear();
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    public static Music getMusicForID(Context context, long musicid){
+        Music music = new Music();
+
+        Cursor cursor = makeSongCursor(context ,"_id=" + String.valueOf(musicid), null);
         if (cursor == null) {
-            return;
+            return null;
         }
         while (cursor.moveToNext()) {
             // 是否为音乐
@@ -53,7 +53,7 @@ public class MusicUtils {
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
             String year = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)));
-            Music music = new Music();
+
             music.setId(id);
             music.setType(Music.Type.LOCAL);
             music.setTitle(title);
@@ -66,12 +66,27 @@ public class MusicUtils {
             music.setFileName(fileName);
             music.setFileSize(fileSize);
             music.setYear(year);
-            musicList.add(music);
         }
         cursor.close();
+        return music;
     }
 
-    private static String getCoverUri(Context context, long albumId) {
+    public static Cursor makeSongCursor(Context context, String selection, String[] paramArrayOfString) {
+        String selectionStatement = "is_music=1 AND title != ''";
+        final String songSortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+
+        if (!TextUtils.isEmpty(selection)) {
+            selectionStatement = selectionStatement + " AND " + selection;
+        }
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null,
+                selectionStatement, paramArrayOfString, songSortOrder);
+
+        return cursor;
+    }
+
+
+    public static String getCoverUri(Context context, long albumId) {
         String uri = null;
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/albums/" + albumId),
@@ -90,39 +105,9 @@ public class MusicUtils {
      * @param context
      * @return
      */
-    public static List<LocalPlaylist> scanPlaylist(Context context){
+    public static List<Playlist> scanPlaylist(Context context){
         DBDao dbDao = new DBDao(context);
         return dbDao.getPlaylist();
-    }
-
-    /**
-     * 新增歌单
-     * @param context
-     * @param playlist
-     * @return
-     */
-    public static Boolean newPlaylist(Context context,LocalPlaylist playlist){
-        DBDao dbDao = new DBDao(context);
-        return dbDao.newPlaylist(playlist);
-    }
-    /**
-     * 扫描本地歌曲
-     */
-    public static void getMusicForPlaylist(Context context,String playlist_id, List<Music> musicList){
-        musicList.clear();
-        DBDao dbDao = new DBDao(context);
-        dbDao.queryPlaylist(playlist_id,musicList);
-        dbDao.close();
-    }
-    /**
-     * 添加歌曲到歌单
-     */
-    public static void addToPlaylist(Context context,String playlist_id, Music music){
-        DBDao dbDao = new DBDao(context);
-        dbDao.add(playlist_id,music);
-        dbDao.close();
-        final String message = "添加成功！";
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -177,58 +162,6 @@ public class MusicUtils {
         return musicList;
     }
 
-    /**
-     * 获取音乐专辑歌曲
-     * @param context
-     * @return
-     */
-    public static List<Music> getAlbumSongs(Context context,String albumID) {
-        List<Music> musicList = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
-//        final String albumSongSortOrder = PreferencesUtility.getInstance(context).getAlbumSongSortOrder();
-        String string = "is_music=1 AND title != '' AND album_id=" + albumID;
-        Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null, string, null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if (cursor == null) {
-            return musicList;
-        }
-        while (cursor.moveToNext()) {
-            // 是否为音乐
-            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-            if (isMusic == 0) {
-                continue;
-            }
-            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-            String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
-            String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String unknown = context.getString(R.string.unknown);
-            artist = artist.equals("<unknown>") ? unknown : artist;
-            String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
-            long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-            String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-            long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-            String coverUri = getCoverUri(context, albumId);
-//            String coverUri = String.valueOf(albumId);
-            String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
-            long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-            String year = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)));
-            Music music = new Music();
-            music.setId(id);
-            music.setType(Music.Type.LOCAL);
-            music.setTitle(title);
-            music.setArtist(artist);
-            music.setAlbum(album);
-            music.setAlbumId(albumId);
-            music.setDuration(duration);
-            music.setUri(uri);
-            music.setCoverUri(coverUri);
-            music.setFileName(fileName);
-            music.setFileSize(fileSize);
-            music.setYear(year);
-            musicList.add(music);
-        }
-        cursor.close();
-        return musicList;
-    }
+
+
 }

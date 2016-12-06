@@ -5,8 +5,8 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.application.MyApplication;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.MyApplication;
+import com.cyl.music_hnust.model.music.Music;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -27,6 +27,10 @@ public class FileUtils {
         String dir = getAppDir() + "Music/";
         return mkdirs(dir);
     }
+    public static String getImageDir() {
+        String dir = getAppDir() + "cache/";
+        return mkdirs(dir);
+    }
 
     public static String getLrcDir() {
         String dir = getAppDir() + "Lyric/";
@@ -44,7 +48,7 @@ public class FileUtils {
     }
 
     public static String getRelativeMusicDir() {
-        String dir = "PonyMusic/Music/";
+        String dir = "hkMusic/Music/";
         return mkdirs(dir);
     }
 
@@ -91,8 +95,17 @@ public class FileUtils {
         }
         return artist + " - " + title + Constants.FILENAME_LRC;
     }
+    public static String getTitle(String title) {
+        title = stringFilter(title);
+        if (TextUtils.isEmpty(title)) {
+            title = MyApplication.getInstance().getString(R.string.unknown);
+        }
+        return title;
+    }
 
     public static String getArtistAndAlbum(String artist, String album) {
+        artist = stringFilter(artist);
+        album = stringFilter(album);
         if (TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
             return "";
         } else if (!TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
@@ -104,6 +117,7 @@ public class FileUtils {
         }
     }
 
+
     /**
      * 过滤特殊字符(\/:*?"<>|)
      */
@@ -111,7 +125,8 @@ public class FileUtils {
         if (str == null) {
             return null;
         }
-        String regEx = "[\\/:*?\"<>|]";
+        String regEx  = "<[^>]+>";
+//        String regEx = "[\\/:*?\"<>|]";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(str);
         return m.replaceAll("").trim();

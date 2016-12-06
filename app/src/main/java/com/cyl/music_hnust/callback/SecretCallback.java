@@ -2,7 +2,7 @@ package com.cyl.music_hnust.callback;
 
 import android.util.Log;
 
-import com.cyl.music_hnust.model.SecretInfo;
+import com.cyl.music_hnust.model.community.SecretInfo;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 

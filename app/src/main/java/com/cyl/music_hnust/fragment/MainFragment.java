@@ -33,9 +33,9 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initDatas() {
-        mToolbar.setTitle("湖科音乐");
+//        mToolbar.setTitle("湖科音乐");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         final ActionBar toggle = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
         toggle.setDisplayHomeAsUpEnabled(true);
@@ -70,9 +70,9 @@ public class MainFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new SongsFragment(), "本地音乐");
+        adapter.addFragment(new LocalFragment(), "本地音乐");
         adapter.addFragment(new OnlineFragment(), "在线音乐");
-        adapter.addFragment(new PlaylistFragment(), "我的歌单");
+        adapter.addFragment(new CommunityFragment().newInstance(1), "音乐湖");
         viewPager.setAdapter(adapter);
     }
 

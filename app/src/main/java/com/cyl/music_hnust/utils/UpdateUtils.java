@@ -1,93 +1,121 @@
-//package com.cyl.music_hnust.utils;
-//
-//import android.app.Activity;
-//import android.app.DownloadManager;
-//import android.content.Context;
-//import android.content.DialogInterface;
-//import android.net.Uri;
-//import android.support.v7.app.AlertDialog;
-//import android.webkit.MimeTypeMap;
-//
-//import com.cyl.music_hnust.BuildConfig;
-//import com.cyl.music_hnust.model.UpdateInfo;
-//import com.google.gson.Gson;
-//import com.google.gson.JsonSyntaxException;
-//
-//import im.fir.sdk.FIR;
-//import im.fir.sdk.VersionCheckCallback;
-//
-//public class UpdateUtils {
-//    public static long sDownloadId = 0;
-//
-//    public static void checkUpdate(final Activity activity) {
-//        FIR.checkForUpdateInFIR(ApiKey.FIR_KEY, new VersionCheckCallback() {
-//            @Override
-//            public void onStart() {
-////                if (activity instanceof AboutActivity) {
-////                    ToastUtils.show(activity,"正在检查更新");
-////                }
-//            }
-//
-//            @Override
-//            public void onSuccess(String versionJson) {
-//                if (activity.isFinishing()) {
-//                    return;
-//                }
-//                Gson gson = new Gson();
-//                UpdateInfo updateInfo;
-//                try {
-//                    updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
-//                } catch (JsonSyntaxException e) {
-//                    e.printStackTrace();
-//                    return;
-//                }
-//                int version = Integer.valueOf(updateInfo.version);
-//                if (version > BuildConfig.VERSION_CODE) {
-//                    updateDialog(activity, updateInfo);
-//                } else {
-////                    if (activity instanceof AboutActivity) {
-////                        ToastUtils.show(activity,"已是最新版本");
-////                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFail(Exception exception) {
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//            }
-//        });
-//    }
-//
-//    private static void updateDialog(final Activity activity, final UpdateInfo updateInfo) {
-//        String fileSize = FileUtils.b2mb(updateInfo.binary.fsize) + "MB";
-//        String message = "v " + updateInfo.versionShort + "(" + fileSize + ")" + "\n\n" + updateInfo.changelog;
-//        new AlertDialog.Builder(activity)
-//                .setTitle("发现新版本")
-//                .setMessage(message)
-//                .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        download(activity, updateInfo);
-//                    }
-//                })
-//                .setNegativeButton("稍后提醒", null)
-//                .show();
-//    }
-//
-//    private static void download(Activity activity, UpdateInfo updateInfo) {
-//        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-//        Uri uri = Uri.parse(updateInfo.installUrl);
-//        DownloadManager.Request request = new DownloadManager.Request(uri);
-//        String fileName = "MusicHnust_" + updateInfo.versionShort + ".apk";
-//        request.setDestinationInExternalPublicDir("Download", fileName);
-//        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(updateInfo.installUrl));
-//        request.allowScanningByMediaScanner();
-//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-//        request.setAllowedOverRoaming(false);// 不允许漫游
-//        sDownloadId = downloadManager.enqueue(request);
-//        ToastUtils.show(activity,"正在后台下载");
-//    }
-//}
+package com.cyl.music_hnust.utils;
+
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
+
+import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.callback.UpdateCallback;
+import com.cyl.music_hnust.model.download.UpdateInfo;
+import com.zhy.http.okhttp.OkHttpUtils;
+
+import okhttp3.Call;
+
+/**
+ * 功能: 下载工具类
+ * 作者：yonglong on 2016/9/22 14:36
+ * 邮箱：643872807@qq.com
+ * 版本：2.5
+ */
+public class UpdateUtils {
+    private static Context mContext;
+    public static void init(Context context) {
+        mContext = context;
+    }
+
+    //检查更新
+    public static void checkUpdate(final Activity activity) {
+
+        OkHttpUtils
+                .post()
+                .url(Constants.DEFAULT_URL)
+                .addParams(Constants.FUNC, Constants.UPDATEAPP)
+                .build()
+                .execute(new UpdateCallback() {
+                             @Override
+                             public void onError(Call call, Exception e) {
+                                 ToastUtils.show(mContext, R.string.error_connection);
+                             }
+
+                             @Override
+                             public void onResponse(UpdateInfo response) {
+
+                                 double version = response.getVersion();
+                                 double preVersion = 0;
+                                 try {
+                                     preVersion = Double.parseDouble(getVersion());
+                                 } catch (PackageManager.NameNotFoundException e) {
+                                     e.printStackTrace();
+                                 }
+                                 if (version <= preVersion) {
+                                     ToastUtils.show(mContext, "暂无更新");
+                                 } else {
+                                     updateDialog(activity, response);
+                                 }
+                             }
+
+                         }
+
+                );
+    }
+
+    private static void updateDialog(final Activity activity, final UpdateInfo updateInfo) {
+        String message = "版本号：" + updateInfo.getVersion() + "\n" +
+                "更新日志: " + updateInfo.getChangelog();
+        new AlertDialog.Builder(activity)
+                .setTitle("发现新版本")
+                .setMessage(message)
+                .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        download(activity, updateInfo);
+                    }
+                })
+                .setNegativeButton("稍后提醒", null)
+                .show();
+    }
+
+    /**
+     * 获取当前程序的版本号
+     */
+    public static String getVersion() throws PackageManager.NameNotFoundException {
+        //获取packagemanager的实例
+        PackageManager packageManager = mContext.getPackageManager();
+        //getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageInfo packageInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
+        return packageInfo.versionName;
+    }
+
+    public static long sDownloadId = 0;
+
+    private static void download(Activity activity, UpdateInfo updateInfo) {
+
+        try {
+
+            DownloadManager manager = (DownloadManager) mContext
+                    .getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(
+                    Uri.parse(updateInfo.download_url));
+            request.setDescription("更新APP");
+            request.allowScanningByMediaScanner();// 设置可以被扫描到
+            request.setVisibleInDownloadsUi(true);// 设置下载可见
+            request.setNotificationVisibility(
+                    DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);//下载完成后通知栏任然可见
+//        String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));// 解析fileName
+            request.setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS, Constants.DOWNLOAD_FILENAME);// 设置下载位置，sdcard/Download/fileName
+            sDownloadId = manager.enqueue(request);// 加入下载并取得下载ID
+            ToastUtils.show(mContext, "正在后台下载");
+
+        } catch (Exception e) {
+            ToastUtils.show(mContext, "下载异常，请稍后重试！");
+
+        }
+    }
+}

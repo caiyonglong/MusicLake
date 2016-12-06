@@ -7,8 +7,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.music_hnust.model.LocalPlaylist;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.dataloaders.PlaylistLoader;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.Playlist;
 import com.cyl.music_hnust.utils.MusicUtils;
 
 import java.util.List;
@@ -20,16 +21,17 @@ import java.util.List;
  */
 public class AddPlaylistDialog extends DialogFragment {
 
-//    public static AddPlaylistDialog newInstance(Music music) {
-//        List<Music> musicList = new ArrayList<>();
-//        musicList.add(music);
-//        return newInstance(musicList);
+//    public static AddPlaylistDialog newInstance(Music song) {
+//        long[] songs = new long[1];
+//        songs[0] = song.getId();
+//        return newInstance(songs);
 //    }
 
-    public static AddPlaylistDialog newInstance(Music music) {
+
+    public static AddPlaylistDialog newInstance(Music song) {
         AddPlaylistDialog dialog = new AddPlaylistDialog();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("music", music);
+        bundle.putSerializable("music", song);
         dialog.setArguments(bundle);
         return dialog;
     }
@@ -38,7 +40,7 @@ public class AddPlaylistDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final List<LocalPlaylist> playlists = MusicUtils.scanPlaylist(getActivity());
+        final List<Playlist> playlists = MusicUtils.scanPlaylist(getActivity());
         CharSequence[] chars = new CharSequence[playlists.size() + 1];
         chars[0] = "新建歌单";
 
@@ -49,12 +51,13 @@ public class AddPlaylistDialog extends DialogFragment {
             @Override
             public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                 Music music = (Music) getArguments().getSerializable("music");
+//                long[] songs = getArguments().getSerializable("songs");
                 if (which == 0) {
-//                    CreatePlaylistDialog.newInstance(songs).show(getActivity().getSupportFragmentManager(), "CREATE_PLAYLIST");
+                    CreatePlaylistDialog.newInstance(music).show(getActivity().getSupportFragmentManager(), "新建歌单");
                     return;
                 }
 
-                MusicUtils.addToPlaylist(getActivity(),playlists.get(which-1).getId(),music);
+                PlaylistLoader.addToPlaylist(getActivity(),playlists.get(which-1).getId(),music);
                 dialog.dismiss();
 
             }

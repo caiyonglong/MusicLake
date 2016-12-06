@@ -1,24 +1,25 @@
 package com.cyl.music_hnust.fragment;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.activity.MainActivity;
-import com.cyl.music_hnust.activity.SearchActivity;
-import com.cyl.music_hnust.activity.SettingsActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.adapter.MyStaggeredViewAdapter;
+import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.music.Album;
+import com.cyl.music_hnust.model.music.Artist;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -30,21 +31,33 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnItemClickListener {
+public class SongsFragment extends BaseFragment {
 
     RecyclerView mRecyclerView;
     TextView tv_empty;
+    LinearLayout loading;
+    private  LocalMusicAdapter mAdapter;
+    private  MyStaggeredViewAdapter adapter;
+    private  List<Music> musicInfos = new ArrayList<>();
+    private  List<Album> albums = new ArrayList<>();
+    private  List<Artist> artists = new ArrayList<>();
 
-    private static LocalMusicAdapter mAdapter;
-    private static List<Music> musicInfos = new ArrayList<>();
+    int type = 0;
 
+    public static SongsFragment newInstance(int type) {
+
+        Bundle args = new Bundle();
+        args.putInt(Extras.SONG_TYPE, type);
+        SongsFragment fragment = new SongsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     /**
      * 设置监听事件
      */
     @Override
     protected void listener() {
-        mAdapter.setOnItemClickListener(this);
     }
 
     /**
@@ -52,11 +65,9 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
      */
     @Override
     protected void initDatas() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
-        reloadAdapter();
-        mRecyclerView.setAdapter(mAdapter);
-
+        type = getArguments().getInt(Extras.SONG_TYPE);
+        Log.e("tppppp",type+"===");
+        new loadSongs().execute("");
     }
 
     /**
@@ -75,23 +86,16 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
     @Override
     public void initViews() {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
+        loading = (LinearLayout) rootView.findViewById(R.id.loading);
 
-        if (musicInfos.size() == 0) {
-            tv_empty.setText("请稍后，本地音乐加载中...");
-            tv_empty.setVisibility(View.VISIBLE);
-        } else {
-            tv_empty.setVisibility(View.GONE);
-        }
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
-        if (getmPlayService()!= null) {
+        if (getmPlayService() != null) {
             mRecyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
         }
     }
@@ -102,47 +106,18 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_my, menu);
-    }
 
-    /**
-     * 菜单点击事件
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                final Intent intent = new Intent(getActivity(), SearchActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                break;
-            case R.id.action_settings:
-                final Intent intent1 = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent1);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    //recyclerview item点击事件
-    @Override
-    public void onItemClick(View view, int position) {
-        MainActivity.mPlayService.setMyMusicList(musicInfos);
-        MainActivity.mPlayService.playMusic(position);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void reloadAdapter() {
+    private void reloadAdapter(int type) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
-                musicInfos = MusicUtils.getAllSongs(getActivity());
+                try {
+                    musicInfos = MusicUtils.getAllSongs(getActivity());
+                    albums = MusicLoader.getAllAlbums(getActivity());
+                    artists = MusicLoader.getAllArtists(getActivity());
+                } catch (Exception e) {
+
+                }
                 return null;
             }
 
@@ -159,6 +134,40 @@ public class SongsFragment extends BaseFragment implements LocalMusicAdapter.OnI
             }
         }.execute();
     }
+    private class loadSongs extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+            if (getActivity() != null){
+                if (type == 0) {
+                    musicInfos = MusicUtils.getAllSongs(getActivity());
+                    mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
+                } else if (type == 1){
+                    albums = MusicLoader.getAllAlbums(getActivity());
+                    adapter = new MyStaggeredViewAdapter(getActivity(),albums,artists,true);
+                } else {
+                    artists = MusicLoader.getAllArtists(getActivity());
+                    adapter = new MyStaggeredViewAdapter(getActivity(),albums,artists,false);
+                }
+            }
+            return "Executed";
+        }
 
+        @Override
+        protected void onPostExecute(String result) {
+            loading.setVisibility(View.GONE);
+            if (type == 0) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                mRecyclerView.setAdapter(mAdapter);
+            } else {
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                mRecyclerView.setAdapter(adapter);
+            }
+        }
+        @Override
+        protected void onPreExecute() {
+            loading.setVisibility(View.VISIBLE);
+            tv_empty.setText("请稍后，努力加载中...");
+        }
+    }
 }

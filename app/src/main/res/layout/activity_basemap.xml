@@ -43,44 +43,12 @@
             android:textColor="@color/blueGrey"
             android:visibility="gone" />
 
-        <RadioGroup
-            android:id="@+id/gps_radio_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|left"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/grey"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/gps_locate_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/gpslocate"
-                android:textColor="@android:color/black" />
-
-            <RadioButton
-                android:id="@+id/gps_follow_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gpsfollow"
-                android:textColor="@android:color/black" />
-
-            <RadioButton
-                android:id="@+id/gps_rotate_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gpsrotate"
-                android:textColor="@android:color/black" />
-        </RadioGroup>
 
 
     </FrameLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/multiple_actions"
+        android:id="@+id/action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -94,6 +62,15 @@
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp">
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_icon="@mipmap/icon_near"
+            fab:fab_colorNormal="@color/main_white"
+            fab:fab_title="附近的人"
+            fab:fab_size="mini"
+            fab:fab_colorPressed="@color/white"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_b"

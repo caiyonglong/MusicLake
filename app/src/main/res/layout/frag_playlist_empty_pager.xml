@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <FrameLayout
+        android:id="@+id/vg_cover"
+        android:background="@color/gray"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="60dp">
+
+        <ImageView
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_gravity="bottom|left">
+            <TextView
+                android:textSize="28sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginRight="13dp"
+                android:textColor="#ffffff"
+                android:text="新建歌单"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:transitionName="transition_playlist_name"/>
+            <TextView
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:paddingTop="3dp"
+                android:ellipsize="end"
+                android:textColor="#ffffff"
+                android:text="0 首歌曲"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/songcount"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_gravity="top|right"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="40dp"
+            android:textSize="35sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/number"/>
+
+        <TextView
+            android:layout_gravity="top|center"
+            android:layout_marginTop="15dp"
+            android:textSize="15sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="暂无歌单"
+            android:id="@+id/playlisttype"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/foreground"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:transitionName="transition_foreground"/>
+
+        <ImageView
+            android:id="@+id/playlist_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/ic_add_white_24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+
+    </FrameLayout>
+
+</RelativeLayout>

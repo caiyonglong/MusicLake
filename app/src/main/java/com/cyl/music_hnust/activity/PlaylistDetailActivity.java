@@ -1,114 +1,134 @@
 package com.cyl.music_hnust.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.dataloaders.MusicLoader;
+import com.cyl.music_hnust.dataloaders.PlaylistLoader;
+import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.Extras;
-import com.cyl.music_hnust.utils.MusicUtils;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
 
 /**
  * 作者：yonglong on 2016/8/14 16:15
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAdapter.OnItemClickListener {
+public class PlaylistDetailActivity extends BaseActivity {
 
+    @Bind(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    TextView tv_empty;
+    @Bind(R.id.playlist_name)
+    TextView playlist_name;
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
-    FloatingActionButton fab;
+    @Bind(R.id.album_art)
+    ImageView album_art;
+    @Bind(R.id.foreground)
+    View foreground;
+    @Bind(R.id.main_content)
+    FrameLayout main_content;
 
-    private static LocalMusicAdapter mAdapter;
-    private static List<Music> musicInfos = new ArrayList<>();
-    private String playlist_id, album_id;
-    private boolean isAlbum;
+    private LocalMusicAdapter mAdapter;
+    private List<Music> musicInfos = new ArrayList<>();
+    private String playlist_id;
+    private long album_id;
+    //0代表专辑，1代表艺术家
+    private int isAlbum;
+
+    Runnable loadSongs = new Runnable() {
+        @Override
+        public void run() {
+            new loadPlaylist().execute("");
+        }
+    };
 
     /**
      * 设置监听事件
      */
     @Override
     protected void listener() {
+
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist_detail);
-        SystemUtils.setSystemBarTransparent(this);
+//        SystemUtils.setSystemBarTransparent(this);
+    }
 
+    private void setAlbumart() {
+
+        Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "==\n" + ImageUtils.getAlbumArtUri(getIntent().getExtras().getLong(Extras.ALBUM_ID)).toString());
+        playlist_name.setText(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
+        if (isAlbum != 0) {
+            foreground.setBackgroundColor(getIntent().getExtras().getInt(Extras.PLAYLIST_FOREGROUND_COLOR));
+            album_art.setBackgroundResource(getIntent().getExtras().getInt(Extras.PLAYLIST_BACKGROUND_IMAGE));
+        } else if (album_id != -1) {
+            loadBitmap(ImageUtils.getAlbumArtUri(album_id).toString());
+        }
+    }
+
+    private void loadBitmap(String uri) {
+        Log.e("EEEE", uri);
+        ImageLoader.getInstance().displayImage(uri, album_art,
+                new DisplayImageOptions.Builder().cacheInMemory(true)
+                        .showImageOnFail(R.drawable.default_cover)
+                        .resetViewBeforeLoading(true)
+                        .build());
+    }
+
+    @Override
+    protected void initData() {
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         playlist_id = getIntent().getStringExtra(Extras.PLAYLIST_ID);
-        isAlbum = getIntent().getBooleanExtra(Extras.ALBUM, false);
-        album_id = getIntent().getStringExtra(Extras.ALBUM_ID);
+        isAlbum = getIntent().getIntExtra(Extras.ALBUM, -1);
+        album_id = getIntent().getLongExtra(Extras.ALBUM_ID, -1);
         Log.e("playlist_id", playlist_id + "===" + isAlbum + "+++" + album_id + "00");
-
-
-        initView();
-        initData();
+        setAlbumart();
     }
 
-    private void initData() {
-
-
-        reloadAdapter();
-        mAdapter = new LocalMusicAdapter(this, musicInfos);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this);
-
-    }
-
-
-    private void initView() {
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    @Override
+    protected void initView() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setTitle("歌单列表");
-        tv_empty = (TextView) findViewById(R.id.tv_empty);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mToolbar.setTitleTextColor(Color.WHITE);
 
-        if (musicInfos.size() == 0) {
-            tv_empty.setText("请稍后，本地音乐加载中...");
-            tv_empty.setVisibility(View.VISIBLE);
+        if (SystemUtils.isLollipop()) {
+            getWindow().getEnterTransition().addListener(new EnterTransition());
         } else {
-            tv_empty.setVisibility(View.GONE);
+            loadSongs.run();
         }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlaylistDetailActivity.this, EditActivity.class);
-                String content = "";
-                if (musicInfos.size() > 0) {
-                    content = "分享歌单\n";
-                }
-                for (int i = 0; i < musicInfos.size(); i++) {
-                    content += musicInfos.get(i).getTitle() + "---" + musicInfos.get(i).getArtist();
-                    content += "\n";
-                }
-                intent.putExtra("content", content);
-
-                startActivity(intent);
-            }
-        });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -121,9 +141,30 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
                 final Intent intent = new Intent(this, SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
+                break;
+            case R.id.action_delete_playlist:
+                PlaylistLoader.deletePlaylist(this, playlist_id);
+                setResult(RESULT_OK);
+                finish();
+                break;
             case R.id.action_settings:
-                final Intent intent1 = new Intent(this, SettingsActivity.class);
-                startActivity(intent1);
+                final Intent intent2 = new Intent(this, SettingsActivity.class);
+                startActivity(intent2);
+                break;
+            case R.id.action_share:
+                Intent intent3 = new Intent(PlaylistDetailActivity.this, EditActivity.class);
+                String content = "";
+                if (musicInfos.size() > 0) {
+                    content = "分享歌单\n";
+                }
+                for (int i = 0; i < musicInfos.size(); i++) {
+                    content += musicInfos.get(i).getTitle() + "---" + musicInfos.get(i).getArtist();
+                    content += "\n";
+                }
+                intent3.putExtra("content", content);
+
+                startActivity(intent3);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -131,45 +172,86 @@ public class PlaylistDetailActivity extends BaseActivity implements LocalMusicAd
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_my, menu);
+        if (isAlbum != -1) {
+            getMenuInflater().inflate(R.menu.menu_playlist, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_playlist_detail, menu);
+        }
         return super.onCreateOptionsMenu(menu);
 
     }
 
+    private class loadPlaylist extends AsyncTask<String, Void, String> {
 
-    private void reloadAdapter() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(final Void... unused) {
-                musicInfos.clear();
-                if (isAlbum) {
-                    Log.e("歌单id++++++", album_id + "");
-                    musicInfos = MusicUtils.getAlbumSongs(PlaylistDetailActivity.this, album_id);
-                } else {
-                    Log.e("歌单id++++++", playlist_id + "");
-                    MusicUtils.getMusicForPlaylist(PlaylistDetailActivity.this, playlist_id, musicInfos);
-                }
-                return null;
+        @Override
+        protected String doInBackground(String... params) {
+            if (isAlbum == 0) {
+                Log.e("歌单id++++++", album_id + "==" + getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "");
+                musicInfos = MusicLoader.getAlbumSongs(PlaylistDetailActivity.this, album_id + "");
+                Log.e("歌单id++++++", musicInfos.size() + "");
+            } else if (isAlbum == 1) {
+                Log.e("歌单id++++++", album_id + "");
+                musicInfos = MusicLoader.getArtistSongs(PlaylistDetailActivity.this, album_id + "");
+                Log.e("歌单id++++++", musicInfos.size() + "");
+            } else {
+                Log.e("歌单id++++++", playlist_id + "");
+                musicInfos = PlaylistLoader.getMusicForPlaylist(PlaylistDetailActivity.this, playlist_id);
+                Log.e("歌单id++++++", musicInfos.size() + "");
             }
+            mAdapter = new LocalMusicAdapter(PlaylistDetailActivity.this, musicInfos);
+            return "Executed";
+        }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (musicInfos.size() == 0) {
-                    tv_empty.setText("暂无音乐");
-                    tv_empty.setVisibility(View.VISIBLE);
-                } else {
-                    tv_empty.setVisibility(View.GONE);
-                }
+        @Override
+        protected void onPostExecute(String result) {
+            setRecyclerViewAapter();
+        }
 
-                mAdapter.setMusicInfos(musicInfos);
-                mAdapter.notifyDataSetChanged();
-            }
-        }.execute();
+        @Override
+        protected void onPreExecute() {
+        }
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        MainActivity.mPlayService.setMyMusicList(musicInfos);
-        MainActivity.mPlayService.playMusic(position);
+    private void setRecyclerViewAapter() {
+        mRecyclerView.setAdapter(mAdapter);
+//        if (SystemUtils.isLollipop()) {
+//            Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL_LIST, R.drawable.item_divider_white));
+//                }
+//            }, 250);
+//        } else
+//            mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL_LIST, R.drawable.item_divider_white));
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private class EnterTransition implements Transition.TransitionListener {
+        @Override
+        public void onTransitionStart(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+            loadSongs.run();
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+
+        }
     }
 }

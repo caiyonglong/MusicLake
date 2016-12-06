@@ -1,21 +1,26 @@
 package com.cyl.music_hnust.adapter;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.download.FileState;
-import com.cyl.music_hnust.download.SqliteDao;
+import com.cyl.music_hnust.download.DownloadListener;
 import com.cyl.music_hnust.download.DownloadService;
+import com.cyl.music_hnust.download.db.SqliteDao;
+import com.cyl.music_hnust.download.model.FileState;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.utils.Constants;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,7 +29,6 @@ import java.util.List;
  */
 public class DownloadManageAdapter extends
         RecyclerView.Adapter<DownloadManageAdapter.DownloadManageViewHolder> {
-
 
     /**
      * 设置（更新）list数据
@@ -44,44 +48,35 @@ public class DownloadManageAdapter extends
         mContext.startService(intent);
     }
 
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-
-    }
-
-    public OnItemClickListener mOnItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mOnItemClickListener = listener;
-    }
-
-
     public Context mContext;
-    public LayoutInflater mLayoutInflater;
+    private LayoutInflater mLayoutInflater;
     private List<FileState> fileStates;
-    private SqliteDao dao;
-    public boolean[] isPause ;
+    private List<Music> musics;
+    private boolean[] isPause;
+    public UpdateReceiver receiver;
 
-    public DownloadManageAdapter(Context context, List<FileState> fileStates,
-                                 SqliteDao dao) {
+    public DownloadManageAdapter(Context context, List<FileState> fileStates) {
         this.mContext = context;
         this.fileStates = fileStates;
-        this.dao = dao;
         mLayoutInflater = LayoutInflater.from(mContext);
-        isPause = new boolean[fileStates.size()];
-        for (int i =0 ; i<fileStates.size();i++){
+
+
+        receiver = new UpdateReceiver();
+        receiver.registerAction(Constants.DOWNLOADMANAGEACTION);
+
+        isPause = new boolean[fileStates.size()+5];
+        for (int i = 0; i < fileStates.size()+5; i++) {
             isPause[i] = false;
         }
 
     }
-
+    View mView;
     /**
      * 创建ViewHolder
      */
     @Override
     public DownloadManageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mView = mLayoutInflater.inflate(R.layout.item_download, parent, false);
+        mView = mLayoutInflater.inflate(R.layout.item_download, parent, false);
         DownloadManageViewHolder mViewHolder = new DownloadManageViewHolder(mView);
         return mViewHolder;
     }
@@ -89,21 +84,20 @@ public class DownloadManageAdapter extends
     @Override
     public void onBindViewHolder(final DownloadManageViewHolder holder, final int position) {
 
-        if (mOnItemClickListener != null) {
-            holder.btn_stop.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(holder.btn_stop, position);
+        holder.btn_control.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isPause[position]) {
+                    holder.btn_control.setText("下载中");
+                    isPause[position] = false;
+                } else {
+                    holder.btn_control.setText("已暂停");
+                    isPause[position] = true;
                 }
-            });
-            holder.btn_continue.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(holder.btn_continue, position);
-                }
-            });
-
-        }
+                setChange(fileStates.get(position));
+                notifyDataSetChanged();
+            }
+        });
 
         final FileState fileState = fileStates.get(position);
 
@@ -111,9 +105,19 @@ public class DownloadManageAdapter extends
 
         if (0 == fileState.getState()) {// 下载完成
 
-            holder.progressBar.setVisibility(View.INVISIBLE);
-            holder.btn_stop.setText("已下载");
-            holder.btn_stop.setClickable(false);
+            holder.progressBar.setVisibility(View.GONE);
+            holder.tv_per.setVisibility(View.GONE);
+            holder.btn_control.setText("下载完成");
+            holder.btn_control.setClickable(false);
+            fileStates = new SqliteDao(mContext).getFileStates();
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
         } else if (1 == fileState.getState()) {// 正在下载
 
             int completeSize = fileState.getCompleteSize();
@@ -124,13 +128,11 @@ public class DownloadManageAdapter extends
             int result = (int) (num * 100);
             holder.progressBar.setProgress(result);
             holder.tv_per.setText(result + "%");
-            
-            if (!isPause[position]){
-                holder.btn_stop.setVisibility(View.VISIBLE);
-                holder.btn_continue.setVisibility(View.GONE);
-            }else {
-                holder.btn_stop.setVisibility(View.GONE);
-                holder.btn_continue.setVisibility(View.VISIBLE);
+
+            if (!isPause[position]) {
+                holder.btn_control.setText("下载中");
+            } else {
+                holder.btn_control.setText("已暂停");
             }
 
         }
@@ -138,15 +140,23 @@ public class DownloadManageAdapter extends
         if (fileState.getCompleteSize() == fileState.getFileSize()) {
             fileState.setState(0);
             fileStates.set(position, fileState);
-            holder.progressBar.setVisibility(ProgressBar.INVISIBLE);
-            holder.btn_stop.setText("已下载");
+            holder.progressBar.setVisibility(ProgressBar.GONE);
+            holder.btn_control.setText("下载完成");
             holder.tv_per.setVisibility(View.GONE);
-            holder.btn_stop.setClickable(false);
+            holder.btn_control.setClickable(false);
         }
 
+        DownloadListener downloadListener = new DownloadListener() {
+            @Override
+            public void oDownloading(String url, int finished) {
 
+            }
 
+            @Override
+            public void onDownloadFinished(File downloadFile) {
 
+            }
+        };
 
     }
 
@@ -158,24 +168,68 @@ public class DownloadManageAdapter extends
 
     public class DownloadManageViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView iv_icon;
         public TextView tv_name;
         public TextView tv_per;
         public ProgressBar progressBar;
-        public Button btn_stop;
-        public Button btn_continue;
+        public Button btn_control;
 
         public DownloadManageViewHolder(View mView) {
             super(mView);
-            //iv_icon = (ImageView) mView.findViewById(R.id.iv_icon);
             tv_name = (TextView) mView.findViewById(R.id.tv_name);
             tv_per = (TextView) mView.findViewById(R.id.tv_per);
             progressBar = (ProgressBar) mView
                     .findViewById(R.id.progressBar);
             progressBar.setMax(100);
-            btn_stop = (Button) mView.findViewById(R.id.btn_stop);
-            btn_continue = (Button) mView
-                    .findViewById(R.id.btn_continue);
+            btn_control = (Button) mView.findViewById(R.id.btn_control);
         }
     }
+
+
+    /**
+     * 项目名称：MultithreadedDownload 类名称：UpdateReceiver 类描述：
+     * 接收器类，用来接收后台service发送过来的下载进度 创建人：wpy 创建时间：2014-10-13 上午10:11:20
+     */
+    private class UpdateReceiver extends BroadcastReceiver {
+        /**
+         * 注册广播接收器
+         *
+         * @param action
+         */
+        public void registerAction(String action) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(action);
+            mContext.registerReceiver(this, intentFilter);
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.DOWNLOADMANAGEACTION)) {
+                String url = intent.getStringExtra("url");
+                int completeSize = intent.getIntExtra("completeSize", 0);
+                for (int i = 0; i < fileStates.size(); i++) {
+                    FileState fileState = fileStates.get(i);
+                    if (fileState.getUrl().equals(url)) {
+                        fileState.setCompleteSize(completeSize);
+                        fileStates.set(i, fileState);
+                    }
+                }
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    class DownloadImp implements DownloadListener{
+
+        @Override
+        public void oDownloading(String url, int finished) {
+
+        }
+
+        @Override
+        public void onDownloadFinished(File downloadFile) {
+
+        }
+    }
+
+
 }

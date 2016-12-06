@@ -16,7 +16,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:drawableLeft="@mipmap/back_arrow"
+            android:drawableLeft="@drawable/md_nav_back"
             android:gravity="center"
             android:text="照片"
             android:textColor="#FFFFFF"
@@ -36,7 +36,7 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <com.cyl.music_hnust.clipheadphoto.ClipImageLayout
+    <com.cyl.music_hnust.activity.clipheadphoto.ClipImageLayout
         android:id="@+id/id_clipImageLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

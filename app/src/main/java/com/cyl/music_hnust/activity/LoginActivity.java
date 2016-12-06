@@ -1,5 +1,6 @@
 package com.cyl.music_hnust.activity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,9 +18,8 @@ import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.UserCallback;
-import com.cyl.music_hnust.model.User;
-import com.cyl.music_hnust.model.UserInfo;
-import com.cyl.music_hnust.model.UserStatus;
+import com.cyl.music_hnust.model.user.UserInfo;
+import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
@@ -30,6 +31,9 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -73,14 +77,21 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //初始化黄油刀控件绑定框架
-        ButterKnife.bind(this);
+
+    }
+
+    @Override
+    protected void initView() {
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
+    @Override
+    protected void initData() {
+        mToolbar.setTitle("用户登录");
         usernameWrapper.setHint("用户名");
         passwordWrapper.setHint("密码");
-
     }
 
     @Override
@@ -104,9 +115,15 @@ public class LoginActivity extends BaseActivity {
         final String password = passwordWrapper.getEditText().getText().toString();
         // TODO: 检查　
         if (!validatePassword(username)) {
-            passwordWrapper.setError("邮箱或者学号");
+            usernameWrapper.setErrorEnabled(false);
+            passwordWrapper.setErrorEnabled(false);
+
+            usernameWrapper.setError("邮箱或者学号");
         } else if (!validatePassword(password)) {
-            passwordWrapper.setError("密码需为6~18位的数字和字母");
+            usernameWrapper.setErrorEnabled(false);
+            passwordWrapper.setErrorEnabled(false);
+
+            passwordWrapper.setError("密码需为5~18位的数字或字母");
         } else {
             usernameWrapper.setErrorEnabled(false);
             passwordWrapper.setErrorEnabled(false);
@@ -116,24 +133,37 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onHidden(FloatingActionButton fab) {
                     super.onHidden(fab);
-                    login(username, password);
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(Constants.USER_EMAIL,username);
+                    params.put(Constants.PASSWORD,password);
+                    login(params);
                 }
             });
         }
     }
-
-    //
     @OnClick(R.id.register)
     public void tofab() {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivity(intent);
+
+        final Intent intent = new Intent(this, RegisterActivity.class);
+
+        if (SystemUtils.isLollipop()) {
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    this,
+                    Pair.create((View) register, "transition_next"),
+                    Pair.create((View) fab, "transition_fab"),
+                    Pair.create((View) cv, "transition_cardView")).toBundle());
+        } else {
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.qqlogin)
     public void tologin() {
         progressBar.setVisibility(View.VISIBLE);
         qqLogin();
-    }/**
+    }
+
+    /**
      * 沉浸式状态栏
      */
     private void initSystemBar() {
@@ -143,19 +173,19 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void login(String username, String password) {
+    private void login(Map<String,String> params) {
 
         OkHttpUtils.post()//
-                .url(Constants.LOGIN_URL)//
-                .addParams(Constants.USER_EMAIL, username)//
-                .addParams(Constants.PASSWORD, password)//
+                .url(Constants.LOGIN_URL)
+                .params(params)
                 .build()//
                 .execute(new UserCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
+                        e.printStackTrace();
                         progressBar.setVisibility(View.GONE);
                         fab.show();
-                        ToastUtils.show(LoginActivity.this, "网路异常，请稍后！");
+                        ToastUtils.show(LoginActivity.this, "网络异常，请稍后重试！");
                     }
 
                     @Override
@@ -178,7 +208,7 @@ public class LoginActivity extends BaseActivity {
 
     //判断密码是否合法
     public boolean validatePassword(String password) {
-        return password.length() > 5 && password.length() <= 18;
+        return password.length() >= 5 && password.length() <= 18;
     }
 
     /**
@@ -208,12 +238,12 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onError(UiError uiError) {
-
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancel() {
-
+                progressBar.setVisibility(View.GONE);
             }
         };
     }
@@ -233,27 +263,31 @@ public class LoginActivity extends BaseActivity {
                             String nickName = info.getString("nickname");//获取用户昵称
                             String iconUrl = info.getString("figureurl_qq_2");//获取用户头像的url
                             String gender = info.getString("gender");//获取用户性别
-                            User user=new User();
-                            user.setUser_name(nickName);
-                            user.setUser_img(iconUrl);
-                            user.setUser_sex(gender);
-
-                            UserStatus.savaUserInfo(getApplicationContext(),user);
-                            UserStatus.saveuserstatus(getApplicationContext(),true);
-                            finish();
+                            Map<String,String> params = new HashMap<String, String>();
+//                            Log.e("user_id=====",mTencent.getOpenId());
+//                            Log.e("username=====",nickName);
+//                            Log.e("user_img=====",iconUrl);
+//                            Log.e("use_sex=====",gender);
+                            params.put(Constants.PARAM_METHOD,"qq");
+                            params.put(Constants.USERNAME,nickName);
+                            params.put(Constants.USER_SEX,gender);
+                            params.put(Constants.USER_IMG,iconUrl);
+                            params.put(Constants.USER_ID,mTencent.getOpenId());
+                            login(params);
                         } catch (JSONException e) {
+                            ToastUtils.show(LoginActivity.this, "网络异常，请稍后重试！");
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onError(UiError uiError) {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onCancel() {
-
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
             }

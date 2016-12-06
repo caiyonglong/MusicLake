@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="本地无音乐"
+        android:text="@string/error_connection"
+        android:textColor="@color/black"
         android:visibility="gone"
-        android:textColor="@color/grey"
-        android:textSize="14sp" />
+        android:textSize="20sp" />
 </RelativeLayout>

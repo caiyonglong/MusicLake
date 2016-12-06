@@ -6,7 +6,7 @@ import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.application.MyApplication;
+import com.cyl.music_hnust.MyApplication;
 
 
 /**

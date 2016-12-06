@@ -14,10 +14,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.dataloaders.MusicLoader;
+import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.MusicUtils;
 
@@ -29,7 +30,7 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistDetailFragment extends BaseFragment implements LocalMusicAdapter.OnItemClickListener {
+public class PlaylistDetailFragment extends BaseFragment{
 
     RecyclerView mRecyclerView;
     TextView tv_empty;
@@ -67,7 +68,6 @@ public class PlaylistDetailFragment extends BaseFragment implements LocalMusicAd
         reloadAdapter();
         mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this);
 
     }
 
@@ -118,10 +118,10 @@ public class PlaylistDetailFragment extends BaseFragment implements LocalMusicAd
                 if (playlist_id != null ) {
                     if (isAlbum){
                         Log.e("歌单id++++++", playlist_id + "");
-                        musicInfos= MusicUtils.getAlbumSongs(getActivity(),playlist_id);
+                        musicInfos= MusicLoader.getAlbumSongs(getActivity(),playlist_id);
                     }else {
                         Log.e("歌单id++++++", playlist_id + "");
-                        MusicUtils.getMusicForPlaylist(getActivity(), playlist_id, musicInfos);
+                        musicInfos= PlaylistLoader.getMusicForPlaylist(getActivity(), playlist_id);
                     }
                 }
                 return null;
@@ -142,10 +142,5 @@ public class PlaylistDetailFragment extends BaseFragment implements LocalMusicAd
         }.execute();
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        MainActivity.mPlayService.setMyMusicList(musicInfos);
-        MainActivity.mPlayService.playMusic(position);
-    }
 
 }

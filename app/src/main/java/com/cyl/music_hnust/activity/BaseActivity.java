@@ -2,7 +2,10 @@ package com.cyl.music_hnust.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.Preferences;
@@ -19,21 +22,48 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected Handler mHandler;
-    boolean  on = Preferences.isNightMode();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if (on){
-            this.setTheme(R.style.MyThemeDark);
-        }else {
-            this.setTheme(R.style.MyThemeBlue);
+        boolean on = Preferences.isNightMode();
+        if (on) {
+            setTheme(R.style.MyThemeDark);
+        } else {
+            setTheme(R.style.MyThemeBlue);
         }
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
+
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+        init();
+    }
+
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        init();
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        super.setContentView(view, params);
+        init();
+    }
+
+    private void init() {
+        //初始化黄油刀控件绑定框架
+        ButterKnife.bind(this);
+        initView();
+        initData();
         listener();
     }
 
-
+    protected abstract void initView();
+    protected abstract void initData();
     protected abstract void listener();
 
     @Override

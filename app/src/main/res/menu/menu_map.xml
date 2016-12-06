@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.map.BaseMapActivity">
+
+    <item android:title="定位的类型">
+        <menu>
+            <item
+                android:id="@+id/action_location"
+                android:orderInCategory="101"
+                android:title="@string/action_location"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/action_follow"
+                android:orderInCategory="101"
+                android:title="@string/action_follow"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_rotate"
+                android:orderInCategory="101"
+                android:title="@string/action_rotate"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_18dp"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:title="" />
+
+
+</menu>

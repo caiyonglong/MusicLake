@@ -19,7 +19,7 @@ import com.trello.rxlifecycle.components.support.RxFragment;
  */
 public abstract class BaseFragment extends RxFragment {
     private PlayService mPlayService;
-    protected Handler mHandler;
+    protected static Handler mHandler;
     private boolean mResumed;
     public View rootView;
 

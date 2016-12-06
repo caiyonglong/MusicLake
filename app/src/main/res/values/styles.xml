@@ -15,7 +15,7 @@
 
     </style>
 
-    <!-- 蓝色为主色调 -->
+    <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--选中状态icon的颜色和字体颜色-->
@@ -62,13 +62,9 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <!--<style name="Theme.Start" parent="Theme.AppCompat.Light.NoActionBar">-->
-        <!--<item name="android:windowBackground">@mipmap/bg</item>-->
-        <!--<item name="android:windowNoTitle">true</item>-->
-    <!--</style>-->
-
-    <style name="AppTheme.Splash" parent="MyThemeBlue">
-        <item name="android:windowIsTranslucent">true</item>
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@mipmap/bg</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.Search" parent="MyThemeBlue">

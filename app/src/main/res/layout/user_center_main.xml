@@ -9,8 +9,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:elevation="10dp"
@@ -29,16 +27,25 @@
             <ImageView
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="180dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:background="@drawable/bg_header"
+                android:background="@drawable/music_five"
                 app:layout_collapseMode="pin" />
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                >
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:background="@drawable/ic_account_circle"
                     android:id="@+id/header_img"
                     android:layout_width="80dp"
@@ -48,14 +55,6 @@
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="pin" />
             </FrameLayout>
-
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
         <FrameLayout
@@ -81,6 +80,7 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/m_viewpager"
+        android:background="@drawable/music_three"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
@@ -95,10 +95,9 @@
         android:layout_margin="@dimen/fab_margin">
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/multiple_actions"
+            android:id="@+id/action_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             fab:fab_addButtonColorNormal="@color/setting_blue"
             fab:fab_addButtonColorPressed="@color/white_pressed"
             fab:fab_addButtonPlusIconColor="@color/main_white"

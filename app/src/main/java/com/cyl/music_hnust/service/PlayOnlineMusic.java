@@ -7,11 +7,11 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
-import com.cyl.music_hnust.Json.JsonCallback;
+import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.DownloadInfo;
-import com.cyl.music_hnust.model.Music;
-import com.cyl.music_hnust.model.OnlineMusicInfo;
+import com.cyl.music_hnust.model.download.DownloadInfo;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.OnlineMusicInfo;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;
@@ -79,6 +79,7 @@ public abstract class PlayOnlineMusic {
         }
         final Music music = new Music();
         music.setType(Music.Type.ONLINE);
+        music.setLrcPath(mOnlineMusic.getLrclink());
         music.setTitle(mOnlineMusic.getTitle());
         music.setArtist(mOnlineMusic.getArtist_name());
         music.setAlbum(mOnlineMusic.getAlbum_title());
@@ -94,8 +95,15 @@ public abstract class PlayOnlineMusic {
                             onFail(null, null);
                             return;
                         }
-                        music.setUri(response.getBitrate().getFile_link());
-                        music.setDuration(response.getBitrate().getFile_duration() * 1000);
+                        try {
+                            if (response.getBitrate().getFile_link() != null) {
+                                music.setUri(response.getBitrate().getFile_link());
+                            }
+                            music.setDuration(response.getBitrate().getFile_duration() * 1000);
+                        } catch (Exception e) {
+
+                        }
+
                         mCounter++;
                         if (mCounter == 3) {
                             onSuccess(music);
@@ -107,31 +115,38 @@ public abstract class PlayOnlineMusic {
                         onFail(call, e);
                     }
                 });
-        // 下载歌词
+
         if (!TextUtils.isEmpty(mOnlineMusic.getLrclink()) && !lrcFile.exists()) {
-            OkHttpUtils.get().url(mOnlineMusic.getLrclink()).build()
-                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
-                        @Override
-                        public void inProgress(float progress, long total) {
-                        }
-
-                        @Override
-                        public void onResponse(File response) {
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e) {
-                        }
-
-                        @Override
-                        public void onAfter() {
-                            mCounter++;
-                            if (mCounter == 3) {
-                                onSuccess(music);
-                            }
-                        }
-                    });
+            mCounter++;
+            if (mCounter == 3) {
+                onSuccess(music);
+            }
         }
+        // 下载歌词
+//        if (!TextUtils.isEmpty(mOnlineMusic.getLrclink()) && !lrcFile.exists()) {
+//            OkHttpUtils.get().url(mOnlineMusic.getLrclink()).build()
+//                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
+//                        @Override
+//                        public void inProgress(float progress, long total) {
+//                        }
+//
+//                        @Override
+//                        public void onResponse(File response) {
+//                        }
+//
+//                        @Override
+//                        public void onError(Call call, Exception e) {
+//                        }
+//
+//                        @Override
+//                        public void onAfter() {
+//                            mCounter++;
+//                            if (mCounter == 3) {
+//                                onSuccess(music);
+//                            }
+//                        }
+//                    });
+//        }
         // 下载歌曲封面
         if (!TextUtils.isEmpty(picUrl)) {
             OkHttpUtils.get().url(picUrl).build()

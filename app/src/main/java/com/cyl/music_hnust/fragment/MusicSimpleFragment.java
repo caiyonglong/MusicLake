@@ -8,7 +8,7 @@ import android.util.Log;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.music.Music;
 
 import java.util.ArrayList;
 import java.util.List;

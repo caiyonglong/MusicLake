@@ -45,4 +45,9 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="info_secret_setting">
+        <item>不保密</item>
+        <item>保密</item>
+    </string-array>
+
 </resources>

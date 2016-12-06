@@ -1,6 +1,6 @@
 package com.cyl.music_hnust.service;
 
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.music.Music;
 
 /**
  * 作者：yonglong on 2016/8/11 19:10

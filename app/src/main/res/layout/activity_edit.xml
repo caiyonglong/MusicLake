@@ -23,19 +23,18 @@
         android:id="@+id/edit_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar"
-        android:layout_margin="16dp"
-        android:background="@drawable/selector_edittext"
         android:gravity="left|top"
         android:hint="分享心情，分享歌曲..."
         android:textSize="16sp"
         android:inputType="textMultiLine"
         android:minLines="8"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/app_bar"
+        android:layout_centerHorizontal="true">
 
         <requestFocus />
     </EditText>
-
 
 
 </RelativeLayout>

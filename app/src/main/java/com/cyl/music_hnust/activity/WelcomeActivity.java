@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.cyl.music_hnust.utils.UpdateUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
@@ -25,8 +27,7 @@ import rx.functions.Action1;
  * Created by 永龙 on 2016/3/19.
  */
 public class WelcomeActivity extends BaseActivity {
-
-    @Bind(R.id.container)
+    @Bind(R.id.wel_container)
     RelativeLayout container;
 
     private ServiceConnection mPlayServiceConnection;
@@ -35,29 +36,23 @@ public class WelcomeActivity extends BaseActivity {
     protected void listener() {
 
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-//初始化黄油刀控件绑定框架
-        ButterKnife.bind(this);
-        SystemUtils.setSystemBarTransparent(this);
-        initSystemBar();
-        if (SystemUtils.isMarshmallow()) {
-            checkPermissionAndThenLoad();
-        }
-
     }
 
+    @Override
+    protected void initView() {
+        initSystemBar();
+    }
 
-    /**
-     * 沉浸式状态栏
-     */
-    private void initSystemBar() {
-        if (SystemUtils.isKITKAT()) {
-            int top = StatusBarCompat.getStatusBarHeight(this);
-            container.setPadding(0, top, 0, 0);
+    @Override
+    protected void initData() {
+        if (SystemUtils.isMarshmallow()) {
+            checkPermissionAndThenLoad();
+        }else {
+            checkService();
         }
     }
 
@@ -173,6 +168,15 @@ public class WelcomeActivity extends BaseActivity {
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    /**
+     * 沉浸式状态栏
+     */
+    private void initSystemBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int top = StatusBarCompat.getStatusBarHeight(this);
+            container.setPadding(0, top, 0, 0);
+        }
+    }
     @Override
     public void onBackPressed() {
     }

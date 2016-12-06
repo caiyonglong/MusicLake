@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.OnlinePlaylists.Billboard;
+import com.cyl.music_hnust.model.music.OnlinePlaylists.Billboard;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -49,7 +49,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_online_large, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_online_large, parent,false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -91,7 +91,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     private void setData(Billboard mBillboard, final ItemHolder holder) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(mBillboard.getPic_s192(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
+        imageLoader.displayImage(mBillboard.getPic_s192().trim(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
 
         holder.title.setText(mBillboard.getName());
         List<Billboard.MusicLists> musicLists = mBillboard.getContent();

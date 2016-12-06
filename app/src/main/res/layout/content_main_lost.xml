@@ -96,7 +96,7 @@ z
         android:id="@+id/add_dynamic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fab_icon="@mipmap/add"
+        app:fab_icon="@drawable/ic_add_white_24dp"
         fab:fab_colorNormal="@color/setting_blue"
         fab:fab_colorPressed="@color/setting_blue"
 

@@ -1,12 +1,15 @@
 package com.cyl.music_hnust.utils;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Formatter;
 
 /**
  * <br>
@@ -96,50 +99,43 @@ public class FormatUtil {
         return ye;
     }
 
-    public static String distime(String pre) {
-
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        //  Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        java.util.Date begin = null;
-
-        String date = dfs.format(new java.util.Date());
-
-        long between = 0;
+    public static String getTimeDifference(String starTime) {
+        String timeString = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        String endTime = dateFormat.format(new Date());
         try {
-            begin = dfs.parse(pre);
-            java.util.Date now = dfs.parse(date);
-            between = (now.getTime() - begin.getTime());// 得到两者的毫秒数
-            Log.e("time", between + "");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            Date parse = dateFormat.parse(starTime);
+            Date parse1 = dateFormat.parse(endTime);
+
+            long diff = parse1.getTime() - parse.getTime();
+
+            long day = diff / (24 * 60 * 60 * 1000);
+            long hour = (diff / (60 * 60 * 1000) - day * 24);
+            long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+            long s = (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
+            long ms = (diff - day * 24 * 60 * 60 * 1000 - hour * 60 * 60 * 1000
+                    - min * 60 * 1000 - s * 1000);
+
+            //距当前时间大于15天时输出年月日
+            if (day>15){
+                timeString=dateFormat1.format(parse);
+            }else if (day>0){
+                timeString= day+"天前";
+            }else if (hour>0){
+                timeString= hour+"小时前";
+            }else if (min>=0){
+                timeString= min+"分钟前";
+            }
+
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        long day = between / (1000 * 60 * 60 * 24);
-        long hour = (between - day * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
-        long min = (between - day * (1000 * 60 * 60 * 24) - hour * (1000 * 60 * 60)) / (1000 * 60);
-        long s = (between / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
-
-
-        long daynow = begin.getTime() / (24 * 60 * 60 * 1000);
-        long hournow = (begin.getTime() / (60 * 60 * 1000) - daynow * 24);
-        long minnow = ((begin.getTime() / (60 * 1000)) - hournow * 24 * 60 - hournow * 60);
-
-//        System.out.println(day + "天" + hour + "小时" + min + "分" + s + "秒" ;
-        if (day == 0 && hour == 0 && min == 0) {
-            return s+"秒前";
-        } else if (day == 0 && hour == 0) {
-            return min + " 分钟前";
-        } else if (day == 0) {
-            return  hour + " 小时前";
-        } else {
-            if (day == 1)
-                return "昨天";
-            else
-                return day + " 天前" ;
-        }
-
+        return timeString;
 
     }
+
 
     /**
      * 获取当前时间
@@ -148,9 +144,20 @@ public class FormatUtil {
      */
     public static String getTime() {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         String date = dfs.format(new java.util.Date());
         return date;
+    }
+
+    /**
+     * 毫秒转化成时间
+     *
+     * @return 时间
+     */
+    public static String distime(long time) {
+
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(time);
+        return dfs.format(date);
     }
 
 }

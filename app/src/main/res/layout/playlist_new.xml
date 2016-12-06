@@ -8,7 +8,7 @@
         android:id="@+id/et_playlist"
         android:hint="请输入歌单名"
         android:paddingLeft="10dp"
-        android:shadowColor="@color/blue_btn_bg_color"
+        android:shadowColor="@color/gray"
         android:textColor="@color/main_black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

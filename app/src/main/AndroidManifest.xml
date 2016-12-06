@@ -27,10 +27,9 @@
     <!-- 用于读取手机当前的状态 -->
     <!--定位包、导航包需要的额外权限（注：基础权限也需要）-->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 
     <application
-        android:name=".application.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -45,7 +44,7 @@
         <activity
             android:name=".activity.WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Splash">
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -87,44 +86,40 @@
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue"></activity>
+            android:theme="@style/MyThemeBlue" />
         <activity
             android:name=".activity.RegisterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue"></activity>
+            android:theme="@style/MyThemeBlue" />
         <activity
             android:name=".activity.PlaylistDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ArtistInfoActivity"
+            android:screenOrientation="portrait" />
 
         <activity
-            android:name=".map.BaseMapActivity"
+            android:name=".activity.map.BaseMapActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".map.NearActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".map.RadarActivity"
+            android:name=".activity.map.NearActivity"
 
             android:screenOrientation="portrait" />
         <activity
-            android:name=".map.CloudDetailActivity"
+            android:name=".activity.map.RadarActivity"
+
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.map.CloudDetailActivity"
             android:label="@string/detail_position"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".map.PreviewPhotoActivity"
+            android:name=".activity.map.PreviewPhotoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NearPeopleAcivity"
+            android:name=".activity.NearPeopleAcivity"
             android:label="@string/near_people"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MyActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".LocalMusic"
-            android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.OnlineMusicActivity"
@@ -132,72 +127,22 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".MynamicActivity"
-            android:label="@string/my_dnamic"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ShakeActivity"
+            android:name=".activity.ShakeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.SearchActivity" />
         <activity
-            android:name=".DownloadActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".PlayerActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".PlaylistActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".SearchActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.EditActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".CommentActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".UserCenterMainAcivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.UserCenterAcivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ScanActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".AddSong2PlaylistActivity"
-            android:label="@string/title_activity_playlist_song"
-            android:screenOrientation="portrait" />
 
-        <service
-            android:name=".service.MusicPlayService"
-            android:enabled="true" />
-        <service
-            android:name=".service.MediaService"
-            android:enabled="true" />
         <service
             android:name=".service.PlayService"
             android:enabled="true" />
-
-        <activity
-            android:name=".PlaylistSongActivity"
-            android:label="@string/title_activity_playlist_song"
-            android:screenOrientation="portrait" />
 
         <service android:name="com.amap.api.location.APSService" />
         <service android:name=".download.DownloadService" />
@@ -207,7 +152,7 @@
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ClipActivity"
+            android:name=".activity.clipheadphoto.ClipActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
 

@@ -14,6 +14,10 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cyl.music_hnust.download.db.SqliteDao;
+import com.cyl.music_hnust.download.model.DownloadInfo;
+import com.cyl.music_hnust.download.model.DownloaderInfo;
+
 
 /**
  * 
@@ -38,6 +42,7 @@ public class Downloader {
 	private int state = INIT;// 设置状态为初始化
 
 	private SqliteDao dao;
+
 
 	/**
 	 * 构造函数

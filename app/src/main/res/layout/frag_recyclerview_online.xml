@@ -9,16 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="57dp"
-        android:fadeScrollbars="true"
-         />
+        android:fadeScrollbars="true" />
 
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="本地无音乐"
-        android:visibility="gone"
-        android:textColor="@color/grey"
-        android:textSize="14sp" />
+    <include layout="@layout/item_loading" />
 </RelativeLayout>

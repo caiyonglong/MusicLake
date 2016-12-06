@@ -1,69 +1,101 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/modify"
+<?xml version="1.0" encoding="utf-8"?><!--卡片布局-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
-    <TableRow
-        android:gravity="center">
 
-        <TextView
-            android:textColor="@color/setting_blue"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/userNameWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="昵称：" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/edt_nick"
-            android:inputType="textShortMessage"
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/Username"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/nickWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/grey"
-            android:hint="xxxxxxxxxxxx"
-            android:selectAllOnFocus="true" />
-    </TableRow>
+            android:layout_height="wrap_content">
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="个性签名"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp">
 
-    <TableRow
-        android:gravity="center">
-
-        <TextView
-            android:textColor="@color/setting_blue"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/phoneWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="邮箱：" />
+            android:layout_height="wrap_content">
 
-        <EditText
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="手机号"
+                android:inputType="phone"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
 
-            android:id="@+id/edt_email"
-            android:textColor="@color/grey"
-            android:inputType="textEmailAddress"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/emailWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="xxxxxxxxxxx@xx.com"
-            android:selectAllOnFocus="true" />
-    </TableRow>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
 
 
-    <TableRow
-        android:gravity="center">
-
-        <TextView
-            android:textColor="@color/setting_blue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="电话：" />
-
-        <EditText
-
-            android:id="@+id/edt_phone"
-            android:textColor="@color/grey"
-            android:inputType="phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="xxxxxxxxxxx"
-            android:selectAllOnFocus="true" />
-    </TableRow>
-</TableLayout>
+</LinearLayout>

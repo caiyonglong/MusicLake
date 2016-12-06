@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">湖科音乐</string>
-    <string name="near_people">校友资料</string>
+    <string name="near_people">分享人资料</string>
     <string name="detail_position">位置详情</string>
 
     <string name="toolbar_title">湖科音乐</string>
@@ -20,7 +20,7 @@
     <string name="xml_activity_scan_title">扫描歌曲</string>
     <string name="my_dnamic">我的发布</string>
     <!-- Strings related to login -->
-    <string name="prompt_email">学号</string>
+    <string name="prompt_email">邮箱</string>
     <string name="prompt_password">教务网密码</string>
     <string name="action_sign_in">登录</string>
     <string name="action_sign_in_short">登录</string>
@@ -41,8 +41,9 @@
 
 
     <string name="title_activity_settings">设置</string>
-    <string name="info_secret_setting">个性化设置</string>
-    <string name="info_secret_setting_detail">个人隐私设置,可隐藏真实姓名</string>
+    <string name="info_common_settings">通用设置</string>
+    <string name="info_secret_setting">隐私设置</string>
+    <string name="info_secret_setting_detail">是否隐藏手机号和邮箱</string>
 
     <string name="info_network_setting">网络设置</string>
     <string name="info_network_setting_detail">设置网络请求权限</string>
@@ -67,8 +68,9 @@
     <string name="pref_header_notifications">网络设置</string>
 
     <string name="pref_title_wifi">省流量模式</string>
-    <string name="pref_title_wifi_summary">避免在线搜歌消耗过多的流量</string>
+    <string name="pref_title_wifi_summary">避免歌曲下载时消耗过多的流量</string>
     <string name="pref_title_about">关于</string>
+    <string name="pref_title_update">检查更新</string>
     <string name="pref_title_clear">清除缓存</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
@@ -82,11 +84,12 @@
     <string name="unknown">未知</string>
     <string name="login">登录</string>
     <string name="register">暂无账号？快去注册吧</string>
-    <string name="Username">用户名</string>
+    <string name="Username">昵称</string>
     <string name="Password">密码</string>
     <string name="forgot_your_password">忘记密码?</string>
     <string name="repeat_password">重复密码</string>
-    <string name="next">完成注册</string>
+    <string name="next">下一步</string>
+    <string name="register_publish">完成注册</string>
     <string name="go">登录</string>
 
     <!-- Transitions -->
@@ -118,4 +121,11 @@
     <string name="search">搜索</string>
     <string name="search_tips">歌手、歌名</string>
 
+    <string name="create_playlist">新建歌单</string>
+    <string name="action_location">定位</string>
+    <string name="action_follow">追随</string>
+    <string name="action_rotate">旋转</string>
+
+    <string name="error_connection">网络连接异常，请稍后重试！</string>
+    <string name="secret_num">~~ 动态 %1$d ~~</string>
 </resources>

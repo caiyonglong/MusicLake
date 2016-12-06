@@ -1,19 +1,21 @@
 package com.cyl.music_hnust.fragment;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +29,8 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
-import com.cyl.music_hnust.lyric.LrcView;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.model.music.lyric.LrcView;
+import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
@@ -38,12 +40,15 @@ import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
 
 /**
  * 功能：歌曲播放详情页
@@ -51,30 +56,32 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener, LocalMusicAdapter.OnItemClickListener {
+public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
 
     //整个容器
     LinearLayout container;
     //图片按钮
-    ImageView skip_prev, skip_next, skip_mode, iv_back, ivPlayingBg,page_icon;
+    ImageView skip_prev, skip_next, skip_mode, iv_back, ivPlayingBg, page_icon;
     //播放暂停按钮
     PlayPauseButton mPlayPause;
     //textView
-    TextView tv_title, tv_artist, tv_time, tv_duration;
+    TextView tv_title, tv_artist, tv_time, tv_duration, skip_lrc;
     SeekBar sk_progress;
     List<View> mViewPagerContent;
     ViewPager mViewPager;
     FloatingActionButton playPauseFloating;
     PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
-    private static LocalMusicAdapter mAdapter;
-    private static List<Music> musicInfos = new ArrayList<>();
+    private LocalMusicAdapter mAdapter;
+    private List<Music> musicInfos = new ArrayList<>();
 
     private LrcView mLrcView;
     private RecyclerView recyclerView;
     private CircleImageView civ_cover;
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int play_mode;
+    //是否有歌词
+    private boolean lrc_empty = true;
 
     @Override
     public int getLayoutId() {
@@ -95,6 +102,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         skip_prev = (ImageView) rootView.findViewById(R.id.previous);
         skip_mode = (ImageView) rootView.findViewById(R.id.skip_mode);
         iv_back = (ImageView) rootView.findViewById(R.id.iv_back);
+        skip_lrc = (TextView) rootView.findViewById(R.id.skip_lrc);
         ivPlayingBg = (ImageView) rootView.findViewById(R.id.iv_play_page_bg);
         page_icon = (ImageView) rootView.findViewById(R.id.page_icon);
         skip_next = (ImageView) rootView.findViewById(R.id.next);
@@ -134,6 +142,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         skip_prev.setOnClickListener(this);
         skip_mode.setOnClickListener(this);
         iv_back.setOnClickListener(this);
+        skip_lrc.setOnClickListener(this);
         sk_progress.setOnSeekBarChangeListener(this);
         if (playPauseFloating != null)
             playPauseFloating.setOnClickListener(mButtonListener);
@@ -163,16 +172,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (music == null) {
             return;
         }
-        tv_title.setText(music.getTitle());
-        tv_artist.setText(music.getArtist());
+        tv_title.setText(FileUtils.getTitle(music.getTitle()));
+        tv_artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
         tv_duration.setText(SystemUtils.formatTime(music.getDuration()));
         sk_progress.setMax((int) music.getDuration());
         sk_progress.setProgress(0);
         setLrc(music);
         setCoverAndBg(music);
-
         reloadAdapter();
-        mAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
 
     }
@@ -182,14 +189,21 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.previous:
-                getmPlayService().prev();
+                if (getmPlayService() == null) {
+                    Log.e("222", "33333333333333333");
+                } else {
+                    getmPlayService().prev();
+                }
                 break;
             case R.id.next:
-                getmPlayService().next();
+                if (getmPlayService() == null) {
+                    Log.e("222", "33333333333333333");
+                } else {
+                    getmPlayService().next();
+                }
                 break;
             case R.id.iv_back:
                 onBackPressed();
-                ;
                 break;
             case R.id.skip_mode:
                 play_mode = Preferences.getPlayMode();
@@ -197,8 +211,55 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 Preferences.savePlayMode(play_mode);
                 updatePlayMode();
                 break;
+            case R.id.skip_lrc:
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("歌词下载")
+                        .setMessage("匹配到相应的歌词")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (!lrc_empty) {
+                                    getlrc(Music.Type.LOCAL);
+                                }
+                            }
+                        });
+
+                break;
         }
 
+    }
+
+    /**
+     * 在线获取歌词
+     */
+    private void getlrc(Music.Type type) {
+        if (type == Music.Type.ONLINE) {
+//            OkHttpUtils.get().url(mOnlineMusic.getLrclink()).build()
+//                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
+//                        @Override
+//                        public void inProgress(float progress, long total) {
+//                        }
+//
+//                        @Override
+//                        public void onResponse(File response) {
+//                        }
+//
+//                        @Override
+//                        public void onError(Call call, Exception e) {
+//                        }
+//
+//                        @Override
+//                        public void onAfter() {
+//                            mCounter++;
+//                            if (mCounter == 3) {
+//                                onSuccess(music);
+//                            }
+//                        }
+//                    });
+        } else {
+
+        }
     }
 
     /**
@@ -259,6 +320,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 String lrcPath = uri.replace(".mp3", ".lrc");
                 File file = new File(lrcPath);
                 if (file.exists()) {
+                    lrc_empty = false;
                     loadLrc(lrcPath, Music.Type.LOCAL);
                 } else {
                     loadLrc("", Music.Type.LOCAL);
@@ -268,7 +330,40 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             }
         } else {
             String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-            loadLrc(lrcPath, Music.Type.ONLINE);
+//            loadLrc(lrcPath, Music.Type.ONLINE);
+            loadOnlineLrc(music, Music.Type.ONLINE);
+        }
+    }
+
+    private void loadOnlineLrc(final Music music, final Music.Type online) {
+        final String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
+        final String lrcFileName = FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
+        File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
+        if (!TextUtils.isEmpty(music.getLrcPath()) && !lrcFile.exists()) {
+            Log.e("---", "exists");
+            OkHttpUtils.get().url(music.getLrcPath()).build()
+                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
+
+                        @Override
+                        public void onError(Call call, Exception e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(File response) {
+                            Log.e("---", lrcPath);
+
+                            loadLrc(lrcPath, online);
+                        }
+
+                        @Override
+                        public void inProgress(float progress, long total) {
+
+                        }
+                    });
+        } else {
+            loadLrc(lrcPath, online);
+            Log.e("---", "emnnnn");
         }
     }
 
@@ -279,6 +374,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      * @param type
      */
     private void loadLrc(String path, Music.Type type) {
+        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
+            lrc_empty = true;
+        }
         mLrcView.loadLrc(path, type);
         // 清除tag
         mLrcView.setTag(null);
@@ -290,7 +388,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      * @param music
      */
     private void setCoverAndBg(Music music) {
-
         if (music.getType() == Music.Type.LOCAL) {
             civ_cover.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
@@ -307,22 +404,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             }
         }
         initAlbumpic();
-
+        operatingAnim.start();
     }
 
     private void setRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
-
         reloadAdapter();
-        recyclerView.setAdapter(mAdapter);
-
-        mAdapter.setOnItemClickListener(this);
     }
 
-
-    private static Context mContext;
-    public static ObjectAnimator operatingAnim;
+    public ObjectAnimator operatingAnim;
 
 
     public void initAlbumpic() {
@@ -337,7 +427,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
         operatingAnim.setInterpolator(lin);
 
-        operatingAnim.start();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -420,7 +509,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void updatePageIcon(int current) {
-        switch (current){
+        switch (current) {
             case 0:
                 page_icon.setImageResource(R.drawable.page_icon_left);
                 break;
@@ -446,16 +535,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onPageScrollStateChanged(int state) {
 
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        if (getmPlayService().checkNetwork(position)) {
-            MainActivity.mPlayService.setMyMusicList(musicInfos);
-            MainActivity.mPlayService.playMusic(position);
-
-        }
-        mAdapter.notifyDataSetChanged();
     }
 
 
@@ -490,24 +569,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void reloadAdapter() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(final Void... unused) {
-                musicInfos = getmPlayService().getMusicList();
-                return null;
-            }
+        musicInfos = MainActivity.mPlayService.getMusicList();
+        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
+        recyclerView.setAdapter(mAdapter);
+    }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                if (musicInfos.size() == 0) {
-//                    tv_empty.setText("暂无音乐");
-//                    tv_empty.setVisibility(View.VISIBLE);
-//                } else {
-//                    tv_empty.setVisibility(View.GONE);
-//                }
-                mAdapter.setMusicInfos(musicInfos);
-                mAdapter.notifyDataSetChanged();
-            }
-        }.execute();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        operatingAnim.cancel();
     }
 }

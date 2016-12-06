@@ -9,8 +9,7 @@
         android:id="@+id/adapter_scan_item_cb"
         android:layout_width="30.0dip"
         android:layout_height="30.0dip"
-        android:layout_marginLeft="10.0dip"
-        android:button="@drawable/scan_item_cbx_selection" />
+        android:layout_marginLeft="10.0dip"/>
 
     <TextView
         android:id="@+id/adapter_scan_item_tv"

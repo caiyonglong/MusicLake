@@ -1,18 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <!--第一部分：伸缩工具栏-->
 
-    <!--第二部分：主要内容，NestedScrollView和ScrollView基本功能一致，只不过NestedScrollView可以兼容新的控件-->
+    <RelativeLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@drawable/music_eight">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:fitsSystemWindows="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_account_circle" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_logo"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:text="昵称"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+
+    </RelativeLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/music_nine"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -20,10 +54,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingTop="24dp">
-
             <!--卡片布局-->
             <android.support.v7.widget.CardView
-                android:id="@+id/cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -37,211 +69,23 @@
                 app:cardUseCompatPadding="true"
                 app:contentPadding="16dp">
 
-                <LinearLayout
+
+                <TextView
+                    android:id="@+id/user_nick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_name" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="姓名"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:text="demo"
-                            android:textColor="@color/setting_blue"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_sex" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="性别"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_sex"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:text="demo"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_id" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="学号"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:text="demo"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_college" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="院系"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_departments"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:text="demo"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_major" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="专业"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_major"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:text="demo"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_class" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="班级"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_class"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:text="demo"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_weight="1"
+                    android:text="demo"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
             </android.support.v7.widget.CardView>
 
-
             <!--卡片布局-->
             <android.support.v7.widget.CardView
+                android:id="@+id/info_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -259,39 +103,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="13dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@mipmap/usercenter_name" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginStart="15dp"
-                            android:text="昵称"
-                            android:textColor="@color/text_color"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/usercenter_sign"
-                            android:layout_width="70dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginStart="25dp"
-                            android:layout_weight="1"
-                            android:text="demo"
-                            android:textColor="@color/setting_blue"
-                            android:textSize="16sp" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -311,11 +122,11 @@
                             android:layout_marginLeft="15dp"
                             android:layout_marginStart="15dp"
                             android:text="电话"
-                            android:textColor="@color/text_color"
+                            android:textColor="@color/black"
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/usercenter_phone"
+                            android:id="@+id/user_phone"
                             android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="25dp"
@@ -344,11 +155,11 @@
                             android:layout_marginLeft="15dp"
                             android:layout_marginStart="15dp"
                             android:text="邮箱"
-                            android:textColor="@color/text_color"
+                            android:textColor="@color/black"
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/usercenter_email"
+                            android:id="@+id/user_email"
                             android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="25dp"
@@ -363,46 +174,41 @@
 
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/main_white"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="15dp">
+
+                <TextView
+                    android:id="@+id/user_secret_num"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/secret_num"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <ImageView
-                android:id="@+id/backdrop"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_account_circle"
-                app:layout_collapseMode="pin" />
-
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
 
 
     <!--第三部分：漂浮按钮-->
@@ -410,4 +216,4 @@
 
     <!--"-->
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

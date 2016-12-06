@@ -3,125 +3,122 @@
     android:id="@+id/id_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
     android:layout_marginBottom="2dp"
+    android:layout_marginTop="3dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="?cardColor"
-    app:cardElevation="3dp"
-    app:cardMaxElevation="5dp"
+    app:cardElevation="6dp"
+    app:cardMaxElevation="8dp"
     app:cardPreventCornerOverlap="false"
-    app:cardUseCompatPadding="false"
-    >
+    app:cardUseCompatPadding="false">
 
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:descendantFocusability="blocksDescendants"
-        >
+        android:orientation="vertical">
+
         <RelativeLayout
-            android:layout_margin="5dp"
+            android:id="@+id/rl_user"
             android:layout_width="match_parent"
-            android:layout_height="45dp">
-            <ImageView
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_logo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                />
-            <ImageView
-                android:layout_alignParentRight="true"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                />
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_toRightOf="@+id/user_logo"
-                android:layout_marginLeft="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp">
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:textColor="@color/setting_blue"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:layout_width="wrap_content" />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_account_circle"
+                android:layout_gravity="center_vertical" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_query_builder_blue_grey_400_18dp"
-                        />
-
-                    <TextView
-                        android:id="@+id/content_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/setting_blue"
-                        android:scaleType="centerInside" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/content_text"
+                android:id="@+id/user_name"
+                android:layout_toRightOf="@+id/user_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:layout_marginBottom="8dp"
-                />
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:text="123123131"
+                android:layout_gravity="center_vertical"
+                android:lines="1"
+                android:textColor="@color/setting_blue"
+                android:textSize="14sp" />
+            <Button
+                android:id="@+id/item_love"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_bg"
+                android:text="赞"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/content_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:maxLines="4" />
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/item_comment_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginRight="10dp"
                 android:background="#334A90E2"
-                android:layout_marginRight="5dp"
-                android:text="·评论"
                 android:padding="2dp"
+                android:text="·评论"
                 android:textColor="@color/setting_blue" />
+
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/item_love_num"
+                android:layout_toRightOf="@+id/item_comment_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="#334A90E2"
-                android:text="·赞"
                 android:padding="2dp"
+                android:text="·赞"
                 android:textColor="@color/setting_blue" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/item_comment_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="bottom"
+                android:background="#334A90E2"
+                android:padding="2dp"
+                android:text="分享于2016-7-2"
+                android:textColor="@color/setting_blue" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
