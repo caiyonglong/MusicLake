@@ -2,6 +2,7 @@ package com.cyl.music_hnust.adapter;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -17,13 +18,17 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.activity.PlaylistDetailActivity;
-import com.cyl.music_hnust.model.LocalPlaylist;
-import com.cyl.music_hnust.model.Music;
+import com.cyl.music_hnust.dataloaders.PlaylistLoader;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.Playlist;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.Extras;
-import com.cyl.music_hnust.utils.MusicUtils;
+import com.cyl.music_hnust.utils.FileUtils;
+import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.AddPlaylistDialog;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,16 +44,8 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
+    private int currentlyPlayingPosition =0;
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public OnItemClickListener mOnItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mOnItemClickListener = listener;
-    }
 
     public LocalMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
         this.context = context;
@@ -61,7 +58,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent,false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -70,33 +67,42 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-        if (localItem.getCover() != null) {
-            holder.albumArt.setImageBitmap(localItem.getCover());
-        } else {
-            Bitmap cover = CoverLoader.getInstance().loadThumbnail(localItem.getCoverUri());
-            holder.albumArt.setImageBitmap(cover);
+        if (localItem.getType()== Music.Type.LOCAL) {
+            loadBitmap(ImageUtils.getAlbumArtUri(localItem.getAlbumId()).toString(),
+                    holder.albumArt);
+        }else {
+            if (localItem.getCover() != null) {
+                holder.albumArt.setImageBitmap(localItem.getCover());
+            } else {
+                holder.albumArt.setImageResource(R.drawable.default_cover);
+            }
         }
+        holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
+        holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(),localItem.getAlbum()));
 
-        holder.title.setText(localItem.getTitle());
-        holder.artist.setText(localItem.getArtist());
-
-        if(MainActivity.mPlayService.getPlayingMusic().getArtist().equals(localItem.getArtist())
-                && MainActivity.mPlayService.getPlayingMusic().getTitle().equals(localItem.getTitle()))
+        if(MainActivity.mPlayService.getPlayingMusic().getId()==musicInfos.get(position).getId())
         {
             holder.v_playing.setVisibility(View.VISIBLE);
         }else {
             holder.v_playing.setVisibility(View.GONE);
         }
 
-        if (mOnItemClickListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(holder.itemView, position);
-                }
-            });
-        }
         setOnPopupMenuListener(holder, position);
+    }
+
+
+    private void loadBitmap(String uri, ImageView img) {
+        try {
+            ImageLoader.getInstance().displayImage(uri, img,
+                    new DisplayImageOptions.Builder().cacheInMemory(true)
+                            .showImageOnFail(R.drawable.default_cover)
+                            .showImageForEmptyUri(R.drawable.default_cover)
+                            .showImageOnLoading(R.drawable.default_cover)
+                            .resetViewBeforeLoading(true)
+                            .build());
+        } catch (Exception e) {
+            Log.e("EEEE", uri);
+        }
     }
 
     private void setOnPopupMenuListener(ItemHolder holder, final int position) {
@@ -118,8 +124,9 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                             case R.id.popup_song_goto_album:
                                 Log.e("album",musicInfos.get(position).getAlbumId()+"");
                                 Intent intent = new Intent(context, PlaylistDetailActivity.class);
-                                intent.putExtra(Extras.ALBUM_ID,musicInfos.get(position).getAlbumId()+"");
-                                intent.putExtra(Extras.ALBUM,true);
+                                intent.putExtra(Extras.ALBUM_ID,musicInfos.get(position).getAlbumId());
+                                intent.putExtra(Extras.PLAYLIST_NAME,musicInfos.get(position).getAlbum()+"");
+                                intent.putExtra(Extras.ALBUM,0);
                                 context.startActivity(intent);
                                 break;
                             case R.id.popup_song_goto_artist:
@@ -140,7 +147,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     private void getMusicInfo(Music music) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle(music.getTitle());
+        dialog.setTitle(FileUtils.getTitle(music.getTitle()));
         StringBuilder sb = new StringBuilder();
         sb.append("艺术家：")
                 .append(music.getArtist())
@@ -163,28 +170,13 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         dialog.show();
     }
 
-    private void getPlaylistInfo(Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        List<LocalPlaylist> playlists = MusicUtils.scanPlaylist(context);
-        dialog.setTitle("歌单列表");
-        if (playlists.size() == 0) {
-            dialog.setMessage("暂无歌单,请新建!");
-        } else {
-            String msg = "";
-            for (int i = 0; i < playlists.size(); i++) {
-                msg += playlists.get(i).getName() + "\n";
-            }
-            dialog.setMessage(msg);
-        }
-        dialog.show();
-    }
 
     @Override
     public int getItemCount() {
         return (null != musicInfos ? musicInfos.size() : 0);
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder {
+    public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected TextView title, artist;
         protected ImageView albumArt;
         protected ImageView popupmenu;
@@ -197,6 +189,32 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
             this.albumArt = (ImageView) view.findViewById(R.id.iv_cover);
             this.popupmenu = (ImageView) view.findViewById(R.id.iv_more);
             this.v_playing = view.findViewById(R.id.v_playing);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("lllllaaaaaaaa",musicInfos.size()+"====");
+                    MainActivity.mPlayService.setMyMusicList(musicInfos);
+                    MainActivity.mPlayService.playMusic(getAdapterPosition());
+
+                    Log.e("LOCal",MainActivity.mPlayService.getMusicList().size()+"====");
+
+                    Handler handler1 = new Handler();
+                    handler1.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyItemChanged(currentlyPlayingPosition);
+                            notifyItemChanged(getAdapterPosition());
+                            currentlyPlayingPosition =getAdapterPosition();
+                        }
+                    }, 50);
+                }
+            }, 100);
         }
     }
 }
