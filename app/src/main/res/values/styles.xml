@@ -62,9 +62,8 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="AppTheme.Launcher">
-        <item name="android:windowBackground">@mipmap/bg</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="AppTheme.Launcher" parent="MyThemeBlue">
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AppTheme.Search" parent="MyThemeBlue">

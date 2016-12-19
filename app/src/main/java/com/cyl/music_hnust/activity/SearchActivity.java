@@ -41,6 +41,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import okhttp3.Call;
 
 /**
@@ -49,17 +50,19 @@ import okhttp3.Call;
  * 版本：2.5
  */
 public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchAdapter.OnItemClickListener {
-    private Toolbar mToolbar;
+
+    //搜索信息
     private String queryString;
 
     private SearchAdapter mAdapter;
-
     private PlayService mPlayService;
     private ProgressDialog mProgressDialog;
     private int mOffset = 10;
 
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+    @Bind(R.id.xrecyclerview)
     XRecyclerView mRecyclerView;
-    TextView tv_empty;
 
     private List<SearchMusic.SongList> searchResults = new ArrayList<>();
 
@@ -76,10 +79,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void initView() {
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
-        tv_empty = (TextView) findViewById(R.id.tv_empty);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -137,11 +136,13 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                 @Override
                 public void onClick(View v) {
                     queryString = searchView.getQuery().toString().toString();
+                    mProgressDialog.show();
                     if (queryString.length() > 0) {
                         mOffset = 10;
                         searchResults.clear();
                         getMusic(mOffset);
                     } else {
+                        mProgressDialog.cancel();
                         ToastUtils.show(getApplicationContext(), "不能搜索空文本");
                     }
                 }
@@ -193,11 +194,11 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
                         searchResults.addAll(response.getSong_list());
                         mAdapter.notifyDataSetChanged();
+                        mProgressDialog.cancel();
                     }
 
                     @Override
                     public void onError(Call call, Exception e) {
-                        tv_empty.setVisibility(View.VISIBLE);
                         mRecyclerView.loadMoreComplete();
                         if (e instanceof RuntimeException) {
                             // 歌曲全部加载完成
@@ -209,6 +210,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                         } else {
 //                            ToastUtils.show(R.string.load_fail);
                         }
+                        mProgressDialog.cancel();
                     }
                 });
     }
@@ -315,10 +317,10 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         dialog.setTitle("歌曲信息");
         StringBuilder sb = new StringBuilder();
         sb.append("歌曲名：")
-                .append(music.getTitle())
+                .append(FileUtils.getTitle(music.getTitle()))
                 .append("\n\n")
                 .append("歌手：")
-                .append(music.getAuthor())
+                .append(FileUtils.getArtist(music.getAuthor()))
                 .append("\n\n")
                 .append("专辑：")
                 .append(music.getAlbum_title())

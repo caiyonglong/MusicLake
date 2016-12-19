@@ -15,7 +15,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,13 +24,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.activity.map.BaseMapActivity;
 import com.cyl.music_hnust.fragment.DownloadFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.fragment.PlaylistFragment;
-import com.cyl.music_hnust.activity.map.BaseMapActivity;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.user.User;
 import com.cyl.music_hnust.model.user.UserStatus;
@@ -51,55 +49,56 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * 描述
+ * 描述 主要的Activity
  *
  * @author yonglong
  * @date 2016/8/3
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        OnPlayerListener {
+        OnPlayerListener{
 
-
-    //底部控制的进度条
+    //进度条
     @Bind(R.id.song_progress_normal)
     ProgressBar mProgressBar;
-    //底部控制的歌名
+    //歌名
     @Bind(R.id.title)
     TextView tv_title;
-    //底部控制的歌手
+    //歌手
     @Bind(R.id.artist)
     TextView tv_artist;
-    //底部控制的整个frame
+    //底部
     @Bind(R.id.play_control)
     RelativeLayout play_control;
 
-    //底部控制的整个frame点击事件
+    //底部点击事件
     @OnClick(R.id.play_control)
     public void show() {
         showPlayingFragment();
     }
 
-
-    //底部控制的音乐专辑图片
+    //音乐专辑图片
     @Bind(R.id.album)
     ImageView album;
-    //底部控制的下一首按钮
+    //下一首按钮
     @Bind(R.id.next_buttom)
     ImageButton next_buttom;
 
-    //底部控制的下一首点击事件
+    //下一首点击事件
     @OnClick(R.id.next_buttom)
     public void onclik() {
         mPlayService.next();
     }
 
+    //暂停or播放按钮
     @Bind(R.id.play_pause)
     PlayPauseButton mPlayPause;
-
+    //暂停播放按钮的点击效果
     @Bind(R.id.playpausewrapper)
     View playpausewrapper;
 
-
+    /**
+     * 播放状态
+     */
     Boolean duetoplaypause = false;
 
     @OnClick(R.id.playpausewrapper)
@@ -120,7 +119,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 playOrPause();
             }
         }, 200);
-
     }
 
     /**
@@ -171,10 +169,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     boolean login_status;
 
+    //跳转Intent
+    private Intent intent = null;
+
     boolean on = Preferences.isNightMode();
 
     PlayFragment mPlayFragment = null;
     PlaylistFragment playlistFragment = null;
+
+    static MainActivity mainActivity = null;
 
     //替换Mainfragment
     Runnable main = new Runnable() {
@@ -203,15 +206,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
     /**
-     * service 连接
+     * service服务连接
      */
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.MyBinder) service).getService();
             mPlayService.setOnPlayEventListener(MainActivity.this);
-
             mPlayService.updateMusicList();
+            init();
         }
 
         @Override
@@ -225,22 +228,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SystemUtils.setSystemBarTransparent(this);
     }
 
     @Override
     protected void initView() {
+        //初始化菜单栏
+        setNavigationView();
     }
 
     @Override
     protected void initData() {
-        //进度条样式
-        mProgressBar.setProgress(0);
-        mPlayPause.setColor(Color.parseColor("#259b24"));
         bindService();
-        setNavigationView();
-        init();
     }
 
     @Override
@@ -249,23 +247,30 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
-     * 初始化加载MainFragment
+     * 服务绑定后，初始化视图。
      */
     private void init() {
+        //加载Mainfragment
         main.run();
-//        onPlay(mPlayService.getPlayingMusic());
+        //更新底部控制栏
+        updateControl(mPlayService.getPlayingMusic());
     }
 
-
+    /**
+     * 绑定服务
+     */
     private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
+        intent = new Intent(this, PlayService.class);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    /**
+     * 初始化菜单栏
+     */
     private void setNavigationView() {
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
+        //菜单栏的头部控件初始化
         View headerView = mNavigationView.inflateHeaderView(R.layout.header_nav);
         iv_bg = (ImageView) headerView.findViewById(R.id.header_bg);
         user_face = (CircleImageView) headerView.findViewById(R.id.header_face);
@@ -277,7 +282,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onClick(View v) {
                 login_status = UserStatus.getstatus(MainActivity.this);
-                Intent intent = null;
                 if (login_status) {
                     intent = new Intent(MainActivity.this, UserCenterAcivity.class);
                 } else {
@@ -323,8 +327,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    Runnable runnable = null;
-
+    /**
+     * 菜单条目点击事件
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         mDrawerLayout.closeDrawers();
@@ -332,64 +340,47 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_music:
                 item.setChecked(true);
                 mHandler.postDelayed(main, 100);
-//                main.run();
                 break;
             case R.id.nav_menu_playlist:
                 item.setChecked(true);
                 mHandler.postDelayed(playlist, 100);
-//                .run();
                 break;
             case R.id.nav_menu_download:
                 item.setChecked(true);
                 mHandler.postDelayed(download, 100);
-//                download.run();
-//                runnable = new Runnable() {
-//                    public void run() {
-//                Intent intent = new Intent(MainActivity.this, DownloadActivity1.class);
-//                startActivity(intent);
-//                    }
-//                };
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
-//                runnable = new Runnable() {
-//                    public void run() {
                 if (login_status) {
-                    Intent intent2 = new Intent(MainActivity.this, ShakeActivity.class);
-                    startActivity(intent2);
+                    intent = new Intent(MainActivity.this, ShakeActivity.class);
+                    startActivity(intent);
                 } else {
-                    Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent1);
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
-//                    }
-//                };
                 break;
             case R.id.nav_menu_near:
-//                runnable = new Runnable() {
-//                    public void run() {
                 if (login_status) {
-                    Intent intent2 = new Intent(MainActivity.this, BaseMapActivity.class);
-                    intent2.putExtra("fromActivity", "Near");
-                    startActivity(intent2);
+                    intent = new Intent(MainActivity.this, BaseMapActivity.class);
+                    intent.putExtra("fromActivity", "Near");
+                    startActivity(intent);
                 } else {
-                    Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent1);
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
-//                    }
-//                };
                 break;
             case R.id.nav_menu_setting:
-                Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent3);
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_menu_exit:
                 finish();
                 break;
             case R.id.nav_menu_help:
-                Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                intent = new Intent(Intent.ACTION_VIEW);
                 Uri data = Uri.parse("mailto:643872807@qq.com");
-                intent1.setData(data);
-                startActivity(intent1);
+                intent.setData(data);
+                startActivity(intent);
                 break;
         }
         return true;
@@ -397,8 +388,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-
-    //更新进度条
+    /**
+     * 更新歌曲播放进度条
+     *
+     * @param progress
+     */
     @Override
     public void onUpdate(int progress) {
         mProgressBar.setProgress(progress);
@@ -407,22 +401,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    //切换歌曲
+    /**
+     * 切换音乐
+     * 音乐播放
+     *
+     * @param music
+     */
     @Override
     public void onChange(Music music) {
-        onPlay(music);
+        //更新底部控制栏
+        updateControl(music);
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlay(music);
         }
     }
 
-    //播放音乐
-    private void onPlay(Music music) {
+    /**
+     * 更新底部控制栏
+     *
+     * @param music
+     */
+    private void updateControl(Music music) {
         if (music == null) {
             return;
         }
         updateState();
-        //更换控制条的显示
+        //歌曲专辑图片更新
         if (music.getType() == Music.Type.LOCAL) {
             ImageLoader.getInstance().displayImage(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),
                     album,
@@ -454,10 +458,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tv_artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
-
+        //按钮颜色
+        mPlayPause.setColor(Color.parseColor("#259b24"));
     }
 
 
+    /**
+     * 播放暂停
+     */
     @Override
     public void onPlayerPause() {
         updateState();
@@ -467,6 +475,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+    /**
+     * 恢复播放
+     */
     @Override
     public void onPlayerResume() {
         updateState();
@@ -475,11 +486,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mServiceConnection);
-    }
 
     //返回键
     @Override
@@ -495,9 +501,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onBackPressed();
     }
 
-    //播放列表隐藏
+    //播放列表是否隐藏
     Boolean isPlayFragmentShow = false;
 
+    /**
+     * 隐藏播放列表
+     */
     private void hidePlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(0, R.anim.fragment_slide_down);
@@ -506,7 +515,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         isPlayFragmentShow = false;
     }
 
-    //播放列表显示
+    /**
+     * 播放列表显示
+     */
     private void showPlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.addToBackStack(null);
@@ -528,14 +539,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return mPlayService;
     }
 
+    /**
+     * 生命周期onresume
+     */
     @Override
     protected void onResume() {
         super.onResume();
+        mainActivity = this;
         on = Preferences.isNightMode();
         initNav();
     }
 
 
+    /**
+     * 菜单
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -556,7 +577,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.action_search:
-                final Intent intent = new Intent(this, SearchActivity.class);
+                intent = new Intent(this, SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 break;
@@ -576,4 +597,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mServiceConnection != null)
+            unbindService(mServiceConnection);
+    }
 }

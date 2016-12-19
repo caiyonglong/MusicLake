@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.custom;
+package com.cyl.music_hnust.view.custom;
 
 /**
  * Created by Mr_immortalZ on 2016/5/3.

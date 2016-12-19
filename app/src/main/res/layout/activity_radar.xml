@@ -20,7 +20,7 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <com.cyl.music_hnust.custom.RadarViewGroup
+    <com.cyl.music_hnust.view.custom.RadarViewGroup
         android:id="@+id/radar"
         android:layout_width="280dp"
         android:layout_height="280dp"
@@ -30,11 +30,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp">
 
-        <com.cyl.music_hnust.custom.RadarView
+        <com.cyl.music_hnust.view.custom.RadarView
             android:id="@id/id_scan_circle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.cyl.music_hnust.custom.RadarViewGroup>
+    </com.cyl.music_hnust.view.custom.RadarViewGroup>
 
     <RelativeLayout
         android:id="@+id/ry_container"
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.cyl.music_hnust.custom.CustomViewPager
+        <com.cyl.music_hnust.view.custom.CustomViewPager
             android:id="@+id/vp"
             android:layout_width="160dp"
             android:layout_height="200dp"

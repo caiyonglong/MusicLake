@@ -202,9 +202,6 @@ public class UserCenterAcivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
-        SystemUtils.setSystemBarTransparent(this);
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -232,7 +229,6 @@ public class UserCenterAcivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new UserFragment(), "个人信息");
-        adapter.addFragment(new CommunityFragment().newInstance(2), "我的动态");
         viewPager.setAdapter(adapter);
     }
 

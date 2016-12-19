@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
@@ -74,11 +73,11 @@
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/v_divider"
-            style="@style/AppTheme.Divider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_gravity="bottom" />
+        <!--<View-->
+            <!--android:id="@+id/v_divider"-->
+            <!--style="@style/AppTheme.Divider"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/divider_height"-->
+            <!--android:layout_gravity="bottom" />-->
     </FrameLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.cyl.music_hnust.fragment;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.cyl.music_hnust.model.user.UserStatus;
  * 作者：yonglong on 2016/8/8 17:47
  * 邮箱：643872807@qq.com
  * 版本：2.5
+ * 用户fragment :主要包括个人信息
  */
 public class UserFragment extends BaseFragment implements View.OnClickListener {
 
@@ -24,6 +26,14 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     private User user;
 
+    public static UserFragment newInstance(int flag) {
+        
+        Bundle args = new Bundle();
+        
+        UserFragment fragment = new UserFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     protected void listener() {
@@ -47,6 +57,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public int getLayoutId() {
+
         return R.layout.frag_user;
     }
 

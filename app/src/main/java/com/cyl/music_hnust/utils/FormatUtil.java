@@ -26,18 +26,16 @@ public class FormatUtil {
      * @param time 时间值
      * @return 时间
      */
-    public static String formatTime(String time) {
+    public static String formatTime(long time) {
         // TODO Auto-generated method stub
-        int time1 = Integer.parseInt(time);
-        if (time1 == 0) {
+        if (time == 0) {
             return "00:00";
         }
-        time1 = time1 / 1000;
-        int m = time1 / 60 % 60;
-        int s = time1 % 60;
+        time = time / 1000;
+        int m = (int) (time / 60 % 60);
+        int s = (int) (time % 60);
         return (m > 9 ? m : "0" + m) + ":" + (s > 9 ? s : "0" + s);
     }
-
     /**
      * 格式化文件大小
      *

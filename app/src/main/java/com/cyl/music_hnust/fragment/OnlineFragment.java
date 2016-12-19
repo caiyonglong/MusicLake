@@ -95,6 +95,8 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
                                     return;
                                 }
                                 mBillboards= response.getContent();
+                                //移除T榜
+                                mBillboards.remove(3);
                                 mAdapter.setmBillboards(mBillboards);
                                 mAdapter.notifyDataSetChanged();
                             }

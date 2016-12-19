@@ -23,6 +23,35 @@ public class MusicLoader {
 
 
     /**
+     *
+     * 获取一个专辑的详情信息
+     * @param context
+     * @param id
+     * @return
+     */
+    public static Album getAlbum(Context context,long id) {
+
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[]{"_id", "album", "artist", "artist_id", "numsongs"},
+                "_id=?", new String[]{String.valueOf(id)}, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
+        Album album = new Album();
+
+        if (cursor != null) {
+            if (cursor.moveToFirst())
+                album =new Album(
+                        cursor.getLong(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getLong(3),
+                        cursor.getInt(4));
+        }
+        if (cursor != null)
+            cursor.close();
+        return album;
+    }
+
+    /**
      * 获取所有专辑
      *
      * @param context

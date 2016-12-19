@@ -72,6 +72,12 @@ public class FileUtils {
         return dir;
     }
 
+    /**
+     * mp3文件格式名
+     * @param artist
+     * @param title
+     * @return
+     */
     public static String getMp3FileName(String artist, String title) {
         artist = stringFilter(artist);
         title = stringFilter(title);
@@ -84,6 +90,12 @@ public class FileUtils {
         return artist + " - " + title + Constants.FILENAME_MP3;
     }
 
+    /**
+     * 歌词文件名
+     * @param artist
+     * @param title
+     * @return
+     */
     public static String getLrcFileName(String artist, String title) {
         artist = stringFilter(artist);
         title = stringFilter(title);
@@ -95,6 +107,12 @@ public class FileUtils {
         }
         return artist + " - " + title + Constants.FILENAME_LRC;
     }
+
+    /**
+     * 音乐名格式化
+     * @param title
+     * @return
+     */
     public static String getTitle(String title) {
         title = stringFilter(title);
         if (TextUtils.isEmpty(title)) {
@@ -102,7 +120,26 @@ public class FileUtils {
         }
         return title;
     }
+    /**
+     * 歌手名格式化
+     * @param artist
+     * @return
+     */
+    public static String getArtist(String artist) {
+        artist = stringFilter(artist);
+        if (TextUtils.isEmpty(artist)) {
+            artist = MyApplication.getInstance().getString(R.string.unknown);
+        }
+        return artist;
+    }
 
+
+    /**
+     * 歌手专辑格式化
+     * @param artist
+     * @param album
+     * @return
+     */
     public static String getArtistAndAlbum(String artist, String album) {
         artist = stringFilter(artist);
         album = stringFilter(album);

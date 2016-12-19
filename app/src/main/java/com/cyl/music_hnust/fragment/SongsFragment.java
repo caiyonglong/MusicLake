@@ -36,11 +36,11 @@ public class SongsFragment extends BaseFragment {
     RecyclerView mRecyclerView;
     TextView tv_empty;
     LinearLayout loading;
-    private  LocalMusicAdapter mAdapter;
-    private  MyStaggeredViewAdapter adapter;
-    private  List<Music> musicInfos = new ArrayList<>();
-    private  List<Album> albums = new ArrayList<>();
-    private  List<Artist> artists = new ArrayList<>();
+    private LocalMusicAdapter mAdapter;
+    private MyStaggeredViewAdapter adapter;
+    private List<Music> musicInfos = new ArrayList<>();
+    private List<Album> albums = new ArrayList<>();
+    private List<Artist> artists = new ArrayList<>();
 
     int type = 0;
 
@@ -66,7 +66,7 @@ public class SongsFragment extends BaseFragment {
     @Override
     protected void initDatas() {
         type = getArguments().getInt(Extras.SONG_TYPE);
-        Log.e("tppppp",type+"===");
+        Log.e("tppppp", type + "===");
         new loadSongs().execute("");
     }
 
@@ -77,7 +77,12 @@ public class SongsFragment extends BaseFragment {
      */
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview;
+        type = getArguments().getInt(Extras.SONG_TYPE);
+        if (type == 0) {
+            return R.layout.frag_recyclerview_songs;
+        } else {
+            return R.layout.frag_recyclerview;
+        }
     }
 
     /**
@@ -88,10 +93,7 @@ public class SongsFragment extends BaseFragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
         loading = (LinearLayout) rootView.findViewById(R.id.loading);
-
     }
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -134,20 +136,21 @@ public class SongsFragment extends BaseFragment {
             }
         }.execute();
     }
+
     private class loadSongs extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            if (getActivity() != null){
+            if (getActivity() != null) {
                 if (type == 0) {
                     musicInfos = MusicUtils.getAllSongs(getActivity());
                     mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
-                } else if (type == 1){
+                } else if (type == 1) {
                     albums = MusicLoader.getAllAlbums(getActivity());
-                    adapter = new MyStaggeredViewAdapter(getActivity(),albums,artists,true);
+                    adapter = new MyStaggeredViewAdapter(getActivity(), albums, artists, true);
                 } else {
                     artists = MusicLoader.getAllArtists(getActivity());
-                    adapter = new MyStaggeredViewAdapter(getActivity(),albums,artists,false);
+                    adapter = new MyStaggeredViewAdapter(getActivity(), albums, artists, false);
                 }
             }
             return "Executed";
@@ -164,6 +167,7 @@ public class SongsFragment extends BaseFragment {
                 mRecyclerView.setAdapter(adapter);
             }
         }
+
         @Override
         protected void onPreExecute() {
             loading.setVisibility(View.VISIBLE);

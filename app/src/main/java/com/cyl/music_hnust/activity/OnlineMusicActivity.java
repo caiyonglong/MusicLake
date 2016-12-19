@@ -60,8 +60,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private List<Music> mMusicls = new ArrayList<>();
     private OnlineMusicAdapter mAdapter;
 
-    @Bind(R.id.main_content)
-    LinearLayout main_content;
     @Bind(R.id.xrecyclerview)
     XRecyclerView mRecyclerView;
 
@@ -282,7 +280,9 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
         TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
         tvTitle.setText(mMusicList.getBillboard().getName());
-        tvUpdateDate.setText(getString(R.string.recent_update, mMusicList.getBillboard().getUpdate_date()));
+        if (mMusicList.getBillboard().getUpdate_date()==null)
+            mMusicList.getBillboard().setUpdate_date("暂无记录");
+        tvUpdateDate.setText(getString(R.string.recent_update, mMusicList.getBillboard().getUpdate_date() ));
         tvComment.setText(mMusicList.getBillboard().getComment());
         ImageSize imageSize = new ImageSize(200, 200);
         ImageLoader.getInstance().loadImage(mMusicList.getBillboard().getPic_s640(), imageSize,

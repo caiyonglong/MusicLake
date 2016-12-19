@@ -18,7 +18,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import okhttp3.Call;
 
 /**
- * 功能: 下载工具类
+ * 功能: 软件更新工具类
  * 作者：yonglong on 2016/9/22 14:36
  * 邮箱：643872807@qq.com
  * 版本：2.5

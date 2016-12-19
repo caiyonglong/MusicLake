@@ -33,6 +33,7 @@ import com.cyl.music_hnust.model.music.lyric.LrcView;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
+import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SizeUtils;
@@ -120,7 +121,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
 
         //初始化沉淀式标题栏
-        initSystemBar();
+//        initSystemBar();
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -160,7 +161,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     public void onUpdate(int progress) {
         sk_progress.setProgress(progress);
-        tv_time.setText(SystemUtils.formatTime(progress));
+        tv_time.setText(FormatUtil.formatTime(progress));
         if (playPauseFloating != null)
             updatePlayPauseFloatingButton();
         if (mLrcView.hasLrc()) {
@@ -174,7 +175,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
         tv_title.setText(FileUtils.getTitle(music.getTitle()));
         tv_artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
-        tv_duration.setText(SystemUtils.formatTime(music.getDuration()));
+        tv_duration.setText(FormatUtil.formatTime(music.getDuration()));
         sk_progress.setMax((int) music.getDuration());
         sk_progress.setProgress(0);
         setLrc(music);
@@ -302,7 +303,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             int progress = seekBar.getProgress();
             getmPlayService().seekTo(progress);
             mLrcView.onDrag(progress);
-            tv_time.setText(SystemUtils.formatTime(progress));
+            tv_time.setText(FormatUtil.formatTime(progress));
         } else {
             seekBar.setProgress(0);
         }

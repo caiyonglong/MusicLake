@@ -14,6 +14,7 @@ public class OnlineMusicInfo {
     private String album_title;
     private String artist_name;
 
+
     public String getPic_big() {
         return pic_big;
     }

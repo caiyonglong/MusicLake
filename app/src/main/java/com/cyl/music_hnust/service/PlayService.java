@@ -530,4 +530,11 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             playPause();
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mServiceReceiver);
+        stop();
+    }
 }

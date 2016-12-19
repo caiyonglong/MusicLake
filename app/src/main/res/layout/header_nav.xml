@@ -1,70 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="220dp">
+    android:layout_height="200dp">
+
     <ImageView
         android:id="@+id/header_bg"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_header" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:padding="10dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <FrameLayout
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:elevation="10dp"
-            android:translationZ="10dp"
-            android:src="@drawable/ic_account_circle"
-            android:id="@+id/header_face"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
-    </FrameLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/header_face"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_account_circle" />
+        </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:orientation="vertical">
 
         <TextView
             android:id="@+id/header_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="18sp"
-            android:text="@string/header_author_name"
+            android:layout_marginTop="8dp"
             android:lines="1"
-            android:textColor="@android:color/white" />
+            android:text="@string/header_author_name"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/header_nick"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/header_author_url"
+            android:layout_marginTop="4dp"
             android:lines="1"
-            android:textColor="@android:color/white"
-             />
-    </LinearLayout>
-
+            android:text="@string/header_author_url"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </RelativeLayout>

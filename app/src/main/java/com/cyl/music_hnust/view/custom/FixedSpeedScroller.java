@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.custom;
+package com.cyl.music_hnust.view.custom;
 
 import android.content.Context;
 import android.view.animation.AccelerateInterpolator;

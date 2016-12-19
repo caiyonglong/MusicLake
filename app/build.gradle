@@ -1,19 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "com.cyl.music_hnust"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 5
         versionName "3.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -22,11 +23,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:+'
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:cardview-v7:+'
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
     compile 'com.jcodecraeer:xrecyclerview:1.2.7'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.loopj.android:android-async-http:1.4.9'

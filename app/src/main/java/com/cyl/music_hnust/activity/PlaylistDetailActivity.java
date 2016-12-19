@@ -51,8 +51,6 @@ public class PlaylistDetailActivity extends BaseActivity {
     ImageView album_art;
     @Bind(R.id.foreground)
     View foreground;
-    @Bind(R.id.main_content)
-    FrameLayout main_content;
 
     private LocalMusicAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
@@ -81,17 +79,18 @@ public class PlaylistDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist_detail);
-//        SystemUtils.setSystemBarTransparent(this);
     }
 
     private void setAlbumart() {
 
         Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "==\n" + ImageUtils.getAlbumArtUri(getIntent().getExtras().getLong(Extras.ALBUM_ID)).toString());
         playlist_name.setText(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
-        if (isAlbum != 0) {
+        if (isAlbum == -1) {
+            Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_FOREGROUND_COLOR) + "==\n"
+                    );
             foreground.setBackgroundColor(getIntent().getExtras().getInt(Extras.PLAYLIST_FOREGROUND_COLOR));
             album_art.setBackgroundResource(getIntent().getExtras().getInt(Extras.PLAYLIST_BACKGROUND_IMAGE));
-        } else if (album_id != -1) {
+        }else {
             loadBitmap(ImageUtils.getAlbumArtUri(album_id).toString());
         }
     }

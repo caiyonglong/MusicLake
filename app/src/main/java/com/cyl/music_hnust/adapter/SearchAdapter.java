@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.SearchMusic;
+import com.cyl.music_hnust.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +70,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ItemHolder
         }
 
         if (songList.get(position).getTitle() != null)
-            holder.tv_name.setText(Html.fromHtml(songList.get(position).getTitle()));
+            holder.tv_name.setText(FileUtils.getTitle(songList.get(position).getTitle()));
         if (songList.get(position).getAuthor() != null)
-            holder.tv_artist.setText(Html.fromHtml(songList.get(position).getAuthor())+songList.get(position).getAlbum_title());
+            holder.tv_artist.setText(FileUtils.getArtistAndAlbum(songList.get(position).getAuthor(),
+                    songList.get(position).getAlbum_title()));
 
     }
 

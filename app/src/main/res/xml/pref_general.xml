@@ -14,14 +14,7 @@
             android:title="@string/pref_title_wifi" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="反馈VS提升">
-        <EditTextPreference
-            android:title="用户反馈"
-            android:defaultValue="湖科音乐有什么缺点"
-            android:key="key_feedback"
-            android:summary="提bug，帮助改善app"
-           />
-    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_data_sync">
 
         <PreferenceScreen

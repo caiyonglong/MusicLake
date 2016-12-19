@@ -11,7 +11,10 @@ public class Album {
     private long artistId;
     private int count;
 
-    public Album(long id, String name,  String artistName, long artistId, int count) {
+    public Album() {
+    }
+
+    public Album(long id, String name, String artistName, long artistId, int count) {
         this.name = name;
         this.id = id;
         this.artistName = artistName;

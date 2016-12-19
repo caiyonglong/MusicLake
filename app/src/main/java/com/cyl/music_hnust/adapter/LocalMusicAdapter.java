@@ -20,6 +20,7 @@ import com.cyl.music_hnust.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.FileUtils;
+import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.AddPlaylistDialog;
@@ -152,13 +153,13 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                 .append(music.getAlbum())
                 .append("\n\n")
                 .append("播放时长：")
-                .append(SystemUtils.formatTime(music.getDuration()))
+                .append(FormatUtil.formatTime(music.getDuration()))
                 .append("\n\n")
                 .append("文件名称：")
                 .append(music.getFileName())
                 .append("\n\n")
                 .append("文件大小：")
-                .append(SystemUtils.formatSize(music.getFileSize()))
+                .append(FormatUtil.formatSize(music.getFileSize()))
                 .append("\n\n")
                 .append("文件路径：")
                 .append(new File(music.getUri()).getParent());

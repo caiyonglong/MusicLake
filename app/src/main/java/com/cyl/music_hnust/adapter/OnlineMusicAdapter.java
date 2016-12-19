@@ -71,7 +71,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         OnlineMusicInfo localItem = musicInfos.get(position);
-        ImageLoader.getInstance().displayImage(localItem.getPic_small().trim(), holder.albumArt, ImageUtils.getCoverDisplayOptions());
+        ImageLoader.getInstance().displayImage(localItem.getPic_small(), holder.albumArt, ImageUtils.getCoverDisplayOptions());
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist_name());
 

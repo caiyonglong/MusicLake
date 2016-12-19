@@ -66,7 +66,6 @@ public class SettingsActivity extends BaseActivity {
 
         private PreferenceScreen preference_about, preference_cache, preference_update;
         public SwitchPreference wifi_mode;
-        public EditTextPreference feedback;
         public CheckBoxPreference night_mode;
 
         public GeneralPreferenceFragment() {
@@ -87,9 +86,6 @@ public class SettingsActivity extends BaseActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-            //反馈
-            feedback = (EditTextPreference) findPreference("key_feedback");
-
             preference_about = (PreferenceScreen) findPreference("key_about");
             preference_update = (PreferenceScreen) findPreference("key_update");
             preference_cache = (PreferenceScreen) findPreference("key_cache");
@@ -101,8 +97,8 @@ public class SettingsActivity extends BaseActivity {
                 @Override
                 public void run() {
                     try {
-                        String size = DataClearmanager.getTotalCacheSize(getActivity());
-                        preference_cache.setSummary(size);
+//                        String size = DataClearmanager.getTotalCacheSize(getActivity());
+//                        preference_cache.setSummary(size);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -113,13 +109,6 @@ public class SettingsActivity extends BaseActivity {
             preference_update.setOnPreferenceClickListener(this);
             preference_cache.setOnPreferenceClickListener(this);
 
-            feedback.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    ToastUtils.show(getActivity(), String.valueOf(newValue));
-                    return false;
-                }
-            });
             night_mode.setChecked(Preferences.isNightMode());
             night_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -139,6 +128,7 @@ public class SettingsActivity extends BaseActivity {
                         public void run() {
                             dialog.cancel();
                             getActivity().recreate();
+                            MainActivity.mainActivity.recreate();
                             Preferences.saveNightMode(on);
                         }
                     }, 500);

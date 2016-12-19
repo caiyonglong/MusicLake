@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.custom;
+package com.cyl.music_hnust.view.custom;
 
 import android.app.Activity;
 import android.content.Context;

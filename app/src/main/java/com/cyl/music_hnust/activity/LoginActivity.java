@@ -21,7 +21,6 @@ import com.cyl.music_hnust.callback.UserCallback;
 import com.cyl.music_hnust.model.user.UserInfo;
 import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
-import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.tencent.tauth.IUiListener;
@@ -36,7 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 
@@ -52,8 +50,6 @@ public class LoginActivity extends BaseActivity {
 
     @Bind(R.id.cv)
     CardView cv;
-    @Bind(R.id.main)
-    RelativeLayout main;
     @Bind(R.id.fab)
     FloatingActionButton fab;
     @Bind(R.id.qqlogin)
@@ -163,15 +159,6 @@ public class LoginActivity extends BaseActivity {
         qqLogin();
     }
 
-    /**
-     * 沉浸式状态栏
-     */
-    private void initSystemBar() {
-        if (SystemUtils.isKITKAT()) {
-            int top = StatusBarCompat.getStatusBarHeight(this);
-            main.setPadding(0, top, 0, 0);
-        }
-    }
 
     private void login(Map<String,String> params) {
 
@@ -264,10 +251,6 @@ public class LoginActivity extends BaseActivity {
                             String iconUrl = info.getString("figureurl_qq_2");//获取用户头像的url
                             String gender = info.getString("gender");//获取用户性别
                             Map<String,String> params = new HashMap<String, String>();
-//                            Log.e("user_id=====",mTencent.getOpenId());
-//                            Log.e("username=====",nickName);
-//                            Log.e("user_img=====",iconUrl);
-//                            Log.e("use_sex=====",gender);
                             params.put(Constants.PARAM_METHOD,"qq");
                             params.put(Constants.USERNAME,nickName);
                             params.put(Constants.USER_SEX,gender);
@@ -278,6 +261,7 @@ public class LoginActivity extends BaseActivity {
                             ToastUtils.show(LoginActivity.this, "网络异常，请稍后重试！");
                             e.printStackTrace();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override

@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
@@ -14,13 +13,10 @@ import android.widget.RelativeLayout;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.service.PlayService;
-import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
-import com.cyl.music_hnust.utils.UpdateUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import rx.functions.Action1;
 
 /**
@@ -29,13 +25,14 @@ import rx.functions.Action1;
 public class WelcomeActivity extends BaseActivity {
     @Bind(R.id.wel_container)
     RelativeLayout container;
-
+    //
     private ServiceConnection mPlayServiceConnection;
 
     @Override
     protected void listener() {
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +41,14 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        initSystemBar();
+//        initSystemBar();
     }
 
     @Override
     protected void initData() {
         if (SystemUtils.isMarshmallow()) {
             checkPermissionAndThenLoad();
-        }else {
+        } else {
             checkService();
         }
     }
@@ -59,7 +56,7 @@ public class WelcomeActivity extends BaseActivity {
     //检查权限
     private void checkPermissionAndThenLoad() {
 
-        //check for permission
+        //需要检查的权限
         final String[] mPermissionList = new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -77,9 +74,9 @@ public class WelcomeActivity extends BaseActivity {
                 .subscribe(new Action1<Boolean>() {
                     @Override
                     public void call(Boolean granted) {
-                        if (granted){
+                        if (granted) {
                             checkService();
-                        }else {
+                        } else {
                             Snackbar.make(container, "软件必须获取相关权限",
                                     Snackbar.LENGTH_INDEFINITE)
                                     .setAction("OK", new View.OnClickListener() {
@@ -130,7 +127,7 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     /**
-     * 跳转
+     * 欢迎界面跳转到主界面
      */
     private void startMainActivity() {
         Intent intent = new Intent();
@@ -166,18 +163,5 @@ public class WelcomeActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    /**
-     * 沉浸式状态栏
-     */
-    private void initSystemBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int top = StatusBarCompat.getStatusBarHeight(this);
-            container.setPadding(0, top, 0, 0);
-        }
-    }
-    @Override
-    public void onBackPressed() {
     }
 }

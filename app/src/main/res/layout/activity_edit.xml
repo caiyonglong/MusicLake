@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/main_white">
+    android:fitsSystemWindows="false">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -19,24 +20,20 @@
     </android.support.design.widget.AppBarLayout>
 
     <EditText
-        android:textColor="@color/main_black"
         android:id="@+id/edit_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="left|top"
         android:hint="分享心情，分享歌曲..."
-        android:textSize="16sp"
         android:inputType="textMultiLine"
-        android:minLines="8"
         android:padding="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/app_bar"
-        android:layout_centerHorizontal="true">
-
+        android:textColor="@color/main_black"
+        android:textSize="16sp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <requestFocus />
     </EditText>
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
 
 

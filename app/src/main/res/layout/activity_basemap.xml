@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/tools">
+    android:fitsSystemWindows="true">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -14,15 +16,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:fitsSystemWindows="true"
-            app:title="设置" />
+            app:title="附近" />
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:layout_below="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@+id/app_bar"
+        android:orientation="vertical"
+        fab:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.amap.api.maps.MapView
             android:id="@+id/map"
@@ -43,45 +45,51 @@
             android:textColor="@color/blueGrey"
             android:visibility="gone" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/action_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                fab:fab_addButtonColorNormal="@color/white"
+                fab:fab_addButtonColorPressed="@color/white_pressed"
+                fab:fab_addButtonPlusIconColor="@color/half_black"
+                fab:fab_labelStyle="@style/menu_labels_style">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/action_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:fab_colorNormal="@color/main_white"
+                    fab:fab_colorPressed="@color/white"
+                    fab:fab_icon="@mipmap/icon_near"
+                    fab:fab_size="mini"
+                    fab:fab_title="附近的人" />
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/action_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:fab_colorNormal="@color/main_white"
+                    fab:fab_colorPressed="@color/white"
+                    fab:fab_icon="@android:drawable/ic_menu_search"
+                    fab:fab_size="mini"
+                    fab:fab_title="科大地图" />
+
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        </RelativeLayout>
 
 
     </FrameLayout>
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/action_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        fab:fab_addButtonColorNormal="@color/white"
-        fab:fab_addButtonColorPressed="@color/white_pressed"
-        fab:fab_addButtonPlusIconColor="@color/half_black"
-        fab:fab_labelStyle="@style/menu_labels_style"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_icon="@mipmap/icon_near"
-            fab:fab_colorNormal="@color/main_white"
-            fab:fab_title="附近的人"
-            fab:fab_size="mini"
-            fab:fab_colorPressed="@color/white"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_icon="@android:drawable/ic_menu_search"
-            fab:fab_colorNormal="@color/main_white"
-            fab:fab_title="科大地图"
-            fab:fab_size="mini"
-            fab:fab_colorPressed="@color/white"/>
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

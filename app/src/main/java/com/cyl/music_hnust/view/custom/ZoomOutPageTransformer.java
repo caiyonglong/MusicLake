@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.custom;
+package com.cyl.music_hnust.view.custom;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/music_five"
+    android:fitsSystemWindows="true"
     tools:context=".activity.RegisterActivity">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -14,245 +15,168 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:elevation="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:title="湖科音乐"
-            android:titleTextColor="@color/white"
-            />
+            android:titleTextColor="@color/white" />
     </android.support.design.widget.AppBarLayout>
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-25dp"
-        android:elevation="5dp"
-        app:fab_colorNormal="@color/grean"
-        app:fab_colorPressed="@color/lightGreen"
-        app:fab_icon="@drawable/ic_clear_white_24dp"
-        app:fabSize="normal"
-        android:transitionName="transition_fab"
-        android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/cv_add"/>
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:elevation="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone"/>
-    <android.support.v7.widget.CardView
-        android:id="@+id/cv_add"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="3dp"
-        android:transitionName="transition_cardView"
-        app:cardUseCompatPadding="true">
 
-        <LinearLayout
-            android:id="@+id/first"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="20dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/music_five"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <RelativeLayout
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cv_add"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-25dp"
+            android:elevation="5dp"
+            android:transitionName="transition_fab"
+            app:fabSize="normal"
+            app:fab_colorNormal="@color/grean"
+            app:fab_colorPressed="@color/lightGreen"
+            app:fab_icon="@drawable/ic_clear_white_24dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_add"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:transitionName="transition_cardView"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:id="@+id/first"
                 android:layout_width="match_parent"
-                android:layout_height="45dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginStart="30dp"
+                        android:text="用户注册"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:background="#2fa881" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:text="用户注册"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:paddingEnd="30dp"
+                    android:paddingStart="30dp">
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="match_parent"
-                    android:background="#2fa881"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:id="@+id/view" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="30dp"
-                android:paddingStart="30dp">
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/emailWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/emailWrapper"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="请输入有效邮箱"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="请输入有效邮箱"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingEnd="30dp"
+                    android:paddingStart="30dp">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/userNameWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/editText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/Username"
+                            android:inputType="text"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingEnd="30dp"
+                    android:paddingStart="30dp">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/passWordWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/Password"
+                            android:inputType="textPassword"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/publish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_bg"
+                    android:elevation="6dp"
+                    android:text="@string/register_publish"
+                    android:transitionName="transition_next" />
+
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="30dp"
-                android:paddingStart="30dp">
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/userNameWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/Username"
-                        android:inputType="text"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"
-                        android:id="@+id/editText" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="30dp"
-                android:paddingStart="30dp">
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/passWordWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/Password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/publish"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/btn_bg"
-                android:elevation="6dp"
-                android:transitionName="transition_next"
-                android:text="@string/register_publish" />
-
-        </LinearLayout>
-
-        <!--<LinearLayout-->
-
-            <!--android:visibility="gone"-->
-            <!--android:id="@+id/second"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical"-->
-            <!--android:padding="20dp">-->
-
-            <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="45dp">-->
-
-                <!--<View-->
-                    <!--android:layout_width="8dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_alignParentStart="true"-->
-                    <!--android:background="#2fa881" />-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginStart="30dp"-->
-                    <!--android:text="完善资料"-->
-                    <!--android:textColor="?attr/colorPrimary"-->
-                    <!--android:textSize="20sp"-->
-                    <!--android:textStyle="bold" />-->
-            <!--</RelativeLayout>-->
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:paddingEnd="30dp"-->
-                <!--android:paddingStart="30dp">-->
-
-                <!--<android.support.design.widget.TextInputLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content">-->
-
-                    <!--<EditText-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:hint="电话"-->
-                        <!--android:inputType="text"-->
-                        <!--android:textColor="@color/black"-->
-                        <!--android:textSize="13sp" />-->
-                <!--</android.support.design.widget.TextInputLayout>-->
-            <!--</LinearLayout>-->
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:paddingEnd="30dp"-->
-                <!--android:paddingStart="30dp">-->
-
-                <!--<android.support.design.widget.TextInputLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content">-->
-
-                    <!--<EditText-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:hint="昵称"-->
-                        <!--android:inputType="text"-->
-                        <!--android:textColor="@color/black"-->
-                        <!--android:textSize="13sp" />-->
-                <!--</android.support.design.widget.TextInputLayout>-->
-            <!--</LinearLayout>-->
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
 
-            <!--<Button-->
-                <!--android:id="@+id/success"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:layout_marginTop="20dp"-->
-                <!--android:background="@drawable/btn_bg"-->
-                <!--android:elevation="6dp"-->
-                <!--android:text="@string/register_publish" />-->
-
-        <!--</LinearLayout>-->
-
-    </android.support.v7.widget.CardView>
-
-
-
-
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
