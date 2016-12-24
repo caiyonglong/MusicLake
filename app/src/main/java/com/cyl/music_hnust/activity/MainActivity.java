@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.map.BaseMapActivity;
 import com.cyl.music_hnust.fragment.DownloadFragment;
+import com.cyl.music_hnust.fragment.LocalFragment;
 import com.cyl.music_hnust.fragment.MainFragment;
 import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.fragment.PlaylistFragment;
@@ -574,7 +576,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+//                mDrawerLayout.openDrawer(GravityCompat.START);
+                if (isNavigatingMain()) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                } else super.onBackPressed();
+
                 break;
             case R.id.action_search:
                 intent = new Intent(this, SearchActivity.class);
@@ -583,6 +589,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isNavigatingMain() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        return (currentFragment instanceof MainFragment || currentFragment instanceof LocalFragment
+                || currentFragment instanceof PlaylistFragment ||currentFragment instanceof DownloadFragment);
     }
 
     @Override

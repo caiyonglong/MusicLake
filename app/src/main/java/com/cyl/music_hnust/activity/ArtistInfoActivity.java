@@ -1,8 +1,10 @@
 package com.cyl.music_hnust.activity;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -179,7 +181,11 @@ public class ArtistInfoActivity extends BaseActivity {
         if (!TextUtils.isEmpty(url)) {
             TextView tvUrl = new TextView(this);
             String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
-            tvUrl.setText(Html.fromHtml(String.format(html, url)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                tvUrl.setText(Html.fromHtml(String.format(html, url)));
+            }else {
+                tvUrl.setText(Html.fromHtml(String.format(html, url)));
+            }
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             tvUrl.setPadding(0, 0, 0, 10);
             tvUrl.setGravity(Gravity.CENTER);

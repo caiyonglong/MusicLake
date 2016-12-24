@@ -22,8 +22,6 @@ import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
-import com.cyl.music_hnust.utils.NavigateUtil;
-import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.AddPlaylistDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,14 +36,14 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.ItemHolder> {
+public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.ItemHolder> {
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
-    private int currentlyPlayingPosition = 0;
+    private int currentlyPlayingPosition =0;
 
 
-    public LocalMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
+    public AlbumMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
         this.context = context;
         this.musicInfos = musicInfos;
     }
@@ -56,7 +54,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent,false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -65,41 +63,18 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
-        if (localItem.getType() == Music.Type.LOCAL) {
-            loadBitmap(ImageUtils.getAlbumArtUri(localItem.getAlbumId()).toString(),
-                    holder.albumArt);
-        } else {
-            if (localItem.getCover() != null) {
-                holder.albumArt.setImageBitmap(localItem.getCover());
-            } else {
-                holder.albumArt.setImageResource(R.drawable.default_cover);
-            }
-        }
-        holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
-        holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
 
-        if (MainActivity.mPlayService.getPlayingMusic().getId() == musicInfos.get(position).getId()) {
+        holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
+        holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(),localItem.getAlbum()));
+
+        if(MainActivity.mPlayService.getPlayingMusic().getId()==musicInfos.get(position).getId())
+        {
             holder.v_playing.setVisibility(View.VISIBLE);
-        } else {
+        }else {
             holder.v_playing.setVisibility(View.GONE);
         }
 
         setOnPopupMenuListener(holder, position);
-    }
-
-
-    private void loadBitmap(String uri, ImageView img) {
-        try {
-            ImageLoader.getInstance().displayImage(uri, img,
-                    new DisplayImageOptions.Builder().cacheInMemory(true)
-                            .showImageOnFail(R.drawable.default_cover)
-                            .showImageForEmptyUri(R.drawable.default_cover)
-                            .showImageOnLoading(R.drawable.default_cover)
-                            .resetViewBeforeLoading(true)
-                            .build());
-        } catch (Exception e) {
-            Log.e("EEEE", uri);
-        }
     }
 
     private void setOnPopupMenuListener(ItemHolder holder, final int position) {
@@ -118,21 +93,6 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                             case R.id.popup_song_detail:
                                 getMusicInfo(musicInfos.get(position));
                                 break;
-                            case R.id.popup_song_goto_album:
-                                Log.e("album", musicInfos.get(position).getAlbumId() + "");
-
-                                Log.e("album", musicInfos.get(position).getAlbumId() + "");
-                                NavigateUtil.navigateToAlbum(context,
-                                        musicInfos.get(position).getAlbumId(),
-                                        true,
-                                        musicInfos.get(position).getAlbum());
-                                break;
-                            case R.id.popup_song_goto_artist:
-                                NavigateUtil.navigateToAlbum(context,
-                                        musicInfos.get(position).getArtistId(),
-                                        false,
-                                        musicInfos.get(position).getArtist());
-                                break;
                             case R.id.popup_song_addto_queue:
                                 AddPlaylistDialog.newInstance(musicInfos.get(position)).show(context.getSupportFragmentManager(), "ADD_PLAYLIST");
                                 break;
@@ -140,7 +100,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                         return false;
                     }
                 });
-                mPopupmenu.inflate(R.menu.popup_song);
+                mPopupmenu.inflate(R.menu.popup_album);
                 mPopupmenu.show();
             }
         });
@@ -200,11 +160,11 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e("lllllaaaaaaaa", musicInfos.size() + "====");
+                    Log.e("lllllaaaaaaaa",musicInfos.size()+"====");
                     MainActivity.mPlayService.setMyMusicList(musicInfos);
                     MainActivity.mPlayService.playMusic(getAdapterPosition());
 
-                    Log.e("LOCal", MainActivity.mPlayService.getMusicList().size() + "====");
+                    Log.e("LOCal",MainActivity.mPlayService.getMusicList().size()+"====");
 
                     Handler handler1 = new Handler();
                     handler1.postDelayed(new Runnable() {
@@ -212,7 +172,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                         public void run() {
                             notifyItemChanged(currentlyPlayingPosition);
                             notifyItemChanged(getAdapterPosition());
-                            currentlyPlayingPosition = getAdapterPosition();
+                            currentlyPlayingPosition =getAdapterPosition();
                         }
                     }, 50);
                 }

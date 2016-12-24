@@ -22,7 +22,7 @@
         android:layout_marginLeft="10dp"
         android:elevation="1dp"
         android:scaleType="fitXY"
-        android:src="@drawable/default_cover" />
+         />
 
     <FrameLayout
         android:layout_width="match_parent"

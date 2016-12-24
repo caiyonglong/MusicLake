@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.adapter.AlbumMusicAdapter;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
@@ -46,7 +47,7 @@ public class AlbumDetailFragment extends BaseFragment {
     String transitionName;
     String title;
 
-    private LocalMusicAdapter mAdapter;
+    private AlbumMusicAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
 
     Runnable loadSongs = new Runnable() {
@@ -110,14 +111,6 @@ public class AlbumDetailFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * 显示专辑图片
@@ -150,7 +143,7 @@ public class AlbumDetailFragment extends BaseFragment {
                 musicInfos = MusicLoader.getArtistSongs(getContext(), albumID + "");
                 Log.e("歌单id++++++", musicInfos.size() + "");
             }
-            mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
+            mAdapter = new AlbumMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
 
             return "Executed";
         }

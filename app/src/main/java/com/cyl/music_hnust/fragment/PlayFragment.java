@@ -39,6 +39,7 @@ import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SizeUtils;
 import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.SystemUtils;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -121,7 +122,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
 
         //初始化沉淀式标题栏
-//        initSystemBar();
+        initSystemBar();
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -220,11 +221,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (!lrc_empty) {
-                                    getlrc(Music.Type.LOCAL);
+                                if (lrc_empty) {
+                                    if (getmPlayService().getPlayingMusic() != null)
+                                        getlrc(getmPlayService().getPlayingMusic().getType());
                                 }
                             }
-                        });
+                        }).show();
 
                 break;
         }
@@ -236,30 +238,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void getlrc(Music.Type type) {
         if (type == Music.Type.ONLINE) {
-//            OkHttpUtils.get().url(mOnlineMusic.getLrclink()).build()
-//                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
-//                        @Override
-//                        public void inProgress(float progress, long total) {
-//                        }
-//
-//                        @Override
-//                        public void onResponse(File response) {
-//                        }
-//
-//                        @Override
-//                        public void onError(Call call, Exception e) {
-//                        }
-//
-//                        @Override
-//                        public void onAfter() {
-//                            mCounter++;
-//                            if (mCounter == 3) {
-//                                onSuccess(music);
-//                            }
-//                        }
-//                    });
+            ToastUtils.show(getContext(), "在线歌曲");
         } else {
-
+            ToastUtils.show(getContext(), "本地歌曲");
         }
     }
 
@@ -498,12 +479,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         switch (play_mode) {
             case 0:
                 skip_mode.setImageResource(R.drawable.ic_repeat_white_24dp);
+                ToastUtils.show(getContext(), "列表循环");
                 break;
             case 1:
                 skip_mode.setImageResource(R.drawable.ic_shuffle_white_24dp);
+                ToastUtils.show(getContext(), "随机播放");
                 break;
             case 2:
                 skip_mode.setImageResource(R.drawable.ic_repeat_one_white_24dp);
+                ToastUtils.show(getContext(), "单曲循环");
                 break;
         }
 

@@ -29,6 +29,7 @@ import com.cyl.music_hnust.model.music.Album;
 import com.cyl.music_hnust.model.music.Artist;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.NavigateUtil;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -82,22 +83,10 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
                 @Override
                 public void onClick(View v) {
                     Log.e("album", albums.get(position).getId() + "");
-                    navigateToAlbum(mContext, albums.get(position).getId(),true, albums.get(position).getName());
-//                    Intent intent = new Intent(mContext, PlaylistDetailActivity.class);
-//                    intent.putExtra(Extras.ALBUM_ID, albums.get(position).getId());
-//                    intent.putExtra(Extras.PLAYLIST_NAME, albums.get(position).getName() + "");
-//                    intent.putExtra(Extras.ALBUM, 0);
-//
-//                    if (SystemUtils.isLollipop()) {
-//                        ActivityOptions options = makeSceneTransitionAnimation
-//                                (mContext,
-//                                        Pair.create((View) holder.name, "transition_playlist_name"),
-//                                        Pair.create((View) holder.album, "transition_album_art")
-//                                );
-//                        mContext.startActivity(intent, options.toBundle());
-//                    } else {
-//                        mContext.startActivity(intent);
-//                    }
+                    NavigateUtil.navigateToAlbum(mContext,
+                            albums.get(position).getId(),
+                            true,
+                            albums.get(position).getName());
                 }
             });
         } else {
@@ -107,26 +96,12 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    navigateToAlbum(mContext, artists.get(position).getId(),false, artists.get(position).getName());
-//
-                    Log.e("album", artists.get(position).getId() + "");
-//                    Intent intent = new Intent(mContext, PlaylistDetailActivity.class);
-//                    intent.putExtra(Extras.ALBUM_ID, artists.get(position).getId());
-//                    intent.putExtra(Extras.PLAYLIST_NAME, artists.get(position).getName() + "");
-//                    intent.putExtra(Extras.ALBUM, 1);
-//                    if (SystemUtils.isLollipop()) {
-//                        ActivityOptions options = makeSceneTransitionAnimation
-//                                (mContext,
-//                                        Pair.create((View) holder.name, "transition_playlist_name"),
-//                                        Pair.create((View) holder.album, "transition_album_art")
-//                                );
-//                        mContext.startActivity(intent, options.toBundle());
-//                    } else {
-//                        mContext.startActivity(intent);
-//                    }
+                    NavigateUtil.navigateToAlbum(mContext,
+                            artists.get(position).getId(),
+                            false,
+                            artists.get(position).getName());
                 }
             });
-
         }
     }
 
@@ -169,20 +144,5 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
         }
     }
 
-    /**
-     * 跳转
-     */
-    public static void navigateToAlbum(Activity context, long albumID, boolean isAlbum, String title) {
 
-        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-        Fragment fragment;
-
-        transaction.setCustomAnimations(R.anim.activity_fade_in,
-                R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-        fragment = AlbumDetailFragment.newInstance(albumID, isAlbum, title,null);
-
-        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.content));
-        transaction.add(R.id.content, fragment);
-        transaction.addToBackStack(null).commit();
-    }
 }
