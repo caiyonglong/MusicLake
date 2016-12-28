@@ -26,17 +26,17 @@
             android:id="@+id/user_img"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:layout_marginRight="10dp"
             android:scaleType="fitCenter" />
 
         <LinearLayout
-            android:layout_toRightOf="@+id/user_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_toRightOf="@+id/user_img"
             android:orientation="vertical">
 
             <TextView
@@ -44,28 +44,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="用户名"
                 android:lines="1"
-                android:textColor="@color/main_black_grey"
-                android:textSize="18sp" />
+                android:text="用户名"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/location_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5 分钟前"
                 android:lines="1"
+                android:text="5 分钟前"
                 android:textColor="@color/main_black_grey"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/user_signature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="12341234"
                 android:lines="1"
+                android:text="歌曲"
                 android:textColor="@color/main_black_grey"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
+
             <TextView
                 android:id="@+id/user_distance"
                 android:layout_width="wrap_content"

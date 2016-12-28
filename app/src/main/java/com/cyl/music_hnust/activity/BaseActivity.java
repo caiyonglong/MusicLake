@@ -12,12 +12,11 @@ import android.view.WindowManager;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.Preferences;
-import com.cyl.music_hnust.utils.SystemUtils;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 
-/**
+/**3
  * 基类
  *
  * @author yonglong

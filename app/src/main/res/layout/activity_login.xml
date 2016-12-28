@@ -25,29 +25,6 @@
         android:background="@drawable/music_five"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/cv"
-            android:layout_alignRight="@+id/cv"
-            android:layout_alignTop="@+id/cv"
-            android:layout_marginEnd="-20dp"
-            android:layout_marginRight="-20dp"
-            android:layout_marginTop="25dp"
-            android:src="@drawable/ic_send_white_18dp"
-            android:transitionName="loginFab"
-            app:fabSize="normal" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:elevation="10dp"
-            android:visibility="gone" />
-
         <android.support.v7.widget.CardView
             android:id="@+id/cv"
             android:layout_width="300dp"
@@ -190,6 +167,31 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/cv"
+            android:layout_alignRight="@+id/cv"
+            android:layout_alignTop="@+id/cv"
+            android:layout_marginEnd="-20dp"
+            android:layout_marginRight="-20dp"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/ic_send_white_18dp"
+            android:transitionName="loginFab"
+            app:fabSize="normal" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone" />
+
+
     </RelativeLayout>
 
 

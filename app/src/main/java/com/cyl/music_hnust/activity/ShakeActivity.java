@@ -31,6 +31,7 @@ import com.cyl.music_hnust.model.user.User;
 import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.ShakeManager;
@@ -89,7 +90,6 @@ public class ShakeActivity extends BaseActivity {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-
     }
 
 
@@ -106,8 +106,6 @@ public class ShakeActivity extends BaseActivity {
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         shake_result.setLayoutManager(mLayoutManager);
 
-        adapter = new MyLocationAdapter(getApplicationContext(), mydatas);
-        shake_result.setAdapter(adapter);
 
     }
 
@@ -126,14 +124,23 @@ public class ShakeActivity extends BaseActivity {
         });
     }
 
+    private boolean isRequest = false;
+
     private void init() {
-        Log.e("ddd", secondTime + "+++++" + firstTime);
+        Log.e("ddd", secondTime + "+++++" + firstTime + "摇一摇动画结束");
         if (secondTime - firstTime > 700) {
             firstTime = secondTime;
+
+            Log.e("init ----", "正在搜索");
             showProgressDialog("正在搜索......");
-            getdata();
+            if (!isRequest) {
+                getdata();
+            }
 
         } else if (secondTime - firstTime > 500) {
+
+            Log.e("init ----", "正在搜索");
+
             showProgressDialog("能不能缓一缓,我都受不了了！");
             dissmissProgressDialog();
         }
@@ -173,45 +180,42 @@ public class ShakeActivity extends BaseActivity {
 
 
     private void getdata() {
+        isRequest = true;
         User user = UserStatus.getUserInfo(getApplicationContext());
-        if (user_id == null)
-            user_id = UserStatus.getUserInfo(this).getUser_id();
+        user_id = UserStatus.getUserInfo(this).getUser_id();
         if (user != null && user.getUser_id() != null) {
+            String song = "";
             if (mService.isPlaying()) {
                 Music music = mService.getPlayingMusic();
-                //上传正在听的歌曲
-                Log.e("Tag", music.getTitle().toString());
-                String song = music.getArtist().toString() + "";
-                OkHttpUtils.post()//
-                        .url(Constants.DEFAULT_URL)//
-                        .addParams(Constants.FUNC, Constants.SONG_ADD)//
-                        .addParams(Constants.USER_ID, user_id)//
-                        .addParams(Constants.SONG, song)//
-                        .build()//
-                        .execute(new NearCallback() {
-                            @Override
-                            public void onError(Call call, Exception e) {
-                                Log.e("ccc", ":aa");
-                                dissmissProgressDialog();
-                            }
-
-                            @Override
-                            public void onResponse(LocationInfo response) {
-                                Log.e("ccc", ":bb");
-                                dissmissProgressDialog();
-                                mydatas = response.getData();
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-
-
-            } else {
-                dissmissProgressDialog();
-                ToastUtils.show(getApplicationContext(), "未播放歌曲");
+                song = FileUtils.getArtistAndAlbum(music.getArtist(), music.getTitle());
             }
-        } else {
-            dissmissProgressDialog();
-            ToastUtils.show(getApplicationContext(), "暂未登录");
+            OkHttpUtils.post()//
+                    .url(Constants.DEFAULT_URL)//
+                    .addParams(Constants.FUNC, Constants.SONG_ADD)//
+                    .addParams(Constants.USER_ID, user_id)//
+                    .addParams(Constants.SONG, song)//
+                    .build()//
+                    .execute(new NearCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            Log.e("ccc", ":aa");
+                            isRequest = false;
+                            dissmissProgressDialog();
+                        }
+
+                        @Override
+                        public void onResponse(LocationInfo response) {
+                            dissmissProgressDialog();
+                            isRequest = false;
+                            mydatas = response.getData();
+                            Log.e("ccc", ":bb" + mydatas.size());
+
+                            adapter = new MyLocationAdapter(getApplicationContext(), mydatas);
+                            shake_result.setAdapter(adapter);
+                        }
+                    });
+
+
         }
     }
 
@@ -266,22 +270,16 @@ public class ShakeActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(MyLocationViewHolder holder, int position) {
 
-            holder.user_name.setText(myDatas.get(position).getUser().getUser_name()
-            );
+            holder.user_name.setText(myDatas.get(position).getUser().getUser_name());
             holder.user_signature.setText(myDatas.get(position).getUser_song());
             String distance = "";
             String distime = "";
-//            if (myDatas.size() > 0) {
-//            distance = FormatUtil.Distance(latLonPoint.getLongitude() + 0, latLonPoint.getLatitude() + 0,
-//                    myDatas.get(position).getLocation_longitude() + 0, myDatas.get(position).getLocation_latitude() + 0);
             distime = FormatUtil.getTimeDifference(myDatas.get(position).getLocation_time());
-//            }
-//
             Log.e("tag2", myDatas.get(position).getLocation_latitude() + "");
             Log.e("tag2", myDatas.get(position).getLocation_latitude() + "");
             Log.e("tag3", myDatas.get(position).getLocation_time() + "");
 
-            holder.location_time.setText(distime);
+            holder.location_time.setText(distime + "在听：");
             holder.user_distance.setVisibility(View.GONE);
             com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(
                     myDatas.get(position).getUser().getUser_img(), holder.user_img, ImageUtils.getAlbumDisplayOptions()

@@ -17,16 +17,21 @@ import android.widget.ImageView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.adapter.AlbumMusicAdapter;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.callback.SingerCallback;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.Singer;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -116,11 +121,33 @@ public class AlbumDetailFragment extends BaseFragment {
      * 显示专辑图片
      */
     private void setAlbumart() {
-        Log.e("====", albumID + "=="+title);
+        Log.e("====", albumID + "==" + title);
         if (isAlbum) {
             loadBitmap(ImageUtils.getAlbumArtUri(albumID).toString());
+        } else {
+            loadArtist(title);
         }
     }
+
+    private void loadArtist(String title) {
+        OkHttpUtils.get().url("http://apis.baidu.com/geekery/music/singer")
+                .addHeader("apikey", "0bbd28df93933b00fdbbd755f8769f1b")
+                .addParams("name", title)
+                .build()
+                .execute(new SingerCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Singer response) {
+                        if (response.getCode() == 0)
+                            loadBitmap(response.getData().getImage());
+                    }
+                });
+    }
+
     private void loadBitmap(String uri) {
         Log.e("EEEE", uri);
         ImageLoader.getInstance().displayImage(uri, album_art,
@@ -135,7 +162,7 @@ public class AlbumDetailFragment extends BaseFragment {
         @Override
         protected String doInBackground(String... params) {
             if (isAlbum) {
-                Log.e("专辑id++++++", albumID + "==" +title + "");
+                Log.e("专辑id++++++", albumID + "==" + title + "");
                 musicInfos = MusicLoader.getAlbumSongs(getContext(), albumID + "");
                 Log.e("歌单id++++++", musicInfos.size() + "");
             } else {

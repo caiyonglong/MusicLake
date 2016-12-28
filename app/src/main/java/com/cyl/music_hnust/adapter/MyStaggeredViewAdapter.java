@@ -24,18 +24,29 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.activity.PlaylistDetailActivity;
+import com.cyl.music_hnust.callback.SingerCallback;
 import com.cyl.music_hnust.fragment.AlbumDetailFragment;
 import com.cyl.music_hnust.model.music.Album;
 import com.cyl.music_hnust.model.music.Artist;
+import com.cyl.music_hnust.model.music.Singer;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.NavigateUtil;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
@@ -92,7 +103,11 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
         } else {
             holder.name.setText(artists.get(position).getName());
             holder.artist.setText(artists.get(position).getCount() + "首歌");
-            holder.album.setVisibility(View.GONE);
+            if (!artists.get(position).getName().equals("<unknown>"))
+                loadArtist(artists.get(position).getName(), holder.album);
+            else {
+                holder.album.setVisibility(View.GONE);
+            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,11 +137,31 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
                             .showImageOnFail(R.drawable.default_cover)
                             .showImageForEmptyUri(R.drawable.default_cover)
                             .showImageOnLoading(R.drawable.default_cover)
-                            .resetViewBeforeLoading(true)
                             .build());
         } catch (Exception e) {
             Log.e("EEEE", uri);
         }
+    }
+
+
+    private void loadArtist(String title, final ImageView imgView) {
+        OkHttpUtils.get().url("http://apis.baidu.com/geekery/music/singer")
+                .addHeader("apikey", "0bbd28df93933b00fdbbd755f8769f1b")
+                .addParams("name", title)
+                .build()
+                .execute(new SingerCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Singer response) {
+                        if (response.getCode() == 0)
+                            loadBitmap(response.getData().getImage(), imgView);
+
+                    }
+                });
     }
 
 

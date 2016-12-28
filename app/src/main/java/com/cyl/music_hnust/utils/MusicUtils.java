@@ -44,6 +44,8 @@ public class MusicUtils {
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String unknown = context.getString(R.string.unknown);
             artist = artist.equals("<unknown>") ? unknown : artist;
+            long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -58,6 +60,7 @@ public class MusicUtils {
             music.setType(Music.Type.LOCAL);
             music.setTitle(title);
             music.setArtist(artist);
+            music.setArtistId(artistId);
             music.setAlbum(album);
             music.setAlbumId(albumId);
             music.setDuration(duration);
@@ -134,6 +137,7 @@ public class MusicUtils {
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String unknown = context.getString(R.string.unknown);
             artist = artist.equals("<unknown>") ? unknown : artist;
+            long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -148,6 +152,7 @@ public class MusicUtils {
             music.setType(Music.Type.LOCAL);
             music.setTitle(title);
             music.setArtist(artist);
+            music.setArtistId(artistId);
             music.setAlbum(album);
             music.setAlbumId(albumId);
             music.setDuration(duration);

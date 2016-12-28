@@ -50,4 +50,5 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.0.2'
     //    compile 'im.fir:fir-sdk:latest.integration@aar'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+
 }

@@ -20,7 +20,7 @@
         android:layout_margin="25dp"
         android:src="@mipmap/shake" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/shake_result_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,16 +30,23 @@
         android:layout_marginTop="50dp"
         android:orientation="vertical">
 
+        <TextView
+            android:text="说明：\n\t\t\t\t通过摇一摇可以知晓其他用户在使用该功能时正在听什么样的歌，摇一摇的同时，也会上传正在播放音乐的歌曲信息！"
+            android:textSize="18sp"
+            android:layout_margin="5dp"
+            android:textColor="?attr/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shake_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:visibility="gone" />
+            android:layout_margin="5dp" />
 
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
 

@@ -214,19 +214,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 updatePlayMode();
                 break;
             case R.id.skip_lrc:
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("歌词下载")
-                        .setMessage("匹配到相应的歌词")
-                        .setNegativeButton("取消", null)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (lrc_empty) {
-                                    if (getmPlayService().getPlayingMusic() != null)
-                                        getlrc(getmPlayService().getPlayingMusic().getType());
-                                }
-                            }
-                        }).show();
+
 
                 break;
         }
@@ -356,12 +344,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      * @param type
      */
     private void loadLrc(String path, Music.Type type) {
-        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
-            lrc_empty = true;
-        }
+
         mLrcView.loadLrc(path, type);
         // 清除tag
         mLrcView.setTag(null);
+        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
+            lrc_empty = true;
+        }
     }
 
     /**
@@ -460,7 +449,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 @Override
                 public void run() {
                     getmPlayService().playPause();
-
                 }
             }, 250);
         }

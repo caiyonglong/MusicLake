@@ -122,8 +122,10 @@ public class FormatUtil {
                 timeString= day+"天前";
             }else if (hour>0){
                 timeString= hour+"小时前";
-            }else if (min>=0){
+            }else if (min>0){
                 timeString= min+"分钟前";
+            }else {
+                timeString= s +"秒前";
             }
 
         } catch (ParseException e) {

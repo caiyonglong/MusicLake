@@ -2,9 +2,12 @@ package com.cyl.music_hnust.model.music.lyric;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,7 +15,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.fragment.PlayFragment;
 import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SizeUtils;
 
 import java.io.BufferedReader;
@@ -65,7 +70,6 @@ public class LrcView extends View implements ILrcView {
     private int endTime = 0;// 当前句歌词的持续时间
 
 
-
     private Context mContext;
 
 
@@ -114,6 +118,7 @@ public class LrcView extends View implements ILrcView {
         mCurrentPaint.setTextSize(mTextSize);
 
     }
+
     public void setListener(ILrcViewListener l) {
         mLrcViewListener = l;
     }
@@ -129,9 +134,29 @@ public class LrcView extends View implements ILrcView {
         //当没有歌词的时候
         if (mLrcRows == null || mLrcRows.size() == 0) {
             float centerX = (getWidth() - mCurrentPaint.measureText(mLoadingText)) / 2;
-            canvas.drawText(mLoadingText,centerX , centerY, mCurrentPaint);
+            mCurrentPaint.setUnderlineText(true);
+            canvas.drawText(mLoadingText, centerX, centerY, mCurrentPaint);
             return;
+        } else {
+            mCurrentPaint.setUnderlineText(false);
         }
+        // 当前文本
+        String mCurrentText = "";
+        // 上下拖动歌词的时候 画出拖动要高亮的那句歌词的时间 和 高亮的那句歌词下面的一条直线
+        if (mDisplayMode == DISPLAY_MODE_SEEK) {
+            // 画出中间的那一条直线和时间
+            String time = FormatUtil.formatTime(mLrcRows.get(mCurrentLine).getTime());
+            float[] ptx = {
+                    0, centerY, getWidth() / 2 - 50, centerY,
+                    getWidth() / 2 + 50, centerY, getWidth() - mNormalPaint.measureText(time) - 5, centerY
+            };
+            canvas.drawLines(ptx, mNormalPaint);
+
+            canvas.drawText(time, getWidth() - mNormalPaint.measureText(time) - 5, centerY, mNormalPaint);
+        }
+
+        mCurrentText = mLrcRows.get(mCurrentLine).getText();
+
 
         /**
          * 分以下三步来绘制歌词：
@@ -142,8 +167,7 @@ public class LrcView extends View implements ILrcView {
          */
         // 1.高亮画出当前歌词
 
-        String mCurrentText = mLrcRows.get(mCurrentLine).getText();
-        float rowX= (getWidth() - mCurrentPaint.measureText(mCurrentText)) / 2;
+        float rowX = (getWidth() - mCurrentPaint.measureText(mCurrentText)) / 2;
         canvas.drawText(mCurrentText, rowX, centerY, mCurrentPaint);
 //        float len = this.getTextWidth(mCurrentPaint, highlightText);// 该句歌词精确长度
 //        dunringTime = endTime - starttime;
@@ -159,23 +183,10 @@ public class LrcView extends View implements ILrcView {
 //                TileMode.CLAMP);// 重绘渐变
 //        mCurrentPaint.setShader(gradient);
 
-        // 上下拖动歌词的时候 画出拖动要高亮的那句歌词的时间 和 高亮的那句歌词下面的一条直线
-//        if (mDisplayMode == DISPLAY_MODE_SEEK) {
-//            // 画出中间的那一条直线和时间
-//            String time = SystemUtils.formatTime( mLrcRows.get(mCurrentLine).getTime());
-//            float[] ptx={
-//                    0 , centerY, getWidth()/2 - 50 ,centerY,
-//                    getWidth()/2 + 50 , centerY, getWidth() - mNormalPaint.measureText(time)-5 ,centerY
-//            };
-//            canvas.drawLines( ptx, mNormalPaint);
-//
-//            canvas.drawText(time , getWidth()- mNormalPaint.measureText(time)-5, centerY, mNormalPaint);
-//        }
-
 
         // 2.画当前行上面的
         for (int i = mCurrentLine - 1; i >= 0; i--) {
-            String upStr =mLrcRows.get(i).getText();
+            String upStr = mLrcRows.get(i).getText();
 
             float upX = (getWidth() - mNormalPaint.measureText(upStr)) / 2;
             float upY = centerY - (mTextSize + mDividerHeight) * (mCurrentLine - i);
@@ -237,33 +248,55 @@ public class LrcView extends View implements ILrcView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (hasLrc()) {
-            return super.onTouchEvent(event);
-        }
-        switch (event.getAction()) {
-            //手指按下
-            case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "down,mLastMotionY:" + mLastMotionY);
-                mLastMotionY = event.getY();
-                invalidate();
-                break;
-            //手指移动
-            case MotionEvent.ACTION_MOVE:
-                //如果一个手指按下，在屏幕上移动的话，拖动歌词上下
-                mDisplayMode = DISPLAY_MODE_SEEK;
-                Log.d(TAG, "one move");
-                doSeek(event);
-                break;
-            case MotionEvent.ACTION_CANCEL:
+            switch (event.getAction()) {
+                //手指按下
+                case MotionEvent.ACTION_DOWN:
+                    Log.d(TAG, "down,mLastMotionY:" + mLastMotionY);
+                    mLastMotionY = event.getY();
+                    invalidate();
+                    break;
+                //手指移动
+                case MotionEvent.ACTION_MOVE:
+                    //如果一个手指按下，在屏幕上移动的话，拖动歌词上下
+                    mDisplayMode = DISPLAY_MODE_SEEK;
+                    Log.d(TAG, "one move");
+                    doSeek(event);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    //手指抬起
+                case MotionEvent.ACTION_UP:
+                    if (mDisplayMode == DISPLAY_MODE_SEEK) {
+                    }
+                    mDisplayMode = DISPLAY_MODE_NORMAL;
+                    invalidate();
+                    break;
+            }
+            return true;
+        } else {
+            switch (event.getAction()) {
+                //手指按下
+                case MotionEvent.ACTION_DOWN:
+                    if (!hasLrc()) {
+                        mCurrentPaint.setColor(Color.YELLOW);
+                        invalidate();
+                    }
+                    break;
                 //手指抬起
-            case MotionEvent.ACTION_UP:
-                if (mDisplayMode == DISPLAY_MODE_SEEK) {
-
-                }
-                mDisplayMode = DISPLAY_MODE_NORMAL;
-                invalidate();
-                break;
+                case MotionEvent.ACTION_UP:
+                    if (!hasLrc()) {
+                        mCurrentPaint.setColor(Color.WHITE);
+                        invalidate();
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("歌词下载")
+                                .setMessage("匹配到相应的歌词")
+                                .setNegativeButton("取消", null)
+                                .setPositiveButton("确定", null).show();
+                    }
+                    break;
+            }
+            return true;
         }
-        return true;
+
     }
 
     /**
@@ -272,8 +305,8 @@ public class LrcView extends View implements ILrcView {
     private void doSeek(MotionEvent event) {
         float y = event.getY();//手指当前位置的y坐标
         float offsetY = y - mLastMotionY; //第一次按下的y坐标和目前移动手指位置的y坐标之差
-        //如果移动距离小于10，不做任何处理
-        if (Math.abs(offsetY) < mMinSeekFiredOffset) {
+        //如果移动距离小于间距，不做任何处理
+        if (Math.abs(offsetY) < mDividerHeight) {
             return;
         }
         //将模式设置为拖动歌词模式
@@ -285,19 +318,29 @@ public class LrcView extends View implements ILrcView {
         if (offsetY < 0) {
             //手指向上移动，歌词向下滚动
             mCurrentLine += rowOffset;//设置要高亮的歌词为 当前高亮歌词 向下滚动rowOffset行后的歌词
+            if (mCurrentLine > mLrcRows.size() - 1) {
+                mCurrentLine = mLrcRows.size() - 1;
+            }
         } else if (offsetY > 0) {
             //手指向下移动，歌词向上滚动
             mCurrentLine -= rowOffset;//设置要高亮的歌词为 当前高亮歌词 向上滚动rowOffset行后的歌词
+            if (mCurrentLine < 1) {
+                mCurrentLine = 0;
+            }
         }
 //        //设置要高亮的歌词为0和mHignlightRow中的较大值，即如果mHignlightRow < 0，mCurrentLine=0
 //        mCurrentLine = Math.max(0, mCurrentLine);
 //        //设置要高亮的歌词为0和mHignlightRow中的较小值，即如果mHignlight > RowmLrcRows.size()-1，mCurrentLine=mLrcRows.size()-1
 //        mCurrentLine = Math.min(mCurrentLine, mLrcRows.size() - 1);
 //        //如果歌词要滚动的行数大于0，则重画LrcView
-        if (rowOffset > 0) {
+        if (rowOffset > 0)
+
+        {
             mLastMotionY = y;
+            newLineAnim();
             invalidate();
         }
+
     }
 
 
@@ -331,13 +374,13 @@ public class LrcView extends View implements ILrcView {
         }
         String text = LrcParser.getStrignFromFile(path);
 
-        StringReader reader=null;
-        BufferedReader br=null;
+        StringReader reader = null;
+        BufferedReader br = null;
         try {
-            if (type == Music.Type.LOCAL){
+            if (type == Music.Type.LOCAL) {
                 reader = new StringReader(text);
                 br = new BufferedReader(reader);
-            }else {
+            } else {
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));
             }
             String line;
@@ -345,9 +388,9 @@ public class LrcView extends View implements ILrcView {
                 String[] arr = parseLine(line);
                 if (arr != null) {
                     //将歌词导入
-                    for (int i=0;i<arr.length-1;i++){
+                    for (int i = 0; i < arr.length - 1; i++) {
                         LrcRow lrcrow = new LrcRow();
-                        lrcrow.setText(arr[arr.length-1]);
+                        lrcrow.setText(arr[arr.length - 1]);
                         lrcrow.setTime(Long.parseLong(arr[i]));
                         mLrcRows.add(lrcrow);
                     }
@@ -431,7 +474,7 @@ public class LrcView extends View implements ILrcView {
         }
         line = line.replaceAll("\\[", "");
         String[] result = line.split("\\]");
-        for(int i=0;i<result.length-1;i++){
+        for (int i = 0; i < result.length - 1; i++) {
             result[i] = parseTime(result[i]);
         }
         return result;
