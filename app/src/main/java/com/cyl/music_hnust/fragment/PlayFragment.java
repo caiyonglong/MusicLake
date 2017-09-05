@@ -29,6 +29,8 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.activity.MainActivity;
 import com.cyl.music_hnust.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.fragment.base.BaseFragment;
+import com.cyl.music_hnust.model.music.lyric.ILrcViewListener;
+import com.cyl.music_hnust.model.music.lyric.LrcRow;
 import com.cyl.music_hnust.model.music.lyric.LrcView;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.CoverLoader;

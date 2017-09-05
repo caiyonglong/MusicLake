@@ -267,7 +267,7 @@ public class LrcView extends View implements ILrcView {
                 case MotionEvent.ACTION_UP:
                     if (mDisplayMode == DISPLAY_MODE_SEEK) {
                     }
-                    mDisplayMode = DISPLAY_MODE_NORMAL;
+
                     invalidate();
                     break;
             }
@@ -427,16 +427,18 @@ public class LrcView extends View implements ILrcView {
         if (time < mNextTime || isEnd) {
             return;
         }
-        for (int i = mCurrentLine; i < mLrcRows.size(); i++) {
+        for (int i = 0; i < mLrcRows.size(); i++) {
             if (mLrcRows.get(i).getTime() > time) {
                 mNextTime = mLrcRows.get(i).getTime();
                 mCurrentLine = i < 1 ? 0 : i - 1;
+                mDisplayMode = DISPLAY_MODE_NORMAL;
                 newLineAnim();
                 break;
             } else if (i == mLrcRows.size() - 1) {
                 // 最后一行
                 mCurrentLine = mLrcRows.size() - 1;
                 isEnd = true;
+                mDisplayMode = DISPLAY_MODE_NORMAL;
                 newLineAnim();
                 break;
             }

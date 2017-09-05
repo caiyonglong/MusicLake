@@ -7,15 +7,24 @@
     android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-<com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/community_RecyclerView"
+<!--<com.jcodecraeer.xrecyclerview.XRecyclerView-->
+        <!--android:id="@+id/community_RecyclerView"-->
+        <!--android:layout_marginBottom="56dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fadeScrollbars="true"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshlayout"
         android:layout_marginBottom="56dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadeScrollbars="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
+        android:layout_height="wrap_content">
+        <!-- 新闻列表展示-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/community_RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
     <TextView
         android:id="@+id/tv_empty"
         android:layout_width="wrap_content"

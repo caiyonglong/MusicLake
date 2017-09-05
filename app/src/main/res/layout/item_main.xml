@@ -17,12 +17,13 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:descendantFocusability="blocksDescendants"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="5dp">
 
         <RelativeLayout
             android:id="@+id/rl_user"
@@ -32,34 +33,35 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_logo"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/ic_account_circle"
-                android:layout_gravity="center_vertical" />
+                android:src="@drawable/ic_account_circle" />
 
             <TextView
                 android:id="@+id/user_name"
-                android:layout_toRightOf="@+id/user_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:ellipsize="end"
-                android:text="123123131"
                 android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@+id/user_logo"
+                android:ellipsize="end"
                 android:lines="1"
+                android:text="123123131"
                 android:textColor="@color/setting_blue"
                 android:textSize="14sp" />
+
             <Button
                 android:id="@+id/item_love"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
                 android:background="@drawable/btn_bg"
                 android:text="赞"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -72,17 +74,19 @@
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:ellipsize="end"
-                android:maxLines="4" />
+                android:maxLines="4"
+                android:padding="5dp" />
 
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/comment"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:id="@+id/item_comment_num"
@@ -90,33 +94,31 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginRight="10dp"
-                android:background="#334A90E2"
                 android:padding="2dp"
                 android:text="·评论"
-                android:textColor="@color/setting_blue" />
+                android:textColor="@color/gray" />
 
             <TextView
                 android:id="@+id/item_love_num"
-                android:layout_toRightOf="@+id/item_comment_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="#334A90E2"
+                android:layout_toRightOf="@+id/item_comment_num"
                 android:padding="2dp"
                 android:text="·赞"
-                android:textColor="@color/setting_blue" />
+                android:textColor="@color/gray" />
 
-            <TextView
-                android:id="@+id/item_comment_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="bottom"
-                android:background="#334A90E2"
-                android:padding="2dp"
-                android:text="分享于2016-7-2"
-                android:textColor="@color/setting_blue" />
+            <!--<TextView-->
+            <!--android:id="@+id/item_comment_time"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:background="#334A90E2"-->
+            <!--android:padding="2dp"-->
+            <!--android:text="分享于2016-7-2"-->
+            <!--android:textColor="@color/setting_blue" />-->
 
         </RelativeLayout>
 

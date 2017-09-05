@@ -130,13 +130,14 @@ public class LoginActivity extends BaseActivity {
                 public void onHidden(FloatingActionButton fab) {
                     super.onHidden(fab);
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put(Constants.USER_EMAIL,username);
-                    params.put(Constants.PASSWORD,password);
+                    params.put(Constants.USER_EMAIL, username);
+                    params.put(Constants.PASSWORD, password);
                     login(params);
                 }
             });
         }
     }
+
     @OnClick(R.id.register)
     public void tofab() {
 
@@ -160,7 +161,7 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    private void login(Map<String,String> params) {
+    private void login(Map<String, String> params) {
 
         OkHttpUtils.post()//
                 .url(Constants.LOGIN_URL)
@@ -250,12 +251,12 @@ public class LoginActivity extends BaseActivity {
                             String nickName = info.getString("nickname");//获取用户昵称
                             String iconUrl = info.getString("figureurl_qq_2");//获取用户头像的url
                             String gender = info.getString("gender");//获取用户性别
-                            Map<String,String> params = new HashMap<String, String>();
-                            params.put(Constants.PARAM_METHOD,"qq");
-                            params.put(Constants.USERNAME,nickName);
-                            params.put(Constants.USER_SEX,gender);
-                            params.put(Constants.USER_IMG,iconUrl);
-                            params.put(Constants.USER_ID,mTencent.getOpenId());
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put(Constants.PARAM_METHOD, "qq");
+                            params.put(Constants.USERNAME, nickName);
+                            params.put(Constants.USER_SEX, gender);
+                            params.put(Constants.USER_IMG, iconUrl);
+                            params.put(Constants.USER_ID, mTencent.getOpenId());
                             login(params);
                         } catch (JSONException e) {
                             ToastUtils.show(LoginActivity.this, "网络异常，请稍后重试！");

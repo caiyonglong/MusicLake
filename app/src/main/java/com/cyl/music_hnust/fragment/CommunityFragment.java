@@ -1,8 +1,13 @@
 package com.cyl.music_hnust.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +25,6 @@ import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ToastUtils;
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
@@ -35,10 +38,13 @@ import okhttp3.Call;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class CommunityFragment extends BaseFragment implements XRecyclerView.LoadingListener {
+public class CommunityFragment extends BaseFragment {
 
 
-    XRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+
     FloatingActionButton fab;
     TextView tv_empty;
 
@@ -47,7 +53,14 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
     private int flag = 1;
     private String user_id = "";
 
+    /**
+     * 当前的动态
+     */
     private static List<Secret> mdatas = new ArrayList<>();
+    /**
+     * 加载更多的动态
+     */
+    private static List<Secret> newdatas = new ArrayList<>();
 
     public static CommunityFragment newInstance(int flag) {
 
@@ -68,8 +81,13 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
         });
     }
 
+    private boolean loading = false;
+    private int VISIBLE_THRESHOLD = 2;
+
+
     @Override
     protected void initDatas() {
+
         MyAdapter = new CommunityAdapter(getContext(), mdatas);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -88,18 +106,47 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
                         fab.show();
                     }
                 }
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                int totalItemCount = layoutManager.getItemCount();
+
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                Log.e("-------",totalItemCount+":"+lastVisibleItem);
+
+                if (!loading && totalItemCount < (lastVisibleItem + VISIBLE_THRESHOLD)) {
+                    new SecretTask(getContext()).execute(pagenum);
+                    loading = true;
+                }
             }
         });
 
-        mRecyclerView.setLoadingListener(this);
-        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
         if (UserStatus.getstatus(getContext())) {
             user_id = UserStatus.getUserInfo(getContext()).getUser_id();
         } else {
             user_id = "";
         }
-        getSecret(pagenum);
+        mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                mdatas.clear();
+                pagenum = 1;
+                new MoreSecretTask().execute(pagenum);
+            }
+        });
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                mdatas.clear();
+                pagenum=1;
+                new MoreSecretTask().execute(pagenum);
+            }
+        });
+
+
     }
 
     @Override
@@ -109,7 +156,9 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
 
     @Override
     public void initViews() {
-        mRecyclerView = (XRecyclerView) rootView.findViewById(R.id.community_RecyclerView);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefreshlayout);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.community_RecyclerView);
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         flag = (int) getArguments().get(Extras.COMMUNITY_FLAG);
@@ -124,77 +173,171 @@ public class CommunityFragment extends BaseFragment implements XRecyclerView.Loa
         startActivity(intent);
     }
 
-    /**
-     * 下拉刷新
-     */
-    @Override
-    public void onRefresh() {
-        Log.e("111====1", String.valueOf(pagenum));
-        mdatas.clear();
-        pagenum = 1;
-        getSecret(pagenum);
-        mRecyclerView.refreshComplete();
-    }
 
-    /**
-     * 上拉加载更多
-     */
-    @Override
-    public void onLoadMore() {
-        Log.e("111======1", String.valueOf(pagenum));
-        getSecret(pagenum);
-        mRecyclerView.loadMoreComplete();
-    }
-
-    private void getSecret(int PageNum) {
-        Map<String, String> params = new HashMap<>();
-        if (flag == 1) {
-            params.put(Constants.FUNC, Constants.GET_SECRET_LIST);
-        } else {
-            params.put(Constants.FUNC, Constants.GET_MYSECRET_LIST);
-        }
-        params.put(Constants.PAGENUM, String.valueOf(PageNum));
-        params.put(Constants.USER_ID, user_id);
-
-        OkHttpUtils.post().url(Constants.DEFAULT_URL)
-                .params(params)
-                .build()
-                .execute(new SecretCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        tv_empty.setText(R.string.error_connection);
-                        tv_empty.setVisibility(View.VISIBLE);
-                        ToastUtils.show(getActivity(), R.string.error_connection);
-                    }
-
-                    @Override
-                    public void onResponse(SecretInfo response) {
-                        if (response.getStatus() == 1) {
-                            if (response.getData() == null || response.getData().size() == 0) {
-                                mRecyclerView.loadMoreComplete();
-                                return;
-                            }
-                            pagenum = pagenum + 1;
-                            mdatas.addAll(response.getData());
-                            if (response.getData().size() <= 0) {
-                                tv_empty.setText("暂无动态");
-                                tv_empty.setVisibility(View.VISIBLE);
-                            } else {
-                                tv_empty.setVisibility(View.GONE);
-                            }
-                            MyAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        mdatas.clear();
-        pagenum = 1;
-        getSecret(pagenum);
     }
+
+    // Integer 是输入参数
+    class MoreSecretTask extends AsyncTask<Integer, Void, List<Secret>> {
+        @Override
+        protected List<Secret> doInBackground(Integer... params) {
+
+            Map<String, String> param = new HashMap<>();
+            param.put(Constants.FUNC, Constants.GET_SECRET_LIST);
+            param.put(Constants.PAGENUM, String.valueOf(params[0]));
+            param.put(Constants.USER_ID, user_id);
+
+            OkHttpUtils.post().url(Constants.DEFAULT_URL)
+                    .params(param)
+                    .build()
+                    .execute(new SecretCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            if (mSwipeRefreshLayout != null) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                            tv_empty.setText(R.string.error_connection);
+                            tv_empty.setVisibility(View.VISIBLE);
+                            ToastUtils.show(getActivity(), R.string.error_connection);
+                        }
+
+                        @Override
+                        public void onResponse(SecretInfo response) {
+
+                            if (mSwipeRefreshLayout != null) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                            if (response.getStatus() == 1) {
+
+
+                                newdatas =response.getData();
+                                //更新视图
+                                if (mSwipeRefreshLayout != null) {
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                }
+                                //没有新的数据，提示消息
+                                if (newdatas == null || newdatas.size() == 0) {
+                                    Snackbar.make(getView(),"暂无数据",Snackbar.LENGTH_SHORT).show();
+                                } else {
+                                    pagenum=pagenum+1;
+                                    mdatas.addAll(newdatas);
+                                    MyAdapter.notifyDataSetChanged();
+                                }
+
+                            }
+                        }
+                    });
+            return newdatas;
+        }
+
+        @Override
+        protected void onPostExecute(List<Secret> simpleArticleItems) {
+            super.onPostExecute(simpleArticleItems);
+
+        }
+
+    }
+
+
+    class SecretTask extends AsyncTask<Integer, Void, List<Secret>> {
+
+        private Context mContext;
+
+        public SecretTask(Context context) {
+            mContext = context;
+        }
+
+        /**
+         * Runs on the UI thread before {@link #doInBackground}.
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (mdatas != null && mdatas.size() > 0) {
+                mdatas.add(null);
+                // notifyItemInserted(int position)，这个方法是在第position位置
+                // 被插入了一条数据的时候可以使用这个方法刷新，
+                // 注意这个方法调用后会有插入的动画，这个动画可以使用默认的，也可以自己定义。
+                MyAdapter.notifyItemInserted(mdatas.size() - 1);
+            }
+        }
+
+        /**
+         * @param params 偏移量 aid
+         * @return
+         */
+        @Override
+        protected List<Secret> doInBackground(Integer... params) {
+
+            final Map<String, String> param = new HashMap<>();
+            param.put(Constants.FUNC, Constants.GET_SECRET_LIST);
+            param.put(Constants.PAGENUM, String.valueOf(params[0]));
+            param.put(Constants.USER_ID, user_id);
+
+            OkHttpUtils.post().url(Constants.DEFAULT_URL)
+                    .params(param)
+                    .build()
+                    .execute(new SecretCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            if (mSwipeRefreshLayout != null) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                            tv_empty.setText(R.string.error_connection);
+                            tv_empty.setVisibility(View.VISIBLE);
+                            ToastUtils.show(getActivity(), R.string.error_connection);
+                        }
+
+                        @Override
+                        public void onResponse(SecretInfo response) {
+                            if (mSwipeRefreshLayout != null) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+
+                            if (response.getStatus() == 1) {
+                                newdatas.clear();
+                                newdatas=response.getData();
+                                //没有新的数据，提示消息
+                                if (newdatas == null || newdatas.size() == 0) {
+                                    if (mdatas.size() == 0) {
+                                        MyAdapter.notifyDataSetChanged();
+                                    } else {
+                                        //删除 footer
+                                        mdatas.remove(mdatas.size() - 1);
+                                        MyAdapter.notifyDataSetChanged();
+                                        loading = false;
+                                    }
+                                    return;
+                                }
+                                pagenum=pagenum+1;
+
+
+                                if (mdatas.size() == 0) {
+                                    mdatas.addAll(newdatas);
+                                    MyAdapter.notifyDataSetChanged();
+                                } else {
+                                    //删除 footer
+                                    mdatas.remove(mdatas.size() - 1);
+                                    mdatas.addAll(newdatas);
+                                    MyAdapter.notifyDataSetChanged();
+                                    loading = false;
+                                }
+                            }
+                        }
+                    });
+
+            return newdatas;
+        }
+
+        @Override
+        protected void onPostExecute(final List<Secret> moreArticles) {
+            super.onPostExecute(moreArticles);
+
+        }
+    }
+
 }
 

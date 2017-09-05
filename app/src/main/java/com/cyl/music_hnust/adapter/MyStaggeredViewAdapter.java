@@ -103,9 +103,9 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
         } else {
             holder.name.setText(artists.get(position).getName());
             holder.artist.setText(artists.get(position).getCount() + "首歌");
-            if (!artists.get(position).getName().equals("<unknown>"))
-                loadArtist(artists.get(position).getName(), holder.album);
-            else {
+            if (!artists.get(position).getName().equals("<unknown>")) {
+                //loadArtist(artists.get(position).getName(), holder.album);
+            } else {
                 holder.album.setVisibility(View.GONE);
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -130,16 +130,18 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
     }
 
     private void loadBitmap(String uri, ImageView img) {
-        Log.e("uri", uri);
-        try {
-            ImageLoader.getInstance().displayImage(uri, img,
-                    new DisplayImageOptions.Builder().cacheInMemory(true)
-                            .showImageOnFail(R.drawable.default_cover)
-                            .showImageForEmptyUri(R.drawable.default_cover)
-                            .showImageOnLoading(R.drawable.default_cover)
-                            .build());
-        } catch (Exception e) {
-            Log.e("EEEE", uri);
+        Log.e("uri", uri + ".........-");
+        if (uri != null) {
+            try {
+                ImageLoader.getInstance().displayImage(uri, img,
+                        new DisplayImageOptions.Builder().cacheInMemory(true)
+                                .showImageOnFail(R.drawable.default_cover)
+                                .showImageForEmptyUri(R.drawable.default_cover)
+                                .showImageOnLoading(R.drawable.default_cover)
+                                .build());
+            } catch (Exception e) {
+                Log.e("EEEE", uri);
+            }
         }
     }
 

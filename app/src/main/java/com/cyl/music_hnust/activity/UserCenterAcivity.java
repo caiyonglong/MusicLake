@@ -1,6 +1,5 @@
 package com.cyl.music_hnust.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,10 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -28,12 +26,11 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.music_hnust.activity.clipheadphoto.ClipActivity;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.activity.clipheadphoto.ClipActivity;
 import com.cyl.music_hnust.adapter.ViewPagerAdapter;
 import com.cyl.music_hnust.callback.StatusCallback;
 import com.cyl.music_hnust.callback.UserCallback;
-import com.cyl.music_hnust.fragment.CommunityFragment;
 import com.cyl.music_hnust.fragment.UserFragment;
 import com.cyl.music_hnust.model.user.StatusInfo;
 import com.cyl.music_hnust.model.user.User;
@@ -42,7 +39,6 @@ import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
-import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -63,16 +59,10 @@ import okhttp3.Call;
  */
 public class UserCenterAcivity extends BaseActivity {
 
-    @Bind(R.id.m_viewpager)
-    ViewPager viewPager;
-    @Bind(R.id.m_tablayout)
-    TabLayout mTabLayout;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.header_img)
     CircleImageView header_img;
-    @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout coll_toolbar;
     @Bind(R.id.action_a)
     FloatingActionButton fab_a;
     @Bind(R.id.action_b)
@@ -164,6 +154,18 @@ public class UserCenterAcivity extends BaseActivity {
         }
     }
 
+    @Bind(R.id.nick)
+    TextView nick;
+    @Bind(R.id.user_name)
+    TextView user_name;
+    @Bind(R.id.email)
+    TextView email;
+    @Bind(R.id.phone)
+    TextView phone;
+    @Bind(R.id.logout)
+    CardView logout;
+
+
     private PopupWindow popWindow;
     private LayoutInflater layoutInflater;
     private TextView photograph, albums;
@@ -211,26 +213,22 @@ public class UserCenterAcivity extends BaseActivity {
     protected void initData() {
         user = UserStatus.getUserInfo(this);
 
-        coll_toolbar.setTitle(user.getUser_name() + "");
+
+        if (user.getNick() == null || user.getNick().length() <= 0) {
+            nick.setText("");
+        } else {
+            nick.setText(user.getNick());
+        }
+
+        email.setText(user.getUser_email());
+        phone.setText(user.getPhone());
+        user_name.setText(user.getUser_name() + "");
 
         ImageLoader.getInstance().displayImage(user.getUser_img(), header_img, ImageUtils.getAlbumDisplayOptions());
 
-        layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-            viewPager.setOffscreenPageLimit(3);
-        }
-
-        mTabLayout.setupWithViewPager(viewPager);
     }
 
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new UserFragment(), "个人信息");
-        viewPager.setAdapter(adapter);
-    }
 
     @SuppressWarnings("deprecation")
     private void showPopupWindow(View parent) {
@@ -395,11 +393,8 @@ public class UserCenterAcivity extends BaseActivity {
                             UserStatus.savaUserInfo(UserCenterAcivity.this, response.getUser());
                             user = response.getUser();
                             //更新title
-                            coll_toolbar.setTitle(user.getUser_name() + "");
-                            if (viewPager != null) {
-                                setupViewPager(viewPager);
-                                viewPager.setOffscreenPageLimit(3);
-                            }
+                            user_name.setText(user.getUser_name() + "");
+
                         } else {
                             ToastUtils.show(UserCenterAcivity.this, response.getMessage());
                         }

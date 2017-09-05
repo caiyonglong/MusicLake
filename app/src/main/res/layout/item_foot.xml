@@ -1,52 +1,12 @@
-<!--
-    CardView就是一个卡片样式的FrameLayout。
-
-    参数介绍：
-        app:cardBackgroundColor  :   背景颜色
-        app:cardCornerRadius    ：   设置圆角。
-        app:cardElevation       ：    阴影。
-        app:cardMaxElevation    ：       最大阴影。
-        app:cardPreventCornerOverlap  ： 在v20和之前的版本中添加内边距，
-                                    这个属性是为了防止卡片内容和边角的重叠。
-
-       app:cardUseCompatPadding  ：  设置内边距，v21+的版本和之前的版本仍旧具有一样的计算方式
--->
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/id_cardview_foot"
+<?xml version="1.0" encoding="utf-8"?><!--上拉加载更多 RecyclerView 底部-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    app:cardBackgroundColor="@color/cardview_light_background"
-    app:cardCornerRadius="3dp"
-    app:cardElevation="3dp"
-    app:cardMaxElevation="3dp"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="1dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    >
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dip"
-        android:background="#FFFFFF"
-        android:descendantFocusability="blocksDescendants"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:textColor="@color/grey"
-            android:id="@+id/foot_text"
-            android:layout_centerInParent="true"
-            android:text="下拉加载更多..."
-            android:layout_margin="4dp"
-            />
-    </RelativeLayout>
-
-</android.support.v7.widget.CardView>
+    <ProgressBar
+        android:id="@+id/rcv_load_more"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
