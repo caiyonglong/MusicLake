@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.fragment.AlbumDetailFragment;
+import com.cyl.music_hnust.ui.fragment.AlbumDetailFragment;
 
 /**
  * Created by yonglong on 2016/12/24.

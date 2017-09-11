@@ -36,7 +36,7 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <com.cyl.music_hnust.activity.clipheadphoto.ClipImageLayout
+    <com.cyl.music_hnust.ui.activity.clipheadphoto.ClipImageLayout
         android:id="@+id/id_clipImageLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

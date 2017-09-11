@@ -22,7 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.activity.MainActivity;
+import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlinePlaylist;

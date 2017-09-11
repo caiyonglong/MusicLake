@@ -2,7 +2,6 @@ package com.cyl.music_hnust.model.music.lyric;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.fragment.PlayFragment;
+import com.cyl.music_hnust.ui.fragment.PlayFragment;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SizeUtils;

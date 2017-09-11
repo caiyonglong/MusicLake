@@ -39,7 +39,7 @@
             android:value="bb7a657dae711860f30d669c193e49d6" />
 
         <activity
-            android:name=".activity.WelcomeActivity"
+            android:name=".ui.activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
@@ -49,7 +49,7 @@
 
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
@@ -74,59 +74,59 @@
 
 
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".activity.RegisterActivity"
+            android:name=".ui.activity.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".activity.PlaylistDetailActivity"
+            android:name=".ui.activity.PlaylistDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ArtistInfoActivity"
+            android:name=".ui.activity.ArtistInfoActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.map.BaseMapActivity"
+            android:name=".ui.activity.map.BaseMapActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.map.NearActivity"
+            android:name=".ui.activity.map.NearActivity"
 
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.map.RadarActivity"
+            android:name=".ui.activity.map.RadarActivity"
 
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.map.CloudDetailActivity"
+            android:name=".ui.activity.map.CloudDetailActivity"
             android:label="@string/detail_position"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.map.PreviewPhotoActivity"
+            android:name=".ui.activity.map.PreviewPhotoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.NearPeopleAcivity"
+            android:name=".ui.activity.NearPeopleAcivity"
             android:label="@string/near_people"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.OnlineMusicActivity"
+            android:name=".ui.activity.OnlineMusicActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".activity.ShakeActivity"
+            android:name=".ui.activity.ShakeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
         <activity
-            android:name=".activity.EditActivity"
+            android:name=".ui.activity.EditActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.UserCenterAcivity"
+            android:name=".ui.activity.UserCenterAcivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
@@ -138,11 +138,11 @@
         <service android:name=".download.DownloadService" />
 
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.clipheadphoto.ClipActivity"
+            android:name=".ui.activity.clipheadphoto.ClipActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
 
@@ -150,7 +150,7 @@
 
 
         <activity
-            android:name=".activity.CommentActivity"
+            android:name=".ui.activity.CommentActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

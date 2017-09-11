@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
-import com.cyl.music_hnust.fragment.PlaylistFragment;
+import com.cyl.music_hnust.ui.fragment.PlaylistFragment;
 import com.cyl.music_hnust.model.music.Music;
 
 /**

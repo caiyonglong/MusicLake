@@ -6,13 +6,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.cyl.music_hnust.activity.MainActivity;
+import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.download.db.SqliteDao;
 import com.cyl.music_hnust.download.model.DownloaderInfo;
 import com.cyl.music_hnust.download.model.FileState;
 import com.cyl.music_hnust.utils.Constants;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
