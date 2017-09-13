@@ -59,9 +59,8 @@ public class NearPeopleAcivity extends BaseActivity {
     private static List<Secret> mdatas = new ArrayList<>();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_center_near);
+    protected int getLayoutResID() {
+        return R.layout.user_center_near;
     }
 
     @Override

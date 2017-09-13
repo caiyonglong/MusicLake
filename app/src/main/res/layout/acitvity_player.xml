@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
+    <include layout="@layout/play_control_menu" />
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/play_page_default_bg" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/container"

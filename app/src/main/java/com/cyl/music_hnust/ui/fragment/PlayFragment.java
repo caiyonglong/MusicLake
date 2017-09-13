@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
@@ -84,6 +85,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     protected static Handler mHandler;
 
+    public static PlayFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        PlayFragment fragment = new PlayFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.acitvity_player;
@@ -115,9 +125,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (playPauseFloating != null) {
             playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
             playPauseFloating.setImageDrawable(playPauseDrawable);
-            if (getmPlayService().isPlaying())
-                playPauseDrawable.transformToPause(false);
-            else playPauseDrawable.transformToPlay(false);
+//            if (getmPlayService().isPlaying())
+            playPauseDrawable.transformToPause(false);
+//            else playPauseDrawable.transformToPlay(false);
         }
 
         //初始化沉淀式标题栏
@@ -154,7 +164,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     protected void initDatas() {
         mHandler = new Handler();
         sk_progress.setProgress(0);
-        onPlay(getmPlayService().getPlayingMusic());
+//        onPlay(getmPlayService().getPlayingMusic());
 
     }
 
@@ -181,7 +191,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setLrc(music);
         setCoverAndBg(music);
         reloadAdapter();
-        recyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
+//        recyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
 
     }
 
@@ -454,11 +464,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     };
 
     public void updatePlayPauseFloatingButton() {
-        if (getmPlayService().isPlaying()) {
+//        if (getmPlayService().isPlaying()) {
             playPauseDrawable.transformToPause(false);
-        } else {
+//        } else {
             playPauseDrawable.transformToPlay(false);
-        }
+//        }
     }
 
     public void updatePlayMode() {
@@ -541,7 +551,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void reloadAdapter() {
-        musicInfos = MainActivity.mPlayService.getMusicList();
         mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
         recyclerView.setAdapter(mAdapter);
     }

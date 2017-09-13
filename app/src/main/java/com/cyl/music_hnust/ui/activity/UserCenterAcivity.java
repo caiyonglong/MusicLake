@@ -181,9 +181,8 @@ public class UserCenterAcivity extends BaseActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_center_main);
+    protected int getLayoutResID() {
+        return R.layout.user_center_main;
     }
 
     @Override

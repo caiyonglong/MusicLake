@@ -44,9 +44,6 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof MainActivity) {
-            mPlayService = ((MainActivity) activity).getmPlayService();
-        }
     }
 
     @Override
@@ -60,7 +57,7 @@ public abstract class BaseFragment extends RxFragment {
     public abstract void initViews();
 
     public PlayService getmPlayService() {
-        return mPlayService;
+        return new PlayService();
     }
 
 }

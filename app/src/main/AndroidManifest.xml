@@ -92,10 +92,6 @@
             android:name=".ui.activity.map.BaseMapActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.map.NearActivity"
-
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.map.RadarActivity"
 
             android:screenOrientation="portrait" />

@@ -16,7 +16,8 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 
-/**3
+/**
+ * 3
  * 基类
  *
  * @author yonglong
@@ -28,34 +29,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        boolean on = Preferences.isNightMode();
-        if (on) {
-            setTheme(R.style.MyThemeDark);
-        } else {
-            setTheme(R.style.MyThemeBlue);
-        }
         super.onCreate(savedInstanceState);
+        setContentView(getLayoutResID());
         mHandler = new Handler();
-        setSystemBarTransparent();
-    }
-
-    @Override
-    public void setContentView(@LayoutRes int layoutResID) {
-        super.setContentView(layoutResID);
+//        setSystemBarTransparent();
         init();
     }
 
-    @Override
-    public void setContentView(View view) {
-        super.setContentView(view);
-        init();
-    }
-
-    @Override
-    public void setContentView(View view, ViewGroup.LayoutParams params) {
-        super.setContentView(view, params);
-        init();
-    }
 
     private void init() {
         //初始化黄油刀控件绑定框架
@@ -65,8 +45,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         listener();
     }
 
+    protected abstract int getLayoutResID();
+
     protected abstract void initView();
+
     protected abstract void initData();
+
     protected abstract void listener();
 
     private void setSystemBarTransparent() {

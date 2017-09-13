@@ -75,9 +75,8 @@ public class PlaylistDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.playlist_detail);
+    protected int getLayoutResID() {
+        return R.layout.playlist_detail;
     }
 
     private void setAlbumart() {

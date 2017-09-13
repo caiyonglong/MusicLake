@@ -89,10 +89,6 @@ public class RegisterActivity extends BaseActivity {
 
     @OnClick(R.id.fab)
     void exit(){
-//        if (SystemUtils.isLollipop()) {
-//            getWindow().getExitTransition().addListener(new EnterTransitionListener());
-//        }
-//        finish();
         onBackPressed();
     }
 
@@ -102,10 +98,8 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
+    protected int getLayoutResID() {
+        return R.layout.activity_register;
     }
 
     @Override

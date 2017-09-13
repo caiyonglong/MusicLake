@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -21,14 +20,14 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.adapter.OnlineMusicAdapter;
+import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlineMusicInfo;
 import com.cyl.music_hnust.model.music.OnlineMusicList;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.service.PlayService;
+import com.cyl.music_hnust.ui.adapter.OnlineMusicAdapter;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
@@ -71,10 +70,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private int mOffset = 0;
     private String title;
     private String type;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_online);
+    protected int getLayoutResID() {
+        return R.layout.activity_online;
     }
 
     @Override
@@ -101,7 +100,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         mProgressDialog.setMessage(getString(R.string.loading));
 
         vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_header, null);
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this,150));
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this, 150));
         vHeader.setLayoutParams(params);
         mAdapter = new OnlineMusicAdapter(this, mMusicLists);
         mAdapter.setOnItemClickListener(this);
@@ -170,6 +169,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private void onLoad() {
         getMusic(mOffset);
     }
+
     private void getMusic(final int offset) {
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
@@ -193,7 +193,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
                         mOffset += Constants.MUSIC_LIST_SIZE;
                         conver(response.getSong_list());
 
-                        Log.e("ddd11111111111",mMusicls.size()+""+"=====");
+                        Log.e("ddd11111111111", mMusicls.size() + "" + "=====");
                         mMusicLists.addAll(response.getSong_list());
                         mAdapter.notifyDataSetChanged();
                     }
@@ -226,7 +226,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
             @Override
             public void onSuccess(Music music) {
                 mProgressDialog.cancel();
-                Log.e("***********",music.toString());
+                Log.e("***********", music.toString());
                 mPlayService.playMusic(music);
 //                ToastUtils.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
             }
@@ -234,7 +234,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
             @Override
             public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
-                ToastUtils.show(getApplicationContext(),R.string.unable_to_play);
+                ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
             }
         }.execute();
     }
@@ -245,9 +245,9 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         super.onDestroy();
     }
 
-    private void conver(List<OnlineMusicInfo> mMusicLists){
+    private void conver(List<OnlineMusicInfo> mMusicLists) {
 
-        for (int i=0;i<mMusicLists.size();i++) {
+        for (int i = 0; i < mMusicLists.size(); i++) {
             new PlayOnlineMusic(this, mMusicLists.get(i)) {
 
                 @Override
@@ -261,8 +261,9 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
                     mProgressDialog.cancel();
 //                    Log.e("***********", music.toString());
                     mMusicls.add(music);
-                    Log.e("mMusicls",mMusicls.size()+""+"=====");
+                    Log.e("mMusicls", mMusicls.size() + "" + "=====");
                 }
+
                 @Override
                 public void onFail(Call call, Exception e) {
                     mProgressDialog.cancel();
@@ -279,22 +280,23 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
         TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
         tvTitle.setText(mMusicList.getBillboard().getName());
-        if (mMusicList.getBillboard().getUpdate_date()==null)
+        if (mMusicList.getBillboard().getUpdate_date() == null)
             mMusicList.getBillboard().setUpdate_date("暂无记录");
-        tvUpdateDate.setText(getString(R.string.recent_update, mMusicList.getBillboard().getUpdate_date() ));
+        tvUpdateDate.setText(getString(R.string.recent_update, mMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mMusicList.getBillboard().getComment());
         ImageSize imageSize = new ImageSize(200, 200);
         ImageLoader.getInstance().loadImage(mMusicList.getBillboard().getPic_s640(), imageSize,
                 ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        if(loadedImage!=null) {
+                        if (loadedImage != null) {
                             ivCover.setImageBitmap(loadedImage);
                             ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
                         }
                     }
                 });
     }
+
     @Override
     public void onItemClick(View view, int position) {
 //        play(mMusicLists.get(position));

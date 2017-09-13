@@ -44,11 +44,11 @@ import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.nearby.NearbySearch;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.BaseActivity;
 import com.cyl.music_hnust.callback.NearCallback;
 import com.cyl.music_hnust.model.location.Location;
 import com.cyl.music_hnust.model.location.LocationInfo;
 import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.ui.activity.BaseActivity;
 import com.cyl.music_hnust.utils.AMapUtil;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ToastUtils;
@@ -62,6 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
 import okhttp3.Call;
 
 /**
@@ -69,17 +70,26 @@ import okhttp3.Call;
  */
 public class BaseMapActivity extends BaseActivity implements AMapLocationListener, LocationSource, AMap.OnMarkerClickListener, AMap.OnPOIClickListener, CloudSearch.OnCloudSearchListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
     private AMap aMap;
-    private Toolbar mToolbar;
-    private MapView mapView;
     private UiSettings mUiSettings;
     private LocationSource.OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
 
-    private TextView mLocationErrText;
-    private FloatingActionsMenu menuMultipleActions;
-    private FloatingActionButton actionB;
-    private FloatingActionButton actionA;
+
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @Bind(R.id.map)
+    MapView mapView;
+
+    @Bind(R.id.location_errInfo_text)
+    TextView mLocationErrText;
+    @Bind(R.id.action_menu)
+    FloatingActionsMenu menuMultipleActions;
+    @Bind(R.id.action_b)
+    FloatingActionButton actionB;
+    @Bind(R.id.action_a)
+    FloatingActionButton actionA;
 
     private CloudSearch mCloudSearch;
     private String mTableID = "557067a2e4b0deb9ee7bdb5f"; // 用户tableid，从官网下载测试数据后在云图中新建地图并导入，获取相应的tableid
@@ -99,36 +109,38 @@ public class BaseMapActivity extends BaseActivity implements AMapLocationListene
     private String mLocalCityName = "湘潭";
     private ArrayList<CloudItem> items = new ArrayList<CloudItem>();
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_basemap);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mapView = (MapView) findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        init();
-        initView();
-        String fromActivity = getIntent().getStringExtra("fromActivity");
-        if ("Near".equals(fromActivity)) {
-            initNear();
-        }
-
-
+    protected int getLayoutResID() {
+        return R.layout.activity_basemap;
     }
 
     @Override
     protected void initView() {
-        menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.action_menu);
-        actionB = (FloatingActionButton) findViewById(R.id.action_b);
-        actionA = (FloatingActionButton) findViewById(R.id.action_a);
-
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mapView.onCreate(new Bundle());
+        String fromActivity = getIntent().getStringExtra("fromActivity");
+        if ("Near".equals(fromActivity)) {
+            initNear();
+        }
     }
 
     @Override
     protected void initData() {
+        if (aMap == null) {
+            aMap = mapView.getMap();
+            mUiSettings = aMap.getUiSettings();
+            setUpMap();
 
+        }
+        mUiSettings.setScaleControlsEnabled(true);
+        mUiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        mLocationErrText = (TextView) findViewById(R.id.location_errInfo_text);
+        mLocationErrText.setVisibility(View.GONE);
+
+        //附近派单功能
+        NearbySearch mNearbySearch = NearbySearch.getInstance(getApplicationContext());
     }
 
     private void initNear() {
@@ -304,25 +316,6 @@ public class BaseMapActivity extends BaseActivity implements AMapLocationListene
         }
     }
 
-    /**
-     * 初始化
-     */
-    private void init() {
-        if (aMap == null) {
-            aMap = mapView.getMap();
-            mUiSettings = aMap.getUiSettings();
-            setUpMap();
-
-        }
-        mUiSettings.setScaleControlsEnabled(true);
-        mUiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
-        mLocationErrText = (TextView) findViewById(R.id.location_errInfo_text);
-        mLocationErrText.setVisibility(View.GONE);
-
-        //附近派单功能
-        NearbySearch mNearbySearch = NearbySearch.getInstance(getApplicationContext());
-
-    }
 
     /**
      * 设置一些amap的属性

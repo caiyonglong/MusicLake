@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/play_control"
@@ -36,11 +35,11 @@
 
         <FrameLayout
             android:id="@+id/play_status"
-            android:layout_toLeftOf="@+id/next_buttom"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/next_buttom">
 
             <com.cyl.music_hnust.view.PlayPauseButton
                 android:id="@+id/play_pause"
@@ -55,14 +54,15 @@
                 android:background="?attr/selectableItemBackgroundBorderless" />
 
         </FrameLayout>
+
         <ImageButton
             android:id="@+id/next_buttom"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
+            android:layout_marginRight="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitXY"
             android:src="@drawable/ic_skip_next_black_18dp" />
@@ -71,12 +71,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@+id/play_status"
-            android:layout_toStartOf="@+id/play_status">
+            android:layout_toStartOf="@+id/play_status"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/title"

@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.activity;
 
 
-import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,9 +28,8 @@ public class SettingsActivity extends BaseActivity {
     Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+    protected int getLayoutResID() {
+        return R.layout.activity_setting;
     }
 
     @Override
@@ -108,32 +106,6 @@ public class SettingsActivity extends BaseActivity {
             preference_update.setOnPreferenceClickListener(this);
             preference_cache.setOnPreferenceClickListener(this);
 
-            night_mode.setChecked(Preferences.isNightMode());
-            night_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Log.e("sss", newValue.toString());
-
-                    final boolean on = !Preferences.isNightMode();
-                    final ProgressDialog dialog = new ProgressDialog(getActivity());
-
-                    night_mode.setChecked(Preferences.isNightMode());
-                    dialog.setCancelable(false);
-                    dialog.show();
-
-                    Handler handler = new Handler(getActivity().getMainLooper());
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            dialog.cancel();
-                            getActivity().recreate();
-                            MainActivity.mainActivity.recreate();
-                            Preferences.saveNightMode(on);
-                        }
-                    }, 500);
-                    return false;
-                }
-            });
 
             wifi_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override

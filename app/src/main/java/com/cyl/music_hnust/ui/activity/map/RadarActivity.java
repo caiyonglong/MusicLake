@@ -79,17 +79,9 @@ public class RadarActivity extends BaseActivity implements ViewPager.OnPageChang
 
     public List<Location> mLocationInfo = new ArrayList<>();
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radar);
-
-        user = UserStatus.getUserInfo(getApplicationContext());
-
-        init();
-
-
+    protected int getLayoutResID() {
+        return R.layout.activity_radar;
     }
 
     @Override
@@ -99,6 +91,9 @@ public class RadarActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @Override
     protected void initData() {
+
+        user = UserStatus.getUserInfo(getApplicationContext());
+        init();
 
         for (int i = 0; i < mLocationInfo.size(); i++) {
             Info info = new Info();
@@ -279,6 +274,7 @@ public class RadarActivity extends BaseActivity implements ViewPager.OnPageChang
         mLocationClient.startLocation();
 
     }
+
 
     @Override
     protected void onDestroy() {

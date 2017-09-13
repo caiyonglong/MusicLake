@@ -56,4 +56,6 @@ dependencies {
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
     // Retrofit Gson数据转换器
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
+
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
 }

@@ -74,12 +74,12 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         }
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
         holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
-
-        if (MainActivity.mPlayService.getPlayingMusic().getId() == musicInfos.get(position).getId()) {
-            holder.v_playing.setVisibility(View.VISIBLE);
-        } else {
-            holder.v_playing.setVisibility(View.GONE);
-        }
+//
+//        if (MainActivity.mPlayService.getPlayingMusic().getId() == musicInfos.get(position).getId()) {
+//            holder.v_playing.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.v_playing.setVisibility(View.GONE);
+//        }
 
         setOnPopupMenuListener(holder, position);
     }
@@ -109,8 +109,8 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.popup_song_play:
-                                MainActivity.mPlayService.setMyMusicList(musicInfos);
-                                MainActivity.mPlayService.playMusic(position);
+//                                MainActivity.mPlayService.setMyMusicList(musicInfos);
+//                                MainActivity.mPlayService.playMusic(position);
                                 break;
                             case R.id.popup_song_detail:
                                 getMusicInfo(musicInfos.get(position));
@@ -198,10 +198,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                 @Override
                 public void run() {
                     Log.e("lllllaaaaaaaa", musicInfos.size() + "====");
-                    MainActivity.mPlayService.setMyMusicList(musicInfos);
-                    MainActivity.mPlayService.playMusic(getAdapterPosition());
 
-                    Log.e("LOCal", MainActivity.mPlayService.getMusicList().size() + "====");
 
                     Handler handler1 = new Handler();
                     handler1.postDelayed(new Runnable() {

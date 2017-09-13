@@ -35,7 +35,7 @@ public class ApiManager {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) // 使用RxJava作为回调适配器
-                .addConverterFactory(GsonConverterFactory.create()) // 使用Gson作为数据转换器
+//                .addConverterFactory(GsonConverterFactory.create()) // 使用Gson作为数据转换器
                 .build();
         apiService = retrofit.create(ApiManagerService.class);
     }

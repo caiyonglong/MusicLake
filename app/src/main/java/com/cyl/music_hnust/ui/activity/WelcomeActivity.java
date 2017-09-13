@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -25,7 +24,7 @@ import rx.functions.Action1;
 public class WelcomeActivity extends BaseActivity {
     @Bind(R.id.wel_container)
     RelativeLayout container;
-    //
+
     private ServiceConnection mPlayServiceConnection;
 
     @Override
@@ -34,14 +33,12 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+    protected int getLayoutResID() {
+        return R.layout.activity_welcome;
     }
 
     @Override
     protected void initView() {
-//        initSystemBar();
     }
 
     @Override

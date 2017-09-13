@@ -35,9 +35,8 @@ public class EditActivity extends BaseActivity {
     String content;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+    protected int getLayoutResID() {
+        return R.layout.activity_edit;
     }
 
     @Override

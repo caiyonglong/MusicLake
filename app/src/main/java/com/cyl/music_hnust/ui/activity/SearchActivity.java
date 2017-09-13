@@ -71,9 +71,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.acitvity_search);
+    protected int getLayoutResID() {
+        return R.layout.acitvity_search;
     }
 
     @Override

@@ -126,10 +126,12 @@ public class CommentActivity extends BaseActivity {
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+    protected int getLayoutResID() {
+        return R.layout.activity_comment;
+    }
 
+    @Override
+    protected void initView() {
         send_comment.setClickable(true);
 
         setSupportActionBar(mToolbar);
@@ -155,10 +157,6 @@ public class CommentActivity extends BaseActivity {
 
         Log.e("rrr", secret_id + "====" + user_id);
         getComment(secret_id);
-    }
-
-    @Override
-    protected void initView() {
 
     }
 

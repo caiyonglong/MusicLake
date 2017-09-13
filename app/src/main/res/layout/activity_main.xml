@@ -4,11 +4,10 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/content_main" />
-
+    <include layout="@layout/include_main" />
 
 
     <android.support.design.widget.NavigationView
@@ -18,7 +17,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:overScrollMode="never"
-        app:itemTextColor="@color/selector_nav_menu_textcolor"
         android:scrollbars="none"
+        app:itemTextColor="@color/selector_nav_menu_textcolor"
         app:menu="@menu/menu_all" />
 </android.support.v4.widget.DrawerLayout>

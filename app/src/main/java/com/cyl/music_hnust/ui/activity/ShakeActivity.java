@@ -81,12 +81,8 @@ public class ShakeActivity extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shake);
-        mService = MainActivity.getmPlayService();
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+    protected int getLayoutResID() {
+        return R.layout.activity_shake;
     }
 
     @Override
@@ -99,9 +95,12 @@ public class ShakeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         shake_result.setLayoutManager(mLayoutManager);
-
 
     }
 
@@ -141,6 +140,7 @@ public class ShakeActivity extends BaseActivity {
             dissmissProgressDialog();
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

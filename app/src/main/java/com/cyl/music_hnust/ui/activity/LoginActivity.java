@@ -69,10 +69,8 @@ public class LoginActivity extends BaseActivity {
     IUiListener loginListener;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+    protected int getLayoutResID() {
+        return R.layout.activity_login;
     }
 
     @Override
