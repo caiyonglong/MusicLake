@@ -127,7 +127,7 @@
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".service.PlayService"
+            android:name=".service.MusicPlayService"
             android:enabled="true" />
 
         <service android:name="com.amap.api.location.APSService" />

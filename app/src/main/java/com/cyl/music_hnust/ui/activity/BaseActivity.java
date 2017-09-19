@@ -1,17 +1,19 @@
 package com.cyl.music_hnust.ui.activity;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.LayoutRes;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.utils.Preferences;
+import com.cyl.music_hnust.IMusicService;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -26,16 +28,15 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected Handler mHandler;
+    public static IMusicService mService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResID());
         mHandler = new Handler();
-//        setSystemBarTransparent();
         init();
     }
-
 
     private void init() {
         //初始化黄油刀控件绑定框架
@@ -63,6 +64,30 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             // KITKAT解决方案
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+    }
+
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mService = IMusicService.Stub.asInterface(iBinder);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
+
+
+    private void bindMusicService() {
+        Intent intent = new Intent(this, MusicPlayService.class);
+        bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private void unbindMusicService() {
+        Intent intent = new Intent(this, MusicPlayService.class);
+        unbindService(mServiceConnection);
     }
 
     @Override

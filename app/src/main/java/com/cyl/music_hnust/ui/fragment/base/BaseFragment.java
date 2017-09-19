@@ -7,8 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cyl.music_hnust.ui.activity.MainActivity;
-import com.cyl.music_hnust.service.PlayService;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.ButterKnife;
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
  * 版本：2.5
  */
 public abstract class BaseFragment extends RxFragment {
-    private PlayService mPlayService;
+    private MusicPlayService mMusicPlayService;
     public View rootView;
 
     @Nullable
@@ -56,8 +55,8 @@ public abstract class BaseFragment extends RxFragment {
 
     public abstract void initViews();
 
-    public PlayService getmPlayService() {
-        return new PlayService();
+    public MusicPlayService getmMusicPlayService() {
+        return new MusicPlayService();
     }
 
 }

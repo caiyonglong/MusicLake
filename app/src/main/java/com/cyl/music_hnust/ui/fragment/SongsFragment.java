@@ -97,8 +97,8 @@ public class SongsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getmPlayService() != null) {
-            mRecyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
+        if (getmMusicPlayService() != null) {
+            mRecyclerView.scrollToPosition(getmMusicPlayService().getmPlayingPosition());
         }
     }
 

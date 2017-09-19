@@ -10,9 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
@@ -21,11 +21,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cyl.music_hnust.IMusicService;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlinePlaylist;
+import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;
@@ -44,10 +45,15 @@ import java.util.Random;
  * 邮箱：643872807@qq.com
  * 版本：2.5 播放service
  */
-public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
+public class MusicPlayService extends Service {
 
+    public static final String ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
+    public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
+    public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 广播标志
+    public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
 
-    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private MediaPlayer mPlayer;
+    private MusicPlayService mService;
     private Music mPlayingMusic = null;
     private List<Music> myMusicList = new ArrayList<>();
     private int mPlayingPosition;
@@ -67,15 +73,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private int curTime = 0;
     //广播接收者
     ServiceReceiver mServiceReceiver;
-    public static final String ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
-    public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
-    public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 广播标志
-    public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
 
     public Notification notif;
 
-
-    private IBinder mBinder = new MyBinder();
 
     public void setOnPlayEventListener(OnPlayerListener listener) {
         mListener = listener;
@@ -90,11 +90,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public void onCreate() {
         super.onCreate();
+        mService = this;
+        mPlayer = new MediaPlayer();
 
         //实例化过滤器，设置广播
         mServiceReceiver = new ServiceReceiver();
         IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
-
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
         intentFilter.addAction(ACTION_PLAY);
@@ -102,32 +103,31 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         registerReceiver(mServiceReceiver, intentFilter);
 
 
-        mediaPlayer.setOnCompletionListener(this);
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mPlayer) {
+                next();
+            }
+        });
+
         TelephonyManager telephonyManager = (TelephonyManager) this
                 .getSystemService(Context.TELEPHONY_SERVICE);// 获取电话通讯服务
         telephonyManager.listen(new ServicePhoneStateListener(),
                 PhoneStateListener.LISTEN_CALL_STATE);// 创建一个监听对象，监听电话状态改变事件
 
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-
+        return START_STICKY;
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mBinder;
+        return new IMusicServiceStub();
     }
 
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        next();
-    }
 
     /**
      * 每次启动时扫描音乐
@@ -145,9 +145,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     /**
      * 下一首
      */
-    public void next() {
-
-
+    private void next() {
         play_mode = Preferences.getPlayMode();
         switch (play_mode) {
             case PLAY_MODE_ORDER:
@@ -165,7 +163,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
-    public boolean checkNetwork(int position) {
+    private boolean checkNetwork(int position) {
 
         Log.e("----Service", getMusicList().size() + "====");
 
@@ -196,7 +194,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     /**
      * 上一首
      */
-    public void prev() {
+    private void prev() {
         play_mode = Preferences.getPlayMode();
         switch (play_mode) {
             case PLAY_MODE_ORDER:
@@ -220,7 +218,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      *
      * @param position
      */
-    public int playMusic(int position) {
+    private int playMusic(int position) {
         if (getMusicList().isEmpty()) {
             return -1;
         }
@@ -241,9 +239,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void playMusic(Music music) {
         mPlayingMusic = music;
         try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(mPlayingMusic.getUri());
-            mediaPlayer.prepare();
+            mPlayer.reset();
+            mPlayer.setDataSource(mPlayingMusic.getUri());
+            mPlayer.prepare();
             start();
             if (mListener != null) {
                 mListener.onChange(music);
@@ -256,7 +254,20 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     }
 
-    public void playPause() {
+    private void pasue() {
+        if (mPlayer.isPlaying() && mPlayer != null) {
+            mPlayer.pause();
+        }
+    }
+
+    private void play() {
+        if (!mPlayer.isPlaying() && mPlayer != null) {
+            mPlayer.pause();
+        }
+    }
+
+
+    private void playPause() {
         if (isPlaying()) {
             pause();
         } else if (isPause()) {
@@ -268,7 +279,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     private void start() {
-        mediaPlayer.start();
+        mPlayer.start();
         isPause = false;
         mHandler.post(mRunnable);
         showNotification();
@@ -281,11 +292,11 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         if (!isPlaying()) {
             return;
         }
-        mediaPlayer.pause();
+        mPlayer.pause();
         isPause = true;
 
         mHandler.removeCallbacks(mRunnable);
-        curTime = mediaPlayer.getCurrentPosition();
+        curTime = mPlayer.getCurrentPosition();
         if (mListener != null) {
             mListener.onPlayerPause();
         }
@@ -293,7 +304,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
 
     public boolean isPlaying() {
-        return mediaPlayer.isPlaying() && mediaPlayer != null;
+        return mPlayer.isPlaying() && mPlayer != null;
     }
 
 
@@ -318,7 +329,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public int getCurrent() {
         try {
             if (isPlaying()) {
-                return mediaPlayer.getCurrentPosition();
+                return mPlayer.getCurrentPosition();
             } else {
                 return curTime;
             }
@@ -334,7 +345,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     public void seekTo(int msec) {
         if (isPlaying() || isPause()) {
-            mediaPlayer.seekTo(msec);
+            mPlayer.seekTo(msec);
             if (mListener != null) {
                 mListener.onUpdate(msec);
             }
@@ -349,9 +360,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void stop() {
         pause();
-        mediaPlayer.reset();
-        mediaPlayer.release();
-        mediaPlayer = null;
+        mPlayer.reset();
+        mPlayer.release();
+        mPlayer = null;
         mNotificationManager.cancel(NOTIFICATION_ID);
         stopSelf();
     }
@@ -412,17 +423,11 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return -1;
     }
 
-    public class MyBinder extends Binder {
-        public PlayService getService() {
-            return PlayService.this;
-        }
-    }
-
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             if (isPlaying() && mListener != null) {
-                mListener.onUpdate(mediaPlayer.getCurrentPosition());
+                mListener.onUpdate(mPlayer.getCurrentPosition());
             }
             mHandler.postDelayed(this, DELAY_TIME);
         }
@@ -513,14 +518,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private class ServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            final String command = intent.getStringExtra(CMDNAME);
-            handleCommandIntent(intent);
+            if (intent.getAction().equals(ACTION_SERVICE)) {
+                handleCommandIntent(intent);
+            }
         }
     }
 
     private void handleCommandIntent(Intent intent) {
         final String action = intent.getAction();
-
 
         if (ACTION_NEXT.equals(action)) {
             next();
@@ -536,5 +541,52 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         super.onDestroy();
         unregisterReceiver(mServiceReceiver);
         stop();
+    }
+
+    private class IMusicServiceStub extends IMusicService.Stub {
+        @Override
+        public void openFile(String path) throws RemoteException {
+
+        }
+
+        @Override
+        public void open(long[] list, int position, long sourceId, int sourceType) throws RemoteException {
+
+        }
+
+        @Override
+        public void stop() throws RemoteException {
+            mPlayer.stop();
+        }
+
+        @Override
+        public void pause() throws RemoteException {
+            mService.pause();
+        }
+
+        @Override
+        public void play() throws RemoteException {
+            mService.play();
+        }
+
+        @Override
+        public void prev(boolean forcePrevious) throws RemoteException {
+            mService.prev();
+        }
+
+        @Override
+        public void next() throws RemoteException {
+            mService.next();
+        }
+
+        @Override
+        public void setShuffleMode(int shufflemode) throws RemoteException {
+
+        }
+
+        @Override
+        public void refresh() throws RemoteException {
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.cyl.music_hnust.ui.fragment;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -25,7 +26,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.music.lyric.LrcView;
@@ -47,6 +47,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 
@@ -58,10 +59,13 @@ import okhttp3.Call;
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
 
+    public static View topContainer;
     //整个容器
     LinearLayout container;
     //图片按钮
-    ImageView skip_prev, skip_next, skip_mode, iv_back, ivPlayingBg, page_icon;
+    ImageView skip_prev;
+    ImageView skip_next;
+    ImageView skip_mode, iv_back, ivPlayingBg, page_icon;
     //播放暂停按钮
     PlayPauseButton mPlayPause;
     //textView
@@ -105,8 +109,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void initViews() {
         //初始化控件
-        tv_title = (TextView) rootView.findViewById(R.id.song_title);
-        tv_artist = (TextView) rootView.findViewById(R.id.song_artist);
+        topContainer = rootView.findViewById(R.id.top_container);
+        tv_title =rootView.findViewById(R.id.song_title);
+        tv_artist =  rootView.findViewById(R.id.song_artist);
         tv_time = (TextView) rootView.findViewById(R.id.song_elapsed_time);
         tv_duration = (TextView) rootView.findViewById(R.id.song_duration);
         sk_progress = (SeekBar) rootView.findViewById(R.id.song_progress);
@@ -125,13 +130,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (playPauseFloating != null) {
             playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
             playPauseFloating.setImageDrawable(playPauseDrawable);
-//            if (getmPlayService().isPlaying())
+//            if (getmMusicPlayService().isPlaying())
             playPauseDrawable.transformToPause(false);
 //            else playPauseDrawable.transformToPlay(false);
         }
 
         //初始化沉淀式标题栏
-        initSystemBar();
+//        initSystemBar();
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -164,7 +169,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     protected void initDatas() {
         mHandler = new Handler();
         sk_progress.setProgress(0);
-//        onPlay(getmPlayService().getPlayingMusic());
+//        onPlay(getmMusicPlayService().getPlayingMusic());
 
     }
 
@@ -191,7 +196,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setLrc(music);
         setCoverAndBg(music);
         reloadAdapter();
-//        recyclerView.scrollToPosition(getmPlayService().getmPlayingPosition());
+//        recyclerView.scrollToPosition(getmMusicPlayService().getmPlayingPosition());
 
     }
 
@@ -200,17 +205,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.previous:
-                if (getmPlayService() == null) {
+                if (getmMusicPlayService() == null) {
                     Log.e("222", "33333333333333333");
                 } else {
-                    getmPlayService().prev();
                 }
                 break;
             case R.id.next:
-                if (getmPlayService() == null) {
+                if (getmMusicPlayService() == null) {
                     Log.e("222", "33333333333333333");
                 } else {
-                    getmPlayService().next();
                 }
                 break;
             case R.id.iv_back:
@@ -277,9 +280,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (getmPlayService().isPlaying() || getmPlayService().isPause()) {
+        if (getmMusicPlayService().isPlaying() || getmMusicPlayService().isPause()) {
             int progress = seekBar.getProgress();
-            getmPlayService().seekTo(progress);
+            getmMusicPlayService().seekTo(progress);
             mLrcView.onDrag(progress);
             tv_time.setText(FormatUtil.formatTime(progress));
         } else {
@@ -457,17 +460,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getmPlayService().playPause();
                 }
             }, 250);
         }
     };
 
     public void updatePlayPauseFloatingButton() {
-//        if (getmPlayService().isPlaying()) {
-            playPauseDrawable.transformToPause(false);
+//        if (getmMusicPlayService().isPlaying()) {
+        playPauseDrawable.transformToPause(false);
 //        } else {
-            playPauseDrawable.transformToPlay(false);
+        playPauseDrawable.transformToPlay(false);
 //        }
     }
 

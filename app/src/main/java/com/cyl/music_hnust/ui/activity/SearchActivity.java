@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.ui.adapter.SearchAdapter;
 import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.download.DownloadService;
@@ -28,7 +28,6 @@ import com.cyl.music_hnust.model.music.OnlineMusicInfo;
 import com.cyl.music_hnust.model.music.SearchMusic;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.service.PlaySearchedMusic;
-import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.FileUtils;
@@ -54,7 +53,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private String queryString;
 
     private SearchAdapter mAdapter;
-    private PlayService mPlayService;
+    private MusicPlayService mMusicPlayService;
     private ProgressDialog mProgressDialog;
     private int mOffset = 10;
 
@@ -83,7 +82,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void initData() {
-        bindService();
 
         mAdapter = new SearchAdapter(this, searchResults);
         mAdapter.setOnItemClickListener(this);
@@ -213,22 +211,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                 });
     }
 
-    private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
 
-    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayService = ((PlayService.MyBinder) service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
 
 
     private void play(SearchMusic.SongList songList) {
@@ -242,7 +225,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             public void onSuccess(Music music) {
                 mProgressDialog.cancel();
                 Log.e("***********", music.toString());
-                mPlayService.playMusic(music);
+                mMusicPlayService.playMusic(music);
 //                ToastUtils.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
             }
 
@@ -256,7 +239,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
         super.onDestroy();
     }
 

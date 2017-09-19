@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -44,26 +43,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
     @Bind(R.id.sliding_layout)
     SlidingUpPanelLayout mSlidingUpPaneLayout;
-
     @Bind(R.id.nav_view)
     NavigationView mNavigationView;
-
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    ImageView iv_bg;
-    CircleImageView user_face;
-    TextView tv_nick, tv_name;
+    ImageView mImageView;
+    CircleImageView mAvatarIcon;
+    TextView mNick, mName;
 
     boolean login_status;
-
-    //跳转Intent
+    private static final String TAG = "MainActivity";
     private Intent intent = null;
-
-    PlayFragment mPlayFragment = null;
     PlaylistFragment playlistFragment = null;
 
     //替换Mainfragment
@@ -117,17 +110,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void initData() {
         main.run();
         detail.run();
-
         mSlidingUpPaneLayout.addPanelSlideListener(new PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
-            }
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
+                if (newState.equals(PanelState.COLLAPSED)) {
+
+                }
             }
+
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+                View nowPlayingCard = PlayFragment.topContainer;
+                nowPlayingCard.setAlpha(1 - slideOffset);
+            }
+
+
         });
         mSlidingUpPaneLayout.setFadeOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,10 +153,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavigationView.setItemIconTintList(null);
         //菜单栏的头部控件初始化
         View headerView = mNavigationView.inflateHeaderView(R.layout.header_nav);
-        iv_bg = headerView.findViewById(R.id.header_bg);
-        user_face = headerView.findViewById(R.id.header_face);
-        tv_name = headerView.findViewById(R.id.header_name);
-        tv_nick = headerView.findViewById(R.id.header_nick);
+        mImageView = headerView.findViewById(R.id.header_bg);
+        mAvatarIcon = headerView.findViewById(R.id.header_face);
+        mName = headerView.findViewById(R.id.header_name);
+        mNick = headerView.findViewById(R.id.header_nick);
 
         initNav();
         headerView.setOnClickListener(new View.OnClickListener() {
@@ -182,29 +182,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (login_status) {
             User user = UserStatus.getUserInfo(this);
             if (user.getUser_name() != null && user.getUser_name().length() > 0) {
-                tv_name.setText(user.getUser_name());
+                mName.setText(user.getUser_name());
             } else if (user.getUser_email() != null && user.getUser_email().length() > 0) {
-                tv_name.setText(user.getUser_email());
+                mName.setText(user.getUser_email());
             } else {
-                tv_name.setText(user.getUser_id());
+                mName.setText(user.getUser_id());
             }
             if (user.getNick() != null && user.getNick().length() > 0) {
-                tv_nick.setText(user.getNick());
+                mNick.setText(user.getNick());
             } else {
-                tv_nick.setText("湖科音乐湖");
+                mNick.setText("湖科音乐湖");
             }
             if (user.getUser_img() != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getImageDir() + user.getUser_id() + ".png");
                 if (bitmap != null) {
-                    user_face.setImageBitmap(bitmap);
+                    mAvatarIcon.setImageBitmap(bitmap);
                     bitmap.recycle();
                 } else
-                    ImageLoader.getInstance().displayImage(user.getUser_img(), user_face, ImageUtils.getAlbumDisplayOptions());
+                    ImageLoader.getInstance().displayImage(user.getUser_img(), mAvatarIcon, ImageUtils.getAlbumDisplayOptions());
             }
         } else {
-            user_face.setImageResource(R.drawable.ic_account_circle);
-            tv_name.setText("湖科音乐湖");
-            tv_nick.setText("未登录?去登录/注册吧!");
+            mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
+            mName.setText("湖科音乐湖");
+            mNick.setText("未登录?去登录/注册吧!");
         }
     }
 
@@ -276,47 +276,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (mSlidingUpPaneLayout != null &&
                 (mSlidingUpPaneLayout.getPanelState() == PanelState.EXPANDED || mSlidingUpPaneLayout.getPanelState() == PanelState.ANCHORED)) {
             mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-        }
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    //播放列表是否隐藏
-    Boolean isPlayFragmentShow = false;
-
-    /**
-     * 隐藏播放列表
-     */
-    private void hidePlayingFragment() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(0, R.anim.fragment_slide_down);
-        ft.hide(mPlayFragment);
-        ft.commitAllowingStateLoss();
-        isPlayFragmentShow = false;
-    }
-
-    /**
-     * 播放列表显示
-     */
-    private void showPlayingFragment() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.addToBackStack(null);
-        ft.setCustomAnimations(R.anim.fragment_slide_up, 0);
-        if (mPlayFragment == null) {
-            mPlayFragment = new PlayFragment();
-            ft.replace(R.id.controls_container, mPlayFragment);
         } else {
-            ft.show(mPlayFragment);
+            super.onBackPressed();
         }
-        ft.commitAllowingStateLoss();
-        isPlayFragmentShow = true;
     }
-
-    View view = null;
-
 
     /**
      * 生命周期onresume
@@ -326,7 +291,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onResume();
         initNav();
     }
-
 
     /**
      * 菜单
@@ -351,11 +315,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                mDrawerLayout.openDrawer(GravityCompat.START);
                 if (isNavigatingMain()) {
                     mDrawerLayout.openDrawer(GravityCompat.START);
-                } else super.onBackPressed();
-
+                } else {
+                    super.onBackPressed();
+                }
                 break;
             case R.id.action_search:
                 intent = new Intent(this, SearchActivity.class);

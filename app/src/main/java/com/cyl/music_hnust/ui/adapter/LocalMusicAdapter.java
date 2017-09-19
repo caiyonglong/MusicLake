@@ -14,8 +14,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.MainActivity;
-import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -28,6 +26,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.cyl.music_hnust.ui.activity.BaseActivity.mService;
 
 /**
  * 功能：本地歌曲item
@@ -198,7 +198,6 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                 @Override
                 public void run() {
                     Log.e("lllllaaaaaaaa", musicInfos.size() + "====");
-
 
                     Handler handler1 = new Handler();
                     handler1.postDelayed(new Runnable() {

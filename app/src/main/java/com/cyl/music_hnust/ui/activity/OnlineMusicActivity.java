@@ -25,8 +25,8 @@ import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlineMusicInfo;
 import com.cyl.music_hnust.model.music.OnlineMusicList;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
-import com.cyl.music_hnust.service.PlayService;
 import com.cyl.music_hnust.ui.adapter.OnlineMusicAdapter;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
@@ -65,7 +65,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     Toolbar mToolbar;
 
     private View vHeader;
-    private PlayService mPlayService;
+    private MusicPlayService mMusicPlayService;
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
     private String title;
@@ -94,7 +94,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     private void init() {
 
-        bindService();
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
@@ -148,23 +147,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         return super.onOptionsItemSelected(item);
     }
 
-    private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayService = ((PlayService.MyBinder) service).getService();
-            onLoad();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
 
     private void onLoad() {
         getMusic(mOffset);
@@ -227,7 +209,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
             public void onSuccess(Music music) {
                 mProgressDialog.cancel();
                 Log.e("***********", music.toString());
-                mPlayService.playMusic(music);
+                mMusicPlayService.playMusic(music);
 //                ToastUtils.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
             }
 
@@ -241,7 +223,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     @Override
     protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
         super.onDestroy();
     }
 
@@ -300,7 +281,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     @Override
     public void onItemClick(View view, int position) {
 //        play(mMusicLists.get(position));
-        mPlayService.setMyMusicList(mMusicls);
-        mPlayService.playMusic(mMusicls.get(position));
+        mMusicPlayService.setMyMusicList(mMusicls);
+        mMusicPlayService.playMusic(mMusicls.get(position));
     }
 }

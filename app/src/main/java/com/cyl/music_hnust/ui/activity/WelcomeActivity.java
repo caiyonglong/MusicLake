@@ -10,8 +10,9 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.cyl.music_hnust.IMusicService;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.service.PlayService;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -89,18 +90,19 @@ public class WelcomeActivity extends BaseActivity {
 
     //检查服务是否运行
     private void checkService() {
-        if (SystemUtils.isServiceRunning(this, PlayService.class)) {
-            startMainActivity();
-            finish();
-        } else {
-            startService();
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bindService();
-                }
-            }, 100);
-        }
+        startMainActivity();
+//        if (SystemUtils.isServiceRunning(this, MusicPlayService.class)) {
+//            startMainActivity();
+//            finish();
+//        } else {
+//            startService();
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    bindService();
+//                }
+//            }, 100);
+//        }
     }
 
     /**
@@ -119,7 +121,7 @@ public class WelcomeActivity extends BaseActivity {
      */
     private void startService() {
         Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
+        intent.setClass(this, MusicPlayService.class);
         startService(intent);
     }
 
@@ -133,32 +135,32 @@ public class WelcomeActivity extends BaseActivity {
         startActivity(intent);
     }
 
-
-    /**
-     * 服务连接
-     */
-    private class PlayServiceConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayService playService = ((PlayService.MyBinder) service).getService();
-            playService.updateMusicList();
-            startMainActivity();
-            finish();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    }
+//
+//    /**
+//     * 服务连接
+//     */
+//    private class PlayServiceConnection implements ServiceConnection {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            IMusicService musicPlayService = IMusicService.Stub.asInterface(service);
+//            musicPlayService.updateMusicList();
+//            startMainActivity();
+//            finish();
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//        }
+//    }
 
     /**
      * 绑定服务
      */
     private void bindService() {
-        mPlayServiceConnection = new PlayServiceConnection();
+//        mPlayServiceConnection = new PlayServiceConnection();
         Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
+        intent.setClass(this, MusicPlayService.class);
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 }

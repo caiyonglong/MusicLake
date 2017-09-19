@@ -6,9 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +27,7 @@ import com.cyl.music_hnust.model.location.LocationInfo;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.user.User;
 import com.cyl.music_hnust.model.user.UserStatus;
-import com.cyl.music_hnust.service.PlayService;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -60,7 +58,7 @@ public class ShakeActivity extends BaseActivity {
 
     private MyLocationAdapter adapter;
 
-    private PlayService mService;
+    private MusicPlayService mService;
 
     private static ProgressDialog progDialog = null;
     private static String user_id;
