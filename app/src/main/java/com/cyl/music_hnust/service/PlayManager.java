@@ -131,9 +131,18 @@ public class PlayManager {
         return 0;
     }
 
-    public static int duration() {
+    public static int getCurrentPosition() {
         try {
-            return mService.duration();
+            return mService.getCurrentPosition();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static int getDuration() {
+        try {
+            return mService.getDuration();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -161,6 +170,15 @@ public class PlayManager {
     public static boolean isPlaying() {
         try {
             return mService.isPlaying();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isPause() {
+        try {
+            return mService.isPause();
         } catch (RemoteException e) {
             e.printStackTrace();
         }

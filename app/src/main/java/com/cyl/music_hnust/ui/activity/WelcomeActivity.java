@@ -91,6 +91,7 @@ public class WelcomeActivity extends BaseActivity {
     //检查服务是否运行
     private void checkService() {
         startMainActivity();
+        finish();
 //        if (SystemUtils.isServiceRunning(this, MusicPlayService.class)) {
 //            startMainActivity();
 //            finish();

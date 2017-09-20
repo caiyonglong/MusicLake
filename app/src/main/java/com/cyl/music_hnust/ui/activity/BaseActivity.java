@@ -85,10 +85,10 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         super.onDestroy();
         ButterKnife.unbind(this);
         // Unbind from the service
-        if (serviceToken != null) {
-            PlayManager.unbindFromService(serviceToken);
-            serviceToken = null;
-        }
+//        if (serviceToken != null) {
+//            PlayManager.unbindFromService(serviceToken);
+//            serviceToken = null;
+//        }
     }
 
     @Override

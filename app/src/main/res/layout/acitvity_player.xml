@@ -173,28 +173,19 @@
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_previous_white_24dp" />
 
-                <FrameLayout
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1">
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/playpausefloating"
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_gravity="center"
-                        android:clickable="true"
-                        android:scaleType="fitCenter"
-                        android:tag="bg_tint_accent_color" />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/playpausefloating"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:scaleType="fitCenter"
+                    android:tag="bg_tint_accent_color" />
 
-                </FrameLayout>
 
                 <ImageView
-                    android:id="@+id/next"
+                    android:id="@+id/skip_next"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"

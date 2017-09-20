@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.ui.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
@@ -94,12 +95,11 @@ public class SongsFragment extends BaseFragment {
         tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
         loading = (LinearLayout) rootView.findViewById(R.id.loading);
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (getmMusicPlayService() != null) {
-            mRecyclerView.scrollToPosition(getmMusicPlayService().getmPlayingPosition());
-        }
+//        mRecyclerView.scrollToPosition(PlayManager.position());
     }
 
     @Override

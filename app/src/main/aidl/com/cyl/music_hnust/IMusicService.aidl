@@ -13,8 +13,8 @@ interface IMusicService {
     void setLoopMode(int loopmode);
     void seekTo(int ms);
     int position();
-    int duration();
-    int getPlayingPosition();
+    int getDuration();
+    int getCurrentPosition();
     boolean isPlaying();
     boolean isPause();
     String getSongName();

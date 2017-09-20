@@ -583,17 +583,28 @@ public class MusicPlayService extends Service {
 
         @Override
         public int position() throws RemoteException {
+            return mService.get().getmPlayingPosition();
+        }
+
+        @Override
+        public int getDuration() throws RemoteException {
             return mService.get().getCurrent();
         }
 
         @Override
-        public int duration() throws RemoteException {
+        public int getCurrentPosition() throws RemoteException {
             return mService.get().getCurrent();
         }
+
 
         @Override
         public boolean isPlaying() throws RemoteException {
             return mService.get().isPlaying();
+        }
+
+        @Override
+        public boolean isPause() throws RemoteException {
+            return mService.get().isPause();
         }
 
     }

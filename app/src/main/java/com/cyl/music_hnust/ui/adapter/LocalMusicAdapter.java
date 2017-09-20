@@ -38,8 +38,6 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
-    private int currentlyPlayingPosition = 0;
-
 
     public LocalMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
         this.context = context;
@@ -84,8 +82,25 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         }
 
         setOnPopupMenuListener(holder, position);
+        setOnClickListener(holder, position);
     }
 
+    private void setOnClickListener(ItemHolder holder, final int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        PlayManager.setPlayList(musicInfos);
+                        PlayManager.play(position);
+                        notifyItemChanged(position);
+                    }
+                }, 100);
+            }
+        });
+    }
 
     private void loadBitmap(String uri, ImageView img) {
         try {
@@ -177,7 +192,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         return (null != musicInfos ? musicInfos.size() : 0);
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ItemHolder extends RecyclerView.ViewHolder {
         protected TextView title, artist;
         protected ImageView albumArt;
         protected ImageView popupmenu;
@@ -190,28 +205,6 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
             this.albumArt = (ImageView) view.findViewById(R.id.iv_cover);
             this.popupmenu = (ImageView) view.findViewById(R.id.iv_more);
             this.v_playing = view.findViewById(R.id.v_playing);
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.e("lllllaaaaaaaa", musicInfos.size() + "====");
-
-                    Handler handler1 = new Handler();
-                    handler1.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyItemChanged(currentlyPlayingPosition);
-                            notifyItemChanged(getAdapterPosition());
-                            currentlyPlayingPosition = getAdapterPosition();
-                        }
-                    }, 50);
-                }
-            }, 100);
         }
     }
 }

@@ -180,9 +180,9 @@ public class ArtistInfoActivity extends BaseActivity {
             TextView tvUrl = new TextView(this);
             String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                tvUrl.setText(Html.fromHtml(String.format(html, url)));
+                tvUrl.setText(Html.fromHtml(String.format(html, url),1));
             } else {
-                tvUrl.setText(Html.fromHtml(String.format(html, url)));
+                tvUrl.setText(Html.fromHtml(String.format(html, url),1));
             }
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             tvUrl.setPadding(0, 0, 0, 10);
