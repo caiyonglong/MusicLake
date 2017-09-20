@@ -2,7 +2,6 @@ package com.cyl.music_hnust.ui.activity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
@@ -16,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.callback.UserCallback;
+import com.cyl.music_hnust.callback.UserCallBack;
 import com.cyl.music_hnust.model.user.UserInfo;
 import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
@@ -164,7 +163,7 @@ public class LoginActivity extends BaseActivity {
                 .url(Constants.LOGIN_URL)
                 .params(params)
                 .build()//
-                .execute(new UserCallback() {
+                .execute(new UserCallBack() {
                     @Override
                     public void onError(Call call, Exception e) {
                         e.printStackTrace();

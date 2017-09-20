@@ -36,6 +36,7 @@ import com.cyl.music_hnust.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,9 +54,8 @@ public class MusicPlayService extends Service {
     public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
 
     private MediaPlayer mPlayer;
-    private MusicPlayService mService;
     private Music mPlayingMusic = null;
-    private List<Music> myMusicList = new ArrayList<>();
+    private List<Music> mPlaylist = new ArrayList<>();
     private int mPlayingPosition;
 
     private boolean isPause = false;
@@ -75,6 +75,7 @@ public class MusicPlayService extends Service {
     ServiceReceiver mServiceReceiver;
 
     public Notification notif;
+    private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
 
 
     public void setOnPlayEventListener(OnPlayerListener listener) {
@@ -90,7 +91,6 @@ public class MusicPlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mService = this;
         mPlayer = new MediaPlayer();
 
         //实例化过滤器，设置广播
@@ -125,7 +125,7 @@ public class MusicPlayService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new IMusicServiceStub();
+        return mBindStub;
     }
 
 
@@ -134,7 +134,7 @@ public class MusicPlayService extends Service {
      */
     public void updateMusicList() {
 //        MusicUtils.getAllSongs(this, getMusicList());
-        myMusicList = MusicUtils.getAllSongs(this);
+        mPlaylist = MusicUtils.getAllSongs(this);
         if (getMusicList().isEmpty()) {
             return;
         }
@@ -155,7 +155,7 @@ public class MusicPlayService extends Service {
             case PLAY_MODE_RANDOM:
                 Random random = new Random();
                 if (checkNetwork(random.nextInt(getMusicList().size())))
-                    playMusic(random.nextInt(myMusicList.size()));
+                    playMusic(random.nextInt(mPlaylist.size()));
                 break;
             case PLAY_MODE_LOOP:
                 playMusic(mPlayingPosition);
@@ -252,18 +252,6 @@ public class MusicPlayService extends Service {
         }
 
 
-    }
-
-    private void pasue() {
-        if (mPlayer.isPlaying() && mPlayer != null) {
-            mPlayer.pause();
-        }
-    }
-
-    private void play() {
-        if (!mPlayer.isPlaying() && mPlayer != null) {
-            mPlayer.pause();
-        }
     }
 
 
@@ -378,19 +366,8 @@ public class MusicPlayService extends Service {
      */
     public List<Music> getMusicList() {
 
-        Log.e("----Service", myMusicList.size() + "====");
-        return myMusicList;
-    }
-
-
-    /**
-     * 设置当前播放列表
-     *
-     * @param myMusicList
-     */
-    public void setMyMusicList(List<Music> myMusicList) {
-        this.myMusicList = myMusicList;
-        Log.e("----Service", myMusicList.size() + "====");
+        Log.e("----Service", mPlaylist.size() + "====");
+        return mPlaylist;
     }
 
 
@@ -544,49 +521,80 @@ public class MusicPlayService extends Service {
     }
 
     private class IMusicServiceStub extends IMusicService.Stub {
-        @Override
-        public void openFile(String path) throws RemoteException {
+        private final WeakReference<MusicPlayService> mService;
 
+        private IMusicServiceStub(final MusicPlayService service) {
+            mService = new WeakReference<MusicPlayService>(service);
         }
 
         @Override
-        public void open(long[] list, int position, long sourceId, int sourceType) throws RemoteException {
-
+        public void playOnline(Music music) throws RemoteException {
+            mService.get().playMusic(music);
         }
 
         @Override
-        public void stop() throws RemoteException {
-            mPlayer.stop();
+        public void play(int id) throws RemoteException {
+            mService.get().playMusic(id);
         }
 
         @Override
-        public void pause() throws RemoteException {
-            mService.pause();
+        public void playPause() throws RemoteException {
+            mService.get().playPause();
         }
 
         @Override
-        public void play() throws RemoteException {
-            mService.play();
-        }
-
-        @Override
-        public void prev(boolean forcePrevious) throws RemoteException {
-            mService.prev();
+        public void prev() throws RemoteException {
+            mService.get().prev();
         }
 
         @Override
         public void next() throws RemoteException {
-            mService.next();
+            mService.get().next();
         }
 
         @Override
-        public void setShuffleMode(int shufflemode) throws RemoteException {
-
+        public void setLoopMode(int loopmode) throws RemoteException {
         }
 
         @Override
-        public void refresh() throws RemoteException {
-
+        public void seekTo(int ms) throws RemoteException {
+            mService.get().seekTo(ms);
         }
+
+        @Override
+        public String getSongName() throws RemoteException {
+            return null;
+        }
+
+        @Override
+        public String getSongArtist() throws RemoteException {
+            return null;
+        }
+
+        @Override
+        public Music getPlayingMusic() throws RemoteException {
+            return mPlayingMusic;
+        }
+
+        @Override
+        public void setPlayList(List<Music> playlist) throws RemoteException {
+            mPlaylist = playlist;
+        }
+
+        @Override
+        public int position() throws RemoteException {
+            return mService.get().getCurrent();
+        }
+
+        @Override
+        public int duration() throws RemoteException {
+            return mService.get().getCurrent();
+        }
+
+        @Override
+        public boolean isPlaying() throws RemoteException {
+            return mService.get().isPlaying();
+        }
+
     }
 }

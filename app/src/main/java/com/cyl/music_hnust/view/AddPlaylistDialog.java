@@ -31,7 +31,7 @@ public class AddPlaylistDialog extends DialogFragment {
     public static AddPlaylistDialog newInstance(Music song) {
         AddPlaylistDialog dialog = new AddPlaylistDialog();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("music", song);
+        bundle.putParcelable("music", song);
         dialog.setArguments(bundle);
         return dialog;
     }
@@ -50,14 +50,14 @@ public class AddPlaylistDialog extends DialogFragment {
         return new MaterialDialog.Builder(getActivity()).title("增加到歌单").items(chars).itemsCallback(new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                Music music = (Music) getArguments().getSerializable("music");
+                Music music = getArguments().getParcelable("music");
 //                long[] songs = getArguments().getSerializable("songs");
                 if (which == 0) {
                     CreatePlaylistDialog.newInstance(music).show(getActivity().getSupportFragmentManager(), "新建歌单");
                     return;
                 }
 
-                PlaylistLoader.addToPlaylist(getActivity(),playlists.get(which-1).getId(),music);
+                PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music);
                 dialog.dismiss();
 
             }

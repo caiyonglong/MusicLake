@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,9 +13,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.MainActivity;
-import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.view.AddPlaylistDialog;
@@ -35,7 +33,7 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
-    private int currentlyPlayingPosition =0;
+    private int currentlyPlayingPosition = 0;
 
 
     public AlbumMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
@@ -49,7 +47,7 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent, false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -60,14 +58,14 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
         Music localItem = musicInfos.get(position);
 
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
-        holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(),localItem.getAlbum()));
+        holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
 //
-//        if(MainActivity.mPlayService.getPlayingMusic().getId()==musicInfos.get(position).getId())
-//        {
-//            holder.v_playing.setVisibility(View.VISIBLE);
-//        }else {
-//            holder.v_playing.setVisibility(View.GONE);
-//        }
+        if(PlayManager.getPlayingMusic().getId()==musicInfos.get(position).getId())
+        {
+            holder.v_playing.setVisibility(View.VISIBLE);
+        }else {
+            holder.v_playing.setVisibility(View.GONE);
+        }
 
         setOnPopupMenuListener(holder, position);
     }
@@ -82,8 +80,8 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.popup_song_play:
-//                                MainActivity.mPlayService.setMyMusicList(musicInfos);
-//                                MainActivity.mPlayService.playMusic(position);
+                                PlayManager.setPlayList(musicInfos);
+                                PlayManager.play(position);
                                 break;
                             case R.id.popup_song_detail:
                                 getMusicInfo(musicInfos.get(position));
@@ -156,8 +154,8 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
                 @Override
                 public void run() {
 //                    Log.e("lllllaaaaaaaa",musicInfos.size()+"====");
-//                    MainActivity.mPlayService.setMyMusicList(musicInfos);
-//                    MainActivity.mPlayService.playMusic(getAdapterPosition());
+                    PlayManager.setPlayList(musicInfos);
+                    PlayManager.play(getAdapterPosition());
 //
 //                    Log.e("LOCal",MainActivity.mPlayService.getMusicList().size()+"====");
 
@@ -167,7 +165,7 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
                         public void run() {
                             notifyItemChanged(currentlyPlayingPosition);
                             notifyItemChanged(getAdapterPosition());
-                            currentlyPlayingPosition =getAdapterPosition();
+                            currentlyPlayingPosition = getAdapterPosition();
                         }
                     }, 50);
                 }

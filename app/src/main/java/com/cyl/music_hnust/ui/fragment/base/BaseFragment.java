@@ -55,8 +55,4 @@ public abstract class BaseFragment extends RxFragment {
 
     public abstract void initViews();
 
-    public MusicPlayService getmMusicPlayService() {
-        return new MusicPlayService();
-    }
-
 }

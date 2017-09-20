@@ -2,50 +2,23 @@
 package com.cyl.music_hnust;
 
 // Declare any non-default types here with import statements
+import com.cyl.music_hnust.model.music.Music;
 
 interface IMusicService {
-    void openFile(String path);
-    void open(in long [] list, int position, long sourceId, int sourceType);
-    void stop();
-    void pause();
-    void play();
-    void prev(boolean forcePrevious);
+    void playOnline(in Music music);
+    void play(int id);
+    void playPause();
+    void prev();
     void next();
-//    void enqueue(in long [] list, int action, long sourceId, int sourceType);
-//    void setQueuePosition(int index);
-    void setShuffleMode(int shufflemode);
-//    void setRepeatMode(int repeatmode);
-//    void moveQueueItem(int from, int to);
-    void refresh();
-//    void playlistChanged();
-//    boolean isPlaying();
-//    long [] getQueue();
-//    long getQueueItemAtPosition(int position);
-//    int getQueueSize();
-//    int getQueuePosition();
-//    int getQueueHistoryPosition(int position);
-//    int getQueueHistorySize();
-//    int[] getQueueHistoryList();
-//    long duration();
-//    long position();
-//    long seek(long pos);
-//    void seekRelative(long deltaInMs);
-//    long getAudioId();
-//    MusicPlaybackTrack getCurrentTrack();
-//    MusicPlaybackTrack getTrack(int index);
-//    long getNextAudioId();
-//    long getPreviousAudioId();
-//    long getArtistId();
-//    long getAlbumId();
-//    String getArtistName();
-//    String getTrackName();
-//    String getAlbumName();
-//    String getPath();
-//    int getShuffleMode();
-//    int removeTracks(int first, int last);
-//    int removeTrack(long id);
-//    boolean removeTrackAtPosition(long id, int position);
-//    int getRepeatMode();
-//    int getMediaMountedCount();
-//    int getAudioSessionId();
+    void setLoopMode(int loopmode);
+    void seekTo(int ms);
+    int position();
+    int duration();
+    int getPlayingPosition();
+    boolean isPlaying();
+    boolean isPause();
+    String getSongName();
+    String getSongArtist();
+    Music getPlayingMusic();
+    void setPlayList(in List<Music> playlist);
 }

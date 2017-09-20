@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.fragment;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -26,10 +25,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.model.music.lyric.LrcView;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.music.lyric.LrcView;
-import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -47,7 +47,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 
@@ -110,8 +109,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
-        tv_title =rootView.findViewById(R.id.song_title);
-        tv_artist =  rootView.findViewById(R.id.song_artist);
+        tv_title = rootView.findViewById(R.id.song_title);
+        tv_artist = rootView.findViewById(R.id.song_artist);
         tv_time = (TextView) rootView.findViewById(R.id.song_elapsed_time);
         tv_duration = (TextView) rootView.findViewById(R.id.song_duration);
         sk_progress = (SeekBar) rootView.findViewById(R.id.song_progress);
@@ -130,9 +129,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (playPauseFloating != null) {
             playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
             playPauseFloating.setImageDrawable(playPauseDrawable);
-//            if (getmMusicPlayService().isPlaying())
-            playPauseDrawable.transformToPause(false);
-//            else playPauseDrawable.transformToPlay(false);
+            if (PlayManager.isPlaying())
+                playPauseDrawable.transformToPause(false);
+            else playPauseDrawable.transformToPlay(false);
         }
 
         //初始化沉淀式标题栏
@@ -169,8 +168,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     protected void initDatas() {
         mHandler = new Handler();
         sk_progress.setProgress(0);
-//        onPlay(getmMusicPlayService().getPlayingMusic());
-
+        onPlay(PlayManager.getPlayingMusic());
     }
 
 
@@ -196,7 +194,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setLrc(music);
         setCoverAndBg(music);
         reloadAdapter();
-//        recyclerView.scrollToPosition(getmMusicPlayService().getmPlayingPosition());
+        recyclerView.scrollToPosition(PlayManager.getmPlayingPosition());
 
     }
 
@@ -205,16 +203,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.previous:
-                if (getmMusicPlayService() == null) {
-                    Log.e("222", "33333333333333333");
-                } else {
-                }
+                PlayManager.prev();
                 break;
             case R.id.next:
-                if (getmMusicPlayService() == null) {
-                    Log.e("222", "33333333333333333");
-                } else {
-                }
+                PlayManager.next();
                 break;
             case R.id.iv_back:
                 onBackPressed();
@@ -280,9 +272,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (getmMusicPlayService().isPlaying() || getmMusicPlayService().isPause()) {
+        if (PlayManager.isPlaying() || PlayManager.isPause()) {
             int progress = seekBar.getProgress();
-            getmMusicPlayService().seekTo(progress);
+            PlayManager.seekTo(progress);
             mLrcView.onDrag(progress);
             tv_time.setText(FormatUtil.formatTime(progress));
         } else {
@@ -466,11 +458,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     };
 
     public void updatePlayPauseFloatingButton() {
-//        if (getmMusicPlayService().isPlaying()) {
-        playPauseDrawable.transformToPause(false);
-//        } else {
-        playPauseDrawable.transformToPlay(false);
-//        }
+        if (PlayManager.isPlaying()) {
+            playPauseDrawable.transformToPause(false);
+        } else {
+            playPauseDrawable.transformToPlay(false);
+        }
     }
 
     public void updatePlayMode() {

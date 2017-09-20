@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.activity;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.cyl.music_hnust.IMusicService;
-import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.service.PlayManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -25,16 +24,18 @@ import butterknife.ButterKnife;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity extends RxAppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection {
 
     protected Handler mHandler;
     public static IMusicService mService;
+    public static PlayManager.ServiceToken serviceToken;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResID());
         mHandler = new Handler();
+        serviceToken = PlayManager.bindToService(this, this);
         init();
     }
 
@@ -79,20 +80,24 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     };
 
-
-    private void bindMusicService() {
-        Intent intent = new Intent(this, MusicPlayService.class);
-        bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    private void unbindMusicService() {
-        Intent intent = new Intent(this, MusicPlayService.class);
-        unbindService(mServiceConnection);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        // Unbind from the service
+        if (serviceToken != null) {
+            PlayManager.unbindFromService(serviceToken);
+            serviceToken = null;
+        }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        mService = IMusicService.Stub.asInterface(iBinder);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        mService = null;
     }
 }

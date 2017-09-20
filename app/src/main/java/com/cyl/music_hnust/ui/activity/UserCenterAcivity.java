@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -27,10 +26,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.ui.activity.clipheadphoto.ClipActivity;
-import com.cyl.music_hnust.ui.adapter.ViewPagerAdapter;
 import com.cyl.music_hnust.callback.StatusCallback;
-import com.cyl.music_hnust.callback.UserCallback;
-import com.cyl.music_hnust.ui.fragment.UserFragment;
+import com.cyl.music_hnust.callback.UserCallBack;
 import com.cyl.music_hnust.model.user.StatusInfo;
 import com.cyl.music_hnust.model.user.User;
 import com.cyl.music_hnust.model.user.UserInfo;
@@ -374,7 +371,7 @@ public class UserCenterAcivity extends BaseActivity {
         OkHttpUtils.post().url(Constants.DEFAULT_URL)
                 .params(params)
                 .build()
-                .execute(new UserCallback() {
+                .execute(new UserCallBack() {
                     @Override
                     public void onError(Call call, Exception e) {
                         ToastUtils.show(UserCenterAcivity.this, R.string.error_connection);

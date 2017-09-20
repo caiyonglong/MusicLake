@@ -1,15 +1,15 @@
 package com.cyl.music_hnust.model.music;
 
 import android.graphics.Bitmap;
-
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * 作者：yonglong on 2016/8/9 10:50
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Music implements Serializable{
+public class Music implements Parcelable{
     // 歌曲类型 本地/网络
     private Type type;
     // [本地歌曲]歌曲id
@@ -60,6 +60,35 @@ public class Music implements Serializable{
         this.year = "未知";
         this.type = Type.LOCAL;
     }
+
+    protected Music(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        artist = in.readString();
+        album = in.readString();
+        artistId = in.readLong();
+        albumId = in.readLong();
+        duration = in.readLong();
+        uri = in.readString();
+        lrcPath = in.readString();
+        coverUri = in.readString();
+        fileName = in.readString();
+        cover = in.readParcelable(Bitmap.class.getClassLoader());
+        fileSize = in.readLong();
+        year = in.readString();
+    }
+
+    public static final Creator<Music> CREATOR = new Creator<Music>() {
+        @Override
+        public Music createFromParcel(Parcel in) {
+            return new Music(in);
+        }
+
+        @Override
+        public Music[] newArray(int size) {
+            return new Music[size];
+        }
+    };
 
     public long getArtistId() {
         return artistId;
@@ -179,6 +208,29 @@ public class Music implements Serializable{
 
     public void setLrcPath(String lrcPath) {
         this.lrcPath = lrcPath;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(title);
+        parcel.writeString(artist);
+        parcel.writeString(album);
+        parcel.writeLong(artistId);
+        parcel.writeLong(albumId);
+        parcel.writeLong(duration);
+        parcel.writeString(uri);
+        parcel.writeString(lrcPath);
+        parcel.writeString(coverUri);
+        parcel.writeString(fileName);
+        parcel.writeParcelable(cover, i);
+        parcel.writeLong(fileSize);
+        parcel.writeString(year);
     }
 
     public enum  Type {

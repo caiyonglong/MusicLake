@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.activity.ArtistInfoActivity;
 import com.cyl.music_hnust.download.DownloadService;
 import com.cyl.music_hnust.model.music.Music;
@@ -58,7 +59,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent, false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -92,14 +93,14 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.popup_song_play:
-//                                MainActivity.mPlayService.playMusic(position);
+                                PlayManager.play(position);
                                 break;
                             case R.id.popup_song_detail:
                                 getMusicInfo(musicInfos.get(position));
                                 break;
                             case R.id.popup_song_goto_artist:
-                                Intent intent =new Intent(context, ArtistInfoActivity.class);
-                                intent.putExtra(Extras.TING_UID,musicInfos.get(position).getTing_uid());
+                                Intent intent = new Intent(context, ArtistInfoActivity.class);
+                                intent.putExtra(Extras.TING_UID, musicInfos.get(position).getTing_uid());
                                 context.startActivity(intent);
                                 break;
                             case R.id.popup_song_download:
@@ -177,11 +178,11 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
             @Override
             public void onSuccess(Music music) {
 
-                ToastUtils.show(context,"正在下载");
+                ToastUtils.show(context, "正在下载");
 //                Preferences.
                 Intent intent = new Intent(context, DownloadService.class);
                 intent.putExtra("downloadUrl", music.getUri());
-                intent.putExtra("name", FileUtils.getMp3FileName(music.getArtist(),music.getTitle()));
+                intent.putExtra("name", FileUtils.getMp3FileName(music.getArtist(), music.getTitle()));
                 intent.putExtra("flag", "startDownload");
 
                 context.startService(intent);

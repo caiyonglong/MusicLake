@@ -14,11 +14,9 @@ import okhttp3.Response;
  * 版本：2.5
  */
 
-public abstract class UserCallback extends Callback<UserInfo>
-{
+public abstract class UserCallBack extends Callback<UserInfo> {
     @Override
-    public UserInfo parseNetworkResponse(Response response) throws IOException
-    {
+    public UserInfo parseNetworkResponse(Response response) throws IOException {
         String string = response.body().string();
         UserInfo userinfo = new Gson().fromJson(string, UserInfo.class);
         return userinfo;

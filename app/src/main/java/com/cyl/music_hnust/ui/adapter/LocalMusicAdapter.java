@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
@@ -26,8 +27,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.cyl.music_hnust.ui.activity.BaseActivity.mService;
 
 /**
  * 功能：本地歌曲item
@@ -74,12 +73,15 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         }
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
         holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
-//
-//        if (MainActivity.mPlayService.getPlayingMusic().getId() == musicInfos.get(position).getId()) {
-//            holder.v_playing.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.v_playing.setVisibility(View.GONE);
-//        }
+        try {
+            if (PlayManager.getPlayingMusic().getId() == musicInfos.get(position).getId()) {
+                holder.v_playing.setVisibility(View.VISIBLE);
+            } else {
+                holder.v_playing.setVisibility(View.GONE);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         setOnPopupMenuListener(holder, position);
     }
@@ -109,8 +111,8 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.popup_song_play:
-//                                MainActivity.mPlayService.setMyMusicList(musicInfos);
-//                                MainActivity.mPlayService.playMusic(position);
+                                PlayManager.setPlayList(musicInfos);
+                                PlayManager.play(position);
                                 break;
                             case R.id.popup_song_detail:
                                 getMusicInfo(musicInfos.get(position));

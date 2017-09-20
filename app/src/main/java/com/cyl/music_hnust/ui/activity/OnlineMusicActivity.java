@@ -2,12 +2,7 @@ package com.cyl.music_hnust.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -281,7 +276,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     @Override
     public void onItemClick(View view, int position) {
 //        play(mMusicLists.get(position));
-        mMusicPlayService.setMyMusicList(mMusicls);
+//        mMusicPlayService.setMyMusicList(mMusicls);
         mMusicPlayService.playMusic(mMusicls.get(position));
     }
 }
