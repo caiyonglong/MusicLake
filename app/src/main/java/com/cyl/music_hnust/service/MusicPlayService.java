@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.service;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -10,15 +9,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.IMusicService;
@@ -28,10 +27,8 @@ import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlinePlaylist;
 import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.utils.ImageUtils;
-import com.cyl.music_hnust.utils.MusicUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.utils.Preferences;
-import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -49,18 +46,18 @@ import java.util.Random;
 public class MusicPlayService extends Service {
 
     public static final String ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
-    public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 广播标志
-    public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 广播标志
-    public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 广播标志
+    public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 下一首广播标志
+    public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 上一首广播标志
+    public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 播放广播标志
 
     private MediaPlayer mPlayer;
     private Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
     private int mPlayingPosition;
 
-    private boolean isPause = false;
+    RemoteViews mRemoteViews;
 
-    private Handler mHandler = new Handler();
+    private boolean isPause = false;
 
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int play_mode;
@@ -68,22 +65,13 @@ public class MusicPlayService extends Service {
     private final int PLAY_MODE_RANDOM = 1;
     private final int PLAY_MODE_LOOP = 2;
     private int NOTIFICATION_ID = 0x123;
-    private int DELAY_TIME = 1000;
 
     private int curTime = 0;
     //广播接收者
     ServiceReceiver mServiceReceiver;
 
-    public Notification notif;
+    public Notification mNotify;
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
-
-
-    public void setOnPlayEventListener(OnPlayerListener listener) {
-        mListener = listener;
-    }
-
-    private OnPlayerListener mListener;
-    private NotificationManager mNotificationManager;
 
     //缓存的歌单
     public List<OnlinePlaylist> mSongLists = new ArrayList<>();
@@ -91,8 +79,58 @@ public class MusicPlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mPlayer = new MediaPlayer();
+        initReceiver();
+        initMediaPlayer();
+        initTelephony();
+//        initNotify();
+    }
 
+    private void initNotify() {
+
+        String text = TextUtils.isEmpty(mPlayingMusic.getAlbum())
+                ? mPlayingMusic.getArtist() : mPlayingMusic.getArtist() + " - " + mPlayingMusic.getAlbum();
+        int playButtonResId = isPlaying()
+                ? R.drawable.ic_pause_white_18dp : R.drawable.ic_play_arrow_white_18dp;
+        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+        nowPlayingIntent.putExtra(ACTION_SERVICE, true);
+        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Bitmap cover = null;
+        if (mPlayingMusic.getCover() == null) {
+            cover = ImageLoader
+                    .getInstance()
+                    .loadImageSync(ImageUtils.getAlbumArtUri(mPlayingMusic.getAlbumId()).toString(),
+                            ImageUtils.getAlbumDisplayOptions());
+        } else {
+            cover = mPlayingMusic.getCover();
+        }
+
+        /* 使用RemoteViews来布局 */
+        mRemoteViews = new RemoteViews(getPackageName(), R.layout.item_view_remote_noti);
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_next, retrievePlaybackAction(ACTION_NEXT)); // 给停止按钮添加点击事件
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_prev, retrievePlaybackAction(ACTION_PREV)); // 给停止按钮添加点击事件
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_play_pause, retrievePlaybackAction(ACTION_PLAY)); // 给停止按钮添加点击事件
+
+    }
+
+    private void initTelephony() {
+        TelephonyManager telephonyManager = (TelephonyManager) this
+                .getSystemService(Context.TELEPHONY_SERVICE);// 获取电话通讯服务
+        telephonyManager.listen(new ServicePhoneStateListener(),
+                PhoneStateListener.LISTEN_CALL_STATE);// 创建一个监听对象，监听电话状态改变事件
+    }
+
+    private void initMediaPlayer() {
+        mPlayer = new MediaPlayer();
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mPlayer) {
+                next();
+            }
+        });
+    }
+
+    private void initReceiver() {
         //实例化过滤器，设置广播
         mServiceReceiver = new ServiceReceiver();
         IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
@@ -101,20 +139,6 @@ public class MusicPlayService extends Service {
         intentFilter.addAction(ACTION_PLAY);
         //注册广播
         registerReceiver(mServiceReceiver, intentFilter);
-
-
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mPlayer) {
-                next();
-            }
-        });
-
-        TelephonyManager telephonyManager = (TelephonyManager) this
-                .getSystemService(Context.TELEPHONY_SERVICE);// 获取电话通讯服务
-        telephonyManager.listen(new ServicePhoneStateListener(),
-                PhoneStateListener.LISTEN_CALL_STATE);// 创建一个监听对象，监听电话状态改变事件
-
     }
 
     @Override
@@ -126,20 +150,6 @@ public class MusicPlayService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return mBindStub;
-    }
-
-
-    /**
-     * 每次启动时扫描音乐
-     */
-    public void updateMusicList() {
-//        MusicUtils.getAllSongs(this, getMusicList());
-        mPlaylist = MusicUtils.getAllSongs(this);
-        if (getMusicList().isEmpty()) {
-            return;
-        }
-//        updatePlayingPosition();
-        mPlayingMusic = mPlayingMusic == null ? getMusicList().get(mPlayingPosition) : mPlayingMusic;
     }
 
     /**
@@ -228,7 +238,6 @@ public class MusicPlayService extends Service {
             position = 0;
         }
 
-
         mPlayingPosition = position;
         playMusic(getMusicList().get(mPlayingPosition));
         showNotification();
@@ -243,15 +252,11 @@ public class MusicPlayService extends Service {
             mPlayer.setDataSource(mPlayingMusic.getUri());
             mPlayer.prepare();
             start();
-            if (mListener != null) {
-                mListener.onChange(music);
-            }
 
         } catch (IOException e) {
             ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
         }
-
-
+        sendBroadcast(new Intent(ACTION_PLAY));
     }
 
 
@@ -269,7 +274,6 @@ public class MusicPlayService extends Service {
     private void start() {
         mPlayer.start();
         isPause = false;
-        mHandler.post(mRunnable);
         showNotification();
     }
 
@@ -282,12 +286,8 @@ public class MusicPlayService extends Service {
         }
         mPlayer.pause();
         isPause = true;
-
-        mHandler.removeCallbacks(mRunnable);
+        stopForeground(true);
         curTime = mPlayer.getCurrentPosition();
-        if (mListener != null) {
-            mListener.onPlayerPause();
-        }
     }
 
 
@@ -305,10 +305,6 @@ public class MusicPlayService extends Service {
         }
         start();
         isPause = false;
-        seekTo(curTime);
-        if (mListener != null) {
-            mListener.onPlayerResume();
-        }
     }
 
     /**
@@ -334,15 +330,11 @@ public class MusicPlayService extends Service {
     public void seekTo(int msec) {
         if (isPlaying() || isPause()) {
             mPlayer.seekTo(msec);
-            if (mListener != null) {
-                mListener.onUpdate(msec);
-            }
         }
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mListener = null;
         return true;
     }
 
@@ -351,7 +343,7 @@ public class MusicPlayService extends Service {
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
-        mNotificationManager.cancel(NOTIFICATION_ID);
+        stopForeground(true);
         stopSelf();
     }
 
@@ -364,12 +356,10 @@ public class MusicPlayService extends Service {
      *
      * @return
      */
-    public List<Music> getMusicList() {
-
+    private List<Music> getMusicList() {
         Log.e("----Service", mPlaylist.size() + "====");
         return mPlaylist;
     }
-
 
     /**
      * 获取正在播放歌曲的位置
@@ -400,16 +390,6 @@ public class MusicPlayService extends Service {
         return -1;
     }
 
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isPlaying() && mListener != null) {
-                mListener.onUpdate(mPlayer.getCurrentPosition());
-            }
-            mHandler.postDelayed(this, DELAY_TIME);
-        }
-    };
-
     private class ServicePhoneStateListener extends PhoneStateListener {
 
         @Override
@@ -428,45 +408,37 @@ public class MusicPlayService extends Service {
      * 更新通知栏
      */
     public void showNotification() {
-        notif = buildNotification();
-        startForeground(NOTIFICATION_ID, notif);
+        if (mPlayingMusic == null)
+            return;
+        mNotify = buildNotification();
+        startForeground(NOTIFICATION_ID, mNotify);
     }
 
     private Notification buildNotification() {
-        Music music = getPlayingMusic();
-        final String title = music.getTitle();
-        final String albumName = music.getAlbum();
-        final String artistName = music.getArtist();
-        final boolean isPlaying = isPlaying();
-        String text = TextUtils.isEmpty(artistName)
-                ? artistName : artistName + " - " + albumName;
 
-        int playButtonResId = isPlaying
+        String text = TextUtils.isEmpty(mPlayingMusic.getAlbum())
+                ? mPlayingMusic.getArtist() : mPlayingMusic.getArtist() + " - " + mPlayingMusic.getAlbum();
+        int playButtonResId = isPlaying()
                 ? R.drawable.ic_pause_white_18dp : R.drawable.ic_play_arrow_white_18dp;
-
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
         nowPlayingIntent.putExtra(ACTION_SERVICE, true);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        Bitmap artwork;
-//        artwork = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(),ImageUtils.getAlbumDisplayOptions());
-//
-//        if (artwork == null) {
-//            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_empty_music2);
-//        }
+
         Bitmap cover = null;
-        if (music.getCover() == null) {
-            cover = ImageLoader.getInstance().loadImageSync(ImageUtils.getAlbumArtUri(music.getAlbumId()).toString(), ImageUtils.getAlbumDisplayOptions());
-//            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+        if (mPlayingMusic.getCover() == null) {
+            cover = ImageLoader
+                    .getInstance()
+                    .loadImageSync(ImageUtils.getAlbumArtUri(mPlayingMusic.getAlbumId()).toString(),
+                            ImageUtils.getAlbumDisplayOptions());
         } else {
-            cover = music.getCover();
+            cover = mPlayingMusic.getCover();
         }
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_empty_music2)
                 .setLargeIcon(cover)
                 .setContentIntent(clickIntent)
-                .setContentTitle(title)
-                .setContentText(text)
+                .setContentTitle(text)
                 .addAction(R.drawable.ic_skip_previous_white_24dp,
                         "",
                         retrievePlaybackAction(ACTION_PREV))
@@ -475,16 +447,9 @@ public class MusicPlayService extends Service {
                 .addAction(R.drawable.ic_skip_next_white_24dp,
                         "",
                         retrievePlaybackAction(ACTION_NEXT));
+        Notification notify = builder.build();
 
-        if (SystemUtils.isLollipop()) {
-            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
-                    .setShowActionsInCompactView(0, 1, 2, 3);
-            builder.setStyle(style);
-        }
-        Notification n = builder.build();
-
-        return n;
+        return notify;
     }
 
     private final PendingIntent retrievePlaybackAction(final String action) {
@@ -578,7 +543,7 @@ public class MusicPlayService extends Service {
 
         @Override
         public void setPlayList(List<Music> playlist) throws RemoteException {
-            mPlaylist = playlist;
+            mService.get().mPlaylist = playlist;
         }
 
         @Override

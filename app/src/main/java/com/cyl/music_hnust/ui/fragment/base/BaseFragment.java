@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cyl.music_hnust.service.MusicPlayService;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.ButterKnife;
@@ -18,7 +17,6 @@ import butterknife.ButterKnife;
  * 版本：2.5
  */
 public abstract class BaseFragment extends RxFragment {
-    private MusicPlayService mMusicPlayService;
     public View rootView;
 
     @Nullable
@@ -34,6 +32,7 @@ public abstract class BaseFragment extends RxFragment {
         initViews();
         initDatas();
         listener();
+
     }
 
     protected abstract void listener();
@@ -47,12 +46,12 @@ public abstract class BaseFragment extends RxFragment {
 
     @Override
     public void onDetach() {
-
         super.onDetach();
     }
 
     public abstract int getLayoutId();
 
     public abstract void initViews();
+
 
 }

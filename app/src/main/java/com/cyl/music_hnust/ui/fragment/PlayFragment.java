@@ -1,14 +1,16 @@
 package com.cyl.music_hnust.ui.fragment;
 
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +19,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,8 +29,10 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.lyric.LrcView;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.ui.adapter.MyPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
@@ -37,7 +40,6 @@ import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SizeUtils;
-import com.cyl.music_hnust.utils.StatusBarCompat;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
@@ -109,9 +111,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private CircleImageView civ_cover;
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int play_mode;
+    private int position;
     //是否有歌词
     private boolean lrc_empty = true;
     protected static Handler mHandler;
+    private PlayerReceiver mPlayerReceiver;
 
     public static PlayFragment newInstance() {
 
@@ -120,6 +124,22 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         fragment.setArguments(args);
         return fragment;
     }
+
+    Runnable updateProgress = new Runnable() {
+        @Override
+        public void run() {
+            position = PlayManager.getCurrentPosition();
+            sk_progress.setProgress(position);
+            tv_time.setText(FormatUtil.formatTime(position));
+
+            if (playPauseFloating != null)
+                updatePlayPauseFloatingButton();
+            if (mLrcView.hasLrc()) {
+                mLrcView.updateTime(position);
+            }
+            mHandler.postDelayed(updateProgress, 50);
+        }
+    };
 
     @Override
     public int getLayoutId() {
@@ -143,8 +163,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 playPauseDrawable.transformToPlay(false);
             }
         }
-        //初始化沉淀式标题栏
-//        initSystemBar();
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -179,21 +197,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         sk_progress.setProgress(0);
         mPlayPause.setPlayed(PlayManager.isPlaying());
         mPlayPause.setColor(R.color.colorPrimary);
-        onPlay(PlayManager.getPlayingMusic());
+
+        //实例化过滤器，设置广播
+        mPlayerReceiver = new PlayerReceiver();
+        IntentFilter intentFilter = new IntentFilter(MusicPlayService.ACTION_PLAY);
+        //注册广播
+        getActivity().registerReceiver(mPlayerReceiver, intentFilter);
     }
 
-
-    public void onUpdate(int progress) {
-        sk_progress.setProgress(progress);
-        tv_time.setText(FormatUtil.formatTime(progress));
-        if (playPauseFloating != null)
-            updatePlayPauseFloatingButton();
-        if (mLrcView.hasLrc()) {
-            mLrcView.updateTime(progress);
-        }
-    }
-
-    public void onPlay(Music music) {
+    public void updateView(Music music) {
         if (music == null) {
             return;
         }
@@ -203,7 +215,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
         tv_duration.setText(FormatUtil.formatTime(music.getDuration()));
         sk_progress.setMax((int) music.getDuration());
-        sk_progress.setProgress(0);
+        mHandler.post(updateProgress);
         setLrc(music);
         setCoverAndBg(music);
         reloadAdapter();
@@ -255,15 +267,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    /**
-     * 沉浸式状态栏
-     */
-    private void initSystemBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int top = StatusBarCompat.getStatusBarHeight(getActivity());
-            container.setPadding(0, top, 0, 0);
-        }
-    }
 
     /**
      * 退出播放页
@@ -517,36 +520,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
 
-    //适配viewpager
-    private class MyPagerAdapter extends PagerAdapter {
-        private List<View> mViews;
-
-        public MyPagerAdapter(List<View> views) {
-            mViews = views;
-        }
-
-        @Override
-        public int getCount() {
-            return mViews.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(mViews.get(position));
-            return mViews.get(position);
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(mViews.get(position));
-        }
-    }
-
     private void reloadAdapter() {
         mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
         recyclerView.setAdapter(mAdapter);
@@ -556,5 +529,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onDestroy() {
         super.onDestroy();
         operatingAnim.cancel();
+        getActivity().unregisterReceiver(mPlayerReceiver);
+    }
+
+
+    public class PlayerReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(MusicPlayService.ACTION_PLAY)) {
+                updateView(PlayManager.getPlayingMusic());
+            }
+        }
     }
 }
