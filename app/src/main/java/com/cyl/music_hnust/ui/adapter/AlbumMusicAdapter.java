@@ -33,7 +33,6 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
-    private int currentlyPlayingPosition = 0;
 
 
     public AlbumMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
@@ -59,14 +58,12 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
 
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
         holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
-//
-        if(PlayManager.getPlayingMusic().getId()==musicInfos.get(position).getId())
-        {
+        if (PlayManager.getPlayingMusic() != null
+                && PlayManager.getPlayingMusic().equals(localItem)) {
             holder.v_playing.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             holder.v_playing.setVisibility(View.GONE);
         }
-
         setOnPopupMenuListener(holder, position);
     }
 
@@ -153,21 +150,9 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-//                    Log.e("lllllaaaaaaaa",musicInfos.size()+"====");
                     PlayManager.setPlayList(musicInfos);
                     PlayManager.play(getAdapterPosition());
-//
-//                    Log.e("LOCal",MainActivity.mPlayService.getMusicList().size()+"====");
-
-                    Handler handler1 = new Handler();
-                    handler1.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyItemChanged(currentlyPlayingPosition);
-                            notifyItemChanged(getAdapterPosition());
-                            currentlyPlayingPosition = getAdapterPosition();
-                        }
-                    }, 50);
+                    notifyDataSetChanged();
                 }
             }, 100);
         }

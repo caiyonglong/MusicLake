@@ -7,6 +7,15 @@
     android:background="@color/white"
     android:elevation="10dp">
 
+    <ProgressBar
+        android:id="@+id/song_progress_normal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_gravity="top"
+        android:progress="10"
+        android:tag="tint_accent_color" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,17 +29,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:scaleType="fitXY" />
-
-        <ProgressBar
-            android:id="@+id/song_progress_normal"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_gravity="top"
-            android:progress="10"
-            android:tag="tint_accent_color" />
-
 
         <FrameLayout
             android:id="@+id/play_status"
@@ -71,7 +71,6 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/song_progress_normal"
             android:layout_toLeftOf="@id/play_status"
             android:layout_toRightOf="@id/album"
             android:ellipsize="marquee"

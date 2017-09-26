@@ -9,7 +9,7 @@ import android.os.Parcelable;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Music implements Parcelable{
+public class Music implements Parcelable {
     // 歌曲类型 本地/网络
     private Type type;
     // [本地歌曲]歌曲id
@@ -171,7 +171,7 @@ public class Music implements Parcelable{
     }
 
     public String getTitle() {
-        return title;
+        return title ;
     }
 
     public void setTitle(String title) {
@@ -233,9 +233,56 @@ public class Music implements Parcelable{
         parcel.writeString(year);
     }
 
-    public enum  Type {
+    public enum Type {
         ONLINE,
         LOCAL
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Music music = (Music) o;
+
+        if (id != music.id) return false;
+        if (artistId != music.artistId) return false;
+        if (albumId != music.albumId) return false;
+        if (duration != music.duration) return false;
+        if (fileSize != music.fileSize) return false;
+        if (type != music.type) return false;
+        if (title != null ? !title.equals(music.title) : music.title != null) return false;
+        if (artist != null ? !artist.equals(music.artist) : music.artist != null) return false;
+        if (album != null ? !album.equals(music.album) : music.album != null) return false;
+        if (uri != null ? !uri.equals(music.uri) : music.uri != null) return false;
+        if (lrcPath != null ? !lrcPath.equals(music.lrcPath) : music.lrcPath != null) return false;
+        if (coverUri != null ? !coverUri.equals(music.coverUri) : music.coverUri != null)
+            return false;
+        if (fileName != null ? !fileName.equals(music.fileName) : music.fileName != null)
+            return false;
+        if (cover != null ? !cover.equals(music.cover) : music.cover != null) return false;
+        return year != null ? year.equals(music.year) : music.year == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (artist != null ? artist.hashCode() : 0);
+        result = 31 * result + (album != null ? album.hashCode() : 0);
+        result = 31 * result + (int) (artistId ^ (artistId >>> 32));
+        result = 31 * result + (int) (albumId ^ (albumId >>> 32));
+        result = 31 * result + (int) (duration ^ (duration >>> 32));
+        result = 31 * result + (uri != null ? uri.hashCode() : 0);
+        result = 31 * result + (lrcPath != null ? lrcPath.hashCode() : 0);
+        result = 31 * result + (coverUri != null ? coverUri.hashCode() : 0);
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+        result = 31 * result + (cover != null ? cover.hashCode() : 0);
+        result = 31 * result + (int) (fileSize ^ (fileSize >>> 32));
+        result = 31 * result + (year != null ? year.hashCode() : 0);
+        return result;
     }
 
     @Override

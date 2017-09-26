@@ -58,9 +58,6 @@
     <string name="pref_title_info">完善基本信息</string>
 
 
-
-
-
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">其他</string>g>
 
@@ -115,6 +112,7 @@
     <string name="cancel">取消</string>
     <string name="now_play">正在播放</string>
     <string name="unable_to_play">网络不给力,请检查网络!</string>
+    <string name="unable_to_play_exception">播放异常</string>
     <string name="loading">努力加载中...</string>
     <string name="recent_update">最近更新：%s</string>
 
@@ -128,4 +126,5 @@
 
     <string name="error_connection">网络连接异常，请稍后重试！</string>
     <string name="secret_num">~~ 动态 %1$d ~~</string>
+    <string name="sure">确定</string>
 </resources>

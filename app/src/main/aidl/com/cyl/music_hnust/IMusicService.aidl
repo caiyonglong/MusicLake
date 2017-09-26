@@ -21,4 +21,7 @@ interface IMusicService {
     String getSongArtist();
     Music getPlayingMusic();
     void setPlayList(in List<Music> playlist);
+    List<Music> getPlayList();
+    void removeFromQueue(int position);
+    void clearQueue();
 }

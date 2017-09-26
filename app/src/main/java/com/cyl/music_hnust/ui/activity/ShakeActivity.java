@@ -28,6 +28,7 @@ import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.user.User;
 import com.cyl.music_hnust.model.user.UserStatus;
 import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
@@ -179,8 +180,8 @@ public class ShakeActivity extends BaseActivity {
         user_id = UserStatus.getUserInfo(this).getUser_id();
         if (user != null && user.getUser_id() != null) {
             String song = "";
-            if (mService.isPlaying()) {
-                Music music = mService.getPlayingMusic();
+            if (PlayManager.isPlaying()) {
+                Music music = PlayManager.getPlayingMusic();
                 song = FileUtils.getArtistAndAlbum(music.getArtist(), music.getTitle());
             }
             OkHttpUtils.post()//

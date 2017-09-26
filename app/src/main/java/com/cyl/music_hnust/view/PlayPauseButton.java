@@ -21,7 +21,7 @@ public class PlayPauseButton extends View {
     private final static double SQRT_3 = Math.sqrt(3);
 
     /**
-     * Animationの速度の倍率
+     * Animation speed
      */
     private final static int SPEED = 1;
     /**

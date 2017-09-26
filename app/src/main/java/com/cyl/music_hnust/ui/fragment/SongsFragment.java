@@ -12,19 +12,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.service.PlayManager;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
-import com.cyl.music_hnust.ui.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
-import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.music.Album;
 import com.cyl.music_hnust.model.music.Artist;
 import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.ui.adapter.MyStaggeredViewAdapter;
+import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
 
 /**
  * 功能：本地歌曲列表
@@ -34,8 +35,11 @@ import java.util.List;
  */
 public class SongsFragment extends BaseFragment {
 
+    @Bind(R.id.recyclerview)
     RecyclerView mRecyclerView;
+    @Bind(R.id.tv_empty)
     TextView tv_empty;
+    @Bind(R.id.loading)
     LinearLayout loading;
     private LocalMusicAdapter mAdapter;
     private MyStaggeredViewAdapter adapter;
@@ -91,9 +95,7 @@ public class SongsFragment extends BaseFragment {
      */
     @Override
     public void initViews() {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-        tv_empty = (TextView) rootView.findViewById(R.id.tv_empty);
-        loading = (LinearLayout) rootView.findViewById(R.id.loading);
+
     }
 
     @Override

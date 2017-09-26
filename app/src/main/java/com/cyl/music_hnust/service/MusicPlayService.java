@@ -1,6 +1,7 @@
 package com.cyl.music_hnust.service;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -15,16 +16,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.cyl.music_hnust.IMusicService;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.OnlinePlaylist;
 import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;
@@ -49,8 +47,10 @@ public class MusicPlayService extends Service {
     public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 下一首广播标志
     public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 上一首广播标志
     public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 播放广播标志
+    public static final String ACTION_UPDATE = "com.cyl.music_hnust.notify.update";// 播放广播标志
+    private static final String TAG = "MusicPlayService";
 
-    private MediaPlayer mPlayer;
+    private MediaPlayer mPlayer = null;
     private Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
     private int mPlayingPosition;
@@ -65,54 +65,28 @@ public class MusicPlayService extends Service {
     private final int PLAY_MODE_RANDOM = 1;
     private final int PLAY_MODE_LOOP = 2;
     private int NOTIFICATION_ID = 0x123;
+    private Bitmap cover = null;
 
-    private int curTime = 0;
     //广播接收者
     ServiceReceiver mServiceReceiver;
 
-    public Notification mNotify;
-    private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
+    private Notification mNotify;
+    private NotificationManager nm;
 
-    //缓存的歌单
-    public List<OnlinePlaylist> mSongLists = new ArrayList<>();
+    private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
 
     @Override
     public void onCreate() {
         super.onCreate();
+        initNotify();
         initReceiver();
         initMediaPlayer();
         initTelephony();
-//        initNotify();
     }
 
-    private void initNotify() {
-
-        String text = TextUtils.isEmpty(mPlayingMusic.getAlbum())
-                ? mPlayingMusic.getArtist() : mPlayingMusic.getArtist() + " - " + mPlayingMusic.getAlbum();
-        int playButtonResId = isPlaying()
-                ? R.drawable.ic_pause_white_18dp : R.drawable.ic_play_arrow_white_18dp;
-        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
-        nowPlayingIntent.putExtra(ACTION_SERVICE, true);
-        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Bitmap cover = null;
-        if (mPlayingMusic.getCover() == null) {
-            cover = ImageLoader
-                    .getInstance()
-                    .loadImageSync(ImageUtils.getAlbumArtUri(mPlayingMusic.getAlbumId()).toString(),
-                            ImageUtils.getAlbumDisplayOptions());
-        } else {
-            cover = mPlayingMusic.getCover();
-        }
-
-        /* 使用RemoteViews来布局 */
-        mRemoteViews = new RemoteViews(getPackageName(), R.layout.item_view_remote_noti);
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_next, retrievePlaybackAction(ACTION_NEXT)); // 给停止按钮添加点击事件
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_prev, retrievePlaybackAction(ACTION_PREV)); // 给停止按钮添加点击事件
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_play_pause, retrievePlaybackAction(ACTION_PLAY)); // 给停止按钮添加点击事件
-
-    }
-
+    /**
+     * 初始化电话监听服务
+     */
     private void initTelephony() {
         TelephonyManager telephonyManager = (TelephonyManager) this
                 .getSystemService(Context.TELEPHONY_SERVICE);// 获取电话通讯服务
@@ -120,6 +94,9 @@ public class MusicPlayService extends Service {
                 PhoneStateListener.LISTEN_CALL_STATE);// 创建一个监听对象，监听电话状态改变事件
     }
 
+    /**
+     * 初始化音乐播放服务
+     */
     private void initMediaPlayer() {
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -128,8 +105,18 @@ public class MusicPlayService extends Service {
                 next();
             }
         });
+        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                playPause();
+                return false;
+            }
+        });
     }
 
+    /**
+     * 初始化广播
+     */
     private void initReceiver() {
         //实例化过滤器，设置广播
         mServiceReceiver = new ServiceReceiver();
@@ -164,7 +151,7 @@ public class MusicPlayService extends Service {
                 break;
             case PLAY_MODE_RANDOM:
                 Random random = new Random();
-                if (checkNetwork(random.nextInt(getMusicList().size())))
+                if (checkNetwork(random.nextInt(mPlaylist.size())))
                     playMusic(random.nextInt(mPlaylist.size()));
                 break;
             case PLAY_MODE_LOOP:
@@ -173,19 +160,18 @@ public class MusicPlayService extends Service {
         }
     }
 
+    /**
+     * 检测网络
+     *
+     * @param position
+     * @return
+     */
     private boolean checkNetwork(int position) {
-
-        Log.e("----Service", getMusicList().size() + "====");
-
-        if (position <= 0) {
-            position = getMusicList().size() - 1;
-        } else if (position >= getMusicList().size()) {
-            position = 0;
-        }
-
+        //判断当前第几首歌
+        if (!isExistPosition(position)) return false;
         boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
         try {
-            if (getMusicList().get(position).getType() == Music.Type.LOCAL) {
+            if (mPlaylist.get(mPlayingPosition).getType() == Music.Type.LOCAL) {
                 return true;
             } else if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
                 ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
@@ -213,8 +199,8 @@ public class MusicPlayService extends Service {
                 break;
             case PLAY_MODE_RANDOM:
                 Random random = new Random();
-                if (checkNetwork(random.nextInt(getMusicList().size())))
-                    playMusic(random.nextInt(getMusicList().size()));
+                if (checkNetwork(random.nextInt(mPlaylist.size())))
+                    playMusic(random.nextInt(mPlaylist.size()));
                 break;
             case PLAY_MODE_LOOP:
                 playMusic(mPlayingPosition);
@@ -222,59 +208,70 @@ public class MusicPlayService extends Service {
         }
     }
 
+    /**
+     * 限制position,确定当前播放歌曲的position
+     *
+     * @param position TODO: 2017/9/26  mPlayingPosition
+     */
+    private boolean isExistPosition(int position) {
+        if (mPlaylist.size() == 0) {
+            return false;
+        } else if (position < 0) {
+            mPlayingPosition = mPlaylist.size() - 1;
+        } else if (position >= 0 && mPlaylist.size() - 1 >= position) {
+            mPlayingPosition = position;
+        } else if (position >= mPlaylist.size()) {
+            mPlayingPosition = 0;
+        }
+        return true;
+    }
+
+    /**
+     * 根据位置播放音乐
+     *
+     * @param position
+     */
+    private void playMusic(int position) {
+        isExistPosition(position);
+        if (mPlaylist.size() != 0) {
+            playMusic(mPlaylist.get(mPlayingPosition));
+        }
+    }
 
     /**
      * 播放音乐
      *
-     * @param position
+     * @param music
      */
-    private int playMusic(int position) {
-        if (getMusicList().isEmpty()) {
-            return -1;
-        }
-        if (position < 0) {
-            position = getMusicList().size() - 1;
-        } else if (position >= getMusicList().size()) {
-            position = 0;
-        }
-
-        mPlayingPosition = position;
-        playMusic(getMusicList().get(mPlayingPosition));
-        showNotification();
-        return mPlayingPosition;
-
-    }
-
     public void playMusic(Music music) {
         mPlayingMusic = music;
         try {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getUri());
             mPlayer.prepare();
-            start();
-
+            mPlayer.start();
+            isPause = false;
+            showNotification();
+            sendBroadcast(new Intent(ACTION_UPDATE));
         } catch (IOException e) {
-            ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+            ToastUtils.show(getApplicationContext(), R.string.unable_to_play_exception);
         }
-        sendBroadcast(new Intent(ACTION_PLAY));
     }
 
-
+    /**
+     * 播放暂停
+     */
     private void playPause() {
+        sendBroadcast(new Intent(ACTION_UPDATE));
         if (isPlaying()) {
             pause();
         } else if (isPause()) {
-            resume();
+            mPlayer.start();
+            isPause = false;
+            showNotification();
         } else {
             playMusic(getmPlayingPosition());
         }
-        showNotification();
-    }
-
-    private void start() {
-        mPlayer.start();
-        isPause = false;
-        showNotification();
     }
 
     /**
@@ -286,49 +283,23 @@ public class MusicPlayService extends Service {
         }
         mPlayer.pause();
         isPause = true;
-        stopForeground(true);
-        curTime = mPlayer.getCurrentPosition();
+        cancelNotification();
     }
 
-
+    /**
+     * 是否正在播放音乐
+     *
+     * @return
+     */
     public boolean isPlaying() {
-        return mPlayer.isPlaying() && mPlayer != null;
-    }
-
-
-    /**
-     * 恢复播放
-     */
-    public void resume() {
-        if (isPlaying()) {
-            return;
-        }
-        start();
-        isPause = false;
-    }
-
-    /**
-     * 得到当前播放进度
-     */
-    public int getCurrent() {
-        try {
-            if (isPlaying()) {
-                return mPlayer.getCurrentPosition();
-            } else {
-                return curTime;
-            }
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "播放出错",
-                    Toast.LENGTH_SHORT).show();
-            return curTime;
-        }
+        return mPlayer != null && mPlayer.isPlaying();
     }
 
     /**
      * 跳到输入的进度
      */
     public void seekTo(int msec) {
-        if (isPlaying() || isPause()) {
+        if (mPlayer != null && mPlayingMusic != null) {
             mPlayer.seekTo(msec);
         }
     }
@@ -338,28 +309,11 @@ public class MusicPlayService extends Service {
         return true;
     }
 
-    public void stop() {
-        pause();
-        mPlayer.reset();
-        mPlayer.release();
-        mPlayer = null;
-        stopForeground(true);
-        stopSelf();
-    }
 
     public boolean isPause() {
         return isPause;
     }
 
-    /**
-     * 获取当前播放列表
-     *
-     * @return
-     */
-    private List<Music> getMusicList() {
-        Log.e("----Service", mPlaylist.size() + "====");
-        return mPlaylist;
-    }
 
     /**
      * 获取正在播放歌曲的位置
@@ -373,23 +327,65 @@ public class MusicPlayService extends Service {
     /**
      * 获取正在播放的歌曲[本地|网络]
      */
-    public Music getPlayingMusic() {
-        return mPlayingMusic;
+    public void removeFromQueue(int position) {
+        Log.e(TAG, position + "---" + mPlayingPosition + "---" + mPlaylist.size());
+        if (position == mPlayingPosition && position != mPlaylist.size() - 1) {
+
+        } else if (position == mPlayingPosition && position == mPlaylist.size() - 1) {
+
+        }
     }
 
     /**
      * 获取正在播放的歌曲[本地|网络]
      */
-    public long getmPlayingMusicId() {
-        if (mPlayingMusic != null) {
-            try {
-                return mPlayingMusic.getId();
-            } catch (Exception e) {
-            }
-        }
-        return -1;
+    public void clearQueue() {
+        mPlaylist.clear();
     }
 
+
+    /**
+     * 初始化通知栏
+     */
+    private void initNotify() {
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        /* 使用RemoteViews来布局 */
+        mRemoteViews = new RemoteViews(getPackageName(), R.layout.item_view_remote_noti);
+
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_next, retrievePlaybackAction(ACTION_NEXT)); // 给停止按钮添加点击事件
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_prev, retrievePlaybackAction(ACTION_PREV)); // 给停止按钮添加点击事件
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_play_pause, retrievePlaybackAction(ACTION_PLAY)); // 给停止按钮添加点击事件
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        mRemoteViews.setOnClickPendingIntent(R.id.iv_album, pendingIntent); // 给停止按钮添加点击事件
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setContent(mRemoteViews)
+                .setAutoCancel(true)
+                .setSmallIcon(R.mipmap.icon);
+        mNotify = builder.build();
+
+    }
+
+    private PendingIntent retrievePlaybackAction(final String action) {
+        Intent intent = new Intent(action);
+        return PendingIntent.getBroadcast(this, 0, intent, 0);
+    }
+
+
+    /**
+     * 取消通知
+     */
+    private void cancelNotification() {
+        if (nm != null) {
+            stopForeground(true);
+            nm.cancel(NOTIFICATION_ID);
+        }
+    }
+
+    /**
+     * 电话监听
+     */
     private class ServicePhoneStateListener extends PhoneStateListener {
 
         @Override
@@ -404,27 +400,22 @@ public class MusicPlayService extends Service {
         }
     }
 
+
     /**
      * 更新通知栏
      */
     public void showNotification() {
         if (mPlayingMusic == null)
             return;
-        mNotify = buildNotification();
-        startForeground(NOTIFICATION_ID, mNotify);
-    }
 
-    private Notification buildNotification() {
+        String text = mPlayingMusic.getTitle() + " - " + mPlayingMusic.getArtist();
+        mRemoteViews.setTextViewText(R.id.tv_name, text);
+        if (isPlaying()) {
+            mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_pause_white_18dp);
+        } else {
+            mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_play_arrow_white_18dp);
+        }
 
-        String text = TextUtils.isEmpty(mPlayingMusic.getAlbum())
-                ? mPlayingMusic.getArtist() : mPlayingMusic.getArtist() + " - " + mPlayingMusic.getAlbum();
-        int playButtonResId = isPlaying()
-                ? R.drawable.ic_pause_white_18dp : R.drawable.ic_play_arrow_white_18dp;
-        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
-        nowPlayingIntent.putExtra(ACTION_SERVICE, true);
-        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Bitmap cover = null;
         if (mPlayingMusic.getCover() == null) {
             cover = ImageLoader
                     .getInstance()
@@ -434,41 +425,27 @@ public class MusicPlayService extends Service {
             cover = mPlayingMusic.getCover();
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_empty_music2)
-                .setLargeIcon(cover)
-                .setContentIntent(clickIntent)
-                .setContentTitle(text)
-                .addAction(R.drawable.ic_skip_previous_white_24dp,
-                        "",
-                        retrievePlaybackAction(ACTION_PREV))
-                .addAction(playButtonResId, "",
-                        retrievePlaybackAction(ACTION_PLAY))
-                .addAction(R.drawable.ic_skip_next_white_24dp,
-                        "",
-                        retrievePlaybackAction(ACTION_NEXT));
-        Notification notify = builder.build();
-
-        return notify;
+        mRemoteViews.setImageViewBitmap(R.id.iv_album, cover);
+        startForeground(NOTIFICATION_ID, mNotify);
+        nm.notify(NOTIFICATION_ID, mNotify);
     }
 
-    private final PendingIntent retrievePlaybackAction(final String action) {
-        Intent intent = new Intent(action);
-        return PendingIntent.getBroadcast(this, 0, intent, 0);
-    }
-
+    /**
+     * Service broadcastReceiver
+     */
     private class ServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(ACTION_SERVICE)) {
-                handleCommandIntent(intent);
-            }
+            Log.i(TAG, intent.getAction().toString());
+            handleCommandIntent(intent);
         }
     }
 
+    /**
+     * @param intent
+     */
     private void handleCommandIntent(Intent intent) {
         final String action = intent.getAction();
-
         if (ACTION_NEXT.equals(action)) {
             next();
         } else if (ACTION_PREV.equals(action)) {
@@ -481,8 +458,15 @@ public class MusicPlayService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //注销广播
         unregisterReceiver(mServiceReceiver);
-        stop();
+        if (mPlayer != null) {
+            mPlayer.reset();
+            mPlayer.release();
+            mPlayer = null;
+        }
+        cancelNotification();
+        stopSelf();
     }
 
     private class IMusicServiceStub extends IMusicService.Stub {
@@ -547,18 +531,34 @@ public class MusicPlayService extends Service {
         }
 
         @Override
+        public List<Music> getPlayList() throws RemoteException {
+            return mService.get().mPlaylist;
+        }
+
+        @Override
+        public void removeFromQueue(int position) throws RemoteException {
+
+            mService.get().removeFromQueue(position);
+        }
+
+        @Override
+        public void clearQueue() throws RemoteException {
+            mService.get().clearQueue();
+        }
+
+        @Override
         public int position() throws RemoteException {
             return mService.get().getmPlayingPosition();
         }
 
         @Override
         public int getDuration() throws RemoteException {
-            return mService.get().getCurrent();
+            return mService.get().mPlayer.getDuration();
         }
 
         @Override
         public int getCurrentPosition() throws RemoteException {
-            return mService.get().getCurrent();
+            return mService.get().mPlayer.getCurrentPosition();
         }
 
 

@@ -10,26 +10,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.MainActivity;
-import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.callback.SingerCallback;
-import com.cyl.music_hnust.ui.fragment.AlbumDetailFragment;
 import com.cyl.music_hnust.model.music.Album;
 import com.cyl.music_hnust.model.music.Artist;
 import com.cyl.music_hnust.model.music.Singer;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.NavigateUtil;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
-
-import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -114,12 +109,18 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
         Log.e("uri", uri + ".........-");
         if (uri != null) {
             try {
-                ImageLoader.getInstance().displayImage(uri, img,
-                        new DisplayImageOptions.Builder().cacheInMemory(true)
-                                .showImageOnFail(R.drawable.default_cover)
-                                .showImageForEmptyUri(R.drawable.default_cover)
-                                .showImageOnLoading(R.drawable.default_cover)
-                                .build());
+                Glide.with(mContext).load(uri)
+                        .error(R.drawable.default_cover)
+                        .placeholder(R.drawable.default_cover)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .centerCrop()
+                        .into(img);
+//                ImageLoader.getInstance().displayImage(uri, img,
+//                        new DisplayImageOptions.Builder().cacheInMemory(true)
+//                                .showImageOnFail(R.drawable.default_cover)
+//                                .showImageForEmptyUri(R.drawable.default_cover)
+//                                .showImageOnLoading(R.drawable.default_cover)
+//                                .build());
             } catch (Exception e) {
                 Log.e("EEEE", uri);
             }

@@ -194,9 +194,34 @@ public class PlayManager {
         return null;
     }
 
+    public static List<Music> getPlayList() {
+        try {
+            return mService.getPlayList();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
     public static void setPlayList(List<Music> playlist) {
         try {
             mService.setPlayList(playlist);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clearQueue() {
+        try {
+            mService.clearQueue();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeFromQueue(int adapterPosition) {
+        try {
+            mService.removeFromQueue(adapterPosition);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

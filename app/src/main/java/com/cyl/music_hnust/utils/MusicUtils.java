@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.db.DBDao;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
@@ -26,10 +25,10 @@ public class MusicUtils {
     /**
      * 扫描本地歌曲
      */
-    public static Music getMusicForID(Context context, long musicid){
+    public static Music getMusicForID(Context context, long musicid) {
         Music music = new Music();
 
-        Cursor cursor = makeSongCursor(context ,"_id=" + String.valueOf(musicid), null);
+        Cursor cursor = makeSongCursor(context, "_id=" + String.valueOf(musicid), null);
         if (cursor == null) {
             return null;
         }
@@ -42,8 +41,9 @@ public class MusicUtils {
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String unknown = context.getString(R.string.unknown);
-            artist = artist.equals("<unknown>") ? unknown : artist;
+            if (artist.equals("<unknown>")) {
+                continue;
+            }
             long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
 
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
@@ -105,16 +105,18 @@ public class MusicUtils {
 
     /**
      * 全部歌单
+     *
      * @param context
      * @return
      */
-    public static List<Playlist> scanPlaylist(Context context){
+    public static List<Playlist> scanPlaylist(Context context) {
         DBDao dbDao = new DBDao(context);
         return dbDao.getPlaylist();
     }
 
     /**
      * 获取所有歌单
+     *
      * @param context
      * @return
      */
@@ -135,8 +137,9 @@ public class MusicUtils {
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String unknown = context.getString(R.string.unknown);
-            artist = artist.equals("<unknown>") ? unknown : artist;
+            if (artist.equals("<unknown>")) {
+                continue;
+            }
             long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -166,7 +169,6 @@ public class MusicUtils {
         cursor.close();
         return musicList;
     }
-
 
 
 }

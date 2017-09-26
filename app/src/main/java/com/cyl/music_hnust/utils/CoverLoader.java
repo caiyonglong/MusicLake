@@ -64,7 +64,7 @@ public class CoverLoader {
 
     public Bitmap loadThumbnail(String uri) {
         Bitmap bitmap = null;
-        try{
+        try {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mThumbnailCache.get(KEY_NULL);
                 if (bitmap == null) {
@@ -81,8 +81,8 @@ public class CoverLoader {
                     mThumbnailCache.put(uri, bitmap);
                 }
             }
-        }catch (Exception e){
-            
+        } catch (Exception e) {
+
         }
         return bitmap;
     }
@@ -108,42 +108,45 @@ public class CoverLoader {
                     mBlurCache.put(uri, bitmap);
                 }
             }
-        }catch (Exception e){
-            
+        } catch (Exception e) {
+
         }
         return bitmap;
     }
 
     public Bitmap loadRound(String uri) {
-        Bitmap bitmap=null;
-        try{
-        if (TextUtils.isEmpty(uri)) {
-            bitmap = mRoundCache.get(KEY_NULL);
-            if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.play_page_default_bg);
-                bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
-                mRoundCache.put(KEY_NULL, bitmap);
-            }
-        } else {
-            bitmap = mRoundCache.get(uri);
-            if (bitmap == null) {
-                bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
+        Bitmap bitmap = null;
+        try {
+            if (TextUtils.isEmpty(uri)) {
+                bitmap = mRoundCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = loadRound(null);
-                } else {
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.music_six);
                     bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
                     bitmap = ImageUtils.createCircleImage(bitmap);
+                    mRoundCache.put(KEY_NULL, bitmap);
                 }
-                mRoundCache.put(uri, bitmap);
+            } else {
+                bitmap = mRoundCache.get(uri);
+                if (bitmap == null) {
+                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
+                    if (bitmap == null) {
+                        bitmap = loadRound(null);
+                    } else {
+                        bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
+                        bitmap = ImageUtils.createCircleImage(bitmap);
+                    }
+                    mRoundCache.put(uri, bitmap);
+                }
             }
-        }}catch (Exception e){
+        } catch (Exception e) {
 
         }
         return bitmap;
     }
+
     public Bitmap loadNormal(String uri) {
-        Bitmap bitmap=null;
-        try{
+        Bitmap bitmap = null;
+        try {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mRoundCache.get(KEY_NULL);
                 if (bitmap == null) {
@@ -155,7 +158,8 @@ public class CoverLoader {
                 if (bitmap == null) {
                     bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
                 }
-            }}catch (Exception e){
+            }
+        } catch (Exception e) {
 
         }
         return bitmap;
@@ -181,8 +185,7 @@ public class CoverLoader {
             // 获取bitmap
             options.inJustDecodeBounds = false;
             return BitmapFactory.decodeFile(uri, options);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

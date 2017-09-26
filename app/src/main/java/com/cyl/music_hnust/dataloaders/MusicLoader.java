@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.Album;
 import com.cyl.music_hnust.model.music.Artist;
 import com.cyl.music_hnust.model.music.Music;
@@ -23,13 +22,13 @@ public class MusicLoader {
 
 
     /**
-     *
      * 获取一个专辑的详情信息
+     *
      * @param context
      * @param id
      * @return
      */
-    public static Album getAlbum(Context context,long id) {
+    public static Album getAlbum(Context context, long id) {
 
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
@@ -39,7 +38,7 @@ public class MusicLoader {
 
         if (cursor != null) {
             if (cursor.moveToFirst())
-                album =new Album(
+                album = new Album(
                         cursor.getLong(0),
                         cursor.getString(1),
                         cursor.getString(2),
@@ -67,6 +66,8 @@ public class MusicLoader {
         List<Album> arrayList = new ArrayList<>();
         if ((cursor != null) && (cursor.moveToFirst()))
             do {
+                if (cursor.getString(2).equals("<unknown>"))
+                    continue;
                 arrayList.add(new Album(
                         cursor.getLong(0),
                         cursor.getString(1),
@@ -83,6 +84,7 @@ public class MusicLoader {
 
     /**
      * 获取所有歌手
+     *
      * @param context
      * @return
      */
@@ -94,6 +96,8 @@ public class MusicLoader {
         List<Artist> arrayList = new ArrayList<>();
         if ((cursor != null) && (cursor.moveToFirst()))
             do {
+                if (cursor.getString(1).equals("<unknown>"))
+                    continue;
                 arrayList.add(new Artist(
                         cursor.getLong(0),
                         cursor.getString(1),
@@ -108,16 +112,17 @@ public class MusicLoader {
 
     /**
      * 获取音乐专辑歌曲
+     *
      * @param context
      * @return
      */
-    public static List<Music> getAlbumSongs(Context context,String albumID) {
+    public static List<Music> getAlbumSongs(Context context, String albumID) {
         List<Music> musicList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
 //        final String albumSongSortOrder = PreferencesUtility.getInstance(context).getAlbumSongSortOrder();
         String string = "is_music=1 AND title != '' AND album_id=" + albumID;
         Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null, string, null,
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, string, null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {
             return musicList;
@@ -131,8 +136,9 @@ public class MusicLoader {
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String unknown = context.getString(R.string.unknown);
-            artist = artist.equals("<unknown>") ? unknown : artist;
+            if (artist.equals("<unknown>")) {
+                continue;
+            }
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -160,18 +166,20 @@ public class MusicLoader {
         cursor.close();
         return musicList;
     }
+
     /**
      * 获取艺术家歌曲
+     *
      * @param context
      * @return
      */
-    public static List<Music> getArtistSongs(Context context,String artistID) {
+    public static List<Music> getArtistSongs(Context context, String artistID) {
         List<Music> musicList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         String string = "is_music=1 AND title != '' AND artist_id=" + artistID;
 
         Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null, string, null,
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, string, null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {
             return musicList;
@@ -185,14 +193,14 @@ public class MusicLoader {
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String unknown = context.getString(R.string.unknown);
-            artist = artist.equals("<unknown>") ? unknown : artist;
+            if (artist.equals("<unknown>")) {
+                continue;
+            }
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverUri = getCoverUri(context, albumId);
-//            String coverUri = String.valueOf(albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
             String year = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)));

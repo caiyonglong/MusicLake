@@ -11,10 +11,9 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -31,7 +31,6 @@ import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.lyric.LrcView;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.ui.adapter.MyPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.CoverLoader;
@@ -43,6 +42,7 @@ import com.cyl.music_hnust.utils.SizeUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
@@ -51,10 +51,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 
-public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
+public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     public static View topContainer;
     //整个容器
@@ -62,13 +63,19 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     LinearLayout container;
     @Bind(R.id.next_buttom)
     ImageButton next_buttom;
+    @Bind(R.id.song_progress_normal)
+    ProgressBar mProgressBar;
     @Bind(R.id.play_pause)
     PlayPauseButton mPlayPause;
     @Bind(R.id.title)
     TextView title;
     @Bind(R.id.artist)
     TextView artist;
+    @Bind(R.id.album)
+    ImageView iv_album;
 
+    @Bind(R.id.ic_detail)
+    ImageView ic_detail;
     @Bind(R.id.previous)
     ImageView skip_prev;
     @Bind(R.id.skip_next)
@@ -79,8 +86,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     ImageView iv_back;
     @Bind(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
-    @Bind(R.id.page_icon)
-    ImageView page_icon;
 
     //textView
     @Bind(R.id.song_title)
@@ -100,14 +105,26 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     ViewPager mViewPager;
     @Bind(R.id.playpausefloating)
     FloatingActionButton playPauseFloating;
-    PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
+
+    @OnClick(R.id.ic_detail)
+    void openPlayQueue() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if (playQueueDialog == null) {
+            playQueueDialog = new PlayQueueDialog();
+        }
+        playQueueDialog.show(fm, "fragment_bottom_dialog");
+        if (mSwatch != null) {
+            playQueueDialog.setPaletteSwatch(mSwatch);
+        }
+    }
+
+    PlayQueueDialog playQueueDialog = null;
+    Palette.Swatch mSwatch;
+    static PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
     List<View> mViewPagerContent;
-    private LocalMusicAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
 
     private LrcView mLrcView;
-    private RecyclerView recyclerView;
     private CircleImageView civ_cover;
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int play_mode;
@@ -118,7 +135,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private PlayerReceiver mPlayerReceiver;
 
     public static PlayFragment newInstance() {
-
         Bundle args = new Bundle();
         PlayFragment fragment = new PlayFragment();
         fragment.setArguments(args);
@@ -130,10 +146,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         public void run() {
             position = PlayManager.getCurrentPosition();
             sk_progress.setProgress(position);
+            mProgressBar.setProgress(position);
             tv_time.setText(FormatUtil.formatTime(position));
 
-            if (playPauseFloating != null)
-                updatePlayPauseFloatingButton();
             if (mLrcView.hasLrc()) {
                 mLrcView.updateTime(position);
             }
@@ -143,7 +158,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public int getLayoutId() {
-        return R.layout.acitvity_player;
+        return R.layout.frag_player;
     }
 
     /**
@@ -154,23 +169,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
 
-        if (playPauseFloating != null) {
-            playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
-            playPauseFloating.setImageDrawable(playPauseDrawable);
-            if (PlayManager.isPlaying()) {
-                playPauseDrawable.transformToPause(false);
-            } else {
-                playPauseDrawable.transformToPlay(false);
-            }
-        }
+        mPlayPause.setColor(Color.parseColor("#259b24"));
+        playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        playPauseFloating.setImageDrawable(playPauseDrawable);
+
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
             mViewPager.setOffscreenPageLimit(3);
+            mViewPager.setCurrentItem(1);
         }
-        mViewPager.setCurrentItem(1);
-        updatePlayMode();
-        setRecyclerView();
     }
 
 
@@ -185,27 +193,26 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         iv_back.setOnClickListener(this);
         skip_lrc.setOnClickListener(this);
         sk_progress.setOnSeekBarChangeListener(this);
-        playPauseFloating.setOnClickListener(mButtonListener);
-        next_buttom.setOnClickListener(this);
+        playPauseFloating.setOnClickListener(this);
         mPlayPause.setOnClickListener(this);
-        mViewPager.addOnPageChangeListener(this);
+        next_buttom.setOnClickListener(this);
     }
 
     @Override
     protected void initDatas() {
         mHandler = new Handler();
-        sk_progress.setProgress(0);
-        mPlayPause.setPlayed(PlayManager.isPlaying());
-        mPlayPause.setColor(R.color.colorPrimary);
-
+        updatePlayPauseFloatingButton();
+        updateView();
+        updatePlayMode();
         //实例化过滤器，设置广播
         mPlayerReceiver = new PlayerReceiver();
-        IntentFilter intentFilter = new IntentFilter(MusicPlayService.ACTION_PLAY);
+        IntentFilter intentFilter = new IntentFilter(MusicPlayService.ACTION_UPDATE);
         //注册广播
         getActivity().registerReceiver(mPlayerReceiver, intentFilter);
     }
 
-    public void updateView(Music music) {
+    public void updateView() {
+        Music music = PlayManager.getPlayingMusic();
         if (music == null) {
             return;
         }
@@ -215,12 +222,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
         tv_duration.setText(FormatUtil.formatTime(music.getDuration()));
         sk_progress.setMax((int) music.getDuration());
+        mProgressBar.setMax((int) music.getDuration());
         mHandler.post(updateProgress);
         setLrc(music);
         setCoverAndBg(music);
-        reloadAdapter();
-        recyclerView.scrollToPosition(PlayManager.position());
-
+        updatePlayPauseFloatingButton();
     }
 
 
@@ -247,10 +253,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.play_pause:
                 PlayManager.playPause();
-                mPlayPause.startAnimation();
                 break;
             case R.id.next_buttom:
                 PlayManager.next();
+                break;
+            case R.id.playpausefloating:
+                PlayManager.playPause();
                 break;
         }
 
@@ -386,28 +394,32 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void setCoverAndBg(Music music) {
         if (music.getType() == Music.Type.LOCAL) {
+            iv_album.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             civ_cover.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
+
+            mSwatch = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
+                    .generate()
+                    .getDarkVibrantSwatch();
         } else {
             if (music.getCover() == null) {
-                civ_cover.setImageResource(R.drawable.ic_empty_music2);
-                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
+                civ_cover.setImageResource(R.drawable.default_cover);
+                ivPlayingBg.setImageResource(R.drawable.music_one);
             } else {
                 Bitmap cover = ImageUtils.resizeImage(music.getCover(), SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
-//                cover = ImageUtils.createCircleImage(cover);
                 civ_cover.setImageBitmap(cover);
                 Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
                 ivPlayingBg.setImageBitmap(bg);
+
+                mSwatch = Palette.from(bg)
+                        .generate()
+                        .getDarkVibrantSwatch();
             }
         }
         initAlbumpic();
         operatingAnim.start();
     }
 
-    private void setRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        reloadAdapter();
-    }
 
     public ObjectAnimator operatingAnim;
 
@@ -433,42 +445,24 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         //专辑视图
         View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_coverview, null);
         civ_cover = coverView.findViewById(R.id.civ_cover);
-        //专辑视图
-        View listView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_listview, null);
-        recyclerView = listView.findViewById(R.id.recyclerView);
 
-        mViewPagerContent = new ArrayList<>(3);
+        mViewPagerContent = new ArrayList<>(2);
 
-        mViewPagerContent.add(listView);
         mViewPagerContent.add(coverView);
         mViewPagerContent.add(lrcView);
         viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
     }
 
-    private boolean duetoplaypause = false;
-
-    private final View.OnClickListener mButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            duetoplaypause = true;
-            playPauseDrawable.transformToPlay(true);
-            playPauseDrawable.transformToPause(true);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    PlayManager.playPause();
-                }
-            }, 250);
-        }
-    };
 
     public void updatePlayPauseFloatingButton() {
         if (PlayManager.isPlaying()) {
-            playPauseDrawable.transformToPause(false);
+            mPlayPause.setPlayed(true);
+            playPauseDrawable.transformToPause(true);
         } else {
-            playPauseDrawable.transformToPlay(false);
+            mPlayPause.setPlayed(false);
+            playPauseDrawable.transformToPlay(true);
         }
+        mPlayPause.startAnimation();
     }
 
     public void updatePlayMode() {
@@ -490,41 +484,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    public void updatePageIcon(int current) {
-        switch (current) {
-            case 0:
-                page_icon.setImageResource(R.drawable.page_icon_left);
-                break;
-            case 1:
-                page_icon.setImageResource(R.drawable.page_icon_mid);
-                break;
-            case 2:
-                page_icon.setImageResource(R.drawable.page_icon_right);
-                break;
-        }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        updatePageIcon(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-
-    private void reloadAdapter() {
-        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
-        recyclerView.setAdapter(mAdapter);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -532,11 +491,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         getActivity().unregisterReceiver(mPlayerReceiver);
     }
 
+    public static void updateDrawableView(PanelState newState) {
+
+    }
+
 
     public class PlayerReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(MusicPlayService.ACTION_PLAY)) {
-                updateView(PlayManager.getPlayingMusic());
+            if (intent.getAction().equals(MusicPlayService.ACTION_UPDATE)) {
+                updateView();
             }
         }
     }

@@ -20,14 +20,12 @@ public class NavigateUtil {
     public static void navigateToAlbum(Activity context, long albumID, boolean isAlbum, String title) {
 
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-        Fragment fragment;
-
         transaction.setCustomAnimations(R.anim.activity_fade_in,
                 R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-        fragment = AlbumDetailFragment.newInstance(albumID, isAlbum, title,null);
+        Fragment fragment = AlbumDetailFragment.newInstance(albumID, isAlbum, title, null);
 
-        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.content));
-        transaction.add(R.id.content, fragment);
-        transaction.addToBackStack(null).commit();
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(title).commit();
     }
 }

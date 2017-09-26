@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
+    <declare-styleable name="PlayPauseButton">
+        <attr name="bgColor" format="reference|color" />
+    </declare-styleable>
+
+
     <declare-styleable name="LrcView">
         <attr name="textSize" format="dimension" />
         <attr name="dividerHeight" format="dimension" />

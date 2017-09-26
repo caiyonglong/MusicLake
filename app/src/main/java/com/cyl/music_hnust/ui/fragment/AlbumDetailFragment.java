@@ -14,13 +14,12 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.adapter.AlbumMusicAdapter;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.callback.SingerCallback;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
-import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Singer;
+import com.cyl.music_hnust.ui.adapter.AlbumMusicAdapter;
+import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,6 +29,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import okhttp3.Call;
 
 /**
@@ -40,9 +40,13 @@ import okhttp3.Call;
  */
 public class AlbumDetailFragment extends BaseFragment {
 
+    @Bind(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsing_toolbar;
+    @Bind(R.id.album_art)
     ImageView album_art;
 
 
@@ -102,12 +106,7 @@ public class AlbumDetailFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        collapsing_toolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
-        album_art = (ImageView) rootView.findViewById(R.id.album_art);
 
-        //toolbar
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         final ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);

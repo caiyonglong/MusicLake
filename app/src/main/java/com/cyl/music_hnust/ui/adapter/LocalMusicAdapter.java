@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.service.PlayManager;
@@ -21,8 +23,6 @@ import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.NavigateUtil;
 import com.cyl.music_hnust.view.AddPlaylistDialog;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,18 +69,16 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                 holder.albumArt.setImageResource(R.drawable.default_cover);
             }
         }
+
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
         holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
-        try {
-            if (PlayManager.getPlayingMusic().getId() == musicInfos.get(position).getId()) {
-                holder.v_playing.setVisibility(View.VISIBLE);
-            } else {
-                holder.v_playing.setVisibility(View.GONE);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
 
+        if (PlayManager.getPlayingMusic() != null
+                && PlayManager.getPlayingMusic().equals(localItem)) {
+            holder.v_playing.setVisibility(View.VISIBLE);
+        } else {
+            holder.v_playing.setVisibility(View.GONE);
+        }
         setOnPopupMenuListener(holder, position);
         setOnClickListener(holder, position);
     }
@@ -95,7 +93,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                     public void run() {
                         PlayManager.setPlayList(musicInfos);
                         PlayManager.play(position);
-                        notifyItemChanged(position);
+                        notifyDataSetChanged();
                     }
                 }, 100);
             }
@@ -104,15 +102,14 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
 
     private void loadBitmap(String uri, ImageView img) {
         try {
-            ImageLoader.getInstance().displayImage(uri, img,
-                    new DisplayImageOptions.Builder().cacheInMemory(true)
-                            .showImageOnFail(R.drawable.default_cover)
-                            .showImageForEmptyUri(R.drawable.default_cover)
-                            .showImageOnLoading(R.drawable.default_cover)
-                            .resetViewBeforeLoading(true)
-                            .build());
+            Glide.with(context).load(uri)
+                    .error(R.drawable.default_cover)
+                    .placeholder(R.drawable.default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .centerCrop()
+                    .into(img);
         } catch (Exception e) {
-            Log.e("EEEE", uri);
+            e.printStackTrace();
         }
     }
 
@@ -193,12 +190,12 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
-        protected TextView title, artist;
-        protected ImageView albumArt;
-        protected ImageView popupmenu;
-        protected View v_playing;
+        private TextView title, artist;
+        private ImageView albumArt;
+        private ImageView popupmenu;
+        private View v_playing;
 
-        public ItemHolder(View view) {
+        private ItemHolder(View view) {
             super(view);
             this.title = (TextView) view.findViewById(R.id.tv_title);
             this.artist = (TextView) view.findViewById(R.id.tv_artist);

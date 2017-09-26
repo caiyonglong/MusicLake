@@ -115,9 +115,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
-                if (newState.equals(PanelState.COLLAPSED)) {
-
-                }
+                PlayFragment.updateDrawableView(newState);
             }
 
             @Override
@@ -129,14 +127,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
         });
-        mSlidingUpPaneLayout.setFadeOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-            }
-        });
-
-
     }
 
     @Override
