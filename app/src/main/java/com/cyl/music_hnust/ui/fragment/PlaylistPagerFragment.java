@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.view.CreatePlaylistDialog;
@@ -24,12 +24,26 @@ import com.cyl.music_hnust.view.CreatePlaylistDialog;
 import java.util.List;
 import java.util.Random;
 
+import butterknife.Bind;
+
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
 /**
  * 作者：yonglong on 2016/11/6 17:09
  */
 public class PlaylistPagerFragment extends Fragment {
+    @Bind(R.id.name)
+    TextView playlistame;
+    @Bind(R.id.songcount)
+    TextView songcount;
+    @Bind(R.id.number)
+    TextView playlistnumber;
+    @Bind(R.id.playlisttype)
+    TextView playlisttype;
+    @Bind(R.id.playlist_image)
+    ImageView playlistImage;
+    @Bind(R.id.foreground)
+    View foreground;
 
     private static final String ARG_PAGE_NUMBER = "pageNumber";
     int[] foregroundColors = {R.color.pink_transparent, R.color.green_transparent, R.color.blue_transparent, R.color.red_transparent, R.color.purple_transparent};
@@ -51,9 +65,6 @@ public class PlaylistPagerFragment extends Fragment {
     private int backgroundImage;
     private long firstAlbumID = -1;
     private Playlist playlist;
-    private TextView playlistame, songcount, playlistnumber, playlisttype;
-    private ImageView playlistImage;
-    private View foreground;
 
     public static PlaylistPagerFragment newInstance(int pageNumber) {
         PlaylistPagerFragment fragment = new PlaylistPagerFragment();
@@ -70,13 +81,6 @@ public class PlaylistPagerFragment extends Fragment {
         final List<Playlist> playlists = PlaylistLoader.getPlaylists(getActivity(), true);
 
 
-        playlistame = (TextView) rootView.findViewById(R.id.name);
-        playlistnumber = (TextView) rootView.findViewById(R.id.number);
-        songcount = (TextView) rootView.findViewById(R.id.songcount);
-        playlisttype = (TextView) rootView.findViewById(R.id.playlisttype);
-        playlistImage = (ImageView) rootView.findViewById(R.id.playlist_image);
-        foreground = rootView.findViewById(R.id.foreground);
-
         int position = (int) getArguments().get(ARG_PAGE_NUMBER);
         if (position == playlists.size()) {
             playlistame.setText("新建歌单");
@@ -85,7 +89,6 @@ public class PlaylistPagerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     CreatePlaylistDialog.newInstance().show(getChildFragmentManager(), "CREATE_PLAYLIST");
-
                 }
             });
         } else {
@@ -168,7 +171,7 @@ public class PlaylistPagerFragment extends Fragment {
 //                    Log.e("-----", playlistsong.get(0).getCoverUri() + "====");
 //                    return playlistsong.get(0).getCoverUri();
 //                } else
-                    return "nosongs";
+                return "nosongs";
 
             } else return "context is null";
 

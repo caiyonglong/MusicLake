@@ -17,20 +17,11 @@ import com.cyl.music_hnust.ui.fragment.PlaylistFragment;
  * 版本：2.5
  */
 public class CreatePlaylistDialog extends DialogFragment {
-    public static CreatePlaylistDialog newInstance() {
-        return newInstance((Music) null);
-    }
 
-//    public static CreatePlaylistDialog newInstance(Music music) {
-//        long[] songs;
-//        if (music == null) {
-//            songs = new long[0];
-//        } else {
-//            songs = new long[1];
-//            songs[0] = music.getId();
-//        }
-//        return newInstance(songs);
-//    }
+
+    public static CreatePlaylistDialog newInstance() {
+        return newInstance(null);
+    }
 
     public static CreatePlaylistDialog newInstance(Music music) {
         CreatePlaylistDialog dialog = new CreatePlaylistDialog();
@@ -43,28 +34,23 @@ public class CreatePlaylistDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new MaterialDialog.Builder(
-                getActivity())
-                .positiveText("新建")
+        return new MaterialDialog.Builder(getActivity())
+                .title("新建歌单")
+                .positiveText("确定")
                 .negativeText("取消")
                 .input("输入歌单名", "", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         Music music = getArguments().getParcelable("music");
                         long playistId = PlaylistLoader.createPlaylist(getActivity(), input.toString());
-//
                         if (playistId != -1) {
                             if (music != null)
                                 PlaylistLoader.addToPlaylist(getActivity(), String.valueOf(playistId), music);
                             else
                                 Toast.makeText(getActivity(), "创建歌单成功", Toast.LENGTH_SHORT).show();
-                            if (getParentFragment() instanceof PlaylistFragment) {
-//                        get.updatePlaylists();
-                            }
                         } else {
                             Toast.makeText(getActivity(), "创建歌单失败", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 }).build();
     }

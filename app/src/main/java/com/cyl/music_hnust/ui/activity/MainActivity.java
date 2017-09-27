@@ -328,14 +328,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        if (requestCode == Extras.TO_PLAYLISTDETAIL) {
-            if (playlistFragment != null) {
-                playlistFragment.updatePlaylists();
-            }
-        }
+//        if (resultCode != RESULT_OK) {
+//            return;
+//        }
+//        if (requestCode == Extras.TO_PLAYLISTDETAIL) {
+//            if (playlistFragment != null) {
+//                playlistFragment.updatePlaylists();
+//            }
+//        }
     }
 
     @Override
