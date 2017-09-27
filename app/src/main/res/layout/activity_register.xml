@@ -167,7 +167,7 @@
             app:fabSize="normal"
             app:fab_colorNormal="@color/grean"
             app:fab_colorPressed="@color/lightGreen"
-            app:fab_icon="@drawable/ic_clear_white_24dp" />
+            app:fab_icon="@drawable/ic_clear" />
 
         <ProgressBar
             android:id="@+id/progressBar"

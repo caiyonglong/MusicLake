@@ -69,7 +69,7 @@
 
         <ImageView
             android:id="@+id/notificationnext"
-            android:src="@drawable/ic_skip_next_white_24dp"
+            android:src="@drawable/ic_skip_next"
             android:layout_width="40dp"
             android:layout_height="40dp" />
     </LinearLayout>

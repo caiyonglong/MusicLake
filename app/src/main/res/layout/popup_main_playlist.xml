@@ -25,7 +25,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="30dp"
-                android:src="@drawable/ic_shuffle_white_24dp"
+                android:src="@drawable/ic_shuffle"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="center" />
             <TextView

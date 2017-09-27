@@ -27,7 +27,6 @@ import java.util.List;
 
 public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.ItemHolder> {
 
-    private int currentlyPlayingPosition;
     private List<Music> arraylist = new ArrayList<>();
     private AppCompatActivity mContext;
 
@@ -69,13 +68,13 @@ public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.Item
         }
         setOnClickListener(holder, position);
 
-        holder.popupmenu.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_clear_white_24dp));
+        holder.popupmenu.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_clear));
         holder.popupmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlayManager.removeFromQueue(position);
-                arraylist.remove(position);
-                notifyItemRemoved(position);
+                arraylist = PlayManager.getPlayList();
+                notifyDataSetChanged();
             }
         });
     }

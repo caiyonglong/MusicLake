@@ -75,6 +75,7 @@ public class SongsFragment extends BaseFragment {
         new loadSongs().execute("");
     }
 
+
     /**
      * 初始化视图
      *
@@ -101,7 +102,7 @@ public class SongsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        mRecyclerView.scrollToPosition(PlayManager.position());
+        new loadSongs().execute("");
     }
 
     @Override

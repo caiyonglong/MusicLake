@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <solid android:color="#E0E0E0" />
-    <size
-        android:width="100dp"
-        android:height="100dp" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/white" />
+            <corners android:radius="5dp" />
+            <size
+                android:width="100dp"
+                android:height="100dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ic_music_note" />
+</layer-list>

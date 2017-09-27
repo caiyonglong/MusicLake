@@ -73,12 +73,11 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
         holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
 
-        if (PlayManager.getPlayingMusic() != null
-                && PlayManager.getPlayingMusic().equals(localItem)) {
-            holder.v_playing.setVisibility(View.VISIBLE);
-        } else {
-            holder.v_playing.setVisibility(View.GONE);
-        }
+//        if (PlayManager.getPlayingMusic() != null && PlayManager.getPlayingMusic().equals(localItem)) {
+//            holder.v_playing.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.v_playing.setVisibility(View.GONE);
+//        }
         setOnPopupMenuListener(holder, position);
         setOnClickListener(holder, position);
     }

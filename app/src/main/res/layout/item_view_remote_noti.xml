@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_skip_previous_white_24dp" />
+            android:src="@drawable/ic_skip_previous" />
 
         <ImageView
             android:id="@+id/iv_play_pause"
@@ -41,7 +41,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_pause_white_18dp" />
+            android:src="@drawable/ic_pause" />
 
         <ImageView
             android:id="@+id/iv_next"
@@ -50,7 +50,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_skip_next_white_24dp" />
+            android:src="@drawable/ic_skip_next" />
     </LinearLayout>
 
 

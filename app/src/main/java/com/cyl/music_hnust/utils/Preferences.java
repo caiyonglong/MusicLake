@@ -37,7 +37,7 @@ public class Preferences {
     }
 
     public static void savePlayMode(int mode) {
-        saveInt(PLAY_MODE, mode);
+        saveInt(PLAY_MODE, (mode + 1) % 4);
     }
 
     public static String getSplashUrl() {

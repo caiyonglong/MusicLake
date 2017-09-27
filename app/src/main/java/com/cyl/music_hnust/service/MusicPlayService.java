@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -24,11 +23,10 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.ui.activity.MainActivity;
-import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.ToastUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -61,11 +59,10 @@ public class MusicPlayService extends Service {
 
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int play_mode;
-    private final int PLAY_MODE_ORDER = 0;
-    private final int PLAY_MODE_RANDOM = 1;
-    private final int PLAY_MODE_LOOP = 2;
+    private final int PLAY_MODE_RANDOM = 0;
+    private final int PLAY_MODE_LOOP = 1;
+    private final int PLAY_MODE_REPEAT = 2;
     private int NOTIFICATION_ID = 0x123;
-    private Bitmap cover = null;
 
     //广播接收者
     ServiceReceiver mServiceReceiver;
@@ -143,43 +140,42 @@ public class MusicPlayService extends Service {
      * 下一首
      */
     private void next() {
+        if (!checkPlay()) {
+            return;
+        }
         play_mode = Preferences.getPlayMode();
         switch (play_mode) {
-            case PLAY_MODE_ORDER:
-                if (checkNetwork(mPlayingPosition + 1))
-                    playMusic(mPlayingPosition + 1);
-                break;
             case PLAY_MODE_RANDOM:
-                Random random = new Random();
-                if (checkNetwork(random.nextInt(mPlaylist.size())))
-                    playMusic(random.nextInt(mPlaylist.size()));
+                mPlayingPosition = new Random().nextInt(mPlaylist.size());
+                playMusic(mPlayingPosition);
                 break;
             case PLAY_MODE_LOOP:
+                if (mPlayingPosition == mPlaylist.size() - 1) {
+                    mPlayingPosition = 0;
+                    playMusic(mPlayingPosition);
+                } else if (mPlayingPosition < mPlaylist.size() - 1) {
+                    mPlayingPosition += 1;
+                    playMusic(mPlayingPosition);
+                }
+                break;
+            case PLAY_MODE_REPEAT:
                 playMusic(mPlayingPosition);
                 break;
         }
     }
 
-    /**
-     * 检测网络
-     *
-     * @param position
-     * @return
-     */
-    private boolean checkNetwork(int position) {
-        //判断当前第几首歌
-        if (!isExistPosition(position)) return false;
+    private boolean checkNetwork(Music music) {
+        if (music.getType() == Music.Type.LOCAL) {
+            return true;
+        }
+
         boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
         try {
-            if (mPlaylist.get(mPlayingPosition).getType() == Music.Type.LOCAL) {
-                return true;
-            } else if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
-                ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
+            if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
                 return false;
             } else if (NetworkUtil.isNetworkAvailable(getApplicationContext())) {
                 return true;
             } else {
-                ToastUtils.show(getApplicationContext(), R.string.unable_to_play);
                 return false;
             }
         } catch (Exception e) {
@@ -188,21 +184,40 @@ public class MusicPlayService extends Service {
     }
 
     /**
+     * 检测网络
+     *
+     * @return
+     */
+    private boolean checkPlay() {
+        if (mPlaylist.size() == 0) {
+            ToastUtils.show(this, "播放队列为空");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 上一首
      */
     private void prev() {
+        if (!checkPlay()) {
+            return;
+        }
         play_mode = Preferences.getPlayMode();
         switch (play_mode) {
-            case PLAY_MODE_ORDER:
-                if (checkNetwork(mPlayingPosition - 1))
-                    playMusic(mPlayingPosition - 1);
-                break;
             case PLAY_MODE_RANDOM:
-                Random random = new Random();
-                if (checkNetwork(random.nextInt(mPlaylist.size())))
-                    playMusic(random.nextInt(mPlaylist.size()));
+                mPlayingPosition = new Random().nextInt(mPlaylist.size());
+                playMusic(mPlayingPosition);
                 break;
             case PLAY_MODE_LOOP:
+                if (mPlayingPosition == 0) {
+                    mPlayingPosition = mPlaylist.size() - 1;
+                } else if (mPlayingPosition > 0) {
+                    mPlayingPosition -= 1;
+                }
+                playMusic(mPlayingPosition);
+                break;
+            case PLAY_MODE_REPEAT:
                 playMusic(mPlayingPosition);
                 break;
         }
@@ -215,6 +230,7 @@ public class MusicPlayService extends Service {
      */
     private boolean isExistPosition(int position) {
         if (mPlaylist.size() == 0) {
+            ToastUtils.show(this, "播放队列为空");
             return false;
         } else if (position < 0) {
             mPlayingPosition = mPlaylist.size() - 1;
@@ -245,14 +261,19 @@ public class MusicPlayService extends Service {
      */
     public void playMusic(Music music) {
         mPlayingMusic = music;
+        Log.d(TAG, mPlayingMusic.toString());
+        showNotification();
+        sendBroadcast(new Intent(ACTION_UPDATE));
+        if (!checkNetwork(music)) {
+            ToastUtils.show(this, R.string.unable_to_play);
+            next();
+        }
         try {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getUri());
             mPlayer.prepare();
             mPlayer.start();
             isPause = false;
-            showNotification();
-            sendBroadcast(new Intent(ACTION_UPDATE));
         } catch (IOException e) {
             ToastUtils.show(getApplicationContext(), R.string.unable_to_play_exception);
         }
@@ -329,10 +350,14 @@ public class MusicPlayService extends Service {
      */
     public void removeFromQueue(int position) {
         Log.e(TAG, position + "---" + mPlayingPosition + "---" + mPlaylist.size());
-        if (position == mPlayingPosition && position != mPlaylist.size() - 1) {
-
-        } else if (position == mPlayingPosition && position == mPlaylist.size() - 1) {
-
+        if (position == mPlayingPosition) {
+            mPlaylist.remove(position);
+            playMusic(position);
+        } else if (position > mPlayingPosition) {
+            mPlaylist.remove(position);
+        } else if (position < mPlayingPosition) {
+            mPlaylist.remove(position);
+            mPlayingPosition = mPlayingPosition - 1;
         }
     }
 
@@ -341,6 +366,9 @@ public class MusicPlayService extends Service {
      */
     public void clearQueue() {
         mPlaylist.clear();
+        mPlayer.stop();
+        mPlayingMusic = null;
+        sendBroadcast(new Intent(ACTION_UPDATE));
     }
 
 
@@ -411,21 +439,21 @@ public class MusicPlayService extends Service {
         String text = mPlayingMusic.getTitle() + " - " + mPlayingMusic.getArtist();
         mRemoteViews.setTextViewText(R.id.tv_name, text);
         if (isPlaying()) {
-            mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_pause_white_18dp);
+            mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_pause);
         } else {
             mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_play_arrow_white_18dp);
         }
 
         if (mPlayingMusic.getCover() == null) {
-            cover = ImageLoader
-                    .getInstance()
-                    .loadImageSync(ImageUtils.getAlbumArtUri(mPlayingMusic.getAlbumId()).toString(),
-                            ImageUtils.getAlbumDisplayOptions());
+            if (mPlayingMusic.getCoverUri() != null) {
+                mRemoteViews.setImageViewBitmap(R.id.iv_album,
+                        CoverLoader.getInstance().loadThumbnail(mPlayingMusic.getCoverUri()));
+            } else {
+                mRemoteViews.setImageViewResource(R.id.iv_album, R.drawable.default_cover);
+            }
         } else {
-            cover = mPlayingMusic.getCover();
+            mRemoteViews.setImageViewBitmap(R.id.iv_album, mPlayingMusic.getCover());
         }
-
-        mRemoteViews.setImageViewBitmap(R.id.iv_album, cover);
         startForeground(NOTIFICATION_ID, mNotify);
         nm.notify(NOTIFICATION_ID, mNotify);
     }

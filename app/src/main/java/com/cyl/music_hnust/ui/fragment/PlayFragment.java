@@ -127,7 +127,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private LrcView mLrcView;
     private CircleImageView civ_cover;
     //播放模式：0顺序播放、1随机播放、2单曲循环
-    private int play_mode;
+    private final int PLAY_MODE_RANDOM = 0;
+    private final int PLAY_MODE_LOOP = 1;
+    private final int PLAY_MODE_REPEAT = 2;
     private int position;
     //是否有歌词
     private boolean lrc_empty = true;
@@ -243,9 +245,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 onBackPressed();
                 break;
             case R.id.skip_mode:
-                play_mode = Preferences.getPlayMode();
-                play_mode = (play_mode + 1) % 3;
-                Preferences.savePlayMode(play_mode);
+                Preferences.savePlayMode(Preferences.getPlayMode());
                 updatePlayMode();
                 break;
             case R.id.skip_lrc:
@@ -404,7 +404,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             if (music.getCover() == null) {
                 civ_cover.setImageResource(R.drawable.default_cover);
-                ivPlayingBg.setImageResource(R.drawable.music_one);
+                ivPlayingBg.setImageResource(R.drawable.default_cover);
             } else {
                 Bitmap cover = ImageUtils.resizeImage(music.getCover(), SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
                 civ_cover.setImageBitmap(cover);
@@ -466,19 +466,18 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void updatePlayMode() {
-        play_mode = Preferences.getPlayMode();
-        switch (play_mode) {
-            case 0:
-                skip_mode.setImageResource(R.drawable.ic_repeat_white_24dp);
-                ToastUtils.show(getContext(), "列表循环");
-                break;
-            case 1:
-                skip_mode.setImageResource(R.drawable.ic_shuffle_white_24dp);
+        switch (Preferences.getPlayMode()) {
+            case PLAY_MODE_RANDOM:
+                skip_mode.setImageResource(R.drawable.ic_shuffle);
                 ToastUtils.show(getContext(), "随机播放");
                 break;
-            case 2:
-                skip_mode.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-                ToastUtils.show(getContext(), "单曲循环");
+            case PLAY_MODE_REPEAT:
+                skip_mode.setImageResource(R.drawable.ic_repeat_one);
+                ToastUtils.show(getContext(), "单曲播放");
+                break;
+            case PLAY_MODE_LOOP:
+                skip_mode.setImageResource(R.drawable.ic_repeat);
+                ToastUtils.show(getContext(), "循环播放");
                 break;
         }
 

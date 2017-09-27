@@ -54,7 +54,10 @@ public class PlayQueueDialog extends DialogFragment {
     LinearLayout root;
 
     private PlayQueueAdapter mAdapter;
-    private int play_mode = 0;
+    //播放模式：0顺序播放、1随机播放、2单曲循环
+    private final int PLAY_MODE_RANDOM = 0;
+    private final int PLAY_MODE_LOOP = 1;
+    private final int PLAY_MODE_REPEAT = 2;
     private Palette.Swatch mSwatch;
 
 
@@ -71,11 +74,6 @@ public class PlayQueueDialog extends DialogFragment {
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mAdapter = new PlayQueueAdapter((AppCompatActivity) getActivity(), PlayManager.getPlayList());
-    }
 
     @Nullable
     @Override
@@ -90,6 +88,9 @@ public class PlayQueueDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        mAdapter = new PlayQueueAdapter((AppCompatActivity) getActivity(), PlayManager.getPlayList());
+
+
         if (mSwatch != null) {
             root.setBackgroundColor(mSwatch.getRgb());
             mAdapter.setPaletteSwatch(mSwatch);
@@ -102,16 +103,6 @@ public class PlayQueueDialog extends DialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
         updatePlayMode();
-
-        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                if (mAdapter.getItemCount() == 0) {
-                    dismiss();
-                }
-            }
-        });
-
     }
 
     public void setPaletteSwatch(Palette.Swatch swatch) {
@@ -150,32 +141,27 @@ public class PlayQueueDialog extends DialogFragment {
 
     @OnClick(R.id.iv_play_mode)
     public void onPlayModeClick() {
-        play_mode = Preferences.getPlayMode();
-        play_mode = (play_mode + 1) % 3;
-        Preferences.savePlayMode(play_mode);
+        Preferences.savePlayMode(Preferences.getPlayMode());
         updatePlayMode();
     }
 
-
     public void updatePlayMode() {
-        play_mode = Preferences.getPlayMode();
-        switch (play_mode) {
-            case 0:
-                ivPlayMode.setImageResource(R.drawable.ic_repeat_white_24dp);
-                tvPlayMode.setText("列表循环");
+        switch (Preferences.getPlayMode()) {
+            case PLAY_MODE_LOOP:
+                ivPlayMode.setImageResource(R.drawable.ic_repeat);
+                tvPlayMode.setText("循环播放");
                 break;
-            case 1:
-                ivPlayMode.setImageResource(R.drawable.ic_shuffle_white_24dp);
+            case PLAY_MODE_RANDOM:
+                ivPlayMode.setImageResource(R.drawable.ic_shuffle);
                 tvPlayMode.setText("随机播放");
                 break;
-            case 2:
-                ivPlayMode.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-                tvPlayMode.setText("单曲循环");
+            case PLAY_MODE_REPEAT:
+                ivPlayMode.setImageResource(R.drawable.ic_repeat_one);
+                tvPlayMode.setText("单曲播放");
                 break;
         }
 
     }
-
 
     @OnClick(R.id.clear_all)
     public void onClearAllClick() {

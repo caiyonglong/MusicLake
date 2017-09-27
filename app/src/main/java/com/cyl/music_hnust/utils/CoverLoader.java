@@ -93,7 +93,8 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mBlurCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.play_page_default_bg);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
                     mBlurCache.put(KEY_NULL, bitmap);
                 }
             } else {

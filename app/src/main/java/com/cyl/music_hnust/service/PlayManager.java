@@ -1,6 +1,5 @@
 package com.cyl.music_hnust.service;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -14,7 +13,6 @@ import com.cyl.music_hnust.model.music.Music;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.WeakHashMap;
 
 /**
  * Created by D22434 on 2017/9/20.
@@ -22,47 +20,30 @@ import java.util.WeakHashMap;
 
 public class PlayManager {
 
-    private static final WeakHashMap<Context, mServiceConnection> mConnectionMap;
-    private static final List<Music> sEmptyList;
     public static IMusicService mService = null;
 
-    static {
-        mConnectionMap = new WeakHashMap<Context, mServiceConnection>();
-        sEmptyList = new ArrayList<>();
-    }
+    private static ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mService = IMusicService.Stub.asInterface(iBinder);
+        }
 
-    public static ServiceToken bindToService(final Context context,
-                                             final ServiceConnection callback) {
-
-        Activity realActivity = ((Activity) context).getParent();
-        if (realActivity == null) {
-            realActivity = (Activity) context;
-        }
-        final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
-        contextWrapper.startService(new Intent(contextWrapper, MusicPlayService.class));
-        final mServiceConnection binder = new mServiceConnection(callback,
-                contextWrapper.getApplicationContext());
-        if (contextWrapper.bindService(
-                new Intent().setClass(contextWrapper, MusicPlayService.class), binder, 0)) {
-            mConnectionMap.put(contextWrapper, binder);
-            return new ServiceToken(contextWrapper);
-        }
-        return null;
-    }
-
-    public static void unbindFromService(final ServiceToken token) {
-        if (token == null) {
-            return;
-        }
-        final ContextWrapper mContextWrapper = token.mWrappedContext;
-        final mServiceConnection mBinder = mConnectionMap.remove(mContextWrapper);
-        if (mBinder == null) {
-            return;
-        }
-        mContextWrapper.unbindService(mBinder);
-        if (mConnectionMap.isEmpty()) {
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
             mService = null;
         }
+    };
+
+    static {
+    }
+
+    public static void bindToService(Context mContext) {
+        mContext.bindService(new Intent(mContext, MusicPlayService.class), mServiceConnection, 0);
+    }
+
+
+    public static void unbindFromService(Context mContext) {
+        mContext.unbindService(mServiceConnection);
     }
 
 
@@ -224,33 +205,6 @@ public class PlayManager {
             mService.removeFromQueue(adapterPosition);
         } catch (RemoteException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static final class mServiceConnection implements ServiceConnection {
-        private final ServiceConnection mCallback;
-        private final Context mContext;
-
-
-        public mServiceConnection(final ServiceConnection callback, final Context context) {
-            mCallback = callback;
-            mContext = context;
-        }
-
-        @Override
-        public void onServiceConnected(final ComponentName className, final IBinder service) {
-            mService = IMusicService.Stub.asInterface(service);
-            if (mCallback != null) {
-                mCallback.onServiceConnected(className, service);
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(final ComponentName className) {
-            if (mCallback != null) {
-                mCallback.onServiceDisconnected(className);
-            }
-            mService = null;
         }
     }
 
