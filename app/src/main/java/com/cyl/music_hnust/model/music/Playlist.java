@@ -14,6 +14,12 @@ public class Playlist {
     //歌单名
     private int count ;
 
+    public Playlist(String id, String name, int count) {
+        this.id = id;
+        this.name = name;
+        this.count = count;
+    }
+
     public String getId() {
         return id;
     }

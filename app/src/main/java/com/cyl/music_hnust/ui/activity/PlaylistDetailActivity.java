@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
@@ -42,8 +40,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     @Bind(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @Bind(R.id.playlist_name)
-    TextView playlist_name;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.album_art)
@@ -82,13 +78,13 @@ public class PlaylistDetailActivity extends BaseActivity {
     private void setAlbumart() {
 
         Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "==\n" + ImageUtils.getAlbumArtUri(getIntent().getExtras().getLong(Extras.ALBUM_ID)).toString());
-        playlist_name.setText(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
+        mToolbar.setTitle(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
         if (isAlbum == -1) {
             Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_FOREGROUND_COLOR) + "==\n"
-                    );
+            );
             foreground.setBackgroundColor(getIntent().getExtras().getInt(Extras.PLAYLIST_FOREGROUND_COLOR));
             album_art.setBackgroundResource(getIntent().getExtras().getInt(Extras.PLAYLIST_BACKGROUND_IMAGE));
-        }else {
+        } else {
             loadBitmap(ImageUtils.getAlbumArtUri(album_id).toString());
         }
     }
@@ -141,7 +137,6 @@ public class PlaylistDetailActivity extends BaseActivity {
                 break;
             case R.id.action_delete_playlist:
                 PlaylistLoader.deletePlaylist(this, playlist_id);
-                setResult(RESULT_OK);
                 finish();
                 break;
             case R.id.action_settings:
@@ -159,7 +154,6 @@ public class PlaylistDetailActivity extends BaseActivity {
                     content += "\n";
                 }
                 intent3.putExtra("content", content);
-
                 startActivity(intent3);
                 break;
         }

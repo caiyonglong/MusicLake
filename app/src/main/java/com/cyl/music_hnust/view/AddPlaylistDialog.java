@@ -21,12 +21,7 @@ import java.util.List;
  */
 public class AddPlaylistDialog extends DialogFragment {
 
-//    public static AddPlaylistDialog newInstance(Music song) {
-//        long[] songs = new long[1];
-//        songs[0] = song.getId();
-//        return newInstance(songs);
-//    }
-
+    private static String TAG_CREATE = "create_playlist";
 
     public static AddPlaylistDialog newInstance(Music song) {
         AddPlaylistDialog dialog = new AddPlaylistDialog();
@@ -47,20 +42,31 @@ public class AddPlaylistDialog extends DialogFragment {
         for (int i = 0; i < playlists.size(); i++) {
             chars[i + 1] = playlists.get(i).getName();
         }
-        return new MaterialDialog.Builder(getActivity()).title("增加到歌单").items(chars).itemsCallback(new MaterialDialog.ListCallback() {
-            @Override
-            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                Music music = getArguments().getParcelable("music");
-//                long[] songs = getArguments().getSerializable("songs");
-                if (which == 0) {
-                    CreatePlaylistDialog.newInstance(music).show(getActivity().getSupportFragmentManager(), "新建歌单");
-                    return;
-                }
-
-                PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music);
-                dialog.dismiss();
-
-            }
-        }).build();
+        return new MaterialDialog.Builder(getActivity())
+                .title("增加到歌单")
+                .items(chars)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        final Music music = getArguments().getParcelable("music");
+                        if (which == 0) {
+                            CreatePlaylistDialog createDialog = CreatePlaylistDialog.newInstance();
+                            createDialog.setInputListener(new CreatePlaylistDialog.InputListener() {
+                                @Override
+                                public void onInputResult(String title) {
+                                    long mid = PlaylistLoader.createPlaylist(getActivity(), title);
+                                    if (mid != -1) {
+                                        PlaylistLoader.addToPlaylist(getActivity(), mid + "", music);
+                                    }
+                                }
+                            });
+                            createDialog.show(getFragmentManager(), TAG_CREATE);
+                        } else {
+                            PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music);
+                            dialog.dismiss();
+                        }
+                    }
+                }).build();
     }
+
 }

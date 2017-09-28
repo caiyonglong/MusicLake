@@ -6,35 +6,55 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by 永龙 on 2016/2/23.
- * 版本: 2016-8-12  v2.5 只建一个歌单表，存放歌单歌曲信息
- *
+ * 版本: 2016-8-12  v2.5
  */
 public class DBHelper extends SQLiteOpenHelper {
+
+    public static DBHelper mInstance = null;
+
+    private static String MUSIC_DB_NAME = "hkmusic.db";
+    private static int MUSIC_DB_VERSION = 1;
+
     /**
      * 创建数据库
      *
-     * @param context
-     *            上下文
+     * @param context 上下文
      */
-    public DBHelper(Context context) {
-        super(context, DBData.MUSIC_DB_NAME, null, DBData.MUSIC_DB_VERSION);
-        // TODO Auto-generated constructor stub
+    private DBHelper(Context context) {
+        super(context, MUSIC_DB_NAME, null, MUSIC_DB_VERSION);
     }
 
+    public static DBHelper getInstance(Context context) {
+        if (mInstance == null) {
+            synchronized (DBHelper.class) {
+                if (mInstance == null) {
+                    mInstance = new DBHelper(context);
+                }
+            }
+        }
+        return mInstance;
+    }
+
+
+    // TODO CREATE TABLE
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
         // 创建歌单表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.PLAYLIST_TABLENAME + " ("
-                + DBData.PLAYLIST_ID + " VARCHAR(100) PRIMARY KEY, "
-                + DBData.PLAYLIST_TITLE + " VARCHAR(100)) "
-                );
+                + DBData.PLAYLIST_ID + " PRIMARY KEY, "
+                + DBData.PLAYLIST_TITLE + " ) "
+        );
+        // 创建歌单表
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + DBData.PLAYLIST_TABLENAME + " ("
+                + DBData.PLAYLIST_ID + " PRIMARY KEY, "
+                + DBData.MUSIC_ID + " ) "
+        );
         // 创建歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MUSIC_TABLENAME + " ("
                 + DBData.MUSIC_ID + " VARCHAR(100) PRIMARY KEY, "
-                + DBData.PLAYLIST_ID + " VARCHAR(100), "
                 + DBData.MUSIC_NAME + " VARCHAR(100), "
                 + DBData.MUSIC_FILENAME + " VARCHAR(100), "
 
@@ -50,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.MUSIC_YEARS + " VARCHAR(100)) "
         );
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub

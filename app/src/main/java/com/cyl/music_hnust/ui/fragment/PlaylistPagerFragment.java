@@ -1,37 +1,25 @@
 package com.cyl.music_hnust.ui.fragment;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Playlist;
-import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
-import com.cyl.music_hnust.utils.Extras;
-import com.cyl.music_hnust.utils.SystemUtils;
-import com.cyl.music_hnust.view.CreatePlaylistDialog;
+import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 
 import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
 
-import static android.app.ActivityOptions.makeSceneTransitionAnimation;
-
 /**
  * 作者：yonglong on 2016/11/6 17:09
  */
-public class PlaylistPagerFragment extends Fragment {
+public class PlaylistPagerFragment extends BaseFragment {
     @Bind(R.id.name)
     TextView playlistame;
     @Bind(R.id.songcount)
@@ -74,75 +62,70 @@ public class PlaylistPagerFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_playlist_pager, container, false);
-        final List<Playlist> playlists = PlaylistLoader.getPlaylists(getActivity(), true);
-
-
-        int position = (int) getArguments().get(ARG_PAGE_NUMBER);
-        if (position == playlists.size()) {
-            playlistame.setText("新建歌单");
-            songcount.setVisibility(View.INVISIBLE);
-            playlistImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CreatePlaylistDialog.newInstance().show(getChildFragmentManager(), "CREATE_PLAYLIST");
-                }
-            });
-        } else {
-            pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
-            playlist = playlists.get(pageNumber);
-            playlistImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    final Intent intent = new Intent(getActivity(), PlaylistDetailActivity.class);
-
-                    //传递参数
-                    intent.putExtra(Extras.PLAYLIST_ID, playlist.getId());
-                    intent.putExtra(Extras.PLAYLIST_FOREGROUND_COLOR, foregroundColor);
-                    intent.putExtra(Extras.PLAYLIST_BACKGROUND_IMAGE, backgroundImage);
-                    intent.putExtra(Extras.ALBUM_ID, firstAlbumID);
-                    intent.putExtra(Extras.PLAYLIST_NAME, String.valueOf(playlistame.getText()));
-
-                    if (SystemUtils.isLollipop()) {
-                        ActivityOptions options = makeSceneTransitionAnimation
-                                (getActivity(),
-                                        Pair.create((View) playlistame, "transition_playlist_name"),
-                                        Pair.create((View) playlistImage, "transition_album_art"),
-                                        Pair.create(foreground, "transition_foreground"));
-                        getActivity().startActivityForResult(intent, Extras.TO_PLAYLISTDETAIL, options.toBundle());
-                    } else {
-                        getActivity().startActivityForResult(intent, Extras.TO_PLAYLISTDETAIL);
-                    }
-                }
-            });
-
-            setUpPlaylistDetails();
-        }
-        return rootView;
+    public int getLayoutId() {
+        return R.layout.fragment_playlist_pager;
     }
 
+    @Override
+    public void initViews() {
+
+    }
 
     @Override
-    public void onViewCreated(View view, Bundle savedinstancestate) {
+    protected void listener() {
+        playlistImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlaylistDetailFragment detailFragment =
+                        PlaylistDetailFragment.newInstance(playlist.getId(), playlist.getName());
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .addSharedElement(playlistame, "transition_playlist_name")
+                        .addSharedElement(playlistImage, "transition_album_art")
+                        .addSharedElement(foreground, "transition_foreground")
+                        .add(R.id.fragment_container, detailFragment)
+                        .addToBackStack(null)
+                        .commit();
+//
+//                final Intent intent = new Intent(getActivity(), PlaylistDetailActivity.class);
+//                //传递参数
+//                intent.putExtra(Extras.PLAYLIST_ID, playlist.getId());
+//                intent.putExtra(Extras.PLAYLIST_FOREGROUND_COLOR, foregroundColor);
+//                intent.putExtra(Extras.PLAYLIST_BACKGROUND_IMAGE, backgroundImage);
+//                intent.putExtra(Extras.ALBUM_ID, firstAlbumID);
+//                intent.putExtra(Extras.PLAYLIST_NAME, String.valueOf(playlistame.getText()));
+//
+//                if (SystemUtils.isLollipop()) {
+//                    ActivityOptions options = makeSceneTransitionAnimation
+//                            (getActivity(),
+//                                    Pair.create((View) playlistame, "transition_playlist_name"),
+//                                    Pair.create((View) playlistImage, "transition_album_art"),
+//                                    Pair.create(foreground, "transition_foreground"));
+//                    getActivity().startActivity(intent, options.toBundle());
+//                } else {
+//                    getActivity().startActivity(intent);
+//                }
+            }
+        });
+    }
+
+    @Override
+    protected void initDatas() {
+        final List<Playlist> playlists = PlaylistLoader.getPlaylists(getActivity(), true);
+        pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
+        playlist = playlists.get(pageNumber);
+
+        setUpPlaylistDetails();
         new loadPlaylistImage().execute("");
     }
 
+
     private void setUpPlaylistDetails() {
         playlistame.setText(playlist.getName());
-
-        int number = getArguments().getInt(ARG_PAGE_NUMBER) + 1;
-        String playlistnumberstring;
-
-        if (number > 9) {
-            playlistnumberstring = String.valueOf(number);
-        } else {
-            playlistnumberstring = "0" + String.valueOf(number);
-        }
-        playlistnumber.setText(playlistnumberstring);
+        playlistnumber.setText(pageNumber + "");
 
         Random random = new Random();
         int rndInt = random.nextInt(foregroundColors.length);
@@ -150,9 +133,7 @@ public class PlaylistPagerFragment extends Fragment {
         foregroundColor = foregroundColors[rndInt];
         foreground.setBackgroundColor(foregroundColor);
 
-//        if (pageNumber > 2) {
         playlisttype.setVisibility(View.GONE);
-//        }
 
     }
 
@@ -185,7 +166,7 @@ public class PlaylistPagerFragment extends Fragment {
             backgroundImage = backgroundResours[rndInt];
             playlistImage.setImageResource(backgroundImage);
 
-            songcount.setText(" " + String.valueOf(songCountInt) + " 首歌曲");
+            songcount.setText(" " + songCountInt + " 首歌曲");
         }
 
         @Override

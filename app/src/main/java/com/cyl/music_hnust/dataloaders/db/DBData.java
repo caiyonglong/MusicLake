@@ -4,14 +4,6 @@ package com.cyl.music_hnust.dataloaders.db;
  * Created by 永龙 on 2016/2/23.
  */
 public class DBData {
-    /**
-     * 音乐数据库名称
-     */
-    public static final String MUSIC_DB_NAME = "hkmusic.db";
-    /**
-     * 音乐数据库版本号
-     */
-    public static final int MUSIC_DB_VERSION = 1;
 
     /**
      * 歌单信息表
@@ -74,7 +66,7 @@ public class DBData {
     /**
      * 发行日期
      */
-    public static final String MUSIC_FILENAME= "filename";
+    public static final String MUSIC_FILENAME = "filename";
 
 
 }

@@ -1,13 +1,12 @@
 package com.cyl.music_hnust.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +14,9 @@ import android.view.MenuItem;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.ui.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.CreatePlaylistDialog;
 import com.cyl.music_hnust.view.MultiViewPager;
 
@@ -29,16 +30,21 @@ import butterknife.Bind;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistFragment extends BaseFragment {
+public class PlaylistFragment extends BaseFragment implements CreatePlaylistDialog.InputListener {
+
+
+    private static final String TAG = "PlaylistFragment";
+    private static String TAG_CREATE = "create_playlist";
 
     @Bind(R.id.mul_vp)
     MultiViewPager mMultiViewPager;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private List<Playlist> mPlaylists = new ArrayList<>();
+    private static List<Playlist> mPlaylists = new ArrayList<>();
+    private static List<Fragment> fragments = new ArrayList<>();
 
-    FragmentStatePagerAdapter adapter;
+    static MyViewPagerAdapter mAdapter;
     //判断新增歌单是否存在
     static Boolean isNewPlaylist = false;
 
@@ -86,7 +92,9 @@ public class PlaylistFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_playlist:
-                CreatePlaylistDialog.newInstance().show(getChildFragmentManager(), "CREATE_PLAYLIST");
+                CreatePlaylistDialog dialog = CreatePlaylistDialog.newInstance();
+                dialog.setInputListener(this);
+                dialog.show(getChildFragmentManager(), TAG_CREATE);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -98,7 +106,7 @@ public class PlaylistFragment extends BaseFragment {
      */
     public void updateView(final long id) {
         final List<Playlist> playlists = PlaylistLoader.getPlaylists(getActivity(), true);
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -120,29 +128,32 @@ public class PlaylistFragment extends BaseFragment {
      */
     public void updateView() {
         mPlaylists = PlaylistLoader.getPlaylists(getActivity(), true);
-        adapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
-
-            @Override
-            public int getCount() {
-                return mPlaylists.size() + 1;
-            }
-
-            @Override
-            public Fragment getItem(int position) {
-                if (position == mPlaylists.size()) {
-                    return PlaylistPagerFragment.newInstance(mPlaylists.size());
-                } else {
-                    return PlaylistPagerFragment.newInstance(position);
-                }
-            }
-        };
-        mMultiViewPager.setAdapter(adapter);
+        fragments.clear();
+        for (int i = 0; i < mPlaylists.size(); i++) {
+            fragments.add(PlaylistPagerFragment.newInstance(i));
+        }
+        mAdapter = new MyViewPagerAdapter(getChildFragmentManager(), fragments);
+        mMultiViewPager.setAdapter(mAdapter);
         mMultiViewPager.setOffscreenPageLimit(3);
+        mMultiViewPager.setCurrentItem(mPlaylists.size() - 1);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onResume() {
+        super.onResume();
         updateView();
     }
+
+    @Override
+    public void onInputResult(String title) {
+        Log.e(TAG, "1111111" + title);
+        long mId = PlaylistLoader.createPlaylist(getActivity(), title);
+        if (mId != -1) {
+            updateView();
+            ToastUtils.show(getActivity(), "创建歌单成功");
+        } else {
+            ToastUtils.show(getActivity(), "歌单已存在");
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.cyl.music_hnust.dataloaders.db.DBDao;
+import com.cyl.music_hnust.dataloaders.db.DBDaoImpl;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
 
@@ -110,8 +110,8 @@ public class MusicUtils {
      * @return
      */
     public static List<Playlist> scanPlaylist(Context context) {
-        DBDao dbDao = new DBDao(context);
-        return dbDao.getPlaylist();
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        return dbDaoImpl.getPlaylist();
     }
 
     /**

@@ -28,7 +28,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/app_bar"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="56dp"
         app:matchChildWidth="@+id/vg_cover" />
 
 </RelativeLayout>
