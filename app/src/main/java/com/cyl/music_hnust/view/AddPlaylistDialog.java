@@ -10,7 +10,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
-import com.cyl.music_hnust.utils.MusicUtils;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class AddPlaylistDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final List<Playlist> playlists = MusicUtils.scanPlaylist(getActivity());
+        final List<Playlist> playlists = PlaylistLoader.getPlaylist(getActivity());
         CharSequence[] chars = new CharSequence[playlists.size() + 1];
         chars[0] = "新建歌单";
 
@@ -56,13 +55,13 @@ public class AddPlaylistDialog extends DialogFragment {
                                 public void onInputResult(String title) {
                                     long mid = PlaylistLoader.createPlaylist(getActivity(), title);
                                     if (mid != -1) {
-                                        PlaylistLoader.addToPlaylist(getActivity(), mid + "", music);
+                                        PlaylistLoader.addToPlaylist(getActivity(), mid + "", music.getId());
                                     }
                                 }
                             });
                             createDialog.show(getFragmentManager(), TAG_CREATE);
                         } else {
-                            PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music);
+                            PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music.getId());
                             dialog.dismiss();
                         }
                     }

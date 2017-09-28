@@ -20,7 +20,6 @@ import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
 import com.cyl.music_hnust.ui.adapter.MyStaggeredViewAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
-import com.cyl.music_hnust.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +116,7 @@ public class SongsFragment extends BaseFragment {
             @Override
             protected Void doInBackground(final Void... unused) {
                 try {
-                    musicInfos = MusicUtils.getAllSongs(getActivity());
+                    musicInfos = MusicLoader.getAllSongs(getActivity());
                     albums = MusicLoader.getAllAlbums(getActivity());
                     artists = MusicLoader.getAllArtists(getActivity());
                 } catch (Exception e) {
@@ -146,7 +145,7 @@ public class SongsFragment extends BaseFragment {
         protected String doInBackground(String... params) {
             if (getActivity() != null) {
                 if (type == 0) {
-                    musicInfos = MusicUtils.getAllSongs(getActivity());
+                    musicInfos = MusicLoader.getAllSongs(getActivity());
                     mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
                 } else if (type == 1) {
                     albums = MusicLoader.getAllAlbums(getActivity());

@@ -114,7 +114,7 @@ public class PlaylistPagerFragment extends BaseFragment {
 
     @Override
     protected void initDatas() {
-        final List<Playlist> playlists = PlaylistLoader.getPlaylists(getActivity(), true);
+        final List<Playlist> playlists = PlaylistLoader.getPlaylist(getActivity());
         pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
         playlist = playlists.get(pageNumber);
 

@@ -105,7 +105,7 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
      * 异步刷新数据
      */
     public void updateView(final long id) {
-        final List<Playlist> playlists = PlaylistLoader.getPlaylists(getActivity(), true);
+        final List<Playlist> playlists = PlaylistLoader.getPlaylist(getActivity());
         mAdapter.notifyDataSetChanged();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -127,7 +127,7 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
      * 异步刷新数据
      */
     public void updateView() {
-        mPlaylists = PlaylistLoader.getPlaylists(getActivity(), true);
+        mPlaylists = PlaylistLoader.getPlaylist(getActivity());
         fragments.clear();
         for (int i = 0; i < mPlaylists.size(); i++) {
             fragments.add(PlaylistPagerFragment.newInstance(i));

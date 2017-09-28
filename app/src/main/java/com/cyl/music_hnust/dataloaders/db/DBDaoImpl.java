@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by 永龙 on 2016/2/23.
  */
-public class DBDaoImpl {
+public class DBDaoImpl implements DBDao {
     private DBHelper helper;
     private SQLiteDatabase db;
 
@@ -30,58 +30,119 @@ public class DBDaoImpl {
     }
 
     /**
-     * 新增音乐到歌单
-     */
-
-    public void insert(Music music) {
-        ContentValues values = new ContentValues();
-        values.put(DBData.MUSIC_ID, music.getId());
-
-        values.put(DBData.MUSIC_NAME, music.getTitle());
-        values.put(DBData.MUSIC_ARTIST, music.getArtist());
-
-        values.put(DBData.MUSIC_PATH, music.getUri());
-        values.put(DBData.MUSIC_FILENAME, music.getFileName());
-
-        values.put(DBData.MUSIC_TIME, music.getDuration());
-        values.put(DBData.MUSIC_SIZE, music.getFileSize());
-
-        values.put(DBData.MUSIC_ALBUM, music.getAlbum());
-        values.put(DBData.MUSIC_ALBUM_ID, music.getAlbumId());
-        values.put(DBData.MUSIC_ALBUM_PIC, music.getCoverUri());
-
-        values.put(DBData.MUSIC_YEARS, music.getYear());
-        db.insert(DBData.MUSIC_TABLENAME, null, values);
-    }
-
-    /**
      * 查询歌单中所有音乐信息
      * flag 0 升序 1 降序
      */
     private String[] order = {"ASC", "DESC"};
 
-    public List<Music> queryPlaylist(String playlist_id) {
+
+    /**
+     * 删除歌单
+     *
+     * @param pId
+     */
+    @Override
+    public void deletePlaylist(String pId) {
+        db.delete(DBData.PLAYLIST_TABLE, DBData.PLAYLIST_ID + " = ?", new String[]{pId});
+        db.delete(DBData.MTP_TABLE, DBData.PLAYLIST_ID + " = ?", new String[]{pId});
+    }
+
+    @Override
+    public void newPlayList(String title) {
+        try {
+            ContentValues values = new ContentValues();
+            long playlistid = System.currentTimeMillis();
+            // 开始组装第一条数据
+            values.put(DBData.PLAYLIST_ID, playlistid);
+            values.put(DBData.PLAYLIST_NAME, title);
+            db.insert(DBData.PLAYLIST_TABLE, null, values);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void insertSong(String pId, String mId) {
+
+    }
+
+    @Override
+    public void removeSong(String pId, String mId) {
+
+    }
+
+    @Override
+    public void insertSongs(List<Music> songs) {
+        for (int i = 0; i < songs.size(); i++) {
+            Music music = songs.get(i);
+            ContentValues values = new ContentValues();
+            values.put(DBData.MUSIC_ID, music.getId());
+
+            values.put(DBData.MUSIC_NAME, music.getTitle());
+            values.put(DBData.MUSIC_ARTIST, music.getArtist());
+
+            values.put(DBData.MUSIC_PATH, music.getUri());
+            values.put(DBData.MUSIC_FILENAME, music.getFileName());
+
+            values.put(DBData.MUSIC_TIME, music.getDuration());
+            values.put(DBData.MUSIC_SIZE, music.getFileSize());
+
+            values.put(DBData.MUSIC_ALBUM, music.getAlbum());
+            values.put(DBData.MUSIC_ALBUM_ID, music.getAlbumId());
+            values.put(DBData.MUSIC_ALBUM_PATH, music.getCoverUri());
+
+            values.put(DBData.MUSIC_YEARS, music.getYear());
+            db.insert(DBData.MUSIC_TABLE, null, values);
+        }
+    }
+
+    @Override
+    public void insertQueue(List<Music> songs) {
+
+    }
+
+    @Override
+    public List<Playlist> getAllPlaylist() {
+        List<Playlist> results = new ArrayList<>();
+
+        // 查询music表中所有的数据
+        Cursor cursor = db.query(DBData.PLAYLIST_TABLE
+                , null, null, null, null, null, null);
+        //再遍历游标cursor，获取数据库中的值
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+
+                Playlist playlist = new MusicCursorWrapper(cursor).getPlaylist();
+
+                Cursor cursor1 = db.rawQuery(
+                        "select * from " + DBData.MTP_TABLE +
+                                " where " + DBData.PLAYLIST_ID + " =? ",
+                        new String[]{playlist.getId()});
+
+                int count = cursor1.getCount();
+                playlist.setCount(count);
+                cursor1.close();
+
+                results.add(playlist);
+            }
+        }
+        // 记得关闭游标
+        if (cursor != null) {
+            cursor.close();
+        }
+        return results;
+    }
+
+    @Override
+    public List<Music> getSongs(String pId) {
         Cursor cursor = null;
         List<Music> musicInfos = new ArrayList<>();
         // 查询歌单
-        cursor = db.rawQuery("select * from " + DBData.MUSIC_TABLENAME + " where " + DBData.PLAYLIST_ID + " =? ",
-                new String[]{playlist_id});
+        cursor = db.rawQuery("select * from music,playlist where music.mid=playlist.mid and playlist.pid= " + pId, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME)) != null) {
-                    Music music = new Music();
-                    music.setId(cursor.getInt(cursor.getColumnIndex(DBData.MUSIC_ID)));
-                    music.setTitle(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME)));
-                    music.setArtist(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_ARTIST)));
-                    music.setAlbum(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_ALBUM)));
-                    music.setDuration(cursor.getLong(cursor.getColumnIndex(DBData.MUSIC_TIME)));
-                    music.setUri(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_PATH)));
-                    music.setCoverUri(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_ALBUM_PIC)));
-                    music.setFileName(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_FILENAME)));
-                    music.setFileSize(cursor.getLong(cursor.getColumnIndex(DBData.MUSIC_SIZE)));
-                    music.setYear(cursor.getString(cursor.getColumnIndex(DBData.MUSIC_YEARS)));
-
+                    Music music = new MusicCursorWrapper(cursor).getMusic();
                     musicInfos.add(music);
                 }
             }
@@ -94,80 +155,15 @@ public class DBDaoImpl {
         return musicInfos;
     }
 
-
-    /**
-     * 新建歌单
-     *
-     * @return
-     */
-    public long createPlaylist(String playlist) {
-        try {
-            ContentValues values = new ContentValues();
-            long playlistid = System.currentTimeMillis();
-            // 开始组装第一条数据
-            values.put(DBData.PLAYLIST_ID, playlistid);
-            values.put(DBData.PLAYLIST_TITLE, playlist);
-            long result = db.insert(DBData.PLAYLIST_TABLENAME, null, values);
-            return playlistid;
-        } catch (Exception e) {
-            return -1;
-        }
-
+    @Override
+    public List<Music> getQueue() {
+        return null;
     }
 
-    /**
-     * 获取歌单名
-     *
-     * @return
-     */
-
-    public List<Playlist> getPlaylist() {
-        List<Playlist> playlists = new ArrayList<>();
-
-        // 查询music表中所有的数据
-        Cursor cursor = db.query(DBData.PLAYLIST_TABLENAME, null, null, null, null, null, null);
-        //再遍历游标cursor，获取数据库中的值
-        if (cursor != null && cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_ID));
-                String name = cursor.getString(cursor.getColumnIndex(DBData.PLAYLIST_TITLE));
-
-                Playlist playlist = new Playlist(id, name, 0);
-
-                Cursor cursor1 = db.rawQuery("select * from " + DBData.MUSIC_TABLENAME + " where " + DBData.PLAYLIST_ID + " =? ",
-                        new String[]{id});
-
-                int count = cursor1.getCount();
-                playlist.setCount(count);
-
-                if (cursor1 != null) {
-                    cursor1.close();
-                }
-                playlists.add(playlist);
-            }
+    @Override
+    public void closeDB() {
+        if (db!=null){
+            db.close();
         }
-        // 记得关闭游标
-        if (cursor != null) {
-            cursor.close();
-        }
-        return playlists;
-    }
-
-    /**
-     * 删除歌单 / 移除歌曲
-     *
-     * @return
-     */
-    public void deletePlaylist(String playlist_id) {
-        db.delete(DBData.PLAYLIST_TABLENAME, DBData.PLAYLIST_ID + " = ?", new String[]{playlist_id});
-        db.delete(DBData.MUSIC_TABLENAME, DBData.PLAYLIST_ID + " = ?", new String[]{playlist_id});
-    }
-
-    /**
-     * 使用完数据库必须关闭
-     */
-    public void close() {
-        db.close();
-        db = null;
     }
 }

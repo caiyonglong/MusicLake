@@ -18,12 +18,13 @@ public class PlaylistLoader {
      * 获取全部歌单
      *
      * @param context
-     * @param b
      * @return
      */
-    public static List<Playlist> getPlaylists(Context context, boolean b) {
+    public static List<Playlist> getPlaylist(Context context) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        return dbDaoImpl.getPlaylist();
+        List<Playlist> results = dbDaoImpl.getAllPlaylist();
+        dbDaoImpl.closeDB();
+        return results;
     }
 
     /**
@@ -35,9 +36,9 @@ public class PlaylistLoader {
      */
     public static long createPlaylist(Context context, String name) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        long result = dbDaoImpl.createPlaylist(name);
-        dbDaoImpl.close();
-        return result;
+        dbDaoImpl.newPlayList(name);
+        dbDaoImpl.closeDB();
+        return 1;
     }
 
     /**
@@ -45,35 +46,24 @@ public class PlaylistLoader {
      */
     public static List<Music> getMusicForPlaylist(Context context, String playlist_id) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        List<Music> results = dbDaoImpl.queryPlaylist(playlist_id);
-        dbDaoImpl.close();
+        List<Music> results = dbDaoImpl.getSongs(playlist_id);
+        dbDaoImpl.closeDB();
         return results;
     }
 
     /**
      * 添加歌曲到歌单
      */
-    public static void addToPlaylist(Context context, String playlist_id, int music_id) {
+    public static void addToPlaylist(Context context, String pid, long mid) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-
-//        if (result == -1) {
-//            Toast.makeText(context, "添加失败，歌曲已存在!", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
-//        }
-        dbDaoImpl.close();
+        dbDaoImpl.insertSong(pid, String.valueOf(mid));
+        dbDaoImpl.closeDB();
     }
 
 
     public static void deletePlaylist(Context context, String playlist_id) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
         dbDaoImpl.deletePlaylist(playlist_id);
-        dbDaoImpl.close();
-
-//        if (result == -1) {
-//        Toast.makeText(context, "添加失败", Toast.LENGTH_SHORT).show();
-//        }else {
-        Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
-//        }
+        dbDaoImpl.closeDB();
     }
 }

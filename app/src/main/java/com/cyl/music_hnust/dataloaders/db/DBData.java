@@ -8,65 +8,35 @@ public class DBData {
     /**
      * 歌单信息表
      */
-    public static final String PLAYLIST_TABLENAME = "playlist";
-    /**
-     * 歌单信息表
-     */
-    public static final String MUSIC_TABLENAME = "music";
+    public static final String PLAYLIST_TABLE = "playlist";
+    public static final String PLAYLIST_ID = "pid";
+    public static final String PLAYLIST_NAME = "pName";
 
     /**
-     * 歌单ID字段
+     * 歌曲信息表
      */
-    public static final String PLAYLIST_ID = "playlist_id";
-    /**
-     * 歌单文件名字段(作为判断是否唯一存在)
-     */
-    public static final String PLAYLIST_TITLE = "playlist_name";
-
-    /**
-     * 音乐ID字段
-     */
-    public static final String MUSIC_ID = "music_id";
-    /**
-     * 音乐名称字段
-     */
-    public static final String MUSIC_NAME = "title";
-    /**
-     * 音乐路径字段
-     */
-    public static final String MUSIC_PATH = "uri";
-    /**
-     * 音乐时长字段
-     */
-    public static final String MUSIC_TIME = "time";
-    /**
-     * 音乐文件大小字段
-     */
-    public static final String MUSIC_SIZE = "size";
-    /**
-     * 音乐艺术家字段
-     */
-    public static final String MUSIC_ARTIST = "artist";
-    /**
-     * 音乐专辑字段
-     */
-    public static final String MUSIC_ALBUM = "album";
-    /**
-     * 音乐专辑id字段
-     */
-    public static final String MUSIC_ALBUM_ID = "albumId";
-    /**
-     * 音乐专辑图片路径字段
-     */
-    public static final String MUSIC_ALBUM_PIC = "albumPic";
-    /**
-     * 发行日期
-     */
+    public static final String MUSIC_TABLE = "music";
+    public static final String MUSIC_ID = "mid";
+    public static final String MUSIC_NAME = "mName";
+    public static final String MUSIC_PATH = "mPath";
+    public static final String MUSIC_TIME = "mTime";
+    public static final String MUSIC_SIZE = "mSize";
+    public static final String MUSIC_ARTIST = "mArtist";
+    public static final String MUSIC_ALBUM = "mAlbum";
+    public static final String MUSIC_ALBUM_ID = "mAlbumId";
+    public static final String MUSIC_ALBUM_PATH = "mAlbumPath";
     public static final String MUSIC_YEARS = "years";
+    public static final String MUSIC_FILENAME = "mFilename";
     /**
-     * 发行日期
+     * mp信息表
      */
-    public static final String MUSIC_FILENAME = "filename";
-
-
+    public static final String MTP_TABLE = "musicToPlaylist";
+    public static final String MTP_PID = "pid";
+    public static final String MTP_MID = "mid";
+    /**
+     * 播放队列信息表
+     */
+    public static final String QUEUE_TABLE = "playQueue";
+    public static final String QUEUE_QID = "qid";
+    public static final String QUEUE_MID = "mid";
 }
