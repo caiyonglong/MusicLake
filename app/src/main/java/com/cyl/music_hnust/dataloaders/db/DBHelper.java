@@ -44,22 +44,22 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.QUEUE_TABLE + " ("
                 + DBData.QUEUE_QID + " PRIMARY KEY, "
-                + DBData.QUEUE_MID + " ) ");
+                + DBData.QUEUE_MID + " varchar(20) ) ");
         // 创建歌单歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MTP_TABLE + " ("
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DBData.MTP_MID + " , "
-                + DBData.MTP_PID + " ) ");
+                + DBData.MTP_MID + " varchar(20) , "
+                + DBData.MTP_PID + " varchar(50) ) ");
         // 创建歌单表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.PLAYLIST_TABLE + " ("
-                + DBData.PLAYLIST_ID + " PRIMARY KEY, "
+                + DBData.PLAYLIST_ID + " varchar(50) PRIMARY KEY, "
                 + DBData.PLAYLIST_NAME + " ) ");
         // 创建歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MUSIC_TABLE + " ("
-                + DBData.MUSIC_ID + " PRIMARY KEY, "
+                + DBData.MUSIC_ID + " archar(20) PRIMARY KEY, "
                 + DBData.MUSIC_NAME + " , "
                 + DBData.MUSIC_FILENAME + " , "
 

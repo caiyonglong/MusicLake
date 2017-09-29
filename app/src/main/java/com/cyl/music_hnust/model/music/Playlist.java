@@ -1,12 +1,14 @@
 package com.cyl.music_hnust.model.music;
 
+import java.io.Serializable;
+
 /**
  * 功能：本地歌单
  * 作者：yonglong on 2016/9/13 21:59
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Playlist {
+public class Playlist implements Serializable {
     //歌单id
     private String id ;
     //歌单名

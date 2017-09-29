@@ -2,7 +2,6 @@ package com.cyl.music_hnust.ui.fragment;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -10,16 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.dataloaders.PlaylistLoader;
-import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
 import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.SystemUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
@@ -43,7 +38,8 @@ public class PlaylistPagerFragment extends BaseFragment {
     @Bind(R.id.foreground)
     View foreground;
 
-    private static final String ARG_PAGE_NUMBER = "pageNumber";
+    private static final String TAG_PAGE_NUMBER = "pageNumber";
+    private static final String TAG_PLAYLIST = "pid";
     int[] foregroundColors = {R.color.pink_transparent, R.color.green_transparent, R.color.blue_transparent, R.color.red_transparent, R.color.purple_transparent};
     int[] backgroundResours = {
             R.drawable.music_one,
@@ -62,14 +58,15 @@ public class PlaylistPagerFragment extends BaseFragment {
     private int foregroundColor;
     private int backgroundImage;
     private long firstAlbumID = -1;
+    private String pid;
     private Playlist playlist;
-    List<Playlist> results = new ArrayList<>();
 
 
-    public static PlaylistPagerFragment newInstance(int pageNumber) {
+    public static PlaylistPagerFragment newInstance(int pageNumber, Playlist playlist) {
         PlaylistPagerFragment fragment = new PlaylistPagerFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_PAGE_NUMBER, pageNumber);
+        bundle.putInt(TAG_PAGE_NUMBER, pageNumber);
+        bundle.putSerializable(TAG_PLAYLIST, playlist);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -82,7 +79,8 @@ public class PlaylistPagerFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-
+        playlist = (Playlist) getArguments().getSerializable(TAG_PLAYLIST);
+        pageNumber = getArguments().getInt(TAG_PAGE_NUMBER);
     }
 
     @Override
@@ -126,16 +124,7 @@ public class PlaylistPagerFragment extends BaseFragment {
 
     @Override
     protected void initDatas() {
-        results = PlaylistLoader.getPlaylist(getActivity());
-        pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
-        playlist = results.get(pageNumber);
 
-        setUpPlaylistDetails();
-        new loadPlaylistImage().execute("");
-    }
-
-
-    private void setUpPlaylistDetails() {
         playlistame.setText(playlist.getName());
         playlistnumber.setText(pageNumber + "");
 
@@ -144,38 +133,13 @@ public class PlaylistPagerFragment extends BaseFragment {
 
         foregroundColor = foregroundColors[rndInt];
         foreground.setBackgroundColor(foregroundColor);
+        backgroundImage = backgroundResours[rndInt];
+        playlistImage.setImageResource(backgroundImage);
 
         playlisttype.setVisibility(View.GONE);
+        songcount.setText(" " + songCountInt + " 首歌曲");
 
     }
 
-    private class loadPlaylistImage extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (getActivity() != null) {
-                List<Music> songs = PlaylistLoader.getMusicForPlaylist(getActivity(), playlist.getId());
-                songCountInt = songs.size();
-                return "nosongs";
-
-            } else return "context is null";
-
-        }
-
-        @Override
-        protected void onPostExecute(String uri) {
-            Random random = new Random();
-            int rndInt = random.nextInt(backgroundResours.length);
-
-            backgroundImage = backgroundResours[rndInt];
-            playlistImage.setImageResource(backgroundImage);
-
-            songcount.setText(" " + songCountInt + " 首歌曲");
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-    }
 
 }

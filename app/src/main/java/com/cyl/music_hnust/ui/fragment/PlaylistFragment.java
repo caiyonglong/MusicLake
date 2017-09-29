@@ -130,7 +130,9 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
         mPlaylists = PlaylistLoader.getPlaylist(getActivity());
         fragments.clear();
         for (int i = 0; i < mPlaylists.size(); i++) {
-            fragments.add(PlaylistPagerFragment.newInstance(i));
+            String pid = mPlaylists.get(i).getId();
+            String pName = mPlaylists.get(i).getName();
+            fragments.add(PlaylistPagerFragment.newInstance(i, mPlaylists.get(i)));
         }
         mAdapter = new MyViewPagerAdapter(getChildFragmentManager(), fragments);
         mMultiViewPager.setAdapter(mAdapter);
