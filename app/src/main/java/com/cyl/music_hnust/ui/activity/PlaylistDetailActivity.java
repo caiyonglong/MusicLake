@@ -77,7 +77,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     private void setAlbumart() {
 
-        Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "==\n" + ImageUtils.getAlbumArtUri(getIntent().getExtras().getLong(Extras.ALBUM_ID)).toString());
         mToolbar.setTitle(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
         if (isAlbum == -1) {
             Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_FOREGROUND_COLOR) + "==\n"

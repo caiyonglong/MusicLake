@@ -45,8 +45,7 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
     private static List<Fragment> fragments = new ArrayList<>();
 
     static MyViewPagerAdapter mAdapter;
-    //判断新增歌单是否存在
-    static Boolean isNewPlaylist = false;
+    private int mCurrentItem = 0;
 
 
     @Override
@@ -130,14 +129,12 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
         mPlaylists = PlaylistLoader.getPlaylist(getActivity());
         fragments.clear();
         for (int i = 0; i < mPlaylists.size(); i++) {
-            String pid = mPlaylists.get(i).getId();
-            String pName = mPlaylists.get(i).getName();
             fragments.add(PlaylistPagerFragment.newInstance(i, mPlaylists.get(i)));
         }
         mAdapter = new MyViewPagerAdapter(getChildFragmentManager(), fragments);
         mMultiViewPager.setAdapter(mAdapter);
         mMultiViewPager.setOffscreenPageLimit(3);
-        mMultiViewPager.setCurrentItem(mPlaylists.size() - 1);
+        mMultiViewPager.setCurrentItem(mCurrentItem);
     }
 
     @Override

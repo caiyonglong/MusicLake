@@ -30,8 +30,8 @@ public class MusicCursorWrapper extends CursorWrapper {
     public Playlist getPlaylist() {
         String id = getString(getColumnIndex(DBData.PLAYLIST_ID));
         String name = getString(getColumnIndex(DBData.PLAYLIST_NAME));
-//        int num = getInt(getColumnIndex("num"));
-        return new Playlist(id, name, 0);
+        int num = getInt(getColumnIndex("num"));
+        return new Playlist(id, name, num);
     }
 
 }

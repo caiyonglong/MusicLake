@@ -123,7 +123,7 @@ public class AlbumDetailFragment extends BaseFragment {
         if (isAlbum) {
             loadBitmap(ImageUtils.getAlbumArtUri(albumID).toString());
         } else {
-            loadArtist(title);
+//            loadArtist(title);
         }
     }
 

@@ -86,11 +86,9 @@ public class WelcomeActivity extends BaseActivity {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                
+                finish();
             }
-        }, 100);
-
-        finish();
+        }, 1000);
     }
 
     /**
@@ -106,9 +104,7 @@ public class WelcomeActivity extends BaseActivity {
      * 欢迎界面跳转到主界面
      */
     private void startMainActivity() {
-        Intent intent = new Intent();
-        intent.setClass(this, MainActivity.class);
-        intent.putExtras(getIntent());
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

@@ -40,25 +40,19 @@ public class PlaylistPagerFragment extends BaseFragment {
 
     private static final String TAG_PAGE_NUMBER = "pageNumber";
     private static final String TAG_PLAYLIST = "pid";
-    int[] foregroundColors = {R.color.pink_transparent, R.color.green_transparent, R.color.blue_transparent, R.color.red_transparent, R.color.purple_transparent};
-    int[] backgroundResours = {
+    int[] backgroundResourse = {
             R.drawable.music_one,
             R.drawable.music_two,
             R.drawable.music_three,
-            R.drawable.music_four,
-            R.drawable.music_five,
-            R.drawable.music_six,
             R.drawable.music_seven,
             R.drawable.music_eight,
             R.drawable.music_nine,
             R.drawable.music_ten,
-            R.drawable.music_eleven,
-            R.drawable.music_twelve};
-    private int pageNumber, songCountInt;
+            R.drawable.music_eleven};
+    private int pageNumber;
     private int foregroundColor;
     private int backgroundImage;
     private long firstAlbumID = -1;
-    private String pid;
     private Playlist playlist;
 
 
@@ -126,18 +120,14 @@ public class PlaylistPagerFragment extends BaseFragment {
     protected void initDatas() {
 
         playlistame.setText(playlist.getName());
-        playlistnumber.setText(pageNumber + "");
+        playlistnumber.setText(pageNumber + 1 + "");
+        songcount.setText(" " + playlist.getCount() + " 首歌曲");
 
-        Random random = new Random();
-        int rndInt = random.nextInt(foregroundColors.length);
-
-        foregroundColor = foregroundColors[rndInt];
-        foreground.setBackgroundColor(foregroundColor);
-        backgroundImage = backgroundResours[rndInt];
+//
+//        foregroundColor = foregroundColors[rndInt];
+//        foreground.setBackgroundColor(foregroundColor);
+        backgroundImage = backgroundResourse[pageNumber % backgroundResourse.length];
         playlistImage.setImageResource(backgroundImage);
-
-        playlisttype.setVisibility(View.GONE);
-        songcount.setText(" " + songCountInt + " 首歌曲");
 
     }
 

@@ -56,14 +56,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     boolean login_status;
     private static final String TAG = "MainActivity";
     private Intent intent = null;
-    PlaylistFragment playlistFragment = null;
 
     //替换Mainfragment
     Runnable main = new Runnable() {
         @Override
         public void run() {
+            mNavigationView.getMenu().findItem(R.id.nav_menu_music).setChecked(true);
             MainFragment mainFragment = MainFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFragment).commitAllowingStateLoss();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, mainFragment)
+                    .commitAllowingStateLoss();
         }
     };
 
@@ -73,7 +76,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         @Override
         public void run() {
             PlayFragment playFragment = PlayFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().replace(R.id.controls_container, playFragment).commitAllowingStateLoss();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.controls_container, playFragment)
+                    .commitAllowingStateLoss();
         }
     };
 
@@ -81,16 +87,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     Runnable playlist = new Runnable() {
         @Override
         public void run() {
-            playlistFragment = new PlaylistFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, playlistFragment).commitAllowingStateLoss();
+            mNavigationView.getMenu().findItem(R.id.nav_menu_playlist).setChecked(true);
+            PlaylistFragment playlistFragment = new PlaylistFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, playlistFragment)
+                    .commitAllowingStateLoss();
         }
     };
     //替换Mainfragment
     Runnable download = new Runnable() {
         @Override
         public void run() {
+            mNavigationView.getMenu().findItem(R.id.nav_menu_download).setChecked(true);
             DownloadFragment fragment = new DownloadFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commitAllowingStateLoss();
         }
     };
 
@@ -205,19 +219,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        mDrawerLayout.closeDrawers();
+        Runnable runnable = null;
         switch (item.getItemId()) {
             case R.id.nav_menu_music:
-                item.setChecked(true);
-                mHandler.postDelayed(main, 100);
+                runnable = main;
                 break;
             case R.id.nav_menu_playlist:
-                item.setChecked(true);
-                mHandler.postDelayed(playlist, 100);
+                runnable = playlist;
                 break;
             case R.id.nav_menu_download:
-                item.setChecked(true);
-                mHandler.postDelayed(download, 100);
+                runnable = download;
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
@@ -252,6 +263,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 intent.setData(data);
                 startActivity(intent);
                 break;
+        }
+        if (runnable != null) {
+            item.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            mHandler.postDelayed(runnable, 500);
         }
         return true;
 

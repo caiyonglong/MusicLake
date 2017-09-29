@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.ui.fragment.AlbumDetailFragment;
+import com.cyl.music_hnust.ui.fragment.MainFragment;
 
 /**
  * Created by yonglong on 2016/12/24.
@@ -28,4 +29,5 @@ public class NavigateUtil {
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(title).commit();
     }
+
 }

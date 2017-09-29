@@ -60,8 +60,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
         if (localItem.getType() == Music.Type.LOCAL) {
-            loadBitmap(ImageUtils.getAlbumArtUri(localItem.getAlbumId()).toString(),
-                    holder.albumArt);
+            loadBitmap(localItem.getCoverUri(), holder.albumArt);
         } else {
             if (localItem.getCover() != null) {
                 holder.albumArt.setImageBitmap(localItem.getCover());
