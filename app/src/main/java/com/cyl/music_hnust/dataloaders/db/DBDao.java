@@ -11,23 +11,82 @@ import java.util.List;
 
 public interface DBDao {
 
+    /**
+     * 删除歌单
+     *
+     * @param pId
+     */
     void deletePlaylist(String pId);
 
-    void newPlayList(String title);
+    /**
+     * 新建歌单
+     *
+     * @param title
+     */
+    long newPlayList(String title);
 
+    /**
+     * 加入歌单
+     *
+     * @param pId
+     * @param mId
+     */
     void insertSong(String pId, String mId);
 
+    /**
+     * 从歌单中移除
+     *
+     * @param pId
+     * @param mId
+     */
     void removeSong(String pId, String mId);
 
+    /**
+     * 插入音乐
+     *
+     * @param songs
+     */
     void insertSongs(List<Music> songs);
 
-    void insertQueue(List<Music> songs);
-
+    /**
+     * 获取所有歌单
+     *
+     * @return
+     */
     List<Playlist> getAllPlaylist();
 
+    /**
+     * 获取歌单中所有音乐
+     *
+     * @param pId
+     * @return
+     */
     List<Music> getSongs(String pId);
 
+    /**
+     * 获取播放队列
+     *
+     * @return
+     */
     List<Music> getQueue();
+
+    /**
+     * 插入队列
+     *
+     * @param song
+     */
+    void insertQueue(Music song);
+
+    /**
+     * 更新播放队列
+     *
+     * @param songs
+     */
+    void updateQueue(List<Music> songs);
+
+    void clearQueue();
+
+    void removeQueue(String mid);
 
     void closeDB();
 }

@@ -49,7 +49,7 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     private LocalMusicAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private String playlist_id;
+    private String pid;
     private long album_id;
     //0代表专辑，1代表艺术家
     private int isAlbum;
@@ -102,10 +102,10 @@ public class PlaylistDetailActivity extends BaseActivity {
     protected void initData() {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        playlist_id = getIntent().getStringExtra(Extras.PLAYLIST_ID);
+        pid = getIntent().getStringExtra(Extras.PLAYLIST_ID);
         isAlbum = getIntent().getIntExtra(Extras.ALBUM, -1);
         album_id = getIntent().getLongExtra(Extras.ALBUM_ID, -1);
-        Log.e("playlist_id", playlist_id + "===" + isAlbum + "+++" + album_id + "00");
+        Log.e("pid", pid + "===" + isAlbum + "+++" + album_id + "00");
         setAlbumart();
     }
 
@@ -136,7 +136,7 @@ public class PlaylistDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.action_delete_playlist:
-                PlaylistLoader.deletePlaylist(this, playlist_id);
+                PlaylistLoader.deletePlaylist(this, pid);
                 finish();
                 break;
             case R.id.action_settings:
@@ -185,8 +185,8 @@ public class PlaylistDetailActivity extends BaseActivity {
                 musicInfos = MusicLoader.getArtistSongs(PlaylistDetailActivity.this, album_id + "");
                 Log.e("歌单id++++++", musicInfos.size() + "");
             } else {
-                Log.e("歌单id++++++", playlist_id + "");
-                musicInfos = PlaylistLoader.getMusicForPlaylist(PlaylistDetailActivity.this, playlist_id);
+                Log.e("歌单id++++++", pid + "");
+                musicInfos = PlaylistLoader.getMusicForPlaylist(PlaylistDetailActivity.this, pid);
                 Log.e("歌单id++++++", musicInfos.size() + "");
             }
             mAdapter = new LocalMusicAdapter(PlaylistDetailActivity.this, musicInfos);

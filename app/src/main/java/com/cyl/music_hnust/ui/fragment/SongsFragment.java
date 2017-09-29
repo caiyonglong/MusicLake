@@ -111,34 +111,6 @@ public class SongsFragment extends BaseFragment {
     }
 
 
-    private void reloadAdapter(int type) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(final Void... unused) {
-                try {
-                    musicInfos = MusicLoader.getAllSongs(getActivity());
-                    albums = MusicLoader.getAllAlbums(getActivity());
-                    artists = MusicLoader.getAllArtists(getActivity());
-                } catch (Exception e) {
-
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (musicInfos.size() == 0) {
-                    tv_empty.setText("暂无音乐");
-                    tv_empty.setVisibility(View.VISIBLE);
-                } else {
-                    tv_empty.setVisibility(View.GONE);
-                }
-                mAdapter.setMusicInfos(musicInfos);
-                mAdapter.notifyDataSetChanged();
-            }
-        }.execute();
-    }
-
     private class loadSongs extends AsyncTask<String, Void, String> {
 
         @Override

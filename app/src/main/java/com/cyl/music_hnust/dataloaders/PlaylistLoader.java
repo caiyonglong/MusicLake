@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.dataloaders;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.cyl.music_hnust.dataloaders.db.DBDaoImpl;
 import com.cyl.music_hnust.model.music.Music;
@@ -13,7 +12,6 @@ import java.util.List;
  * 作者：yonglong on 2016/11/6 17:02
  */
 public class PlaylistLoader {
-
     /**
      * 获取全部歌单
      *
@@ -35,10 +33,11 @@ public class PlaylistLoader {
      * @return
      */
     public static long createPlaylist(Context context, String name) {
+        long pid = -1;
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.newPlayList(name);
+        pid = dbDaoImpl.newPlayList(name);
         dbDaoImpl.closeDB();
-        return 1;
+        return pid;
     }
 
     /**
@@ -60,7 +59,18 @@ public class PlaylistLoader {
         dbDaoImpl.closeDB();
     }
 
+    /**
+     * 移除歌曲到歌单
+     */
+    public static void removeSong(Context context, String pid, long mid) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.removeSong(pid, String.valueOf(mid));
+        dbDaoImpl.closeDB();
+    }
 
+    /**
+     * 删除歌单
+     */
     public static void deletePlaylist(Context context, String playlist_id) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
         dbDaoImpl.deletePlaylist(playlist_id);

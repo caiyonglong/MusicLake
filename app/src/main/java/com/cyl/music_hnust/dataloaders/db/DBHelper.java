@@ -15,6 +15,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static String MUSIC_DB_NAME = "hkmusic.db";
     private static int MUSIC_DB_VERSION = 2;
 
+
     /**
      * 创建数据库
      *
@@ -43,21 +44,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.QUEUE_TABLE + " ("
                 + DBData.QUEUE_QID + " PRIMARY KEY, "
-                + DBData.QUEUE_MID + " ) "
-        );
+                + DBData.QUEUE_MID + " ) ");
         // 创建歌单歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MTP_TABLE + " ("
-                + "_id PRIMARY KEY, "
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DBData.MTP_MID + " , "
-                + DBData.MTP_PID + " ) "
-        );
+                + DBData.MTP_PID + " ) ");
         // 创建歌单表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.PLAYLIST_TABLE + " ("
                 + DBData.PLAYLIST_ID + " PRIMARY KEY, "
-                + DBData.PLAYLIST_NAME + " ) "
-        );
+                + DBData.PLAYLIST_NAME + " ) ");
         // 创建歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MUSIC_TABLE + " ("
@@ -74,8 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.MUSIC_ALBUM_ID + " , "
                 + DBData.MUSIC_ALBUM_PATH + " , "
 
-                + DBData.MUSIC_YEARS + " ) "
-        );
+                + DBData.MUSIC_YEARS + " ) ");
     }
 
     @Override

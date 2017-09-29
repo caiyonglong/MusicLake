@@ -46,18 +46,18 @@ public class CreatePlaylistDialog extends DialogFragment {
                 .negativeText("取消")
                 .inputRangeRes(2, 10, R.color.red)
                 .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("输入歌单名", "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        Log.e(TAG, input.toString());
+                    }
+                })
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String title = dialog.getInputEditText().getText().toString();
                         mCallback.onInputResult(title);
                         Log.d(TAG, title);
-                    }
-                })
-                .input("输入歌单名", "", false, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        Log.e(TAG, input.toString());
                     }
                 }).build();
     }

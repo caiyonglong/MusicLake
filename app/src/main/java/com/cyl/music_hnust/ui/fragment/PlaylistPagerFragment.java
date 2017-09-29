@@ -1,20 +1,30 @@
 package com.cyl.music_hnust.ui.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
+import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
+import com.cyl.music_hnust.utils.Extras;
+import com.cyl.music_hnust.utils.SystemUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
+
+import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
 /**
  * 作者：yonglong on 2016/11/6 17:09
@@ -53,6 +63,8 @@ public class PlaylistPagerFragment extends BaseFragment {
     private int backgroundImage;
     private long firstAlbumID = -1;
     private Playlist playlist;
+    List<Playlist> results = new ArrayList<>();
+
 
     public static PlaylistPagerFragment newInstance(int pageNumber) {
         PlaylistPagerFragment fragment = new PlaylistPagerFragment();
@@ -78,45 +90,45 @@ public class PlaylistPagerFragment extends BaseFragment {
         playlistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaylistDetailFragment detailFragment =
-                        PlaylistDetailFragment.newInstance(playlist.getId(), playlist.getName());
+//                PlaylistDetailFragment detailFragment =
+//                        PlaylistDetailFragment.newInstance(playlist.getId(), playlist.getName());
+//
+//                getActivity().getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .addSharedElement(playlistame, "transition_playlist_name")
+//                        .addSharedElement(playlistImage, "transition_album_art")
+//                        .addSharedElement(foreground, "transition_foreground")
+//                        .add(R.id.fragment_container, detailFragment)
+//                        .addToBackStack(null)
+//                        .commit();
+//
+                final Intent intent = new Intent(getActivity(), PlaylistDetailActivity.class);
+                //传递参数
+                intent.putExtra(Extras.PLAYLIST_ID, playlist.getId());
+                intent.putExtra(Extras.PLAYLIST_FOREGROUND_COLOR, foregroundColor);
+                intent.putExtra(Extras.PLAYLIST_BACKGROUND_IMAGE, backgroundImage);
+                intent.putExtra(Extras.ALBUM_ID, firstAlbumID);
+                intent.putExtra(Extras.PLAYLIST_NAME, String.valueOf(playlistame.getText()));
 
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .addSharedElement(playlistame, "transition_playlist_name")
-                        .addSharedElement(playlistImage, "transition_album_art")
-                        .addSharedElement(foreground, "transition_foreground")
-                        .add(R.id.fragment_container, detailFragment)
-                        .addToBackStack(null)
-                        .commit();
-//
-//                final Intent intent = new Intent(getActivity(), PlaylistDetailActivity.class);
-//                //传递参数
-//                intent.putExtra(Extras.PLAYLIST_ID, playlist.getId());
-//                intent.putExtra(Extras.PLAYLIST_FOREGROUND_COLOR, foregroundColor);
-//                intent.putExtra(Extras.PLAYLIST_BACKGROUND_IMAGE, backgroundImage);
-//                intent.putExtra(Extras.ALBUM_ID, firstAlbumID);
-//                intent.putExtra(Extras.PLAYLIST_NAME, String.valueOf(playlistame.getText()));
-//
-//                if (SystemUtils.isLollipop()) {
-//                    ActivityOptions options = makeSceneTransitionAnimation
-//                            (getActivity(),
-//                                    Pair.create((View) playlistame, "transition_playlist_name"),
-//                                    Pair.create((View) playlistImage, "transition_album_art"),
-//                                    Pair.create(foreground, "transition_foreground"));
-//                    getActivity().startActivity(intent, options.toBundle());
-//                } else {
-//                    getActivity().startActivity(intent);
-//                }
+                if (SystemUtils.isLollipop()) {
+                    ActivityOptions options = makeSceneTransitionAnimation
+                            (getActivity(),
+                                    Pair.create((View) playlistame, "transition_playlist_name"),
+                                    Pair.create((View) playlistImage, "transition_album_art"),
+                                    Pair.create(foreground, "transition_foreground"));
+                    getActivity().startActivity(intent, options.toBundle());
+                } else {
+                    getActivity().startActivity(intent);
+                }
             }
         });
     }
 
     @Override
     protected void initDatas() {
-        final List<Playlist> playlists = PlaylistLoader.getPlaylist(getActivity());
+        results = PlaylistLoader.getPlaylist(getActivity());
         pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
-        playlist = playlists.get(pageNumber);
+        playlist = results.get(pageNumber);
 
         setUpPlaylistDetails();
         new loadPlaylistImage().execute("");
@@ -142,16 +154,8 @@ public class PlaylistPagerFragment extends BaseFragment {
         @Override
         protected String doInBackground(String... params) {
             if (getActivity() != null) {
-//                List<Music> playlistsong = PlaylistLoader.getMusicForPlaylist(getActivity(), playlist.getId());
-//                songCountInt = playlistsong.size();
-//                if (songCountInt != 0) {
-//
-//                    Log.e("-----", songCountInt + "====");
-//                    Log.e("-----", playlistsong.get(0).toString() + "====");
-//
-//                    Log.e("-----", playlistsong.get(0).getCoverUri() + "====");
-//                    return playlistsong.get(0).getCoverUri();
-//                } else
+                List<Music> songs = PlaylistLoader.getMusicForPlaylist(getActivity(), playlist.getId());
+                songCountInt = songs.size();
                 return "nosongs";
 
             } else return "context is null";

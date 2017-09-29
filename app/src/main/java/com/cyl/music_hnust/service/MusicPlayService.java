@@ -313,7 +313,12 @@ public class MusicPlayService extends Service {
      * @return
      */
     public boolean isPlaying() {
-        return mPlayer != null && mPlayer.isPlaying();
+        if (mPlayer == null) {
+            return false;
+        } else if (mPlayer.isPlaying()) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,7 +36,7 @@ public class AddPlaylistDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final List<Playlist> playlists = PlaylistLoader.getPlaylist(getActivity());
-        CharSequence[] chars = new CharSequence[playlists.size() + 1];
+        final CharSequence[] chars = new CharSequence[playlists.size() + 1];
         chars[0] = "新建歌单";
 
         for (int i = 0; i < playlists.size(); i++) {
@@ -54,13 +55,12 @@ public class AddPlaylistDialog extends DialogFragment {
                                 @Override
                                 public void onInputResult(String title) {
                                     long mid = PlaylistLoader.createPlaylist(getActivity(), title);
-                                    if (mid != -1) {
-                                        PlaylistLoader.addToPlaylist(getActivity(), mid + "", music.getId());
-                                    }
+                                    PlaylistLoader.addToPlaylist(getActivity(), mid + "", music.getId());
                                 }
                             });
                             createDialog.show(getFragmentManager(), TAG_CREATE);
                         } else {
+                            Log.d("addDialog", which + "----" + playlists.get(which - 1).getId() + "------" + music.getId());
                             PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music.getId());
                             dialog.dismiss();
                         }

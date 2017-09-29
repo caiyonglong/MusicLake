@@ -43,4 +43,13 @@ public class Playlist {
     public void setCount(int count) {
         this.count = count;
     }
+
+    @Override
+    public String toString() {
+        return "Playlist{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", count=" + count +
+                '}';
+    }
 }

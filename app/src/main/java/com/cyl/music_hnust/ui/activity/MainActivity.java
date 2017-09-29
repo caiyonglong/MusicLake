@@ -24,7 +24,6 @@ import com.cyl.music_hnust.ui.fragment.LocalFragment;
 import com.cyl.music_hnust.ui.fragment.MainFragment;
 import com.cyl.music_hnust.ui.fragment.PlayFragment;
 import com.cyl.music_hnust.ui.fragment.PlaylistFragment;
-import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -143,10 +142,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavigationView.setItemIconTintList(null);
         //菜单栏的头部控件初始化
         View headerView = mNavigationView.inflateHeaderView(R.layout.header_nav);
-        mImageView = headerView.findViewById(R.id.header_bg);
-        mAvatarIcon = headerView.findViewById(R.id.header_face);
-        mName = headerView.findViewById(R.id.header_name);
-        mNick = headerView.findViewById(R.id.header_nick);
+        mImageView = (ImageView) headerView.findViewById(R.id.header_bg);
+        mAvatarIcon = (CircleImageView) headerView.findViewById(R.id.header_face);
+        mName = (TextView) headerView.findViewById(R.id.header_name);
+        mNick = (TextView) headerView.findViewById(R.id.header_nick);
 
         initNav();
         headerView.setOnClickListener(new View.OnClickListener() {

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.cyl.music_hnust.dataloaders.db.DBDaoImpl;
 import com.cyl.music_hnust.model.music.Album;
 import com.cyl.music_hnust.model.music.Artist;
 import com.cyl.music_hnust.model.music.Music;
@@ -293,6 +294,7 @@ public class MusicLoader {
             musicList.add(music);
         }
         cursor.close();
+        insertSongs(context, musicList);
         return musicList;
     }
 
@@ -310,4 +312,61 @@ public class MusicLoader {
         return cursor;
     }
 
+
+    /**
+     * 添加歌曲到歌单
+     */
+    private static void insertSongs(Context context, List<Music> musics) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.insertSongs(musics);
+        dbDaoImpl.closeDB();
+    }
+
+    /**
+     * 添加歌曲到歌单
+     */
+    public static List<Music> getPlayQueue(Context context) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        List<Music> results = dbDaoImpl.getQueue();
+        dbDaoImpl.closeDB();
+        return results;
+    }
+
+
+    /**
+     * 添加歌曲到歌单
+     */
+    public static void updateQueue(Context context, List<Music> musics) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.updateQueue(musics);
+        dbDaoImpl.closeDB();
+    }
+
+    /**
+     * 添加歌曲到歌单
+     */
+    public static void insertQueue(Context context, Music music) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.insertQueue(music);
+        dbDaoImpl.closeDB();
+    }
+
+
+    /**
+     * 移除歌曲到歌单
+     */
+    public static void removeQueue(Context context, long mid) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.removeQueue(String.valueOf(mid));
+        dbDaoImpl.closeDB();
+    }
+
+    /**
+     * 移除歌曲到歌单
+     */
+    public static void clearQueue(Context context) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.clearQueue();
+        dbDaoImpl.closeDB();
+    }
 }

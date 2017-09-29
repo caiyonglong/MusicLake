@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
@@ -11,10 +12,16 @@ import com.cyl.music_hnust.model.music.Playlist;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cyl.music_hnust.dataloaders.db.DBData.MTP_MID;
+import static com.cyl.music_hnust.dataloaders.db.DBData.MTP_PID;
+import static com.cyl.music_hnust.dataloaders.db.DBData.MTP_TABLE;
+import static com.cyl.music_hnust.dataloaders.db.DBData.PLAYLIST_TABLE;
+
 /**
  * Created by 永龙 on 2016/2/23.
  */
 public class DBDaoImpl implements DBDao {
+    private static final String TAG = "DBDaoImpl";
     private DBHelper helper;
     private SQLiteDatabase db;
 
@@ -43,35 +50,41 @@ public class DBDaoImpl implements DBDao {
      */
     @Override
     public void deletePlaylist(String pId) {
-        db.delete(DBData.PLAYLIST_TABLE, DBData.PLAYLIST_ID + " = ?", new String[]{pId});
-        db.delete(DBData.MTP_TABLE, DBData.PLAYLIST_ID + " = ?", new String[]{pId});
+        db.delete(PLAYLIST_TABLE, DBData.PLAYLIST_ID + " = ?", new String[]{pId});
+        db.delete(MTP_TABLE, DBData.PLAYLIST_ID + " = ?", new String[]{pId});
     }
 
     @Override
-    public void newPlayList(String title) {
-        try {
-            ContentValues values = new ContentValues();
-            long playlistid = System.currentTimeMillis();
-            // 开始组装第一条数据
-            values.put(DBData.PLAYLIST_ID, playlistid);
-            values.put(DBData.PLAYLIST_NAME, title);
-            db.insert(DBData.PLAYLIST_TABLE, null, values);
-        } catch (Exception e) {
-        }
+    public long newPlayList(String title) {
+        long pid = System.currentTimeMillis();
+        ContentValues values = new ContentValues();
+        // 开始组装第一条数据
+        values.put(DBData.PLAYLIST_ID, pid);
+        values.put(DBData.PLAYLIST_NAME, title);
+        db.insert(PLAYLIST_TABLE, null, values);
+        Log.d(TAG, "--newPlayList--" + pid);
+        return pid;
     }
 
     @Override
     public void insertSong(String pId, String mId) {
-
+        Log.d(TAG, "--insertSong--" + pId + "_--" + mId);
+        ContentValues values = new ContentValues();
+        values.put(MTP_PID, pId);
+        values.put(MTP_MID, mId);
+        db.insert(MTP_TABLE, null, values);
+        getSongs(pId);
     }
 
     @Override
     public void removeSong(String pId, String mId) {
-
+        db.delete(MTP_TABLE, MTP_PID + " = ? and " +
+                MTP_MID + " = ? ", new String[]{pId, mId});
     }
 
     @Override
     public void insertSongs(List<Music> songs) {
+        db.rawQuery("delete from " + DBData.MUSIC_TABLE, null);
         for (int i = 0; i < songs.size(); i++) {
             Music music = songs.get(i);
             ContentValues values = new ContentValues();
@@ -96,33 +109,64 @@ public class DBDaoImpl implements DBDao {
     }
 
     @Override
-    public void insertQueue(List<Music> songs) {
-
+    public void updateQueue(List<Music> songs) {
+        db.rawQuery("delete from " + DBData.QUEUE_TABLE, null);
+        for (int i = 0; i < songs.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(DBData.QUEUE_MID, songs.get(i).getId());
+            db.insert(DBData.QUEUE_TABLE, null, values);
+        }
     }
+
 
     @Override
     public List<Playlist> getAllPlaylist() {
         List<Playlist> results = new ArrayList<>();
+        String sql = "SELECT a.pid, a.pName, " +
+                "(SELECT Count(b.mid) " +
+                "FROM musicToPlaylist b " +
+                " WHERE b.pid = a.pid) AS num FROM playlist a";
 
-        // 查询music表中所有的数据
-        Cursor cursor = db.query(DBData.PLAYLIST_TABLE
-                , null, null, null, null, null, null);
+//        String sql = "select playlist.pid,playlist.pName,count(musicToPlaylist.mid) as num " +
+//                "from playlist , musicToPlaylist where playlist.pid = musicToPlaylist.pid group by playlist.pid";
+//        Cursor cursor = db.query(PLAYLIST_TABLE + "as a"
+//                , new String[]{"a." + PLAYLIST_ID,
+//                        "a." + PLAYLIST_NAME,
+//                        "select count( b." + MTP_MID + ") as num"}
+//                , PLAYLIST_TABLE + "." + PLAYLIST_ID + " = " + MTP_TABLE + "." + MTP_PID
+//                , null
+//                , PLAYLIST_TABLE + "." + PLAYLIST_ID
+//                , null
+//                , null);
+        Log.d(TAG, sql + "----");
+        Cursor cursor = db.rawQuery(sql, null);
         //再遍历游标cursor，获取数据库中的值
+        Log.d(TAG, cursor.getCount() + "----");
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Playlist playlist = new MusicCursorWrapper(cursor).getPlaylist();
+                Log.d(TAG, playlist.toString() + "----");
+                results.add(playlist);
+            }
+        }
+        // 记得关闭游标
+        cursor.close();
+        return results;
+    }
+
+    @Override
+    public List<Music> getSongs(String pId) {
+        List<Music> results = new ArrayList<>();
+        // 查询歌单
+        String sql = "select * from music,musicToPlaylist where music.mid = musicToPlaylist.mid and musicToPlaylist.pid=" + pId;
+        Cursor cursor = db.rawQuery(sql, null);
+
+        Log.d(TAG, cursor.getCount() + "----"+sql);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-
-                Playlist playlist = new MusicCursorWrapper(cursor).getPlaylist();
-
-                Cursor cursor1 = db.rawQuery(
-                        "select * from " + DBData.MTP_TABLE +
-                                " where " + DBData.PLAYLIST_ID + " =? ",
-                        new String[]{playlist.getId()});
-
-                int count = cursor1.getCount();
-                playlist.setCount(count);
-                cursor1.close();
-
-                results.add(playlist);
+                Music music = new MusicCursorWrapper(cursor).getMusic();
+                Log.d(TAG, music.toString() + "----");
+                results.add(music);
             }
         }
         // 记得关闭游标
@@ -133,17 +177,16 @@ public class DBDaoImpl implements DBDao {
     }
 
     @Override
-    public List<Music> getSongs(String pId) {
-        Cursor cursor = null;
-        List<Music> musicInfos = new ArrayList<>();
+    public List<Music> getQueue() {
+        List<Music> results = new ArrayList<>();
         // 查询歌单
-        cursor = db.rawQuery("select * from music,playlist where music.mid=playlist.mid and playlist.pid= " + pId, null);
+        Cursor cursor = db.rawQuery("select * from music,playQueue where music.mid = playQueue.mid ", null);
 
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME)) != null) {
                     Music music = new MusicCursorWrapper(cursor).getMusic();
-                    musicInfos.add(music);
+                    results.add(music);
                 }
             }
         }
@@ -152,18 +195,30 @@ public class DBDaoImpl implements DBDao {
         if (cursor != null) {
             cursor.close();
         }
-        return musicInfos;
+        return results;
     }
 
     @Override
-    public List<Music> getQueue() {
-        return null;
+    public void insertQueue(Music song) {
+        ContentValues values = new ContentValues();
+        values.put(DBData.QUEUE_MID, song.getId());
+        db.insert(DBData.QUEUE_TABLE, null, values);
+    }
+
+    @Override
+    public void clearQueue() {
+        db.rawQuery("delete from " + DBData.QUEUE_TABLE, null);
+    }
+
+    @Override
+    public void removeQueue(String mid) {
+        db.rawQuery("delete from " + DBData.QUEUE_TABLE + " where mid = " + mid, null);
     }
 
     @Override
     public void closeDB() {
-        if (db!=null){
-            db.close();
-        }
+//        if (db != null) {
+//            db.close();
+//        }
     }
 }

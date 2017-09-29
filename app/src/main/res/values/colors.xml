@@ -32,10 +32,9 @@
     <color name="bg_color_pink">#FF90A2</color>
     <color name="bg_color_blue">#43D5FF</color>
     <color name="bg_color_blue_light">#84B5CA</color>
-
     <!--应用基础色-->
-    <color name="colorPrimary">#259b24</color>
-    <color name="colorPrimaryDark">#259b24</color>
+    <color name="colorPrimary">#0091EA</color>
+    <color name="colorPrimaryDark">#01579B</color>
     <color name="colorAccent">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="gray">#9e9e9e</color>

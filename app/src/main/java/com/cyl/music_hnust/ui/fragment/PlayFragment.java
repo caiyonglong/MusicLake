@@ -441,10 +441,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void setupViewPager(ViewPager viewPager) {
         //歌词视图
         View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_lrcview, null);
-        mLrcView = lrcView.findViewById(R.id.LyricShow);
+        mLrcView = (LrcView) lrcView.findViewById(R.id.LyricShow);
         //专辑视图
         View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_coverview, null);
-        civ_cover = coverView.findViewById(R.id.civ_cover);
+        civ_cover = (CircleImageView) coverView.findViewById(R.id.civ_cover);
 
         mViewPagerContent = new ArrayList<>(2);
 
@@ -486,7 +486,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        operatingAnim.cancel();
+        if (operatingAnim != null) {
+            operatingAnim.cancel();
+        }
         getActivity().unregisterReceiver(mPlayerReceiver);
     }
 
