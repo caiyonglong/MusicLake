@@ -93,7 +93,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mBlurCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.music_eight);
                     bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
                     mBlurCache.put(KEY_NULL, bitmap);
                 }
@@ -121,7 +121,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mRoundCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.music_six);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.music_eight);
                     bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
                     bitmap = ImageUtils.createCircleImage(bitmap);
                     mRoundCache.put(KEY_NULL, bitmap);
@@ -151,7 +151,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mRoundCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.bg_header);
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
                     bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
                     mRoundCache.put(KEY_NULL, bitmap);
                 }

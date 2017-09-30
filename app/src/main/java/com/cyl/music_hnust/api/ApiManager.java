@@ -2,7 +2,8 @@ package com.cyl.music_hnust.api;
 
 import android.content.Context;
 
-import retrofit.GsonConverterFactory;
+import com.cyl.music_hnust.utils.Constants;
+
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
@@ -33,7 +34,7 @@ public class ApiManager {
 
     private ApiManager(Context context) {
         retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Constants.BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) // 使用RxJava作为回调适配器
 //                .addConverterFactory(GsonConverterFactory.create()) // 使用Gson作为数据转换器
                 .build();

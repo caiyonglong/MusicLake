@@ -8,8 +8,10 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -37,7 +39,6 @@ import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ImageUtils;
-import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.SizeUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
@@ -80,8 +81,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     ImageView skip_prev;
     @Bind(R.id.skip_next)
     ImageView skip_next;
-    @Bind(R.id.skip_mode)
-    ImageView skip_mode;
     @Bind(R.id.iv_back)
     ImageView iv_back;
     @Bind(R.id.iv_play_page_bg)
@@ -112,10 +111,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (playQueueDialog == null) {
             playQueueDialog = new PlayQueueDialog();
         }
-        playQueueDialog.show(fm, "fragment_bottom_dialog");
         if (mSwatch != null) {
             playQueueDialog.setPaletteSwatch(mSwatch);
         }
+        playQueueDialog.show(fm, "fragment_bottom_dialog");
     }
 
     PlayQueueDialog playQueueDialog = null;
@@ -126,10 +125,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private LrcView mLrcView;
     private CircleImageView civ_cover;
-    //播放模式：0顺序播放、1随机播放、2单曲循环
-    private final int PLAY_MODE_RANDOM = 0;
-    private final int PLAY_MODE_LOOP = 1;
-    private final int PLAY_MODE_REPEAT = 2;
     private int position;
     //是否有歌词
     private boolean lrc_empty = true;
@@ -166,20 +161,21 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     /**
      * 初始化控件
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
 
-        mPlayPause.setColor(Color.parseColor("#259b24"));
+        mPlayPause.setColor(getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
         playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         playPauseFloating.setImageDrawable(playPauseDrawable);
 
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
-            mViewPager.setOffscreenPageLimit(3);
-            mViewPager.setCurrentItem(1);
+            mViewPager.setOffscreenPageLimit(2);
+            mViewPager.setCurrentItem(0);
         }
     }
 
@@ -191,7 +187,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     protected void listener() {
         skip_next.setOnClickListener(this);
         skip_prev.setOnClickListener(this);
-        skip_mode.setOnClickListener(this);
         iv_back.setOnClickListener(this);
         skip_lrc.setOnClickListener(this);
         sk_progress.setOnSeekBarChangeListener(this);
@@ -205,7 +200,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mHandler = new Handler();
         updatePlayPauseFloatingButton();
         updateView();
-        updatePlayMode();
+        initAlbumPic();
+
         //实例化过滤器，设置广播
         mPlayerReceiver = new PlayerReceiver();
         IntentFilter intentFilter = new IntentFilter(MusicPlayService.ACTION_UPDATE);
@@ -243,10 +239,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.iv_back:
                 onBackPressed();
-                break;
-            case R.id.skip_mode:
-                Preferences.savePlayMode(Preferences.getPlayMode());
-                updatePlayMode();
                 break;
             case R.id.skip_lrc:
 
@@ -349,21 +341,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                     .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
 
                         @Override
-                        public void onError(Call call, Exception e) {
+                        public void onError(Call call, Exception e, int id) {
 
                         }
 
                         @Override
-                        public void onResponse(File response) {
-                            Log.e("---", lrcPath);
+                        public void onResponse(File response, int id) {
 
                             loadLrc(lrcPath, online);
                         }
 
-                        @Override
-                        public void inProgress(float progress, long total) {
-
-                        }
                     });
         } else {
             loadLrc(lrcPath, online);
@@ -399,8 +386,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
 
             mSwatch = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
-                    .generate()
-                    .getDarkVibrantSwatch();
+                    .generate().getVibrantSwatch();
         } else {
             if (music.getCover() == null) {
                 civ_cover.setImageResource(R.drawable.default_cover);
@@ -412,26 +398,33 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 ivPlayingBg.setImageBitmap(bg);
 
                 mSwatch = Palette.from(bg)
-                        .generate()
-                        .getDarkVibrantSwatch();
+                        .generate().getVibrantSwatch();
             }
         }
-        initAlbumpic();
-        operatingAnim.start();
+
+        if (operatingAnim != null) {
+            if (PlayManager.isPlaying()) {
+                operatingAnim.setCurrentPlayTime(currentPlayTime);
+                operatingAnim.start();
+            } else {
+                operatingAnim.cancel();
+                currentPlayTime = operatingAnim.getCurrentPlayTime();
+            }
+        }
     }
 
 
     public ObjectAnimator operatingAnim;
+    public long currentPlayTime = 0;
 
 
-    public void initAlbumpic() {
+    public void initAlbumPic() {
         /**
          * 旋转动画
          */
         LinearInterpolator lin = new LinearInterpolator();
-
-        operatingAnim = ObjectAnimator.ofFloat(civ_cover, "rotation", 0, 360);
-        operatingAnim.setDuration(20000);
+        operatingAnim = ObjectAnimator.ofFloat(civ_cover, "rotation", 0, 359);
+        operatingAnim.setDuration(20 * 1000);
         operatingAnim.setRepeatCount(-1);
         operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
         operatingAnim.setInterpolator(lin);
@@ -465,24 +458,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mPlayPause.startAnimation();
     }
 
-    public void updatePlayMode() {
-        switch (Preferences.getPlayMode()) {
-            case PLAY_MODE_RANDOM:
-                skip_mode.setImageResource(R.drawable.ic_shuffle);
-                ToastUtils.show(getContext(), "随机播放");
-                break;
-            case PLAY_MODE_REPEAT:
-                skip_mode.setImageResource(R.drawable.ic_repeat_one);
-                ToastUtils.show(getContext(), "单曲播放");
-                break;
-            case PLAY_MODE_LOOP:
-                skip_mode.setImageResource(R.drawable.ic_repeat);
-                ToastUtils.show(getContext(), "循环播放");
-                break;
-        }
-
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -493,7 +468,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public static void updateDrawableView(PanelState newState) {
-
+        if (newState == PanelState.EXPANDED) {
+        }
     }
 
 

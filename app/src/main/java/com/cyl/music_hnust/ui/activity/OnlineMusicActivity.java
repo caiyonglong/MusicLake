@@ -3,6 +3,7 @@ package com.cyl.music_hnust.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,11 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlineMusicInfo;
 import com.cyl.music_hnust.model.music.OnlineMusicList;
-import com.cyl.music_hnust.service.MusicPlayService;
+import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.ui.adapter.OnlineMusicAdapter;
 import com.cyl.music_hnust.utils.Constants;
@@ -28,12 +28,16 @@ import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SizeUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
+import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.zhy.http.okhttp.OkHttpUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +52,7 @@ import okhttp3.Call;
 public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdapter.OnItemClickListener {
 
     private OnlineMusicList mMusicList;
+    private static final String TAG = "OnlineMusicActivity";
 
     private List<OnlineMusicInfo> mMusicLists = new ArrayList<>();
     private List<Music> mMusicls = new ArrayList<>();
@@ -60,7 +65,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     Toolbar mToolbar;
 
     private View vHeader;
-    private MusicPlayService mMusicPlayService;
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
     private String title;
@@ -83,8 +87,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
         title = getIntent().getStringExtra(Extras.BILLBOARD_TITLE);
         type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
         mToolbar.setTitle(title);
-
         init();
+        getMusic(mOffset);
     }
 
     private void init() {
@@ -108,6 +112,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
             @Override
             public void onRefresh() {
                 //refresh data here
+                mOffset = 0;
                 getMusic(mOffset);
                 mRecyclerView.refreshComplete();
             }
@@ -148,47 +153,33 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     }
 
     private void getMusic(final int offset) {
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
-                .addParams(Constants.PARAM_TYPE, type)
-                .addParams(Constants.PARAM_SIZE, String.valueOf(Constants.MUSIC_LIST_SIZE))
-                .addParams(Constants.PARAM_OFFSET, String.valueOf(offset))
-                .build()
-                .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
-                    @Override
-                    public void onResponse(OnlineMusicList response) {
-                        mMusicList = response;
-                        if (offset == 0 && response == null) {
-                            return;
-                        } else if (offset == 0) {
-                            initHeader();
-                        }
-                        if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
-                            mRecyclerView.loadMoreComplete();
-                            return;
-                        }
-                        mOffset += Constants.MUSIC_LIST_SIZE;
-                        conver(response.getSong_list());
-
-                        Log.e("ddd11111111111", mMusicls.size() + "" + "=====");
-                        mMusicLists.addAll(response.getSong_list());
-                        mAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        mRecyclerView.loadMoreComplete();
-                        if (e instanceof RuntimeException) {
-                            // 歌曲全部加载完成
-                            mRecyclerView.setLoadingMoreEnabled(false);
-                            return;
-                        }
-                        if (offset == 0) {
-                        } else {
-//                            ToastUtils.show(R.string.load_fail);
-                        }
-                    }
-                });
+        new TTask().execute();
+//        OkHttpUtils.get().url(Constants.BASE_URL)
+//                .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
+//                .addParams(Constants.PARAM_TYPE, type)
+//                .addParams(Constants.PARAM_SIZE, String.valueOf(Constants.MUSIC_LIST_SIZE))
+//                .addParams(Constants.PARAM_OFFSET, String.valueOf(offset))
+//                .build()
+//                .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
+//                    @Override
+//                    public void onResponse(OnlineMusicList response) {
+//                        Log.e("ddd11111111111", response.toString() + "" + "=====");
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e) {
+//                        mRecyclerView.loadMoreComplete();
+//                        if (e instanceof RuntimeException) {
+//                            // 歌曲全部加载完成
+//                            mRecyclerView.setLoadingMoreEnabled(false);
+//                            return;
+//                        }
+//                        if (offset == 0) {
+//                        } else {
+////                            ToastUtils.show(R.string.load_fail);
+//                        }
+//                    }
+//                });
     }
 
     private void play(OnlineMusicInfo musicInfo) {
@@ -204,7 +195,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
             public void onSuccess(Music music) {
                 mProgressDialog.cancel();
                 Log.e("***********", music.toString());
-                mMusicPlayService.playMusic(music);
+                PlayManager.playOnline(music);
 //                ToastUtils.show(getApplicationContext(),getString(R.string.now_play, music.getTitle()));
             }
 
@@ -275,8 +266,73 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     @Override
     public void onItemClick(View view, int position) {
-//        play(mMusicLists.get(position));
+        play(mMusicLists.get(position));
 //        mMusicPlayService.setMyMusicList(mMusicls);
-        mMusicPlayService.playMusic(mMusicls.get(position));
+//        PlayManager.playOnline(mMusicls.get(position));
+    }
+
+    private class TTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            String baseUrl = Constants.BASE_URL + "?" +
+                    Constants.PARAM_METHOD + "=" + Constants.METHOD_GET_MUSIC_LIST + "&" +
+                    Constants.PARAM_TYPE + "=" + type + "&" +
+                    Constants.PARAM_SIZE + "=10" + "&" +
+                    Constants.PARAM_OFFSET + "=" + mOffset;
+
+            Log.e(TAG, "请求吗 :" + baseUrl);
+            try {
+                URL url = new URL(baseUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                int code = conn.getResponseCode();
+                Log.e(TAG, "请求吗 :" + code);
+                if (code == 200) {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    InputStream is = conn.getInputStream(); // 字节流转换成字符串
+                    int by = 0;
+                    byte[] buffer = new byte[1024];
+                    while ((by = is.read(buffer)) > 0) {
+                        out.write(buffer, 0, by);
+                    }
+                    out.close();
+                    String json = new String(out.toByteArray());
+                    Log.e(TAG, "请求吗 :" + json);
+                    return json;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                Gson gson = new Gson();
+                OnlineMusicList response = gson.fromJson(s, OnlineMusicList.class);
+
+                mMusicList = response;
+                if (mOffset == 0 && response == null) {
+                    return;
+                } else if (mOffset == 0) {
+                    initHeader();
+                }
+                if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
+                    mRecyclerView.loadMoreComplete();
+                    return;
+                }
+                mOffset += Constants.MUSIC_LIST_SIZE;
+
+                Log.e("ddd11111111111", response.getSong_list().size() + "" + "=====");
+                mMusicLists.addAll(response.getSong_list());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

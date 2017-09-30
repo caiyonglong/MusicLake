@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // 创建歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MUSIC_TABLE + " ("
-                + DBData.MUSIC_ID + " archar(20) PRIMARY KEY, "
+                + DBData.MUSIC_ID + " varchar(20) PRIMARY KEY, "
                 + DBData.MUSIC_NAME + " , "
                 + DBData.MUSIC_FILENAME + " , "
 

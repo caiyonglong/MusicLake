@@ -9,12 +9,10 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:elevation="5dp"
-        android:background="?attr/cardColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadeScrollbars="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
     <include
         layout="@layout/item_loading" />
 </RelativeLayout>

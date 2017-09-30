@@ -1,5 +1,6 @@
 package com.cyl.music_hnust.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,8 +17,7 @@ import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Playlist;
 import com.cyl.music_hnust.ui.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
-import com.cyl.music_hnust.utils.ToastUtils;
-import com.cyl.music_hnust.view.CreatePlaylistDialog;
+import com.cyl.music_hnust.ui.CreatePlaylistDialog;
 import com.cyl.music_hnust.view.MultiViewPager;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import butterknife.Bind;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistFragment extends BaseFragment implements CreatePlaylistDialog.InputListener {
+public class PlaylistFragment extends BaseFragment implements CreatePlaylistDialog.mCallBack {
 
 
     private static final String TAG = "PlaylistFragment";
@@ -92,7 +92,7 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
         switch (item.getItemId()) {
             case R.id.action_new_playlist:
                 CreatePlaylistDialog dialog = CreatePlaylistDialog.newInstance();
-                dialog.setInputListener(this);
+                dialog.setCallBack(this);
                 dialog.show(getChildFragmentManager(), TAG_CREATE);
                 return true;
         }
@@ -144,15 +144,13 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
     }
 
     @Override
-    public void onInputResult(String title) {
-        Log.e(TAG, "1111111" + title);
-        long mId = PlaylistLoader.createPlaylist(getActivity(), title);
-        if (mId != -1) {
-            updateView();
-            ToastUtils.show(getActivity(), "创建歌单成功");
-        } else {
-            ToastUtils.show(getActivity(), "歌单已存在");
-        }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("---", "----");
     }
 
+    @Override
+    public void updatePlaylistView() {
+        updateView();
+    }
 }

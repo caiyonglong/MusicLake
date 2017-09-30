@@ -30,20 +30,21 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:background="@drawable/default_cover"
             android:scaleType="fitXY" />
 
         <FrameLayout
             android:id="@+id/play_status"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_toLeftOf="@+id/next_buttom">
 
             <com.cyl.music_hnust.view.PlayPauseButton
                 android:id="@+id/play_pause"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center" />
 
             <View
@@ -56,8 +57,8 @@
 
         <ImageButton
             android:id="@+id/next_buttom"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
@@ -66,32 +67,36 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_skip_next_black_18dp" />
 
-
-        <TextView
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_toLeftOf="@id/play_status"
             android:layout_toRightOf="@id/album"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:textSize="15sp" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/artist"
-            style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_toLeftOf="@id/play_status"
-            android:layout_toRightOf="@id/album"
-            android:ellipsize="marquee"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/artist"
+                style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textSize="13sp" />
+        </LinearLayout>
 
     </RelativeLayout>
 

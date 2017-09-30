@@ -13,13 +13,12 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            app:tabSelectedTextColor="@color/grean"
-            app:tabTextColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/cardColor"
             android:tag="tab_indicator_accent_color,bg_primary_color"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:tabSelectedTextColor="@color/black"
+            app:tabTextColor="@color/white" />
 
     </android.support.design.widget.AppBarLayout>
 

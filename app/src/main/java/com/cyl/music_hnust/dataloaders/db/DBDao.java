@@ -39,6 +39,14 @@ public interface DBDao {
      * @param pId
      * @param mId
      */
+    boolean checkSongPlaylist(String pId, String mId);
+
+    /**
+     * 从歌单中移除
+     *
+     * @param pId
+     * @param mId
+     */
     void removeSong(String pId, String mId);
 
     /**

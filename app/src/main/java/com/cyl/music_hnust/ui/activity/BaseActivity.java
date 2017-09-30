@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity extends RxAppCompatActivity{
+public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected Handler mHandler;
 
@@ -34,6 +34,7 @@ public abstract class BaseActivity extends RxAppCompatActivity{
     private void init() {
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
+        setSystemBarTransparent();
         initView();
         initData();
         listener();
@@ -58,7 +59,6 @@ public abstract class BaseActivity extends RxAppCompatActivity{
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
-
 
 
     @Override

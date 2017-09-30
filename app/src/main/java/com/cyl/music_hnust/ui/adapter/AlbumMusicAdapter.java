@@ -17,7 +17,7 @@ import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.view.AddPlaylistDialog;
+import com.cyl.music_hnust.ui.AddPlaylistDialog;
 
 import java.io.File;
 import java.util.ArrayList;

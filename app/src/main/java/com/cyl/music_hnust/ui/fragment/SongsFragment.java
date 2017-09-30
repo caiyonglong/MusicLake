@@ -96,6 +96,12 @@ public class SongsFragment extends BaseFragment {
     @Override
     public void initViews() {
 
+        if (type == 0) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        } else {
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        }
+
     }
 
     @Override
@@ -134,10 +140,8 @@ public class SongsFragment extends BaseFragment {
         protected void onPostExecute(String result) {
             loading.setVisibility(View.GONE);
             if (type == 0) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 mRecyclerView.setAdapter(mAdapter);
             } else {
-                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(adapter);
             }
         }

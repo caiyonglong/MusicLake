@@ -114,19 +114,17 @@ public abstract class PlaySearchedMusic {
                         }
                         String lrcFileName = FileUtils.getLrcFileName(songList.getAuthor(), songList.getTitle());
                         saveLrcFile(lrcFileName, response.getLrcContent());
+
+                        mCounter++;
+                        if (mCounter == 2) {
+                            onSuccess(music);
+                        }
                     }
 
                     @Override
                     public void onError(Call call, Exception e) {
                     }
 
-                    @Override
-                    public void onAfter() {
-                        mCounter++;
-                        if (mCounter == 2) {
-                            onSuccess(music);
-                        }
-                    }
                 });
     }
 

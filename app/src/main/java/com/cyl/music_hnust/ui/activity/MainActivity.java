@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -62,10 +63,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         @Override
         public void run() {
             mNavigationView.getMenu().findItem(R.id.nav_menu_music).setChecked(true);
-            MainFragment mainFragment = MainFragment.newInstance();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, mainFragment)
+            MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainfragment");
+            if (mainFragment == null) {
+                mainFragment = MainFragment.newInstance();
+            }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, mainFragment, "mainFragment")
                     .commitAllowingStateLoss();
         }
     };

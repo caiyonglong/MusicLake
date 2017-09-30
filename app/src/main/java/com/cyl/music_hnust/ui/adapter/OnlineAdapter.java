@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.OnlinePlaylists.Billboard;
-import com.cyl.music_hnust.utils.ImageUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_online_large, parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_online_large, parent, false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
 
@@ -90,27 +89,33 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
     }
 
     private void setData(Billboard mBillboard, final ItemHolder holder) {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(mBillboard.getPic_s192().trim(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
+
+
+        Glide.with(mContext)
+                .load(mBillboard.getPic_s192())
+                .error(R.drawable.default_cover)
+                .into(holder.iv_cover);
+//        ImageLoader imageLoader = ImageLoader.getInstance();
+//        imageLoader.displayImage(mBillboard.getPic_s192().trim(), holder.iv_cover, ImageUtils.getCoverDisplayOptions());
 
         holder.title.setText(mBillboard.getName());
         List<Billboard.MusicLists> musicLists = mBillboard.getContent();
-        if (musicLists.size()>=1){
+        if (musicLists.size() >= 1) {
             holder.tv_1.setText(mContext.getString(R.string.song_list_item_title_1,
-                    musicLists.get(0).getTitle(),musicLists.get(0).getAuthor()));
-        }else {
+                    musicLists.get(0).getTitle(), musicLists.get(0).getAuthor()));
+        } else {
             holder.tv_1.setText("");
         }
-        if (musicLists.size()>=2){
+        if (musicLists.size() >= 2) {
             holder.tv_2.setText(mContext.getString(R.string.song_list_item_title_2,
-                    musicLists.get(1).getTitle(),musicLists.get(1).getAuthor()));
-        }else {
+                    musicLists.get(1).getTitle(), musicLists.get(1).getAuthor()));
+        } else {
             holder.tv_2.setText("");
         }
-        if (musicLists.size()>=3){
+        if (musicLists.size() >= 3) {
             holder.tv_3.setText(mContext.getString(R.string.song_list_item_title_3,
-                    musicLists.get(2).getTitle(),musicLists.get(2).getAuthor()));
-        }else {
+                    musicLists.get(2).getTitle(), musicLists.get(2).getAuthor()));
+        } else {
             holder.tv_3.setText("");
         }
     }

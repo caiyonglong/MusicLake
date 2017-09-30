@@ -1,30 +1,33 @@
 package com.cyl.music_hnust.ui.fragment;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.OnlineMusicActivity;
-import com.cyl.music_hnust.ui.adapter.OnlineAdapter;
 import com.cyl.music_hnust.download.NetworkUtil;
-import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.music.OnlinePlaylists;
 import com.cyl.music_hnust.model.music.OnlinePlaylists.Billboard;
+import com.cyl.music_hnust.ui.activity.OnlineMusicActivity;
+import com.cyl.music_hnust.ui.adapter.OnlineAdapter;
+import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
-import com.zhy.http.okhttp.OkHttpUtils;
+import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
 
 /**
  * 功能：在线排行榜
@@ -34,6 +37,7 @@ import okhttp3.Call;
  */
 public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItemClickListener {
 
+    private static final String TAG = "OnlineFragment";
     RecyclerView mRecyclerView;
     //适配器
     private OnlineAdapter mAdapter;
@@ -56,6 +60,7 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
 
     }
+
     @Override
     protected void initDatas() {
 
@@ -85,27 +90,8 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
             loading.setVisibility(View.VISIBLE);
         } else {
             loading.setVisibility(View.GONE);
-            if (mBillboards.isEmpty()) {
-                OkHttpUtils.get().url(Constants.BASE_MUSIC_URL)
-                        .build()
-                        .execute(new JsonCallback<OnlinePlaylists>(OnlinePlaylists.class) {
-                            @Override
-                            public void onResponse(OnlinePlaylists response) {
-                                if (response == null || response.getContent() == null) {
-                                    return;
-                                }
-                                mBillboards= response.getContent();
-                                //移除T榜
-                                mBillboards.remove(3);
-                                mAdapter.setmBillboards(mBillboards);
-                                mAdapter.notifyDataSetChanged();
-                            }
 
-                            @Override
-                            public void onError(Call call, Exception e) {
-                            }
-                        });
-            }
+            new TTask().execute();
         }
 
     }
@@ -130,5 +116,53 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     public void onResume() {
         super.onResume();
         init();
+    }
+
+    private class TTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+                URL url = new URL(Constants.BASE_MUSIC_URL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                int code = conn.getResponseCode();
+                Log.e(TAG, "请求吗 :" + code);
+                if (code == 200) {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    InputStream is = conn.getInputStream(); // 字节流转换成字符串
+                    int by = 0;
+                    byte[] buffer = new byte[1024];
+                    while ((by = is.read(buffer)) > 0) {
+                        out.write(buffer, 0, by);
+                    }
+                    out.close();
+                    String json = new String(out.toByteArray());
+                    Log.e(TAG, "请求吗 :" + json);
+                    return json;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                Gson gson = new Gson();
+                OnlinePlaylists response = gson.fromJson(s, OnlinePlaylists.class);
+                mBillboards = response.getContent();
+                //移除T榜
+                mBillboards.remove(3);
+                mAdapter.setmBillboards(mBillboards);
+                mAdapter.notifyDataSetChanged();
+
+                Log.e(TAG, "post :" + response.toString());
+            }
+        }
     }
 }

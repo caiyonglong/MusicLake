@@ -10,6 +10,12 @@ import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.UpdateUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.log.LoggerInterceptor;
+
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 
 public class MyApplication extends Application {
@@ -28,6 +34,19 @@ public class MyApplication extends Application {
         initImageLoader(this);
         startService(new Intent(this, MusicPlayService.class));
         PlayManager.bindToService(this);
+        initOkhttp();
+    }
+
+    private void initOkhttp() {
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new LoggerInterceptor("TAG"))
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                //其他配置
+                .build();
+
+        OkHttpUtils.initClient(okHttpClient);
     }
 
     public static void initImageLoader(Context context) {

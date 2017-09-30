@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.view;
+package com.cyl.music_hnust.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
 public class AddPlaylistDialog extends DialogFragment {
 
     private static String TAG_CREATE = "create_playlist";
+    private static boolean result = false;
 
     public static AddPlaylistDialog newInstance(Music song) {
         AddPlaylistDialog dialog = new AddPlaylistDialog();
@@ -50,18 +52,16 @@ public class AddPlaylistDialog extends DialogFragment {
                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         final Music music = getArguments().getParcelable("music");
                         if (which == 0) {
-                            CreatePlaylistDialog createDialog = CreatePlaylistDialog.newInstance();
-                            createDialog.setInputListener(new CreatePlaylistDialog.InputListener() {
-                                @Override
-                                public void onInputResult(String title) {
-                                    long mid = PlaylistLoader.createPlaylist(getActivity(), title);
-                                    PlaylistLoader.addToPlaylist(getActivity(), mid + "", music.getId());
-                                }
-                            });
+                            CreatePlaylistDialog createDialog = CreatePlaylistDialog.newInstance(music);
                             createDialog.show(getFragmentManager(), TAG_CREATE);
                         } else {
                             Log.d("addDialog", which + "----" + playlists.get(which - 1).getId() + "------" + music.getId());
-                            PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music.getId());
+                            result = PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music.getId());
+                            if (result) {
+                                ToastUtils.show(getActivity(), "添加成功");
+                            } else {
+                                ToastUtils.show(getActivity(), "歌单中已有此音乐，请勿重复添加");
+                            }
                             dialog.dismiss();
                         }
                     }

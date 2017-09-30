@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
-import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.model.download.DownloadInfo;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlineMusicInfo;
@@ -18,7 +18,6 @@ import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.utils.Preferences;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
-import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 
@@ -89,8 +88,14 @@ public abstract class PlayOnlineMusic {
                 .addParams(Constants.PARAM_SONG_ID, mOnlineMusic.getSong_id())
                 .build()
                 .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
+
                     @Override
-                    public void onResponse(final DownloadInfo response) {
+                    public void onError(Call call, Exception e) {
+                        onFail(call, e);
+                    }
+
+                    @Override
+                    public void onResponse(DownloadInfo response) {
                         if (response == null) {
                             onFail(null, null);
                             return;
@@ -108,11 +113,6 @@ public abstract class PlayOnlineMusic {
                         if (mCounter == 3) {
                             onSuccess(music);
                         }
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        onFail(call, e);
                     }
                 });
 
@@ -149,11 +149,11 @@ public abstract class PlayOnlineMusic {
 //        }
         // 下载歌曲封面
         if (!TextUtils.isEmpty(picUrl)) {
+
             OkHttpUtils.get().url(picUrl).build()
                     .execute(new BitmapCallback() {
                         @Override
-                        public void onResponse(Bitmap bitmap) {
-                            music.setCover(bitmap);
+                        public void onError(Call call, Exception e, int id) {
                             mCounter++;
                             if (mCounter == 3) {
                                 onSuccess(music);
@@ -161,12 +161,14 @@ public abstract class PlayOnlineMusic {
                         }
 
                         @Override
-                        public void onError(Call call, Exception e) {
+                        public void onResponse(Bitmap response, int id) {
+                            music.setCover(response);
                             mCounter++;
                             if (mCounter == 3) {
                                 onSuccess(music);
                             }
                         }
+
                     });
         }
     }

@@ -51,9 +51,10 @@ public class MainFragment extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         final ActionBar toggle = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
-        toggle.setDisplayHomeAsUpEnabled(true);
-
+        if (toggle != null) {
+            toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
+            toggle.setDisplayHomeAsUpEnabled(true);
+        }
 
         if (viewPager != null) {
             setupViewPager(viewPager);

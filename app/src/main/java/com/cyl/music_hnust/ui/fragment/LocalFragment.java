@@ -6,14 +6,17 @@ import android.support.v4.view.ViewPager;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 
+import butterknife.Bind;
+
 
 /**
  * Created by Monkey on 2015/6/29.
  */
 public class LocalFragment extends BaseFragment {
-
+    @Bind(R.id.m_viewpager)
     ViewPager viewPager;
-    public static TabLayout mTabLayout;
+    @Bind(R.id.tabs)
+    TabLayout mTabLayout;
 
     @Override
     protected void listener() {
@@ -44,9 +47,6 @@ public class LocalFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        viewPager = (ViewPager) rootView.findViewById(R.id.m_viewpager);
-        mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-
         mTabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(0);
     }

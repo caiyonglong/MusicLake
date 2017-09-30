@@ -53,10 +53,15 @@ public class PlaylistLoader {
     /**
      * 添加歌曲到歌单
      */
-    public static void addToPlaylist(Context context, String pid, long mid) {
+    public static boolean addToPlaylist(Context context, String pid, long mid) {
+        boolean result = false;
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.insertSong(pid, String.valueOf(mid));
+        if (!dbDaoImpl.checkSongPlaylist(pid, String.valueOf(mid))) {
+            dbDaoImpl.insertSong(pid, String.valueOf(mid));
+            result = true;
+        }
         dbDaoImpl.closeDB();
+        return result;
     }
 
     /**

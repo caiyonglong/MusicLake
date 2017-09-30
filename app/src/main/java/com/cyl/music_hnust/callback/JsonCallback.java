@@ -5,8 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 
-import java.io.IOException;
-
+import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -23,7 +22,7 @@ public abstract class JsonCallback<T> extends Callback<T> {
     }
 
     @Override
-    public T parseNetworkResponse(Response response) throws IOException {
+    public T parseNetworkResponse(Response response, int id) throws Exception {
         try {
             String jsonString = response.body().string();
             Log.e("eeeeeee",jsonString);
@@ -33,4 +32,20 @@ public abstract class JsonCallback<T> extends Callback<T> {
         }
         return null;
     }
+
+    @Override
+    public void onError(Call call, Exception e, int id) {
+        onError(call, e);
+    }
+
+    protected abstract void onError(Call call, Exception e);
+
+    @Override
+    public void onResponse(T response, int id) {
+        onResponse(response);
+    }
+
+    protected abstract void onResponse(T response);
+
+
 }

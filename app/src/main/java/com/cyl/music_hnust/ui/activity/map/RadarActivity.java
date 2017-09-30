@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.activity.map;
 
 import android.app.ProgressDialog;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,22 +24,22 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.services.core.LatLonPoint;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.BaseActivity;
 import com.cyl.music_hnust.callback.NearCallback;
+import com.cyl.music_hnust.model.location.Location;
+import com.cyl.music_hnust.model.location.LocationInfo;
+import com.cyl.music_hnust.model.user.User;
+import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.ui.activity.BaseActivity;
+import com.cyl.music_hnust.utils.Constants;
+import com.cyl.music_hnust.utils.FormatUtil;
+import com.cyl.music_hnust.utils.ImageUtils;
+import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.custom.CustomViewPager;
 import com.cyl.music_hnust.view.custom.FixedSpeedScroller;
 import com.cyl.music_hnust.view.custom.Info;
 import com.cyl.music_hnust.view.custom.LogUtil;
 import com.cyl.music_hnust.view.custom.RadarViewGroup;
 import com.cyl.music_hnust.view.custom.ZoomOutPageTransformer;
-import com.cyl.music_hnust.model.location.Location;
-import com.cyl.music_hnust.model.location.LocationInfo;
-import com.cyl.music_hnust.model.user.User;
-import com.cyl.music_hnust.model.user.UserStatus;
-import com.cyl.music_hnust.utils.Constants;
-import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ImageUtils;
-import com.cyl.music_hnust.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -141,7 +140,7 @@ public class RadarActivity extends BaseActivity implements ViewPager.OnPageChang
     }
 
     @Override
-    protected  void initView() {
+    protected void initView() {
         viewPager = (CustomViewPager) findViewById(R.id.vp);
         radarViewGroup = (RadarViewGroup) findViewById(R.id.radar);
         ryContainer = (RelativeLayout) findViewById(R.id.ry_container);
@@ -300,12 +299,12 @@ public class RadarActivity extends BaseActivity implements ViewPager.OnPageChang
                 .build()//
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         ToastUtils.show(getApplicationContext(), "网络连接异常，请稍后重试!");
                     }
 
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(String response, int id) {
                         Log.e("eeee", response);
 
                     }
@@ -320,16 +319,18 @@ public class RadarActivity extends BaseActivity implements ViewPager.OnPageChang
                 .build()//
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(Call call, Exception e) {
-                        e.printStackTrace();
+                    public void onError(Call call, Exception e, int id) {
+
                     }
 
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(String response, int id) {
+
                         Log.e("eeee", response);
                         ToastUtils.show(getApplicationContext(), "已清除位置!");
                         finish();
                     }
+
                 });
     }
 

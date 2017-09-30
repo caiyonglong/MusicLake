@@ -12,6 +12,7 @@ import com.cyl.music_hnust.model.music.Playlist;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 import static com.cyl.music_hnust.dataloaders.db.DBData.MTP_MID;
 import static com.cyl.music_hnust.dataloaders.db.DBData.MTP_PID;
 import static com.cyl.music_hnust.dataloaders.db.DBData.MTP_TABLE;
@@ -61,7 +62,7 @@ public class DBDaoImpl implements DBDao {
         // 开始组装第一条数据
         values.put(DBData.PLAYLIST_ID, pid);
         values.put(DBData.PLAYLIST_NAME, title);
-        db.insert(PLAYLIST_TABLE, null, values);
+        db.insertWithOnConflict(DBData.PLAYLIST_TABLE, null, values, CONFLICT_IGNORE);
         Log.d(TAG, "--newPlayList--" + pid);
         return pid;
     }
@@ -72,8 +73,25 @@ public class DBDaoImpl implements DBDao {
         ContentValues values = new ContentValues();
         values.put(MTP_PID, pId);
         values.put(MTP_MID, mId);
-        db.insert(MTP_TABLE, null, values);
+        db.insertWithOnConflict(DBData.MTP_TABLE, null, values, CONFLICT_IGNORE);
         getSongs(pId);
+    }
+
+    @Override
+    public boolean checkSongPlaylist(String pId, String mId) {
+        boolean result = false;
+        Cursor cursor = db.query(MTP_TABLE
+                , null
+                , MTP_MID + " = ? and " + MTP_PID + " = ?"
+                , new String[]{mId, pId}
+                , null
+                , null
+                , null);
+
+        if (cursor.getCount() > 0) {
+            result = true;
+        }
+        return result;
     }
 
     @Override
@@ -104,7 +122,7 @@ public class DBDaoImpl implements DBDao {
             values.put(DBData.MUSIC_ALBUM_PATH, music.getCoverUri());
 
             values.put(DBData.MUSIC_YEARS, music.getYear());
-            db.insert(DBData.MUSIC_TABLE, null, values);
+            db.insertWithOnConflict(DBData.MUSIC_TABLE, null, values, CONFLICT_IGNORE);
         }
     }
 
@@ -161,7 +179,7 @@ public class DBDaoImpl implements DBDao {
         String sql = "select * from music,musicToPlaylist where music.mid = musicToPlaylist.mid and musicToPlaylist.pid=" + pId;
         Cursor cursor = db.rawQuery(sql, null);
 
-        Log.d(TAG, cursor.getCount() + "----"+sql);
+        Log.d(TAG, cursor.getCount() + "----" + sql);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Music music = new MusicCursorWrapper(cursor).getMusic();

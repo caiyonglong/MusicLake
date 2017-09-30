@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
+        android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/translucent_black"
         android:orientation="vertical">
 
         <LinearLayout
@@ -61,31 +59,18 @@
                     android:textColor="@color/grey"
                     android:textSize="12sp" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/skip_mode"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="30dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="center"
-                android:src="@drawable/ic_shuffle" />
         </LinearLayout>
 
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager_player"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_marginBottom="10dp" />
-
+            android:layout_height="350dp" />
 
         <LinearLayout
             android:id="@+id/detailView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/center_View"
             android:layout_gravity="center_horizontal|center_vertical"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="vertical">
@@ -139,8 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="5dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/skip_lrc"
