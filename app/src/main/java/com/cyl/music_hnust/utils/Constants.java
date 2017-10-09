@@ -75,14 +75,9 @@ public class Constants {
     public static final String PLAYLIST_ID = "playlist";
 
 
-
-
-
-
-
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";
-   //根据关键词获取音乐接口
+    //根据关键词获取音乐接口
     public static final String DEFAULT_MUSIC_LIST_URL = "http://suen.pw/interface/music/api.php?operate=search&&key=";
 
     //音乐歌词根网址
@@ -118,6 +113,8 @@ public class Constants {
     public static final String BASE_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
             "from=android&version=5.8.2.0&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2";
 
+    public static final String PLAY_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
+            "method=baidu.ting.song.play&songid=877578";
 
 
     /**

@@ -92,9 +92,6 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.popup_song_play:
-                                PlayManager.play(position);
-                                break;
                             case R.id.popup_song_detail:
                                 getMusicInfo(musicInfos.get(position));
                                 break;
@@ -104,7 +101,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
                                 context.startActivity(intent);
                                 break;
                             case R.id.popup_song_download:
-                                conver(musicInfos.get(position));
+//                                conver(musicInfos.get(position));
                                 break;
                         }
                         return false;
@@ -164,6 +161,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 //
         }
     }
+
 
 
     private void conver(OnlineMusicInfo onlineMusicInfo) {

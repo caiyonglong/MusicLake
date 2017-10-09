@@ -20,7 +20,7 @@ import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.ui.activity.EditActivity;
 import com.cyl.music_hnust.ui.activity.SearchActivity;
 import com.cyl.music_hnust.ui.activity.SettingsActivity;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.ui.adapter.SongAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
 
@@ -45,7 +45,7 @@ public class PlaylistDetailFragment extends BaseFragment {
     @Bind(R.id.foreground)
     View foreground;
 
-    private LocalMusicAdapter mAdapter;
+    private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
     private String mId;
     private String title;
@@ -160,7 +160,7 @@ public class PlaylistDetailFragment extends BaseFragment {
     }
 
     private void updateView() {
-        mAdapter = new LocalMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
+        mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
 
     }
 

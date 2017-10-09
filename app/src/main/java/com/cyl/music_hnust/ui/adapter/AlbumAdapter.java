@@ -1,9 +1,11 @@
 package com.cyl.music_hnust.ui.adapter;
 
 import android.app.Activity;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.SingerCallback;
 import com.cyl.music_hnust.model.music.Album;
-import com.cyl.music_hnust.model.music.Artist;
 import com.cyl.music_hnust.model.music.Singer;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.NavigateUtil;
@@ -29,20 +30,15 @@ import okhttp3.Call;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredViewAdapter.MyRecyclerViewHolder> {
-
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyRecyclerViewHolder> {
 
     private Activity mContext;
     public List<Album> albums = new ArrayList<>();
-    public List<Artist> artists = new ArrayList<>();
     private LayoutInflater mLayoutInflater;
-    private boolean isAlbum;
 
-    public MyStaggeredViewAdapter(Activity mContext, List<Album> albums, List<Artist> artists, boolean isAlbum) {
+    public AlbumAdapter(Activity mContext, List<Album> albums) {
         this.mContext = mContext;
         this.albums = albums;
-        this.artists = artists;
-        this.isAlbum = isAlbum;
         mLayoutInflater = LayoutInflater.from(mContext);
     }
 
@@ -61,48 +57,33 @@ public class MyStaggeredViewAdapter extends RecyclerView.Adapter<MyStaggeredView
      */
     @Override
     public void onBindViewHolder(final MyRecyclerViewHolder holder, final int position) {
-        if (isAlbum) {
-            holder.album.setVisibility(View.VISIBLE);
-            holder.name.setText(albums.get(position).getName());
-            holder.artist.setText(albums.get(position).getArtistName());
-            loadBitmap(ImageUtils.getAlbumArtUri(albums.get(position).getId()).toString(), holder.album);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e("album", albums.get(position).getId() + "");
-                    NavigateUtil.navigateToAlbum(mContext,
-                            albums.get(position).getId(),
-                            true,
-                            albums.get(position).getName());
-                }
-            });
-        } else {
-            holder.name.setText(artists.get(position).getName());
-            holder.artist.setText(artists.get(position).getCount() + "首歌");
-            if (!artists.get(position).getName().equals("<unknown>")) {
-                //loadArtist(artists.get(position).getName(), holder.album);
-            } else {
-                holder.album.setVisibility(View.GONE);
-            }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NavigateUtil.navigateToAlbum(mContext,
-                            artists.get(position).getId(),
-                            false,
-                            artists.get(position).getName());
-                }
-            });
+        holder.album.setVisibility(View.VISIBLE);
+        holder.name.setText(albums.get(position).getName());
+        holder.artist.setText(albums.get(position).getArtistName());
+        loadBitmap(ImageUtils.getAlbumArtUri(albums.get(position).getId()).toString(), holder.album);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.album.setTransitionName("transition_album_art");
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("album", albums.get(position).getId() + "");
+                NavigateUtil.navigateToAlbum(mContext,
+                        albums.get(position).getId(),
+                        true,
+                        albums.get(position).getName(),
+                        new Pair<View, String>(holder.album, "transition_album_art"));
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        if (isAlbum) {
-            return albums.size();
-        } else {
-            return artists.size();
-        }
+        return albums.size();
     }
 
     private void loadBitmap(String uri, ImageView img) {

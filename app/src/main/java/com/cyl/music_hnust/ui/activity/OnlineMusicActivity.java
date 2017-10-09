@@ -17,9 +17,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.model.download.DownloadInfo;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.OnlineMusicInfo;
 import com.cyl.music_hnust.model.music.OnlineMusicList;
+import com.cyl.music_hnust.model.music.OnlinePlaylists;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.ui.adapter.OnlineMusicAdapter;
@@ -266,10 +268,78 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     @Override
     public void onItemClick(View view, int position) {
-        play(mMusicLists.get(position));
+//        play(mMusicLists.get(position));
+        new PlayOnlineTask().execute(mMusicLists.get(position).getSong_id());
 //        mMusicPlayService.setMyMusicList(mMusicls);
 //        PlayManager.playOnline(mMusicls.get(position));
     }
+
+
+    private class PlayOnlineTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String baseUrl = Constants.BASE_URL + "?" +
+                    Constants.PARAM_METHOD + "=" + Constants.METHOD_DOWNLOAD_MUSIC + "&" +
+                    Constants.PARAM_SONG_ID + "=" + params[0];
+            Log.e(TAG, "请求吗 :" + baseUrl);
+            try {
+                URL url = new URL(baseUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                int code = conn.getResponseCode();
+                Log.e(TAG, "请求吗 :" + code);
+                if (code == 200) {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    InputStream is = conn.getInputStream(); // 字节流转换成字符串
+                    int by = 0;
+                    byte[] buffer = new byte[1024];
+                    while ((by = is.read(buffer)) > 0) {
+                        out.write(buffer, 0, by);
+                    }
+                    out.close();
+                    String json = new String(out.toByteArray());
+                    Log.e(TAG, "请求吗 :" + json);
+                    return json;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            mProgressDialog.cancel();
+            if (s != null) {
+                Gson gson = new Gson();
+                DownloadInfo response = gson.fromJson(s, DownloadInfo.class);
+                DownloadInfo.SongInfo songInfo = response.getSonginfo();
+                DownloadInfo.JBitrate jBitrate = response.getBitrate();
+
+                Music music = new Music();
+                music.setType(Music.Type.ONLINE);
+                music.setAlbum(songInfo.getAlbum_title());
+                music.setArtist(songInfo.getAuthor());
+                music.setTitle(songInfo.getTitle());
+                music.setLrcPath(songInfo.getLrclink());
+                music.setCoverUri(songInfo.getPic_big().split("@")[0]);
+                music.setUri(jBitrate.getFile_link());
+                Log.e(TAG, "post :" + music.toString());
+                PlayManager.playOnline(music);
+
+            }
+        }
+    }
+
 
     private class TTask extends AsyncTask<String, Void, String> {
         @Override

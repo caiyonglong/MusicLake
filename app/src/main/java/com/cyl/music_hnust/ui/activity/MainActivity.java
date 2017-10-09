@@ -63,10 +63,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         @Override
         public void run() {
             mNavigationView.getMenu().findItem(R.id.nav_menu_music).setChecked(true);
-            MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainfragment");
-            if (mainFragment == null) {
-                mainFragment = MainFragment.newInstance();
-            }
+            MainFragment mainFragment = MainFragment.newInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, mainFragment, "mainFragment")
                     .commitAllowingStateLoss();

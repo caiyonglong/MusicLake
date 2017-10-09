@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.ui.adapter.SongAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.model.music.Music;
 
@@ -42,7 +42,7 @@ public class MusicSimpleFragment extends BaseFragment {
 
     private int page = 1;
 
-    private LocalMusicAdapter mAdapter;
+    private SongAdapter mAdapter;
 
     private LinearLayoutManager mLayoutManager;
 
@@ -99,7 +99,7 @@ public class MusicSimpleFragment extends BaseFragment {
 //        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-//        mAdapter = new LocalMusicAdapter(getContext(), musicInfos);
+//        mAdapter = new SongAdapter(getContext(), musicInfos);
         mRecyclerView.setAdapter(mAdapter);
     }
 

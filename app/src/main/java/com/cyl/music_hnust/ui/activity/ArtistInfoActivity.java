@@ -1,13 +1,16 @@
 package com.cyl.music_hnust.ui.activity;
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +22,18 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.model.music.OnlineArtistInfo;
+import com.cyl.music_hnust.model.music.OnlineMusicList;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import butterknife.Bind;
 import okhttp3.Call;
@@ -34,6 +44,7 @@ import okhttp3.Call;
 
 public class ArtistInfoActivity extends BaseActivity {
 
+    private static final String TAG = "ArtistInfoActivity";
     @Bind(R.id.li_container)
     LinearLayout li_container;
     @Bind(R.id.toolbar)
@@ -61,7 +72,8 @@ public class ArtistInfoActivity extends BaseActivity {
     @Override
     protected void initData() {
         String tingUid = getIntent().getStringExtra(Extras.TING_UID);
-        getArtistInfo(tingUid);
+//        getArtistInfo(tingUid);
+        new TTask().execute(tingUid);
         loading.setVisibility(View.VISIBLE);
     }
 
@@ -100,6 +112,57 @@ public class ArtistInfoActivity extends BaseActivity {
                     public void onError(Call call, Exception e) {
                     }
                 });
+    }
+
+
+    private class TTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            String baseUrl = Constants.BASE_URL + "?" +
+                    Constants.PARAM_METHOD + "=" + Constants.METHOD_ARTIST_INFO + "&" +
+                    Constants.PARAM_TING_UID + "=" + params[0];
+
+            Log.e(TAG, "请求吗 :" + baseUrl);
+            try {
+                URL url = new URL(baseUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                int code = conn.getResponseCode();
+                Log.e(TAG, "请求吗 :" + code);
+                if (code == 200) {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    InputStream is = conn.getInputStream(); // 字节流转换成字符串
+                    int by = 0;
+                    byte[] buffer = new byte[1024];
+                    while ((by = is.read(buffer)) > 0) {
+                        out.write(buffer, 0, by);
+                    }
+                    out.close();
+                    String json = new String(out.toByteArray());
+                    Log.e(TAG, "请求吗 :" + json);
+                    return json;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                Gson gson = new Gson();
+                OnlineArtistInfo response = gson.fromJson(s, OnlineArtistInfo.class);
+                loading.setVisibility(View.GONE);
+                onSuccess(response);
+
+            }
+        }
     }
 
     private void onSuccess(OnlineArtistInfo jArtistInfo) {
@@ -180,9 +243,9 @@ public class ArtistInfoActivity extends BaseActivity {
             TextView tvUrl = new TextView(this);
             String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                tvUrl.setText(Html.fromHtml(String.format(html, url),1));
+                tvUrl.setText(Html.fromHtml(String.format(html, url), 1));
             } else {
-                tvUrl.setText(Html.fromHtml(String.format(html, url),1));
+                tvUrl.setText(Html.fromHtml(String.format(html, url)));
             }
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             tvUrl.setPadding(0, 0, 0, 10);

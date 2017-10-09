@@ -53,7 +53,9 @@ public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.Item
             loadBitmap(ImageUtils.getAlbumArtUri(localItem.getAlbumId()).toString(),
                     holder.albumArt);
         } else {
-            if (localItem.getCover() != null) {
+            if (localItem.getCoverUri() != null) {
+//                Glide.with(this).load()
+            } else if (localItem.getCover() != null) {
                 holder.albumArt.setImageBitmap(localItem.getCover());
             } else {
                 holder.albumArt.setImageResource(R.drawable.default_cover);

@@ -1,5 +1,6 @@
 package com.cyl.music_hnust.ui.fragment;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
@@ -18,6 +19,14 @@ public class LocalFragment extends BaseFragment {
     @Bind(R.id.tabs)
     TabLayout mTabLayout;
 
+    public static LocalFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        LocalFragment fragment = new LocalFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     protected void listener() {
 
@@ -34,9 +43,9 @@ public class LocalFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         MainFragment.Adapter adapter = new MainFragment.Adapter(getChildFragmentManager());
-        adapter.addFragment(new SongsFragment().newInstance(0), "歌曲");
-        adapter.addFragment(new SongsFragment().newInstance(1), "专辑");
-        adapter.addFragment(new SongsFragment().newInstance(2), "艺术家");
+        adapter.addFragment( SongsFragment.newInstance(), "歌曲");
+        adapter.addFragment( AlbumFragment.newInstance(), "专辑");
+        adapter.addFragment( ArtistFragment.newInstance(), "艺术家");
         viewPager.setAdapter(adapter);
     }
 

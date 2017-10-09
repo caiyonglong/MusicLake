@@ -2,17 +2,16 @@ package com.cyl.music_hnust.ui.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.ui.adapter.SongAdapter;
+import com.cyl.music_hnust.model.music.Album;
+import com.cyl.music_hnust.ui.adapter.AlbumAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import butterknife.Bind;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SongsFragment extends BaseFragment {
+public class AlbumFragment extends BaseFragment {
 
     @Bind(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -34,13 +33,14 @@ public class SongsFragment extends BaseFragment {
     TextView tv_empty;
     @Bind(R.id.loading)
     LinearLayout loading;
-    private SongAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
+    private AlbumAdapter mAdapter;
+    private List<Album> albums = new ArrayList<>();
 
-    public static SongsFragment newInstance() {
+
+    public static AlbumFragment newInstance() {
 
         Bundle args = new Bundle();
-        SongsFragment fragment = new SongsFragment();
+        AlbumFragment fragment = new AlbumFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +57,7 @@ public class SongsFragment extends BaseFragment {
      */
     @Override
     protected void initDatas() {
-        new loadSongs().execute();
+        new loadAlbumTask().execute("");
     }
 
 
@@ -68,7 +68,7 @@ public class SongsFragment extends BaseFragment {
      */
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview_songs;
+        return R.layout.frag_recyclerview;
     }
 
     /**
@@ -76,16 +76,14 @@ public class SongsFragment extends BaseFragment {
      */
     @Override
     public void initViews() {
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        new loadSongs().execute("");
+        new loadAlbumTask().execute("");
     }
 
     @Override
@@ -95,13 +93,13 @@ public class SongsFragment extends BaseFragment {
     }
 
 
-    private class loadSongs extends AsyncTask<String, Void, String> {
+    private class loadAlbumTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
             if (getActivity() != null) {
-                musicInfos = MusicLoader.getAllSongs(getActivity());
-                mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
+                albums = MusicLoader.getAllAlbums(getActivity());
+                mAdapter = new AlbumAdapter(getActivity(), albums);
 
             }
             return "Executed";

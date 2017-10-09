@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.1'
 
     defaultConfig {
         applicationId "com.cyl.music_hnust"
@@ -51,7 +51,8 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.0.2'
     //    compile 'im.fir:fir-sdk:latest.integration@aar'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+//    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     // Retrofit适配RxJava
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'

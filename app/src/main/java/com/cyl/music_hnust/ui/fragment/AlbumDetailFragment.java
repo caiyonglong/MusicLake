@@ -104,6 +104,7 @@ public class AlbumDetailFragment extends BaseFragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void initViews() {
 
@@ -112,6 +113,7 @@ public class AlbumDetailFragment extends BaseFragment {
         ab.setDisplayHomeAsUpEnabled(true);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 
 

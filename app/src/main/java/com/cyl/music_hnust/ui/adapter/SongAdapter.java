@@ -33,12 +33,12 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.ItemHolder> {
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
 
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
 
-    public LocalMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
+    public SongAdapter(AppCompatActivity context, List<Music> musicInfos) {
         this.context = context;
         this.musicInfos = musicInfos;
     }
@@ -133,13 +133,13 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.It
                                 NavigateUtil.navigateToAlbum(context,
                                         musicInfos.get(position).getAlbumId(),
                                         true,
-                                        musicInfos.get(position).getAlbum());
+                                        musicInfos.get(position).getAlbum(), null);
                                 break;
                             case R.id.popup_song_goto_artist:
                                 NavigateUtil.navigateToAlbum(context,
                                         musicInfos.get(position).getArtistId(),
                                         false,
-                                        musicInfos.get(position).getArtist());
+                                        musicInfos.get(position).getArtist(), null);
                                 break;
                             case R.id.popup_song_addto_queue:
                                 AddPlaylistDialog.newInstance(musicInfos.get(position)).show(context.getSupportFragmentManager(), "ADD_PLAYLIST");

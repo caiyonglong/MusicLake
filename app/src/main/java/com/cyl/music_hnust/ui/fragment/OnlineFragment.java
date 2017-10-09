@@ -47,6 +47,14 @@ public class OnlineFragment extends BaseFragment implements OnlineAdapter.OnItem
     private ProgressBar progress;
     private LinearLayout loading;
 
+    public static OnlineFragment newInstance() {
+        Bundle args = new Bundle();
+
+        OnlineFragment fragment = new OnlineFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.frag_recyclerview_online;

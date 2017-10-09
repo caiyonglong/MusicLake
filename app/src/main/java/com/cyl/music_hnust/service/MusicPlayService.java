@@ -168,7 +168,6 @@ public class MusicPlayService extends Service {
         if (music.getType() == Music.Type.LOCAL) {
             return true;
         }
-
         boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
         try {
             if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {

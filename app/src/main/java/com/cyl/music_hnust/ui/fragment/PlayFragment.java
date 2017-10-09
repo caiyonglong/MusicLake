@@ -28,6 +28,13 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.model.music.lyric.LrcView;
@@ -44,8 +51,6 @@ import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +59,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.Call;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -325,37 +330,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 loadLrc("", Music.Type.LOCAL);
             }
         } else {
-            String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-//            loadLrc(lrcPath, Music.Type.ONLINE);
-            loadOnlineLrc(music, Music.Type.ONLINE);
+            loadOnlineLrc(music.getLrcPath());
         }
     }
 
-    private void loadOnlineLrc(final Music music, final Music.Type online) {
-        final String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-        final String lrcFileName = FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-        File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
-        if (!TextUtils.isEmpty(music.getLrcPath()) && !lrcFile.exists()) {
-            Log.e("---", "exists");
-            OkHttpUtils.get().url(music.getLrcPath()).build()
-                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-
-                        }
-
-                        @Override
-                        public void onResponse(File response, int id) {
-
-                            loadLrc(lrcPath, online);
-                        }
-
-                    });
-        } else {
-            loadLrc(lrcPath, online);
-            Log.e("---", "emnnnn");
-        }
+    private void loadOnlineLrc(String path) {
+        Log.e("---", "path" + path);
+//
+//        loadLrc(lrcPath, online);
     }
 
     /**
@@ -387,18 +369,24 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
             mSwatch = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
                     .generate().getVibrantSwatch();
-        } else {
-            if (music.getCover() == null) {
-                civ_cover.setImageResource(R.drawable.default_cover);
-                ivPlayingBg.setImageResource(R.drawable.default_cover);
-            } else {
-                Bitmap cover = ImageUtils.resizeImage(music.getCover(), SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
-                civ_cover.setImageBitmap(cover);
-                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
-                ivPlayingBg.setImageBitmap(bg);
-
-                mSwatch = Palette.from(bg)
-                        .generate().getVibrantSwatch();
+        } else if (music.getType() == Music.Type.ONLINE) {
+            if (music.getCoverUri() != null) {
+                Glide.with(this)
+                        .load(music.getCoverUri())
+                        .placeholder(R.drawable.default_cover)
+                        .error(R.drawable.default_cover) //失败图片
+                        .into(civ_cover);
+                Glide.with(this).load(music.getCoverUri())
+                        .placeholder(R.drawable.default_cover)
+                        .error(R.drawable.default_cover) //失败图片
+                        .crossFade(1000)
+                        .bitmapTransform(new BlurTransformation(getContext(), 23, 4))  // “23”：设置模糊度(在0.0到25.0之间)，默认”25";"4":图片缩放比例,默认“1”。
+                        .into(ivPlayingBg);
+                Glide.with(this)
+                        .load(music.getCoverUri())
+                        .placeholder(R.drawable.default_cover)
+                        .error(R.drawable.default_cover) //失败图片
+                        .into(iv_album);
             }
         }
 

@@ -19,7 +19,7 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
 import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.ui.adapter.LocalMusicAdapter;
+import com.cyl.music_hnust.ui.adapter.SongAdapter;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.SystemUtils;
@@ -47,7 +47,7 @@ public class PlaylistDetailActivity extends BaseActivity {
     @Bind(R.id.foreground)
     View foreground;
 
-    private LocalMusicAdapter mAdapter;
+    private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
     private String pid;
     private long album_id;
@@ -188,7 +188,7 @@ public class PlaylistDetailActivity extends BaseActivity {
                 musicInfos = PlaylistLoader.getMusicForPlaylist(PlaylistDetailActivity.this, pid);
                 Log.e("歌单id++++++", musicInfos.size() + "");
             }
-            mAdapter = new LocalMusicAdapter(PlaylistDetailActivity.this, musicInfos);
+            mAdapter = new SongAdapter(PlaylistDetailActivity.this, musicInfos);
             return "Executed";
         }
 
