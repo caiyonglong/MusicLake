@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.model.music.lyric;
+package com.cyl.music_hnust.view.lyric;
 
 import java.util.List;
 

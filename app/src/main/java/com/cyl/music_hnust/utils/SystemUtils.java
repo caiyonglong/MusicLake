@@ -2,13 +2,7 @@ package com.cyl.music_hnust.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.WindowManager;
-
-import java.text.DecimalFormat;
 
 /**
  * android系统工具类
@@ -18,7 +12,10 @@ import java.text.DecimalFormat;
  * 版本：2.5
  */
 public class SystemUtils {
-
+    //判断是否是android 6.0
+    public static boolean isJellyBeanMR1() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
+    }
     //判断是否是android 6.0
     public static boolean isMarshmallow() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;

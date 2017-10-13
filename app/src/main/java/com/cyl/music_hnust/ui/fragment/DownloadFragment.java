@@ -52,7 +52,7 @@ public class DownloadFragment extends BaseFragment {
         if (ab != null) {
             ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
             ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle("我的下载");
+            ab.setTitle("");
         }
         mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         mTabLayout.setSelectedTabIndicatorHeight(5);

@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.model.music.lyric;
+package com.cyl.music_hnust.view.lyric;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.fragment.PlayFragment;
 import com.cyl.music_hnust.model.music.Music;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SizeUtils;

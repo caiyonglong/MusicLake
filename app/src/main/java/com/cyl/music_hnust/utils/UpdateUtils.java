@@ -10,12 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
-import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.callback.UpdateCallback;
 import com.cyl.music_hnust.model.download.UpdateInfo;
-import com.zhy.http.okhttp.OkHttpUtils;
-
-import okhttp3.Call;
 
 /**
  * 功能: 软件更新工具类
@@ -32,37 +27,37 @@ public class UpdateUtils {
     //检查更新
     public static void checkUpdate(final Activity activity) {
 
-        OkHttpUtils
-                .post()
-                .url(Constants.DEFAULT_URL)
-                .addParams(Constants.FUNC, Constants.UPDATEAPP)
-                .build()
-                .execute(new UpdateCallback() {
-                             @Override
-                             public void onError(Call call, Exception e) {
-                                 ToastUtils.show(mContext, R.string.error_connection);
-                             }
-
-                             @Override
-                             public void onResponse(UpdateInfo response) {
-
-                                 double version = response.getVersion();
-                                 double preVersion = 0;
-                                 try {
-                                     preVersion = Double.parseDouble(getVersion());
-                                 } catch (PackageManager.NameNotFoundException e) {
-                                     e.printStackTrace();
-                                 }
-                                 if (version <= preVersion) {
-                                     ToastUtils.show(mContext, "暂无更新");
-                                 } else {
-                                     updateDialog(activity, response);
-                                 }
-                             }
-
-                         }
-
-                );
+//        OkHttpUtils
+//                .post()
+//                .url(Constants.DEFAULT_URL)
+//                .addParams(Constants.FUNC, Constants.UPDATEAPP)
+//                .build()
+//                .execute(new UpdateCallback() {
+//                             @Override
+//                             public void onError(Call call, Exception e) {
+//                                 ToastUtils.show(mContext, R.string.error_connection);
+//                             }
+//
+//                             @Override
+//                             public void onResponse(UpdateInfo response) {
+//
+//                                 double version = response.getVersion();
+//                                 double preVersion = 0;
+//                                 try {
+//                                     preVersion = Double.parseDouble(getVersion());
+//                                 } catch (PackageManager.NameNotFoundException e) {
+//                                     e.printStackTrace();
+//                                 }
+//                                 if (version <= preVersion) {
+//                                     ToastUtils.show(mContext, "暂无更新");
+//                                 } else {
+//                                     updateDialog(activity, response);
+//                                 }
+//                             }
+//
+//                         }
+//
+//                );
     }
 
     private static void updateDialog(final Activity activity, final UpdateInfo updateInfo) {

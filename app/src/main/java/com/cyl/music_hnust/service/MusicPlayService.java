@@ -8,13 +8,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v7.graphics.Palette;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -26,6 +30,7 @@ import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.NetworkUtils;
 import com.cyl.music_hnust.utils.Preferences;
+import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.io.IOException;
@@ -67,10 +72,12 @@ public class MusicPlayService extends Service {
     //广播接收者
     ServiceReceiver mServiceReceiver;
 
-    private Notification mNotify;
     private NotificationManager nm;
 
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
+    private long mNotificationPostTime = 0;
+
+    MediaSessionCompat sessionCompat ;
 
     @Override
     public void onCreate() {
@@ -375,28 +382,117 @@ public class MusicPlayService extends Service {
         sendBroadcast(new Intent(ACTION_UPDATE));
     }
 
+    /**
+     * 获取正在播放时间
+     */
+    public int getCurrentPosition() {
+        if (mPlayingMusic != null) {
+            return mPlayer.getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * 获取时长
+     */
+    public int getDuration() {
+        if (mPlayingMusic != null) {
+            return mPlayer.getDuration();
+        } else {
+            return 0;
+        }
+    }
+
+
+    /**
+     * 构建Notification
+     *
+     * @return
+     */
+    private Notification buildNotification() {
+        final String albumName = getAlbumName();
+        final String artistName = getArtistName();
+        final boolean isPlaying = isPlaying();
+        String text = TextUtils.isEmpty(albumName)
+                ? artistName : artistName + " - " + albumName;
+
+        int playButtonResId = isPlaying
+                ? R.drawable.ic_pause : R.drawable.ic_play_arrow_white_18dp;
+
+        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Bitmap artwork;
+        artwork = CoverLoader.getInstance().loadThumbnail(mPlayingMusic.getCoverUri());
+
+        if (artwork == null) {
+//            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.icon_album_default);
+        }
+
+        if (mNotificationPostTime == 0) {
+            mNotificationPostTime = System.currentTimeMillis();
+        }
+
+        android.support.v4.app.NotificationCompat.Builder builder = new android.support.v7.app.NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.default_cover)
+                .setLargeIcon(artwork)
+                .setContentIntent(clickIntent)
+                .setContentTitle(getTrackName())
+                .setContentText(text)
+                .setWhen(mNotificationPostTime)
+                .addAction(R.drawable.ic_skip_previous,
+                        "",
+                        retrievePlaybackAction(ACTION_PREV))
+                .addAction(playButtonResId, "",
+                        retrievePlaybackAction(ACTION_PLAY))
+                .addAction(R.drawable.ic_skip_next,
+                        "",
+                        retrievePlaybackAction(ACTION_NEXT));
+
+        if (SystemUtils.isJellyBeanMR1()) {
+            builder.setShowWhen(false);
+        }
+        if (SystemUtils.isLollipop()) {
+            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            android.support.v7.app.NotificationCompat.MediaStyle style = new android.support.v7.app.NotificationCompat.MediaStyle()
+//                    .setMediaSession(mSession.getSessionToken())
+                    .setShowActionsInCompactView(0, 1, 2, 3);
+            builder.setStyle(style);
+        }
+        if (artwork != null && SystemUtils.isLollipop()) {
+            builder.setColor(Palette.from(artwork).generate().getMutedColor(Color.GRAY));
+        }
+
+        return builder.build();
+    }
+
+    private CharSequence getTrackName() {
+        if (mPlayingMusic != null) {
+            return mPlayingMusic.getTitle();
+        }
+        return null;
+    }
+
+    private String getArtistName() {
+        if (mPlayingMusic != null) {
+            return mPlayingMusic.getAlbum();
+        }
+        return null;
+    }
+
+    private String getAlbumName() {
+        if (mPlayingMusic != null) {
+            return mPlayingMusic.getArtist();
+        }
+        return null;
+    }
 
     /**
      * 初始化通知栏
      */
     private void initNotify() {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        /* 使用RemoteViews来布局 */
-        mRemoteViews = new RemoteViews(getPackageName(), R.layout.item_view_remote_noti);
-
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_next, retrievePlaybackAction(ACTION_NEXT)); // 给停止按钮添加点击事件
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_prev, retrievePlaybackAction(ACTION_PREV)); // 给停止按钮添加点击事件
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_play_pause, retrievePlaybackAction(ACTION_PLAY)); // 给停止按钮添加点击事件
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-        mRemoteViews.setOnClickPendingIntent(R.id.iv_album, pendingIntent); // 给停止按钮添加点击事件
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setContent(mRemoteViews)
-                .setAutoCancel(true)
-                .setSmallIcon(R.mipmap.icon);
-        mNotify = builder.build();
-
     }
 
     private PendingIntent retrievePlaybackAction(final String action) {
@@ -437,29 +533,9 @@ public class MusicPlayService extends Service {
      * 更新通知栏
      */
     public void showNotification() {
-        if (mPlayingMusic == null)
-            return;
-
-        String text = mPlayingMusic.getTitle() + " - " + mPlayingMusic.getArtist();
-        mRemoteViews.setTextViewText(R.id.tv_name, text);
-        if (isPlaying()) {
-            mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_pause);
-        } else {
-            mRemoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_play_arrow_white_18dp);
-        }
-
-        if (mPlayingMusic.getCover() == null) {
-            if (mPlayingMusic.getCoverUri() != null) {
-                mRemoteViews.setImageViewBitmap(R.id.iv_album,
-                        CoverLoader.getInstance().loadThumbnail(mPlayingMusic.getCoverUri()));
-            } else {
-                mRemoteViews.setImageViewResource(R.id.iv_album, R.drawable.default_cover);
-            }
-        } else {
-            mRemoteViews.setImageViewBitmap(R.id.iv_album, mPlayingMusic.getCover());
-        }
-        startForeground(NOTIFICATION_ID, mNotify);
-        nm.notify(NOTIFICATION_ID, mNotify);
+        int notificationId = hashCode();
+        if (SystemUtils.isLollipop())
+            startForeground(notificationId, buildNotification());
     }
 
     /**
@@ -585,12 +661,12 @@ public class MusicPlayService extends Service {
 
         @Override
         public int getDuration() throws RemoteException {
-            return mService.get().mPlayer.getDuration();
+            return mService.get().getDuration();
         }
 
         @Override
         public int getCurrentPosition() throws RemoteException {
-            return mService.get().mPlayer.getCurrentPosition();
+            return mService.get().getCurrentPosition();
         }
 
 

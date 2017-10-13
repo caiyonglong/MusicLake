@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.model.music.lyric;
+package com.cyl.music_hnust.view.lyric;
 
 /**
  * Created by yonglong on 2016/4/23.

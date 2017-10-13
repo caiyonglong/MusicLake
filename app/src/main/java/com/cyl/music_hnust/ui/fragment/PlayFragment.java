@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -29,15 +28,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.lyric.LrcView;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.adapter.MyPagerAdapter;
@@ -45,11 +37,10 @@ import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
-import com.cyl.music_hnust.utils.ImageUtils;
-import com.cyl.music_hnust.utils.SizeUtils;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
+import com.cyl.music_hnust.view.lyric.LrcView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.io.File;
@@ -246,7 +237,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 onBackPressed();
                 break;
             case R.id.skip_lrc:
-
                 break;
             case R.id.play_pause:
                 PlayManager.playPause();
