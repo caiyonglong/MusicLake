@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.ui.adapter.SongAdapter;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.ImageUtils;

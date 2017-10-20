@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.UserCallBack;
-import com.cyl.music_hnust.model.user.UserInfo;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.user.UserInfo;
+import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;

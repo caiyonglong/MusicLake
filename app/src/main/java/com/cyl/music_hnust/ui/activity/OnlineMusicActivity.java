@@ -17,11 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.download.DownloadInfo;
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.OnlineMusicInfo;
-import com.cyl.music_hnust.model.music.OnlineMusicList;
-import com.cyl.music_hnust.model.music.OnlinePlaylists;
+import com.cyl.music_hnust.bean.download.DownloadInfo;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.music.OnlineMusicInfo;
+import com.cyl.music_hnust.bean.music.OnlineMusicList;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.ui.adapter.OnlineMusicAdapter;

@@ -128,7 +128,7 @@
 
         <service
             android:name=".service.MusicPlayService"
-            android:enabled="true" />
+             />
 
         <service android:name="com.amap.api.location.APSService" />
         <service android:name=".download.DownloadService" />

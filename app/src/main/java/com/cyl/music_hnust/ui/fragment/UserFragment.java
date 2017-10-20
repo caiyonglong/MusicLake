@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
-import com.cyl.music_hnust.model.user.User;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.user.User;
+import com.cyl.music_hnust.bean.user.UserStatus;
 
 /**
  * 作者：yonglong on 2016/8/8 17:47

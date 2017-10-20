@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.MyApplication;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 
 import java.io.File;
 import java.text.DecimalFormat;

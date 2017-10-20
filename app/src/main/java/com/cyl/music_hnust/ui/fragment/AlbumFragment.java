@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
-import com.cyl.music_hnust.model.music.Album;
+import com.cyl.music_hnust.bean.music.Album;
 import com.cyl.music_hnust.ui.adapter.AlbumAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 

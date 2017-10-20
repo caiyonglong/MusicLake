@@ -9,8 +9,8 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.music.Playlist;
 import com.cyl.music_hnust.utils.ToastUtils;
 
 import java.util.List;

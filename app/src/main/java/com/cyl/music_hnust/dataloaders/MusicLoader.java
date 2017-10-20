@@ -8,9 +8,9 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.cyl.music_hnust.dataloaders.db.DBDaoImpl;
-import com.cyl.music_hnust.model.music.Album;
-import com.cyl.music_hnust.model.music.Artist;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Album;
+import com.cyl.music_hnust.bean.music.Artist;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.utils.CoverLoader;
 
 import java.util.ArrayList;

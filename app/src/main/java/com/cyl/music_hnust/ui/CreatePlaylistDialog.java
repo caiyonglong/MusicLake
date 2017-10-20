@@ -11,7 +11,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.utils.ToastUtils;
 
 /**

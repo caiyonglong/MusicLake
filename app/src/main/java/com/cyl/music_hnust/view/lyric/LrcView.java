@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SizeUtils;
 

@@ -2,7 +2,7 @@
 package com.cyl.music_hnust;
 
 // Declare any non-default types here with import statements
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 
 interface IMusicService {
     void playOnline(in Music music);

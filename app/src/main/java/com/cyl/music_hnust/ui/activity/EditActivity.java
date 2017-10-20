@@ -1,7 +1,5 @@
 package com.cyl.music_hnust.ui.activity;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,9 +9,9 @@ import android.widget.EditText;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.StatusCallback;
-import com.cyl.music_hnust.model.user.StatusInfo;
-import com.cyl.music_hnust.model.user.User;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.user.StatusInfo;
+import com.cyl.music_hnust.bean.user.User;
+import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;

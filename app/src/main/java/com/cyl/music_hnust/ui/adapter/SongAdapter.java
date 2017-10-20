@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;

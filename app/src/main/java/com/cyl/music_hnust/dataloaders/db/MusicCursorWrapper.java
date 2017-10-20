@@ -3,8 +3,8 @@ package com.cyl.music_hnust.dataloaders.db;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.music.Playlist;
 
 public class MusicCursorWrapper extends CursorWrapper {
 

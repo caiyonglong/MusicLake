@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.OnlinePlaylists.Billboard;
+import com.cyl.music_hnust.bean.music.OnlinePlaylists.Billboard;
 
 import java.util.ArrayList;
 import java.util.List;

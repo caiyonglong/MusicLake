@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.download.NetworkUtil;
-import com.cyl.music_hnust.model.music.OnlinePlaylists;
-import com.cyl.music_hnust.model.music.OnlinePlaylists.Billboard;
+import com.cyl.music_hnust.bean.music.OnlinePlaylists;
+import com.cyl.music_hnust.bean.music.OnlinePlaylists.Billboard;
 import com.cyl.music_hnust.ui.activity.OnlineMusicActivity;
 import com.cyl.music_hnust.ui.adapter.OnlineAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;

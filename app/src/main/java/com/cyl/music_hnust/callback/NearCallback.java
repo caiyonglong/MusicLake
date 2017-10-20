@@ -2,7 +2,7 @@ package com.cyl.music_hnust.callback;
 
 import android.util.Log;
 
-import com.cyl.music_hnust.model.location.LocationInfo;
+import com.cyl.music_hnust.bean.location.LocationInfo;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 

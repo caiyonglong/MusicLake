@@ -17,7 +17,7 @@ import com.cyl.music_hnust.download.DownloadListener;
 import com.cyl.music_hnust.download.DownloadService;
 import com.cyl.music_hnust.download.db.SqliteDao;
 import com.cyl.music_hnust.download.model.FileState;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.utils.Constants;
 
 import java.io.File;

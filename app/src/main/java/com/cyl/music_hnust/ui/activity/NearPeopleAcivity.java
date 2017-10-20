@@ -1,7 +1,5 @@
 package com.cyl.music_hnust.ui.activity;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +11,9 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.ui.adapter.CommunityAdapter;
 import com.cyl.music_hnust.callback.SecretCallback;
-import com.cyl.music_hnust.model.community.Secret;
-import com.cyl.music_hnust.model.community.SecretInfo;
-import com.cyl.music_hnust.model.user.User;
+import com.cyl.music_hnust.bean.community.Secret;
+import com.cyl.music_hnust.bean.community.SecretInfo;
+import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.cyl.music_hnust.utils.ToastUtils;

@@ -9,13 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.bean.music.Playlist;
 import com.cyl.music_hnust.ui.activity.PlaylistDetailActivity;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.SystemUtils;
-
-import java.util.Random;
 
 import butterknife.Bind;
 

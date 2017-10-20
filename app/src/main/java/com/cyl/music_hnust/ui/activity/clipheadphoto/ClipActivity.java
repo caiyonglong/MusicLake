@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.user.User;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.user.User;
+import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageTools;
 import com.cyl.music_hnust.utils.ToastUtils;
@@ -58,10 +58,10 @@ public class ClipActivity extends Activity {
                         Bitmap bitmap = mClipImageLayout.clip();
 
                         boolean saveStatus = ImageTools.savePhotoToSDCard(bitmap, FileUtils.getImageDir(), user.getUser_id() + ".png");
-                        if (saveStatus){
-                            ToastUtils.show(getApplicationContext(),"保存成功");
-                        }else {
-                            ToastUtils.show(getApplicationContext(),"保存失败");
+                        if (saveStatus) {
+                            ToastUtils.show(getApplicationContext(), "保存成功");
+                        } else {
+                            ToastUtils.show(getApplicationContext(), "保存失败");
                         }
                         loadingDialog.dismiss();
                         Intent intent = new Intent();
@@ -73,6 +73,4 @@ public class ClipActivity extends Activity {
             }
         });
     }
-
-
 }

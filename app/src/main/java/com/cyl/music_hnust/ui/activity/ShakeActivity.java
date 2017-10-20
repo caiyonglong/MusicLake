@@ -22,11 +22,11 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.NearCallback;
-import com.cyl.music_hnust.model.location.Location;
-import com.cyl.music_hnust.model.location.LocationInfo;
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.user.User;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.location.Location;
+import com.cyl.music_hnust.bean.location.LocationInfo;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.user.User;
+import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.Constants;

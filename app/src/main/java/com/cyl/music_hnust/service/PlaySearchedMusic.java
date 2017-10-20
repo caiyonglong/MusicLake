@@ -8,10 +8,10 @@ import android.text.TextUtils;
 
 import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.download.DownloadInfo;
-import com.cyl.music_hnust.model.music.Lrc;
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.SearchMusic;
+import com.cyl.music_hnust.bean.download.DownloadInfo;
+import com.cyl.music_hnust.bean.music.Lrc;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.music.SearchMusic;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.NetworkUtils;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.bean.music.Playlist;
 import com.cyl.music_hnust.utils.FormatUtil;
 
 import java.util.ArrayList;

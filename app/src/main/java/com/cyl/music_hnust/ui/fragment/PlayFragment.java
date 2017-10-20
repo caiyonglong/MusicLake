@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.adapter.MyPagerAdapter;

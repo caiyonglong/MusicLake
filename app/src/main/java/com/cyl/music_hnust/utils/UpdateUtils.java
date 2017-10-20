@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
-import com.cyl.music_hnust.model.download.UpdateInfo;
+import com.cyl.music_hnust.bean.download.UpdateInfo;
 
 /**
  * 功能: 软件更新工具类

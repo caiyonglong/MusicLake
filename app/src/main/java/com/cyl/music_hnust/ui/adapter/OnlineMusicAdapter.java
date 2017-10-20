@@ -14,11 +14,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.activity.ArtistInfoActivity;
 import com.cyl.music_hnust.download.DownloadService;
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.OnlineMusicInfo;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.music.OnlineMusicInfo;
 import com.cyl.music_hnust.service.PlayOnlineMusic;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.FileUtils;

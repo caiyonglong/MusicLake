@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.adapter.PlayQueueAdapter;
 import com.cyl.music_hnust.utils.ColorUtil;

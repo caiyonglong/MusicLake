@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.model.user.User;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.user.User;
+import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.ui.activity.map.BaseMapActivity;
 import com.cyl.music_hnust.ui.fragment.DownloadFragment;
 import com.cyl.music_hnust.ui.fragment.LocalFragment;

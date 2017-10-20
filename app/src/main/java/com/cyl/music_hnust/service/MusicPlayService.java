@@ -25,7 +25,7 @@ import android.widget.RemoteViews;
 import com.cyl.music_hnust.IMusicService;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.download.NetworkUtil;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.NetworkUtils;
@@ -310,7 +310,6 @@ public class MusicPlayService extends Service {
         }
         mPlayer.pause();
         isPause = true;
-        cancelNotification();
     }
 
     /**

@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.PlaylistLoader;
-import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.bean.music.Playlist;
 import com.cyl.music_hnust.ui.adapter.MyViewPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.ui.CreatePlaylistDialog;

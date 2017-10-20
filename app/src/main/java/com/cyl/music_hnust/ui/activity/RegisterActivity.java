@@ -2,8 +2,6 @@ package com.cyl.music_hnust.ui.activity;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
@@ -15,7 +13,7 @@ import android.widget.ProgressBar;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.StatusCallback;
-import com.cyl.music_hnust.model.user.StatusInfo;
+import com.cyl.music_hnust.bean.user.StatusInfo;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.cyl.music_hnust.utils.ToastUtils;

@@ -1,8 +1,6 @@
 package com.cyl.music_hnust.ui.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,12 +20,12 @@ import com.cyl.music_hnust.ui.adapter.CommentAdapter;
 import com.cyl.music_hnust.callback.CommentCallback;
 import com.cyl.music_hnust.callback.SecretCallback;
 import com.cyl.music_hnust.callback.StatusCallback;
-import com.cyl.music_hnust.model.community.Comment;
-import com.cyl.music_hnust.model.community.CommentInfo;
-import com.cyl.music_hnust.model.community.Secret;
-import com.cyl.music_hnust.model.community.SecretInfo;
-import com.cyl.music_hnust.model.user.StatusInfo;
-import com.cyl.music_hnust.model.user.UserStatus;
+import com.cyl.music_hnust.bean.community.Comment;
+import com.cyl.music_hnust.bean.community.CommentInfo;
+import com.cyl.music_hnust.bean.community.Secret;
+import com.cyl.music_hnust.bean.community.SecretInfo;
+import com.cyl.music_hnust.bean.user.StatusInfo;
+import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.FormatUtil;

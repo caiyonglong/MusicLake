@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.ui.adapter.SongAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 

@@ -1,7 +1,7 @@
 package com.cyl.music_hnust.dataloaders.db;
 
-import com.cyl.music_hnust.model.music.Music;
-import com.cyl.music_hnust.model.music.Playlist;
+import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.bean.music.Playlist;
 
 import java.util.List;
 

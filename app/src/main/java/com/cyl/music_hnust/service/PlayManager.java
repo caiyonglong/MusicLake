@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.cyl.music_hnust.IMusicService;
-import com.cyl.music_hnust.model.music.Music;
+import com.cyl.music_hnust.bean.music.Music;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.cyl.music_hnust.callback;
 
-import com.cyl.music_hnust.model.music.Singer;
+import com.cyl.music_hnust.bean.music.Singer;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 
