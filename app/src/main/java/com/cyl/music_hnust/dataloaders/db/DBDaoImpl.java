@@ -131,7 +131,6 @@ public class DBDaoImpl implements DBDao {
         db.rawQuery("delete from " + DBData.QUEUE_TABLE, null);
         for (int i = 0; i < songs.size(); i++) {
             ContentValues values = new ContentValues();
-            values.put(DBData.QUEUE_MID, songs.get(i).getId());
             db.insert(DBData.QUEUE_TABLE, null, values);
         }
     }
@@ -218,9 +217,6 @@ public class DBDaoImpl implements DBDao {
 
     @Override
     public void insertQueue(Music song) {
-        ContentValues values = new ContentValues();
-        values.put(DBData.QUEUE_MID, song.getId());
-        db.insert(DBData.QUEUE_TABLE, null, values);
     }
 
     @Override

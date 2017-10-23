@@ -1,10 +1,6 @@
 package com.cyl.music_hnust.ui.fragment;
 
 import android.animation.ObjectAnimator;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -30,8 +26,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.music.Music;
-import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
+import com.cyl.music_hnust.service.RxBus;
 import com.cyl.music_hnust.ui.adapter.MyPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.CoverLoader;
@@ -51,6 +47,10 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -125,7 +125,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     //是否有歌词
     private boolean lrc_empty = true;
     protected static Handler mHandler;
-    private PlayerReceiver mPlayerReceiver;
 
     public static PlayFragment newInstance() {
         Bundle args = new Bundle();
@@ -197,12 +196,30 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         updatePlayPauseFloatingButton();
         updateView();
         initAlbumPic();
+        initSubscriptionEvent();
+    }
 
-        //实例化过滤器，设置广播
-        mPlayerReceiver = new PlayerReceiver();
-        IntentFilter intentFilter = new IntentFilter(MusicPlayService.ACTION_UPDATE);
-        //注册广播
-        getActivity().registerReceiver(mPlayerReceiver, intentFilter);
+    /**
+     * 初始化观察者模式
+     */
+    private void initSubscriptionEvent() {
+        Subscription subscription = RxBus.getInstance()
+                .toObservable(Music.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Music>() {
+                    @Override
+                    public void call(Music event) {
+                        Log.e("----", event.toString());
+                        updateView();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        RxBus.getInstance().addSubscription(this, subscription);
     }
 
     public void updateView() {
@@ -442,7 +459,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (operatingAnim != null) {
             operatingAnim.cancel();
         }
-        getActivity().unregisterReceiver(mPlayerReceiver);
     }
 
     public static void updateDrawableView(PanelState newState) {
@@ -451,11 +467,4 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
 
-    public class PlayerReceiver extends BroadcastReceiver {
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(MusicPlayService.ACTION_UPDATE)) {
-                updateView();
-            }
-        }
-    }
 }

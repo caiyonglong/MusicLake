@@ -49,9 +49,14 @@ public class MusicPlayService extends Service {
     public static final String ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
     public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 下一首广播标志
     public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 上一首广播标志
-    public static final String ACTION_PLAY = "com.cyl.music_hnust.notify.play";// 播放广播标志
+    public static final String PLAY_STATE_CHANGED = "com.cyl.music_hnust.play_state";// 播放广播标志
     public static final String ACTION_UPDATE = "com.cyl.music_hnust.notify.update";// 播放广播标志
     private static final String TAG = "MusicPlayService";
+    public static final String PLAYLIST_CHANGED = "com.cyl.music_hnust.playlist";
+    public static final String TRACK_ERROR = "com.cyl.music_hnust.error";
+    public static final String REFRESH = "com.cyl.music_hnust.refresh";
+    public static final String PLAYLIST_CLEAR = "com.cyl.music_hnust.playlist_clear";
+    public static final String META_CHANGED = "com.cyl.music_hnust.metachanged";
 
     private MediaPlayer mPlayer = null;
     private Music mPlayingMusic = null;
@@ -77,7 +82,7 @@ public class MusicPlayService extends Service {
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private long mNotificationPostTime = 0;
 
-    MediaSessionCompat sessionCompat ;
+    MediaSessionCompat sessionCompat;
 
     @Override
     public void onCreate() {
@@ -127,7 +132,7 @@ public class MusicPlayService extends Service {
         IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
-        intentFilter.addAction(ACTION_PLAY);
+        intentFilter.addAction(PLAY_STATE_CHANGED);
         //注册广播
         registerReceiver(mServiceReceiver, intentFilter);
     }
@@ -269,7 +274,7 @@ public class MusicPlayService extends Service {
         mPlayingMusic = music;
         Log.d(TAG, mPlayingMusic.toString());
         showNotification();
-        sendBroadcast(new Intent(ACTION_UPDATE));
+        sendBroadcast(new Intent(META_CHANGED));
         if (!checkNetwork(music)) {
             ToastUtils.show(this, R.string.unable_to_play);
             next();
@@ -289,7 +294,7 @@ public class MusicPlayService extends Service {
      * 播放暂停
      */
     private void playPause() {
-        sendBroadcast(new Intent(ACTION_UPDATE));
+        sendBroadcast(new Intent(META_CHANGED));
         if (isPlaying()) {
             pause();
         } else if (isPause()) {
@@ -369,16 +374,24 @@ public class MusicPlayService extends Service {
             mPlaylist.remove(position);
             mPlayingPosition = mPlayingPosition - 1;
         }
+
+        Intent clearIntent = new Intent();
+        clearIntent.setAction(META_CHANGED);
+        clearIntent.setAction(REFRESH);
+        sendBroadcast(clearIntent);
     }
 
     /**
      * 获取正在播放的歌曲[本地|网络]
      */
     public void clearQueue() {
+        mPlayingMusic = null;
         mPlaylist.clear();
         mPlayer.stop();
-        mPlayingMusic = null;
-        sendBroadcast(new Intent(ACTION_UPDATE));
+        Intent clearIntent = new Intent();
+        clearIntent.setAction(META_CHANGED);
+        clearIntent.setAction(PLAYLIST_CLEAR);
+        sendBroadcast(clearIntent);
     }
 
     /**
@@ -444,7 +457,7 @@ public class MusicPlayService extends Service {
                         "",
                         retrievePlaybackAction(ACTION_PREV))
                 .addAction(playButtonResId, "",
-                        retrievePlaybackAction(ACTION_PLAY))
+                        retrievePlaybackAction(PLAY_STATE_CHANGED))
                 .addAction(R.drawable.ic_skip_next,
                         "",
                         retrievePlaybackAction(ACTION_NEXT));
@@ -557,7 +570,7 @@ public class MusicPlayService extends Service {
             next();
         } else if (ACTION_PREV.equals(action)) {
             prev();
-        } else if (ACTION_PLAY.equals(action)) {
+        } else if (PLAY_STATE_CHANGED.equals(action)) {
             playPause();
         }
     }

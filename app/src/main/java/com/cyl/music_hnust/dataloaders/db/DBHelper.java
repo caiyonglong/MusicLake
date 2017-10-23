@@ -40,11 +40,6 @@ public class DBHelper extends SQLiteOpenHelper {
     // TODO CREATE TABLE
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // 创建播放队列表
-        db.execSQL("CREATE TABLE IF NOT EXISTS "
-                + DBData.QUEUE_TABLE + " ("
-                + DBData.QUEUE_QID + " PRIMARY KEY, "
-                + DBData.QUEUE_MID + " varchar(20) ) ");
         // 创建歌单歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MTP_TABLE + " ("

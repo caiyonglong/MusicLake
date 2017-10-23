@@ -17,8 +17,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.bean.user.UserStatus;
+import com.cyl.music_hnust.service.PlayManager;
+import com.cyl.music_hnust.service.RxBus;
 import com.cyl.music_hnust.ui.activity.map.BaseMapActivity;
 import com.cyl.music_hnust.ui.fragment.DownloadFragment;
 import com.cyl.music_hnust.ui.fragment.LocalFragment;
@@ -34,6 +37,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import butterknife.Bind;
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * 描述 主要的Activity
@@ -123,6 +130,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void initData() {
         main.run();
         detail.run();
+        updatePanelLayout();
+        initSubscriptionEvent();
         mSlidingUpPaneLayout.addPanelSlideListener(new PanelSlideListener() {
 
             @Override
@@ -140,6 +149,43 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
         });
+
+
+    }
+
+    /**
+     * 初始化观察者模式
+     */
+    private void initSubscriptionEvent() {
+        Subscription subscription = RxBus.getInstance()
+                .toObservable(Music.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Music>() {
+                    @Override
+                    public void call(Music event) {
+                        Log.e("----", event.toString());
+                        updatePanelLayout();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        RxBus.getInstance().addSubscription(this, subscription);
+    }
+
+    /**
+     * 显示|隐藏 mSlidingUpPaneLayout 底部
+     */
+    private void updatePanelLayout() {
+        if (PlayManager.getPlayingMusic() != null &&
+                mSlidingUpPaneLayout.getPanelState() == PanelState.HIDDEN) {
+            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+        } else if (PlayManager.getPlayingMusic() == null) {
+            mSlidingUpPaneLayout.setPanelState(PanelState.HIDDEN);
+        }
     }
 
     @Override
@@ -352,6 +398,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            }
 //        }
     }
+
 
     @Override
     protected void onDestroy() {

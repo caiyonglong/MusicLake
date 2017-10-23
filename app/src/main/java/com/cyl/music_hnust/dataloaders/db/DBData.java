@@ -27,6 +27,8 @@ public class DBData {
     public static final String MUSIC_ALBUM_PATH = "mAlbumPath";
     public static final String MUSIC_YEARS = "years";
     public static final String MUSIC_FILENAME = "mFilename";
+    public static final String MUSIC_TYPE = "type";
+
     /**
      * mp信息表
      */
@@ -38,5 +40,9 @@ public class DBData {
      */
     public static final String QUEUE_TABLE = "playQueue";
     public static final String QUEUE_QID = "qid";
-    public static final String QUEUE_MID = "mid";
+    public static final String QUEUE_TITLE = "title";
+    public static final String QUEUE_ARTIST = "artist";
+    public static final String QUEUE_ALBUM = "album";
+    public static final String QUEUE_URL = "url";
+    public static final String QUEUE_TYPE = "type";
 }
