@@ -36,7 +36,7 @@ import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
-import com.cyl.music_hnust.view.lyric.LrcView;
+import com.cyl.music_hnust.view.LrcView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.io.File;

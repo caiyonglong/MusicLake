@@ -1,4 +1,4 @@
-package com.cyl.music_hnust.view.lyric;
+package com.cyl.music_hnust.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.SizeUtils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,15 +34,14 @@ import java.util.regex.Pattern;
  * 自定义LrcView,可以同步显示歌词，拖动歌词
  * v2.5 对自定义控件添加自定义属性 defStyleAttr
  */
-public class LrcView extends View implements ILrcView {
+public class LrcView extends View {
 
     public final static String TAG = "LrcView";
     public final static int DISPLAY_MODE_NORMAL = 0; //正常歌词模式
     public final static int DISPLAY_MODE_SEEK = 1;  // 拖动歌词模式
     private int mDisplayMode = DISPLAY_MODE_NORMAL; //当前模式
-    private List<LrcRow> mLrcRows; //歌词集合，包含所有行的歌词
+    private List<LineInfo> mLineInfos; //歌词集合，包含所有行的歌词
     private int mMinSeekFiredOffset = 10; //最小移动的距离，当拖动歌词时如果小于该距离不做处理
-
 
     private int mCurrentLine = 0; //当前行
 
@@ -103,7 +103,7 @@ public class LrcView extends View implements ILrcView {
         int currentColor = ta.getColor(R.styleable.LrcView_currentTextColor, 0xFFFF4081);
         ta.recycle();
 
-        mLrcRows = new ArrayList<>();
+        mLineInfos = new ArrayList<>();
 
         mNormalPaint = new Paint();
         mCurrentPaint = new Paint();
@@ -130,7 +130,7 @@ public class LrcView extends View implements ILrcView {
         // 中心Y坐标
         float centerY = getHeight() / 2 + mTextSize / 2 + mAnimOffset;
         //当没有歌词的时候
-        if (mLrcRows == null || mLrcRows.size() == 0) {
+        if (mLineInfos == null || mLineInfos.size() == 0) {
             float centerX = (getWidth() - mCurrentPaint.measureText(mLoadingText)) / 2;
             mCurrentPaint.setUnderlineText(true);
             canvas.drawText(mLoadingText, centerX, centerY, mCurrentPaint);
@@ -143,7 +143,7 @@ public class LrcView extends View implements ILrcView {
         // 上下拖动歌词的时候 画出拖动要高亮的那句歌词的时间 和 高亮的那句歌词下面的一条直线
         if (mDisplayMode == DISPLAY_MODE_SEEK) {
             // 画出中间的那一条直线和时间
-            String time = FormatUtil.formatTime(mLrcRows.get(mCurrentLine).getTime());
+            String time = FormatUtil.formatTime(mLineInfos.get(mCurrentLine).getTime());
             float[] ptx = {
                     0, centerY, getWidth() / 2 - 50, centerY,
                     getWidth() / 2 + 50, centerY, getWidth() - mNormalPaint.measureText(time) - 5, centerY
@@ -153,7 +153,7 @@ public class LrcView extends View implements ILrcView {
             canvas.drawText(time, getWidth() - mNormalPaint.measureText(time) - 5, centerY, mNormalPaint);
         }
 
-        mCurrentText = mLrcRows.get(mCurrentLine).getText();
+        mCurrentText = mLineInfos.get(mCurrentLine).getText();
 
 
         /**
@@ -184,7 +184,7 @@ public class LrcView extends View implements ILrcView {
 
         // 2.画当前行上面的
         for (int i = mCurrentLine - 1; i >= 0; i--) {
-            String upStr = mLrcRows.get(i).getText();
+            String upStr = mLineInfos.get(i).getText();
 
             float upX = (getWidth() - mNormalPaint.measureText(upStr)) / 2;
             float upY = centerY - (mTextSize + mDividerHeight) * (mCurrentLine - i);
@@ -196,8 +196,8 @@ public class LrcView extends View implements ILrcView {
         }
 
         // 3.画当前行下面的
-        for (int i = mCurrentLine + 1; i < mLrcRows.size(); i++) {
-            String downStr = mLrcRows.get(i).getText();
+        for (int i = mCurrentLine + 1; i < mLineInfos.size(); i++) {
+            String downStr = mLineInfos.get(i).getText();
             float downX = (getWidth() - mNormalPaint.measureText(downStr)) / 2;
             float downY = centerY + (mTextSize + mDividerHeight) * (i - mCurrentLine);
             // 超出屏幕停止绘制
@@ -216,17 +216,17 @@ public class LrcView extends View implements ILrcView {
      * @param cb       是否是手指拖动后要高亮的歌词
      */
     public void seekLrc(int position, boolean cb, int time) {
-        if (mLrcRows == null || position < 0 || position > mLrcRows.size()) {
+        if (mLineInfos == null || position < 0 || position > mLineInfos.size()) {
             return;
         }
-        LrcRow lrcRow = mLrcRows.get(position);
+        LineInfo lrcRow = mLineInfos.get(position);
         if (lrcRow.getText().length() > 0) {
             mCurrentLine = position;
         }
-        if (position == mLrcRows.size() - 1) {
+        if (position == mLineInfos.size() - 1) {
             endTime = duration;
-        } else if (position < mLrcRows.size() - 1) {
-            endTime = (int) mLrcRows.get(position + 1).getTime();
+        } else if (position < mLineInfos.size() - 1) {
+            endTime = (int) mLineInfos.get(position + 1).getTime();
         }
         starttime = (int) lrcRow.getTime();
         //	mCurrentLine = position;
@@ -316,8 +316,8 @@ public class LrcView extends View implements ILrcView {
         if (offsetY < 0) {
             //手指向上移动，歌词向下滚动
             mCurrentLine += rowOffset;//设置要高亮的歌词为 当前高亮歌词 向下滚动rowOffset行后的歌词
-            if (mCurrentLine > mLrcRows.size() - 1) {
-                mCurrentLine = mLrcRows.size() - 1;
+            if (mCurrentLine > mLineInfos.size() - 1) {
+                mCurrentLine = mLineInfos.size() - 1;
             }
         } else if (offsetY > 0) {
             //手指向下移动，歌词向上滚动
@@ -328,8 +328,8 @@ public class LrcView extends View implements ILrcView {
         }
 //        //设置要高亮的歌词为0和mHignlightRow中的较大值，即如果mHignlightRow < 0，mCurrentLine=0
 //        mCurrentLine = Math.max(0, mCurrentLine);
-//        //设置要高亮的歌词为0和mHignlightRow中的较小值，即如果mHignlight > RowmLrcRows.size()-1，mCurrentLine=mLrcRows.size()-1
-//        mCurrentLine = Math.min(mCurrentLine, mLrcRows.size() - 1);
+//        //设置要高亮的歌词为0和mHignlightRow中的较小值，即如果mHignlight > RowmLineInfos.size()-1，mCurrentLine=mLineInfos.size()-1
+//        mCurrentLine = Math.min(mCurrentLine, mLineInfos.size() - 1);
 //        //如果歌词要滚动的行数大于0，则重画LrcView
         if (rowOffset > 0)
 
@@ -370,7 +370,7 @@ public class LrcView extends View implements ILrcView {
             postInvalidate();
             return;
         }
-        String text = LrcParser.getStrignFromFile(path);
+        String text = getStrignFromFile(path);
 
         StringReader reader = null;
         BufferedReader br = null;
@@ -387,10 +387,10 @@ public class LrcView extends View implements ILrcView {
                 if (arr != null) {
                     //将歌词导入
                     for (int i = 0; i < arr.length - 1; i++) {
-                        LrcRow lrcrow = new LrcRow();
+                        LineInfo lrcrow = new LineInfo();
                         lrcrow.setText(arr[arr.length - 1]);
                         lrcrow.setTime(Long.parseLong(arr[i]));
-                        mLrcRows.add(lrcrow);
+                        mLineInfos.add(lrcrow);
                     }
 
                 }
@@ -409,7 +409,7 @@ public class LrcView extends View implements ILrcView {
     }
 
     private void reset() {
-        mLrcRows.clear();
+        mLineInfos.clear();
         mCurrentLine = 0;
         mNextTime = 0L;
         isEnd = false;
@@ -425,16 +425,16 @@ public class LrcView extends View implements ILrcView {
         if (time < mNextTime || isEnd) {
             return;
         }
-        for (int i = 0; i < mLrcRows.size(); i++) {
-            if (mLrcRows.get(i).getTime() > time) {
-                mNextTime = mLrcRows.get(i).getTime();
+        for (int i = 0; i < mLineInfos.size(); i++) {
+            if (mLineInfos.get(i).getTime() > time) {
+                mNextTime = mLineInfos.get(i).getTime();
                 mCurrentLine = i < 1 ? 0 : i - 1;
                 mDisplayMode = DISPLAY_MODE_NORMAL;
                 newLineAnim();
                 break;
-            } else if (i == mLrcRows.size() - 1) {
+            } else if (i == mLineInfos.size() - 1) {
                 // 最后一行
-                mCurrentLine = mLrcRows.size() - 1;
+                mCurrentLine = mLineInfos.size() - 1;
                 isEnd = true;
                 mDisplayMode = DISPLAY_MODE_NORMAL;
                 newLineAnim();
@@ -444,9 +444,9 @@ public class LrcView extends View implements ILrcView {
     }
 
     public void onDrag(int progress) {
-        for (int i = 0; i < mLrcRows.size(); i++) {
-            if (mLrcRows.get(i).getTime() > progress) {
-                mNextTime = mLrcRows.get(i).getTime();
+        for (int i = 0; i < mLineInfos.size(); i++) {
+            if (mLineInfos.get(i).getTime() > progress) {
+                mNextTime = mLineInfos.get(i).getTime();
                 mCurrentLine = i < 1 ? 0 : i - 1;
                 isEnd = false;
                 newLineAnim();
@@ -456,7 +456,7 @@ public class LrcView extends View implements ILrcView {
     }
 
     public boolean hasLrc() {
-        return !mLrcRows.isEmpty();
+        return !mLineInfos.isEmpty();
     }
 
     /**
@@ -517,5 +517,176 @@ public class LrcView extends View implements ILrcView {
         });
         animator.start();
     }
+
+    public interface ILrcView {
+        /**
+         * 设置歌词拖动时候的监听类
+         */
+        void setListener(ILrcViewListener l);
+    }
+
+
+    public interface ILrcViewListener {
+        /**
+         * 当歌词被用户上下拖动的时候回调该方法
+         */
+        void onLrcSeeked(int newPosition, LineInfo row);
+    }
+
+    /**
+     * 歌词行
+     * 包括该行歌词的时间，歌词内容
+     */
+    public class LineInfo {
+        private String text;
+        private long time;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public long getTime() {
+            return time;
+        }
+
+        public void setTime(long time) {
+            this.time = time;
+        }
+    }
+
+
+    public List<LineInfo> getLineInfos(String path) {
+        String rawLrc = null;
+//        rawLrc = converfile(path);
+        Log.d(TAG, "getLineInfos by rawString\n" + rawLrc);
+        if (rawLrc == null || rawLrc.length() == 0) {
+            Log.e(TAG, "getLineInfos rawLrc null or empty");
+            return null;
+        }
+        StringReader reader = new StringReader(rawLrc);
+        BufferedReader br = new BufferedReader(reader);
+        String line = null;
+        List<LineInfo> rows = new ArrayList<LineInfo>();
+        try {
+            //循环地读取歌词的每一行
+            do {
+                line = br.readLine();
+                /**
+                 一行歌词只有一个时间的  例如：徐佳莹   《我好想你》
+                 [01:15.33]我好想你 好想你
+
+                 一行歌词有多个时间的  例如：草蜢 《失恋战线联盟》
+                 [02:34.14][01:07.00]当你我不小心又想起她
+                 [02:45.69][02:42.20][02:37.69][01:10.60]就在记忆里画一个叉
+                 **/
+                Log.d(TAG, "lrc raw line: " + line);
+                if (line != null && line.length() > 0) {
+                    //解析每一行歌词 得到每行歌词的集合，因为有些歌词重复有多个时间，就可以解析出多个歌词行来
+//                    List<LineInfo> lrcRows = LineInfo.createRows(line);
+//                    if (lrcRows != null && lrcRows.size() > 0) {
+//                        for (LineInfo row : lrcRows) {
+//                            rows.add(row);
+//                        }
+//                    }
+                }
+            } while (line != null);
+
+            if (rows.size() > 0) {
+                // 根据歌词行的时间排序
+//                Collections.sort(rows);
+                if (rows != null && rows.size() > 0) {
+                    for (LineInfo lrcRow : rows) {
+                        Log.d(TAG, "lrcRow:" + lrcRow.toString());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "parse exceptioned:" + e.getMessage());
+            return null;
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            reader.close();
+        }
+        return rows;
+    }
+
+    public static String getStrignFromFile(String filepath) {
+        System.out.println("ConvertFileCode--------->" + filepath);
+        File file = new File(filepath);
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        BufferedReader reader = null;
+        String text = "";
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            bis.mark(4);
+            byte[] first3bytes = new byte[3];
+//   System.out.println("");
+            //找到文档的前三个字节并自动判断文档类型。
+            bis.read(first3bytes);
+            bis.reset();
+            if (first3bytes[0] == (byte) 0xEF && first3bytes[1] == (byte) 0xBB
+                    && first3bytes[2] == (byte) 0xBF) {// utf-8
+
+                reader = new BufferedReader(new InputStreamReader(bis, "utf-8"));
+
+            } else if (first3bytes[0] == (byte) 0xFF
+                    && first3bytes[1] == (byte) 0xFE) {
+
+                reader = new BufferedReader(
+                        new InputStreamReader(bis, "unicode"));
+            } else if (first3bytes[0] == (byte) 0xFE
+                    && first3bytes[1] == (byte) 0xFF) {
+
+                reader = new BufferedReader(new InputStreamReader(bis,
+                        "utf-16be"));
+            } else if (first3bytes[0] == (byte) 0xFF
+                    && first3bytes[1] == (byte) 0xFF) {
+
+                reader = new BufferedReader(new InputStreamReader(bis,
+                        "utf-16le"));
+            } else {
+
+                reader = new BufferedReader(new InputStreamReader(bis, "GBK"));
+            }
+            String str = reader.readLine();
+
+            while (str != null) {
+                text = text + str + "\n";
+                str = reader.readLine();
+            }
+            System.out.println("text" + text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return text;
+
+    }
+
 
 }

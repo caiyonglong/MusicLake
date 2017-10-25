@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:lrc="http://schemas.android.com/apk/res-auto">
 
-    <com.cyl.music_hnust.view.lyric.LrcView
+    <com.cyl.music_hnust.view.LrcView
         android:id="@+id/LyricShow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
