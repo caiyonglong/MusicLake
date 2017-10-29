@@ -34,6 +34,7 @@ import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.ToastUtils;
+import com.cyl.music_hnust.view.LyricView;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
 import com.cyl.music_hnust.view.LrcView;
@@ -54,6 +55,7 @@ import rx.schedulers.Schedulers;
 
 public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
+    private static final String TAG = "PlayFragment";
     public static View topContainer;
     //整个容器
     @Bind(R.id.container)
@@ -119,7 +121,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     List<View> mViewPagerContent;
 
-    private LrcView mLrcView;
+    private LyricView mLrcView;
     private CircleImageView civ_cover;
     private int position;
     //是否有歌词
@@ -141,9 +143,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             mProgressBar.setProgress(position);
             tv_time.setText(FormatUtil.formatTime(position));
 
-            if (mLrcView.hasLrc()) {
-                mLrcView.updateTime(position);
-            }
+            Log.d(TAG, "position" + position);
+            mLrcView.setCurrentTimeMillis(position);
             mHandler.postDelayed(updateProgress, 50);
         }
     };
@@ -309,7 +310,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (PlayManager.isPlaying() || PlayManager.isPause()) {
             int progress = seekBar.getProgress();
             PlayManager.seekTo(progress);
-            mLrcView.onDrag(progress);
             tv_time.setText(FormatUtil.formatTime(progress));
         } else {
             seekBar.setProgress(0);
@@ -355,11 +355,23 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void loadLrc(String path, Music.Type type) {
 
-        mLrcView.loadLrc(path, type);
-        // 清除tag
-        mLrcView.setTag(null);
-        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
-            lrc_empty = true;
+        mLrcView.setLineSpace(15.0f);
+        mLrcView.setTextSize(17.0f);
+        mLrcView.setPlayable(false);
+        mLrcView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
+            @Override
+            public void onPlayerClicked(long progress, String content) {
+                PlayManager.seekTo((int) progress);
+                if (!PlayManager.isPlaying()) {
+//                    PlayManager.onPlayPauseClick();
+                }
+            }
+        });
+        if (TextUtils.isEmpty(path)) {
+            mLrcView.reset("暂无歌词");
+        } else {
+            File file = new File(path);
+            mLrcView.setLyricFile(file, "utf-8");
         }
     }
 
@@ -429,7 +441,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void setupViewPager(ViewPager viewPager) {
         //歌词视图
         View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_lrcview, null);
-        mLrcView = (LrcView) lrcView.findViewById(R.id.LyricShow);
+        mLrcView = (LyricView) lrcView.findViewById(R.id.LyricShow);
         //专辑视图
         View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_coverview, null);
         civ_cover = (CircleImageView) coverView.findViewById(R.id.civ_cover);

@@ -129,8 +129,27 @@ public class DBDaoImpl implements DBDao {
     @Override
     public void updateQueue(List<Music> songs) {
         db.rawQuery("delete from " + DBData.QUEUE_TABLE, null);
+        ContentValues values = new ContentValues();
         for (int i = 0; i < songs.size(); i++) {
-            ContentValues values = new ContentValues();
+            Music music = songs.get(i);
+            values.clear();
+            values.put(DBData.MUSIC_ID, music.getId());
+
+            values.put(DBData.MUSIC_NAME, music.getTitle());
+            values.put(DBData.MUSIC_ARTIST, music.getArtist());
+
+            values.put(DBData.MUSIC_PATH, music.getUri());
+            values.put(DBData.MUSIC_FILENAME, music.getFileName());
+
+            values.put(DBData.MUSIC_TIME, music.getDuration());
+            values.put(DBData.MUSIC_SIZE, music.getFileSize());
+
+            values.put(DBData.MUSIC_ALBUM, music.getAlbum());
+            values.put(DBData.MUSIC_ALBUM_ID, music.getAlbumId());
+            values.put(DBData.MUSIC_ALBUM_PATH, music.getCoverUri());
+
+            values.put(DBData.MUSIC_YEARS, music.getYear());
+
             db.insert(DBData.QUEUE_TABLE, null, values);
         }
     }
@@ -197,7 +216,7 @@ public class DBDaoImpl implements DBDao {
     public List<Music> getQueue() {
         List<Music> results = new ArrayList<>();
         // 查询歌单
-        Cursor cursor = db.rawQuery("select * from music,playQueue where music.mid = playQueue.mid ", null);
+        Cursor cursor = db.rawQuery("select * from playQueue", null);
 
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -216,18 +235,10 @@ public class DBDaoImpl implements DBDao {
     }
 
     @Override
-    public void insertQueue(Music song) {
-    }
-
-    @Override
     public void clearQueue() {
         db.rawQuery("delete from " + DBData.QUEUE_TABLE, null);
     }
 
-    @Override
-    public void removeQueue(String mid) {
-        db.rawQuery("delete from " + DBData.QUEUE_TABLE + " where mid = " + mid, null);
-    }
 
     @Override
     public void closeDB() {

@@ -79,13 +79,6 @@ public interface DBDao {
     List<Music> getQueue();
 
     /**
-     * 插入队列
-     *
-     * @param song
-     */
-    void insertQueue(Music song);
-
-    /**
      * 更新播放队列
      *
      * @param songs
@@ -93,8 +86,6 @@ public interface DBDao {
     void updateQueue(List<Music> songs);
 
     void clearQueue();
-
-    void removeQueue(String mid);
 
     void closeDB();
 }

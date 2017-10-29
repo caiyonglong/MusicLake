@@ -343,25 +343,6 @@ public class MusicLoader {
     }
 
     /**
-     * 添加歌曲到歌单
-     */
-    public static void insertQueue(Context context, Music music) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.insertQueue(music);
-        dbDaoImpl.closeDB();
-    }
-
-
-    /**
-     * 移除歌曲到歌单
-     */
-    public static void removeQueue(Context context, long mid) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.removeQueue(String.valueOf(mid));
-        dbDaoImpl.closeDB();
-    }
-
-    /**
      * 移除歌曲到歌单
      */
     public static void clearQueue(Context context) {

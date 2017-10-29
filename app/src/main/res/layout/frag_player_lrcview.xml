@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:lrc="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:lrc="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <com.cyl.music_hnust.view.LrcView
+    <com.cyl.music_hnust.view.LyricView
         android:id="@+id/LyricShow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        lrc:animationDuration="1000"
-        lrc:currentTextColor="@color/white"
-        lrc:dividerHeight="24dp"
-        lrc:normalTextColor="@color/translucent_white"
-        lrc:textSize="@dimen/text_size_common"
-        />
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" />
 
 
 </RelativeLayout>

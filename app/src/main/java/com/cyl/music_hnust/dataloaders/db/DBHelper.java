@@ -68,6 +68,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.MUSIC_ALBUM_PATH + " , "
 
                 + DBData.MUSIC_YEARS + " ) ");
+
+        // 创建播放队列表
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + DBData.QUEUE_TABLE + " ("
+                + DBData.QUEUE_QID + " varchar(20) PRIMARY KEY, "
+                + DBData.MUSIC_ID + " , "
+                + DBData.MUSIC_NAME + " , "
+                + DBData.MUSIC_FILENAME + " , "
+
+                + DBData.MUSIC_PATH + " , "
+                + DBData.MUSIC_TIME + " , "
+                + DBData.MUSIC_SIZE + " , "
+                + DBData.MUSIC_ARTIST + " , "
+
+                + DBData.MUSIC_ALBUM + " , "
+                + DBData.MUSIC_ALBUM_ID + " , "
+                + DBData.MUSIC_ALBUM_PATH + " , "
+
+                + DBData.MUSIC_YEARS + " ) ");
     }
 
     @Override

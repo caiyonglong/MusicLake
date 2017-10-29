@@ -24,6 +24,7 @@ import android.widget.RemoteViews;
 
 import com.cyl.music_hnust.IMusicService;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.download.NetworkUtil;
 import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.ui.activity.MainActivity;
@@ -91,6 +92,17 @@ public class MusicPlayService extends Service {
         initReceiver();
         initMediaPlayer();
         initTelephony();
+        initData();
+    }
+
+    private void initData() {
+        mPlaylist = MusicLoader.getPlayQueue(this);
+        mPlayingPosition = (int) Preferences.getCurrentSongId();
+        if (mPlayingPosition == -1) {
+            mPlayingMusic = null;
+        } else {
+            mPlayingMusic = mPlaylist.get(mPlayingPosition);
+        }
     }
 
     /**
@@ -577,7 +589,6 @@ public class MusicPlayService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         //注销广播
         unregisterReceiver(mServiceReceiver);
         if (mPlayer != null) {
@@ -585,8 +596,13 @@ public class MusicPlayService extends Service {
             mPlayer.release();
             mPlayer = null;
         }
+        Log.d("TAG", "ondestory");
+        MusicLoader.updateQueue(this, mPlaylist);
+        Preferences.saveCurrentSongId(mPlayingPosition);
         cancelNotification();
         stopSelf();
+
+        super.onDestroy();
     }
 
     private class IMusicServiceStub extends IMusicService.Stub {

@@ -17,6 +17,7 @@ public class Preferences {
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
     private static final String NIGHT_MODE = "night_mode";
+    private static final String POSITION = "position";
 
     private static Context sContext;
 
