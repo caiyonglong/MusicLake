@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 

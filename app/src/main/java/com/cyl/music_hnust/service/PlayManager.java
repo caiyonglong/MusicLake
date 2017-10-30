@@ -199,6 +199,13 @@ public class PlayManager {
             e.printStackTrace();
         }
     }
+    public static void refresh() {
+        try {
+            mService.refresh();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void removeFromQueue(int adapterPosition) {
         try {

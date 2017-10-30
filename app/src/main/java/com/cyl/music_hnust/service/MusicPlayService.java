@@ -46,13 +46,13 @@ import java.util.Random;
  * 版本：2.5 播放service
  */
 public class MusicPlayService extends Service {
+    private static final String TAG = "MusicPlayService";
 
     public static final String ACTION_SERVICE = "com.cyl.music_hnust.service";// 广播标志
     public static final String ACTION_NEXT = "com.cyl.music_hnust.notify.next";// 下一首广播标志
     public static final String ACTION_PREV = "com.cyl.music_hnust.notify.prev";// 上一首广播标志
     public static final String PLAY_STATE_CHANGED = "com.cyl.music_hnust.play_state";// 播放广播标志
     public static final String ACTION_UPDATE = "com.cyl.music_hnust.notify.update";// 播放广播标志
-    private static final String TAG = "MusicPlayService";
     public static final String PLAYLIST_CHANGED = "com.cyl.music_hnust.playlist";
     public static final String TRACK_ERROR = "com.cyl.music_hnust.error";
     public static final String REFRESH = "com.cyl.music_hnust.refresh";
@@ -363,6 +363,11 @@ public class MusicPlayService extends Service {
     }
 
 
+    private void refresh() {
+        Preferences.saveCurrentSongId(mPlayingPosition);
+        MusicLoader.updateQueue(this, mPlaylist);
+    }
+
     /**
      * 获取正在播放歌曲的位置
      *
@@ -638,6 +643,11 @@ public class MusicPlayService extends Service {
         }
 
         @Override
+        public void refresh() throws RemoteException {
+            mService.get().refresh();
+        }
+
+        @Override
         public void setLoopMode(int loopmode) throws RemoteException {
         }
 
@@ -709,4 +719,5 @@ public class MusicPlayService extends Service {
         }
 
     }
+
 }

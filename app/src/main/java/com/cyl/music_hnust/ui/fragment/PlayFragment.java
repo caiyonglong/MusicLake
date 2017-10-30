@@ -1,6 +1,10 @@
 package com.cyl.music_hnust.ui.fragment;
 
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -14,6 +18,7 @@ import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
@@ -26,8 +31,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.music.Music;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
-import com.cyl.music_hnust.service.RxBus;
 import com.cyl.music_hnust.ui.adapter.MyPagerAdapter;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.CoverLoader;
@@ -37,10 +42,10 @@ import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.LyricView;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
-import com.cyl.music_hnust.view.LrcView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,10 +53,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -120,6 +121,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     static PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
     List<View> mViewPagerContent;
+    private PlayerReceiver mPlayStatus;
 
     private LyricView mLrcView;
     private CircleImageView civ_cover;
@@ -194,33 +196,37 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     protected void initDatas() {
         mHandler = new Handler();
+
+
+        mPlayStatus = new PlayerReceiver(getActivity());
+
+        IntentFilter filter = new IntentFilter();
+        // Play and pause changes
+        filter.addAction(MusicPlayService.PLAY_STATE_CHANGED);
+        // Track changes
+        filter.addAction(MusicPlayService.META_CHANGED);
+        // Update a list, probably the playlist fragment's
+        filter.addAction(MusicPlayService.REFRESH);
+        // If a playlist has changed, notify us
+        filter.addAction(MusicPlayService.PLAYLIST_CHANGED);
+        // If there is an error playing a track
+        filter.addAction(MusicPlayService.TRACK_ERROR);
+
+        getActivity().registerReceiver(mPlayStatus, filter);
+
+
         updatePlayPauseFloatingButton();
         updateView();
         initAlbumPic();
-        initSubscriptionEvent();
+
     }
 
-    /**
-     * 初始化观察者模式
-     */
-    private void initSubscriptionEvent() {
-        Subscription subscription = RxBus.getInstance()
-                .toObservable(Music.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Music>() {
-                    @Override
-                    public void call(Music event) {
-                        Log.e("----", event.toString());
-                        updateView();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
-        RxBus.getInstance().addSubscription(this, subscription);
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mPlayStatus != null) {
+            getActivity().unregisterReceiver(mPlayStatus);
+        }
     }
 
     public void updateView() {
@@ -358,6 +364,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mLrcView.setLineSpace(15.0f);
         mLrcView.setTextSize(17.0f);
         mLrcView.setPlayable(false);
+        mLrcView.setTouchable(false);
         mLrcView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
             @Override
             public void onPlayerClicked(long progress, String content) {
@@ -439,15 +446,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         //歌词视图
-        View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_lrcview, null);
-        mLrcView = (LyricView) lrcView.findViewById(R.id.LyricShow);
+        View lrcView = inflater.inflate(R.layout.frag_player_lrcview, null);
         //专辑视图
-        View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.frag_player_coverview, null);
+        View coverView = inflater.inflate(R.layout.frag_player_coverview, null);
         civ_cover = (CircleImageView) coverView.findViewById(R.id.civ_cover);
+        mLrcView = (LyricView) lrcView.findViewById(R.id.LyricShow);
 
         mViewPagerContent = new ArrayList<>(2);
-
         mViewPagerContent.add(coverView);
         mViewPagerContent.add(lrcView);
         viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
@@ -478,5 +485,26 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
+    public class PlayerReceiver extends BroadcastReceiver {
+        private final WeakReference<Context> mReference;
+
+
+        public PlayerReceiver(final Context activity) {
+            mReference = new WeakReference<Context>(activity);
+        }
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            final String action = intent.getAction();
+            Context baseActivity = mReference.get();
+            if (baseActivity != null) {
+                if (action.equals(MusicPlayService.META_CHANGED)) {
+                    updateView();
+                } else if (action.equals(MusicPlayService.TRACK_ERROR)) {
+
+                }
+            }
+        }
+    }
 
 }
