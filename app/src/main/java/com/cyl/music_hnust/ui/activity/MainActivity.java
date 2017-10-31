@@ -124,7 +124,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void initData() {
         main.run();
         detail.run();
-//        updatePanelLayout();
         mSlidingUpPaneLayout.addPanelSlideListener(new PanelSlideListener() {
 
             @Override

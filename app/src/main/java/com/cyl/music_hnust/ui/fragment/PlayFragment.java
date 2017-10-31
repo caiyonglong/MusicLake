@@ -18,7 +18,6 @@ import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
@@ -104,25 +103,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Bind(R.id.playpausefloating)
     FloatingActionButton playPauseFloating;
 
-    @OnClick(R.id.ic_detail)
-    void openPlayQueue() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        if (playQueueDialog == null) {
-            playQueueDialog = new PlayQueueDialog();
-        }
-        if (mSwatch != null) {
-            playQueueDialog.setPaletteSwatch(mSwatch);
-        }
-        playQueueDialog.show(fm, "fragment_bottom_dialog");
-    }
-
     PlayQueueDialog playQueueDialog = null;
-    Palette.Swatch mSwatch;
+    Palette mPalette;
     static PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
     List<View> mViewPagerContent;
     private PlayerReceiver mPlayStatus;
-
     private LyricView mLrcView;
     private CircleImageView civ_cover;
     private int position;
@@ -135,6 +121,18 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         PlayFragment fragment = new PlayFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @OnClick(R.id.ic_detail)
+    void openPlayQueue() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if (playQueueDialog == null) {
+            playQueueDialog = new PlayQueueDialog();
+        }
+        if (mPalette != null) {
+            playQueueDialog.setPaletteSwatch(mPalette.getVibrantSwatch());
+        }
+        playQueueDialog.show(fm, "fragment_bottom_dialog");
     }
 
     Runnable updateProgress = new Runnable() {
@@ -217,7 +215,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
         updatePlayPauseFloatingButton();
         updateView();
-        initAlbumPic();
 
     }
 
@@ -244,6 +241,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mHandler.post(updateProgress);
         setLrc(music);
         setCoverAndBg(music);
+        initAlbumPic();
         updatePlayPauseFloatingButton();
     }
 
@@ -330,15 +328,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void setLrc(final Music music) {
         if (music.getType() == Music.Type.LOCAL) {
             String uri = music.getUri();
-            if (uri.endsWith(".mp3") && uri != null) {
+            if (uri.endsWith(".mp3")) {
                 String lrcPath = uri.replace(".mp3", ".lrc");
-                File file = new File(lrcPath);
-                if (file.exists()) {
-                    lrc_empty = false;
-                    loadLrc(lrcPath, Music.Type.LOCAL);
-                } else {
-                    loadLrc("", Music.Type.LOCAL);
-                }
+                loadLrc(lrcPath, Music.Type.LOCAL);
             } else {
                 loadLrc("", Music.Type.LOCAL);
             }
@@ -349,7 +341,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private void loadOnlineLrc(String path) {
         Log.e("---", "path" + path);
-//
 //        loadLrc(lrcPath, online);
     }
 
@@ -393,8 +384,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             civ_cover.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
 
-            mSwatch = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
-                    .generate().getVibrantSwatch();
+            mPalette = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
+                    .generate();
         } else if (music.getType() == Music.Type.ONLINE) {
             if (music.getCoverUri() != null) {
                 Glide.with(this)
@@ -458,6 +449,23 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mViewPagerContent.add(coverView);
         mViewPagerContent.add(lrcView);
         viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mLrcView.setTouchable(true);
+                mLrcView.setPlayable(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
