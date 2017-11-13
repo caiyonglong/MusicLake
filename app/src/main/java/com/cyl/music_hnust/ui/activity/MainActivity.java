@@ -20,7 +20,6 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.bean.user.UserStatus;
 import com.cyl.music_hnust.service.PlayManager;
-import com.cyl.music_hnust.ui.activity.map.BaseMapActivity;
 import com.cyl.music_hnust.ui.fragment.DownloadFragment;
 import com.cyl.music_hnust.ui.fragment.LocalFragment;
 import com.cyl.music_hnust.ui.fragment.MainFragment;
@@ -254,14 +253,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 break;
             case R.id.nav_menu_near:
-                if (login_status) {
-                    intent = new Intent(MainActivity.this, BaseMapActivity.class);
-                    intent.putExtra("fromActivity", "Near");
-                    startActivity(intent);
-                } else {
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                }
                 break;
             case R.id.nav_menu_setting:
                 intent = new Intent(MainActivity.this, SettingsActivity.class);

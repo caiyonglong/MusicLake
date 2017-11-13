@@ -34,9 +34,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyThemeBlue">
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="bb7a657dae711860f30d669c193e49d6" />
 
         <activity
             android:name=".ui.activity.WelcomeActivity"
@@ -86,21 +83,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ArtistInfoActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.activity.map.BaseMapActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.map.RadarActivity"
-
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.map.CloudDetailActivity"
-            android:label="@string/detail_position"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.map.PreviewPhotoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.NearPeopleAcivity"
