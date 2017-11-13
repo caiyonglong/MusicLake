@@ -3,7 +3,6 @@ package com.cyl.music_hnust.ui.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,12 +18,13 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.bean.user.UserStatus;
+import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.fragment.DownloadFragment;
-import com.cyl.music_hnust.ui.fragment.LocalFragment;
 import com.cyl.music_hnust.ui.fragment.MainFragment;
 import com.cyl.music_hnust.ui.fragment.PlayFragment;
 import com.cyl.music_hnust.ui.fragment.PlaylistFragment;
+import com.cyl.music_hnust.ui.fragment.SongsFragment;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -121,10 +121,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initData() {
+
+        intent = new Intent(this, MusicPlayService.class);
+        startService(intent);
+        PlayManager.bindToService(this);
+
         main.run();
         detail.run();
         mSlidingUpPaneLayout.addPanelSlideListener(new PanelSlideListener() {
-
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
@@ -142,17 +146,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    /**
-     * 显示|隐藏 mSlidingUpPaneLayout 底部
-     */
-    private void updatePanelLayout() {
-        if (PlayManager.getPlayingMusic() != null &&
-                mSlidingUpPaneLayout.getPanelState() == PanelState.HIDDEN) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-        } else if (PlayManager.getPlayingMusic() == null) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.HIDDEN);
-        }
-    }
 
     @Override
     protected void listener() {
@@ -172,7 +165,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvatarIcon = (CircleImageView) headerView.findViewById(R.id.header_face);
         mName = (TextView) headerView.findViewById(R.id.header_name);
         mNick = (TextView) headerView.findViewById(R.id.header_nick);
-
         initNav();
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,15 +236,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
-                if (login_status) {
+                if (!login_status) {
+                    toLoginActivity();
+                } else {
                     intent = new Intent(MainActivity.this, ShakeActivity.class);
                     startActivity(intent);
-                } else {
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
                 }
-                break;
-            case R.id.nav_menu_near:
                 break;
             case R.id.nav_menu_setting:
                 intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -261,12 +250,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_exit:
                 finish();
                 break;
-            case R.id.nav_menu_help:
-                intent = new Intent(Intent.ACTION_VIEW);
-                Uri data = Uri.parse("mailto:643872807@qq.com");
-                intent.setData(data);
-                startActivity(intent);
-                break;
         }
         if (runnable != null) {
             item.setChecked(true);
@@ -274,10 +257,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mHandler.postDelayed(runnable, 500);
         }
         return true;
-
-
     }
 
+    private void toLoginActivity() {
+        intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
 
     //返回键
     @Override
@@ -341,27 +326,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private boolean isNavigatingMain() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        return (currentFragment instanceof MainFragment || currentFragment instanceof LocalFragment
+        return (currentFragment instanceof MainFragment || currentFragment instanceof SongsFragment
                 || currentFragment instanceof PlaylistFragment || currentFragment instanceof DownloadFragment);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (resultCode != RESULT_OK) {
-//            return;
-//        }
-//        if (requestCode == Extras.TO_PLAYLISTDETAIL) {
-//            if (playlistFragment != null) {
-//                playlistFragment.updatePlaylists();
-//            }
-//        }
+    protected void onDestroy() {
+        super.onDestroy();
+        PlayManager.unbindFromService(this);
+        stopService(intent);
     }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        PlayManager.refresh();
-    }
-
 }

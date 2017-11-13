@@ -75,7 +75,7 @@ public class MainFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(LocalFragment.newInstance(), "本地音乐");
+        adapter.addFragment(SongsFragment.newInstance(), "本地音乐");
         adapter.addFragment(OnlineFragment.newInstance(), "在线音乐");
 //        adapter.addFragment(CommunityFragment.newInstance(1), "音乐湖");
         viewPager.setAdapter(adapter);

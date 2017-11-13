@@ -3,10 +3,7 @@ package com.cyl.music_hnust;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.cyl.music_hnust.service.MusicPlayService;
-import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.UpdateUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -21,7 +18,6 @@ import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
     private static MyApplication sInstance;
-    private Intent intent;
 
     public static synchronized MyApplication getInstance() {
         return sInstance;
@@ -31,24 +27,12 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        intent = new Intent(this, MusicPlayService.class);
         UpdateUtils.init(this);
         Preferences.init(this);
         initImageLoader(this);
-        startService(intent);
-        PlayManager.bindToService(this);
         initOkhttp();
     }
 
-    @Override
-    public void onTerminate() {
-        // 程序终止的时候执行
-        PlayManager.unbindFromService(this);
-        stopService(intent);
-        Log.d("MyApplication", "onTerminate");
-        super.onTerminate();
-
-    }
 
     private void initOkhttp() {
 

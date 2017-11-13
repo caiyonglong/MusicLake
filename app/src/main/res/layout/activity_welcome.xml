@@ -5,4 +5,5 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg"
     android:orientation="vertical">
+
 </RelativeLayout>

@@ -218,14 +218,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mPlayStatus != null) {
-            getActivity().unregisterReceiver(mPlayStatus);
-        }
-    }
-
     public void updateView() {
         Music music = PlayManager.getPlayingMusic();
         if (music == null) {
@@ -485,6 +477,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         super.onDestroy();
         if (operatingAnim != null) {
             operatingAnim.cancel();
+        }
+        if (mPlayStatus != null) {
+            getActivity().unregisterReceiver(mPlayStatus);
         }
     }
 
