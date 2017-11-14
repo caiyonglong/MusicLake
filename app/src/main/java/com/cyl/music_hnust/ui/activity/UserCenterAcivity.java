@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,13 +24,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.ui.activity.clipheadphoto.ClipActivity;
-import com.cyl.music_hnust.callback.StatusCallback;
-import com.cyl.music_hnust.callback.UserCallBack;
 import com.cyl.music_hnust.bean.user.StatusInfo;
 import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.bean.user.UserInfo;
 import com.cyl.music_hnust.bean.user.UserStatus;
+import com.cyl.music_hnust.callback.StatusCallback;
+import com.cyl.music_hnust.callback.UserCallBack;
 import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.ImageUtils;
@@ -286,29 +284,25 @@ public class UserCenterAcivity extends BaseActivity {
         Uri uri = null;
         switch (requestCode) {
             case PHOTOZOOM://相册
-                if (data == null) {
-                    return;
-                }
-                uri = data.getData();
-                String[] proj = {MediaStore.Images.Media.DATA};
-//                Cursor cursor = managedQuery(uri, proj, null, null, null);
-                Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
-//                Cursor c= CloudSearch.Query();
-
-//                Cursor cursor = manag
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                path = cursor.getString(column_index);// 图片在的路径
-                Intent intent3 = new Intent(UserCenterAcivity.this, ClipActivity.class);
-                intent3.putExtra("path", path);
-                startActivityForResult(intent3, IMAGE_COMPLETE);
+//                if (data == null) {
+//                    return;
+//                }
+//                uri = data.getData();
+//                String[] proj = {MediaStore.Images.Media.DATA};
+//                Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+//                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//                cursor.moveToFirst();
+//                path = cursor.getString(column_index);// 图片在的路径
+//                Intent intent3 = new Intent(UserCenterAcivity.this, ClipActivity.class);
+//                intent3.putExtra("path", path);
+//                startActivityForResult(intent3, IMAGE_COMPLETE);
                 break;
             case PHOTOTAKE://拍照
-                path = photoSavePath + photoSaveName;
-                uri = Uri.fromFile(new File(path));
-                Intent intent2 = new Intent(UserCenterAcivity.this, ClipActivity.class);
-                intent2.putExtra("path", path);
-                startActivityForResult(intent2, IMAGE_COMPLETE);
+//                path = photoSavePath + photoSaveName;
+//                uri = Uri.fromFile(new File(path));
+//                Intent intent2 = new Intent(UserCenterAcivity.this, ClipActivity.class);
+//                intent2.putExtra("path", path);
+//                startActivityForResult(intent2, IMAGE_COMPLETE);
                 break;
             case IMAGE_COMPLETE:
                 path = FileUtils.getImageDir() + user.getUser_id() + ".png";

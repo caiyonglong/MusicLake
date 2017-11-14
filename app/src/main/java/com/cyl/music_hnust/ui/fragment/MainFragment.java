@@ -35,7 +35,6 @@ public class MainFragment extends BaseFragment {
     public static MainFragment newInstance() {
 
         Bundle args = new Bundle();
-
         MainFragment fragment = new MainFragment();
         fragment.setArguments(args);
         return fragment;
@@ -81,22 +80,6 @@ public class MainFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();

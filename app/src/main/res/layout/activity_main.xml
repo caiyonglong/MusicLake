@@ -18,6 +18,7 @@
         android:fitsSystemWindows="true"
         android:overScrollMode="never"
         android:scrollbars="none"
+        app:headerLayout="@layout/header_nav"
         app:itemTextColor="@color/selector_nav_menu_textcolor"
         app:menu="@menu/menu_all" />
 </android.support.v4.widget.DrawerLayout>

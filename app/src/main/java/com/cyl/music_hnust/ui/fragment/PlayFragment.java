@@ -41,7 +41,6 @@ import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.LyricView;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -480,11 +479,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
         if (mPlayStatus != null) {
             getActivity().unregisterReceiver(mPlayStatus);
-        }
-    }
-
-    public static void updateDrawableView(PanelState newState) {
-        if (newState == PanelState.EXPANDED) {
         }
     }
 

@@ -52,61 +52,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     ImageView mImageView;
     CircleImageView mAvatarIcon;
-    TextView mNick, mName;
+    TextView mName;
+    TextView mNick;
 
-    boolean login_status;
+    private View headerView;
     private static final String TAG = "MainActivity";
+
+    private MainFragment mainFragment;
+    private PlayFragment playFragment;
+    private PlaylistFragment playlistFragment;
+    private DownloadFragment downloadFragment;
+
+    private boolean login_status;
     private Intent intent = null;
 
-    //替换Mainfragment
-    Runnable main = new Runnable() {
-        @Override
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_music).setChecked(true);
-            MainFragment mainFragment = MainFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, mainFragment, "mainFragment")
-                    .commitAllowingStateLoss();
-        }
-    };
-
-
-    //替换Mainfragment
-    Runnable detail = new Runnable() {
-        @Override
-        public void run() {
-            PlayFragment playFragment = PlayFragment.newInstance();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.controls_container, playFragment)
-                    .commitAllowingStateLoss();
-        }
-    };
-
-    //替换Mainfragment
-    Runnable playlist = new Runnable() {
-        @Override
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_playlist).setChecked(true);
-            PlaylistFragment playlistFragment = new PlaylistFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, playlistFragment)
-                    .commitAllowingStateLoss();
-        }
-    };
-    //替换Mainfragment
-    Runnable download = new Runnable() {
-        @Override
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_download).setChecked(true);
-            DownloadFragment fragment = new DownloadFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .commitAllowingStateLoss();
-        }
-    };
 
     @Override
     protected int getLayoutResID() {
@@ -115,24 +74,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-        //初始化菜单栏
-        setNavigationView();
+        initMainPager();
+        initPlay();
+        //菜单栏的头部控件初始化
+        headerView = mNavigationView.getHeaderView(0);
+        mImageView = headerView.findViewById(R.id.header_bg);
+        mAvatarIcon = headerView.findViewById(R.id.header_face);
+        mName = headerView.findViewById(R.id.header_name);
+        mNick = headerView.findViewById(R.id.header_nick);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setItemIconTintList(null);
     }
 
     @Override
     protected void initData() {
+        initService();
+        initNav();
+    }
 
+    private void initService() {
         intent = new Intent(this, MusicPlayService.class);
         startService(intent);
         PlayManager.bindToService(this);
+    }
 
-        main.run();
-        detail.run();
+
+    @Override
+    protected void listener() {
         mSlidingUpPaneLayout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
-                PlayFragment.updateDrawableView(newState);
             }
 
             @Override
@@ -144,28 +116,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         });
 
-    }
-
-
-    @Override
-    protected void listener() {
-
-    }
-
-
-    /**
-     * 初始化菜单栏
-     */
-    private void setNavigationView() {
-        mNavigationView.setNavigationItemSelectedListener(this);
-        mNavigationView.setItemIconTintList(null);
-        //菜单栏的头部控件初始化
-        View headerView = mNavigationView.inflateHeaderView(R.layout.header_nav);
-        mImageView = (ImageView) headerView.findViewById(R.id.header_bg);
-        mAvatarIcon = (CircleImageView) headerView.findViewById(R.id.header_face);
-        mName = (TextView) headerView.findViewById(R.id.header_name);
-        mNick = (TextView) headerView.findViewById(R.id.header_nick);
-        initNav();
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,7 +129,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(intent);
             }
         });
+
     }
+
 
     /**
      * 初始化菜单栏的头部
@@ -223,39 +175,33 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Runnable runnable = null;
         switch (item.getItemId()) {
             case R.id.nav_menu_music:
-                runnable = main;
+                initMainPager();
                 break;
             case R.id.nav_menu_playlist:
-                runnable = playlist;
+                initPlaylist();
                 break;
             case R.id.nav_menu_download:
-                runnable = download;
+                initDownload();
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
                 if (!login_status) {
                     toLoginActivity();
                 } else {
-                    intent = new Intent(MainActivity.this, ShakeActivity.class);
-                    startActivity(intent);
+                    toShakeActivity();
                 }
                 break;
             case R.id.nav_menu_setting:
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                toSettingsActivity();
                 break;
             case R.id.nav_menu_exit:
                 finish();
                 break;
         }
-        if (runnable != null) {
-            item.setChecked(true);
-            mDrawerLayout.closeDrawers();
-            mHandler.postDelayed(runnable, 500);
-        }
+        item.setChecked(true);
+        mDrawerLayout.closeDrawers();
         return true;
     }
 
@@ -263,6 +209,83 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
+
+    private void toShakeActivity() {
+        intent = new Intent(MainActivity.this, ShakeActivity.class);
+        startActivity(intent);
+    }
+
+    private void toSettingsActivity() {
+        intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+
+    private void initMainPager() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mainFragment == null) {
+            mainFragment = MainFragment.newInstance();
+            transaction.add(R.id.fragment_container, mainFragment);
+        }
+        //隐藏所有fragment
+        hideFragment(transaction);
+        //显示需要显示的fragment
+        transaction.show(mainFragment);
+        transaction.commit();
+    }
+
+    private void initPlaylist() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (playlistFragment == null) {
+            playlistFragment = new PlaylistFragment();
+            transaction.add(R.id.fragment_container, playlistFragment);
+        }
+        //隐藏所有fragment
+        hideFragment(transaction);
+        //显示需要显示的fragment
+        transaction.show(playlistFragment);
+        transaction.commit();
+    }
+
+    private void initPlay() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (playFragment == null) {
+            playFragment = PlayFragment.newInstance();
+            transaction.add(R.id.controls_container, playFragment);
+        }
+        //隐藏所有fragment
+        hideFragment(transaction);
+        //显示需要显示的fragment
+        transaction.show(downloadFragment);
+        transaction.commit();
+    }
+
+    private void initDownload() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (downloadFragment == null) {
+            downloadFragment = new DownloadFragment();
+            transaction.add(R.id.fragment_container, downloadFragment);
+        }
+        //隐藏所有fragment
+        hideFragment(transaction);
+        //显示需要显示的fragment
+        transaction.show(downloadFragment);
+        transaction.commit();
+    }
+
+
+    private void hideFragment(FragmentTransaction transaction) {
+        if (mainFragment != null) {
+            transaction.hide(mainFragment);
+        }
+        if (playlistFragment != null) {
+            transaction.hide(playlistFragment);
+        }
+        if (downloadFragment != null) {
+            transaction.hide(downloadFragment);
+        }
+    }
+
 
     //返回键
     @Override

@@ -112,18 +112,12 @@
             android:name=".service.MusicPlayService"
              />
 
-        <service android:name="com.amap.api.location.APSService" />
         <service android:name=".download.DownloadService" />
 
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.clipheadphoto.ClipActivity"
-            android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"></activity>
-
         <!--社区-->
 
 

@@ -4,6 +4,10 @@ buildscript {
     repositories {
         jcenter()
 
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 
     dependencies {
@@ -21,6 +25,10 @@ allprojects {
             url "https://jitpack.io"
         }
 
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
