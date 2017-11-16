@@ -4,8 +4,9 @@ import android.content.Context;
 
 import com.cyl.music_hnust.utils.Constants;
 
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by yonglong on 2017/9/11.
@@ -35,8 +36,8 @@ public class ApiManager {
     private ApiManager(Context context) {
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) // 使用RxJava作为回调适配器
-//                .addConverterFactory(GsonConverterFactory.create()) // 使用Gson作为数据转换器
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
+                .addConverterFactory(GsonConverterFactory.create()) // 使用Gson作为数据转换器
                 .build();
         apiService = retrofit.create(ApiManagerService.class);
     }

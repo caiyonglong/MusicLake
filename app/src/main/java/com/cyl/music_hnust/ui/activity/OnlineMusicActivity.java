@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.download.DownloadInfo;
 import com.cyl.music_hnust.bean.music.Music;
@@ -66,7 +66,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     Toolbar mToolbar;
 
     private View vHeader;
-    private ProgressDialog mProgressDialog;
+    private MaterialDialog mProgressDialog;
     private int mOffset = 0;
     private String title;
     private String type;
@@ -78,9 +78,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     @Override
     protected void initView() {
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 
     @Override
@@ -94,9 +95,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
 
     private void init() {
 
+        mProgressDialog = new MaterialDialog.Builder(this)
+                .content(R.string.loading)
+                .progress(true, 0)
+                .build();
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
 
         vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_header, null);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this, 150));

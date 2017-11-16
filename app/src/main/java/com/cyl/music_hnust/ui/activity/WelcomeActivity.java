@@ -8,10 +8,9 @@ import android.widget.RelativeLayout;
 
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.SystemUtils;
-import com.tbruyelle.rxpermissions.RxPermissions;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.Bind;
-import rx.functions.Action1;
 
 /**
  * Created by 永龙 on 2016/3/19.
@@ -60,24 +59,21 @@ public class WelcomeActivity extends BaseActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
         };
-
         rxPermissions
                 .request(mPermissionList)
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean granted) {
-                        if (granted) {
-                            initPlayQueue();
-                        } else {
-                            Snackbar.make(container, "软件必须获取相关权限",
+                .subscribe(granted -> {
+                    if (granted) {
+                        initPlayQueue();
+                        // All requested permissions are granted
+                    } else {
+                        Snackbar.make(container, "软件必须获取相关权限",
                                     Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("OK", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            checkPermissionAndThenLoad();
-                                        }
-                                    }).show();
-                        }
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        checkPermissionAndThenLoad();
+                                    }
+                                }).show();
                     }
                 });
     }

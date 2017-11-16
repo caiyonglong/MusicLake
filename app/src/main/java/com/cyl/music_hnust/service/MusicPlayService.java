@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.graphics.Palette;
 import android.telephony.PhoneStateListener;
@@ -24,9 +25,9 @@ import android.widget.RemoteViews;
 
 import com.cyl.music_hnust.IMusicService;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.dataloaders.MusicLoader;
 import com.cyl.music_hnust.download.NetworkUtil;
-import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.ui.activity.MainActivity;
 import com.cyl.music_hnust.utils.CoverLoader;
 import com.cyl.music_hnust.utils.NetworkUtils;
@@ -82,8 +83,7 @@ public class MusicPlayService extends Service {
 
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private long mNotificationPostTime = 0;
-
-    MediaSessionCompat sessionCompat;
+    private MediaSessionCompat mSession;
 
     @Override
     public void onCreate() {
@@ -463,7 +463,7 @@ public class MusicPlayService extends Service {
             mNotificationPostTime = System.currentTimeMillis();
         }
 
-        android.support.v4.app.NotificationCompat.Builder builder = new android.support.v7.app.NotificationCompat.Builder(this)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.default_cover)
                 .setLargeIcon(artwork)
                 .setContentIntent(clickIntent)
@@ -482,13 +482,14 @@ public class MusicPlayService extends Service {
         if (SystemUtils.isJellyBeanMR1()) {
             builder.setShowWhen(false);
         }
-        if (SystemUtils.isLollipop()) {
-            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-            android.support.v7.app.NotificationCompat.MediaStyle style = new android.support.v7.app.NotificationCompat.MediaStyle()
+//        if (SystemUtils.isLollipop()) {
+//            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+//            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
 //                    .setMediaSession(mSession.getSessionToken())
-                    .setShowActionsInCompactView(0, 1, 2, 3);
-            builder.setStyle(style);
-        }
+//                    .setShowActionsInCompactView(0, 1, 2, 3);
+//            builder.setStyle(style);
+//        }
+
         if (artwork != null && SystemUtils.isLollipop()) {
             builder.setColor(Palette.from(artwork).generate().getMutedColor(Color.GRAY));
         }

@@ -1,6 +1,5 @@
 package com.cyl.music_hnust.ui.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,13 +19,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.callback.NearCallback;
 import com.cyl.music_hnust.bean.location.Location;
 import com.cyl.music_hnust.bean.location.LocationInfo;
 import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.bean.user.UserStatus;
+import com.cyl.music_hnust.callback.NearCallback;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.Constants;
@@ -61,7 +61,7 @@ public class ShakeActivity extends BaseActivity {
 
     private MusicPlayService mService;
 
-    private static ProgressDialog progDialog = null;
+    private static MaterialDialog mProgressDialog;
     private static String user_id;
 
     private SensorManager sensorManager;
@@ -155,21 +155,19 @@ public class ShakeActivity extends BaseActivity {
      * 显示进度框
      */
     private void showProgressDialog(String msg) {
-        progDialog = new ProgressDialog(ShakeActivity.this);
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDialog.setIndeterminate(false);
-        progDialog.setCancelable(true);
-        progDialog.setMessage(msg);
-        progDialog.show();
 
+        mProgressDialog = new MaterialDialog.Builder(this)
+                .content(R.string.loading)
+                .progress(true, 0)
+                .build();
     }
 
     /**
      * 隐藏进度框
      */
     private static void dissmissProgressDialog() {
-        if (progDialog != null) {
-            progDialog.dismiss();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
     }
 

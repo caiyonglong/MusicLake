@@ -7,7 +7,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 

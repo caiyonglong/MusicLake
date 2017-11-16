@@ -1,7 +1,6 @@
 package com.cyl.music_hnust.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.callback.JsonCallback;
 import com.cyl.music_hnust.download.DownloadService;
@@ -50,7 +50,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     private SearchAdapter mAdapter;
     private MusicPlayService mMusicPlayService;
-    private ProgressDialog mProgressDialog;
+    private MaterialDialog mProgressDialog;
     private int mOffset = 10;
 
     @Bind(R.id.toolbar)
@@ -88,8 +88,11 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
+
+        mProgressDialog = new MaterialDialog.Builder(this)
+                .content(R.string.loading)
+                .progress(true, 0)
+                .build();
 
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
