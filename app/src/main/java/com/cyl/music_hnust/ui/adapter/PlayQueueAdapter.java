@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.api.GlideApp;
 import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.utils.FileUtils;
@@ -54,7 +53,7 @@ public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.Item
                     holder.albumArt);
         } else {
             if (localItem.getCoverUri() != null) {
-//                Glide.with(this).load()
+//                GlideApp.with(this).load()
             } else if (localItem.getCover() != null) {
                 holder.albumArt.setImageBitmap(localItem.getCover());
             } else {
@@ -94,10 +93,9 @@ public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.Item
 
     private void loadBitmap(String uri, ImageView img) {
         try {
-            Glide.with(mContext).load(uri)
+            GlideApp.with(mContext).load(uri)
                     .error(R.drawable.default_cover)
                     .placeholder(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
                     .into(img);
         } catch (Exception e) {

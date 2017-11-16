@@ -19,6 +19,7 @@ import rx.functions.Action1;
 public class WelcomeActivity extends BaseActivity {
     @Bind(R.id.wel_container)
     RelativeLayout container;
+    RxPermissions rxPermissions;
 
     @Override
     protected void listener() {
@@ -36,6 +37,7 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        rxPermissions = new RxPermissions(this);
         if (SystemUtils.isMarshmallow()) {
             checkPermissionAndThenLoad();
         } else {
@@ -59,7 +61,7 @@ public class WelcomeActivity extends BaseActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION
         };
 
-        RxPermissions.getInstance(this)
+        rxPermissions
                 .request(mPermissionList)
                 .subscribe(new Action1<Boolean>() {
                     @Override

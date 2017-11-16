@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
-import com.cyl.music_hnust.callback.SingerCallback;
+import com.cyl.music_hnust.api.GlideApp;
 import com.cyl.music_hnust.bean.music.Artist;
 import com.cyl.music_hnust.bean.music.Singer;
+import com.cyl.music_hnust.callback.SingerCallback;
 import com.cyl.music_hnust.utils.NavigateUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -93,18 +93,11 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyRecycler
         Log.e("uri", uri + ".........-");
         if (uri != null) {
             try {
-                Glide.with(mContext).load(uri)
+                GlideApp.with(mContext).load(uri)
                         .error(R.drawable.default_cover)
                         .placeholder(R.drawable.default_cover)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .centerCrop()
                         .into(img);
-//                ImageLoader.getInstance().displayImage(uri, img,
-//                        new DisplayImageOptions.Builder().cacheInMemory(true)
-//                                .showImageOnFail(R.drawable.default_cover)
-//                                .showImageForEmptyUri(R.drawable.default_cover)
-//                                .showImageOnLoading(R.drawable.default_cover)
-//                                .build());
             } catch (Exception e) {
                 Log.e("EEEE", uri);
             }

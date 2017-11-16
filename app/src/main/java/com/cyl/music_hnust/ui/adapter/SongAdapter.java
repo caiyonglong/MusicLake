@@ -13,15 +13,15 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.api.GlideApp;
 import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.service.PlayManager;
+import com.cyl.music_hnust.ui.AddPlaylistDialog;
 import com.cyl.music_hnust.utils.FileUtils;
 import com.cyl.music_hnust.utils.FormatUtil;
 import com.cyl.music_hnust.utils.NavigateUtil;
-import com.cyl.music_hnust.ui.AddPlaylistDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,10 +99,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
 
     private void loadBitmap(String uri, ImageView img) {
         try {
-            Glide.with(context).load(uri)
+            GlideApp.with(context).load(uri)
                     .error(R.drawable.default_cover)
                     .placeholder(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
                     .into(img);
         } catch (Exception e) {

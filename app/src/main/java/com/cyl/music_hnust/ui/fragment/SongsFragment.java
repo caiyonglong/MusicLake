@@ -45,41 +45,23 @@ public class SongsFragment extends BaseFragment {
         return fragment;
     }
 
-    /**
-     * 设置监听事件
-     */
     @Override
     protected void listener() {
     }
 
-    /**
-     * 初始化数据
-     */
     @Override
     protected void initDatas() {
         new loadSongs().execute();
     }
 
-
-    /**
-     * 初始化视图
-     *
-     * @return
-     */
     @Override
     public int getLayoutId() {
         return R.layout.frag_recyclerview_songs;
     }
 
-    /**
-     * 初始化控件
-     */
     @Override
     public void initViews() {
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
     }
 
     @Override
@@ -94,7 +76,6 @@ public class SongsFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-
     private class loadSongs extends AsyncTask<String, Void, String> {
 
         @Override
@@ -102,7 +83,6 @@ public class SongsFragment extends BaseFragment {
             if (getActivity() != null) {
                 musicInfos = MusicLoader.getAllSongs(getActivity());
                 mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
-
             }
             return "Executed";
         }

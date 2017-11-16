@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.api.GlideApp;
 import com.cyl.music_hnust.bean.music.Music;
 import com.cyl.music_hnust.service.MusicPlayService;
 import com.cyl.music_hnust.service.PlayManager;
@@ -379,18 +380,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                     .generate();
         } else if (music.getType() == Music.Type.ONLINE) {
             if (music.getCoverUri() != null) {
-                Glide.with(this)
+                GlideApp.with(this)
                         .load(music.getCoverUri())
                         .placeholder(R.drawable.default_cover)
                         .error(R.drawable.default_cover) //失败图片
                         .into(civ_cover);
-                Glide.with(this).load(music.getCoverUri())
+                GlideApp.with(this).load(music.getCoverUri())
                         .placeholder(R.drawable.default_cover)
                         .error(R.drawable.default_cover) //失败图片
-                        .crossFade(1000)
-                        .bitmapTransform(new BlurTransformation(getContext(), 23, 4))  // “23”：设置模糊度(在0.0到25.0之间)，默认”25";"4":图片缩放比例,默认“1”。
                         .into(ivPlayingBg);
-                Glide.with(this)
+                GlideApp.with(this)
                         .load(music.getCoverUri())
                         .placeholder(R.drawable.default_cover)
                         .error(R.drawable.default_cover) //失败图片

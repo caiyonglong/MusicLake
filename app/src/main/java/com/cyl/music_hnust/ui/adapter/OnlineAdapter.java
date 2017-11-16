@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
+import com.cyl.music_hnust.api.GlideApp;
 import com.cyl.music_hnust.bean.music.OnlinePlaylists.Billboard;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class OnlineAdapter extends RecyclerView.Adapter<OnlineAdapter.ItemHolder
     private void setData(Billboard mBillboard, final ItemHolder holder) {
 
 
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(mBillboard.getPic_s192())
                 .error(R.drawable.default_cover)
                 .into(holder.iv_cover);
