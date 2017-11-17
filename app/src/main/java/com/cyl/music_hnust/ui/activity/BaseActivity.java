@@ -66,7 +66,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        ButterKnife.bind(this).unbind();
 
     }
 

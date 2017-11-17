@@ -32,7 +32,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -43,11 +43,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Bind(R.id.sliding_layout)
+    @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mSlidingUpPaneLayout;
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView mNavigationView;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
     ImageView mImageView;

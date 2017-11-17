@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.api.GlideApp;
 import com.cyl.music_hnust.bean.music.Music;
@@ -48,7 +47,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,49 +56,49 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private static final String TAG = "PlayFragment";
     public static View topContainer;
     //整个容器
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     LinearLayout container;
-    @Bind(R.id.next_buttom)
+    @BindView(R.id.next_buttom)
     ImageButton next_buttom;
-    @Bind(R.id.song_progress_normal)
+    @BindView(R.id.song_progress_normal)
     ProgressBar mProgressBar;
-    @Bind(R.id.play_pause)
+    @BindView(R.id.play_pause)
     PlayPauseButton mPlayPause;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView title;
-    @Bind(R.id.artist)
+    @BindView(R.id.artist)
     TextView artist;
-    @Bind(R.id.album)
+    @BindView(R.id.album)
     ImageView iv_album;
 
-    @Bind(R.id.ic_detail)
+    @BindView(R.id.ic_detail)
     ImageView ic_detail;
-    @Bind(R.id.previous)
+    @BindView(R.id.previous)
     ImageView skip_prev;
-    @Bind(R.id.skip_next)
+    @BindView(R.id.skip_next)
     ImageView skip_next;
-    @Bind(R.id.iv_back)
+    @BindView(R.id.iv_back)
     ImageView iv_back;
-    @Bind(R.id.iv_play_page_bg)
+    @BindView(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
 
     //textView
-    @Bind(R.id.song_title)
+    @BindView(R.id.song_title)
     TextView tv_title;
-    @Bind(R.id.song_artist)
+    @BindView(R.id.song_artist)
     TextView tv_artist;
-    @Bind(R.id.song_elapsed_time)
+    @BindView(R.id.song_elapsed_time)
     TextView tv_time;
-    @Bind(R.id.song_duration)
+    @BindView(R.id.song_duration)
     TextView tv_duration;
-    @Bind(R.id.skip_lrc)
+    @BindView(R.id.skip_lrc)
     TextView skip_lrc;
 
-    @Bind(R.id.song_progress)
+    @BindView(R.id.song_progress)
     SeekBar sk_progress;
-    @Bind(R.id.viewpager_player)
+    @BindView(R.id.viewpager_player)
     ViewPager mViewPager;
-    @Bind(R.id.playpausefloating)
+    @BindView(R.id.playpausefloating)
     FloatingActionButton playPauseFloating;
 
     PlayQueueDialog playQueueDialog = null;
@@ -169,7 +168,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
-            mViewPager.setOffscreenPageLimit(2);
+            mViewPager.setOffscreenPageLimit(1);
             mViewPager.setCurrentItem(0);
         }
     }

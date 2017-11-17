@@ -43,7 +43,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
@@ -53,15 +53,15 @@ import okhttp3.Call;
  */
 public class UserCenterAcivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.header_img)
+    @BindView(R.id.header_img)
     CircleImageView header_img;
-    @Bind(R.id.action_a)
+    @BindView(R.id.action_a)
     FloatingActionButton fab_a;
-    @Bind(R.id.action_b)
+    @BindView(R.id.action_b)
     FloatingActionButton fab_b;
-    @Bind(R.id.action_menu)
+    @BindView(R.id.action_menu)
     FloatingActionsMenu action_menu;
 
     @OnClick(R.id.header_img)
@@ -148,15 +148,15 @@ public class UserCenterAcivity extends BaseActivity {
         }
     }
 
-    @Bind(R.id.nick)
+    @BindView(R.id.nick)
     TextView nick;
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     TextView user_name;
-    @Bind(R.id.email)
+    @BindView(R.id.email)
     TextView email;
-    @Bind(R.id.phone)
+    @BindView(R.id.phone)
     TextView phone;
-    @Bind(R.id.logout)
+    @BindView(R.id.logout)
     CardView logout;
 
 

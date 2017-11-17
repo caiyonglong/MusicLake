@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 
@@ -43,24 +43,24 @@ import okhttp3.Call;
  */
 public class LoginActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.cv)
+    @BindView(R.id.cv)
     CardView cv;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fab;
-    @Bind(R.id.qqlogin)
+    @BindView(R.id.qqlogin)
     com.getbase.floatingactionbutton.FloatingActionButton qqlogin;
-    @Bind(R.id.register)
+    @BindView(R.id.register)
     Button register;
 
-    @Bind(R.id.usernameWrapper)
+    @BindView(R.id.usernameWrapper)
     TextInputLayout usernameWrapper;
-    @Bind(R.id.passwordWrapper)
+    @BindView(R.id.passwordWrapper)
     TextInputLayout passwordWrapper;
 
-    @Bind(R.id.progressBar)
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
     //QQ第三方登录
     String APP_ID = "1104846425";

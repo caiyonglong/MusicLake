@@ -32,7 +32,7 @@ import com.cyl.music_hnust.utils.Preferences;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -42,15 +42,15 @@ import butterknife.OnClick;
 
 public class PlayQueueDialog extends DialogFragment {
 
-    @Bind(R.id.tv_play_mode)
+    @BindView(R.id.tv_play_mode)
     TextView tvPlayMode;
-    @Bind(R.id.iv_play_mode)
+    @BindView(R.id.iv_play_mode)
     ImageView ivPlayMode;
-    @Bind(R.id.clear_all)
+    @BindView(R.id.clear_all)
     ImageView clearAll;
-    @Bind(R.id.recycler_view_songs)
+    @BindView(R.id.recycler_view_songs)
     RecyclerView recyclerView;
-    @Bind(R.id.bottomsheet)
+    @BindView(R.id.bottomsheet)
     LinearLayout root;
 
     private PlayQueueAdapter mAdapter;

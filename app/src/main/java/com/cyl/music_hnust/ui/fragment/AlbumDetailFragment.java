@@ -29,7 +29,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import okhttp3.Call;
 
 /**
@@ -40,13 +40,13 @@ import okhttp3.Call;
  */
 public class AlbumDetailFragment extends BaseFragment {
 
-    @Bind(R.id.recyclerView)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.collapsing_toolbar)
+    @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsing_toolbar;
-    @Bind(R.id.album_art)
+    @BindView(R.id.album_art)
     ImageView album_art;
 
 

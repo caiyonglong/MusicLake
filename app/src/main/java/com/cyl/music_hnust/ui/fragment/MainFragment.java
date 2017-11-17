@@ -16,7 +16,7 @@ import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 /**
  * 作者：yonglong on 2016/8/8 17:47
@@ -25,11 +25,11 @@ import butterknife.Bind;
  */
 public class MainFragment extends BaseFragment {
 
-    @Bind(R.id.m_viewpager)
+    @BindView(R.id.m_viewpager)
     ViewPager viewPager;
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     TabLayout mTabLayout;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     public static MainFragment newInstance() {

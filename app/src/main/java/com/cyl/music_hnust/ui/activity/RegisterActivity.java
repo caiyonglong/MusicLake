@@ -23,7 +23,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 
@@ -34,22 +34,22 @@ import okhttp3.Call;
  */
 public class RegisterActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fab;
 
-    @Bind(R.id.emailWrapper)
+    @BindView(R.id.emailWrapper)
     TextInputLayout emailWrapper;
-    @Bind(R.id.passWordWrapper)
+    @BindView(R.id.passWordWrapper)
     TextInputLayout passWordWrapper;
-    @Bind(R.id.userNameWrapper)
+    @BindView(R.id.userNameWrapper)
     TextInputLayout userNameWrapper;
 
-    @Bind(R.id.progressBar)
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @Bind(R.id.publish)
+    @BindView(R.id.publish)
     Button publish;
 
     @OnClick(R.id.publish)

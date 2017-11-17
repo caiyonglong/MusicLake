@@ -38,7 +38,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 
@@ -47,30 +47,30 @@ import okhttp3.Call;
  */
 public class CommentActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.id_cardview)
+    @BindView(R.id.id_cardview)
     CardView id_cardview;
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     TextView user_name;
-    @Bind(R.id.user_logo)
+    @BindView(R.id.user_logo)
     ImageView user_logo;
-    @Bind(R.id.content_text)
+    @BindView(R.id.content_text)
     TextView content_text;
-    @Bind(R.id.item_comment_num)
+    @BindView(R.id.item_comment_num)
     TextView comment_num;
-    @Bind(R.id.item_love_num)
+    @BindView(R.id.item_love_num)
     TextView love_num;
-    @Bind(R.id.item_comment_time)
+    @BindView(R.id.item_comment_time)
     TextView item_comment_time;
-    @Bind(R.id.send_comment)
+    @BindView(R.id.send_comment)
     Button send_comment;
-    @Bind(R.id.item_love)
+    @BindView(R.id.item_love)
     Button item_love;
-    @Bind(R.id.et_comment)
+    @BindView(R.id.et_comment)
     EditText mEditText;
 
-    @Bind(R.id.comment_list)
+    @BindView(R.id.comment_list)
     RecyclerView mRecyclerView;
 
     @OnClick(R.id.send_comment)

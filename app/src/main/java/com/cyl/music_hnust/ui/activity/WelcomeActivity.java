@@ -10,13 +10,13 @@ import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.utils.SystemUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 /**
  * Created by 永龙 on 2016/3/19.
  */
 public class WelcomeActivity extends BaseActivity {
-    @Bind(R.id.wel_container)
+    @BindView(R.id.wel_container)
     RelativeLayout container;
     RxPermissions rxPermissions;
 

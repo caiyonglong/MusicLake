@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import okhttp3.Call;
 
 /**
@@ -41,16 +41,16 @@ import okhttp3.Call;
 public class ArtistInfoActivity extends BaseActivity {
 
     private static final String TAG = "ArtistInfoActivity";
-    @Bind(R.id.li_container)
+    @BindView(R.id.li_container)
     LinearLayout li_container;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     LinearLayout loading;
-    @Bind(R.id.tv_empty)
+    @BindView(R.id.tv_empty)
     TextView tv_empty;
-    @Bind(R.id.progress)
+    @BindView(R.id.progress)
     ProgressBar progress;
 
 

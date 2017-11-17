@@ -16,7 +16,7 @@ import com.cyl.music_hnust.utils.Constants;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import okhttp3.Call;
 
 
@@ -25,9 +25,9 @@ import okhttp3.Call;
  */
 public class EditActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.edit_content)
+    @BindView(R.id.edit_content)
     EditText mEditText;
     String user_id;
     String content;

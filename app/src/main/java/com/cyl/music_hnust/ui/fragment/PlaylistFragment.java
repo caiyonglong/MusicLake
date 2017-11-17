@@ -23,7 +23,7 @@ import com.cyl.music_hnust.view.MultiViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 /**
  * 作者：yonglong on 2016/8/10 21:27
@@ -36,9 +36,9 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
     private static final String TAG = "PlaylistFragment";
     private static String TAG_CREATE = "create_playlist";
 
-    @Bind(R.id.mul_vp)
+    @BindView(R.id.mul_vp)
     MultiViewPager mMultiViewPager;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     private static List<Playlist> mPlaylists = new ArrayList<>();

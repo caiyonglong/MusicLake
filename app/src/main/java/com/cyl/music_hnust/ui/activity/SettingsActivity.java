@@ -20,11 +20,11 @@ import com.cyl.music_hnust.utils.Preferences;
 import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.utils.UpdateUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class SettingsActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Override

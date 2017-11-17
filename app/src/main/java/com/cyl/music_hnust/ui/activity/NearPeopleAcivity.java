@@ -22,7 +22,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 
@@ -31,23 +31,23 @@ import okhttp3.Call;
  */
 public class NearPeopleAcivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     TextView user_name;
-    @Bind(R.id.user_logo)
+    @BindView(R.id.user_logo)
     CircleImageView user_logo;
-    @Bind(R.id.user_email)
+    @BindView(R.id.user_email)
     TextView user_email;
-    @Bind(R.id.user_phone)
+    @BindView(R.id.user_phone)
     TextView user_phone;
-    @Bind(R.id.user_nick)
+    @BindView(R.id.user_nick)
     TextView user_nick;
-    @Bind(R.id.user_secret_num)
+    @BindView(R.id.user_secret_num)
     TextView user_secret_num;
-    @Bind(R.id.recyclerview)
+    @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
-    @Bind(R.id.info_card)
+    @BindView(R.id.info_card)
     CardView info_card;
 
     User userinfo;

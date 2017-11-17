@@ -39,7 +39,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import okhttp3.Call;
 
 /**
@@ -47,11 +47,11 @@ import okhttp3.Call;
  */
 public class ShakeActivity extends BaseActivity {
 
-    @Bind(R.id.shake)
+    @BindView(R.id.shake)
     ImageView imgBackground;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.shake_result)
+    @BindView(R.id.shake_result)
     RecyclerView shake_result;
     public List<Location> mydatas = new ArrayList<>();
 

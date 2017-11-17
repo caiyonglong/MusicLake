@@ -17,7 +17,7 @@ import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 /**
  * 功能：本地歌曲列表
@@ -27,11 +27,11 @@ import butterknife.Bind;
  */
 public class ArtistFragment extends BaseFragment {
 
-    @Bind(R.id.recyclerview)
+    @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
-    @Bind(R.id.tv_empty)
+    @BindView(R.id.tv_empty)
     TextView tv_empty;
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     LinearLayout loading;
     private ArtistAdapter mAdapter;
     private List<Artist> artists = new ArrayList<>();

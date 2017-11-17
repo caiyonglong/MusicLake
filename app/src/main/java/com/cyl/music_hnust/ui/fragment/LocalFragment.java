@@ -7,16 +7,16 @@ import android.support.v4.view.ViewPager;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 
 /**
  * Created by Monkey on 2015/6/29.
  */
 public class LocalFragment extends BaseFragment {
-    @Bind(R.id.m_viewpager)
+    @BindView(R.id.m_viewpager)
     ViewPager viewPager;
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
     public static LocalFragment newInstance() {

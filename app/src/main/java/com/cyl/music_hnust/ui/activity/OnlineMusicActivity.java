@@ -42,7 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import okhttp3.Call;
 
 /**
@@ -59,10 +59,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
     private List<Music> mMusicls = new ArrayList<>();
     private OnlineMusicAdapter mAdapter;
 
-    @Bind(R.id.xrecyclerview)
+    @BindView(R.id.xrecyclerview)
     XRecyclerView mRecyclerView;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     private View vHeader;

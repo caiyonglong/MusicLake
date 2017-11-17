@@ -15,7 +15,7 @@ import com.cyl.music_hnust.ui.fragment.base.BaseFragment;
 import com.cyl.music_hnust.utils.Extras;
 import com.cyl.music_hnust.utils.SystemUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
@@ -23,17 +23,17 @@ import static android.app.ActivityOptions.makeSceneTransitionAnimation;
  * 作者：yonglong on 2016/11/6 17:09
  */
 public class PlaylistPagerFragment extends BaseFragment {
-    @Bind(R.id.name)
+    @BindView(R.id.name)
     TextView playlistame;
-    @Bind(R.id.songcount)
+    @BindView(R.id.songcount)
     TextView songcount;
-    @Bind(R.id.number)
+    @BindView(R.id.number)
     TextView playlistnumber;
-    @Bind(R.id.playlisttype)
+    @BindView(R.id.playlisttype)
     TextView playlisttype;
-    @Bind(R.id.playlist_image)
+    @BindView(R.id.playlist_image)
     ImageView playlistImage;
-    @Bind(R.id.foreground)
+    @BindView(R.id.foreground)
     View foreground;
 
     private static final String TAG_PAGE_NUMBER = "pageNumber";

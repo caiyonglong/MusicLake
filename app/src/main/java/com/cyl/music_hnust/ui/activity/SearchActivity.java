@@ -35,7 +35,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import okhttp3.Call;
 
 /**
@@ -53,9 +53,9 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private MaterialDialog mProgressDialog;
     private int mOffset = 10;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.xrecyclerview)
+    @BindView(R.id.xrecyclerview)
     XRecyclerView mRecyclerView;
 
     private List<SearchMusic.SongList> searchResults = new ArrayList<>();
