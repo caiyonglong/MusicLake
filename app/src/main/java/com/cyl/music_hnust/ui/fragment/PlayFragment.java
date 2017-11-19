@@ -41,6 +41,7 @@ import com.cyl.music_hnust.utils.ToastUtils;
 import com.cyl.music_hnust.view.LyricView;
 import com.cyl.music_hnust.view.PlayPauseButton;
 import com.cyl.music_hnust.view.PlayPauseDrawable;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -105,8 +106,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     Palette mPalette;
     static PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
-    List<View> mViewPagerContent;
+    private List<View> mViewPagerContent;
     private PlayerReceiver mPlayStatus;
+
+    private SlidingUpPanelLayout mSlidingUpPaneLayout;
     private LyricView mLrcView;
     private CircleImageView civ_cover;
     private int position;
@@ -160,7 +163,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
-
+        mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
         mPlayPause.setColor(getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
         playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         playPauseFloating.setImageDrawable(playPauseDrawable);
@@ -179,6 +182,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     @Override
     protected void listener() {
+        iv_album.setOnClickListener(this);
         skip_next.setOnClickListener(this);
         skip_prev.setOnClickListener(this);
         iv_back.setOnClickListener(this);
@@ -228,6 +232,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         tv_duration.setText(FormatUtil.formatTime(music.getDuration()));
         sk_progress.setMax((int) music.getDuration());
         mProgressBar.setMax((int) music.getDuration());
+        mLrcView.requestFocus();
         mHandler.post(updateProgress);
         setLrc(music);
         setCoverAndBg(music);
@@ -239,6 +244,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_album:
+                mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                break;
             case R.id.previous:
                 PlayManager.prev();
                 break;
@@ -305,6 +313,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             int progress = seekBar.getProgress();
             PlayManager.seekTo(progress);
             tv_time.setText(FormatUtil.formatTime(progress));
+            mLrcView.setCurrentTimeMillis(progress);
         } else {
             seekBar.setProgress(0);
         }
@@ -344,14 +353,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
         mLrcView.setLineSpace(15.0f);
         mLrcView.setTextSize(17.0f);
-        mLrcView.setPlayable(false);
-        mLrcView.setTouchable(false);
+        mLrcView.setPlayable(true);
         mLrcView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
             @Override
             public void onPlayerClicked(long progress, String content) {
                 PlayManager.seekTo((int) progress);
                 if (!PlayManager.isPlaying()) {
-//                    PlayManager.onPlayPauseClick();
+                    PlayManager.playPause();
                 }
             }
         });
@@ -445,8 +453,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onPageSelected(int position) {
-                mLrcView.setTouchable(true);
-                mLrcView.setPlayable(true);
+                Log.d("PlayFragment", "--" + position);
+                if (position == 1) {
+                    mSlidingUpPaneLayout.setTouchEnabled(false);
+//                    mSlidingUpPaneLayout.isTouchEnabled(true);
+                } else {
+                    mSlidingUpPaneLayout.setTouchEnabled(true);
+                }
             }
 
             @Override

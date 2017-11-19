@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -82,7 +83,6 @@ public class LyricView extends View {
     private ValueAnimator mFlingAnimator;
     private boolean mPlayable = false;
     private boolean mSliding = false;
-    private boolean mTouchable = true;
 
     public LyricView(Context context) {
         super(context);
@@ -282,10 +282,7 @@ public class LyricView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        if (!mTouchable) {
-            return super.onTouchEvent(event);
-        }
+        Log.e("onTouchEvent", event.getAction() + "----");
 
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
@@ -350,6 +347,7 @@ public class LyricView extends View {
      * @param event
      */
     private void actionMove(MotionEvent event) {
+        Log.e("Lrc", scrollable() + "----");
         if (scrollable()) {
             final VelocityTracker tracker = mVelocityTracker;
             tracker.computeCurrentVelocity(1000, maximumFlingVelocity);
@@ -923,10 +921,6 @@ public class LyricView extends View {
 
     public void setPlayable(boolean playable) {
         mPlayable = playable;
-    }
-
-    public void setTouchable(boolean touchable) {
-        mTouchable = touchable;
     }
 
     public void setHintColor(int color) {

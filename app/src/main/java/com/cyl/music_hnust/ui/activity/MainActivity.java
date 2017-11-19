@@ -18,8 +18,6 @@ import android.widget.TextView;
 import com.cyl.music_hnust.R;
 import com.cyl.music_hnust.bean.user.User;
 import com.cyl.music_hnust.bean.user.UserStatus;
-import com.cyl.music_hnust.service.MusicPlayService;
-import com.cyl.music_hnust.service.PlayManager;
 import com.cyl.music_hnust.ui.fragment.DownloadFragment;
 import com.cyl.music_hnust.ui.fragment.MainFragment;
 import com.cyl.music_hnust.ui.fragment.PlayFragment;
@@ -88,14 +86,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initData() {
-        initService();
         initNav();
-    }
-
-    private void initService() {
-        intent = new Intent(this, MusicPlayService.class);
-        startService(intent);
-        PlayManager.bindToService(this);
     }
 
 
@@ -105,6 +96,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
+                if (newState.equals(PanelState.COLLAPSED)) {
+                    mSlidingUpPaneLayout.setTouchEnabled(true);
+                }
             }
 
             @Override
@@ -253,10 +247,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             playFragment = PlayFragment.newInstance();
             transaction.add(R.id.controls_container, playFragment);
         }
-        //隐藏所有fragment
-        hideFragment(transaction);
         //显示需要显示的fragment
-        transaction.show(downloadFragment);
+        transaction.show(playFragment);
         transaction.commit();
     }
 
@@ -356,7 +348,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        PlayManager.unbindFromService(this);
-        stopService(intent);
     }
 }
