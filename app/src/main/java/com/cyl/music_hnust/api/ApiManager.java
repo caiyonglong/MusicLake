@@ -1,7 +1,5 @@
 package com.cyl.music_hnust.api;
 
-import android.content.Context;
-
 import com.cyl.music_hnust.utils.Constants;
 
 import retrofit2.Retrofit;
@@ -22,18 +20,18 @@ public class ApiManager {
     private static ApiManager sApiManager;
 
     //获取ApiManager的单例
-    public static ApiManager getInstence(Context context) {
+    public static ApiManager getInstance() {
         if (sApiManager == null) {
             synchronized (ApiManager.class) {
                 if (sApiManager == null) {
-                    sApiManager = new ApiManager(context);
+                    sApiManager = new ApiManager();
                 }
             }
         }
         return sApiManager;
     }
 
-    private ApiManager(Context context) {
+    private ApiManager() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
