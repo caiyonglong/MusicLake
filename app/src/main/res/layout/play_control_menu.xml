@@ -41,7 +41,7 @@
             android:layout_gravity="center"
             android:layout_toLeftOf="@+id/next_buttom">
 
-            <com.cyl.music_hnust.view.PlayPauseButton
+            <com.cyl.musiclake.view.PlayPauseButton
                 android:id="@+id/play_pause"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

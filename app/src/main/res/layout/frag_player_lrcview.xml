@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cyl.music_hnust.view.LyricView
-        android:id="@+id/LyricShow"
+    <com.cyl.musiclake.view.LyricView
+        android:id="@+id/lyricShow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/civ_cover"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:focusable="true" />
 
 
 </RelativeLayout>

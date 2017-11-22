@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cyl.music_hnust">
+    package="com.cyl.musiclake">
 
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <!-- 手机震动 -->
@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.cyl.musiclake.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -36,7 +36,7 @@
         android:theme="@style/MyThemeBlue">
 
         <activity
-            android:name=".ui.activity.WelcomeActivity"
+            android:name="com.cyl.musiclake.ui.activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
@@ -46,7 +46,7 @@
 
         </activity>
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name="com.cyl.musiclake.ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
@@ -71,58 +71,58 @@
 
 
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name="com.cyl.musiclake.ui.activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".ui.activity.RegisterActivity"
+            android:name="com.cyl.musiclake.ui.activity.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".ui.activity.PlaylistDetailActivity"
+            android:name="com.cyl.musiclake.ui.activity.PlaylistDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ArtistInfoActivity"
+            android:name="com.cyl.musiclake.ui.activity.ArtistInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.NearPeopleAcivity"
+            android:name="com.cyl.musiclake.ui.activity.NearPeopleAcivity"
             android:label="@string/near_people"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.OnlineMusicActivity"
+            android:name="com.cyl.musiclake.ui.activity.OnlineMusicActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".ui.activity.ShakeActivity"
+            android:name="com.cyl.musiclake.ui.activity.ShakeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name="com.cyl.musiclake.ui.activity.SearchActivity" />
         <activity
-            android:name=".ui.activity.EditActivity"
+            android:name="com.cyl.musiclake.ui.activity.EditActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.UserCenterAcivity"
+            android:name="com.cyl.musiclake.ui.activity.UserCenterAcivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".service.MusicPlayService"
+            android:name="com.cyl.musiclake.service.MusicPlayService"
              />
 
-        <service android:name=".download.DownloadService" />
+        <service android:name="com.cyl.musiclake.download.DownloadService" />
 
         <activity
-            android:name=".ui.activity.SettingsActivity"
+            android:name="com.cyl.musiclake.ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
         <!--社区-->
 
 
         <activity
-            android:name=".ui.activity.CommentActivity"
+            android:name="com.cyl.musiclake.ui.activity.CommentActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

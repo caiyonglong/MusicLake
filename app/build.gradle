@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.1'
-
     defaultConfig {
-        applicationId "com.cyl.music_hnust"
+        applicationId "com.cyl.musiclake"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 5
@@ -24,19 +23,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    productFlavors {
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-//    testCompile 'junit:junit:4.12'
+    //    testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:27.0.1'
     compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'com.android.support:palette-v7:27.0.1'
     compile 'com.android.support:cardview-v7:27.0.1'
     compile 'com.android.support:recyclerview-v7:27.0.1'
     compile 'com.android.support:support-v4:27.0.1'
-
     compile 'com.jcodecraeer:xrecyclerview:1.2.7'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.loopj.android:android-async-http:1.4.9'
@@ -61,7 +60,6 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.5.0'
     //    compile 'im.fir:fir-sdk:latest.integration@aar'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-
     compile 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
     // Retrofit适配RxJava
@@ -69,6 +67,5 @@ dependencies {
     // Retrofit Gson数据转换器
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-
     compile 'com.sothree.slidinguppanel:library:3.3.1'
 }
