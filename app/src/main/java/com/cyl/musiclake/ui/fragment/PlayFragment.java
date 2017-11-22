@@ -30,8 +30,10 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.mvp.model.music.Music;
+import com.cyl.musiclake.mvp.presenter.MusicStateListener;
 import com.cyl.musiclake.service.MusicPlayService;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.activity.BaseActivity;
 import com.cyl.musiclake.ui.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.fragment.base.BaseFragment;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -52,7 +54,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MusicStateListener {
 
     private static final String TAG = "PlayFragment";
     public static View topContainer;
@@ -107,8 +109,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     static PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
     private List<View> mViewPagerContent;
-    private PlayerReceiver mPlayStatus;
-
     private SlidingUpPanelLayout mSlidingUpPaneLayout;
     private LyricView mLrcView;
     private CircleImageView civ_cover;
@@ -196,25 +196,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     protected void initDatas() {
         mHandler = new Handler();
-
-
-        mPlayStatus = new PlayerReceiver(getActivity());
-
-        IntentFilter filter = new IntentFilter();
-        // Play and pause changes
-        filter.addAction(MusicPlayService.PLAY_STATE_CHANGED);
-        // Track changes
-        filter.addAction(MusicPlayService.META_CHANGED);
-        // Update a list, probably the playlist fragment's
-        filter.addAction(MusicPlayService.REFRESH);
-        // If a playlist has changed, notify us
-        filter.addAction(MusicPlayService.PLAYLIST_CHANGED);
-        // If there is an error playing a track
-        filter.addAction(MusicPlayService.TRACK_ERROR);
-
-        getActivity().registerReceiver(mPlayStatus, filter);
-
-
+        ((BaseActivity)getActivity()).setMusicStateListenerListener(this);
         updatePlayPauseFloatingButton();
         updateView();
 
@@ -483,31 +465,20 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (operatingAnim != null) {
             operatingAnim.cancel();
         }
-        if (mPlayStatus != null) {
-            getActivity().unregisterReceiver(mPlayStatus);
-        }
     }
 
-    public class PlayerReceiver extends BroadcastReceiver {
-        private final WeakReference<Context> mReference;
+    @Override
+    public void restartLoader() {
 
-
-        public PlayerReceiver(final Context activity) {
-            mReference = new WeakReference<Context>(activity);
-        }
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            final String action = intent.getAction();
-            Context baseActivity = mReference.get();
-            if (baseActivity != null) {
-                if (action.equals(MusicPlayService.META_CHANGED)) {
-                    updateView();
-                } else if (action.equals(MusicPlayService.TRACK_ERROR)) {
-
-                }
-            }
-        }
     }
 
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+        updateView();
+    }
 }
