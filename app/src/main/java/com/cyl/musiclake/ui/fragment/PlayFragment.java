@@ -1,21 +1,16 @@
 package com.cyl.musiclake.ui.fragment;
 
 import android.animation.ObjectAnimator;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,24 +24,24 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.mvp.contract.PlayControlsContract;
 import com.cyl.musiclake.mvp.model.music.Music;
 import com.cyl.musiclake.mvp.presenter.MusicStateListener;
-import com.cyl.musiclake.service.MusicPlayService;
+import com.cyl.musiclake.mvp.presenter.PlayControlsPresenter;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.activity.BaseActivity;
 import com.cyl.musiclake.ui.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.fragment.base.BaseFragment;
+import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.utils.ToastUtils;
+import com.cyl.musiclake.utils.ImageUtils;
+import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.PlayPauseButton;
-import com.cyl.musiclake.view.PlayPauseDrawable;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,25 +49,25 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MusicStateListener {
+public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, MusicStateListener, PlayControlsContract.View {
 
     private static final String TAG = "PlayFragment";
     public static View topContainer;
     //整个容器
     @BindView(R.id.container)
-    LinearLayout container;
+    LinearLayout mContainer;
     @BindView(R.id.next_buttom)
-    ImageButton next_buttom;
+    ImageButton mBtnNext;
     @BindView(R.id.song_progress_normal)
     ProgressBar mProgressBar;
     @BindView(R.id.play_pause)
     PlayPauseButton mPlayPause;
     @BindView(R.id.title)
-    TextView title;
+    TextView mTvTitle;
     @BindView(R.id.artist)
-    TextView artist;
+    TextView mTvArtist;
     @BindView(R.id.album)
-    ImageView iv_album;
+    ImageView mIvAlbum;
 
     @BindView(R.id.ic_detail)
     ImageView ic_detail;
@@ -84,10 +79,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     ImageView iv_back;
     @BindView(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
+    @BindView(R.id.playOrPause)
+    ImageView mPlayOrPause;
 
     //textView
     @BindView(R.id.song_title)
-    TextView tv_title;
+    TextView mTvName;
     @BindView(R.id.song_artist)
     TextView tv_artist;
     @BindView(R.id.song_elapsed_time)
@@ -101,28 +98,54 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     SeekBar sk_progress;
     @BindView(R.id.viewpager_player)
     ViewPager mViewPager;
-    @BindView(R.id.playpausefloating)
-    FloatingActionButton playPauseFloating;
 
-    PlayQueueDialog playQueueDialog = null;
-    Palette mPalette;
-    static PlayPauseDrawable playPauseDrawable = new PlayPauseDrawable();
 
+    LyricView mLrcView;
+    CircleImageView mCivImage;
+
+
+    @OnClick(R.id.iv_back)
+    void back() {
+        onBackPressed();
+    }
+
+    private PlayQueueDialog playQueueDialog = null;
+    private Palette mPalette;
+    private Palette.Swatch mSwatch;
+    private boolean isDebug = true;
+    private int mProgress;
+    private Handler mHandler;
     private List<View> mViewPagerContent;
     private SlidingUpPanelLayout mSlidingUpPaneLayout;
-    private LyricView mLrcView;
-    private CircleImageView civ_cover;
-    private int position;
-    //是否有歌词
-    private boolean lrc_empty = true;
-    protected static Handler mHandler;
+    private PlayControlsPresenter mPresenter = new PlayControlsPresenter();
+    private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
 
-    public static PlayFragment newInstance() {
-        Bundle args = new Bundle();
-        PlayFragment fragment = new PlayFragment();
-        fragment.setArguments(args);
-        return fragment;
+
+    @OnClick(R.id.skip_next)
+    void next() {
+        mPresenter.onNextClick();
     }
+
+    @OnClick(R.id.next_buttom)
+    void nextButtom() {
+        mPresenter.onNextClick();
+    }
+
+    @OnClick(R.id.play_pause)
+    void playOrPause() {
+        mPresenter.onPlayPauseClick();
+    }
+
+    @OnClick(R.id.playOrPause)
+    void playOrPauseF() {
+        mPresenter.onPlayPauseClick();
+    }
+
+    @OnClick(R.id.previous)
+    void prev() {
+        mPresenter.onPreviousClick();
+    }
+
 
     @OnClick(R.id.ic_detail)
     void openPlayQueue() {
@@ -139,25 +162,28 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     Runnable updateProgress = new Runnable() {
         @Override
         public void run() {
-            position = PlayManager.getCurrentPosition();
-            sk_progress.setProgress(position);
-            mProgressBar.setProgress(position);
-            tv_time.setText(FormatUtil.formatTime(position));
-
-            Log.d(TAG, "position" + position);
-            mLrcView.setCurrentTimeMillis(position);
+            if (isDebug) Log.d(TAG, "mProgress" + mProgress);
+            mProgress = PlayManager.getCurrentPosition();
+            sk_progress.setProgress(mProgress);
+            mProgressBar.setProgress(mProgress);
+            tv_time.setText(FormatUtil.formatTime(mProgress));
+            mLrcView.setCurrentTimeMillis(mProgress);
             mHandler.postDelayed(updateProgress, 50);
         }
     };
+
+    public static PlayFragment newInstance() {
+        Bundle args = new Bundle();
+        PlayFragment fragment = new PlayFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public int getLayoutId() {
         return R.layout.frag_player;
     }
 
-    /**
-     * 初始化控件
-     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void initViews() {
@@ -165,103 +191,62 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         topContainer = rootView.findViewById(R.id.top_container);
         mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
         mPlayPause.setColor(getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
-        playPauseDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
-        playPauseFloating.setImageDrawable(playPauseDrawable);
-
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
+            mViewPager.setPageTransformer(false, new DepthPageTransformer());
             mViewPager.setOffscreenPageLimit(1);
             mViewPager.setCurrentItem(0);
         }
     }
 
-
-    /**
-     * 一些监听事件
-     */
     @Override
     protected void listener() {
-        iv_album.setOnClickListener(this);
-        skip_next.setOnClickListener(this);
-        skip_prev.setOnClickListener(this);
-        iv_back.setOnClickListener(this);
-        skip_lrc.setOnClickListener(this);
         sk_progress.setOnSeekBarChangeListener(this);
-        playPauseFloating.setOnClickListener(this);
-        mPlayPause.setOnClickListener(this);
-        next_buttom.setOnClickListener(this);
     }
 
     @Override
     protected void initDatas() {
         mHandler = new Handler();
-        ((BaseActivity)getActivity()).setMusicStateListenerListener(this);
-        updatePlayPauseFloatingButton();
-        updateView();
-
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
+        }
+        mPresenter.attachView(this);
+        mPresenter.updateNowPlayingCard();
     }
 
-    public void updateView() {
-        Music music = PlayManager.getPlayingMusic();
-        if (music == null) {
-            return;
-        }
-        tv_title.setText(FileUtils.getTitle(music.getTitle()));
-        title.setText(FileUtils.getTitle(music.getTitle()));
-        tv_artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
-        artist.setText(FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum()));
-        tv_duration.setText(FormatUtil.formatTime(music.getDuration()));
-        sk_progress.setMax((int) music.getDuration());
-        mProgressBar.setMax((int) music.getDuration());
-        mLrcView.requestFocus();
-        mHandler.post(updateProgress);
-        setLrc(music);
-        setCoverAndBg(music);
-        initAlbumPic();
-        updatePlayPauseFloatingButton();
-    }
+    private void setupViewPager(ViewPager viewPager) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View lrcView = inflater.inflate(R.layout.frag_player_lrcview, null);
+        View coverView = inflater.inflate(R.layout.frag_player_coverview, null);
 
+        mLrcView = lrcView.findViewById(R.id.lyricShow);
+        mCivImage = coverView.findViewById(R.id.civ_cover);
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_album:
-                mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                break;
-            case R.id.previous:
-                PlayManager.prev();
-                break;
-            case R.id.skip_next:
-                PlayManager.next();
-                break;
-            case R.id.iv_back:
-                onBackPressed();
-                break;
-            case R.id.skip_lrc:
-                break;
-            case R.id.play_pause:
-                PlayManager.playPause();
-                break;
-            case R.id.next_buttom:
-                PlayManager.next();
-                break;
-            case R.id.playpausefloating:
-                PlayManager.playPause();
-                break;
-        }
+        mViewPagerContent = new ArrayList<>(2);
+        mViewPagerContent.add(coverView);
+        mViewPagerContent.add(lrcView);
+        viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
-    }
+            @Override
+            public void onPageSelected(int position) {
+                Log.d("PlayFragment", "--" + position);
+                if (position == 1) {
+                    mSlidingUpPaneLayout.setTouchEnabled(false);
+                } else {
+                    mSlidingUpPaneLayout.setTouchEnabled(true);
+                }
+            }
 
-    /**
-     * 在线获取歌词
-     */
-    private void getlrc(Music.Type type) {
-        if (type == Music.Type.ONLINE) {
-            ToastUtils.show(getContext(), "在线歌曲");
-        } else {
-            ToastUtils.show(getContext(), "本地歌曲");
-        }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -301,38 +286,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    /**
-     * 设置歌词路径
-     *
-     * @param music
-     */
-    private void setLrc(final Music music) {
-        if (music.getType() == Music.Type.LOCAL) {
-            String uri = music.getUri();
-            if (uri.endsWith(".mp3")) {
-                String lrcPath = uri.replace(".mp3", ".lrc");
-                loadLrc(lrcPath, Music.Type.LOCAL);
-            } else {
-                loadLrc("", Music.Type.LOCAL);
-            }
-        } else {
-            loadOnlineLrc(music.getLrcPath());
-        }
-    }
 
-    private void loadOnlineLrc(String path) {
-        Log.e("---", "path" + path);
-//        loadLrc(lrcPath, online);
-    }
-
-    /**
-     * 歌词视图加载歌词
-     *
-     * @param path
-     * @param type
-     */
-    private void loadLrc(String path, Music.Type type) {
-
+    private void loadLrc(File file) {
         mLrcView.setLineSpace(15.0f);
         mLrcView.setTextSize(17.0f);
         mLrcView.setPlayable(true);
@@ -345,8 +300,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         });
-        File file = new File(path);
-        mLrcView.setLyricFile(file, "utf-8");
+        if (file != null && file.exists()) {
+            Log.e(TAG, "file" + file.getAbsolutePath());
+            mLrcView.setLyricFile(file, "utf-8");
+        } else {
+            mLrcView.reset("暂无歌词");
+        }
     }
 
     /**
@@ -356,8 +315,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void setCoverAndBg(Music music) {
         if (music.getType() == Music.Type.LOCAL) {
-            iv_album.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
-            civ_cover.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
+            mIvAlbum.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
+            mCivImage.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
 
             mPalette = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
@@ -368,7 +327,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                         .load(music.getCoverUri())
                         .placeholder(R.drawable.default_cover)
                         .error(R.drawable.default_cover) //失败图片
-                        .into(civ_cover);
+                        .into(mCivImage);
                 GlideApp.with(this).load(music.getCoverUri())
                         .placeholder(R.drawable.default_cover)
                         .error(R.drawable.default_cover) //失败图片
@@ -377,7 +336,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                         .load(music.getCoverUri())
                         .placeholder(R.drawable.default_cover)
                         .error(R.drawable.default_cover) //失败图片
-                        .into(iv_album);
+                        .into(mIvAlbum);
             }
         }
 
@@ -396,65 +355,24 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public ObjectAnimator operatingAnim;
     public long currentPlayTime = 0;
 
-
-    public void initAlbumPic() {
-        /**
-         * 旋转动画
-         */
-        LinearInterpolator lin = new LinearInterpolator();
-        operatingAnim = ObjectAnimator.ofFloat(civ_cover, "rotation", 0, 359);
+    /**
+     * 旋转动画
+     */
+    public void initAlbumPic(View view) {
+        operatingAnim = ObjectAnimator.ofFloat(view, "rotation", 0, 359);
         operatingAnim.setDuration(20 * 1000);
         operatingAnim.setRepeatCount(-1);
         operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
-        operatingAnim.setInterpolator(lin);
+        operatingAnim.setInterpolator(mLinearInterpolator);
 
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        //歌词视图
-        View lrcView = inflater.inflate(R.layout.frag_player_lrcview, null);
-        //专辑视图
-        View coverView = inflater.inflate(R.layout.frag_player_coverview, null);
-        civ_cover = (CircleImageView) coverView.findViewById(R.id.civ_cover);
-        mLrcView = (LyricView) lrcView.findViewById(R.id.lyricShow);
-
-        mViewPagerContent = new ArrayList<>(2);
-        mViewPagerContent.add(coverView);
-        mViewPagerContent.add(lrcView);
-        viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.d("PlayFragment", "--" + position);
-                if (position == 1) {
-                    mSlidingUpPaneLayout.setTouchEnabled(false);
-//                    mSlidingUpPaneLayout.isTouchEnabled(true);
-                } else {
-                    mSlidingUpPaneLayout.setTouchEnabled(true);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
 
     public void updatePlayPauseFloatingButton() {
         if (PlayManager.isPlaying()) {
             mPlayPause.setPlayed(true);
-            playPauseDrawable.transformToPause(true);
         } else {
             mPlayPause.setPlayed(false);
-            playPauseDrawable.transformToPlay(true);
         }
         mPlayPause.startAnimation();
     }
@@ -479,6 +397,129 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onMetaChanged() {
-        updateView();
+        mPresenter.updateNowPlayingCard();
+        mPresenter.loadLyric();
+    }
+
+    @Override
+    public void setAlbumArt(Bitmap albumArt) {
+        mIvAlbum.setImageBitmap(albumArt);
+        mCivImage.setImageBitmap(albumArt);
+        ivPlayingBg.setImageBitmap(ImageUtils.blur(albumArt, 50));
+        initAlbumPic(mCivImage);
+    }
+
+    @Override
+    public void setAlbumArt(Drawable albumArt) {
+        ivPlayingBg.setBackground(albumArt);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        mTvName.setText(title);
+        mTvTitle.setText(title);
+    }
+
+    @Override
+    public void setArtist(String artist) {
+        tv_artist.setText(artist);
+        mTvArtist.setText(artist);
+    }
+
+    @Override
+    public void setPalette(Palette palette) {
+        mPalette = palette;
+        mSwatch = ColorUtil.getMostPopulousSwatch(palette);
+
+        int paletteColor = Color.BLACK;
+        if (mSwatch != null) {
+            paletteColor = mSwatch.getRgb();
+            int artistColor = mSwatch.getTitleTextColor();
+            mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
+            tv_artist.setTextColor(artistColor);
+        } else {
+            mSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
+            if (mSwatch != null) {
+                paletteColor = mSwatch.getRgb();
+                int artistColor = mSwatch.getTitleTextColor();
+                mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
+                tv_artist.setTextColor(artistColor);
+            } else {
+//                paletteColor= Color.parseColor();
+                mTvName.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+                tv_artist.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+            }
+
+        }
+        //set icon color
+        int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
+        if (playQueueDialog != null && mSwatch != null) {
+            playQueueDialog.setPaletteSwatch(mSwatch);
+        }
+        mLrcView.setHighLightTextColor(blackWhiteColor);
+        mLrcView.setDefaultColor(blackWhiteColor);
+        tv_time.setTextColor(blackWhiteColor);
+        tv_duration.setTextColor(blackWhiteColor);
+//        mLrcView.setTouchable(false);
+        mLrcView.setHintColor(blackWhiteColor);
+//        mPlayPause.setDrawableColor(blackWhiteColor);
+//        mPlayPause.setCircleColor(blackWhiteColor);
+//        mPlayPause.setCircleAlpah(0);
+//        mPlayPause.setEnabled(true);
+        mBtnNext.setEnabled(true);
+//        mBtnNext.setColor(blackWhiteColor);
+//        skip_prev.setColor(blackWhiteColor);
+//        next.setColor(blackWhiteColor);
+//        iconPlayQueue.setColor(blackWhiteColor);
+
+        //set timely color
+//        setTimelyColor(blackWhiteColor);
+
+        //set seekbar progressdrawable
+//        ScaleDrawable scaleDrawable = (ScaleDrawable) ((LayerDrawable) mSeekBar.getProgressDrawable()).findDrawableByLayerId(R.id.progress);
+//        GradientDrawable gradientDrawable = (GradientDrawable) scaleDrawable.getDrawable();
+//        gradientDrawable.setColors(new int[]{blackWhiteColor, blackWhiteColor, blackWhiteColor});
+
+    }
+
+    @Override
+    public void showLyric(File file) {
+        loadLrc(file);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void setPlayPauseButton(boolean isPlaying) {
+        mPlayPause.setPlayed(isPlaying);
+        mPlayPause.startAnimation();
+        if (operatingAnim != null) {
+            if (isPlaying) {
+                mPlayOrPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_circle));
+                operatingAnim.resume();
+            } else {
+                mPlayOrPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_circle));
+                operatingAnim.pause();
+            }
+        }
+    }
+
+    @Override
+    public boolean getPlayPauseStatus() {
+        return mPlayPause.isPlayed();
+    }
+
+    @Override
+    public void startUpdateProgress() {
+        if (operatingAnim != null) {
+            operatingAnim.start();
+        }
+        mHandler.post(updateProgress);
+    }
+
+    @Override
+    public void setProgressMax(int max) {
+        sk_progress.setMax(max);
+        mProgressBar.setMax(max);
+        tv_duration.setText(FormatUtil.formatTime(max));
     }
 }

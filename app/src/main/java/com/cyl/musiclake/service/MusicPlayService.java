@@ -25,9 +25,9 @@ import android.widget.RemoteViews;
 
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.mvp.model.music.Music;
 import com.cyl.musiclake.dataloaders.MusicLoader;
 import com.cyl.musiclake.download.NetworkUtil;
+import com.cyl.musiclake.mvp.model.music.Music;
 import com.cyl.musiclake.ui.activity.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.NetworkUtils;
@@ -59,18 +59,19 @@ public class MusicPlayService extends Service {
     public static final String REFRESH = "com.cyl.music_hnust.refresh";
     public static final String PLAYLIST_CLEAR = "com.cyl.music_hnust.playlist_clear";
     public static final String META_CHANGED = "com.cyl.music_hnust.metachanged";
+    private static final boolean DEBUG = true;
 
     private MediaPlayer mPlayer = null;
     private Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
-    private int mPlayingPosition;
+    private int mPlayingPos;
 
     RemoteViews mRemoteViews;
 
     private boolean isPause = false;
 
     //播放模式：0顺序播放、1随机播放、2单曲循环
-    private int play_mode;
+    private int mRepeatMode;
     private final int PLAY_MODE_RANDOM = 0;
     private final int PLAY_MODE_LOOP = 1;
     private final int PLAY_MODE_REPEAT = 2;
@@ -92,16 +93,15 @@ public class MusicPlayService extends Service {
         initReceiver();
         initMediaPlayer();
         initTelephony();
-        initData();
     }
 
     private void initData() {
         mPlaylist = MusicLoader.getPlayQueue(this);
-        mPlayingPosition = (int) Preferences.getCurrentSongId();
-        if (mPlayingPosition == -1) {
+        mPlayingPos = (int) Preferences.getCurrentSongId();
+        if (mPlayingPos == -1) {
             mPlayingMusic = null;
         } else {
-            mPlayingMusic = mPlaylist.get(mPlayingPosition);
+            mPlayingMusic = mPlaylist.get(mPlayingPos);
         }
     }
 
@@ -120,18 +120,10 @@ public class MusicPlayService extends Service {
      */
     private void initMediaPlayer() {
         mPlayer = new MediaPlayer();
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mPlayer) {
-                next();
-            }
-        });
-        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                playPause();
-                return false;
-            }
+        mPlayer.setOnCompletionListener(mPlayer -> next());
+        mPlayer.setOnErrorListener((mediaPlayer, i, i1) -> {
+            playPause();
+            return false;
         });
     }
 
@@ -164,28 +156,65 @@ public class MusicPlayService extends Service {
      * 下一首
      */
     private void next() {
-        if (!checkPlay()) {
-            return;
+        mPlayingPos = getNextPosition();
+        playMusic(mPlayingPos);
+    }
+
+    /**
+     * 上一首
+     */
+    private void prev() {
+        mPlayingPos = getPreviousPosition();
+        Log.e(TAG, "mPlayingPos:" + mPlayingPos);
+        playMusic(mPlayingPos);
+    }
+
+    private int getNextPosition() {
+        if (mPlaylist == null || mPlaylist.isEmpty()) {
+            return -1;
         }
-        play_mode = Preferences.getPlayMode();
-        switch (play_mode) {
-            case PLAY_MODE_RANDOM:
-                mPlayingPosition = new Random().nextInt(mPlaylist.size());
-                playMusic(mPlayingPosition);
-                break;
-            case PLAY_MODE_LOOP:
-                if (mPlayingPosition == mPlaylist.size() - 1) {
-                    mPlayingPosition = 0;
-                    playMusic(mPlayingPosition);
-                } else if (mPlayingPosition < mPlaylist.size() - 1) {
-                    mPlayingPosition += 1;
-                    playMusic(mPlayingPosition);
-                }
-                break;
-            case PLAY_MODE_REPEAT:
-                playMusic(mPlayingPosition);
-                break;
+        if (mPlaylist.size() == 1) {
+            return mPlayingPos;
         }
+        mRepeatMode = Preferences.getPlayMode();
+        if (mRepeatMode == PLAY_MODE_REPEAT) {
+            if (mPlayingPos < 0) {
+                return 0;
+            }
+        } else if (mRepeatMode == PLAY_MODE_LOOP) {
+            if (mPlayingPos == mPlaylist.size() - 1) {
+                mPlayingPos = 0;
+            } else if (mPlayingPos < mPlaylist.size() - 1) {
+                mPlayingPos += 1;
+            }
+        } else if (mRepeatMode == PLAY_MODE_RANDOM) {
+            mPlayingPos = new Random().nextInt(mPlaylist.size());
+        }
+        return mPlayingPos;
+    }
+
+    private int getPreviousPosition() {
+        if (mPlaylist == null || mPlaylist.isEmpty()) {
+            return -1;
+        }
+        if (mPlaylist.size() == 1) {
+            return mPlayingPos;
+        }
+        mRepeatMode = Preferences.getPlayMode();
+        if (mRepeatMode == PLAY_MODE_REPEAT) {
+            if (mPlayingPos < 0) {
+                return 0;
+            }
+        } else if (mRepeatMode == PLAY_MODE_LOOP) {
+            if (mPlayingPos == 0) {
+                mPlayingPos = mPlaylist.size() - 1;
+            } else if (mPlayingPos > 0) {
+                mPlayingPos -= 1;
+            }
+        } else if (mRepeatMode == PLAY_MODE_RANDOM) {
+            mPlayingPos = new Random().nextInt(mPlaylist.size());
+        }
+        return mPlayingPos;
     }
 
     private boolean checkNetwork(Music music) {
@@ -207,74 +236,22 @@ public class MusicPlayService extends Service {
     }
 
     /**
-     * 检测网络
-     *
-     * @return
-     */
-    private boolean checkPlay() {
-        if (mPlaylist.size() == 0) {
-            ToastUtils.show(this, "播放队列为空");
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 上一首
-     */
-    private void prev() {
-        if (!checkPlay()) {
-            return;
-        }
-        play_mode = Preferences.getPlayMode();
-        switch (play_mode) {
-            case PLAY_MODE_RANDOM:
-                mPlayingPosition = new Random().nextInt(mPlaylist.size());
-                playMusic(mPlayingPosition);
-                break;
-            case PLAY_MODE_LOOP:
-                if (mPlayingPosition == 0) {
-                    mPlayingPosition = mPlaylist.size() - 1;
-                } else if (mPlayingPosition > 0) {
-                    mPlayingPosition -= 1;
-                }
-                playMusic(mPlayingPosition);
-                break;
-            case PLAY_MODE_REPEAT:
-                playMusic(mPlayingPosition);
-                break;
-        }
-    }
-
-    /**
-     * 限制position,确定当前播放歌曲的position
-     *
-     * @param position TODO: 2017/9/26  mPlayingPosition
-     */
-    private boolean isExistPosition(int position) {
-        if (mPlaylist.size() == 0) {
-            ToastUtils.show(this, "播放队列为空");
-            return false;
-        } else if (position < 0) {
-            mPlayingPosition = mPlaylist.size() - 1;
-        } else if (position >= 0 && mPlaylist.size() - 1 >= position) {
-            mPlayingPosition = position;
-        } else if (position >= mPlaylist.size()) {
-            mPlayingPosition = 0;
-        }
-        return true;
-    }
-
-    /**
      * 根据位置播放音乐
      *
      * @param position
      */
     private void playMusic(int position) {
-        isExistPosition(position);
-        if (mPlaylist.size() != 0) {
-            playMusic(mPlaylist.get(mPlayingPosition));
+        if (mPlaylist == null || mPlaylist.isEmpty()) {
+            return;
         }
+        if (mPlayingPos == -1) {
+            return;
+        }
+        if (mPlaylist.get(mPlayingPos) == null) {
+            return;
+        }
+        Log.e(TAG, "position" + position);
+        playMusic(mPlaylist.get(position));
     }
 
     /**
@@ -286,11 +263,7 @@ public class MusicPlayService extends Service {
         mPlayingMusic = music;
         Log.d(TAG, mPlayingMusic.toString());
         showNotification();
-        sendBroadcast(new Intent(META_CHANGED));
-        if (!checkNetwork(music)) {
-            ToastUtils.show(this, R.string.unable_to_play);
-            next();
-        }
+        notifyChange(META_CHANGED);
         try {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getUri());
@@ -306,15 +279,15 @@ public class MusicPlayService extends Service {
      * 播放暂停
      */
     private void playPause() {
-        sendBroadcast(new Intent(META_CHANGED));
         if (isPlaying()) {
             pause();
         } else if (isPause()) {
+            notifyChange(META_CHANGED);
             mPlayer.start();
             isPause = false;
             showNotification();
         } else {
-            playMusic(getmPlayingPosition());
+            playMusic(mPlayingPos);
         }
     }
 
@@ -325,6 +298,7 @@ public class MusicPlayService extends Service {
         if (!isPlaying()) {
             return;
         }
+        notifyChange(META_CHANGED);
         mPlayer.pause();
         isPause = true;
     }
@@ -364,7 +338,7 @@ public class MusicPlayService extends Service {
 
 
     private void refresh() {
-        Preferences.saveCurrentSongId(mPlayingPosition);
+        Preferences.saveCurrentSongId(mPlayingPos);
         MusicLoader.updateQueue(this, mPlaylist);
     }
 
@@ -374,28 +348,25 @@ public class MusicPlayService extends Service {
      * @return
      */
     public int getmPlayingPosition() {
-        return mPlayingPosition;
+        return mPlayingPos;
     }
 
     /**
      * 获取正在播放的歌曲[本地|网络]
      */
     public void removeFromQueue(int position) {
-        Log.e(TAG, position + "---" + mPlayingPosition + "---" + mPlaylist.size());
-        if (position == mPlayingPosition) {
+        Log.e(TAG, position + "---" + mPlayingPos + "---" + mPlaylist.size());
+        if (position == mPlayingPos) {
             mPlaylist.remove(position);
             playMusic(position);
-        } else if (position > mPlayingPosition) {
+        } else if (position > mPlayingPos) {
             mPlaylist.remove(position);
-        } else if (position < mPlayingPosition) {
+        } else if (position < mPlayingPos) {
             mPlaylist.remove(position);
-            mPlayingPosition = mPlayingPosition - 1;
+            mPlayingPos = mPlayingPos - 1;
         }
-
-        Intent clearIntent = new Intent();
-        clearIntent.setAction(META_CHANGED);
-        clearIntent.setAction(REFRESH);
-        sendBroadcast(clearIntent);
+        notifyChange(META_CHANGED);
+        notifyChange(REFRESH);
     }
 
     /**
@@ -405,10 +376,8 @@ public class MusicPlayService extends Service {
         mPlayingMusic = null;
         mPlaylist.clear();
         mPlayer.stop();
-        Intent clearIntent = new Intent();
-        clearIntent.setAction(META_CHANGED);
-        clearIntent.setAction(PLAYLIST_CLEAR);
-        sendBroadcast(clearIntent);
+        notifyChange(META_CHANGED);
+        notifyChange(PLAYLIST_CLEAR);
     }
 
     /**
@@ -431,6 +400,24 @@ public class MusicPlayService extends Service {
         } else {
             return 0;
         }
+    }
+
+
+    private void notifyChange(final String what) {
+        if (DEBUG) Log.d(TAG, "notifyChange: what = " + what);
+//
+//        if (what.equals(POSITION_CHANGED)) {
+//            return;
+//        }
+
+        final Intent intent = new Intent(what);
+        intent.putExtra("artist", getArtistName());
+        intent.putExtra("album", getAlbumName());
+        intent.putExtra("track", getTrackName());
+        intent.putExtra("playing", isPlaying());
+
+        sendBroadcast(intent);
+
     }
 
 
@@ -545,7 +532,6 @@ public class MusicPlayService extends Service {
      * 电话监听
      */
     private class ServicePhoneStateListener extends PhoneStateListener {
-
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             // TODO Auto-generated method stub
@@ -575,7 +561,6 @@ public class MusicPlayService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, intent.getAction().toString());
-            handleCommandIntent(intent);
         }
     }
 
@@ -604,7 +589,7 @@ public class MusicPlayService extends Service {
         }
         Log.d("TAG", "ondestory");
         MusicLoader.updateQueue(this, mPlaylist);
-        Preferences.saveCurrentSongId(mPlayingPosition);
+        Preferences.saveCurrentSongId(mPlayingPos);
         cancelNotification();
         stopSelf();
 
@@ -625,7 +610,8 @@ public class MusicPlayService extends Service {
 
         @Override
         public void play(int id) throws RemoteException {
-            mService.get().playMusic(id);
+            mPlayingPos = id;
+            mService.get().playMusic(mPlayingPos);
         }
 
         @Override
@@ -659,12 +645,12 @@ public class MusicPlayService extends Service {
 
         @Override
         public String getSongName() throws RemoteException {
-            return null;
+            return mPlayingMusic.getTitle();
         }
 
         @Override
         public String getSongArtist() throws RemoteException {
-            return null;
+            return mPlayingMusic.getArtist();
         }
 
         @Override
@@ -695,7 +681,7 @@ public class MusicPlayService extends Service {
 
         @Override
         public int position() throws RemoteException {
-            return mService.get().getmPlayingPosition();
+            return mService.get().mPlayingPos;
         }
 
         @Override

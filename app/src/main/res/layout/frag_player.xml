@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -60,20 +62,17 @@
             </LinearLayout>
         </LinearLayout>
 
-
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager_player"
             android:layout_width="match_parent"
-            android:layout_height="350dp" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/detailView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <SeekBar
                 android:id="@+id/song_progress"
@@ -81,16 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:maxHeight="2dp"
-                android:paddingTop="10dp"
                 android:progress="30"
                 android:tag="tint_accent_color" />
-
-
-            <TextView
-                android:id="@+id/song_album"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -102,18 +93,20 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:paddingRight="20dp"
-                    android:text="00:00"/>
+                    android:text="00:00"
+                    android:textColor="@color/translucent_white" />
 
                 <TextView
                     android:id="@+id/song_elapsed_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:paddingLeft="20dp"
-                    android:text="00:00"/>
+                    android:text="00:00"
+                    android:textColor="@color/translucent_white" />
+
             </RelativeLayout>
 
 
@@ -121,6 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -128,7 +122,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
                     android:scaleType="center"
@@ -142,20 +136,24 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_previous" />
 
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/playpausefloating"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
+                <ImageView
+                    android:id="@+id/playOrPause"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:layout_gravity="center"
-                    android:clickable="true"
-                    android:scaleType="fitCenter"
-                    android:tag="bg_tint_accent_color" />
+                    android:layout_margin="5dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:elevation="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_play_circle"
+                    android:translationZ="5dp"
+                    tools:ignore="UnusedAttribute" />
 
 
                 <ImageView
@@ -163,7 +161,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_next" />
@@ -173,7 +171,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     android:src="@drawable/ic_detail" />
@@ -184,4 +182,4 @@
     </LinearLayout>
 
     <include layout="@layout/play_control_menu" />
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

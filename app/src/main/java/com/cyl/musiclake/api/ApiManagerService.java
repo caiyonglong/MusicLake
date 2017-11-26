@@ -22,7 +22,6 @@ public interface ApiManagerService {
     @GET
     Observable<String> getSongUrl(
             @Url String baseUrl
-
     );
 
 }

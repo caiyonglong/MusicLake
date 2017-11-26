@@ -268,12 +268,27 @@ public class LyricView extends View {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         Log.e("LyricView_dispatch", event.getAction() + "----");
+        final float x = event.getX();
+        final float y = event.getY();
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mDownX = x;
+                mDownY = y;
                 getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
-                getParent().requestDisallowInterceptTouchEvent(true);
+                final float deltaX = Math.abs(x - mDownX);
+                final float deltaY = Math.abs(y - mDownY);
+                // 这里是够拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
+                if (deltaX < deltaY) {
+                    Log.e("MotionEvent","down");
+                    setUserTouch(true);
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }else {
+                    Log.e("MotionEvent","lefttoright");
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 break;
@@ -340,7 +355,6 @@ public class LyricView extends View {
             mFlingAnimator.cancel();
             mFlingAnimator = null;
         }
-        setUserTouch(true);
         mIsMoved = false;
         mPlayerClick = false;
     }

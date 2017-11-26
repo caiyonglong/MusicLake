@@ -95,7 +95,7 @@ public class ImageUtils {
         return target;
     }
 
-    public static final int BLUR_RADIUS = 50;
+    public static final int BLUR_RADIUS = 30;
 
     /**
      * 模糊图片
