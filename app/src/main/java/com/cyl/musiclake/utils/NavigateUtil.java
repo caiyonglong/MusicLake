@@ -12,7 +12,7 @@ import android.util.Pair;
 import android.view.View;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.fragment.AlbumDetailFragment;
+import com.cyl.musiclake.ui.music.fragment.AlbumDetailFragment;
 
 /**
  * Created by yonglong on 2016/12/24.

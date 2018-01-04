@@ -48,7 +48,6 @@
     <color name="colorAccentBlack">#ffffff</color>
 
 
-
     <color name="pink_transparent">#44700d39</color>
     <color name="green_transparent">#44375a1f</color>
     <color name="blue_transparent">#44293576</color>
@@ -58,6 +57,7 @@
     <color name="black_translucent">#66000000</color>
 
 
+    <color name="dark">#000000</color>
 
 
     <!--material design 基础色-->

@@ -24,4 +24,13 @@
         <attr name="android:maxHeight" />
     </declare-styleable>
 
+    <!--音乐条目属性-->
+    <declare-styleable name="ItemView">
+        <attr name="tv_name" format="string" />
+        <attr name="iv_icon" format="reference|integer" />
+        <attr name="tv_desc" format="string" />
+        <!--<attr name="tv_desc_color" format="color" />-->
+        <!--<attr name="tv_name_color" format="color" />-->
+    </declare-styleable>
+
 </resources>

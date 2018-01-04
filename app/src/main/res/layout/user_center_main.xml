@@ -20,34 +20,35 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
             android:title="个人信息"
+            app:layout_collapseMode="pin"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/header_img"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="23dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="23dp"
                 android:background="@drawable/ic_account_circle"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="pin" />
+
             <TextView
                 android:id="@+id/user_name"
-                android:text="用户名"
-                android:textSize="18sp"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/white"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="用户名"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
 
 
@@ -64,9 +65,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/music_three"
         android:orientation="vertical"
         android:paddingTop="24dp"
-        android:background="@drawable/music_three"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!--卡片布局-->

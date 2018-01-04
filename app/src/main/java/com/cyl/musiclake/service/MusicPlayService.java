@@ -25,10 +25,10 @@ import android.widget.RemoteViews;
 
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.dataloaders.MusicLoader;
-import com.cyl.musiclake.download.NetworkUtil;
-import com.cyl.musiclake.mvp.model.music.Music;
-import com.cyl.musiclake.ui.activity.MainActivity;
+import com.cyl.musiclake.ui.music.model.data.MusicLoader;
+import com.cyl.musiclake.ui.download.NetworkUtil;
+import com.cyl.musiclake.ui.music.model.Music;
+import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.Preferences;

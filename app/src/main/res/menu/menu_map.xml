@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activity.map.BaseMapActivity">
+    tools:context=".ui.music.activity.map.BaseMapActivity">
 
     <item android:title="定位的类型">
         <menu>

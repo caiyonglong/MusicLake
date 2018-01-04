@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
-import com.cyl.musiclake.mvp.model.download.UpdateInfo;
+import com.cyl.musiclake.ui.download.download.UpdateInfo;
 
 /**
  * 功能: 软件更新工具类
