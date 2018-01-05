@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.onlinemusic.activity.ArtistInfoActivity;
 import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicInfo;
 import com.cyl.musiclake.utils.Extras;
-import com.cyl.musiclake.utils.ImageUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,10 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         OnlineMusicInfo localItem = musicInfos.get(position);
-        ImageLoader.getInstance().displayImage(localItem.getPic_small(), holder.albumArt, ImageUtils.getCoverDisplayOptions());
+        GlideApp.with(context)
+                .load(localItem.getPic_small())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.albumArt);
         holder.title.setText(localItem.getTitle());
         holder.artist.setText(localItem.getArtist_name());
 
@@ -152,7 +155,6 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 //
         }
     }
-
 
 
 //    private void conver(OnlineMusicInfo onlineMusicInfo) {

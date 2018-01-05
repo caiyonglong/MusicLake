@@ -15,19 +15,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.main.SettingsActivity;
+import com.cyl.musiclake.ui.music.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.model.Music;
 import com.cyl.musiclake.ui.music.model.data.MusicLoader;
 import com.cyl.musiclake.ui.music.model.data.PlaylistLoader;
-import com.cyl.musiclake.ui.music.model.Music;
-import com.cyl.musiclake.ui.music.adapter.SongAdapter;
-import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.Extras;
 import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.SystemUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,11 +93,10 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     private void loadBitmap(String uri) {
         Log.e("EEEE", uri);
-        ImageLoader.getInstance().displayImage(uri, album_art,
-                new DisplayImageOptions.Builder().cacheInMemory(true)
-                        .showImageOnFail(R.drawable.default_cover)
-                        .resetViewBeforeLoading(true)
-                        .build());
+        GlideApp.with(this)
+                .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(album_art);
     }
 
     @Override

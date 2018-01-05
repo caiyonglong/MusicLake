@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.onlinemusic.activity;
 
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -25,13 +24,9 @@ import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicInfo;
 import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicList;
 import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.Extras;
-import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -252,17 +247,17 @@ public class OnlineMusicActivity extends BaseActivity implements OnlineMusicAdap
             mMusicList.getBillboard().setUpdate_date("暂无记录");
         tvUpdateDate.setText(getString(R.string.recent_update, mMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mMusicList.getBillboard().getComment());
-        ImageSize imageSize = new ImageSize(200, 200);
-        ImageLoader.getInstance().loadImage(mMusicList.getBillboard().getPic_s640(), imageSize,
-                ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        if (loadedImage != null) {
-                            ivCover.setImageBitmap(loadedImage);
-                            ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
-                        }
-                    }
-                });
+//        ImageSize imageSize = new ImageSize(200, 200);
+//        ImageLoader.getInstance().loadImage(mMusicList.getBillboard().getPic_s640(), imageSize,
+//                ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
+//                    @Override
+//                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                        if (loadedImage != null) {
+//                            ivCover.setImageBitmap(loadedImage);
+//                            ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
+//                        }
+//                    }
+//                });
     }
 
     @Override
