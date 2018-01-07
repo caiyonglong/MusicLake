@@ -30,6 +30,9 @@ public interface ApiManagerService {
     @GET
     Observable<String> getSongUrl(@Url String baseUrl);
 
+    @GET
+    Observable<QQApiModel> searchByQQ(@Url String baseUrl, Map<String, Object> params);
+
     @POST
     Observable<ApiModel<User>> getUserInfo(@Url String baseUrl, Map<String, String> params);
 

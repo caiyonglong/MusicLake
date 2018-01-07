@@ -20,7 +20,7 @@ import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.utils.NavigateUtil;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 
 import java.io.File;
 import java.util.ArrayList;

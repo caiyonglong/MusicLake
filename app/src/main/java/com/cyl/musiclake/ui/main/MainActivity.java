@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.main;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
         mNavigationView.setNavigationItemSelectedListener(this);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         mNavigationView.setItemIconTintList(null);
     }
 
@@ -117,6 +120,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 turnToActivity(LoginActivity.class);
             }
         });
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
     }
 
@@ -131,12 +155,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (item.getItemId()) {
             case R.id.nav_menu_music:
                 runnable = navigateLibrary;
-                break;
-            case R.id.nav_menu_playlist:
-                runnable = navigatePlaylist;
-                break;
-            case R.id.nav_menu_download:
-                runnable = navigateDownload;
                 break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
@@ -183,27 +201,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         }
     };
-    private Runnable navigatePlaylist = new Runnable() {
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_playlist).setChecked(true);
-            Fragment fragment = new PlaylistFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.hide(getSupportFragmentManager().findFragmentById(R.id.fragment_container));
-            transaction.replace(R.id.fragment_container, fragment).commit();
-
-        }
-    };
-    private Runnable navigateDownload = new Runnable() {
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_download).setChecked(true);
-            Fragment fragment = MainFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, fragment).commit();
-        }
-    };
     private Runnable navigatePlay = new Runnable() {
         public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_download).setChecked(true);
             Fragment fragment = PlayFragment.newInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.controls_container, fragment).commit();

@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.music.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.music.model.Playlist;
-import com.cyl.musiclake.utils.FormatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +34,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHo
         this.mOnItemClickListener = listener;
     }
 
-
     public void setLocalplaylists(List<Playlist> localplaylists) {
         this.localplaylists = localplaylists;
     }
@@ -48,31 +45,21 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHo
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_grid, parent,false);
-        ItemHolder itemHolder = new ItemHolder(v);
-        return itemHolder;
-
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_playlist, parent, false);
+        return new ItemHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ItemHolder holder, final int position) {
-
         Playlist localItem = localplaylists.get(position);
-        String time =localItem.getId();
 
-        Log.e("时间====","===="+time+"===="+localItem.getId());
-        holder.title.setText(localItem.getName());
-        holder.time.setText(FormatUtil.distime(Long.parseLong(time)));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mOnItemClickListener!=null){
-                    mOnItemClickListener.onItemClick(v,localplaylists.get(position));
-                }
-
+        holder.name.setText(localItem.getName());
+        holder.num.setText(localItem.getCount() + "首");
+        holder.itemView.setOnClickListener(v -> {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemClick(v, localplaylists.get(position));
             }
         });
-
     }
 
     @Override
@@ -80,13 +67,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ItemHo
         return (null != localplaylists ? localplaylists.size() : 0);
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder{
-        protected TextView title, time;
+    public class ItemHolder extends RecyclerView.ViewHolder {
+        private TextView name;
+        private TextView num;
 
         public ItemHolder(View view) {
             super(view);
-            this.title = (TextView) view.findViewById(R.id.album_title);
-            this.time = (TextView) view.findViewById(R.id.album_artist);
+            this.name = (TextView) view.findViewById(R.id.tv_name);
+            this.num = (TextView) view.findViewById(R.id.tv_num);
         }
     }
 }

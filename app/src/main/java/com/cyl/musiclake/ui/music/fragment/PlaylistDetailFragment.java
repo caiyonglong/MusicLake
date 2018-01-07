@@ -1,27 +1,23 @@
 package com.cyl.musiclake.ui.music.fragment;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.model.data.PlaylistLoader;
-import com.cyl.musiclake.ui.music.model.Music;
-import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.ui.music.activity.SearchActivity;
-import com.cyl.musiclake.ui.main.SettingsActivity;
-import com.cyl.musiclake.ui.music.adapter.SongAdapter;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.music.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.model.Music;
+import com.cyl.musiclake.ui.music.model.data.PlaylistLoader;
+import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.Extras;
 
 import java.util.ArrayList;
@@ -42,14 +38,11 @@ public class PlaylistDetailFragment extends BaseFragment {
     Toolbar mToolbar;
     @BindView(R.id.album_art)
     ImageView album_art;
-    @BindView(R.id.foreground)
-    View foreground;
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
     private String mId;
     private String title;
-
 
     public static PlaylistDetailFragment newInstance(String id, String title) {
 
@@ -68,100 +61,66 @@ public class PlaylistDetailFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        mToolbar.setTitle("歌单列表");
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-    }
-
-    @Override
-    protected void listener() {
-
+        setHasOptionsMenu(true);
     }
 
     @Override
     protected void initDatas() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mId = getArguments().getString(Extras.PLAYLIST_ID);
         title = getArguments().getString(Extras.PLAYLIST_NAME);
+
         mToolbar.setTitle(title);
-        loadMusic.run();
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        musicInfos = PlaylistLoader.getMusicForPlaylist(getActivity(), mId);
+        mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
-    Runnable loadMusic = new Runnable() {
-        @Override
-        public void run() {
-            new loadPlaylist().execute("");
-        }
-    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                break;
-            case R.id.action_search:
-                final Intent intent = new Intent(getActivity(), SearchActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                break;
             case R.id.action_delete_playlist:
-                PlaylistLoader.deletePlaylist(getActivity(), mId);
-                getActivity().onBackPressed();
-                break;
-            case R.id.action_settings:
-                final Intent intent2 = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent2);
+                new MaterialDialog.Builder(getContext())
+                        .title("提示")
+                        .content("是否删除这个歌单？")
+                        .onPositive((dialog, which) -> {
+                            PlaylistLoader.deletePlaylist(getActivity(), mId);
+                            onBackPress();
+                        })
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .show();
                 break;
             case R.id.action_share:
                 Intent intent3 = new Intent(getActivity(), EditActivity.class);
-                String content = "";
+                StringBuilder content = new StringBuilder();
                 if (musicInfos.size() > 0) {
-                    content = "分享歌单\n";
+                    content = new StringBuilder("分享歌单\n");
                 }
                 for (int i = 0; i < musicInfos.size(); i++) {
-                    content += musicInfos.get(i).getTitle() + "---" + musicInfos.get(i).getArtist();
-                    content += "\n";
+                    content.append(musicInfos.get(i).getTitle()).append("---").append(musicInfos.get(i).getArtist());
+                    content.append("\n");
                 }
-                intent3.putExtra("content", content);
+                intent3.putExtra("content", content.toString());
                 startActivity(intent3);
                 break;
         }
+        return true;
+    }
 
-        return super.onOptionsItemSelected(item);
+    private void onBackPress() {
+        getActivity().onBackPressed();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_playlist_detail, menu);
-    }
-
-
-    private class loadPlaylist extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            musicInfos = PlaylistLoader.getMusicForPlaylist(getActivity(), mId);
-            Log.e("歌单id++++++", musicInfos.size() + "");
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            updateView();
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-    }
-
-    private void updateView() {
-        mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
-
     }
 
 

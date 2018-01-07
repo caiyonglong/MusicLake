@@ -1,18 +1,16 @@
 package com.cyl.musiclake.ui.music.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.model.data.MusicLoader;
-import com.cyl.musiclake.ui.music.model.Album;
-import com.cyl.musiclake.ui.music.adapter.AlbumAdapter;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.music.adapter.AlbumAdapter;
+import com.cyl.musiclake.ui.music.model.Album;
+import com.cyl.musiclake.ui.music.model.data.MusicLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +44,11 @@ public class AlbumFragment extends BaseFragment {
     }
 
     /**
-     * 设置监听事件
-     */
-    @Override
-    protected void listener() {
-    }
-
-    /**
      * 初始化数据
      */
     @Override
     protected void initDatas() {
-        new loadAlbumTask().execute("");
+        updateView();
     }
 
 
@@ -77,44 +68,17 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void initViews() {
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        new loadAlbumTask().execute("");
+    private void updateView() {
+        albums = MusicLoader.getAllAlbums(getActivity());
+        mAdapter = new AlbumAdapter(getActivity(), albums);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-
-    private class loadAlbumTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (getActivity() != null) {
-                albums = MusicLoader.getAllAlbums(getActivity());
-                mAdapter = new AlbumAdapter(getActivity(), albums);
-
-            }
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            loading.setVisibility(View.GONE);
-            mRecyclerView.setAdapter(mAdapter);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            loading.setVisibility(View.VISIBLE);
-            tv_empty.setText("请稍后，努力加载中...");
-        }
     }
 }

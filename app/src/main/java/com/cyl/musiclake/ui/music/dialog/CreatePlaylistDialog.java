@@ -7,11 +7,10 @@ import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.util.Log;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.model.data.PlaylistLoader;
 import com.cyl.musiclake.ui.music.model.Music;
+import com.cyl.musiclake.ui.music.model.data.PlaylistLoader;
 import com.cyl.musiclake.utils.ToastUtils;
 
 /**
@@ -61,26 +60,23 @@ public class CreatePlaylistDialog extends DialogFragment {
                         Log.e(TAG, input.toString());
                     }
                 })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String title = dialog.getInputEditText().getText().toString();
-                        long pid = PlaylistLoader.createPlaylist(getActivity(), title);
-                        if (pid != -1) {
-                            if (music != null) {
-                                PlaylistLoader.addToPlaylist(getActivity(), String.valueOf(pid), music.getId());
-                                ToastUtils.show(getActivity(), "添加成功");
-                            } else {
-                                ToastUtils.show(getActivity(), "新建歌单 " + title);
-                                if (callBack != null) {
-                                    callBack.updatePlaylistView();
-                                }
-                            }
+                .onPositive((dialog, which) -> {
+                    String title = dialog.getInputEditText().getText().toString();
+                    long pid = PlaylistLoader.createPlaylist(getActivity(), title);
+                    if (pid != -1) {
+                        if (music != null) {
+                            PlaylistLoader.addToPlaylist(getActivity(), String.valueOf(pid), music.getId());
+                            ToastUtils.show(getActivity(), "添加成功");
                         } else {
-                            ToastUtils.show(getActivity(), "创建失败" + title);
+                            ToastUtils.show(getActivity(), "新建歌单 " + title);
+                            if (callBack != null) {
+                                callBack.updatePlaylistView();
+                            }
                         }
-                        Log.d(TAG, title);
+                    } else {
+                        ToastUtils.show(getActivity(), "创建失败" + title);
                     }
+                    Log.d(TAG, title);
                 }).build();
     }
 }

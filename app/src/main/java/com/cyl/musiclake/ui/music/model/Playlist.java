@@ -10,11 +10,11 @@ import java.io.Serializable;
  */
 public class Playlist implements Serializable {
     //歌单id
-    private String id ;
+    private String id;
     //歌单名
-    private String name ;
+    private String name;
     //歌单名
-    private int count ;
+    private int count;
 
     public Playlist(String id, String name, int count) {
         this.id = id;

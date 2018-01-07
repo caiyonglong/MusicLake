@@ -10,13 +10,10 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="?attr/cardColor"
         android:elevation="5dp"
         android:fadeScrollbars="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 
     <include layout="@layout/item_loading" />
 </RelativeLayout>

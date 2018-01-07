@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
-import com.cyl.musiclake.ui.music.fragment.LocalMusicFragment;
+import com.cyl.musiclake.ui.music.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.onlinemusic.fragment.OnlineFragment;
 
 import butterknife.BindView;
@@ -46,7 +46,6 @@ public class MainFragment extends BaseFragment {
             toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
             toggle.setDisplayHomeAsUpEnabled(true);
         }
-
     }
 
     @Override
@@ -65,8 +64,8 @@ public class MainFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager mViewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(LocalMusicFragment.newInstance(), "本地音乐");
-        adapter.addFragment(OnlineFragment.newInstance(), "在线音乐");
+        adapter.addFragment(MyMusicFragment.newInstance(), "我的音乐");
+        adapter.addFragment(OnlineFragment.newInstance(), "发现");
 //        adapter.addFragment(CommunityFragment.newInstance(1), "音乐湖");
         mViewPager.setAdapter(adapter);
     }

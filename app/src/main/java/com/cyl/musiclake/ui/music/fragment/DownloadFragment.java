@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.fragment;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -22,9 +23,13 @@ public class DownloadFragment extends BaseFragment {
 
     ViewPager mViewPager;
 
-    @Override
-    protected void listener() {
+    public static DownloadFragment newInstance() {
 
+        Bundle args = new Bundle();
+
+        DownloadFragment fragment = new DownloadFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

@@ -19,7 +19,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
-import com.cyl.musiclake.ui.main.SettingsActivity;
 import com.cyl.musiclake.ui.music.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.model.Music;
 import com.cyl.musiclake.ui.music.model.data.MusicLoader;
@@ -139,10 +138,6 @@ public class PlaylistDetailActivity extends BaseActivity {
             case R.id.action_delete_playlist:
                 PlaylistLoader.deletePlaylist(this, pid);
                 finish();
-                break;
-            case R.id.action_settings:
-                final Intent intent2 = new Intent(this, SettingsActivity.class);
-                startActivity(intent2);
                 break;
             case R.id.action_share:
                 Intent intent3 = new Intent(PlaylistDetailActivity.this, EditActivity.class);

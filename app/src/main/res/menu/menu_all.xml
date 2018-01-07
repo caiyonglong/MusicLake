@@ -8,14 +8,6 @@
             android:icon="@mipmap/icon_my"
             android:title="我的音乐" />
         <item
-            android:id="@+id/nav_menu_playlist"
-            android:icon="@mipmap/music_playlist"
-            android:title="我的歌单" />
-        <item
-            android:id="@+id/nav_menu_download"
-            android:icon="@mipmap/list_icon_download"
-            android:title="我的下载" />
-        <item
             android:id="@+id/nav_menu_shake"
             android:icon="@mipmap/icon_scan"
             android:title="摇一摇" />

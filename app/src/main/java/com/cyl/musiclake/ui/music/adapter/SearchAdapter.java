@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.onlinemusic.model.SearchMusic;
+import com.cyl.musiclake.ui.music.model.Music;
 import com.cyl.musiclake.utils.FileUtils;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ItemHolder> {
     private Context mContext;
-    private List<SearchMusic.SongList> songList = new ArrayList<>();
+    private List<Music> songList = new ArrayList<>();
 
     private View mView;
 
@@ -32,20 +32,24 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ItemHolder
 
     }
 
+    public void setNewData(List<Music> songList) {
+        this.songList = songList;
+    }
+
     public OnItemClickListener mOnItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 
-    public SearchAdapter(Context context, List<SearchMusic.SongList> songList) {
+    public SearchAdapter(Context context, List<Music> songList) {
         this.mContext = context;
         this.songList = songList;
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music_search, parent,false);
+        mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music_search, parent, false);
         SearchAdapter.ItemHolder itemHolder = new SearchAdapter.ItemHolder(mView);
         return itemHolder;
     }
@@ -70,9 +74,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ItemHolder
 
         if (songList.get(position).getTitle() != null)
             holder.tv_name.setText(FileUtils.getTitle(songList.get(position).getTitle()));
-        if (songList.get(position).getAuthor() != null)
-            holder.tv_artist.setText(FileUtils.getArtistAndAlbum(songList.get(position).getAuthor(),
-                    songList.get(position).getAlbum_title()));
+        if (songList.get(position).getArtist() != null)
+            holder.tv_artist.setText(FileUtils.getArtistAndAlbum(songList.get(position).getArtist(),
+                    songList.get(position).getAlbum()));
 
     }
 

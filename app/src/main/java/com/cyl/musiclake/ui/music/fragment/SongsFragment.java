@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.model.Music;
-import com.cyl.musiclake.ui.music.model.data.MusicLoader;
-import com.cyl.musiclake.ui.music.adapter.SongAdapter;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.music.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.contract.SongsContract;
+import com.cyl.musiclake.ui.music.model.Music;
+import com.cyl.musiclake.ui.music.presenter.SongsPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SongsFragment extends BaseFragment {
+public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -37,6 +37,8 @@ public class SongsFragment extends BaseFragment {
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
 
+    private SongsPresenter mPresenter;
+
     public static SongsFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -46,12 +48,8 @@ public class SongsFragment extends BaseFragment {
     }
 
     @Override
-    protected void listener() {
-    }
-
-    @Override
     protected void initDatas() {
-        new loadSongs().execute();
+        mPresenter.loadSongs(null);
     }
 
     @Override
@@ -61,14 +59,14 @@ public class SongsFragment extends BaseFragment {
 
     @Override
     public void initViews() {
+        mPresenter = new SongsPresenter(getActivity());
+        mPresenter.attachView(this);
+
+        mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        new loadSongs().execute("");
-    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -76,27 +74,21 @@ public class SongsFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    private class loadSongs extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (getActivity() != null) {
-                musicInfos = MusicLoader.getAllSongs(getActivity());
-                mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
-            }
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            loading.setVisibility(View.GONE);
-            mRecyclerView.setAdapter(mAdapter);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            loading.setVisibility(View.VISIBLE);
-            tv_empty.setText("请稍后，努力加载中...");
-        }
+    @Override
+    public void showLoading() {
+        loading.setVisibility(View.VISIBLE);
+        tv_empty.setText("请稍后，努力加载中...");
     }
+
+    @Override
+    public void hideLoading() {
+        loading.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSongs(List<Music> songList) {
+        mAdapter.setMusicInfos(songList);
+        mAdapter.notifyDataSetChanged();
+    }
+
 }

@@ -14,17 +14,17 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="56dp"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/xrecyclerview"
-        android:layout_below="@id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    <include
-        layout="@layout/item_loading" />
+        android:layout_below="@id/app_bar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/item_loading" />
 </android.support.design.widget.CoordinatorLayout>

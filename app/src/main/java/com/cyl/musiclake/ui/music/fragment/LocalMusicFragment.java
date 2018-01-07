@@ -39,6 +39,7 @@ public class LocalMusicFragment extends BaseFragment {
     public void initViews() {
         mToolbar.setTitle("本地歌曲");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

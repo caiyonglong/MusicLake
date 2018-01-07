@@ -16,7 +16,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.music.model.Album;
 import com.cyl.musiclake.utils.ImageUtils;
-import com.cyl.musiclake.utils.NavigateUtil;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyRecyclerVi
      */
     @Override
     public MyRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mView = mLayoutInflater.inflate(R.layout.item_playlist, parent, false);
+        View mView = mLayoutInflater.inflate(R.layout.item_playlist_grid, parent, false);
         MyRecyclerViewHolder mViewHolder = new MyRecyclerViewHolder(mView);
         return mViewHolder;
     }
