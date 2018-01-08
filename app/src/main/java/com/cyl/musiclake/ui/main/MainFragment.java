@@ -29,6 +29,8 @@ public class MainFragment extends BaseFragment {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    private PageAdapter mAdapter;
+
     public static MainFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -63,11 +65,11 @@ public class MainFragment extends BaseFragment {
     }
 
     private void setupViewPager(ViewPager mViewPager) {
-        PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(MyMusicFragment.newInstance(), "我的音乐");
-        adapter.addFragment(OnlineFragment.newInstance(), "发现");
+        mAdapter = new PageAdapter(getChildFragmentManager());
+        mAdapter.addFragment(MyMusicFragment.newInstance(), "我的音乐");
+        mAdapter.addFragment(OnlineFragment.newInstance(), "发现");
 //        adapter.addFragment(CommunityFragment.newInstance(1), "音乐湖");
-        mViewPager.setAdapter(adapter);
+        mViewPager.setAdapter(mAdapter);
     }
 
 }

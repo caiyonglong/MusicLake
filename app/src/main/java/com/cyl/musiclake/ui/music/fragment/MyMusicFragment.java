@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
@@ -110,5 +111,17 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     public void showPlaylist(List<Playlist> playlists) {
         mAdapter.setLocalplaylists(playlists);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            Log.e("TAG", "hidden-----" + hidden);
+        } else {
+            mPresenter.loadSongs();
+            mPresenter.loadPlaylist();
+            Log.e("TAG", "hidden-----" + hidden);
+        }
     }
 }

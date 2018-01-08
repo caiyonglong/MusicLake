@@ -62,10 +62,6 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="AppTheme.Launcher" parent="MyThemeBlue">
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-
     <style name="AppTheme.Search" parent="MyThemeBlue">
         <item name="colorAccent">@color/main_white</item>
     </style>

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -25,10 +24,7 @@ import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.activity.SearchActivity;
-import com.cyl.musiclake.ui.music.fragment.DownloadFragment;
 import com.cyl.musiclake.ui.music.fragment.PlayFragment;
-import com.cyl.musiclake.ui.music.fragment.PlaylistFragment;
-import com.cyl.musiclake.ui.music.fragment.SongsFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -61,10 +57,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private View headerView;
     private static final String TAG = "MainActivity";
 
-    private Runnable runnable;
     private boolean login_status = false;
     UserPresenter mPresenter;
 
+    Class<?> mTargetClass;
 
     @Override
     protected int getLayoutResID() {
@@ -82,8 +78,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
         mNavigationView.setNavigationItemSelectedListener(this);
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
         mNavigationView.setItemIconTintList(null);
     }
 
@@ -113,12 +107,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
 
         headerView.setOnClickListener(v -> {
-            mDrawerLayout.closeDrawers();
             if (login_status) {
-                turnToActivity(UserCenterAcivity.class);
+                mTargetClass = UserCenterAcivity.class;
             } else {
-                turnToActivity(LoginActivity.class);
+                mTargetClass = LoginActivity.class;
             }
+            mDrawerLayout.closeDrawers();
+
         });
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -128,12 +123,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             }
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                if (mTargetClass != null) {
+                    turnToActivity(mTargetClass);
+                }
             }
 
             @Override
@@ -153,31 +149,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_menu_music:
-                runnable = navigateLibrary;
-                break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
                 if (!login_status) {
-                    turnToActivity(LoginActivity.class);
+                    mTargetClass = LoginActivity.class;
                 } else {
-                    turnToActivity(ShakeActivity.class);
+                    mTargetClass = ShakeActivity.class;
                 }
                 break;
             case R.id.nav_menu_setting:
-                turnToActivity(SettingsActivity.class);
+                mTargetClass = SettingsActivity.class;
                 break;
             case R.id.nav_menu_exit:
+                mTargetClass = null;
                 finish();
                 break;
         }
-
-        if (runnable != null) {
-            mDrawerLayout.closeDrawers();
-            Handler handler = new Handler();
-            handler.postDelayed(() -> runnable.run(), 350);
-        }
-
+        mDrawerLayout.closeDrawers();
         return true;
     }
 
@@ -192,21 +180,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-    private Runnable navigateLibrary = new Runnable() {
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_menu_music).setChecked(true);
-            Fragment fragment = MainFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
+    private Runnable navigateLibrary = () -> {
+        Fragment fragment = MainFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
 
-        }
     };
-    private Runnable navigatePlay = new Runnable() {
-        public void run() {
-            Fragment fragment = PlayFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.controls_container, fragment).commit();
-        }
+    private Runnable navigatePlay = () -> {
+        Fragment fragment = PlayFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.controls_container, fragment).commit();
     };
 
 
@@ -253,8 +236,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private boolean isNavigatingMain() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        return (currentFragment instanceof MainFragment || currentFragment instanceof SongsFragment
-                || currentFragment instanceof PlaylistFragment || currentFragment instanceof DownloadFragment);
+        return (currentFragment instanceof MainFragment);
     }
 
     @Override
