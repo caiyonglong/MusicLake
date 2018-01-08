@@ -7,10 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import butterknife.BindView;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -49,6 +52,7 @@ public class LocalMusicFragment extends BaseFragment {
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setCurrentItem(0);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {

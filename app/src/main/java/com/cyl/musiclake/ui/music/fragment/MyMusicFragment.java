@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.adapter.PlaylistAdapter;
@@ -15,12 +16,14 @@ import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog;
 import com.cyl.musiclake.ui.music.model.Music;
 import com.cyl.musiclake.ui.music.model.Playlist;
 import com.cyl.musiclake.ui.music.presenter.MyMusicPresenter;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.ItemView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -85,6 +88,14 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
         mLocal.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
         mLove.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
         mDownload.setOnClickListener(v -> NavigateUtil.navigateToDownload(getActivity(), null));
+
+        RxBus.getInstance().register(String.class).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String integer) throws Exception {
+                mPresenter.loadPlaylist();
+                ToastUtils.show(getContext(), integer);
+            }
+        });
     }
 
     @Override

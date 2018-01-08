@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.model.Music;
@@ -90,6 +91,7 @@ public class PlaylistDetailFragment extends BaseFragment {
                         .content("是否删除这个歌单？")
                         .onPositive((dialog, which) -> {
                             PlaylistLoader.deletePlaylist(getActivity(), mId);
+                            RxBus.getInstance().post("update");
                             onBackPress();
                         })
                         .positiveText("确定")
