@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.MyApplication;
-import com.cyl.musiclake.ui.music.model.Music;
+import com.cyl.musiclake.data.model.Music;
 
 import java.io.File;
 import java.text.DecimalFormat;

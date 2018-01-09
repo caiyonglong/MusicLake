@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -131,40 +131,45 @@
                     android:textSize="18sp" />
 
 
-                <ImageView
+                <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/previous"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
-                    android:src="@drawable/ic_skip_previous" />
+                    android:src="@drawable/ic_skip_previous"
+                    app:materialIcon="skip_previous"
+                    app:materialIconSize="48dp" />
 
 
-                <ImageView
+                <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/playOrPause"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="5dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:elevation="5dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_play_circle"
                     android:translationZ="5dp"
-                    tools:ignore="UnusedAttribute" />
+                    app:materialIcon="play_circle"
+                    app:materialIconColor="@color/orange"
+                    app:materialIconSize="56dp"
+                    tools:targetApi="lollipop" />
 
 
-                <ImageView
+                <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_next"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
-                    android:src="@drawable/ic_skip_next" />
+                    app:materialIcon="skip_next"
+                    app:materialIconSize="48dp" />
 
                 <ImageView
                     android:id="@+id/ic_detail"

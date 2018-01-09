@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.model.Music;
+import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 

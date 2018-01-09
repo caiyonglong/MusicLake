@@ -18,13 +18,13 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.login.LoginActivity;
-import com.cyl.musiclake.ui.login.UserCenterAcivity;
+import com.cyl.musiclake.ui.login.UserCenterActivity;
 import com.cyl.musiclake.ui.login.UserContract;
 import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.music.activity.SearchActivity;
-import com.cyl.musiclake.ui.music.fragment.PlayFragment;
+import com.cyl.musiclake.ui.localmusic.activity.SearchActivity;
+import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -32,7 +32,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.ui.music.fragment.PlayFragment.topContainer;
+import static com.cyl.musiclake.ui.localmusic.fragment.PlayFragment.topContainer;
 
 /**
  * 描述 主要的Activity
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         headerView.setOnClickListener(v -> {
             if (login_status) {
-                mTargetClass = UserCenterAcivity.class;
+                mTargetClass = UserCenterActivity.class;
             } else {
                 mTargetClass = LoginActivity.class;
             }

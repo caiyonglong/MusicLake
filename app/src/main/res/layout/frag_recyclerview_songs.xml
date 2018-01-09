@@ -11,9 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/cardColor"
-        android:elevation="5dp"
-        android:fadeScrollbars="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:fadeScrollbars="true" />
 
     <include layout="@layout/item_loading" />
 </RelativeLayout>

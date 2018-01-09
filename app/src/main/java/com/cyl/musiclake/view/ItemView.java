@@ -2,7 +2,9 @@ package com.cyl.musiclake.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+
 
 /**
  * Created by D22434 on 2018/1/4.
@@ -23,6 +26,8 @@ public class ItemView extends LinearLayout {
     private TextView mDesc;
     private ImageView mPlay;
     private View mView;
+    private int icon_color;
+    private Context mContext;
 
     public ItemView(Context context) {
         super(context, null);
@@ -43,7 +48,15 @@ public class ItemView extends LinearLayout {
         String name = ta.getString(R.styleable.ItemView_tv_name);
         String desc = ta.getString(R.styleable.ItemView_tv_desc);
         Drawable icon = ta.getDrawable(R.styleable.ItemView_iv_icon);
+        icon_color = ta.getColor(R.styleable.ItemView_iv_icon_color, Color.BLACK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (icon != null) {
+                icon.setTint(icon_color);
+            }
+        }
         ta.recycle();
+
+        mContext = context;
 
         LayoutInflater inflater = LayoutInflater.from(context);
         mView = inflater.inflate(R.layout.item_layout_view, this, true);
@@ -54,8 +67,10 @@ public class ItemView extends LinearLayout {
 
         mName.setText(name);
         mDesc.setText(desc);
+
         mIcon.setImageDrawable(icon);
     }
+
 
     public void setSongsNum(int num) {
         mDesc.setText(num + " 首");

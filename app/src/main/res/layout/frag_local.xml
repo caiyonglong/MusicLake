@@ -22,6 +22,7 @@
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
             app:iv_icon="@drawable/item_music"
+            app:iv_icon_color="@color/colorPrimary"
             app:tv_desc="0首"
             app:tv_name="本地音乐" />
 
@@ -32,6 +33,7 @@
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
             app:iv_icon="@drawable/item_recently"
+            app:iv_icon_color="@color/orange"
             app:tv_desc="0首"
             app:tv_name="最近播放" />
 
@@ -42,6 +44,7 @@
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
             app:iv_icon="@drawable/item_favorite"
+            app:iv_icon_color="@color/red"
             app:tv_desc="0首"
             app:tv_name="收藏" />
 

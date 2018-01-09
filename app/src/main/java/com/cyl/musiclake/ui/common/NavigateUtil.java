@@ -12,10 +12,10 @@ import android.util.Pair;
 import android.view.View;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.fragment.AlbumDetailFragment;
-import com.cyl.musiclake.ui.music.fragment.DownloadFragment;
-import com.cyl.musiclake.ui.music.fragment.LocalMusicFragment;
-import com.cyl.musiclake.ui.music.fragment.PlaylistDetailFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.AlbumDetailFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.DownloadFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.LocalMusicFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.PlaylistDetailFragment;
 
 /**
  * Created by yonglong on 2016/12/24.

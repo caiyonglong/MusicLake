@@ -16,7 +16,7 @@ import com.cyl.musiclake.ui.download.NetworkUtil;
 import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists;
 import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists.Billboard;
 import com.cyl.musiclake.ui.onlinemusic.activity.OnlineMusicActivity;
-import com.cyl.musiclake.ui.music.adapter.OnlineAdapter;
+import com.cyl.musiclake.ui.localmusic.adapter.OnlineAdapter;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.Extras;

@@ -83,7 +83,7 @@ public class UserPresenter implements UserContract.Presenter {
 
 //        File file = new File(path);
 //        if (!file.exists()) {
-//            ToastUtils.show(UserCenterAcivity.this, "上传失败，图片文件不存在");
+//            ToastUtils.show(UserCenterActivity.this, "上传失败，图片文件不存在");
 //        }
 //        OkHttpUtils.post().url(Constants.UPLOAD_URL)
 //                .addFile("file", user_id + ".png", file)
@@ -93,7 +93,7 @@ public class UserPresenter implements UserContract.Presenter {
 //                    @Override
 //                    public void onError(Call call, Exception e) {
 //                        Log.e("eee", "ccccc");
-//                        ToastUtils.show(UserCenterAcivity.this, "上传失败，请检查网络");
+//                        ToastUtils.show(UserCenterActivity.this, "上传失败，请检查网络");
 //                    }
 //
 //                    @Override
@@ -110,7 +110,7 @@ public class UserPresenter implements UserContract.Presenter {
 //                            } else
 //                                ImageLoader.getInstance().displayImage(user.getUser_img(), header_img, ImageUtils.getAlbumDisplayOptions());
 //                        }
-//                        ToastUtils.show(UserCenterAcivity.this, response.getMessage().toString());
+//                        ToastUtils.show(UserCenterActivity.this, response.getMessage().toString());
 //                    }
 //                });
     }

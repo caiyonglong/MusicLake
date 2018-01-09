@@ -1,6 +1,7 @@
 package com.cyl.musiclake.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,7 +15,6 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.graphics.Palette;
 import android.telephony.PhoneStateListener;
@@ -25,9 +25,9 @@ import android.widget.RemoteViews;
 
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.music.model.data.MusicLoader;
+import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.data.source.MusicLoader;
 import com.cyl.musiclake.ui.download.NetworkUtil;
-import com.cyl.musiclake.ui.music.model.Music;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.NetworkUtils;
@@ -40,6 +40,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static android.support.v4.app.NotificationCompat.Builder;
 
 /**
  * 作者：yonglong on 2016/8/11 19:16
@@ -75,12 +77,13 @@ public class MusicPlayService extends Service {
     private final int PLAY_MODE_RANDOM = 0;
     private final int PLAY_MODE_LOOP = 1;
     private final int PLAY_MODE_REPEAT = 2;
-    private int NOTIFICATION_ID = 0x123;
+    private final int NOTIFICATION_ID = 0x123;
 
     //广播接收者
     ServiceReceiver mServiceReceiver;
 
-    private NotificationManager nm;
+    private NotificationManager mNotificationManager;
+    private Notification mNotification;
 
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private long mNotificationPostTime = 0;
@@ -89,10 +92,10 @@ public class MusicPlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        initNotify();
         initReceiver();
         initMediaPlayer();
         initTelephony();
+        initNotify();
     }
 
     private void initData() {
@@ -104,6 +107,51 @@ public class MusicPlayService extends Service {
             mPlayingMusic = mPlaylist.get(mPlayingPos);
         }
     }
+
+    /**
+     * 初始化和设置MediaSessionCompat
+     * MediaSessionCompat用于告诉系统及其他应用当前正在播放的内容,以及接收什么类型的播放控制
+     */
+    private void setUpMediaSession() {
+        mSession = new MediaSessionCompat(this, "Listener");
+        mSession.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public void onPause() {
+                pause();
+//                mPausedByTransientLossOfFocus = false;
+            }
+
+            @Override
+            public void onPlay() {
+                playPause();
+            }
+
+            @Override
+            public void onSeekTo(long pos) {
+                seekTo((int) pos);
+            }
+
+            @Override
+            public void onSkipToNext() {
+                next();
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                prev();
+            }
+
+            @Override
+            public void onStop() {
+                pause();
+//                mPausedByTransientLossOfFocus = false;
+                seekTo(0);
+//                releaseServiceUiAndStop();
+            }
+        });
+        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+    }
+
 
     /**
      * 初始化电话监听服务
@@ -421,69 +469,6 @@ public class MusicPlayService extends Service {
     }
 
 
-    /**
-     * 构建Notification
-     *
-     * @return
-     */
-    private Notification buildNotification() {
-        final String albumName = getAlbumName();
-        final String artistName = getArtistName();
-        final boolean isPlaying = isPlaying();
-        String text = TextUtils.isEmpty(albumName)
-                ? artistName : artistName + " - " + albumName;
-
-        int playButtonResId = isPlaying
-                ? R.drawable.ic_pause : R.drawable.ic_play_arrow_white_18dp;
-
-        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
-        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Bitmap artwork;
-        artwork = CoverLoader.getInstance().loadThumbnail(mPlayingMusic.getCoverUri());
-
-        if (artwork == null) {
-//            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.icon_album_default);
-        }
-
-        if (mNotificationPostTime == 0) {
-            mNotificationPostTime = System.currentTimeMillis();
-        }
-
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.default_cover)
-                .setLargeIcon(artwork)
-                .setContentIntent(clickIntent)
-                .setContentTitle(getTrackName())
-                .setContentText(text)
-                .setWhen(mNotificationPostTime)
-                .addAction(R.drawable.ic_skip_previous,
-                        "",
-                        retrievePlaybackAction(ACTION_PREV))
-                .addAction(playButtonResId, "",
-                        retrievePlaybackAction(PLAY_STATE_CHANGED))
-                .addAction(R.drawable.ic_skip_next,
-                        "",
-                        retrievePlaybackAction(ACTION_NEXT));
-
-        if (SystemUtils.isJellyBeanMR1()) {
-            builder.setShowWhen(false);
-        }
-//        if (SystemUtils.isLollipop()) {
-//            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-//            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
-//                    .setMediaSession(mSession.getSessionToken())
-//                    .setShowActionsInCompactView(0, 1, 2, 3);
-//            builder.setStyle(style);
-//        }
-
-        if (artwork != null && SystemUtils.isLollipop()) {
-            builder.setColor(Palette.from(artwork).generate().getMutedColor(Color.GRAY));
-        }
-
-        return builder.build();
-    }
-
     private CharSequence getTrackName() {
         if (mPlayingMusic != null) {
             return mPlayingMusic.getTitle();
@@ -509,7 +494,90 @@ public class MusicPlayService extends Service {
      * 初始化通知栏
      */
     private void initNotify() {
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotification = new Notification.Builder(this).build();
+
+        final String albumName = getAlbumName();
+        final String artistName = getArtistName();
+        final boolean isPlaying = isPlaying();
+        String text = TextUtils.isEmpty(albumName)
+                ? artistName : artistName + " - " + albumName;
+
+        int playButtonResId = isPlaying
+                ? R.drawable.ic_pause : R.drawable.ic_play_arrow_white_18dp;
+
+        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Bitmap artwork;
+        if (mPlayingMusic != null) {
+            artwork = CoverLoader.getInstance().loadThumbnail(mPlayingMusic.getCoverUri());
+        } else {
+            artwork = CoverLoader.getInstance().loadThumbnail(null);
+        }
+
+        if (mNotificationPostTime == 0) {
+            mNotificationPostTime = System.currentTimeMillis();
+        }
+
+        Builder builder = new Builder(this, initChannelId())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(artwork)
+                .setContentIntent(clickIntent)
+                .setContentTitle(getTrackName())
+                .setContentText(text)
+                .setWhen(mNotificationPostTime)
+                .addAction(R.drawable.ic_skip_previous,
+                        "",
+                        retrievePlaybackAction(ACTION_PREV))
+                .addAction(playButtonResId, "",
+                        retrievePlaybackAction(PLAY_STATE_CHANGED))
+                .addAction(R.drawable.ic_skip_next,
+                        "",
+                        retrievePlaybackAction(ACTION_NEXT));
+
+        if (SystemUtils.isJellyBeanMR1()) {
+            builder.setShowWhen(false);
+        }
+//        if (SystemUtils.isLollipop()) {
+//            //线控
+//            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+//            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
+//                    .setMediaSession(mSession.getSessionToken())
+//                    .setShowActionsInCompactView(0, 1, 2, 3);
+//            builder.setStyle(style);
+//        }
+
+        if (artwork != null && SystemUtils.isLollipop()) {
+            builder.setColor(Palette.from(artwork).generate().getMutedColor(Color.GRAY));
+        }
+
+        mNotification = builder.build();
+    }
+
+
+    /**
+     * 创建Notification ChannelID
+     *
+     * @return
+     */
+    private String initChannelId() {
+        // 通知渠道的id
+        String id = "music_lake_01";
+        // 用户可以看到的通知渠道的名字.
+        CharSequence name = "音乐湖";
+        // 用户可以看到的通知渠道的描述
+        String description = "通知栏播放控制";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel mChannel = null;
+            mChannel = new NotificationChannel(id, name, importance);
+            mChannel.setDescription(description);
+            mChannel.enableLights(false);
+            mChannel.enableVibration(false);
+            //最后在notificationmanager中创建该通知渠道
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+        return id;
     }
 
     private PendingIntent retrievePlaybackAction(final String action) {
@@ -522,9 +590,9 @@ public class MusicPlayService extends Service {
      * 取消通知
      */
     private void cancelNotification() {
-        if (nm != null) {
+        if (mNotificationManager != null) {
             stopForeground(true);
-            nm.cancel(NOTIFICATION_ID);
+            mNotificationManager.cancel(NOTIFICATION_ID);
         }
     }
 
@@ -550,8 +618,10 @@ public class MusicPlayService extends Service {
      */
     public void showNotification() {
         int notificationId = hashCode();
-        if (SystemUtils.isLollipop())
-            startForeground(notificationId, buildNotification());
+        if (SystemUtils.isLollipop()) {
+            startForeground(notificationId, mNotification);
+            mNotificationManager.notify(notificationId, mNotification);
+        }
     }
 
     /**

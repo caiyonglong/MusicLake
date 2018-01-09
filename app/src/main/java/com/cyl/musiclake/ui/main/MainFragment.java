@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
-import com.cyl.musiclake.ui.music.fragment.MyMusicFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.onlinemusic.fragment.OnlineFragment;
 
 import butterknife.BindView;
