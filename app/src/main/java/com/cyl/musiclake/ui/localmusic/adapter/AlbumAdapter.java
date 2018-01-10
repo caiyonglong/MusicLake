@@ -12,11 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,26 +52,28 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyRecyclerVi
      */
     @Override
     public void onBindViewHolder(final MyRecyclerViewHolder holder, final int position) {
-        holder.album.setVisibility(View.VISIBLE);
-        holder.name.setText(albums.get(position).getName());
-        holder.artist.setText(albums.get(position).getArtistName());
-        loadBitmap(ImageUtils.getAlbumArtUri(albums.get(position).getId()).toString(), holder.album);
+        Album albumInfo = albums.get(position);
 
+        holder.album.setVisibility(View.VISIBLE);
+        holder.name.setText(albumInfo.getName());
+        holder.artist.setText(albumInfo.getArtistName());
+
+        GlideApp.with(mContext)
+                .load(CoverLoader.getInstance().getCoverUri(mContext, albumInfo.getId()))
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.album);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             holder.album.setTransitionName("transition_album_art");
         }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("album", albums.get(position).getId() + "");
-                NavigateUtil.navigateToAlbum(mContext,
-                        albums.get(position).getId(),
-                        true,
-                        albums.get(position).getName(),
-                        new Pair<View, String>(holder.album, "transition_album_art"));
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Log.e("album", albumInfo.getId() + "");
+            NavigateUtil.navigateToAlbum(mContext,
+                    albumInfo.getId(),
+                    true,
+                    albumInfo.getName(),
+                    new Pair<View, String>(holder.album, "transition_album_art"));
         });
 
     }
@@ -80,42 +83,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyRecyclerVi
         return albums.size();
     }
 
-    private void loadBitmap(String uri, ImageView img) {
-        Log.e("uri", uri + ".........-");
-        if (uri != null) {
-            try {
-                GlideApp.with(mContext).load(uri)
-                        .error(R.drawable.default_cover)
-                        .placeholder(R.drawable.default_cover)
-                        .centerCrop()
-                        .into(img);
-            } catch (Exception e) {
-                Log.e("EEEE", uri);
-            }
-        }
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
     }
-
-
-    private void loadArtist(String title, final ImageView imgView) {
-//        OkHttpUtils.get().url("http://apis.baidu.com/geekery/music/singer")
-//                .addHeader("apikey", "0bbd28df93933b00fdbbd755f8769f1b")
-//                .addParams("name", title)
-//                .build()
-//                .execute(new SingerCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Singer response) {
-//                        if (response.code == 0)
-//                            loadBitmap(response.data.image, imgView);
-//
-//                    }
-//                });
-    }
-
 
     public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
 
@@ -130,6 +100,4 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyRecyclerVi
             artist = (TextView) mView.findViewById(R.id.artist);
         }
     }
-
-
 }

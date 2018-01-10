@@ -13,14 +13,16 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.ui.common.NavigateUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,11 +36,11 @@ import java.util.List;
  */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
 
-    private AppCompatActivity context;
+    private AppCompatActivity mContext;
     private List<Music> musicInfos = new ArrayList<>();
 
-    public SongAdapter(AppCompatActivity context, List<Music> musicInfos) {
-        this.context = context;
+    public SongAdapter(AppCompatActivity mContext, List<Music> musicInfos) {
+        this.mContext = mContext;
         this.musicInfos = musicInfos;
     }
 
@@ -57,15 +59,19 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
     @Override
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
+        String url;
         if (localItem.getType() == Music.Type.LOCAL) {
-            loadBitmap(localItem.getCoverUri(), holder.albumArt);
+            url = CoverLoader.getInstance().getCoverUri(mContext, localItem.getAlbumId());
         } else {
-            if (localItem.getCover() != null) {
-                holder.albumArt.setImageBitmap(localItem.getCover());
-            } else {
-                holder.albumArt.setImageResource(R.drawable.default_cover);
-            }
+            url = localItem.getCoverUri();
         }
+
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(url)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.albumArt);
 
         holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
         holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
@@ -98,7 +104,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
 
     private void loadBitmap(String uri, ImageView img) {
         try {
-            GlideApp.with(context).load(uri)
+            GlideApp.with(mContext).load(uri)
                     .error(R.drawable.default_cover)
                     .placeholder(R.drawable.default_cover)
                     .centerCrop()
@@ -112,7 +118,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
         holder.popupmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu mPopupmenu = new PopupMenu(context, v);
+                PopupMenu mPopupmenu = new PopupMenu(mContext, v);
                 mPopupmenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -128,19 +134,19 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
                                 Log.e("album", musicInfos.get(position).getAlbumId() + "");
 
                                 Log.e("album", musicInfos.get(position).getAlbumId() + "");
-                                NavigateUtil.navigateToAlbum(context,
+                                NavigateUtil.navigateToAlbum(mContext,
                                         musicInfos.get(position).getAlbumId(),
                                         true,
                                         musicInfos.get(position).getAlbum(), null);
                                 break;
                             case R.id.popup_song_goto_artist:
-                                NavigateUtil.navigateToAlbum(context,
+                                NavigateUtil.navigateToAlbum(mContext,
                                         musicInfos.get(position).getArtistId(),
                                         false,
                                         musicInfos.get(position).getArtist(), null);
                                 break;
                             case R.id.popup_song_addto_queue:
-                                AddPlaylistDialog.newInstance(musicInfos.get(position)).show(context.getSupportFragmentManager(), "ADD_PLAYLIST");
+                                AddPlaylistDialog.newInstance(musicInfos.get(position)).show(mContext.getSupportFragmentManager(), "ADD_PLAYLIST");
                                 break;
                         }
                         return false;
@@ -154,7 +160,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ItemHolder> {
     }
 
     private void getMusicInfo(Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setTitle(FileUtils.getTitle(music.getTitle()));
         StringBuilder sb = new StringBuilder();
         sb.append("艺术家：")

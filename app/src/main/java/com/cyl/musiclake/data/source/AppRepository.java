@@ -2,6 +2,8 @@ package com.cyl.musiclake.data.source;
 
 import android.content.Context;
 
+import com.cyl.musiclake.data.model.Album;
+import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.data.model.Music;
 
 import java.util.List;
@@ -15,26 +17,22 @@ import io.reactivex.Observable;
 public class AppRepository {
 
     public static Observable<List<Music>> getAllSongsRepository(Context mContext) {
-        return Observable.create(e -> {
-            List<Music> data = MusicLoader.getAllSongs(mContext);
-            e.onNext(data);
-            e.onComplete();
-        });
+        return SongLoader.getAllSongs(mContext);
     }
 
-    public static Observable<List<Music>> getArtistSongsRepository(Context mContext, String id) {
-        return Observable.create(e -> {
-            List<Music> data = MusicLoader.getArtistSongs(mContext, id);
-            e.onNext(data);
-            e.onComplete();
-        });
+    public static Observable<List<Music>> getArtistSongsRepository(Context mContext, long id) {
+        return ArtistSongLoader.getSongsForArtist(mContext, id);
     }
 
-    public static Observable<List<Music>> getAlbumSongsRepository(Context mContext, String id) {
-        return Observable.create(e -> {
-            List<Music> data = MusicLoader.getAlbumSongs(mContext, id);
-            e.onNext(data);
-            e.onComplete();
-        });
+    public static Observable<List<Music>> getAlbumSongsRepository(Context mContext, long id) {
+        return AlbumSongLoader.getSongsForAlbum(mContext, id);
+    }
+
+    public static Observable<List<Artist>> getAllArtistsRepository(Context mContext) {
+        return ArtistLoader.getAllArtists(mContext);
+    }
+
+    public static Observable<List<Album>> getAllAlbumsRepository(Context mContext) {
+        return AlbumLoader.getAllAlbums(mContext);
     }
 }

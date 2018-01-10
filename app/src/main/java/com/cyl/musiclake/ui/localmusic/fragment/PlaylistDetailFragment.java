@@ -92,7 +92,7 @@ public class PlaylistDetailFragment extends BaseFragment {
                         .content("是否删除这个歌单？")
                         .onPositive((dialog, which) -> {
                             PlaylistLoader.deletePlaylist(getActivity(), mId);
-                            RxBus.getInstance().post(Playlist.class);
+                            RxBus.getInstance().post(new Playlist());
                             onBackPress();
                         })
                         .positiveText("确定")
@@ -126,5 +126,15 @@ public class PlaylistDetailFragment extends BaseFragment {
         inflater.inflate(R.menu.menu_playlist_detail, menu);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        RxBus.getInstance().register();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.getInstance().unregisterAll();
+    }
 }

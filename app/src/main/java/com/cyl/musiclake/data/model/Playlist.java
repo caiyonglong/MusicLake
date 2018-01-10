@@ -16,6 +16,9 @@ public class Playlist implements Serializable {
     //歌单名
     private int count;
 
+    public Playlist() {
+    }
+
     public Playlist(String id, String name, int count) {
         this.id = id;
         this.name = name;

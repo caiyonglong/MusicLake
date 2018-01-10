@@ -2,12 +2,9 @@ package com.cyl.musiclake.ui.localmusic.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.data.source.AppRepository;
-import com.cyl.musiclake.data.source.PlaylistLoader;
-import com.cyl.musiclake.ui.localmusic.contract.MyMusicContract;
+import com.cyl.musiclake.ui.localmusic.contract.AlbumDetailContract;
 
 import java.util.List;
 
@@ -16,31 +13,27 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+
 /**
- * Created by yonglong on 2018/1/6.
+ * Created by yonglong on 2018/1/7.
  */
 
-public class MyMusicPresenter implements MyMusicContract.Presenter {
-    private MyMusicContract.View mView;
+public class ArtistDetailPresenter implements AlbumDetailContract.Presenter {
+    private AlbumDetailContract.View mView;
     private Context mContext;
-    private List<Playlist> playlists;
-    private List<Music> musicList;
 
-    public MyMusicPresenter(Context mContext) {
+    public ArtistDetailPresenter(Context mContext) {
         this.mContext = mContext;
     }
 
     @Override
-    public void attachView(MyMusicContract.View view) {
+    public void attachView(AlbumDetailContract.View view) {
         mView = view;
     }
 
     @Override
     public void subscribe() {
-        RxBus.getInstance().register(Playlist.class).subscribe(integer -> {
-            playlists = PlaylistLoader.getPlaylist(mContext);
-            mView.showPlaylist(playlists);
-        });
+
     }
 
     @Override
@@ -49,8 +42,13 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
     }
 
     @Override
-    public void loadSongs() {
-        AppRepository.getAllSongsRepository(mContext)
+    public void subscribe(long albumID) {
+
+    }
+
+    @Override
+    public void loadAlbumSongs(long albumID) {
+        AppRepository.getArtistSongsRepository(mContext, albumID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
@@ -61,8 +59,8 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(List<Music> musicList) {
-                        mView.showSongs(musicList);
+                    public void onNext(List<Music> songs) {
+                        mView.showAlbumSongs(songs);
                     }
 
                     @Override
@@ -79,8 +77,12 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
     }
 
     @Override
-    public void loadPlaylist() {
-        playlists = PlaylistLoader.getPlaylist(mContext);
-        mView.showPlaylist(playlists);
+    public void loadAlbumArt(long albumID) {
+
+    }
+
+    @Override
+    public void loadArtistSongs(long artistID) {
+
     }
 }

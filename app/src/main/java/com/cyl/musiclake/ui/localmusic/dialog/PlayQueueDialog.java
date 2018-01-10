@@ -26,7 +26,7 @@ import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.adapter.PlayQueueAdapter;
 import com.cyl.musiclake.utils.ColorUtil;
-import com.cyl.musiclake.utils.Preferences;
+import com.cyl.musiclake.utils.PreferencesUtils;
 
 import java.util.List;
 
@@ -139,12 +139,12 @@ public class PlayQueueDialog extends DialogFragment {
 
     @OnClick(R.id.iv_play_mode)
     public void onPlayModeClick() {
-        Preferences.savePlayMode(Preferences.getPlayMode());
+        PreferencesUtils.savePlayMode(PreferencesUtils.getPlayMode());
         updatePlayMode();
     }
 
     public void updatePlayMode() {
-        switch (Preferences.getPlayMode()) {
+        switch (PreferencesUtils.getPlayMode()) {
             case PLAY_MODE_LOOP:
                 ivPlayMode.setImageResource(R.drawable.ic_repeat);
                 tvPlayMode.setText("循环播放");

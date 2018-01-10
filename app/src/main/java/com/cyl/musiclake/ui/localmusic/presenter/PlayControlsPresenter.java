@@ -1,21 +1,34 @@
 package com.cyl.musiclake.ui.localmusic.presenter;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.LinearInterpolator;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
+import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.io.File;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -24,23 +37,34 @@ import java.io.File;
 
 public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
+    private static final String TAG = "PlayControlsPresenter";
     private PlayControlsContract.View mView;
 
     private boolean mDuetoplaypause = false;
+    private boolean isDebug = true;
+    private int mProgress;
+
+    private Handler mHandler;
+    private Context mContext;
+
+    public PlayControlsPresenter(Context mContext) {
+        this.mContext = mContext;
+    }
 
     @Override
     public void attachView(PlayControlsContract.View view) {
         mView = view;
+        mHandler = new Handler();
     }
 
     @Override
     public void subscribe() {
-
     }
 
     @Override
     public void unsubscribe() {
-
+//        RxBus.getInstance().unregisterAll();
+        mHandler.removeCallbacks(updateProgress);
     }
 
 
@@ -48,24 +72,39 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     @Override
     public void onPlayPauseClick() {
         mDuetoplaypause = true;
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(final Void... unused) {
+        Observable.create((ObservableOnSubscribe<Boolean>) e -> {
+            PlayManager.playPause();
+            if (PlayManager.getPlayingMusic() == null) {
+                e.onError(new Throwable("请选择需要播放的音乐"));
+            } else {
                 boolean isPlaying = PlayManager.isPlaying();
-                PlayManager.playPause();
-                return isPlaying;
+                e.onNext(isPlaying);
+                e.onComplete();
             }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
 
-            @Override
-            protected void onPostExecute(Boolean isPlaying) {
-                if (isPlaying) {
-                    mView.setPlayPauseButton(false);
-                } else {
-                    mView.setPlayPauseButton(true);
-                }
-            }
-        }.execute();
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(Boolean isPlaying) {
+                        mView.setPlayPauseButton(isPlaying);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.setErrorInfo(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -108,8 +147,13 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     @Override
     public void updateNowPlayingCard() {
-        if (PlayManager.getPlayingMusic() == null)
+        Log.d(TAG, "updateNowPlayingCard" + mProgress);
+        Music music = null;
+        if (PlayManager.getPlayingMusic() == null) {
             return;
+        } else {
+            music = PlayManager.getPlayingMusic();
+        }
         if (PlayManager.isPlaying()) {
             if (!mView.getPlayPauseStatus()) {//true表示按钮为待暂停状态
                 mView.setPlayPauseButton(true);
@@ -131,25 +175,51 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         }
 
         if (!mDuetoplaypause) {
-            Glide.with(mView.getContext())
-                    .asBitmap()
-                    .load(PlayManager.getPlayingMusic().getCoverUri())
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            mView.setAlbumArt(resource);
-                            new Palette.Builder(resource).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    mView.setPalette(palette);
-                                }
-                            });
-                        }
-                    });
+            if (music != null) {
+                GlideApp.with(mContext)
+                        .asBitmap()
+                        .load(CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId()))
+                        .error(R.drawable.default_cover)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                mView.setAlbumArt(resource);
+                                new Palette.Builder(resource).generate(palette ->
+                                        mView.setPalette(palette));
+                            }
+                        });
+            }
         }
 
         mDuetoplaypause = false;
         mView.setProgressMax(PlayManager.getDuration());
-        mView.startUpdateProgress();
+        mHandler.post(updateProgress);
     }
+
+    private Runnable updateProgress = new Runnable() {
+        @Override
+        public void run() {
+            mProgress = PlayManager.getCurrentPosition();
+            if (isDebug) Log.d(TAG, "mProgress" + mProgress);
+            mView.updateProgress(mProgress);
+            mHandler.postDelayed(updateProgress, 100);
+        }
+    };
+
+
+    public ObjectAnimator operatingAnim;
+    public long currentPlayTime = 0;
+    private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
+    /**
+     * 旋转动画
+     */
+    public void initAlbumPic(View view) {
+        operatingAnim = ObjectAnimator.ofFloat(view, "rotation", 0, 359);
+        operatingAnim.setDuration(20 * 1000);
+        operatingAnim.setRepeatCount(-1);
+        operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
+        operatingAnim.setInterpolator(mLinearInterpolator);
+    }
+
 }

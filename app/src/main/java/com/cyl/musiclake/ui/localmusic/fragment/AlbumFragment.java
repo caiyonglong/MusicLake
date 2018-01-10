@@ -7,10 +7,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.model.Album;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.AlbumAdapter;
-import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.data.source.MusicLoader;
+import com.cyl.musiclake.ui.localmusic.contract.AlbumsContract;
+import com.cyl.musiclake.ui.localmusic.presenter.AlbumPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class AlbumFragment extends BaseFragment {
+public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -33,6 +34,7 @@ public class AlbumFragment extends BaseFragment {
     LinearLayout loading;
     private AlbumAdapter mAdapter;
     private List<Album> albums = new ArrayList<>();
+    private AlbumPresenter mPresenter;
 
 
     public static AlbumFragment newInstance() {
@@ -48,7 +50,7 @@ public class AlbumFragment extends BaseFragment {
      */
     @Override
     protected void initDatas() {
-        updateView();
+        mPresenter.loadAlbums("all");
     }
 
 
@@ -67,11 +69,10 @@ public class AlbumFragment extends BaseFragment {
      */
     @Override
     public void initViews() {
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-    }
+        mPresenter = new AlbumPresenter(getContext());
+        mPresenter.attachView(this);
 
-    private void updateView() {
-        albums = MusicLoader.getAllAlbums(getActivity());
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mAdapter = new AlbumAdapter(getActivity(), albums);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -80,5 +81,26 @@ public class AlbumFragment extends BaseFragment {
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showAlbums(List<Album> albumList) {
+        mAdapter.setAlbums(albumList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showEmptyView() {
+
     }
 }

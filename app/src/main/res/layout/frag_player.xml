@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_frag_player"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -130,21 +131,19 @@
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
-
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/previous"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_previous"
                     app:materialIcon="skip_previous"
+                    app:materialIconColor="@color/white"
                     app:materialIconSize="48dp" />
 
-
-                <net.steamcrafted.materialiconlib.MaterialIconView
+                <com.cyl.musiclake.view.PlayPauseView
                     android:id="@+id/playOrPause"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -154,9 +153,10 @@
                     android:elevation="5dp"
                     android:scaleType="fitXY"
                     android:translationZ="5dp"
-                    app:materialIcon="play_circle"
-                    app:materialIconColor="@color/orange"
-                    app:materialIconSize="56dp"
+                    app:anim_duration="300"
+                    app:bg_color="#55ffffff"
+                    app:btn_color="@color/white"
+                    app:gap_width="15"
                     tools:targetApi="lollipop" />
 
 
@@ -169,6 +169,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     app:materialIcon="skip_next"
+                    app:materialIconColor="@color/white"
                     app:materialIconSize="48dp" />
 
                 <ImageView

@@ -41,4 +41,15 @@ public class Album {
     public int getCount() {
         return count;
     }
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", artistName='" + artistName + '\'' +
+                ", artistId=" + artistId +
+                ", count=" + count +
+                '}';
+    }
 }

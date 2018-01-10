@@ -10,17 +10,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.localmusic.presenter.MusicStateListener;
+import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.service.MusicPlayService;
 import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -32,12 +33,11 @@ import static com.cyl.musiclake.service.PlayManager.mService;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection, MusicStateListener {
+public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection {
 
     protected Handler mHandler;
     private PlayManager.ServiceToken mToken;
     private PlaybackStatus mPlaybackStatus;
-    private final ArrayList<MusicStateListener> mMusicStateListener = new ArrayList<>();
 
 
     @Override
@@ -72,7 +72,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     @Override
     protected void onStart() {
         super.onStart();
-
         final IntentFilter filter = new IntentFilter();
         // Play and pause changes
         filter.addAction(MusicPlayService.PLAY_STATE_CHANGED);
@@ -86,7 +85,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         filter.addAction(MusicPlayService.TRACK_ERROR);
 
         registerReceiver(mPlaybackStatus, filter);
-
     }
 
     @Override
@@ -103,53 +101,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         } catch (final Throwable e) {
             e.printStackTrace();
         }
-        mMusicStateListener.clear();
-    }
-
-    @Override
-    public void onMetaChanged() {
-        // Let the listener know to the meta chnaged
-        for (final MusicStateListener listener : mMusicStateListener) {
-            if (listener != null) {
-                listener.onMetaChanged();
-            }
-        }
-    }
-
-    @Override
-    public void restartLoader() {
-        // Let the listener know to update a list
-        for (final MusicStateListener listener : mMusicStateListener) {
-            if (listener != null) {
-                listener.restartLoader();
-            }
-        }
-    }
-
-    @Override
-    public void onPlaylistChanged() {
-        // Let the listener know to update a list
-        for (final MusicStateListener listener : mMusicStateListener) {
-            if (listener != null) {
-                listener.onPlaylistChanged();
-            }
-        }
-    }
-
-    public void setMusicStateListenerListener(final MusicStateListener status) {
-        if (status == this) {
-            throw new UnsupportedOperationException("Override the method, don't add a listener");
-        }
-
-        if (status != null) {
-            mMusicStateListener.add(status);
-        }
-    }
-
-    public void removeMusicStateListenerListener(final MusicStateListener status) {
-        if (status != null) {
-            mMusicStateListener.remove(status);
-        }
     }
 
     private final static class PlaybackStatus extends BroadcastReceiver {
@@ -164,14 +115,13 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
+            Log.e("PlaybackStatus", "接收到广播-------------" + action);
             BaseActivity baseActivity = mReference.get();
-            if (baseActivity != null) {
+            if (baseActivity != null && action != null) {
                 if (action.equals(MusicPlayService.META_CHANGED)) {
-                    baseActivity.onMetaChanged();
+                    RxBus.getInstance().post(new MetaChangedEvent());
                 } else if (action.equals(MusicPlayService.REFRESH)) {
-                    baseActivity.restartLoader();
                 } else if (action.equals(MusicPlayService.PLAYLIST_CHANGED)) {
-                    baseActivity.onPlaylistChanged();
                 } else if (action.equals(MusicPlayService.TRACK_ERROR)) {
                     final String errorMsg = context.getString(R.string.error_playing_track);
                     Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();

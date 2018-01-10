@@ -82,12 +82,17 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     protected void initDatas() {
         mPresenter.loadSongs();
         mPresenter.loadPlaylist();
-        mPresenter.subscribe();
 
         mLocal.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
         mLove.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
         mDownload.setOnClickListener(v -> NavigateUtil.navigateToDownload(getActivity(), null));
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.subscribe();
     }
 
     @Override
@@ -129,8 +134,8 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetach() {
+        super.onDetach();
         mPresenter.unsubscribe();
     }
 }

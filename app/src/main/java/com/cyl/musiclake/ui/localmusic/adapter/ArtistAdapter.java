@@ -51,31 +51,21 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyRecycler
      */
     @Override
     public void onBindViewHolder(final MyRecyclerViewHolder holder, final int position) {
-
-        holder.name.setText(artists.get(position).getName());
-        holder.artist.setText(artists.get(position).getCount() + "首歌");
-        if (!artists.get(position).getName().equals("<unknown>")) {
-//            loadArtist(artists.get(position).getName(), holder.album);
-        } else {
-            holder.album.setVisibility(View.GONE);
-        }
-
+        Artist artistInfo = artists.get(position);
+        holder.name.setText(artistInfo.getName());
+        holder.artist.setText(artistInfo.getCount() + "首歌");
+//        holder.album.setImageBitmap(
+//                CoverLoader.getInstance().loadThumbnail(mContext, artistInfo.getId()));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             holder.album.setTransitionName("transition_album_art");
         }
 
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavigateUtil.navigateToAlbum(mContext,
-                        artists.get(position).getId(),
-                        false,
-                        artists.get(position).getName(),
-                        new Pair<View, String>(holder.album, "transition_album_art"));
-            }
-        });
+        holder.itemView.setOnClickListener(v -> NavigateUtil.navigateToAlbum(mContext,
+                artists.get(position).getId(),
+                false,
+                artists.get(position).getName(),
+                new Pair<View, String>(holder.album, "transition_album_art")));
     }
 
     @Override
@@ -98,27 +88,9 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyRecycler
         }
     }
 
-
-//    private void loadArtist(String title, final ImageView imgView) {
-//        OkHttpUtils.get().url("http://apis.baidu.com/geekery/music/singer")
-//                .addHeader("apikey", "0bbd28df93933b00fdbbd755f8769f1b")
-//                .addParams("name", title)
-//                .build()
-//                .execute(new SingerCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Singer response) {
-//                        if (response.code == 0)
-//                            loadBitmap(response.data.image, imgView);
-//
-//                    }
-//                });
-//    }
-
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
+    }
 
     public class MyRecyclerViewHolder extends RecyclerView.ViewHolder {
 

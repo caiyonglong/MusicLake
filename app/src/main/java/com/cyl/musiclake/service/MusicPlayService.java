@@ -23,15 +23,19 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.MusicLoader;
+import com.cyl.musiclake.data.source.SongQueueLoader;
 import com.cyl.musiclake.ui.download.NetworkUtil;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.NetworkUtils;
-import com.cyl.musiclake.utils.Preferences;
+import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -84,6 +88,7 @@ public class MusicPlayService extends Service {
 
     private NotificationManager mNotificationManager;
     private Notification mNotification;
+    private Bitmap artwork;
 
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private long mNotificationPostTime = 0;
@@ -98,15 +103,6 @@ public class MusicPlayService extends Service {
         initNotify();
     }
 
-    private void initData() {
-        mPlaylist = MusicLoader.getPlayQueue(this);
-        mPlayingPos = (int) Preferences.getCurrentSongId();
-        if (mPlayingPos == -1) {
-            mPlayingMusic = null;
-        } else {
-            mPlayingMusic = mPlaylist.get(mPlayingPos);
-        }
-    }
 
     /**
      * 初始化和设置MediaSessionCompat
@@ -224,7 +220,7 @@ public class MusicPlayService extends Service {
         if (mPlaylist.size() == 1) {
             return mPlayingPos;
         }
-        mRepeatMode = Preferences.getPlayMode();
+        mRepeatMode = PreferencesUtils.getPlayMode();
         if (mRepeatMode == PLAY_MODE_REPEAT) {
             if (mPlayingPos < 0) {
                 return 0;
@@ -248,7 +244,7 @@ public class MusicPlayService extends Service {
         if (mPlaylist.size() == 1) {
             return mPlayingPos;
         }
-        mRepeatMode = Preferences.getPlayMode();
+        mRepeatMode = PreferencesUtils.getPlayMode();
         if (mRepeatMode == PLAY_MODE_REPEAT) {
             if (mPlayingPos < 0) {
                 return 0;
@@ -269,7 +265,7 @@ public class MusicPlayService extends Service {
         if (music.getType() == Music.Type.LOCAL) {
             return true;
         }
-        boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
+        boolean mobileNetworkPlay = PreferencesUtils.enableMobileNetworkPlay();
         try {
             if (NetworkUtils.is4G(getApplicationContext()) && !mobileNetworkPlay) {
                 return false;
@@ -386,8 +382,8 @@ public class MusicPlayService extends Service {
 
 
     private void refresh() {
-        Preferences.saveCurrentSongId(mPlayingPos);
-        MusicLoader.updateQueue(this, mPlaylist);
+        PreferencesUtils.saveCurrentSongId(mPlayingPos);
+        SongQueueLoader.updateQueue(this, mPlaylist);
     }
 
     /**
@@ -463,9 +459,7 @@ public class MusicPlayService extends Service {
         intent.putExtra("album", getAlbumName());
         intent.putExtra("track", getTrackName());
         intent.putExtra("playing", isPlaying());
-
         sendBroadcast(intent);
-
     }
 
 
@@ -495,7 +489,6 @@ public class MusicPlayService extends Service {
      */
     private void initNotify() {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotification = new Notification.Builder(this).build();
 
         final String albumName = getAlbumName();
         final String artistName = getArtistName();
@@ -508,12 +501,24 @@ public class MusicPlayService extends Service {
 
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Bitmap artwork;
-        if (mPlayingMusic != null) {
-            artwork = CoverLoader.getInstance().loadThumbnail(mPlayingMusic.getCoverUri());
-        } else {
-            artwork = CoverLoader.getInstance().loadThumbnail(null);
+        String coverUrl = "R.drawable.default_cover";
+        if (mPlayingMusic != null && mPlayingMusic.getType() == Music.Type.LOCAL) {
+            coverUrl = CoverLoader.getInstance().getCoverUri(this, mPlayingMusic.getAlbumId());
+        } else if (mPlayingMusic != null && mPlayingMusic.getType() == Music.Type.LOCAL) {
+            coverUrl = mPlayingMusic.getCoverUri();
         }
+
+        GlideApp.with(this)
+                .asBitmap()
+                .load(coverUrl)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        artwork = resource;
+                    }
+                });
 
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
@@ -658,8 +663,8 @@ public class MusicPlayService extends Service {
             mPlayer = null;
         }
         Log.d("TAG", "ondestory");
-        MusicLoader.updateQueue(this, mPlaylist);
-        Preferences.saveCurrentSongId(mPlayingPos);
+        SongQueueLoader.updateQueue(this, mPlaylist);
+        PreferencesUtils.saveCurrentSongId(mPlayingPos);
         cancelNotification();
         stopSelf();
 

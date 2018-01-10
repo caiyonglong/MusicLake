@@ -170,7 +170,7 @@ public class OnlineMusicAdapter extends RecyclerView.Adapter<OnlineMusicAdapter.
 //            public void onSuccess(Music music) {
 //
 //                ToastUtils.show(context, "正在下载");
-////                Preferences.
+////                PreferencesUtils.
 //                Intent intent = new Intent(context, DownloadService.class);
 //                intent.putExtra("downloadUrl", music.getUri());
 //                intent.putExtra("name", FileUtils.getMp3FileName(music.getArtist(), music.getTitle()));

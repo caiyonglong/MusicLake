@@ -21,7 +21,7 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.MusicLoader;
+import com.cyl.musiclake.data.source.SongQueueLoader;
 import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.Extras;
@@ -174,11 +174,11 @@ public class PlaylistDetailActivity extends BaseActivity {
         protected String doInBackground(String... params) {
             if (isAlbum == 0) {
                 Log.e("歌单id++++++", album_id + "==" + getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "");
-                musicInfos = MusicLoader.getAlbumSongs(PlaylistDetailActivity.this, album_id + "");
+                musicInfos = SongQueueLoader.getAlbumSongs(PlaylistDetailActivity.this, album_id + "");
                 Log.e("歌单id++++++", musicInfos.size() + "");
             } else if (isAlbum == 1) {
                 Log.e("歌单id++++++", album_id + "");
-                musicInfos = MusicLoader.getArtistSongs(PlaylistDetailActivity.this, album_id + "");
+                musicInfos = SongQueueLoader.getArtistSongs(PlaylistDetailActivity.this, album_id + "");
                 Log.e("歌单id++++++", musicInfos.size() + "");
             } else {
                 Log.e("歌单id++++++", pid + "");

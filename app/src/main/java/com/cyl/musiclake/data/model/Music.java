@@ -24,6 +24,8 @@ public class Music implements Parcelable {
     private long artistId;
     // 专辑id
     private long albumId;
+    // 专辑id
+    private int trackNumber;
     // 持续时间
     private long duration;
     // 音乐路径
@@ -40,6 +42,20 @@ public class Music implements Parcelable {
     private long fileSize;
     // 发行日期
     private String year;
+
+    public Music(long id, long albumId, long artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.artistId = artistId;
+        this.albumId = albumId;
+        this.duration = duration;
+        this.trackNumber = trackNumber;
+        this.uri = uri;
+        this.type = Type.LOCAL;
+    }
+
 
     public Music() {
         this.id = -1;
@@ -171,7 +187,7 @@ public class Music implements Parcelable {
     }
 
     public String getTitle() {
-        return title ;
+        return title;
     }
 
     public void setTitle(String title) {
@@ -303,4 +319,7 @@ public class Music implements Parcelable {
                 ", year='" + year + '\'' +
                 '}';
     }
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -10,17 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.AlbumMusicAdapter;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.MusicLoader;
+import com.cyl.musiclake.ui.localmusic.contract.AlbumDetailContract;
+import com.cyl.musiclake.ui.localmusic.presenter.AlbumDetailPresenter;
 import com.cyl.musiclake.utils.Extras;
-import com.cyl.musiclake.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ import butterknife.BindView;
  * 版本：2.5
  * 专辑
  */
-public class AlbumDetailFragment extends BaseFragment {
+public class AlbumDetailFragment extends BaseFragment implements AlbumDetailContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -52,16 +51,9 @@ public class AlbumDetailFragment extends BaseFragment {
 
     private AlbumMusicAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-
-    Runnable loadSongs = new Runnable() {
-        @Override
-        public void run() {
-            new loadPlaylist().execute("");
-        }
-    };
+    private AlbumDetailPresenter mPresenter;
 
     public static AlbumDetailFragment newInstance(long id, boolean isAlbum, String title, String transitionName) {
-
         Bundle args = new Bundle();
         args.putLong(Extras.ALBUM_ID, id);
         args.putString(Extras.PLAYLIST_NAME, title);
@@ -72,16 +64,12 @@ public class AlbumDetailFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    protected void listener() {
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initDatas() {
-        albumID = getArguments().getLong(Extras.ALBUM_ID);
+
         isAlbum = getArguments().getBoolean("isAlbum");
+        albumID = getArguments().getLong(Extras.ALBUM_ID);
         transitionName = getArguments().getString("transitionName");
         title = getArguments().getString(Extras.PLAYLIST_NAME);
 
@@ -89,8 +77,13 @@ public class AlbumDetailFragment extends BaseFragment {
             album_art.setTransitionName(transitionName);
         if (title != null)
             collapsing_toolbar.setTitle(title);
-        setAlbumart();
-        loadSongs.run();
+        if (isAlbum) {
+            mPresenter.loadAlbumSongs(albumID);
+            mPresenter.loadAlbumArt(albumID);
+        } else {
+            mPresenter.loadArtistSongs(albumID);
+            mPresenter.loadAlbumArt(albumID);
+        }
     }
 
     @Override
@@ -98,89 +91,52 @@ public class AlbumDetailFragment extends BaseFragment {
         return R.layout.frag_album;
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void initViews() {
+        mPresenter = new AlbumDetailPresenter(getContext());
+        mPresenter.attachView(this);
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        final ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (((AppCompatActivity) getActivity()) != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+            ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
+        mAdapter = new AlbumMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-    }
-
-
-    /**
-     * 显示专辑图片
-     */
-    private void setAlbumart() {
-        Log.e("====", albumID + "==" + title);
-        if (isAlbum) {
-            loadBitmap(ImageUtils.getAlbumArtUri(albumID).toString());
-        } else {
-//            loadArtist(title);
-        }
-    }
-
-//    private void loadArtist(String title) {
-//        OkHttpUtils.get().url("http://apis.baidu.com/geekery/music/singer")
-//                .addHeader("apikey", "0bbd28df93933b00fdbbd755f8769f1b")
-//                .addParams("name", title)
-//                .build()
-//                .execute(new SingerCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Singer response) {
-//                        if (response.code == 0)
-//                            loadBitmap(response.data.image);
-//
-//                    }
-//                });
-//    }
-
-    private void loadBitmap(String uri) {
-        Log.e("EEEE", uri);
-        GlideApp.with(getContext())
-                .load(uri)
-                .into(album_art);
-    }
-
-    private class loadPlaylist extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (isAlbum) {
-                Log.e("专辑id++++++", albumID + "==" + title + "");
-                musicInfos = MusicLoader.getAlbumSongs(getContext(), albumID + "");
-                Log.e("歌单id++++++", musicInfos.size() + "");
-            } else {
-                Log.e("歌单id++++++", albumID + "");
-                musicInfos = MusicLoader.getArtistSongs(getContext(), albumID + "");
-                Log.e("歌单id++++++", musicInfos.size() + "");
-            }
-            mAdapter = new AlbumMusicAdapter((AppCompatActivity) getActivity(), musicInfos);
-
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            setRecyclerViewAapter();
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-    }
-
-    private void setRecyclerViewAapter() {
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showAlbumSongs(List<Music> songList) {
+        mAdapter.setMusicInfos(songList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showArtistSongs(List<Music> songList) {
+        mAdapter.setMusicInfos(songList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showAlbumArt(Drawable albumArt) {
+
+    }
+
+    @Override
+    public void showAlbumArt(Bitmap bitmap) {
+        album_art.setImageBitmap(bitmap);
     }
 
 }

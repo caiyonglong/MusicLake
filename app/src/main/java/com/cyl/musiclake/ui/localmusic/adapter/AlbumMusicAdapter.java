@@ -5,7 +5,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,9 +14,9 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,23 +71,20 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
             @Override
             public void onClick(View v) {
                 PopupMenu mPopupmenu = new PopupMenu(context, v);
-                mPopupmenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.popup_song_play:
-                                PlayManager.setPlayList(musicInfos);
-                                PlayManager.play(position);
-                                break;
-                            case R.id.popup_song_detail:
-                                getMusicInfo(musicInfos.get(position));
-                                break;
-                            case R.id.popup_song_addto_queue:
-                                AddPlaylistDialog.newInstance(musicInfos.get(position)).show(context.getSupportFragmentManager(), "ADD_PLAYLIST");
-                                break;
-                        }
-                        return false;
+                mPopupmenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.popup_song_play:
+                            PlayManager.setPlayList(musicInfos);
+                            PlayManager.play(position);
+                            break;
+                        case R.id.popup_song_detail:
+                            getMusicInfo(musicInfos.get(position));
+                            break;
+                        case R.id.popup_song_addto_queue:
+                            AddPlaylistDialog.newInstance(musicInfos.get(position)).show(context.getSupportFragmentManager(), "ADD_PLAYLIST");
+                            break;
                     }
+                    return false;
                 });
                 mPopupmenu.inflate(R.menu.popup_album);
                 mPopupmenu.show();

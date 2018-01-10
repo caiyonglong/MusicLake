@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,9 +12,8 @@
         android:layout_height="250dp"
         android:layout_centerInParent="true"
         android:elevation="10dp"
-        app:civ_border_color="@color/blueGrey"
-        app:civ_border_width="10dp" />
-
-
+        android:src="@drawable/music_eight"
+        app:civ_border_color="@color/white"
+        tools:targetApi="lollipop" />
 
 </RelativeLayout>

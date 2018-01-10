@@ -2,7 +2,7 @@ package com.cyl.musiclake;
 
 import android.app.Application;
 
-import com.cyl.musiclake.utils.Preferences;
+import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 
 public class MyApplication extends Application {
@@ -17,7 +17,7 @@ public class MyApplication extends Application {
         super.onCreate();
         sInstance = this;
         UpdateUtils.init(this);
-        Preferences.init(this);
+        PreferencesUtils.init(this);
     }
 
 }

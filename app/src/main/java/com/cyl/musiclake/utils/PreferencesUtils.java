@@ -12,7 +12,7 @@ import com.cyl.musiclake.R;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Preferences {
+public class PreferencesUtils {
     private static final String MUSIC_ID = "music_id";
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";

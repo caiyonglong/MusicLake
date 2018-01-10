@@ -19,6 +19,8 @@ public interface AlbumDetailContract {
 
         void showAlbumSongs(List<Music> songList);
 
+        void showArtistSongs(List<Music> songList);
+
         void showAlbumArt(Drawable albumArt);
 
         void showAlbumArt(Bitmap bitmap);
@@ -31,5 +33,7 @@ public interface AlbumDetailContract {
         void loadAlbumSongs(long albumID);
 
         void loadAlbumArt(long albumID);
+
+        void loadArtistSongs(long artistID);
     }
 }

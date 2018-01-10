@@ -15,7 +15,7 @@
 //import com.cyl.musiclake.utils.Constants;
 //import com.cyl.musiclake.utils.FileUtils;
 //import com.cyl.musiclake.utils.NetworkUtils;
-//import com.cyl.musiclake.utils.Preferences;
+//import com.cyl.musiclake.utils.PreferencesUtils;
 //import com.zhy.http.okhttp.OkHttpUtils;
 //
 //import java.io.File;
@@ -43,7 +43,7 @@
 //    }
 //
 //    private void checkNetwork() {
-//        boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
+//        boolean mobileNetworkPlay = PreferencesUtils.enableMobileNetworkPlay();
 //        if (NetworkUtils.is4G(mContext) && !mobileNetworkPlay) {
 //            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 //            builder.setTitle(R.string.tips);
@@ -51,7 +51,7 @@
 //            builder.setPositiveButton(R.string.play_tips_sure, new DialogInterface.OnClickListener() {
 //                @Override
 //                public void onClick(DialogInterface dialog, int which) {
-//                    Preferences.saveMobileNetworkPlay(true);
+//                    PreferencesUtils.saveMobileNetworkPlay(true);
 //                    getPlayInfo();
 //                }
 //            });

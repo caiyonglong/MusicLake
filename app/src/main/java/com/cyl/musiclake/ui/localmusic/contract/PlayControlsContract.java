@@ -11,7 +11,6 @@ import com.cyl.musiclake.ui.base.BaseView;
 import java.io.File;
 
 
-
 public interface PlayControlsContract {
 
     interface View extends BaseView {
@@ -34,10 +33,11 @@ public interface PlayControlsContract {
 
         boolean getPlayPauseStatus();
 
-        void startUpdateProgress();
+        void updateProgress(int progress);
 
         void setProgressMax(int max);
 
+        void setErrorInfo(String message);
     }
 
     interface Presenter extends BasePresenter<View> {

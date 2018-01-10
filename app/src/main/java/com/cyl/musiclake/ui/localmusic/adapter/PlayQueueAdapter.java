@@ -70,13 +70,10 @@ public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.Item
         setOnClickListener(holder, position);
 
         holder.popupmenu.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_clear));
-        holder.popupmenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayManager.removeFromQueue(position);
-                arraylist = PlayManager.getPlayList();
-                notifyDataSetChanged();
-            }
+        holder.popupmenu.setOnClickListener(v -> {
+            PlayManager.removeFromQueue(position);
+            arraylist = PlayManager.getPlayList();
+            notifyDataSetChanged();
         });
     }
 

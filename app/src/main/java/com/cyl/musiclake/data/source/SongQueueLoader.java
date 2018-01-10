@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -20,7 +19,7 @@ import java.util.List;
  * 作者：yonglong on 2016/11/4 22:30
  */
 
-public class MusicLoader {
+public class SongQueueLoader {
 
 
     /**
@@ -31,6 +30,7 @@ public class MusicLoader {
      * @return
      */
     public static Album getAlbum(Context context, long id) {
+
 
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
@@ -107,33 +107,6 @@ public class MusicLoader {
         return arrayList;
     }
 
-    /**
-     * 获取所有歌手
-     *
-     * @param context
-     * @return
-     */
-    public static List<Artist> getAllArtists(Context context) {
-        Cursor cursor = context.getContentResolver().query
-                (MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                        new String[]{"_id", "artist", "number_of_tracks"},
-                        null, null, MediaStore.Audio.Artists.DEFAULT_SORT_ORDER);
-        List<Artist> arrayList = new ArrayList<>();
-        if ((cursor != null) && (cursor.moveToFirst()))
-            do {
-                if (cursor.getString(1).equals("<unknown>"))
-                    continue;
-                arrayList.add(new Artist(
-                        cursor.getLong(0),
-                        cursor.getString(1),
-                        cursor.getInt(2)));
-            }
-            while (cursor.moveToNext());
-        if (cursor != null)
-            cursor.close();
-        return arrayList;
-    }
-
 
     /**
      * 获取音乐专辑歌曲
@@ -143,21 +116,19 @@ public class MusicLoader {
      */
     public static List<Music> getAlbumSongs(Context context, String albumID) {
         List<Music> musicList = new ArrayList<>();
+
+
         ContentResolver contentResolver = context.getContentResolver();
 //        final String albumSongSortOrder = PreferencesUtility.getInstance(context).getAlbumSongSortOrder();
-        String string = "is_music=1 AND title != '' AND album_id=" + albumID;
-        Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, string, null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        String string = MediaStore.Audio.Media.IS_MUSIC + "=1 AND title != '' AND album_id=" + albumID;
+        Cursor cursor = query(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, string,
+                null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+
         if (cursor == null) {
             return musicList;
         }
         while (cursor.moveToNext()) {
-            // 是否为音乐
-            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-            if (isMusic == 0) {
-                continue;
-            }
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -200,21 +171,15 @@ public class MusicLoader {
      */
     public static List<Music> getArtistSongs(Context context, String artistID) {
         List<Music> musicList = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
         String string = "is_music=1 AND title != '' AND artist_id=" + artistID;
+        Cursor cursor = query(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, string,
+                null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
-        Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, string, null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {
             return musicList;
         }
         while (cursor.moveToNext()) {
-            // 是否为音乐
-            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-            if (isMusic == 0) {
-                continue;
-            }
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -272,18 +237,13 @@ public class MusicLoader {
      */
     public static List<Music> getAllSongs(Context context) {
         List<Music> musicList = new ArrayList<>();
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if (cursor == null) {
+        Cursor cursor = query(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Audio.Media.IS_MUSIC + "=1",
+                null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        if (cursor == null && cursor.getCount() == 0) {
             return musicList;
         }
         while (cursor.moveToNext()) {
-            // 是否为音乐
-            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-            if (isMusic == 0) {
-                continue;
-            }
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -373,4 +333,26 @@ public class MusicLoader {
         dbDaoImpl.clearQueue();
         dbDaoImpl.closeDB();
     }
+
+    public static Cursor query(Context context, Uri uri, String[] projection, String selection,
+                               String[] selectionArgs, String sortOrder, int limit) {
+        try {
+            ContentResolver resolver = context.getContentResolver();
+            if (resolver == null) {
+                return null;
+            }
+            if (limit > 0) {
+                uri = uri.buildUpon().appendQueryParameter("limit", "" + limit).build();
+            }
+            return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
+        } catch (UnsupportedOperationException ex) {
+            return null;
+        }
+    }
+
+    public static Cursor query(Context context, Uri uri, String[] projection, String selection,
+                               String[] selectionArgs, String sortOrder) {
+        return query(context, uri, projection, selection, selectionArgs, sortOrder, 0);
+    }
+
 }

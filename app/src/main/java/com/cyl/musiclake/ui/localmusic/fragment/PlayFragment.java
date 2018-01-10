@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -23,26 +22,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.PlayQueueDialog;
-import com.cyl.musiclake.ui.localmusic.presenter.MusicStateListener;
 import com.cyl.musiclake.ui.localmusic.presenter.PlayControlsPresenter;
 import com.cyl.musiclake.utils.ColorUtil;
-import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.ImageUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
-import com.cyl.musiclake.view.PlayPauseButton;
+import com.cyl.musiclake.view.PlayPauseView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.io.File;
@@ -53,7 +49,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, MusicStateListener, PlayControlsContract.View {
+public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
     private static final String TAG = "PlayFragment";
     public static View topContainer;
@@ -65,7 +61,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @BindView(R.id.song_progress_normal)
     ProgressBar mProgressBar;
     @BindView(R.id.play_pause)
-    PlayPauseButton mPlayPause;
+    PlayPauseView mPlayPause;
     @BindView(R.id.title)
     TextView mTvTitle;
     @BindView(R.id.artist)
@@ -84,7 +80,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @BindView(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
     @BindView(R.id.playOrPause)
-    MaterialIconView mPlayOrPause;
+    PlayPauseView mPlayOrPause;
 
     //textView
     @BindView(R.id.song_title)
@@ -99,7 +95,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     TextView skip_lrc;
 
     @BindView(R.id.song_progress)
-    SeekBar sk_progress;
+    SeekBar mSeekBar;
     @BindView(R.id.viewpager_player)
     ViewPager mViewPager;
 
@@ -116,12 +112,9 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     private PlayQueueDialog playQueueDialog = null;
     private Palette mPalette;
     private Palette.Swatch mSwatch;
-    private boolean isDebug = true;
-    private int mProgress;
-    private Handler mHandler;
     private List<View> mViewPagerContent;
     private SlidingUpPanelLayout mSlidingUpPaneLayout;
-    private PlayControlsPresenter mPresenter = new PlayControlsPresenter();
+    private PlayControlsPresenter mPresenter;
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
 
 
@@ -163,19 +156,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         playQueueDialog.show(fm, "fragment_bottom_dialog");
     }
 
-    Runnable updateProgress = new Runnable() {
-        @Override
-        public void run() {
-            if (isDebug) Log.d(TAG, "mProgress" + mProgress);
-            mProgress = PlayManager.getCurrentPosition();
-            sk_progress.setProgress(mProgress);
-            mProgressBar.setProgress(mProgress);
-            tv_time.setText(FormatUtil.formatTime(mProgress));
-            mLrcView.setCurrentTimeMillis(mProgress);
-            mHandler.postDelayed(updateProgress, 50);
-        }
-    };
-
     public static PlayFragment newInstance() {
         Bundle args = new Bundle();
         PlayFragment fragment = new PlayFragment();
@@ -194,7 +174,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
         mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
-        mPlayPause.setColor(getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -206,17 +185,15 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     protected void listener() {
-        sk_progress.setOnSeekBarChangeListener(this);
+        mSeekBar.setOnSeekBarChangeListener(this);
     }
 
     @Override
     protected void initDatas() {
-        mHandler = new Handler();
-        if (getActivity() != null) {
-            ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
-        }
+        mPresenter = new PlayControlsPresenter(getContext());
         mPresenter.attachView(this);
-        mPresenter.updateNowPlayingCard();
+        mPresenter.subscribe();
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -251,6 +228,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
             }
         });
+        initAlbumPic(mCivImage);
     }
 
 
@@ -259,13 +237,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
      */
     private void onBackPressed() {
         getActivity().onBackPressed();
-        iv_back.setEnabled(false);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                iv_back.setEnabled(true);
-            }
-        }, 300);
+//        iv_back.setEnabled(false);
+//        mHandler.postDelayed(() -> iv_back.setEnabled(true), 300);
     }
 
     @Override
@@ -295,13 +268,10 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mLrcView.setLineSpace(15.0f);
         mLrcView.setTextSize(17.0f);
         mLrcView.setPlayable(true);
-        mLrcView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
-            @Override
-            public void onPlayerClicked(long progress, String content) {
-                PlayManager.seekTo((int) progress);
-                if (!PlayManager.isPlaying()) {
-                    PlayManager.playPause();
-                }
+        mLrcView.setOnPlayerClickListener((progress, content) -> {
+            PlayManager.seekTo((int) progress);
+            if (!PlayManager.isPlaying()) {
+                PlayManager.playPause();
             }
         });
         if (file != null && file.exists()) {
@@ -309,49 +279,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
             mLrcView.setLyricFile(file, "utf-8");
         } else {
             mLrcView.reset("暂无歌词");
-        }
-    }
-
-    /**
-     * 初始化歌词图片
-     *
-     * @param music
-     */
-    private void setCoverAndBg(Music music) {
-        if (music.getType() == Music.Type.LOCAL) {
-            mIvAlbum.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
-            mCivImage.setImageBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
-            ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
-
-            mPalette = Palette.from(CoverLoader.getInstance().loadRound(music.getCoverUri()))
-                    .generate();
-        } else if (music.getType() == Music.Type.ONLINE) {
-            if (music.getCoverUri() != null) {
-                GlideApp.with(this)
-                        .load(music.getCoverUri())
-                        .placeholder(R.drawable.default_cover)
-                        .error(R.drawable.default_cover) //失败图片
-                        .into(mCivImage);
-                GlideApp.with(this).load(music.getCoverUri())
-                        .placeholder(R.drawable.default_cover)
-                        .error(R.drawable.default_cover) //失败图片
-                        .into(ivPlayingBg);
-                GlideApp.with(this)
-                        .load(music.getCoverUri())
-                        .placeholder(R.drawable.default_cover)
-                        .error(R.drawable.default_cover) //失败图片
-                        .into(mIvAlbum);
-            }
-        }
-
-        if (operatingAnim != null) {
-            if (PlayManager.isPlaying()) {
-                operatingAnim.setCurrentPlayTime(currentPlayTime);
-                operatingAnim.start();
-            } else {
-                operatingAnim.cancel();
-                currentPlayTime = operatingAnim.getCurrentPlayTime();
-            }
         }
     }
 
@@ -368,49 +295,24 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         operatingAnim.setRepeatCount(-1);
         operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
         operatingAnim.setInterpolator(mLinearInterpolator);
-
-    }
-
-
-    public void updatePlayPauseFloatingButton() {
-        if (PlayManager.isPlaying()) {
-            mPlayPause.setPlayed(true);
-        } else {
-            mPlayPause.setPlayed(false);
-        }
-        mPlayPause.startAnimation();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (operatingAnim != null) {
-            operatingAnim.cancel();
-        }
-    }
-
-    @Override
-    public void restartLoader() {
-
-    }
-
-    @Override
-    public void onPlaylistChanged() {
-
-    }
-
-    @Override
-    public void onMetaChanged() {
-        mPresenter.updateNowPlayingCard();
-        mPresenter.loadLyric();
     }
 
     @Override
     public void setAlbumArt(Bitmap albumArt) {
+        //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
         mCivImage.setImageBitmap(albumArt);
         ivPlayingBg.setImageBitmap(ImageUtils.blur(albumArt, 50));
-        initAlbumPic(mCivImage);
+
+        if (operatingAnim != null) {
+            if (PlayManager.isPlaying()) {
+                operatingAnim.setCurrentPlayTime(currentPlayTime);
+                operatingAnim.start();
+            } else {
+                operatingAnim.cancel();
+                currentPlayTime = operatingAnim.getCurrentPlayTime();
+            }
+        }
     }
 
     @Override
@@ -453,10 +355,10 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 mTvName.setTextColor(getResources().getColor(android.R.color.primary_text_light));
                 tv_artist.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
             }
-
         }
         //set icon color
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
+        int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
         if (playQueueDialog != null && mSwatch != null) {
             playQueueDialog.setPaletteSwatch(mSwatch);
         }
@@ -466,24 +368,12 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         tv_duration.setTextColor(blackWhiteColor);
 //        mLrcView.setTouchable(false);
         mLrcView.setHintColor(blackWhiteColor);
-//        mPlayPause.setDrawableColor(blackWhiteColor);
-//        mPlayPause.setCircleColor(blackWhiteColor);
-//        mPlayPause.setCircleAlpah(0);
-//        mPlayPause.setEnabled(true);
-        mBtnNext.setEnabled(true);
-//        mBtnNext.setColor(blackWhiteColor);
-//        skip_prev.setColor(blackWhiteColor);
-//        next.setColor(blackWhiteColor);
-//        iconPlayQueue.setColor(blackWhiteColor);
-
-        //set timely color
-//        setTimelyColor(blackWhiteColor);
-
-        //set seekbar progressdrawable
-//        ScaleDrawable scaleDrawable = (ScaleDrawable) ((LayerDrawable) mSeekBar.getProgressDrawable()).findDrawableByLayerId(R.id.progress);
-//        GradientDrawable gradientDrawable = (GradientDrawable) scaleDrawable.getDrawable();
-//        gradientDrawable.setColors(new int[]{blackWhiteColor, blackWhiteColor, blackWhiteColor});
-
+//        mBtnNext.setEnabled(true);
+//        mBtnNext.setcolo(blackWhiteColor);
+        skip_prev.setColor(blackWhiteColor);
+        skip_next.setColor(blackWhiteColor);
+        mPlayOrPause.setBtnColor(blackWhiteColor);
+        mPlayOrPause.setEnabled(true);
     }
 
     @Override
@@ -494,14 +384,17 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void setPlayPauseButton(boolean isPlaying) {
-        mPlayPause.setPlayed(isPlaying);
-        mPlayPause.startAnimation();
+        if (isPlaying) {
+            mPlayPause.play();
+            mPlayOrPause.play();
+        } else {
+            mPlayPause.pause();
+            mPlayOrPause.pause();
+        }
         if (operatingAnim != null) {
             if (isPlaying) {
-                mPlayOrPause.setIcon(MaterialDrawableBuilder.IconValue.PAUSE_CIRCLE);
                 operatingAnim.resume();
             } else {
-                mPlayOrPause.setIcon(MaterialDrawableBuilder.IconValue.PLAY_CIRCLE);
                 operatingAnim.pause();
             }
         }
@@ -509,22 +402,28 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     public boolean getPlayPauseStatus() {
-        return mPlayPause.isPlayed();
+        return mPlayPause.isPlaying();
     }
 
     @Override
-    public void startUpdateProgress() {
-        if (operatingAnim != null) {
-            operatingAnim.start();
-        }
-        mHandler.post(updateProgress);
+    public void updateProgress(int progress) {
+
+        mSeekBar.setProgress(progress);
+        mProgressBar.setProgress(progress);
+        tv_time.setText(FormatUtil.formatTime(progress));
+        mLrcView.setCurrentTimeMillis(progress);
     }
 
     @Override
     public void setProgressMax(int max) {
-        sk_progress.setMax(max);
+        mSeekBar.setMax(max);
         mProgressBar.setMax(max);
         tv_duration.setText(FormatUtil.formatTime(max));
+    }
+
+    @Override
+    public void setErrorInfo(String message) {
+        ToastUtils.show(getContext(), message);
     }
 
     @Override
@@ -538,8 +437,43 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mHandler.removeCallbacks(updateProgress);
+    public void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (operatingAnim != null && operatingAnim.isPaused()) {
+                operatingAnim.resume();
+            }
+        }
+        RxBus.getInstance().register(MetaChangedEvent.class).subscribe(metaChangedEvent -> {
+            Log.e("PlayControlsPresenter", "-------------");
+            mPresenter.updateNowPlayingCard();
+            mPresenter.loadLyric();
+        });
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (operatingAnim != null) {
+                operatingAnim.pause();
+            }
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.unsubscribe();
+        RxBus.getInstance().unregisterAll();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.unsubscribe();
+        RxBus.getInstance().unregisterAll();
+    }
+
 }

@@ -8,11 +8,16 @@ public class Artist {
     private String name;
     private long id;
     private int count;
+    private int trackNum;
 
-    public Artist(long id,String name,  int count) {
+    public Artist() {
+    }
+
+    public Artist(long id, String name, int count, int trackNum) {
         this.name = name;
         this.id = id;
         this.count = count;
+        this.count = trackNum;
     }
 
     public String getName() {

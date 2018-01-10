@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/top_container"
     android:layout_width="match_parent"
     android:layout_height="57dp"
@@ -41,11 +42,15 @@
             android:layout_gravity="center"
             android:layout_toLeftOf="@+id/next_buttom">
 
-            <com.cyl.musiclake.view.PlayPauseButton
+            <com.cyl.musiclake.view.PlayPauseView
                 android:id="@+id/play_pause"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                app:anim_duration="300"
+                app:bg_color="#ffffff"
+                app:btn_color="@color/colorPrimary"
+                app:gap_width="10" />
 
             <View
                 android:id="@+id/playpausewrapper"
