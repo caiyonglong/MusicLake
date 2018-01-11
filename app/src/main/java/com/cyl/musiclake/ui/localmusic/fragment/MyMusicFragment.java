@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.ui.base.BaseFragment;
@@ -71,11 +71,16 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setNestedScrollingEnabled(false);
 
-        mAdapter = new PlaylistAdapter(getContext(), mData);
+        mAdapter = new PlaylistAdapter(mData);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener((view, playlist) -> {
-            NavigateUtil.navigateToPlaylist(getActivity(), playlist.getId(), playlist.getName(), null);
-        });
+        mAdapter.bindToRecyclerView(mRecyclerView);
+
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) ->
+                NavigateUtil.navigateToPlaylist(getActivity(), (Playlist) adapter.getItem(position), null));
     }
 
     @Override
@@ -87,6 +92,10 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
         mLove.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
         mDownload.setOnClickListener(v -> NavigateUtil.navigateToDownload(getActivity(), null));
 
+        RxBus.getInstance().register(Playlist.class)
+                .subscribe(playlist -> {
+                    mPresenter.loadPlaylist();
+                });
     }
 
     @Override
@@ -116,21 +125,13 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     }
 
     @Override
-    public void showPlaylist(List<Playlist> playlists) {
-        mAdapter.setLocalplaylists(playlists);
-        mAdapter.notifyDataSetChanged();
+    public void showEmptyView() {
+        mAdapter.setEmptyView(R.layout.view_playlist_empty);
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden) {
-            Log.e("TAG", "hidden-----" + hidden);
-        } else {
-            mPresenter.loadSongs();
-            mPresenter.loadPlaylist();
-            Log.e("TAG", "hidden-----" + hidden);
-        }
+    public void showPlaylist(List<Playlist> playlists) {
+        mAdapter.setNewData(playlists);
     }
 
     @Override

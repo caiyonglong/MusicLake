@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.localmusic.presenter;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,8 +7,6 @@ import android.os.Handler;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.LinearInterpolator;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -41,7 +38,6 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     private PlayControlsContract.View mView;
 
     private boolean mDuetoplaypause = false;
-    private boolean isDebug = true;
     private int mProgress;
 
     private Handler mHandler;
@@ -63,10 +59,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     @Override
     public void unsubscribe() {
-//        RxBus.getInstance().unregisterAll();
         mHandler.removeCallbacks(updateProgress);
     }
-
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -175,21 +169,25 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         }
 
         if (!mDuetoplaypause) {
-            if (music != null) {
-                GlideApp.with(mContext)
-                        .asBitmap()
-                        .load(CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId()))
-                        .error(R.drawable.default_cover)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                mView.setAlbumArt(resource);
-                                new Palette.Builder(resource).generate(palette ->
-                                        mView.setPalette(palette));
-                            }
-                        });
+            String url = null;
+            if (music != null && music.getAlbumId() != -1) {
+                url = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
+            } else {
+                url = music.getCoverUri();
             }
+            GlideApp.with(mContext)
+                    .asBitmap()
+                    .load(url)
+                    .error(R.drawable.default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            mView.setAlbumArt(resource);
+                            new Palette.Builder(resource).generate(palette ->
+                                    mView.setPalette(palette));
+                        }
+                    });
         }
 
         mDuetoplaypause = false;
@@ -201,25 +199,9 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         @Override
         public void run() {
             mProgress = PlayManager.getCurrentPosition();
-            if (isDebug) Log.d(TAG, "mProgress" + mProgress);
             mView.updateProgress(mProgress);
             mHandler.postDelayed(updateProgress, 100);
         }
     };
-
-
-    public ObjectAnimator operatingAnim;
-    public long currentPlayTime = 0;
-    private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
-    /**
-     * 旋转动画
-     */
-    public void initAlbumPic(View view) {
-        operatingAnim = ObjectAnimator.ofFloat(view, "rotation", 0, 359);
-        operatingAnim.setDuration(20 * 1000);
-        operatingAnim.setRepeatCount(-1);
-        operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
-        operatingAnim.setInterpolator(mLinearInterpolator);
-    }
 
 }

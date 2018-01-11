@@ -54,6 +54,9 @@ public class ArtistPresenter implements ArtistContract.Presenter {
                     @Override
                     public void onNext(List<Artist> artistList) {
                         mView.showArtists(artistList);
+                        if (artistList.size() == 0) {
+                            mView.showEmptyView();
+                        }
                     }
 
                     @Override

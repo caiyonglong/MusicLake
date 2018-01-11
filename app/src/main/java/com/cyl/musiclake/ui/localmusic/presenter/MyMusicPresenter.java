@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.localmusic.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.data.source.AppRepository;
@@ -37,10 +36,6 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
 
     @Override
     public void subscribe() {
-        RxBus.getInstance().register(Playlist.class).subscribe(integer -> {
-            playlists = PlaylistLoader.getPlaylist(mContext);
-            mView.showPlaylist(playlists);
-        });
     }
 
     @Override
@@ -82,5 +77,8 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
     public void loadPlaylist() {
         playlists = PlaylistLoader.getPlaylist(mContext);
         mView.showPlaylist(playlists);
+        if (playlists.size() == 0) {
+            mView.showEmptyView();
+        }
     }
 }

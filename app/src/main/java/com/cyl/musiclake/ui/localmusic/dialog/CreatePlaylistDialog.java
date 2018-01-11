@@ -9,7 +9,9 @@ import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -18,6 +20,7 @@ import com.cyl.musiclake.utils.ToastUtils;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
+@SuppressWarnings("ALL")
 public class CreatePlaylistDialog extends DialogFragment {
 
     private static final String TAG = "CreatePlaylistDialog";
@@ -47,6 +50,7 @@ public class CreatePlaylistDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         final Music music = getArguments().getParcelable(TAG_MUSIC);
         return new MaterialDialog.Builder(getActivity())
                 .title("新建歌单")
@@ -54,18 +58,14 @@ public class CreatePlaylistDialog extends DialogFragment {
                 .negativeText("取消")
                 .inputRangeRes(2, 10, R.color.red)
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("输入歌单名", "", false, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        Log.e(TAG, input.toString());
-                    }
-                })
+                .input("输入歌单名", "", false, (dialog, input) -> Log.e(TAG, input.toString()))
                 .onPositive((dialog, which) -> {
                     String title = dialog.getInputEditText().getText().toString();
                     long pid = PlaylistLoader.createPlaylist(getActivity(), title);
                     if (pid != -1) {
                         if (music != null) {
                             PlaylistLoader.addToPlaylist(getActivity(), String.valueOf(pid), music.getId());
+                            RxBus.getInstance().post(new Playlist());
                             ToastUtils.show(getActivity(), "添加成功");
                         } else {
                             ToastUtils.show(getActivity(), "新建歌单 " + title);

@@ -58,6 +58,9 @@ public class AlbumPresenter implements AlbumsContract.Presenter {
                     @Override
                     public void onNext(List<Album> albums) {
                         mView.showAlbums(albums);
+                        if (albums.size() == 0) {
+                            mView.showEmptyView();
+                        }
                     }
 
                     @Override

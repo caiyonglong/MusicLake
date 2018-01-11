@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.localmusic.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,9 +11,11 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.ArtistAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.ArtistContract;
 import com.cyl.musiclake.ui.localmusic.presenter.ArtistPresenter;
+import com.cyl.musiclake.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +56,6 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
         mPresenter.loadArtists("all");
     }
 
-
     /**
      * 初始化视图
      *
@@ -72,10 +74,22 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
         mPresenter = new ArtistPresenter(getContext());
         mPresenter.attachView(this);
 
-        mAdapter = new ArtistAdapter(getActivity(), artists);
+        mAdapter = new ArtistAdapter(artists);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerView);
 
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Artist artist = (Artist) adapter.getItem(position);
+            NavigateUtil.navigateToArtist(getActivity(),
+                    artist.getId(),
+                    artist.getName(),
+                    new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
+        });
     }
 
     @Override
@@ -91,20 +105,21 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
 
     @Override
     public void showLoading() {
+        loading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
+        loading.setVisibility(View.GONE);
     }
 
     @Override
     public void showArtists(List<Artist> artists) {
-        mAdapter.setArtists(artists);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setNewData(artists);
     }
 
     @Override
     public void showEmptyView() {
-        loading.setVisibility(View.VISIBLE);
+        mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 }

@@ -56,6 +56,7 @@ public class SongLoader {
      */
     private static void insertSongs(Context context, List<Music> musics) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.clearQueue();
         dbDaoImpl.insertSongs(musics);
         dbDaoImpl.closeDB();
     }

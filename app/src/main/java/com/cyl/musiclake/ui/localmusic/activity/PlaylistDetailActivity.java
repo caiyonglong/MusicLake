@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.localmusic.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,11 +17,10 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.SongQueueLoader;
-import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.Extras;
 import com.cyl.musiclake.utils.ImageUtils;
@@ -55,13 +53,6 @@ public class PlaylistDetailActivity extends BaseActivity {
     private long album_id;
     //0代表专辑，1代表艺术家
     private int isAlbum;
-
-    Runnable loadSongs = new Runnable() {
-        @Override
-        public void run() {
-            new loadPlaylist().execute("");
-        }
-    };
 
     /**
      * 设置监听事件
@@ -117,8 +108,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
         if (SystemUtils.isLollipop()) {
             getWindow().getEnterTransition().addListener(new EnterTransition());
-        } else {
-            loadSongs.run();
         }
     }
 
@@ -168,51 +157,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     }
 
-    private class loadPlaylist extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (isAlbum == 0) {
-                Log.e("歌单id++++++", album_id + "==" + getIntent().getExtras().getString(Extras.PLAYLIST_NAME) + "");
-                musicInfos = SongQueueLoader.getAlbumSongs(PlaylistDetailActivity.this, album_id + "");
-                Log.e("歌单id++++++", musicInfos.size() + "");
-            } else if (isAlbum == 1) {
-                Log.e("歌单id++++++", album_id + "");
-                musicInfos = SongQueueLoader.getArtistSongs(PlaylistDetailActivity.this, album_id + "");
-                Log.e("歌单id++++++", musicInfos.size() + "");
-            } else {
-                Log.e("歌单id++++++", pid + "");
-                musicInfos = PlaylistLoader.getMusicForPlaylist(PlaylistDetailActivity.this, pid);
-                Log.e("歌单id++++++", musicInfos.size() + "");
-            }
-            mAdapter = new SongAdapter(PlaylistDetailActivity.this, musicInfos);
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            setRecyclerViewAapter();
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-    }
-
-    private void setRecyclerViewAapter() {
-        mRecyclerView.setAdapter(mAdapter);
-//        if (SystemUtils.isLollipop()) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL_LIST, R.drawable.item_divider_white));
-//                }
-//            }, 250);
-//        } else
-//            mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL_LIST, R.drawable.item_divider_white));
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private class EnterTransition implements Transition.TransitionListener {
@@ -223,7 +167,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
         @Override
         public void onTransitionEnd(Transition transition) {
-            loadSongs.run();
         }
 
         @Override

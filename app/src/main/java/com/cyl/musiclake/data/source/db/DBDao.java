@@ -57,6 +57,12 @@ public interface DBDao {
     void insertSongs(List<Music> songs);
 
     /**
+     * 第一次进入清空本地音乐
+     */
+    void clearSongs();
+
+
+    /**
      * 获取所有歌单
      *
      * @return

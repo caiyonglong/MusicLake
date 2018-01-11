@@ -33,7 +33,6 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
     private AppCompatActivity context;
     private List<Music> musicInfos = new ArrayList<>();
 
-
     public AlbumMusicAdapter(AppCompatActivity context, List<Music> musicInfos) {
         this.context = context;
         this.musicInfos = musicInfos;
@@ -48,7 +47,6 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent, false);
         ItemHolder itemHolder = new ItemHolder(v);
         return itemHolder;
-
     }
 
     @Override

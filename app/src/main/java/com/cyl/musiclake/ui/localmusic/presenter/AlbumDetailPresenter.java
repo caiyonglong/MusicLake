@@ -55,6 +55,7 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
 
     @Override
     public void loadAlbumSongs(long albumID) {
+        mView.showLoading();
         AppRepository.getAlbumSongsRepository(mContext, albumID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,6 +69,9 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
                     @Override
                     public void onNext(List<Music> songs) {
                         mView.showAlbumSongs(songs);
+                        if (songs.size() == 0) {
+                            mView.showEmptyView();
+                        }
                     }
 
                     @Override
@@ -98,33 +102,5 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
                 });
     }
 
-    @Override
-    public void loadArtistSongs(long artistID) {
-        AppRepository.getArtistSongsRepository(mContext, artistID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Music>>() {
 
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Music> songs) {
-                        mView.showArtistSongs(songs);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        mView.hideLoading();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mView.hideLoading();
-                    }
-                });
-    }
 }

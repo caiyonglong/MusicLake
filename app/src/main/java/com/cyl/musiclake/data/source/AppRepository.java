@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.cyl.musiclake.data.model.Album;
 import com.cyl.musiclake.data.model.Artist;
+import com.cyl.musiclake.data.model.FolderInfo;
 import com.cyl.musiclake.data.model.Music;
 
 import java.util.List;
@@ -35,4 +36,13 @@ public class AppRepository {
     public static Observable<List<Album>> getAllAlbumsRepository(Context mContext) {
         return AlbumLoader.getAllAlbums(mContext);
     }
+
+    public static Observable<List<Music>> getPlaylistSongsRepository(Context mContext, String playlistId) {
+        return PlaylistLoader.getMusicForPlaylist(mContext, playlistId);
+    }
+
+    public static Observable<List<FolderInfo>> getFolderInfosRepository(Context mContext) {
+        return FolderLoader.getFoldersWithSong(mContext);
+    }
+
 }

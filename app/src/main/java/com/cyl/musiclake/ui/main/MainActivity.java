@@ -15,16 +15,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.ui.localmusic.activity.SearchActivity;
+import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
 import com.cyl.musiclake.ui.login.LoginActivity;
 import com.cyl.musiclake.ui.login.UserCenterActivity;
 import com.cyl.musiclake.ui.login.UserContract;
 import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.localmusic.activity.SearchActivity;
-import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
+import com.cyl.musiclake.utils.Constants;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -69,8 +71,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-        navigateLibrary.run();
-        navigatePlay.run();
         //菜单栏的头部控件初始化
         headerView = mNavigationView.getHeaderView(0);
         mImageView = headerView.findViewById(R.id.header_bg);
@@ -86,6 +86,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mPresenter = new UserPresenter();
         mPresenter.attachView(this);
         mPresenter.getUserInfo();
+
+        String from = getIntent().getAction();
+        if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
+            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+            topContainer.setAlpha(0);
+        }
+        navigateLibrary.run();
+        navigatePlay.run();
     }
 
 
@@ -201,6 +209,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
+        } else if (isNavigatingMain()) {
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
+//            return true;
+//            super.onBackPressed();
         } else {
             super.onBackPressed();
         }
@@ -239,11 +254,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return (currentFragment instanceof MainFragment);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
 
     @Override
     public void showLoading() {
@@ -277,5 +287,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mName.setText("湖科音乐湖");
             mNick.setText("未登录?去登录/注册吧!");
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.getInstance().unregisterAll();
     }
 }

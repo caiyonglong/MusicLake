@@ -48,6 +48,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
@@ -192,8 +194,13 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     protected void initDatas() {
         mPresenter = new PlayControlsPresenter(getContext());
         mPresenter.attachView(this);
-        mPresenter.subscribe();
-
+        RxBus.getInstance().register(MetaChangedEvent.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(metaChangedEvent -> {
+                    mPresenter.updateNowPlayingCard();
+                    mPresenter.loadLyric();
+                });
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -444,11 +451,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 operatingAnim.resume();
             }
         }
-        RxBus.getInstance().register(MetaChangedEvent.class).subscribe(metaChangedEvent -> {
-            Log.e("PlayControlsPresenter", "-------------");
-            mPresenter.updateNowPlayingCard();
-            mPresenter.loadLyric();
-        });
     }
 
     @Override
@@ -461,19 +463,10 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         }
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter.unsubscribe();
-        RxBus.getInstance().unregisterAll();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.unsubscribe();
-        RxBus.getInstance().unregisterAll();
     }
 
 }

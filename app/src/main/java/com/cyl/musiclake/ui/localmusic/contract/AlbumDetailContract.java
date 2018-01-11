@@ -17,9 +17,9 @@ public interface AlbumDetailContract {
 
         Context getContext();
 
-        void showAlbumSongs(List<Music> songList);
+        void showEmptyView();
 
-        void showArtistSongs(List<Music> songList);
+        void showAlbumSongs(List<Music> songList);
 
         void showAlbumArt(Drawable albumArt);
 
@@ -34,6 +34,5 @@ public interface AlbumDetailContract {
 
         void loadAlbumArt(long albumID);
 
-        void loadArtistSongs(long artistID);
     }
 }

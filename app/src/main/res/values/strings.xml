@@ -114,6 +114,8 @@
     <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="unable_to_play_exception">播放异常</string>
     <string name="loading">努力加载中...</string>
+    <string name="tip_empty_song">无音乐，无乐趣</string>
+    <string name="tip_empty_playlist">新建歌单</string>
     <string name="recent_update">最近更新：%s</string>
 
     <string name="search">搜索</string>
@@ -128,4 +130,5 @@
     <string name="secret_num">~~ 动态 %1$d ~~</string>
     <string name="sure">确定</string>
     <string name="error_playing_track">Error Play</string>
+    <string name="folders">文件夹</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
 
 import java.util.List;
@@ -44,7 +45,6 @@ public class SongsPresenter implements SongsContract.Presenter {
     @Override
     public void loadSongs(String action) {
         mView.showLoading();
-
         AppRepository.getAllSongsRepository(mContext)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -56,14 +56,17 @@ public class SongsPresenter implements SongsContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(List<Music> o) {
-                        mView.showSongs((List<Music>) o);
+                    public void onNext(List<Music> musicList) {
+                        if (musicList.size() == 0) {
+                            mView.setEmptyView();
+                        }
+                        mView.showSongs(musicList);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         mView.hideLoading();
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -71,5 +74,11 @@ public class SongsPresenter implements SongsContract.Presenter {
                         mView.hideLoading();
                     }
                 });
+    }
+
+    @Override
+    public void playMusic(List<Music> playlist, int position) {
+        PlayManager.setPlayList(playlist);
+        PlayManager.play(position);
     }
 }

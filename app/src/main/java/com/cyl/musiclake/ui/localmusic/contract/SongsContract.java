@@ -10,10 +10,13 @@ public interface SongsContract {
 
     interface View extends BaseView {
         void showSongs(List<Music> songList);
+
+        void setEmptyView();
     }
 
     interface Presenter extends BasePresenter<View> {
-
         void loadSongs(String action);
+
+        void playMusic(List<Music> playlist, int position);
     }
 }

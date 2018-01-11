@@ -7,9 +7,9 @@ package com.cyl.musiclake.utils;
  */
 
 public class Extras {
-    public static String BILLBOARD_TYPE ="billboard_type";
-    public static String BILLBOARD_TITLE ="billboard_title";
-    public static String BILLBOARD_ALBUM ="billboard_album";
+    public static String BILLBOARD_TYPE = "billboard_type";
+    public static String BILLBOARD_TITLE = "billboard_title";
+    public static String BILLBOARD_ALBUM = "billboard_album";
 
     public static final String ALBUM = "album";
 
@@ -23,9 +23,12 @@ public class Extras {
     public static final String PLAYLIST_BACKGROUND_IMAGE = "background_image";
     public static final String PLAYLIST_NAME = "playlist_name";
 
+    public static final String TRANSITIONNAME = "transitionName";
+
     public static final String ALBUM_ID = "album_id";
     public static final String ARTIST_ID = "artist_id";
     public static final String PLAYLIST_ID = "playlist_id";
+    public static final String PLAYLIST = "playlist";
 
 
     //返回值 playlistDetail

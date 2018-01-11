@@ -10,12 +10,12 @@ public interface ArtistSongContract {
 
     interface View extends BaseView {
 
+        void showEmptyView();
+
         void showSongs(List<Music> songList);
     }
 
     interface Presenter extends BasePresenter<View> {
-
-        void subscribe(long artistID);
 
         void loadSongs(long artistID);
     }

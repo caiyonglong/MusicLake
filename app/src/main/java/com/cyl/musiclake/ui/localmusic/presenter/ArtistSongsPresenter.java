@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
-import com.cyl.musiclake.ui.localmusic.contract.AlbumDetailContract;
+import com.cyl.musiclake.ui.localmusic.contract.ArtistSongContract;
 
 import java.util.List;
 
@@ -18,16 +18,16 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/7.
  */
 
-public class ArtistDetailPresenter implements AlbumDetailContract.Presenter {
-    private AlbumDetailContract.View mView;
+public class ArtistSongsPresenter implements ArtistSongContract.Presenter {
+    private ArtistSongContract.View mView;
     private Context mContext;
 
-    public ArtistDetailPresenter(Context mContext) {
+    public ArtistSongsPresenter(Context mContext) {
         this.mContext = mContext;
     }
 
     @Override
-    public void attachView(AlbumDetailContract.View view) {
+    public void attachView(ArtistSongContract.View view) {
         mView = view;
     }
 
@@ -41,14 +41,11 @@ public class ArtistDetailPresenter implements AlbumDetailContract.Presenter {
 
     }
 
-    @Override
-    public void subscribe(long albumID) {
-
-    }
 
     @Override
-    public void loadAlbumSongs(long albumID) {
-        AppRepository.getArtistSongsRepository(mContext, albumID)
+    public void loadSongs(long artistID) {
+        mView.showLoading();
+        AppRepository.getArtistSongsRepository(mContext, artistID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
@@ -60,7 +57,10 @@ public class ArtistDetailPresenter implements AlbumDetailContract.Presenter {
 
                     @Override
                     public void onNext(List<Music> songs) {
-                        mView.showAlbumSongs(songs);
+                        mView.showSongs(songs);
+                        if (songs.size() == 0) {
+                            mView.showEmptyView();
+                        }
                     }
 
                     @Override
@@ -76,13 +76,4 @@ public class ArtistDetailPresenter implements AlbumDetailContract.Presenter {
                 });
     }
 
-    @Override
-    public void loadAlbumArt(long albumID) {
-
-    }
-
-    @Override
-    public void loadArtistSongs(long artistID) {
-
-    }
 }

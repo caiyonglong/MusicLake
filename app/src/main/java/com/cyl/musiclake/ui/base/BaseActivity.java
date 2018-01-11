@@ -83,7 +83,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         filter.addAction(MusicPlayService.PLAYLIST_CHANGED);
         // If there is an error playing a track
         filter.addAction(MusicPlayService.TRACK_ERROR);
-
         registerReceiver(mPlaybackStatus, filter);
     }
 

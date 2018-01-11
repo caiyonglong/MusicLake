@@ -5,18 +5,24 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.support.v4.media.app.NotificationCompat;
+import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v7.graphics.Palette;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -33,6 +39,7 @@ import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.SongQueueLoader;
 import com.cyl.musiclake.ui.download.NetworkUtil;
 import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.PreferencesUtils;
@@ -70,7 +77,7 @@ public class MusicPlayService extends Service {
     private MediaPlayer mPlayer = null;
     private Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
-    private int mPlayingPos;
+    private int mPlayingPos = -1;
 
     RemoteViews mRemoteViews;
 
@@ -85,6 +92,7 @@ public class MusicPlayService extends Service {
 
     //广播接收者
     ServiceReceiver mServiceReceiver;
+    HeadsetReceiver mHeadsetReceiver;
 
     private NotificationManager mNotificationManager;
     private Notification mNotification;
@@ -93,6 +101,13 @@ public class MusicPlayService extends Service {
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private long mNotificationPostTime = 0;
     private MediaSessionCompat mSession;
+    private boolean isRunningForeground = false;
+
+    private static final int NOTIFY_MODE_NONE = 0;
+    private static final int NOTIFY_MODE_FOREGROUND = 1;
+    private static final int NOTIFY_MODE_BACKGROUND = 2;
+    private static int mNotifyMode = 0;
+
 
     @Override
     public void onCreate() {
@@ -100,6 +115,7 @@ public class MusicPlayService extends Service {
         initReceiver();
         initMediaPlayer();
         initTelephony();
+        setUpMediaSession();
         initNotify();
     }
 
@@ -142,10 +158,14 @@ public class MusicPlayService extends Service {
                 pause();
 //                mPausedByTransientLossOfFocus = false;
                 seekTo(0);
-//                releaseServiceUiAndStop();
+                releaseServiceUiAndStop();
             }
         });
         mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+    }
+
+    private void releaseServiceUiAndStop() {
+
     }
 
 
@@ -177,17 +197,38 @@ public class MusicPlayService extends Service {
     private void initReceiver() {
         //实例化过滤器，设置广播
         mServiceReceiver = new ServiceReceiver();
+        mHeadsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
         intentFilter.addAction(PLAY_STATE_CHANGED);
         //注册广播
         registerReceiver(mServiceReceiver, intentFilter);
+        registerReceiver(mHeadsetReceiver, intentFilter);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
+        Log.d(TAG, "Got new intent " + intent + ", startId = " + startId);
+//        mServiceStartId = startId;
+        if (intent != null) {
+            final String action = intent.getAction();
+
+//            if (SHUTDOWN.equals(action)) {
+//                mShutdownScheduled = false;
+//                releaseServiceUiAndStop();
+//                return START_NOT_STICKY;
+//            }
+
+            handleCommandIntent(intent);
+        }
+
+//        scheduleDelayedShutdown();
+
+//        if (intent != null && intent.getBooleanExtra(FROM_MEDIA_BUTTON, false)) {
+//            MediaButtonIntentReceiver.completeWakefulIntent(intent);
+//        }
+        return START_NOT_STICKY;
     }
 
     @Nullable
@@ -218,7 +259,7 @@ public class MusicPlayService extends Service {
             return -1;
         }
         if (mPlaylist.size() == 1) {
-            return mPlayingPos;
+            return 0;
         }
         mRepeatMode = PreferencesUtils.getPlayMode();
         if (mRepeatMode == PLAY_MODE_REPEAT) {
@@ -242,7 +283,7 @@ public class MusicPlayService extends Service {
             return -1;
         }
         if (mPlaylist.size() == 1) {
-            return mPlayingPos;
+            return 0;
         }
         mRepeatMode = PreferencesUtils.getPlayMode();
         if (mRepeatMode == PLAY_MODE_REPEAT) {
@@ -285,6 +326,7 @@ public class MusicPlayService extends Service {
      * @param position
      */
     private void playMusic(int position) {
+        mPlayingPos = position;
         if (mPlaylist == null || mPlaylist.isEmpty()) {
             return;
         }
@@ -305,8 +347,7 @@ public class MusicPlayService extends Service {
      */
     public void playMusic(Music music) {
         mPlayingMusic = music;
-        Log.d(TAG, mPlayingMusic.toString());
-        showNotification();
+        updateNotification();
         notifyChange(META_CHANGED);
         try {
             mPlayer.reset();
@@ -329,7 +370,7 @@ public class MusicPlayService extends Service {
             notifyChange(META_CHANGED);
             mPlayer.start();
             isPause = false;
-            showNotification();
+            updateNotification();
         } else {
             playMusic(mPlayingPos);
         }
@@ -345,6 +386,7 @@ public class MusicPlayService extends Service {
         notifyChange(META_CHANGED);
         mPlayer.pause();
         isPause = true;
+        updateNotification();
     }
 
     /**
@@ -457,13 +499,13 @@ public class MusicPlayService extends Service {
         final Intent intent = new Intent(what);
         intent.putExtra("artist", getArtistName());
         intent.putExtra("album", getAlbumName());
-        intent.putExtra("track", getTrackName());
+        intent.putExtra("track", getTitle());
         intent.putExtra("playing", isPlaying());
         sendBroadcast(intent);
     }
 
 
-    private CharSequence getTrackName() {
+    private String getTitle() {
         if (mPlayingMusic != null) {
             return mPlayingMusic.getTitle();
         }
@@ -484,6 +526,34 @@ public class MusicPlayService extends Service {
         return null;
     }
 
+    private Music getPlayingMusic() {
+        if (mPlayingMusic != null) {
+            return mPlayingMusic;
+        }
+        return null;
+    }
+
+
+    private void setPlayQueue(List<Music> playQueue) {
+        mPlaylist.clear();
+        mPlaylist.addAll(playQueue);
+    }
+
+
+    private List<Music> getPlayQueue() {
+        if (mPlaylist.size() > 0) {
+            return mPlaylist;
+        }
+        return mPlaylist;
+    }
+
+
+    private int getPlayPosition() {
+        if (mPlayingPos >= 0) {
+            return mPlayingPos;
+        } else return 0;
+    }
+
     /**
      * 初始化通知栏
      */
@@ -500,35 +570,22 @@ public class MusicPlayService extends Service {
                 ? R.drawable.ic_pause : R.drawable.ic_play_arrow_white_18dp;
 
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+        nowPlayingIntent.setAction(Constants.DEAULT_NOTIFICATION);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        String coverUrl = "R.drawable.default_cover";
-        if (mPlayingMusic != null && mPlayingMusic.getType() == Music.Type.LOCAL) {
+        String coverUrl = null;
+        if (mPlayingMusic != null && mPlayingMusic.getType() == Music.Type.LOCAL
+                && mPlayingMusic.getAlbumId() != -1) {
             coverUrl = CoverLoader.getInstance().getCoverUri(this, mPlayingMusic.getAlbumId());
-        } else if (mPlayingMusic != null && mPlayingMusic.getType() == Music.Type.LOCAL) {
+        } else if (mPlayingMusic != null) {
             coverUrl = mPlayingMusic.getCoverUri();
         }
-
-        GlideApp.with(this)
-                .asBitmap()
-                .load(coverUrl)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        artwork = resource;
-                    }
-                });
-
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
-
         Builder builder = new Builder(this, initChannelId())
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(artwork)
                 .setContentIntent(clickIntent)
-                .setContentTitle(getTrackName())
+                .setContentTitle(getTitle())
                 .setContentText(text)
                 .setWhen(mNotificationPostTime)
                 .addAction(R.drawable.ic_skip_previous,
@@ -538,23 +595,36 @@ public class MusicPlayService extends Service {
                         retrievePlaybackAction(PLAY_STATE_CHANGED))
                 .addAction(R.drawable.ic_skip_next,
                         "",
-                        retrievePlaybackAction(ACTION_NEXT));
+                        retrievePlaybackAction(ACTION_NEXT))
+                .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
+                        this, PlaybackStateCompat.ACTION_STOP));
 
+        GlideApp.with(this)
+                .asBitmap()
+                .load(coverUrl)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        builder.setLargeIcon(resource);
+                    }
+                });
         if (SystemUtils.isJellyBeanMR1()) {
             builder.setShowWhen(false);
         }
-//        if (SystemUtils.isLollipop()) {
-//            //线控
-//            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-//            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
-//                    .setMediaSession(mSession.getSessionToken())
-//                    .setShowActionsInCompactView(0, 1, 2, 3);
-//            builder.setStyle(style);
-//        }
 
-        if (artwork != null && SystemUtils.isLollipop()) {
-            builder.setColor(Palette.from(artwork).generate().getMutedColor(Color.GRAY));
+        if (SystemUtils.isLollipop()) {
+            //线控
+            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
+                    .setMediaSession(mSession.getSessionToken())
+                    .setShowActionsInCompactView(0, 1, 2, 3);
+            builder.setStyle(style);
         }
+//        if (artwork != null && SystemUtils.isLollipop()) {
+//            builder.setColor(Palette.from(artwork).generate().getMutedColor(Color.));
+//        }
 
         mNotification = builder.build();
     }
@@ -587,18 +657,8 @@ public class MusicPlayService extends Service {
 
     private PendingIntent retrievePlaybackAction(final String action) {
         Intent intent = new Intent(action);
-        return PendingIntent.getBroadcast(this, 0, intent, 0);
-    }
-
-
-    /**
-     * 取消通知
-     */
-    private void cancelNotification() {
-        if (mNotificationManager != null) {
-            stopForeground(true);
-            mNotificationManager.cancel(NOTIFICATION_ID);
-        }
+        intent.setComponent(new ComponentName(this, MusicPlayService.class));
+        return PendingIntent.getService(this, 0, intent, 0);
     }
 
     /**
@@ -617,16 +677,41 @@ public class MusicPlayService extends Service {
         }
     }
 
+    /**
+     * 更新状态栏通知
+     */
+    private void updateNotification() {
+        final int newNotifyMode;
+        if (isPlaying()) {
+            newNotifyMode = NOTIFY_MODE_FOREGROUND;
+        } else {
+            newNotifyMode = NOTIFY_MODE_NONE;
+        }
+
+        int notificationId = hashCode();
+        startForeground(notificationId, mNotification);
+        mNotificationManager.notify(notificationId, mNotification);
+
+        if (mNotifyMode != newNotifyMode) {
+            if (mNotifyMode == NOTIFY_MODE_FOREGROUND) {
+                stopForeground(true);
+            } else if (newNotifyMode == NOTIFY_MODE_NONE) {
+                mNotificationManager.cancel(notificationId);
+                mNotificationPostTime = 0;
+            }
+        }
+        initNotify();
+        startForeground(notificationId, mNotification);
+    }
+
 
     /**
-     * 更新通知栏
+     * 取消通知
      */
-    public void showNotification() {
-        int notificationId = hashCode();
-        if (SystemUtils.isLollipop()) {
-            startForeground(notificationId, mNotification);
-            mNotificationManager.notify(notificationId, mNotification);
-        }
+    private void cancelNotification() {
+        stopForeground(true);
+        mNotificationManager.cancel(NOTIFICATION_ID);
+        mNotifyMode = NOTIFY_MODE_NONE;
     }
 
     /**
@@ -636,8 +721,10 @@ public class MusicPlayService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, intent.getAction().toString());
+            handleCommandIntent(intent);
         }
     }
+
 
     /**
      * @param intent
@@ -653,22 +740,95 @@ public class MusicPlayService extends Service {
         }
     }
 
+//    /**
+//     * 耳机插入广播接收器
+//     */
+//    public class HeadsetPlugInReceiver extends BroadcastReceiver {
+//
+//        final IntentFilter filter;
+//
+//        public HeadsetPlugInReceiver() {
+//            filter = new IntentFilter();
+//
+//            if (Build.VERSION.SDK_INT >= 21) {
+//                filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+//            } else {
+//                filter.addAction(Intent.ACTION_HEADSET_PLUG);
+//            }
+//        }
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent != null && intent.hasExtra("state")
+//                    && AppConfigs.isResumeAudioWhenPlugin) {
+//
+//                //通过判断 "state" 来知道状态
+//                final boolean isPlugIn = intent.getExtras().getInt("state") == 1;
+//
+//            }
+//        }
+//
+//    }
+
+    /**
+     * 耳机拔出广播接收器
+     */
+    private class HeadsetReceiver extends BroadcastReceiver {
+
+        final IntentFilter filter;
+        final BluetoothAdapter bluetoothAdapter;
+
+        public HeadsetReceiver() {
+            filter = new IntentFilter();
+            filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY); //有线耳机拔出变化
+            filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED); //蓝牙耳机连接变化
+
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isRunningForeground) {
+                //当前是正在运行的时候才能通过媒体按键来操作音频
+                switch (intent.getAction()) {
+                    case BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
+                        if (bluetoothAdapter != null &&
+                                BluetoothProfile.STATE_DISCONNECTED == bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEADSET) &&
+                                isPlaying()) {
+                            //蓝牙耳机断开连接 同时当前音乐正在播放 则将其暂停
+                            pause();
+                        }
+                        break;
+                    case AudioManager.ACTION_AUDIO_BECOMING_NOISY:
+                        if (isPlaying()) {
+                            //有线耳机断开连接 同时当前音乐正在播放 则将其暂停
+                            pause();
+                        }
+                        break;
+                }
+            }
+        }
+
+    }
+
+
     @Override
     public void onDestroy() {
+        super.onDestroy();
         //注销广播
         unregisterReceiver(mServiceReceiver);
+        unregisterReceiver(mHeadsetReceiver);
         if (mPlayer != null) {
             mPlayer.reset();
             mPlayer.release();
             mPlayer = null;
         }
-        Log.d("TAG", "ondestory");
         SongQueueLoader.updateQueue(this, mPlaylist);
         PreferencesUtils.saveCurrentSongId(mPlayingPos);
         cancelNotification();
         stopSelf();
 
-        super.onDestroy();
+        Log.d("TAG", "ondestory");
     }
 
     private class IMusicServiceStub extends IMusicService.Stub {
@@ -685,8 +845,7 @@ public class MusicPlayService extends Service {
 
         @Override
         public void play(int id) throws RemoteException {
-            mPlayingPos = id;
-            mService.get().playMusic(mPlayingPos);
+            mService.get().playMusic(id);
         }
 
         @Override
@@ -720,32 +879,31 @@ public class MusicPlayService extends Service {
 
         @Override
         public String getSongName() throws RemoteException {
-            return mPlayingMusic.getTitle();
+            return mService.get().getTitle();
         }
 
         @Override
         public String getSongArtist() throws RemoteException {
-            return mPlayingMusic.getArtist();
+            return mService.get().getArtistName();
         }
 
         @Override
         public Music getPlayingMusic() throws RemoteException {
-            return mPlayingMusic;
+            return mService.get().getPlayingMusic();
         }
 
         @Override
         public void setPlayList(List<Music> playlist) throws RemoteException {
-            mService.get().mPlaylist = playlist;
+            mService.get().setPlayQueue(playlist);
         }
 
         @Override
         public List<Music> getPlayList() throws RemoteException {
-            return mService.get().mPlaylist;
+            return mService.get().getPlayQueue();
         }
 
         @Override
         public void removeFromQueue(int position) throws RemoteException {
-
             mService.get().removeFromQueue(position);
         }
 
@@ -756,7 +914,7 @@ public class MusicPlayService extends Service {
 
         @Override
         public int position() throws RemoteException {
-            return mService.get().mPlayingPos;
+            return mService.get().getPlayPosition();
         }
 
         @Override
@@ -781,5 +939,6 @@ public class MusicPlayService extends Service {
         }
 
     }
+
 
 }

@@ -223,6 +223,7 @@ public class PlayManager {
             e.printStackTrace();
         }
     }
+
     public static void refresh() {
         try {
             mService.refresh();

@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.musiclake.data.source.PlaylistLoader;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.List;
@@ -20,6 +20,7 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
+@SuppressWarnings("ALL")
 public class AddPlaylistDialog extends DialogFragment {
 
     private static String TAG_CREATE = "create_playlist";
@@ -47,23 +48,21 @@ public class AddPlaylistDialog extends DialogFragment {
         return new MaterialDialog.Builder(getActivity())
                 .title("增加到歌单")
                 .items(chars)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        final Music music = getArguments().getParcelable("music");
-                        if (which == 0) {
-                            CreatePlaylistDialog createDialog = CreatePlaylistDialog.newInstance(music);
-                            createDialog.show(getFragmentManager(), TAG_CREATE);
+                .itemsCallback((dialog, itemView, which, text) -> {
+                    final Music music = getArguments().getParcelable("music");
+                    if (which == 0) {
+                        CreatePlaylistDialog createDialog = CreatePlaylistDialog.newInstance(music);
+                        createDialog.show(getFragmentManager(), TAG_CREATE);
+                    } else {
+                        Log.d("addDialog", which + "----" + playlists.get(which - 1).getId() + "------" + music.getId());
+                        result = PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music.getId());
+                        if (result) {
+                            RxBus.getInstance().post(new Playlist());
+                            ToastUtils.show(getActivity(), "添加成功");
                         } else {
-                            Log.d("addDialog", which + "----" + playlists.get(which - 1).getId() + "------" + music.getId());
-                            result = PlaylistLoader.addToPlaylist(getActivity(), playlists.get(which - 1).getId(), music.getId());
-                            if (result) {
-                                ToastUtils.show(getActivity(), "添加成功");
-                            } else {
-                                ToastUtils.show(getActivity(), "歌单中已有此音乐，请勿重复添加");
-                            }
-                            dialog.dismiss();
+                            ToastUtils.show(getActivity(), "歌单中已有此音乐，请勿重复添加");
                         }
+                        dialog.dismiss();
                     }
                 }).build();
     }

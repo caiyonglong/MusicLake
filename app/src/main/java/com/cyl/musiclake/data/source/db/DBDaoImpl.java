@@ -102,7 +102,7 @@ public class DBDaoImpl implements DBDao {
 
     @Override
     public void insertSongs(List<Music> songs) {
-        db.rawQuery("delete from " + DBData.MUSIC_TABLE, null);
+        clearSongs();
         for (int i = 0; i < songs.size(); i++) {
             Music music = songs.get(i);
             ContentValues values = new ContentValues();
@@ -124,6 +124,11 @@ public class DBDaoImpl implements DBDao {
             values.put(DBData.MUSIC_YEARS, music.getYear());
             db.insertWithOnConflict(DBData.MUSIC_TABLE, null, values, CONFLICT_IGNORE);
         }
+    }
+
+    @Override
+    public void clearSongs() {
+        db.rawQuery("delete from " + DBData.MUSIC_TABLE, null);
     }
 
     @Override
@@ -238,7 +243,6 @@ public class DBDaoImpl implements DBDao {
     public void clearQueue() {
         db.rawQuery("delete from " + DBData.QUEUE_TABLE, null);
     }
-
 
     @Override
     public void closeDB() {

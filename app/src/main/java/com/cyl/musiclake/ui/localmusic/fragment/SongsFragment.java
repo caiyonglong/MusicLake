@@ -1,18 +1,22 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.SongsPresenter;
 
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     @BindView(R.id.loading)
     LinearLayout loading;
     private SongAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
+    private List<Music> musicList = new ArrayList<>();
 
     private SongsPresenter mPresenter;
 
@@ -62,11 +66,52 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
         mPresenter = new SongsPresenter(getActivity());
         mPresenter.attachView(this);
 
-        mAdapter = new SongAdapter((AppCompatActivity) getActivity(), musicInfos);
+        mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerView);
     }
 
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_more) {
+                mPresenter.playMusic(musicList, position);
+            }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Music music = (Music) adapter.getItem(position);
+            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.popup_song_play:
+                        mPresenter.playMusic(musicList, position);
+                        break;
+                    case R.id.popup_song_detail:
+                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                                .show(getChildFragmentManager(), getTag());
+                        break;
+                    case R.id.popup_song_goto_album:
+                        Log.e("album", music.toString() + "");
+                        NavigateUtil.navigateToAlbum(getActivity(),
+                                music.getAlbumId(),
+                                music.getAlbum(), null);
+                        break;
+                    case R.id.popup_song_goto_artist:
+                        NavigateUtil.navigateToArtist(getActivity(),
+                                music.getArtistId(),
+                                music.getArtist(), null);
+                        break;
+                    case R.id.popup_song_addto_queue:
+                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
+                        break;
+                }
+                return false;
+            });
+            popupMenu.inflate(R.menu.popup_song);
+            popupMenu.show();
+        });
+    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -87,8 +132,14 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     @Override
     public void showSongs(List<Music> songList) {
-        mAdapter.setMusicInfos(songList);
-        mAdapter.notifyDataSetChanged();
+        musicList.clear();
+        musicList.addAll(songList);
+        mAdapter.setNewData(songList);
+    }
+
+    @Override
+    public void setEmptyView() {
+        mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 
 }

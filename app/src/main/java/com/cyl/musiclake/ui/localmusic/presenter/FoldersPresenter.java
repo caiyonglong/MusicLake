@@ -2,7 +2,16 @@ package com.cyl.musiclake.ui.localmusic.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.data.model.FolderInfo;
+import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.ui.localmusic.contract.FoldersContract;
+
+import java.util.List;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by D22434 on 2018/1/8.
@@ -34,6 +43,34 @@ public class FoldersPresenter implements FoldersContract.Presenter {
 
     @Override
     public void loadFolders() {
+        mView.showLoading();
+        AppRepository.getFolderInfosRepository(mContext)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<FolderInfo>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<FolderInfo> folderInfos) {
+                        mView.showFolders(folderInfos);
+                        if (folderInfos.size() == 0) {
+                            mView.showEmptyView();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mView.hideLoading();
+                    }
+                });
 
     }
 }

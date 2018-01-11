@@ -12,7 +12,9 @@ import android.util.Pair;
 import android.view.View;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.ui.localmusic.fragment.AlbumDetailFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.DownloadFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.LocalMusicFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.PlaylistDetailFragment;
@@ -43,7 +45,7 @@ public class NavigateUtil {
      * 跳转到专辑
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void navigateToAlbum(Activity context, long albumID, boolean isAlbum, String title, Pair<View, String> transitionViews) {
+    public static void navigateToAlbum(Activity context, long albumID, String title, Pair<View, String> transitionViews) {
 
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
@@ -51,17 +53,41 @@ public class NavigateUtil {
         if (transitionViews != null) {
             Transition changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform);
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
-            fragment = AlbumDetailFragment.newInstance(albumID, isAlbum, title, transitionViews.second);
+            fragment = AlbumDetailFragment.newInstance(albumID, title, transitionViews.second);
             fragment.setSharedElementEnterTransition(changeImage);
         } else {
             transaction.setCustomAnimations(R.anim.activity_fade_in,
                     R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = AlbumDetailFragment.newInstance(albumID, isAlbum, title, null);
+            fragment = AlbumDetailFragment.newInstance(albumID, title, null);
         }
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(title).commit();
     }
+
+    /**
+     * 跳转到专辑
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void navigateToArtist(Activity context, long artistID, String title, Pair<View, String> transitionViews) {
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
+
+        if (transitionViews != null) {
+            Transition changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform);
+            transaction.addSharedElement(transitionViews.first, transitionViews.second);
+            fragment = ArtistSongsFragment.newInstance(artistID, title, transitionViews.second);
+            fragment.setSharedElementEnterTransition(changeImage);
+        } else {
+            transaction.setCustomAnimations(R.anim.activity_fade_in,
+                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
+            fragment = ArtistSongsFragment.newInstance(artistID, title, null);
+        }
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(title).commit();
+    }
+
 
     public static void navigateToLocalMusic(Activity context, Pair<View, String> transitionViews) {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
@@ -97,17 +123,17 @@ public class NavigateUtil {
         transaction.addToBackStack(fragment.getTag()).commit();
     }
 
-    public static void navigateToPlaylist(Activity context, String pid, String title, Pair<View, String> transitionViews) {
+    public static void navigateToPlaylist(Activity context, Playlist playlist, Pair<View, String> transitionViews) {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 
         if (transitionViews != null) {
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
-            fragment = PlaylistDetailFragment.newInstance(pid, title);
+            fragment = PlaylistDetailFragment.newInstance(playlist);
         } else {
             transaction.setCustomAnimations(R.anim.activity_fade_in,
                     R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = PlaylistDetailFragment.newInstance(pid, title);
+            fragment = PlaylistDetailFragment.newInstance(playlist);
         }
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);

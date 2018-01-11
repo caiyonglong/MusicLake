@@ -21,12 +21,14 @@ public interface PlaylistDetailContract {
         void showPlaylistArt(Drawable playlistArt);
 
         void showPlaylistArt(Bitmap bitmap);
+
+        void showEmptyView();
     }
 
     interface Presenter extends BasePresenter<View> {
 
-        void loadPlaylistSongs(long playlistID);
+        void loadPlaylistSongs(String playlistID);
 
-        void loadPlaylistArt(long firstAlbumID);
+        void loadPlaylistArt(String playlistID);
     }
 }

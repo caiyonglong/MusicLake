@@ -3,15 +3,19 @@ package com.cyl.musiclake.ui.localmusic.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Pair;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Album;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.AlbumAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.AlbumsContract;
 import com.cyl.musiclake.ui.localmusic.presenter.AlbumPresenter;
+import com.cyl.musiclake.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
     @BindView(R.id.loading)
     LinearLayout loading;
     private AlbumAdapter mAdapter;
-    private List<Album> albums = new ArrayList<>();
+    private List<Album> albumList = new ArrayList<>();
     private AlbumPresenter mPresenter;
 
 
@@ -72,10 +76,23 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
         mPresenter = new AlbumPresenter(getContext());
         mPresenter.attachView(this);
 
+        mAdapter = new AlbumAdapter(albumList);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mAdapter = new AlbumAdapter(getActivity(), albums);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerView);
     }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Album album = (Album) adapter.getItem(position);
+            NavigateUtil.navigateToAlbum(getActivity(),
+                    album.getId(),
+                    album.getName(),
+                    new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
+        });
+    }
+
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -90,17 +107,15 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
 
     @Override
     public void hideLoading() {
-
     }
 
     @Override
     public void showAlbums(List<Album> albumList) {
-        mAdapter.setAlbums(albumList);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setNewData(albumList);
     }
 
     @Override
     public void showEmptyView() {
-
+        mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 }

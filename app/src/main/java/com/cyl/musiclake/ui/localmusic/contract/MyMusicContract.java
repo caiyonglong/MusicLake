@@ -13,6 +13,8 @@ public interface MyMusicContract {
 
         void showSongs(List<Music> songList);
 
+        void showEmptyView();
+
         void showPlaylist(List<Playlist> playlists);
     }
 
