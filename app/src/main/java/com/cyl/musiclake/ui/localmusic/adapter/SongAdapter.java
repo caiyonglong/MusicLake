@@ -22,8 +22,8 @@ import java.util.List;
 public class SongAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
 //        RecyclerView.Adapter<SongAdapter.ItemHolder> {
 
-    public SongAdapter(List<Music> musicInfos) {
-        super(R.layout.item_music, musicInfos);
+    public SongAdapter(List<Music> musicList) {
+        super(R.layout.item_music, musicList);
     }
 
     @Override

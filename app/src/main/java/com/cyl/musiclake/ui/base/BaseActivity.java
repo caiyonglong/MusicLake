@@ -1,31 +1,24 @@
 package com.cyl.musiclake.ui.base;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.service.MusicPlayService;
-import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
 import butterknife.ButterKnife;
-
-import static com.cyl.musiclake.service.PlayManager.mService;
 
 /**
  * 基类
@@ -33,10 +26,9 @@ import static com.cyl.musiclake.service.PlayManager.mService;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection {
+public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected Handler mHandler;
-    private PlayManager.ServiceToken mToken;
     private PlaybackStatus mPlaybackStatus;
 
 
@@ -44,8 +36,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResID());
-
-        mToken = PlayManager.bindToService(this, this);
         mPlaybackStatus = new PlaybackStatus(this);
         mHandler = new Handler();
         init();
@@ -90,11 +80,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.bind(this).unbind();
-        // Unbind from the service
-        if (mToken != null) {
-            PlayManager.unbindFromService(mToken);
-            mToken = null;
-        }
         try {
             unregisterReceiver(mPlaybackStatus);
         } catch (final Throwable e) {
@@ -131,13 +116,4 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     }
 
 
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        mService = IMusicService.Stub.asInterface(iBinder);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-        mService = null;
-    }
 }

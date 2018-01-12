@@ -46,7 +46,7 @@ public class LocalMusicFragment extends BaseFragment {
     protected void initDatas() {
         setupViewPager(viewPager);
         mTabLayout.setupWithViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.setCurrentItem(0);
 
     }

@@ -20,13 +20,6 @@ import com.cyl.musiclake.utils.CoverLoader;
 
 import java.io.File;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
 
 /**
  * Created by hefuyi on 2016/11/8.
@@ -66,39 +59,13 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     @Override
     public void onPlayPauseClick() {
         mDuetoplaypause = true;
-        Observable.create((ObservableOnSubscribe<Boolean>) e -> {
-            PlayManager.playPause();
-            if (PlayManager.getPlayingMusic() == null) {
-                e.onError(new Throwable("请选择需要播放的音乐"));
-            } else {
-                boolean isPlaying = PlayManager.isPlaying();
-                e.onNext(isPlaying);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Boolean>() {
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Boolean isPlaying) {
-                        mView.setPlayPauseButton(isPlaying);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.setErrorInfo(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        PlayManager.playPause();
+        if (PlayManager.getPlayingMusic() == null) {
+            mView.setErrorInfo("请选择需要播放的音乐");
+        } else {
+            boolean isPlaying = PlayManager.isPlaying();
+            mView.setPlayPauseButton(isPlaying);
+        }
     }
 
     @Override
@@ -142,12 +109,14 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     @Override
     public void updateNowPlayingCard() {
         Log.d(TAG, "updateNowPlayingCard" + mProgress);
-        Music music = null;
-        if (PlayManager.getPlayingMusic() == null) {
+        if (PlayManager.mService != null) {
             return;
-        } else {
-            music = PlayManager.getPlayingMusic();
         }
+        Music music = PlayManager.getPlayingMusic();
+        if (music == null) {
+            return;
+        }
+
         if (PlayManager.isPlaying()) {
             if (!mView.getPlayPauseStatus()) {//true表示按钮为待暂停状态
                 mView.setPlayPauseButton(true);

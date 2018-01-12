@@ -1,6 +1,9 @@
 package com.cyl.musiclake.ui.main;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -14,9 +17,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.localmusic.activity.SearchActivity;
 import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
@@ -34,6 +39,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.cyl.musiclake.service.PlayManager.mService;
 import static com.cyl.musiclake.ui.localmusic.fragment.PlayFragment.topContainer;
 
 /**
@@ -42,7 +48,7 @@ import static com.cyl.musiclake.ui.localmusic.fragment.PlayFragment.topContainer
  * @author yonglong
  * @date 2016/8/3
  */
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, UserContract.View {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, UserContract.View, ServiceConnection {
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mSlidingUpPaneLayout;
@@ -62,6 +68,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private boolean login_status = false;
     UserPresenter mPresenter;
 
+    private PlayManager.ServiceToken mToken;
+
     Class<?> mTargetClass;
 
     @Override
@@ -71,6 +79,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
+        // bind from the service
+        mToken = PlayManager.bindToService(this, this);
+
         //菜单栏的头部控件初始化
         headerView = mNavigationView.getHeaderView(0);
         mImageView = headerView.findViewById(R.id.header_bg);
@@ -83,6 +94,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initData() {
+
         mPresenter = new UserPresenter();
         mPresenter.attachView(this);
         mPresenter.getUserInfo();
@@ -90,7 +102,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         String from = getIntent().getAction();
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
             mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-            topContainer.setAlpha(0);
         }
         navigateLibrary.run();
         navigatePlay.run();
@@ -103,15 +114,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
+                if (newState == PanelState.COLLAPSED) {
+                    topContainer.setVisibility(View.VISIBLE);
+                } else if (newState == PanelState.EXPANDED) {
+                    topContainer.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
-                View nowPlayingCard = topContainer;
-                nowPlayingCard.setAlpha(1 - slideOffset);
+                topContainer.setAlpha(1 - slideOffset * 2);
+                if (topContainer.getAlpha() < 0) {
+                    topContainer.setVisibility(View.GONE);
+                }
             }
-
         });
 
         headerView.setOnClickListener(v -> {
@@ -292,6 +309,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mToken != null) {
+            PlayManager.unbindFromService(mToken);
+            mToken = null;
+        }
         RxBus.getInstance().unregisterAll();
     }
+
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        mService = IMusicService.Stub.asInterface(iBinder);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        mService = null;
+    }
+
 }

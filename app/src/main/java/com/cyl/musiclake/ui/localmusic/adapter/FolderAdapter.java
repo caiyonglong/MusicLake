@@ -1,6 +1,8 @@
 package com.cyl.musiclake.ui.localmusic.adapter;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -27,6 +29,11 @@ public class FolderAdapter extends BaseQuickAdapter<FolderInfo, BaseViewHolder> 
         holder.setText(R.id.tv_artist, folderInfo.folderPath);
         holder.getView(R.id.iv_more).setVisibility(View.GONE);
         Drawable image = mContext.getResources().getDrawable(R.drawable.ic_folder);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (image != null) {
+                image.setTint(Color.BLUE);
+            }
+        }
         ImageView cover = holder.getView(R.id.iv_cover);
         cover.setImageDrawable(image);
 

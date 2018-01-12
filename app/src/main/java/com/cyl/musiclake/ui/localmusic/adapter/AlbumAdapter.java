@@ -1,9 +1,6 @@
 package com.cyl.musiclake.ui.localmusic.adapter;
 
 import android.os.Build;
-import android.util.Log;
-import android.util.Pair;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -12,7 +9,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.CoverLoader;
 
@@ -33,13 +29,8 @@ public class AlbumAdapter extends BaseQuickAdapter<Album, BaseViewHolder> {
             helper.getView(R.id.album).setTransitionName(Constants.TRANSTITION_ALBUM);
         }
 
-
-        String url = null;
-        if (album.getId() != -1) {
-            url = CoverLoader.getInstance().getCoverUri(mContext, album.getId());
-        }
         GlideApp.with(mContext)
-                .load(url)
+                .load(CoverLoader.getInstance().getCoverUri(mContext, album.getId()))
                 .error(R.drawable.default_cover)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) helper.getView(R.id.album));

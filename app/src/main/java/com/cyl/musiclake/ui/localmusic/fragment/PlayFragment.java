@@ -176,6 +176,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
         mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
+
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -194,6 +195,10 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     protected void initDatas() {
         mPresenter = new PlayControlsPresenter(getContext());
         mPresenter.attachView(this);
+
+//        mPresenter.updateNowPlayingCard();
+//        mPresenter.loadLyric();
+
         RxBus.getInstance().register(MetaChangedEvent.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

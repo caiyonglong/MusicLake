@@ -6,7 +6,8 @@
     android:layout_height="57dp"
     android:layout_gravity="top"
     android:background="@color/white"
-    android:elevation="10dp">
+    android:elevation="10dp"
+    android:visibility="gone">
 
     <ProgressBar
         android:id="@+id/song_progress_normal"

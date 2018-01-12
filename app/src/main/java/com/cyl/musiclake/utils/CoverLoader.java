@@ -197,6 +197,9 @@ public class CoverLoader {
 
 
     public String getCoverUri(Context context, long albumId) {
+        if (albumId == -1) {
+            return null;
+        }
         String uri = null;
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/albums/" + albumId),

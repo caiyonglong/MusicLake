@@ -41,7 +41,6 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
 
     @Override
     public void initViews() {
-
 //        if (Build.VERSION.SDK_INT < 21 && view.findViewById(R.id.status_bar) != null) {
 //            view.findViewById(R.id.status_bar).setVisibility(View.GONE);
 //            if (Build.VERSION.SDK_INT >= 19) {
@@ -55,7 +54,6 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         mAdapter.bindToRecyclerView(recyclerView);
     }
-
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {

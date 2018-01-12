@@ -27,7 +27,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -79,8 +78,6 @@ public class MusicPlayService extends Service {
     private List<Music> mPlaylist = new ArrayList<>();
     private int mPlayingPos = -1;
 
-    RemoteViews mRemoteViews;
-
     private boolean isPause = false;
 
     //播放模式：0顺序播放、1随机播放、2单曲循环
@@ -105,17 +102,19 @@ public class MusicPlayService extends Service {
 
     private static final int NOTIFY_MODE_NONE = 0;
     private static final int NOTIFY_MODE_FOREGROUND = 1;
-    private static final int NOTIFY_MODE_BACKGROUND = 2;
     private static int mNotifyMode = 0;
-
 
     @Override
     public void onCreate() {
         super.onCreate();
+        //初始化广播
         initReceiver();
+        //初始化音乐播放服务
         initMediaPlayer();
+        //初始化电话监听服务
         initTelephony();
         setUpMediaSession();
+        //初始化通知
         initNotify();
     }
 
@@ -347,7 +346,6 @@ public class MusicPlayService extends Service {
      */
     public void playMusic(Music music) {
         mPlayingMusic = music;
-        updateNotification();
         notifyChange(META_CHANGED);
         try {
             mPlayer.reset();
@@ -358,6 +356,7 @@ public class MusicPlayService extends Service {
         } catch (IOException e) {
             ToastUtils.show(getApplicationContext(), R.string.unable_to_play_exception);
         }
+        updateNotification();
     }
 
     /**

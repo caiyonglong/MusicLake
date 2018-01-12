@@ -56,10 +56,11 @@ public class PlayManager {
             return;
         }
         final ContextWrapper mContextWrapper = token.mWrappedContext;
-        final ServiceBinder mBinder = mConnectionMap.remove(mContextWrapper);
+        final ServiceBinder mBinder = mConnectionMap.get(mContextWrapper);
         if (mBinder == null) {
             return;
         }
+        mConnectionMap.remove(mContextWrapper);
         mContextWrapper.unbindService(mBinder);
         if (mConnectionMap.isEmpty()) {
             mService = null;
