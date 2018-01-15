@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/music_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="?attr/cardColor"
-    app:cardCornerRadius="3dp"
-    app:cardElevation="3dp"
-    app:cardMaxElevation="2dp"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="4dp">
+    android:layout_height="70dp"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <LinearLayout
+    <View
+        android:id="@+id/v_playing"
+        android:layout_width="3dp"
+        android:layout_height="35dp"
+        android:layout_marginRight="3dp"
+        android:background="?attr/colorPrimary"
+        android:contentDescription="@null"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:elevation="1dp"
+        android:scaleType="fitXY" />
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
+        android:layout_height="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +41,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/music_item_tv_name"
+                    android:id="@+id/tv_title"
                     style="@style/AppTheme.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,7 +51,7 @@
                     android:textSize="@dimen/text_size_common" />
 
                 <TextView
-                    android:id="@+id/music_item_tv_artist"
+                    android:id="@+id/tv_artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -58,14 +62,12 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_more"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_music_list_icon_more" />
+            <TextView
+                android:id="@+id/tv_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="20dp" />
         </LinearLayout>
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+    </FrameLayout>
+</LinearLayout>

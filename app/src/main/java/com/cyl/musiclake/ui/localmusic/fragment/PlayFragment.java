@@ -48,8 +48,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
@@ -196,12 +194,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPresenter = new PlayControlsPresenter(getContext());
         mPresenter.attachView(this);
 
-//        mPresenter.updateNowPlayingCard();
-//        mPresenter.loadLyric();
-
         RxBus.getInstance().register(MetaChangedEvent.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(metaChangedEvent -> {
                     mPresenter.updateNowPlayingCard();
                     mPresenter.loadLyric();

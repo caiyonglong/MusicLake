@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
@@ -23,8 +22,8 @@
 
 
     <!--第二部分：主要内容，NestedScrollView和ScrollView基本功能一致，只不过NestedScrollView可以兼容新的控件-->
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/xrecyclerview"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

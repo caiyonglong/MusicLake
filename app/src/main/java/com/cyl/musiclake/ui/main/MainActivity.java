@@ -1,9 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,13 +14,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseActivity;
-import com.cyl.musiclake.ui.localmusic.activity.SearchActivity;
+import com.cyl.musiclake.ui.onlinemusic.activity.SearchActivity;
 import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
 import com.cyl.musiclake.ui.login.LoginActivity;
 import com.cyl.musiclake.ui.login.UserCenterActivity;
@@ -39,7 +33,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.service.PlayManager.mService;
 import static com.cyl.musiclake.ui.localmusic.fragment.PlayFragment.topContainer;
 
 /**
@@ -48,7 +41,7 @@ import static com.cyl.musiclake.ui.localmusic.fragment.PlayFragment.topContainer
  * @author yonglong
  * @date 2016/8/3
  */
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, UserContract.View, ServiceConnection {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, UserContract.View {
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mSlidingUpPaneLayout;
@@ -68,8 +61,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private boolean login_status = false;
     UserPresenter mPresenter;
 
-    private PlayManager.ServiceToken mToken;
-
     Class<?> mTargetClass;
 
     @Override
@@ -79,8 +70,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-        // bind from the service
-        mToken = PlayManager.bindToService(this, this);
 
         //菜单栏的头部控件初始化
         headerView = mNavigationView.getHeaderView(0);
@@ -101,7 +90,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         String from = getIntent().getAction();
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
         navigateLibrary.run();
         navigatePlay.run();
@@ -114,11 +102,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
-                if (newState == PanelState.COLLAPSED) {
-                    topContainer.setVisibility(View.VISIBLE);
-                } else if (newState == PanelState.EXPANDED) {
-                    topContainer.setVisibility(View.GONE);
-                }
             }
 
             @Override
@@ -127,6 +110,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 topContainer.setAlpha(1 - slideOffset * 2);
                 if (topContainer.getAlpha() < 0) {
                     topContainer.setVisibility(View.GONE);
+                } else {
+                    topContainer.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -241,7 +226,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_my, menu);
         return true;
     }
@@ -263,7 +247,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(intent);
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private boolean isNavigatingMain() {
@@ -309,22 +293,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mToken != null) {
-            PlayManager.unbindFromService(mToken);
-            mToken = null;
-        }
-        RxBus.getInstance().unregisterAll();
     }
-
-
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        mService = IMusicService.Stub.asInterface(iBinder);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-        mService = null;
-    }
-
 }

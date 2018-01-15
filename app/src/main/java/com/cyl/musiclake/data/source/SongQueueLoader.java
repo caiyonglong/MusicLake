@@ -129,7 +129,7 @@ public class SongQueueLoader {
             return musicList;
         }
         while (cursor.moveToNext()) {
-            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+            String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             if (artist.equals("<unknown>")) {
@@ -180,7 +180,7 @@ public class SongQueueLoader {
             return musicList;
         }
         while (cursor.moveToNext()) {
-            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+            String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             if (artist.equals("<unknown>")) {
@@ -244,7 +244,7 @@ public class SongQueueLoader {
             return musicList;
         }
         while (cursor.moveToNext()) {
-            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+            String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             if (artist.equals("<unknown>")) {

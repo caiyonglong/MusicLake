@@ -13,7 +13,7 @@ public class Music implements Parcelable {
     // 歌曲类型 本地/网络
     private Type type;
     // [本地歌曲]歌曲id
-    private long id;
+    private String id;
     // 音乐标题
     private String title;
     // 艺术家
@@ -42,9 +42,11 @@ public class Music implements Parcelable {
     private long fileSize;
     // 发行日期
     private String year;
+    //音乐质量/前缀
+    private String prefix;
 
     public Music(long id, long albumId, long artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
-        this.id = id;
+        this.id = String.valueOf(id);
         this.title = title;
         this.artist = artist;
         this.album = album;
@@ -58,7 +60,7 @@ public class Music implements Parcelable {
 
 
     public Music() {
-        this.id = -1;
+        this.id = "";
         this.albumId = -1;
         this.artistId = -1;
 
@@ -77,13 +79,15 @@ public class Music implements Parcelable {
         this.type = Type.LOCAL;
     }
 
+
     protected Music(Parcel in) {
-        id = in.readLong();
+        id = in.readString();
         title = in.readString();
         artist = in.readString();
         album = in.readString();
         artistId = in.readLong();
         albumId = in.readLong();
+        trackNumber = in.readInt();
         duration = in.readLong();
         uri = in.readString();
         lrcPath = in.readString();
@@ -105,6 +109,30 @@ public class Music implements Parcelable {
             return new Music[size];
         }
     };
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getTrackNumber() {
+        return trackNumber;
+    }
+
+    public void setTrackNumber(int trackNumber) {
+        this.trackNumber = trackNumber;
+    }
 
     public long getArtistId() {
         return artistId;
@@ -178,13 +206,6 @@ public class Music implements Parcelable {
         this.fileSize = fileSize;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -233,12 +254,13 @@ public class Music implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
+        parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeString(artist);
         parcel.writeString(album);
         parcel.writeLong(artistId);
         parcel.writeLong(albumId);
+        parcel.writeInt(trackNumber);
         parcel.writeLong(duration);
         parcel.writeString(uri);
         parcel.writeString(lrcPath);
@@ -250,68 +272,26 @@ public class Music implements Parcelable {
     }
 
     public enum Type {
+        QQ,
+        XIAMI,
         ONLINE,
         LOCAL
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Music music = (Music) o;
-
-        if (id != music.id) return false;
-        if (artistId != music.artistId) return false;
-        if (albumId != music.albumId) return false;
-        if (duration != music.duration) return false;
-        if (fileSize != music.fileSize) return false;
-        if (type != music.type) return false;
-        if (title != null ? !title.equals(music.title) : music.title != null) return false;
-        if (artist != null ? !artist.equals(music.artist) : music.artist != null) return false;
-        if (album != null ? !album.equals(music.album) : music.album != null) return false;
-        if (uri != null ? !uri.equals(music.uri) : music.uri != null) return false;
-        if (lrcPath != null ? !lrcPath.equals(music.lrcPath) : music.lrcPath != null) return false;
-        if (coverUri != null ? !coverUri.equals(music.coverUri) : music.coverUri != null)
-            return false;
-        if (fileName != null ? !fileName.equals(music.fileName) : music.fileName != null)
-            return false;
-        if (cover != null ? !cover.equals(music.cover) : music.cover != null) return false;
-        return year != null ? year.equals(music.year) : music.year == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (int) (id ^ (id >>> 32));
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (artist != null ? artist.hashCode() : 0);
-        result = 31 * result + (album != null ? album.hashCode() : 0);
-        result = 31 * result + (int) (artistId ^ (artistId >>> 32));
-        result = 31 * result + (int) (albumId ^ (albumId >>> 32));
-        result = 31 * result + (int) (duration ^ (duration >>> 32));
-        result = 31 * result + (uri != null ? uri.hashCode() : 0);
-        result = 31 * result + (lrcPath != null ? lrcPath.hashCode() : 0);
-        result = 31 * result + (coverUri != null ? coverUri.hashCode() : 0);
-        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
-        result = 31 * result + (cover != null ? cover.hashCode() : 0);
-        result = 31 * result + (int) (fileSize ^ (fileSize >>> 32));
-        result = 31 * result + (year != null ? year.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "Music{" +
-                "album='" + album + '\'' +
-                ", type=" + type +
-                ", id=" + id +
+                "type=" + type +
+                ", id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
+                ", artistId=" + artistId +
                 ", albumId=" + albumId +
+                ", trackNumber=" + trackNumber +
                 ", duration=" + duration +
                 ", uri='" + uri + '\'' +
+                ", lrcPath='" + lrcPath + '\'' +
                 ", coverUri='" + coverUri + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", cover=" + cover +
@@ -319,7 +299,4 @@ public class Music implements Parcelable {
                 ", year='" + year + '\'' +
                 '}';
     }
-
-
-
 }

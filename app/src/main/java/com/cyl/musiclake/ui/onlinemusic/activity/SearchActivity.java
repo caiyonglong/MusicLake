@@ -1,9 +1,11 @@
-package com.cyl.musiclake.ui.localmusic.activity;
+package com.cyl.musiclake.ui.onlinemusic.activity;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,14 +14,14 @@ import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
-import com.cyl.musiclake.ui.localmusic.adapter.SearchAdapter;
-import com.cyl.musiclake.ui.localmusic.contract.SearchContract;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.ui.localmusic.presenter.SearchPresenter;
+import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
+import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
+import com.cyl.musiclake.ui.onlinemusic.presenter.SearchPresenter;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchAdapter.OnItemClickListener, SearchContract.View {
+public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchContract.View {
 
     //搜索信息
     private String queryString;
@@ -42,17 +44,15 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.xrecyclerview)
-    XRecyclerView mRecyclerView;
+    @BindView(R.id.recyclerview)
+    RecyclerView mRecyclerView;
 
     private List<Music> searchResults = new ArrayList<>();
 
     SearchPresenter mPresenter = new SearchPresenter();
 
-    @Override
-    protected void listener() {
-
-    }
+    private int mCurrentCounter = 0;
+    private int TOTAL_COUNTER = 10;
 
     @Override
     protected int getLayoutResID() {
@@ -69,37 +69,42 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     @Override
     protected void initData() {
 
-        mAdapter = new SearchAdapter(this, searchResults);
-        mAdapter.setOnItemClickListener(this);
-
+        mAdapter = new SearchAdapter(searchResults);
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
-
+        mAdapter.bindToRecyclerView(mRecyclerView);
 
         mProgressDialog = new MaterialDialog.Builder(this)
                 .content(R.string.loading)
                 .progress(true, 0)
                 .build();
+    }
 
-        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                //refresh data here
-                mOffset = 1;
-                mPresenter.search(queryString, 10, mOffset);
-                mRecyclerView.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-                // load more data here
-                mPresenter.search(queryString, 10, mOffset);
-                mRecyclerView.loadMoreComplete();
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Music music = (Music) adapter.getItem(position);
+            Log.e("TAH", music.toString());
+            if (music.getType() == Music.Type.QQ) {
+                mPresenter.playQQMusic(music);
+            } else if (music.getType() == Music.Type.XIAMI) {
+                PlayManager.playOnline(music);
             }
         });
+        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
+            if (mCurrentCounter >= TOTAL_COUNTER) {
+                //数据全部加载完毕
+                mAdapter.loadMoreEnd();
+            } else {
+                //成功获取更多数据
+                mPresenter.search(queryString, 10, mOffset);
+                mCurrentCounter = mAdapter.getData().size();
+                TOTAL_COUNTER = 10 * mOffset;
+            }
+        }, 1000), mRecyclerView);
     }
 
 
@@ -117,17 +122,14 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             field.setAccessible(true);
             ImageView mGoButton = (ImageView) field.get(searchView);
             mGoButton.setImageResource(R.drawable.ic_search_white_18dp);
-            mGoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    queryString = searchView.getQuery().toString();
-                    if (queryString.length() > 0) {
-                        mOffset = 1;
-                        searchResults.clear();
-                        mPresenter.search(queryString, 10, mOffset);
-                    } else {
-                        ToastUtils.show(getApplicationContext(), "不能搜索空文本");
-                    }
+            mGoButton.setOnClickListener(v -> {
+                queryString = searchView.getQuery().toString();
+                if (queryString.length() > 0) {
+                    mOffset = 1;
+                    searchResults.clear();
+                    mPresenter.search(queryString, 10, mOffset);
+                } else {
+                    ToastUtils.show(getApplicationContext(), "不能搜索空文本");
                 }
             });
         } catch (Exception e) {
@@ -147,30 +149,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-
-        switch (view.getId()) {
-            case R.id.iv_more:
-                setOnPopupMenuListener(view, position);
-                break;
-            default:
-//                play(searchResults.get(position));
-                break;
-        }
     }
 
     private void setOnPopupMenuListener(View view, final int position) {
@@ -233,8 +213,12 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showSearchResult(List<Music> list) {
+        if (mOffset == 1) {
+            mAdapter.setNewData(list);
+        } else {
+            mAdapter.addData(list);
+        }
         searchResults.addAll(list);
-        mAdapter.notifyDataSetChanged();
         mOffset++;
     }
 

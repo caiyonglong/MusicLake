@@ -60,7 +60,6 @@ public class PlayManager {
         if (mBinder == null) {
             return;
         }
-        mConnectionMap.remove(mContextWrapper);
         mContextWrapper.unbindService(mBinder);
         if (mConnectionMap.isEmpty()) {
             mService = null;
@@ -74,7 +73,8 @@ public class PlayManager {
 
     public static void playOnline(Music music) {
         try {
-            mService.playOnline(music);
+            if (mService != null)
+                mService.playOnline(music);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -82,7 +82,8 @@ public class PlayManager {
 
     public static void play(int id) {
         try {
-            mService.play(id);
+            if (mService != null)
+                mService.play(id);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -90,7 +91,8 @@ public class PlayManager {
 
     public static void playPause() {
         try {
-            mService.playPause();
+            if (mService != null)
+                mService.playPause();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -98,7 +100,8 @@ public class PlayManager {
 
     public static void prev() {
         try {
-            mService.prev();
+            if (mService != null)
+                mService.prev();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -106,7 +109,8 @@ public class PlayManager {
 
     public static void next() {
         try {
-            mService.next();
+            if (mService != null)
+                mService.next();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -114,7 +118,8 @@ public class PlayManager {
 
     public static void setLoopMode(int loopmode) {
         try {
-            mService.setLoopMode(loopmode);
+            if (mService != null)
+                mService.setLoopMode(loopmode);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -122,7 +127,8 @@ public class PlayManager {
 
     public static void seekTo(int ms) {
         try {
-            mService.seekTo(ms);
+            if (mService != null)
+                mService.seekTo(ms);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -130,7 +136,8 @@ public class PlayManager {
 
     public static int position() {
         try {
-            return mService.position();
+            if (mService != null)
+                return mService.position();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -139,7 +146,8 @@ public class PlayManager {
 
     public static int getCurrentPosition() {
         try {
-            return mService.getCurrentPosition();
+            if (mService != null)
+                return mService.getCurrentPosition();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -148,7 +156,8 @@ public class PlayManager {
 
     public static int getDuration() {
         try {
-            return mService.getDuration();
+            if (mService != null)
+                return mService.getDuration();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -157,7 +166,8 @@ public class PlayManager {
 
     public static String getSongName() {
         try {
-            return mService.getSongName();
+            if (mService != null)
+                return mService.getSongName();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -166,7 +176,8 @@ public class PlayManager {
 
     public static String getSongArtist() {
         try {
-            return mService.getSongArtist();
+            if (mService != null)
+                return mService.getSongArtist();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -175,7 +186,8 @@ public class PlayManager {
 
     public static boolean isPlaying() {
         try {
-            return mService.isPlaying();
+            if (mService != null)
+                return mService.isPlaying();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -184,7 +196,8 @@ public class PlayManager {
 
     public static boolean isPause() {
         try {
-            return mService.isPause();
+            if (mService != null)
+                return mService.isPause();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -193,7 +206,8 @@ public class PlayManager {
 
     public static Music getPlayingMusic() {
         try {
-            return mService.getPlayingMusic();
+            if (mService != null)
+                return mService.getPlayingMusic();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -202,7 +216,8 @@ public class PlayManager {
 
     public static List<Music> getPlayList() {
         try {
-            return mService.getPlayList();
+            if (mService != null)
+                return mService.getPlayList();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -211,7 +226,9 @@ public class PlayManager {
 
     public static void setPlayList(List<Music> playlist) {
         try {
-            mService.setPlayList(playlist);
+            if (mService != null) {
+                mService.setPlayList(playlist);
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -219,7 +236,9 @@ public class PlayManager {
 
     public static void clearQueue() {
         try {
-            mService.clearQueue();
+            if (mService != null) {
+                mService.clearQueue();
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -227,7 +246,8 @@ public class PlayManager {
 
     public static void refresh() {
         try {
-            mService.refresh();
+            if (mService != null)
+                mService.refresh();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -235,7 +255,8 @@ public class PlayManager {
 
     public static void removeFromQueue(int adapterPosition) {
         try {
-            mService.removeFromQueue(adapterPosition);
+            if (mService != null)
+                mService.removeFromQueue(adapterPosition);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

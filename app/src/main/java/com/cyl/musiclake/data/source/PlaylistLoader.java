@@ -43,7 +43,7 @@ public class PlaylistLoader {
     }
 
     /**
-//     * 扫描歌单歌曲
+     //     * 扫描歌单歌曲
      //     */
 //    public static List<Music> getMusicForPlaylist(Context context, String playlist_id) {
 //        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
@@ -68,11 +68,11 @@ public class PlaylistLoader {
     /**
      * 添加歌曲到歌单
      */
-    public static boolean addToPlaylist(Context context, String pid, long mid) {
+    public static boolean addToPlaylist(Context context, String pid, String mid) {
         boolean result = false;
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        if (!dbDaoImpl.checkSongPlaylist(pid, String.valueOf(mid))) {
-            dbDaoImpl.insertSong(pid, String.valueOf(mid));
+        if (!dbDaoImpl.checkSongPlaylist(pid, mid)) {
+            dbDaoImpl.insertSong(pid, mid);
             result = true;
         }
         dbDaoImpl.closeDB();

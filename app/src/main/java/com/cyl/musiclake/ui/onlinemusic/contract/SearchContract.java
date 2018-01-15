@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.localmusic.contract;
+package com.cyl.musiclake.ui.onlinemusic.contract;
 
 
 import com.cyl.musiclake.ui.base.BasePresenter;
@@ -19,6 +19,8 @@ public interface SearchContract {
     interface Presenter extends BasePresenter<View> {
 
         void search(String key, int limit, int page);
+
+        void playQQMusic(Music music);
     }
 
 }

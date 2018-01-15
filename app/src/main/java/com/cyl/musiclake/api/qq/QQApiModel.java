@@ -1,4 +1,4 @@
-package com.cyl.musiclake.api;
+package com.cyl.musiclake.api.qq;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +14,6 @@ public class QQApiModel {
      * data : {"keyword":"Beyond","song":{"curnum":90,"curpage":1,"list":[{"albumid":10819,"albummid":"000eOgmK1fN8Cs","albumname":"BEYOND IV","albumname_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span> IV","alertid":100002,"chinesesinger":0,"docid":"16426264323276032674","grp":[{"albumid":22879,"albummid":"002XSb5j2bTyEh","albumname":"环球影音启示录-Beyond","albumname_hilight":"环球影音启示录-<span class=\"c_tx_highlight\">Beyond<\/span>","alertid":100002,"chinesesinger":0,"docid":"17508663061115521315","interval":278,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"000kJCrU089sJF","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":1088438400,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4451461,"size320":11128359,"sizeape":33884656,"sizeflac":34465898,"sizeogg":6978260,"songid":270129,"songmid":"004HX7zp45jaNj","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"000kJCrU089sJF","stream":10,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":138029,"albummid":"000DWELJ4Y7U3P","albumname":"黄家驹原作精选集","albumname_hilight":"黄家驹原作精选集","alertid":100002,"chinesesinger":0,"docid":"9382919060950553885","interval":278,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"0006WCGH0DNxjU","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":788889600,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4460254,"size320":11150318,"sizeape":33594956,"sizeflac":34104408,"sizeogg":6961841,"songid":106712270,"songmid":"0006WCGH0DNxjU","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"0006WCGH0DNxjU","stream":0,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":10818,"albummid":"003ZlOLo0y6eCt","albumname":"Best Of Millennium","albumname_hilight":"Best Of Millennium","alertid":100002,"chinesesinger":0,"docid":"5545420286932567212","interval":275,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"0015xMxf0oSaYq","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":977241600,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4401911,"size320":11031504,"sizeape":32864569,"sizeflac":34172618,"sizeogg":7343196,"songid":123750,"songmid":"0015xMxf0oSaYq","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"0015xMxf0oSaYq","stream":7,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":57653,"albummid":"000Oexke1G6Idv","albumname":"Beyond 25th Anniversary","albumname_hilight":"<span class=\"c_tx_highlight\">Beyond<\/span> 25th Anniversary","alertid":100002,"chinesesinger":0,"docid":"1451327418680605948","interval":277,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"0010JLCT3SWvjZ","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":1204300800,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4450054,"size320":11106253,"sizeape":34708100,"sizeflac":35944097,"sizeogg":7031144,"songid":685662,"songmid":"0010JLCT3SWvjZ","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"0010JLCT3SWvjZ","stream":2,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":52815,"albummid":"001raGRE25Ry8A","albumname":"Rock & Roll Collection","albumname_hilight":"Rock & Roll Collection","alertid":100002,"chinesesinger":0,"docid":"9061532180235996999","interval":275,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"001abZa91eNa0i","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":58008,"tryend":84731,"trysize":428407},"pubtime":1248019200,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4404725,"size320":11011406,"sizeape":35542690,"sizeflac":36127016,"sizeogg":7285478,"songid":1262957,"songmid":"001abZa91eNa0i","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"001abZa91eNa0i","stream":10,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":641075,"albummid":"0042oZBA3WL347","albumname":"CINEPOLY 25周年+ GO EAST 15周年经典101","albumname_hilight":"CINEPOLY 25周年+ GO EAST 15周年经典101","alertid":100002,"chinesesinger":0,"docid":"13123060570525554328","interval":276,"isonly":0,"lyric":"","lyric_hilight":"","media_mid":"002pBs6D2ctN7k","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":1288281600,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4428495,"size320":11070912,"sizeape":33578857,"sizeflac":34171654,"sizeogg":6968398,"songid":7032427,"songmid":"002D2ptK1GpXMe","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"002pBs6D2ctN7k","stream":5,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":31624,"albummid":"0019T8GL2cUSLk","albumname":"宝丽金传","albumname_hilight":"宝丽金传","alertid":100002,"chinesesinger":0,"docid":"8510677004362202804","interval":277,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"003sPYxh0bxWgG","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":58008,"tryend":81555,"trysize":377834},"pubtime":1174492800,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4448722,"size320":11031504,"sizeape":34708131,"sizeflac":35944143,"sizeogg":7344605,"songid":391533,"songmid":"003sPYxh0bxWgG","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"003sPYxh0bxWgG","stream":9,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":8124,"albummid":"002YZkBS1XytLm","albumname":"一人一首成名曲第一辑（港台版）","albumname_hilight":"一人一首成名曲第一辑（港台版）","alertid":100002,"chinesesinger":0,"docid":"545430038296944688","interval":279,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"002rxIpi3ZrdQC","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":946656000,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4474061,"size320":11184813,"sizeape":35351645,"sizeflac":35865352,"sizeogg":7030117,"songid":4894853,"songmid":"002rxIpi3ZrdQC","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"002rxIpi3ZrdQC","stream":4,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"},{"albumid":103067,"albummid":"004HddOt1Qb7Pr","albumname":"Elements - 励志歌曲","albumname_hilight":"Elements - 励志歌曲","alertid":100002,"chinesesinger":0,"docid":"14117102304487465431","interval":277,"isonly":0,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"0010LEBK0uTtPa","msgid":14,"nt":10000,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":0,"tryend":0,"trysize":0},"pubtime":1261929600,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4442714,"size320":11106300,"sizeape":33680339,"sizeflac":34246934,"sizeogg":6960178,"songid":1233098,"songmid":"0010LEBK0uTtPa","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"0010LEBK0uTtPa","stream":7,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"}],"interval":275,"isonly":1,"lyric":"《摆渡人》电影插曲","lyric_hilight":"《摆渡人》电影插曲","media_mid":"004Gyue33FERTT","msgid":14,"pay":{"payalbum":0,"payalbumprice":0,"paydownload":1,"payinfo":1,"payplay":0,"paytrackmouth":1,"paytrackprice":200},"preview":{"trybegin":58379,"tryend":82879,"trysize":392880},"pubtime":615222000,"pure":0,"singer":[{"id":2,"mid":"002pUZT93gF4Cu","name":"BEYOND","name_hilight":"<span class=\"c_tx_highlight\">BEYOND<\/span>"}],"size128":4405943,"size320":11014486,"sizeape":35079745,"sizeflac":35662215,"sizeogg":6972176,"songid":1319248,"songmid":"004Gyue33FERTT","songname":"真的爱你","songname_hilight":"真的爱你","strMediaMid":"004Gyue33FERTT","stream":9,"switch":636675,"t":1,"tag":0,"type":0,"ver":0,"vid":"h0013xhgbd2"}],"totalnum":245}}
      * time : 1515135036
      */
-
     private int code;
     private DataBean data;
     private int time;
@@ -114,6 +113,48 @@ public class QQApiModel {
             }
 
             public static class ListBean {
+                @Override
+                public String toString() {
+                    return "ListBean{" +
+                            "albumid=" + albumid +
+                            ", albummid='" + albummid + '\'' +
+                            ", albumname='" + albumname + '\'' +
+                            ", albumname_hilight='" + albumname_hilight + '\'' +
+                            ", alertid=" + alertid +
+                            ", chinesesinger=" + chinesesinger +
+                            ", docid='" + docid + '\'' +
+                            ", interval=" + interval +
+                            ", isonly=" + isonly +
+                            ", lyric='" + lyric + '\'' +
+                            ", lyric_hilight='" + lyric_hilight + '\'' +
+                            ", media_mid='" + media_mid + '\'' +
+                            ", msgid=" + msgid +
+                            ", pay=" + pay +
+                            ", preview=" + preview +
+                            ", pubtime=" + pubtime +
+                            ", pure=" + pure +
+                            ", size128=" + size128 +
+                            ", size320=" + size320 +
+                            ", sizeape=" + sizeape +
+                            ", sizeflac=" + sizeflac +
+                            ", sizeogg=" + sizeogg +
+                            ", songid=" + songid +
+                            ", songmid='" + songmid + '\'' +
+                            ", songname='" + songname + '\'' +
+                            ", songname_hilight='" + songname_hilight + '\'' +
+                            ", strMediaMid='" + strMediaMid + '\'' +
+                            ", stream=" + stream +
+                            ", switchX=" + switchX +
+                            ", t=" + t +
+                            ", tag=" + tag +
+                            ", type=" + type +
+                            ", ver=" + ver +
+                            ", vid='" + vid + '\'' +
+                            ", grp=" + grp +
+                            ", singer=" + singer +
+                            '}';
+                }
+
                 /**
                  * albumid : 10819
                  * albummid : 000eOgmK1fN8Cs
@@ -1117,6 +1158,16 @@ public class QQApiModel {
                 }
 
                 public static class SingerBeanX {
+                    @Override
+                    public String toString() {
+                        return "SingerBeanX{" +
+                                "id=" + id +
+                                ", mid='" + mid + '\'' +
+                                ", name='" + name + '\'' +
+                                ", name_hilight='" + name_hilight + '\'' +
+                                '}';
+                    }
+
                     /**
                      * id : 2
                      * mid : 002pUZT93gF4Cu

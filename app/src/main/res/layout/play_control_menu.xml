@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/top_container"
     android:layout_width="match_parent"
     android:layout_height="57dp"
     android:layout_gravity="top"
     android:background="@color/white"
-    android:elevation="10dp"
-    android:visibility="gone">
+    android:elevation="5dp"
+    tools:targetApi="lollipop">
 
     <ProgressBar
         android:id="@+id/song_progress_normal"

@@ -109,9 +109,6 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     @Override
     public void updateNowPlayingCard() {
         Log.d(TAG, "updateNowPlayingCard" + mProgress);
-        if (PlayManager.mService != null) {
-            return;
-        }
         Music music = PlayManager.getPlayingMusic();
         if (music == null) {
             return;
@@ -139,7 +136,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
         if (!mDuetoplaypause) {
             String url = null;
-            if (music != null && music.getAlbumId() != -1) {
+            if (music.getType() == Music.Type.LOCAL && music.getAlbumId() != -1) {
                 url = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
             } else {
                 url = music.getCoverUri();

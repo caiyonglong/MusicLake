@@ -19,11 +19,10 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/xrecyclerview"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include layout="@layout/item_loading" />

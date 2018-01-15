@@ -1,24 +1,32 @@
 package com.cyl.musiclake.ui.base;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.service.MusicPlayService;
+import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
 import butterknife.ButterKnife;
+
+import static com.cyl.musiclake.service.PlayManager.mService;
 
 /**
  * 基类
@@ -26,15 +34,17 @@ import butterknife.ButterKnife;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity extends RxAppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection {
 
     protected Handler mHandler;
+    private PlayManager.ServiceToken mToken;
     private PlaybackStatus mPlaybackStatus;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToken = PlayManager.bindToService(this, this);
         setContentView(getLayoutResID());
         mPlaybackStatus = new PlaybackStatus(this);
         mHandler = new Handler();
@@ -73,6 +83,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         filter.addAction(MusicPlayService.PLAYLIST_CHANGED);
         // If there is an error playing a track
         filter.addAction(MusicPlayService.TRACK_ERROR);
+
         registerReceiver(mPlaybackStatus, filter);
     }
 
@@ -80,6 +91,11 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.bind(this).unbind();
+        // Unbind from the service
+        if (mToken != null) {
+            PlayManager.unbindFromService(mToken);
+            mToken = null;
+        }
         try {
             unregisterReceiver(mPlaybackStatus);
         } catch (final Throwable e) {
@@ -102,18 +118,46 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             Log.e("PlaybackStatus", "接收到广播-------------" + action);
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null && action != null) {
-                if (action.equals(MusicPlayService.META_CHANGED)) {
-                    RxBus.getInstance().post(new MetaChangedEvent());
-                } else if (action.equals(MusicPlayService.REFRESH)) {
-                } else if (action.equals(MusicPlayService.PLAYLIST_CHANGED)) {
-                } else if (action.equals(MusicPlayService.TRACK_ERROR)) {
-                    final String errorMsg = context.getString(R.string.error_playing_track);
-                    Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();
+                switch (action) {
+                    case MusicPlayService.META_CHANGED:
+                        RxBus.getInstance().post(new MetaChangedEvent());
+                        break;
+                    case MusicPlayService.REFRESH:
+                        break;
+                    case MusicPlayService.PLAYLIST_CHANGED:
+                        break;
+                    case MusicPlayService.TRACK_ERROR:
+                        final String errorMsg = context.getString(R.string.error_playing_track);
+                        Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
 
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RxBus.getInstance().post(new MetaChangedEvent());
+    }
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        mService = IMusicService.Stub.asInterface(iBinder);
+        RxBus.getInstance().post(new MetaChangedEvent());
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        mService = null;
+    }
 }

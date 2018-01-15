@@ -95,7 +95,8 @@ public class Constants {
     public static final String FILENAME_LRC = ".lrc";
     public static final int MUSIC_LIST_SIZE = 10;
 
-    public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting/";
+    public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/";//"/ting";
+    public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
     public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
     public static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
     public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
