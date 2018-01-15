@@ -40,11 +40,11 @@ public interface ApiManagerService {
 
     @Headers({"referer: https://y.qq.com/portal/player.html"})
     @GET
-    Observable<QQApiModel> searchByQQ(@Url String baseUrl);
+    Observable<QQApiModel> searchByQQ(@Url String baseUrl, @QueryMap Map<String, Object> params);
 
     @Headers({"referer: http://h.xiami.com/"})
     @GET
-    Observable<XiamiModel> searchByXiaMi(@Url String baseUrl);
+    Observable<XiamiModel> searchByXiaMi(@Url String baseUrl, @QueryMap Map<String, Object> params);
 
     @GET
     Observable<QQApiKey> getTokenKey(@Url String baseUrl);

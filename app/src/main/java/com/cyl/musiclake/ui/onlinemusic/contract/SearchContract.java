@@ -19,8 +19,6 @@ public interface SearchContract {
     interface Presenter extends BasePresenter<View> {
 
         void search(String key, int limit, int page);
-
-        void playQQMusic(Music music);
     }
 
 }

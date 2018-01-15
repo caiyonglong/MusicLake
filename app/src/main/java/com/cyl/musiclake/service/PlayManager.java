@@ -9,13 +9,19 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.cyl.musiclake.IMusicService;
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.WeakHashMap;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by D22434 on 2017/9/20.
@@ -78,6 +84,37 @@ public class PlayManager {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void playQQMusic(Music music) {
+        QQApiServiceImpl.getQQApiKey()
+                .subscribe(new Observer<Map<String, String>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(Map<String, String> map) {
+                        String uid = map.keySet().iterator().next();
+                        String key = map.get(uid);
+                        Log.e("uid", uid + "---" + key);
+                        String songUrl = "http://dl.stream.qqmusic.qq.com/" +
+                                music.getPrefix() + music.getId() + ".mp3?vkey=" + key + "&guid=" + uid + "&fromtag=30";
+                        Log.e("SongUri", songUrl);
+                        music.setUri(songUrl);
+                        playOnline(music);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public static void play(int id) {

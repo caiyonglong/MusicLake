@@ -4,7 +4,9 @@ import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 
@@ -14,8 +16,24 @@ import io.reactivex.Observable;
 
 public class XiamiServiceImpl {
 
-    public static Observable<List<Music>> search(String baseUrl) {
-        return ApiManager.getInstance().apiService.searchByXiaMi(baseUrl)
+    /**
+     * 搜索虾米音乐
+     * @param key 关键字
+     * @param limit
+     * @param page
+     * @return
+     */
+    public static Observable<List<Music>> search(String key, int limit, int page) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("v", "2.0"); //page
+        params.put("page", page); //page
+        params.put("limit", limit);//limit
+        params.put("key", key);// key
+        params.put("r", "search/songs");
+        params.put("app_key", "1");
+        params.put("format", "json");
+        String url = "http://api.xiami.com/web?";
+        return ApiManager.getInstance().apiService.searchByXiaMi(url, params)
                 .flatMap(xiaMiModel -> {
                     List<Music> musicList = new ArrayList<>();
                     List<XiamiModel.DataBean.SongsBean> songs = xiaMiModel.getData().getSongs();
@@ -32,7 +50,6 @@ public class XiamiServiceImpl {
                         music.setUri(song.getListen_file());
                         music.setCoverUri(song.getArtist_logo());
                         music.setLrcPath(song.getLyric());
-                        //qq音乐播放地址前缀,代表音乐品质 M500一般,M800高
                         musicList.add(music);
                     }
                     return Observable.fromArray(musicList);

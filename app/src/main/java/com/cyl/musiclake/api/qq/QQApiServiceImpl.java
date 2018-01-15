@@ -4,7 +4,9 @@ import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 
@@ -13,8 +15,21 @@ import io.reactivex.Observable;
  */
 
 public class QQApiServiceImpl {
-    public static Observable<List<Music>> searchByQQ(String baseUrl) {
-        return ApiManager.getInstance().apiService.searchByQQ(baseUrl)
+    /**
+     * @param
+     * @return
+     */
+    public static Observable<List<Music>> search(String key, int limit, int page) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p", page + ""); //page
+        params.put("n", limit + "");//limit
+        params.put("w", key);// key
+        params.put("aggr", "1");
+        params.put("cr", "1");
+        params.put("lossless", "1");
+        params.put("format", "json");
+        String qqRequestUrl = "http://c.y.qq.com/soso/fcgi-bin/search_cp?";
+        return ApiManager.getInstance().apiService.searchByQQ(qqRequestUrl, params)
                 .flatMap(qqApiModel -> {
                     List<Music> musicList = new ArrayList<>();
                     List<QQApiModel.DataBean.SongBean.ListBean> songList = qqApiModel.getData().getSong().getList();
@@ -36,6 +51,18 @@ public class QQApiServiceImpl {
                         musicList.add(music);
                     }
                     return Observable.fromArray(musicList);
+                });
+    }
+
+    public static Observable<Map<String, String>> getQQApiKey() {
+        double guid = Math.floor(Math.random() * 1000000000);
+        String requestUrl = "https://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg?json=3&guid=" + guid + "&format=json";
+        return ApiManager.getInstance().apiService.getTokenKey(requestUrl)
+                .flatMap(qqApiKey -> {
+                    String key = qqApiKey.getKey();
+                    Map<String, String> map = new HashMap<>();
+                    map.put(String.valueOf(guid), key);
+                    return Observable.fromArray(map);
                 });
     }
 }

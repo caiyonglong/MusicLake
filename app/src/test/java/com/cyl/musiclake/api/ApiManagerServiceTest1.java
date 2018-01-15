@@ -1,10 +1,13 @@
 package com.cyl.musiclake.api;
 
 import com.cyl.musiclake.api.qq.QQApiModel;
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 
@@ -14,8 +17,18 @@ import io.reactivex.Observable;
 public class ApiManagerServiceTest1 {
     @Test
     public void searchByQQ() throws Exception {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("p", 1); //page
+        params.put("n", 10);//limit
+        params.put("w", "薛之谦");// key
+        params.put("aggr", "1");
+        params.put("cr", "1");
+        params.put("lossless", "1");
+        params.put("format", "json");
+
         Observable<QQApiModel> qqApiModel
-                = ApiManager.getInstance().apiService.searchByQQ("http://c.y.qq.com/soso/fcgi-bin/search_cp?p=1&w=%E8%96%9B%E4%B9%8B%E8%B0%A6&format=json&lossless=1&aggr=1&n=10&cr=1");
+                = ApiManager.getInstance().apiService.searchByQQ("http://c.y.qq.com/soso/fcgi-bin/search_cp?", params);
         qqApiModel.subscribe(qqApi -> {
             List<QQApiModel.DataBean.SongBean.ListBean> data = qqApi.getData().getSong().getList();
             System.out.println(data.size());
@@ -35,6 +48,13 @@ public class ApiManagerServiceTest1 {
 
     @Test
     public void searchByXiami() throws Exception {
+        QQApiServiceImpl.getQQApiKey()
+                .subscribe(map -> {
+                    String uid = map.keySet().iterator().next();
+                    String key = map.get(uid);
+                    System.out.println("uid=" + uid + "---" + key);
+                });
+
     }
 
 }

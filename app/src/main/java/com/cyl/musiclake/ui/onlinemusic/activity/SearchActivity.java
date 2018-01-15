@@ -89,7 +89,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             Music music = (Music) adapter.getItem(position);
             Log.e("TAH", music.toString());
             if (music.getType() == Music.Type.QQ) {
-                mPresenter.playQQMusic(music);
+                PlayManager.playQQMusic(music);
             } else if (music.getType() == Music.Type.XIAMI) {
                 PlayManager.playOnline(music);
             }
