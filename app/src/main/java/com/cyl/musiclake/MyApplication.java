@@ -21,5 +21,4 @@ public class MyApplication extends Application {
         UpdateUtils.init(this);
         PreferencesUtils.init(this);
     }
-
 }

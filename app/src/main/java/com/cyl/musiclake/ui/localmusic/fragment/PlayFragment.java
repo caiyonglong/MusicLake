@@ -196,9 +196,18 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
         RxBus.getInstance().register(MetaChangedEvent.class)
                 .subscribe(metaChangedEvent -> {
-                    mPresenter.updateNowPlayingCard();
-                    mPresenter.loadLyric();
+                    if (mPresenter != null) {
+                        mPresenter.updateNowPlayingCard();
+                        mPresenter.loadLyric();
+                    }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        mPresenter.updateNowPlayingCard();
+//        mPresenter.loadLyric();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -221,7 +230,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
             @Override
             public void onPageSelected(int position) {
                 Log.d("PlayFragment", "--" + position);
-                if (position == 1) {
+                if (position == 1 && mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     mSlidingUpPaneLayout.setTouchEnabled(false);
                 } else {
                     mSlidingUpPaneLayout.setTouchEnabled(true);
@@ -467,4 +476,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPresenter.unsubscribe();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

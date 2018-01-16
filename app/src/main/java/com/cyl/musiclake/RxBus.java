@@ -30,6 +30,13 @@ public class RxBus {
         mBus.onNext(obj);
     }
 
+    /**
+     * 订阅事件
+     *
+     * @param clz
+     * @param <T>
+     * @return
+     */
     public <T> Flowable<T> register(Class<T> clz) {
         return mBus.ofType(clz);
     }

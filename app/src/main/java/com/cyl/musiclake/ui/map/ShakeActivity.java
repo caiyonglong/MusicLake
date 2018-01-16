@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.service.MusicPlayService;
+import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.utils.Constants;
@@ -46,7 +46,7 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
 
     private LocationAdapter mAdapter;
 
-    private MusicPlayService mService;
+    private MusicPlayerService mService;
 
     private static MaterialDialog mProgressDialog;
     private static String user_id;

@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,13 +21,10 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.adapter.PlayQueueAdapter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.PreferencesUtils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +47,7 @@ public class PlayQueueDialog extends DialogFragment {
     @BindView(R.id.bottomsheet)
     LinearLayout root;
 
-    private PlayQueueAdapter mAdapter;
+    private PlayQueueAdapter mAdapter = new PlayQueueAdapter(null);
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private final int PLAY_MODE_RANDOM = 0;
     private final int PLAY_MODE_LOOP = 1;
@@ -85,10 +81,6 @@ public class PlayQueueDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        mAdapter = new PlayQueueAdapter((AppCompatActivity) getActivity(), PlayManager.getPlayList());
-
-
         if (mSwatch != null) {
             root.setBackgroundColor(mSwatch.getRgb());
             mAdapter.setPaletteSwatch(mSwatch);
@@ -97,10 +89,24 @@ public class PlayQueueDialog extends DialogFragment {
             ivPlayMode.setColorFilter(blackWhiteColor);
             clearAll.setColorFilter(blackWhiteColor);
         }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
+        updateAdapter();
         updatePlayMode();
+        initListener();
+    }
+
+    private void initListener() {
+        mAdapter.setOnItemClickListener((adapter, view1, position) -> {
+            PlayManager.play(position);
+            mAdapter.setNewData(PlayManager.getPlayList());
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view12, position) -> {
+            if (view12.getId() == R.id.iv_more) {
+                PlayManager.removeFromQueue(position);
+                mAdapter.setNewData(PlayManager.getPlayList());
+            }
+        });
     }
 
     public void setPaletteSwatch(Palette.Swatch swatch) {
@@ -118,7 +124,6 @@ public class PlayQueueDialog extends DialogFragment {
         }
     }
 
-
     @Override
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
@@ -129,8 +134,8 @@ public class PlayQueueDialog extends DialogFragment {
         super.onDestroyView();
     }
 
-    public void showSongs(List<Music> songs) {
-        mAdapter.setSongList(songs);
+    public void updateAdapter() {
+        mAdapter.setNewData(PlayManager.getPlayList());
     }
 
     public void dismiss() {

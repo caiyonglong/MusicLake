@@ -8,6 +8,81 @@ java.lang.IllegalStateException: Only fullscreen opaque activities can request o
 
 只有全屏不透明的活动才能请求方向.主要是manifest中定义了android:screenOrientation="portrait" 和设置半透明主题导致。
             
-            
-  
+3、使用Rxbus时，退出Activity。然后从通知栏进入程序崩溃。
 
+4、Retrofit gson解析数据QQ音乐歌词数据时，抛出异常，因为返回的数据不是一个完整的json数据。
+```
+  io.reactivex.exceptions.OnErrorNotImplementedException: Use JsonReader.setLenient(true) to accept malformed JSON at line 1 column 1 path $
+  ....
+```
+返回数据格式jsonp格式：MusicJsonCallback({...})。
+通过下面的解决方法，不会抛出异常。但是获得的String 数据只有MusicJsonCallback( .这部分
+重要部分不知道去哪了...
+```
+Gson gson = new GsonBuilder()
+        .setLenient()
+        .create();
+
+Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build();
+```
+
+不得已，最后尝试重写GSON转换器。遇到一个大坑那就是ResponseBody //ResponseData中的流只能使用一次，我们先将流中的数据读出在byte数组中。这个方法中已经关闭了ResponseBody,所以不需要再关闭了  
+
+5、Observable<T> 转换成 Observable<S> 
+```
+//lamba表达式
+Observable.flatMap(T -> {
+    return Observable.fromArray(S);
+}
+//Java表达式
+Observable.flatMap(new Function<T, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(T tt) throws Exception {
+                        return null;
+                    }
+                });
+```
+
+6、Retrofit 多个网络请求合并使用
+```
+ Observable.merge(QQApiServiceImpl.search(key, limit, page), XiamiServiceImpl.search(key, limit, page))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Music>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Music> results) {
+                        mView.showSearchResult(results);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.showEmptyView();
+                        mView.hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mView.hideLoading();
+                    }
+                });
+               
+```
+7、封装MediaPlayer，prepareAsync()装载异常，还有getDuration会出现数据异常
+```
+    //异步装载数据
+    player.prepareAsync();
+    //设置异步装载完毕监听事件
+    player.setOnPreparedListener(this);
+    //设置异步装载进度
+    player.setOnBufferingUpdateListener(this);
+```
+8、

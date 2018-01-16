@@ -41,6 +41,8 @@ public class ApiManagerServiceTest1 {
             System.out.println(qqApi.getData().getSong().getList().size());
             for (int i = 0; i < data.size(); i++) {
                 System.out.println(data.get(i).getSinger().get(0).getId());
+                System.out.println(data.get(i).getPubtime());
+                System.out.println(data.get(i).getInterval());
             }
         });
         assert (10 == 10);
@@ -55,6 +57,15 @@ public class ApiManagerServiceTest1 {
                     System.out.println("uid=" + uid + "---" + key);
                 });
 
+    }
+
+
+    @Test
+    public void searchLyric() throws Exception {
+        QQApiServiceImpl.getQQLyric("001Qu4I30eVFYb")
+                .subscribe(map -> {
+                    System.out.println("uid=" + map);
+                });
     }
 
 }

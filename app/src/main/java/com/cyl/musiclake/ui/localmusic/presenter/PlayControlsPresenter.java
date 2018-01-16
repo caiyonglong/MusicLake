@@ -97,6 +97,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             } else {
                 mView.showLyric(null);
             }
+        } else if (song.getType() == Music.Type.QQ) {
         }
     }
 

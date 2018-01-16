@@ -18,7 +18,7 @@ import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.MetaChangedEvent;
-import com.cyl.musiclake.service.MusicPlayService;
+import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -74,15 +74,15 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         super.onStart();
         final IntentFilter filter = new IntentFilter();
         // Play and pause changes
-        filter.addAction(MusicPlayService.PLAY_STATE_CHANGED);
+        filter.addAction(MusicPlayerService.PLAY_STATE_CHANGED);
         // Track changes
-        filter.addAction(MusicPlayService.META_CHANGED);
+        filter.addAction(MusicPlayerService.META_CHANGED);
         // Update a list, probably the playlist fragment's
-        filter.addAction(MusicPlayService.REFRESH);
+        filter.addAction(MusicPlayerService.REFRESH);
         // If a playlist has changed, notify us
-        filter.addAction(MusicPlayService.PLAYLIST_CHANGED);
+        filter.addAction(MusicPlayerService.PLAYLIST_CHANGED);
         // If there is an error playing a track
-        filter.addAction(MusicPlayService.TRACK_ERROR);
+        filter.addAction(MusicPlayerService.TRACK_ERROR);
 
         registerReceiver(mPlaybackStatus, filter);
     }
@@ -119,14 +119,14 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null && action != null) {
                 switch (action) {
-                    case MusicPlayService.META_CHANGED:
+                    case MusicPlayerService.META_CHANGED:
                         RxBus.getInstance().post(new MetaChangedEvent());
                         break;
-                    case MusicPlayService.REFRESH:
+                    case MusicPlayerService.REFRESH:
                         break;
-                    case MusicPlayService.PLAYLIST_CHANGED:
+                    case MusicPlayerService.PLAYLIST_CHANGED:
                         break;
-                    case MusicPlayService.TRACK_ERROR:
+                    case MusicPlayerService.TRACK_ERROR:
                         final String errorMsg = context.getString(R.string.error_playing_track);
                         Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();
                         break;
@@ -148,7 +148,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     @Override
     protected void onResume() {
         super.onResume();
-        RxBus.getInstance().post(new MetaChangedEvent());
     }
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {

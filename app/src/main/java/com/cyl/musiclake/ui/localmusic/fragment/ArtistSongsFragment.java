@@ -102,6 +102,7 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {

@@ -4,12 +4,14 @@ import android.os.Build;
 import android.webkit.WebSettings;
 
 import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
 import com.cyl.musiclake.utils.Constants;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by yonglong on 2017/9/11.
@@ -39,7 +41,7 @@ public class ApiManager {
     private ApiManager() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
 //        builder.addInterceptor(chain -> {
-            //获取本地user_agent;
+        //获取本地user_agent;
 //            String userAgentString = getUserAgent();
 //            Log.e("user_agent",userAgentString);
 //            Request newRequest = chain.request().newBuilder()
@@ -48,15 +50,18 @@ public class ApiManager {
 //                    .build();
 //            return chain.proceed(newRequest);
 //        });
-
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(builder.build())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
-                .addConverterFactory(GsonConverterFactory.create()) // 使用Gson作为数据转换器
+                .addConverterFactory(MyGsonConverterFactory.create(gson)) // 使用Gson作为数据转换器
                 .build();
         apiService = retrofit.create(ApiManagerService.class);
     }
+
     private static String getUserAgent() {
         String userAgent = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

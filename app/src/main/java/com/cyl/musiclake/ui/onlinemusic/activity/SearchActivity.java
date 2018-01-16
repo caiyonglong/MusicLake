@@ -83,16 +83,14 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                 .build();
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
             Log.e("TAH", music.toString());
-            if (music.getType() == Music.Type.QQ) {
-                PlayManager.playQQMusic(music);
-            } else if (music.getType() == Music.Type.XIAMI) {
-                PlayManager.playOnline(music);
-            }
+            PlayManager.playOnline(music);
+            PlayManager.setPlayList(adapter.getData());
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             if (mCurrentCounter >= TOTAL_COUNTER) {
@@ -106,7 +104,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             }
         }, 1000), mRecyclerView);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,6 +124,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                 if (queryString.length() > 0) {
                     mOffset = 1;
                     searchResults.clear();
+                    mProgressDialog.show();
                     mPresenter.search(queryString, 10, mOffset);
                 } else {
                     ToastUtils.show(getApplicationContext(), "不能搜索空文本");
@@ -140,12 +138,26 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        if (query.length() > 0) {
+            mOffset = 1;
+            searchResults.clear();
+            mPresenter.search(query, 10, mOffset);
+        } else {
+            ToastUtils.show(getApplicationContext(), "不能搜索空文本");
+        }
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        if (newText.length() > 0) {
+            mOffset = 1;
+            searchResults.clear();
+            mPresenter.search(newText, 10, mOffset);
+        } else {
+            ToastUtils.show(getApplicationContext(), "不能搜索空文本");
+        }
+        return true;
     }
 
     @Override
@@ -203,7 +215,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showLoading() {
-        mProgressDialog.show();
     }
 
     @Override

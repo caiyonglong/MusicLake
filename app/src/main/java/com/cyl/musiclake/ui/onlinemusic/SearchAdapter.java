@@ -52,4 +52,5 @@ public class SearchAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
 //        }
         holder.addOnClickListener(R.id.iv_more);
     }
+
 }

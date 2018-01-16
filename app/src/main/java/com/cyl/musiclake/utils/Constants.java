@@ -137,5 +137,16 @@ public class Constants {
     public static final String DEAULT_NOTIFICATION = "notification";
     public static final String TRANSTITION_ALBUM = "transition_album_art";
 
+    /**
+     * QQ音乐Api*************************************************
+     */
+    public static final String BASE_URL_QQ_MUSIC_SEARCH = "http://c.y.qq.com/soso/fcgi-bin/search_cp?";
 
+    public static final String BASE_URL_QQ_MUSIC_URL = "http://dl.stream.qqmusic.qq.com/";
+    public static final String BASE_URL_QQ_MUSIC_KEY = "https://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg?";
+
+    /**
+     * 虾米音乐Api*************************************************
+     */
+    public static final String BASE_URL_XIAMI_MUSIC = "http://api.xiami.com/web?";
 }

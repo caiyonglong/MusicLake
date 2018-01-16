@@ -1,142 +1,69 @@
 package com.cyl.musiclake.ui.localmusic.adapter;
 
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.utils.ColorUtil;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
-import com.cyl.musiclake.utils.ImageUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by D22434 on 2017/9/26.
  */
 
-public class PlayQueueAdapter extends RecyclerView.Adapter<PlayQueueAdapter.ItemHolder> {
+public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
+    private Palette.Swatch mSwatch;
 
-    private List<Music> arraylist = new ArrayList<>();
-    private AppCompatActivity mContext;
-
-    public PlayQueueAdapter(AppCompatActivity context, List<Music> arraylist) {
-        this.arraylist = arraylist;
-        this.mContext = context;
+    public PlayQueueAdapter(List<Music> musicList) {
+        super(R.layout.item_music, musicList);
     }
 
     @Override
-    public PlayQueueAdapter.ItemHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View song = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_music, viewGroup, false);
-        return new ItemHolder(song);
-    }
-
-    @Override
-    public void onBindViewHolder(ItemHolder holder, final int position) {
-        Music localItem = arraylist.get(position);
-
-        holder.title.setText(localItem.getTitle());
-        holder.artist.setText(
-                FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
-
-        if (localItem.getType() == Music.Type.LOCAL) {
-            loadBitmap(ImageUtils.getAlbumArtUri(localItem.getAlbumId()).toString(),
-                    holder.albumArt);
+    protected void convert(BaseViewHolder holder, Music item) {
+        String url;
+        if (item.getType() == Music.Type.LOCAL && item.getAlbumId() != -1) {
+            url = CoverLoader.getInstance().getCoverUri(mContext, item.getAlbumId());
         } else {
-            if (localItem.getCoverUri() != null) {
-//                GlideApp.with(this).load()
-            } else if (localItem.getCover() != null) {
-                holder.albumArt.setImageBitmap(localItem.getCover());
-            } else {
-                holder.albumArt.setImageResource(R.drawable.default_cover);
-            }
+            url = item.getCoverUri();
         }
 
-        if (PlayManager.getPlayingMusic() != null
-                && PlayManager.getPlayingMusic().equals(localItem)) {
-            holder.v_playing.setVisibility(View.VISIBLE);
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(R.drawable.ic_clear)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into((ImageView) holder.getView(R.id.iv_more));
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(url)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into((ImageView) holder.getView(R.id.iv_cover));
+
+        holder.setText(R.id.tv_title, FileUtils.getTitle(item.getTitle()));
+        holder.setText(R.id.tv_artist, FileUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
+        if (PlayManager.getPlayingMusic() != null && PlayManager.getPlayingMusic().equals(item)) {
+            holder.getView(R.id.v_playing).setVisibility(View.VISIBLE);
         } else {
-            holder.v_playing.setVisibility(View.GONE);
+            holder.getView(R.id.v_playing).setVisibility(View.GONE);
         }
-        setOnClickListener(holder, position);
-
-        holder.popupmenu.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_clear));
-        holder.popupmenu.setOnClickListener(v -> {
-            PlayManager.removeFromQueue(position);
-            arraylist = PlayManager.getPlayList();
-            notifyDataSetChanged();
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return arraylist.size();
-    }
-
-
-    public void setSongList(List<Music> arraylist) {
-        this.arraylist = arraylist;
-        notifyDataSetChanged();
-    }
-
-    private void loadBitmap(String uri, ImageView img) {
-        try {
-            GlideApp.with(mContext).load(uri)
-                    .error(R.drawable.default_cover)
-                    .placeholder(R.drawable.default_cover)
-                    .centerCrop()
-                    .into(img);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (mSwatch != null) {
+            int artistColor = mSwatch.getTitleTextColor();
+            holder.setTextColor(R.id.tv_title, ColorUtil.getOpaqueColor(artistColor));
+            holder.setTextColor(R.id.tv_artist, artistColor);
         }
-    }
-
-    private void setOnClickListener(PlayQueueAdapter.ItemHolder holder, final int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        PlayManager.setPlayList(arraylist);
-                        PlayManager.play(position);
-                        notifyDataSetChanged();
-                    }
-                }, 100);
-            }
-        });
     }
 
     public void setPaletteSwatch(Palette.Swatch mSwatch) {
-    }
-
-
-    public class ItemHolder extends RecyclerView.ViewHolder {
-
-        private TextView title;
-        private TextView artist;
-        private ImageView albumArt;
-        private ImageView popupmenu;
-        private View v_playing;
-
-        public ItemHolder(View view) {
-            super(view);
-            this.title = (TextView) view.findViewById(R.id.tv_title);
-            this.artist = (TextView) view.findViewById(R.id.tv_artist);
-            this.albumArt = (ImageView) view.findViewById(R.id.iv_cover);
-            this.popupmenu = (ImageView) view.findViewById(R.id.iv_more);
-            this.v_playing = view.findViewById(R.id.v_playing);
-
-        }
+        this.mSwatch = mSwatch;
     }
 }

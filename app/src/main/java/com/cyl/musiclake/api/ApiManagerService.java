@@ -2,6 +2,7 @@ package com.cyl.musiclake.api;
 
 import com.cyl.musiclake.api.qq.QQApiKey;
 import com.cyl.musiclake.api.qq.QQApiModel;
+import com.cyl.musiclake.api.qq.QQLyricInfo;
 import com.cyl.musiclake.api.xiami.XiamiModel;
 import com.cyl.musiclake.ui.download.download.DownloadInfo;
 import com.cyl.musiclake.ui.login.user.User;
@@ -46,8 +47,14 @@ public interface ApiManagerService {
     @GET
     Observable<XiamiModel> searchByXiaMi(@Url String baseUrl, @QueryMap Map<String, Object> params);
 
+//    @Headers({"referer: https://y.qq.com/portal/player.html"})
     @GET
     Observable<QQApiKey> getTokenKey(@Url String baseUrl);
+
+
+    @Headers({"referer: https://y.qq.com/portal/player.html"})
+    @GET
+    Observable<QQLyricInfo> getQQLyric(@Url String baseUrl);
 
     @POST
     Observable<ApiModel<User>> getUserInfo(@Url String baseUrl, @QueryMap Map<String, String> params);

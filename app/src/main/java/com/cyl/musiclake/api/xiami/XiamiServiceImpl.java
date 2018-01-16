@@ -2,6 +2,7 @@ package com.cyl.musiclake.api.xiami;
 
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +19,13 @@ public class XiamiServiceImpl {
 
     /**
      * 搜索虾米音乐
-     * @param key 关键字
+     *
+     * @param key   关键字
      * @param limit
      * @param page
      * @return
      */
+    @SuppressWarnings({"unchecked", "varargs"})
     public static Observable<List<Music>> search(String key, int limit, int page) {
         Map<String, Object> params = new HashMap<>();
         params.put("v", "2.0"); //page
@@ -32,8 +35,7 @@ public class XiamiServiceImpl {
         params.put("r", "search/songs");
         params.put("app_key", "1");
         params.put("format", "json");
-        String url = "http://api.xiami.com/web?";
-        return ApiManager.getInstance().apiService.searchByXiaMi(url, params)
+        return ApiManager.getInstance().apiService.searchByXiaMi(Constants.BASE_URL_XIAMI_MUSIC, params)
                 .flatMap(xiaMiModel -> {
                     List<Music> musicList = new ArrayList<>();
                     List<XiamiModel.DataBean.SongsBean> songs = xiaMiModel.getData().getSongs();
