@@ -9,7 +9,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.ConvertUtils;
 
 import java.util.List;
 
@@ -41,8 +41,8 @@ public class SongAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) holder.getView(R.id.iv_cover));
 
-        holder.setText(R.id.tv_title, FileUtils.getTitle(item.getTitle()));
-        holder.setText(R.id.tv_artist, FileUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
+        holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
+        holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
 //        if (PlayManager.getPlayingMusic() != null && PlayManager.getPlayingMusic().equals(localItem)) {
 //            holder.v_playing.setVisibility(View.VISIBLE);
 //        } else {

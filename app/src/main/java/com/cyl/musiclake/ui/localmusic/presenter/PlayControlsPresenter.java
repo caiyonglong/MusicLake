@@ -13,12 +13,19 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
+import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
+import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.FileUtils;
 
-import java.io.File;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -30,7 +37,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     private static final String TAG = "PlayControlsPresenter";
     private PlayControlsContract.View mView;
 
-    private boolean mDuetoplaypause = false;
+    private boolean isPlayPauseClick = false;
     private int mProgress;
 
     private Handler mHandler;
@@ -58,7 +65,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onPlayPauseClick() {
-        mDuetoplaypause = true;
+        isPlayPauseClick = true;
         PlayManager.playPause();
         if (PlayManager.getPlayingMusic() == null) {
             mView.setErrorInfo("请选择需要播放的音乐");
@@ -75,29 +82,72 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     @Override
     public void loadLyric() {
-        String title = PlayManager.getSongName();
-        String artist = PlayManager.getSongArtist();
-        Music song = PlayManager.getPlayingMusic();
-        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(artist)) {
+        Music music = PlayManager.getPlayingMusic();
+        if (music == null) {
             return;
         }
-        if (song == null) {
-            return;
-        }
-        if (song.getType() == Music.Type.LOCAL) {
-            if (song.getUri().endsWith(".mp3")) {
-                String lrcPath = song.getUri().replace(".mp3", ".lrc");
-                Log.e("Presenter", lrcPath);
-                File file = new File(lrcPath);
-                if (file.exists()) {
-                    mView.showLyric(file);
-                } else {
-                    mView.showLyric(null);
-                }
-            } else {
-                mView.showLyric(null);
+        String localLyricInfo = null;
+        if (music.getType() == Music.Type.LOCAL) {
+            if (music.getUri().endsWith(".mp3")) {
+                String lrcPath = music.getUri().replace(".mp3", ".lrc");
+                localLyricInfo = FileUtils.readFile(lrcPath);
             }
-        } else if (song.getType() == Music.Type.QQ) {
+            mView.showLyric(localLyricInfo);
+        } else if (music.getType() == Music.Type.QQ) {
+            QQApiServiceImpl.getQQLyric(music.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String lyricInfo) {
+                            Log.e(TAG, lyricInfo);
+                            mView.showLyric(lyricInfo);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mView.showLyric(null);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else if (music.getType() == Music.Type.XIAMI) {
+            Log.e(TAG, music.getLrcPath());
+            XiamiServiceImpl.getXimaiLyric(music.getLrcPath())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String lyricInfo) {
+                            Log.e(TAG, lyricInfo);
+                            mView.showLyric(lyricInfo);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mView.showLyric(null);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            mView.showLyric(null);
         }
     }
 
@@ -125,9 +175,9 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             }
         }
 
-        final String title = PlayManager.getSongName();
-        final String artist = PlayManager.getSongArtist();
-        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(artist)) {
+        final String title = music.getArtist();
+        final String artist = ConvertUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        if (TextUtils.isEmpty(title) && TextUtils.isEmpty(artist)) {
             mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
             mView.setArtist("");
         } else {
@@ -135,29 +185,38 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setArtist(artist);
         }
 
-        if (!mDuetoplaypause) {
+        if (music.getType() == Music.Type.LOCAL) {
+            mView.setOtherInfo("本地音乐");
+        } else if (music.getType() == Music.Type.QQ) {
+            mView.setOtherInfo("QQ音乐");
+        } else if (music.getType() == Music.Type.XIAMI) {
+            mView.setOtherInfo("虾米音乐");
+        }
+
+        if (!isPlayPauseClick) {
             String url = null;
             if (music.getType() == Music.Type.LOCAL && music.getAlbumId() != -1) {
                 url = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
             } else {
                 url = music.getCoverUri();
             }
-            GlideApp.with(mContext)
-                    .asBitmap()
-                    .load(url)
-                    .error(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            mView.setAlbumArt(resource);
-                            new Palette.Builder(resource).generate(palette ->
-                                    mView.setPalette(palette));
-                        }
-                    });
+            if (mContext != null) {
+                GlideApp.with(mContext)
+                        .asBitmap()
+                        .load(url)
+                        .error(R.drawable.default_cover)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                mView.setAlbumArt(resource);
+                                new Palette.Builder(resource).generate(palette ->
+                                        mView.setPalette(palette));
+                            }
+                        });
+            }
         }
-
-        mDuetoplaypause = false;
+        isPlayPauseClick = false;
         mView.setProgressMax(PlayManager.getDuration());
         mHandler.post(updateProgress);
     }

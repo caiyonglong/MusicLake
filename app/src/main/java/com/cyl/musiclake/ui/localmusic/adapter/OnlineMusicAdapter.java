@@ -113,7 +113,7 @@ public class OnlineMusicAdapter extends BaseQuickAdapter<OnlineMusicInfo, BaseVi
 ////                PreferencesUtils.
 //                Intent intent = new Intent(context, DownloadService.class);
 //                intent.putExtra("downloadUrl", music.getUri());
-//                intent.putExtra("name", FileUtils.getMp3FileName(music.getArtist(), music.getTitle()));
+//                intent.putExtra("name", ConvertUtils.getMp3FileName(music.getArtist(), music.getTitle()));
 //                intent.putExtra("flag", "startDownload");
 //
 //                context.startService(intent);

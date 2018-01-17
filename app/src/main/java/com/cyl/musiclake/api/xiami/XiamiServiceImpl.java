@@ -17,6 +17,8 @@ import io.reactivex.Observable;
 
 public class XiamiServiceImpl {
 
+    private static final String TAG = "XiamiServiceImpl";
+
     /**
      * 搜索虾米音乐
      *
@@ -55,6 +57,16 @@ public class XiamiServiceImpl {
                         musicList.add(music);
                     }
                     return Observable.fromArray(musicList);
+                });
+    }
+
+
+    @SuppressWarnings({"unchecked", "varargs"})
+    public static Observable<String> getXimaiLyric(String lyricPath) {
+        return ApiManager.getInstance().apiService.getXiamiLyric(lyricPath)
+                .flatMap(xiaMiLyricInfo -> {
+                    String lyric = xiaMiLyricInfo.string();
+                    return Observable.fromArray(lyric);
                 });
     }
 }

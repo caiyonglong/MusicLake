@@ -85,4 +85,47 @@ Observable.flatMap(new Function<T, ObservableSource<?>>() {
     //设置异步装载进度
     player.setOnBufferingUpdateListener(this);
 ```
-8、
+8、ViewPager中 多点触碰导致
+```
+java.lang.IllegalArgumentException: pointerIndex out of range
+    at android.view.MotionEvent.nativeGetAxisValue(Native Method)
+                      
+```
+原因分析：
+在LrcView中,因为调用了requestDisallowInterceptTouchEvent来区分左右滑动和上下滑动，
+所以会导致父类的view多点触摸有些情况下会出现数组溢出的情况.
+解决办法
+- 利用try{}catch(){}抛出异常
+- 重写ViewPager中的onTouchEvent 和onInterceptTouchEvent。
+```
+public class MultiTouchViewPager extends ViewPager {
+
+    public MultiTouchViewPager(Context context) {
+        super(context);
+    }
+
+    public MultiTouchViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        try {
+            return super.onTouchEvent(ev);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        try {
+            return super.onInterceptTouchEvent(ev);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+}
+```

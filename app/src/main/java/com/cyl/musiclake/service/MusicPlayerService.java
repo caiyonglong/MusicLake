@@ -91,9 +91,13 @@ public class MusicPlayerService extends Service {
     private static final boolean DEBUG = true;
 
     private MusicPlayerEngine mPlayer = null;
-    private MusicPlayerHandler mHandler;
     public PowerManager.WakeLock mWakeLock;
+
+    //工作线程和Handler
+    private MusicPlayerHandler mHandler;
     private HandlerThread mWorkThread;
+    //主线程Handler
+    private Handler mMainHandler;
 
     private static Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
@@ -134,14 +138,15 @@ public class MusicPlayerService extends Service {
                         service.next();
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完成后结束
-                        service.seekTo(0);
-                        service.playMusic(mPlayingPos);
-                        if (service.mRepeatMode == PLAY_MODE_REPEAT) {
-                            service.seekTo(0);
-                            mPlayer.start();
-                        } else {
-                            service.next();
-                        }
+                        service.next();
+//                        service.seekTo(0);
+//                        service.playMusic(mPlayingPos);
+//                        if (service.mRepeatMode == PLAY_MODE_REPEAT) {
+//                            service.seekTo(0);
+//                            mPlayer.start();
+//                        } else {
+//                            service.next();
+//                        }
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
                         break;
@@ -182,6 +187,8 @@ public class MusicPlayerService extends Service {
      * 参数配置，锁屏
      */
     private void initConfig() {
+        mMainHandler = new Handler();
+
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PlayerWakelockTag");
     }

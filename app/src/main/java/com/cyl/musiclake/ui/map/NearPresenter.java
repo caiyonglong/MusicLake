@@ -86,7 +86,7 @@ public class NearPresenter implements NearContract.Presenter {
 //            String song = "";
 //            if (PlayManager.isPlaying()) {
 //                Music music = PlayManager.getPlayingMusic();
-//                song = FileUtils.getArtistAndAlbum(music.getArtist(), music.getTitle());
+//                song = ConvertUtils.getArtistAndAlbum(music.getArtist(), music.getTitle());
 //            }
 //            OkHttpUtils.post()//
 //                    .url(Constants.DEFAULT_URL)//

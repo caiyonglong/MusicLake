@@ -245,6 +245,48 @@ public class DBDaoImpl implements DBDao {
     }
 
     @Override
+    public List<Music> getAllLoves(Cursor cursor) {
+        List<Music> results = new ArrayList<>();
+        // 查询歌单
+//        Cursor cursor = db.rawQuery("select * from " + DBData.COLLECTIONS_TABLE, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                if (cursor.getString(cursor.getColumnIndex(DBData.MUSIC_NAME)) != null) {
+                    Music music = new MusicCursorWrapper(cursor).getMusic();
+                    results.add(music);
+                }
+            }
+        }
+
+        // 记得关闭游标
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
+
+    @Override
+    public void addToLove(String[] mid) {
+
+    }
+
+    @Override
+    public void disableLove(String[] mid) {
+
+    }
+
+    @Override
+    public void saveHistory(String mid) {
+
+    }
+
+    @Override
+    public void clearHistory() {
+
+    }
+
+    @Override
     public void closeDB() {
 //        if (db != null) {
 //            db.close();

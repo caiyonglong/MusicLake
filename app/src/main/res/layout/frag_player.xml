@@ -20,9 +20,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="50dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -35,10 +35,9 @@
                 android:src="@drawable/ic_arrow_down" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
@@ -61,12 +60,12 @@
                     android:textColor="@color/grey"
                     android:textSize="12sp" />
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
-        <android.support.v4.view.ViewPager
+        <com.cyl.musiclake.view.MultiTouchViewPager
             android:id="@+id/viewpager_player"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <LinearLayout

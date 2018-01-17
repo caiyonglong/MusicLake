@@ -31,7 +31,7 @@ import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.PlaylistDetailPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.Extras;
-import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 
 import java.io.File;
@@ -143,7 +143,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
 
     private void getMusicInfo(Music music) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(FileUtils.getTitle(music.getTitle()));
+        dialog.setTitle(ConvertUtils.getTitle(music.getTitle()));
         StringBuilder sb = new StringBuilder();
         sb.append("艺术家：")
                 .append(music.getArtist())

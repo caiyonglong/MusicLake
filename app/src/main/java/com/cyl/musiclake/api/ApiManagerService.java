@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -47,7 +48,7 @@ public interface ApiManagerService {
     @GET
     Observable<XiamiModel> searchByXiaMi(@Url String baseUrl, @QueryMap Map<String, Object> params);
 
-//    @Headers({"referer: https://y.qq.com/portal/player.html"})
+    //    @Headers({"referer: https://y.qq.com/portal/player.html"})
     @GET
     Observable<QQApiKey> getTokenKey(@Url String baseUrl);
 
@@ -55,6 +56,10 @@ public interface ApiManagerService {
     @Headers({"referer: https://y.qq.com/portal/player.html"})
     @GET
     Observable<QQLyricInfo> getQQLyric(@Url String baseUrl);
+
+    @Headers({"referer: http://h.xiami.com/"})
+    @GET
+    Observable<ResponseBody> getXiamiLyric(@Url String baseUrl);
 
     @POST
     Observable<ApiModel<User>> getUserInfo(@Url String baseUrl, @QueryMap Map<String, String> params);

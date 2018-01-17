@@ -1,7 +1,5 @@
 package com.cyl.musiclake.api.qq;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
 import com.cyl.musiclake.api.ApiManager;

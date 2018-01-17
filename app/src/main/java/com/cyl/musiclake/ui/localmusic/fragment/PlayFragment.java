@@ -36,12 +36,12 @@ import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
+import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,12 +97,12 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @BindView(R.id.song_progress)
     SeekBar mSeekBar;
     @BindView(R.id.viewpager_player)
-    ViewPager mViewPager;
+    MultiTouchViewPager mViewPager;
 
-
+    //ViewPager中界面专辑和歌词
     LyricView mLrcView;
     CircleImageView mCivImage;
-
+    TextView mTvTip, mTvRecourse;
 
     @OnClick(R.id.iv_back)
     void back() {
@@ -116,7 +116,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     private SlidingUpPanelLayout mSlidingUpPaneLayout;
     private PlayControlsPresenter mPresenter;
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
-
+    public ObjectAnimator operatingAnim;
+    public long currentPlayTime = 0;
 
     @OnClick(R.id.skip_next)
     void next() {
@@ -203,20 +204,15 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        mPresenter.updateNowPlayingCard();
-//        mPresenter.loadLyric();
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(MultiTouchViewPager viewPager) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View lrcView = inflater.inflate(R.layout.frag_player_lrcview, null);
         View coverView = inflater.inflate(R.layout.frag_player_coverview, null);
 
         mLrcView = lrcView.findViewById(R.id.lyricShow);
         mCivImage = coverView.findViewById(R.id.civ_cover);
+        mTvTip = coverView.findViewById(R.id.tv_tip);
+        mTvRecourse = coverView.findViewById(R.id.tv_source);
 
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
@@ -278,28 +274,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     }
 
 
-    private void loadLrc(File file) {
-        mLrcView.setLineSpace(15.0f);
-        mLrcView.setTextSize(17.0f);
-        mLrcView.setPlayable(true);
-        mLrcView.setOnPlayerClickListener((progress, content) -> {
-            PlayManager.seekTo((int) progress);
-            if (!PlayManager.isPlaying()) {
-                PlayManager.playPause();
-            }
-        });
-        if (file != null && file.exists()) {
-            Log.e(TAG, "file" + file.getAbsolutePath());
-            mLrcView.setLyricFile(file, "utf-8");
-        } else {
-            mLrcView.reset("暂无歌词");
-        }
-    }
-
-
-    public ObjectAnimator operatingAnim;
-    public long currentPlayTime = 0;
-
     /**
      * 旋转动画
      */
@@ -344,6 +318,12 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     public void setArtist(String artist) {
         tv_artist.setText(artist);
         mTvArtist.setText(artist);
+        mTvTip.setText(artist);
+    }
+
+    @Override
+    public void setOtherInfo(String source) {
+        mTvRecourse.setText(source);
     }
 
     @Override
@@ -379,6 +359,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mLrcView.setHighLightTextColor(blackWhiteColor);
         mLrcView.setDefaultColor(blackWhiteColor);
         tv_time.setTextColor(blackWhiteColor);
+        mTvTip.setTextColor(blackWhiteColor);
         tv_duration.setTextColor(blackWhiteColor);
 //        mLrcView.setTouchable(false);
         mLrcView.setHintColor(blackWhiteColor);
@@ -391,8 +372,23 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     }
 
     @Override
-    public void showLyric(File file) {
-        loadLrc(file);
+    public void showLyric(String lyricInfo) {
+        //初始化歌词配置
+        mLrcView.setLineSpace(15.0f);
+        mLrcView.setTextSize(17.0f);
+        mLrcView.setPlayable(true);
+        mLrcView.setOnPlayerClickListener((progress, content) -> {
+            PlayManager.seekTo((int) progress);
+            if (!PlayManager.isPlaying()) {
+                PlayManager.playPause();
+            }
+        });
+        if (lyricInfo != null) {
+            //设置歌词信息
+            mLrcView.setLyricContent(lyricInfo, "utf-8");
+        } else {
+            mLrcView.reset("暂无歌词");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

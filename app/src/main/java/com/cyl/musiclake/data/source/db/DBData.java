@@ -5,6 +5,7 @@ package com.cyl.musiclake.data.source.db;
  */
 public class DBData {
 
+    public static final String DEFAULT_ID = "_id";
     /**
      * 歌单信息表
      */
@@ -39,10 +40,17 @@ public class DBData {
      * 播放队列信息表
      */
     public static final String QUEUE_TABLE = "playQueue";
-    public static final String QUEUE_QID = "qid";
-    public static final String QUEUE_TITLE = "title";
-    public static final String QUEUE_ARTIST = "artist";
-    public static final String QUEUE_ALBUM = "album";
-    public static final String QUEUE_URL = "url";
-    public static final String QUEUE_TYPE = "type";
+    public static final String QUEUE_QID = "queue_id";
+    /**
+     * 收藏表
+     */
+    public static final String COLLECTIONS_TABLE = "collections";
+    public static final String CID = "love_id";
+    public static final String TIME = "time";
+
+    /**
+     * 播放历史列表
+     */
+    public static final String HISTORY_TABLE = "history";
+    public static final String HID = "history_id";
 }

@@ -20,7 +20,7 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.SearchPresenter;
-import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import java.lang.reflect.Field;
@@ -198,10 +198,10 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         dialog.setTitle("歌曲信息");
         StringBuilder sb = new StringBuilder();
         sb.append("歌曲名：")
-                .append(FileUtils.getTitle(music.getTitle()))
+                .append(ConvertUtils.getTitle(music.getTitle()))
                 .append("\n\n")
                 .append("歌手：")
-                .append(FileUtils.getArtist(music.getArtist()))
+                .append(ConvertUtils.getArtist(music.getArtist()))
                 .append("\n\n")
                 .append("专辑：")
                 .append(music.getAlbum())

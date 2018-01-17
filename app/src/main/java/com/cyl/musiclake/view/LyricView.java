@@ -25,6 +25,8 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.cyl.musiclake.utils.ConvertUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,10 +40,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Author   : cyl
+ * version  : 2018/01/17
+ * function : 歌词解析显示
+ */
 
 public class LyricView extends View {
 
-    private int mBtnColor = Color.parseColor("#EFEFEF");  // 按钮颜色
+    private int mBtnColor = Color.parseColor("#0091EA");  // 按钮颜色
     private int mHintColor = Color.parseColor("#FFFFFF");  // 提示语颜色
     private int mDefaultColor = Color.parseColor("#FFFFFF");  // 默认字体颜色
     private int mIndicatorColor = Color.parseColor("#EFEFEF");  // 指示器颜色
@@ -138,7 +145,7 @@ public class LyricView extends View {
         mBtnPaint.setDither(true);
         mBtnPaint.setAntiAlias(true);
         mBtnPaint.setColor(mBtnColor);
-        mBtnPaint.setStrokeWidth(3.0f);
+        mBtnPaint.setStrokeWidth(5.0f);
         mBtnPaint.setStyle(Paint.Style.STROKE);
     }
 
@@ -196,12 +203,12 @@ public class LyricView extends View {
     }
 
     /**
-     * 绘制左侧的播放按钮
+     * 绘制右侧的播放按钮
      *
      * @param canvas
      */
     private void drawPlayer(Canvas canvas) {
-        mBtnBound = new Rect(mDefaultMargin, (int) (getMeasuredHeight() * 0.5f - mBtnWidth * 0.5f), mBtnWidth + mDefaultMargin, (int) (getMeasuredHeight() * 0.5f + mBtnWidth * 0.5f));
+        mBtnBound = new Rect(getMeasuredWidth() - mDefaultMargin - mBtnWidth, (int) (getMeasuredHeight() * 0.5f - mBtnWidth * 0.5f), getMeasuredWidth() - mDefaultMargin, (int) (getMeasuredHeight() * 0.5f + mBtnWidth * 0.5f));
 
         Path path = new Path();
         float radio = mBtnBound.width() * 0.3f;
@@ -224,14 +231,15 @@ public class LyricView extends View {
         mIndicatorPaint.setColor(mIndicatorColor);
         mIndicatorPaint.setAlpha(128);
         mIndicatorPaint.setStyle(Paint.Style.FILL);
-        canvas.drawText(measureCurrentTime(), getMeasuredWidth() - mTimerBound.width(), (getMeasuredHeight() + mTimerBound.height() - 6) * 0.5f, mIndicatorPaint);
+        canvas.drawText(measureCurrentTime(), mTimerBound.width() * 0.5f + mDefaultMargin, (getMeasuredHeight() + mTimerBound.height() - 6) * 0.5f, mIndicatorPaint);
 
         Path path = new Path();
         mIndicatorPaint.setStrokeWidth(2.0f);
         mIndicatorPaint.setStyle(Paint.Style.STROKE);
         mIndicatorPaint.setPathEffect(new DashPathEffect(new float[]{20, 10}, 0));
-        path.moveTo(mPlayable ? mBtnBound.right + 24 : 24, getMeasuredHeight() * 0.5f);
-        path.lineTo(getMeasuredWidth() - mTimerBound.width() - mTimerBound.width() - 36, getMeasuredHeight() * 0.5f);
+        path.moveTo(mTimerBound.width() + mDefaultMargin, getMeasuredHeight() * 0.5f);
+        path.lineTo(mPlayable ? mBtnBound.left - 24 : getMeasuredWidth() - 24, getMeasuredHeight() * 0.5f);
+
         canvas.drawPath(path, mIndicatorPaint);
     }
 
@@ -264,7 +272,6 @@ public class LyricView extends View {
     private float mDownX, mDownY, mLastScrollY;      // 记录手指按下时的坐标和当前的滑动偏移量
 
 
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         Log.e("LyricView_dispatch", event.getAction() + "----");
@@ -282,19 +289,21 @@ public class LyricView extends View {
                 final float deltaY = Math.abs(y - mDownY);
                 // 这里是够拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
                 if (deltaX < deltaY) {
-                    Log.e("MotionEvent","down");
+                    Log.e("MotionEvent", "down");
                     setUserTouch(true);
                     getParent().requestDisallowInterceptTouchEvent(true);
-                }else {
-                    Log.e("MotionEvent","lefttoright");
+                } else {
+                    Log.e("MotionEvent", "lefttoright");
                     getParent().requestDisallowInterceptTouchEvent(false);
                 }
+
                 break;
             case MotionEvent.ACTION_UP:
                 break;
             default:
                 break;
         }
+
         return super.dispatchTouchEvent(event);
     }
 
@@ -829,10 +838,12 @@ public class LyricView extends View {
 
 
     /**
+     *
      * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ *
      *                                                                                             对外API                                                                                        *
      * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ *
-     * */
+     *
+     *  */
 
     /**
      * 设置当前时间显示位置
@@ -859,6 +870,20 @@ public class LyricView extends View {
         } else {
             mDefaultHint = "暂无歌词";
             invalidateView();
+        }
+    }
+
+    /**
+     * 设置歌词字符串
+     *
+     * @param lyricInfo   歌词字符串
+     * @param charsetName 解析字符集
+     */
+    public void setLyricContent(String lyricInfo, String charsetName) {
+        if (lyricInfo != null && lyricInfo.length() > 0) {
+            setupLyricResource(ConvertUtils.string2InputStream(lyricInfo, charsetName), charsetName);
+        } else {
+            reset("暂无歌词");
         }
     }
 

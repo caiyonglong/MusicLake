@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // 创建歌单歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MTP_TABLE + " ("
-                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DBData.DEFAULT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DBData.MTP_MID + " varchar(20) , "
                 + DBData.MTP_PID + " varchar(50) ) ");
         // 创建歌单表
@@ -73,20 +73,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.QUEUE_TABLE + " ("
                 + DBData.QUEUE_QID + " varchar(20) PRIMARY KEY, "
-                + DBData.MUSIC_ID + " , "
-                + DBData.MUSIC_NAME + " , "
-                + DBData.MUSIC_FILENAME + " , "
-
-                + DBData.MUSIC_PATH + " , "
-                + DBData.MUSIC_TIME + " , "
-                + DBData.MUSIC_SIZE + " , "
-                + DBData.MUSIC_ARTIST + " , "
-
-                + DBData.MUSIC_ALBUM + " , "
-                + DBData.MUSIC_ALBUM_ID + " , "
-                + DBData.MUSIC_ALBUM_PATH + " , "
-
-                + DBData.MUSIC_YEARS + " ) ");
+                + DBData.MUSIC_ID + " ) ");
+        // 创建收藏表
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + DBData.COLLECTIONS_TABLE + " ("
+                + DBData.CID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DBData.MUSIC_ID + ", "
+                + DBData.TIME + " ) ");
+        // 创建历史表
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + DBData.HISTORY_TABLE + " ("
+                + DBData.HID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DBData.MUSIC_ID + " ) ");
     }
 
     @Override
@@ -96,6 +94,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBData.MUSIC_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.MTP_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.QUEUE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DBData.COLLECTIONS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DBData.HISTORY_TABLE);
     }
 
 }

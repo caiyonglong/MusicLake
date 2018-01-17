@@ -15,7 +15,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 
 import java.io.File;
@@ -53,8 +53,8 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
     public void onBindViewHolder(final ItemHolder holder, final int position) {
         Music localItem = musicInfos.get(position);
 
-        holder.title.setText(FileUtils.getTitle(localItem.getTitle()));
-        holder.artist.setText(FileUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
+        holder.title.setText(ConvertUtils.getTitle(localItem.getTitle()));
+        holder.artist.setText(ConvertUtils.getArtistAndAlbum(localItem.getArtist(), localItem.getAlbum()));
         if (PlayManager.getPlayingMusic() != null
                 && PlayManager.getPlayingMusic().equals(localItem)) {
             holder.v_playing.setVisibility(View.VISIBLE);
@@ -93,7 +93,7 @@ public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.It
 
     private void getMusicInfo(Music music) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle(FileUtils.getTitle(music.getTitle()));
+        dialog.setTitle(ConvertUtils.getTitle(music.getTitle()));
         StringBuilder sb = new StringBuilder();
         sb.append("艺术家：")
                 .append(music.getArtist())

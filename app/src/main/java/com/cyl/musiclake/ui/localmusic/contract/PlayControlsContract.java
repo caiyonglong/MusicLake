@@ -8,8 +8,6 @@ import android.support.v7.graphics.Palette;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.base.BaseView;
 
-import java.io.File;
-
 
 public interface PlayControlsContract {
 
@@ -25,9 +23,11 @@ public interface PlayControlsContract {
 
         void setArtist(String artist);
 
+        void setOtherInfo(String source);
+
         void setPalette(Palette palette);
 
-        void showLyric(File file);
+        void showLyric(String lyric);
 
         void setPlayPauseButton(boolean isPlaying);
 

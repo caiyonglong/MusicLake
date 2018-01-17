@@ -2,7 +2,6 @@ package com.cyl.musiclake.service;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -24,12 +23,9 @@ import java.util.WeakHashMap;
 public class PlayManager {
     public static IMusicService mService = null;
     private static final WeakHashMap<Context, ServiceBinder> mConnectionMap;
-    private static final long[] sEmptyList;
-    private static ContentValues[] mContentValuesCache = null;
 
     static {
         mConnectionMap = new WeakHashMap<Context, ServiceBinder>();
-        sEmptyList = new long[0];
     }
 
     public static final ServiceToken bindToService(final Context context,

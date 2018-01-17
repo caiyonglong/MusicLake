@@ -1,5 +1,7 @@
 package com.cyl.musiclake.data.source.db;
 
+import android.database.Cursor;
+
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 
@@ -92,6 +94,39 @@ public interface DBDao {
     void updateQueue(List<Music> songs);
 
     void clearQueue();
+
+
+    /**
+     * 获取收藏歌曲
+     *
+     */
+    List<Music> getAllLoves(Cursor cursor);
+
+    /**
+     * 收藏歌曲
+     *
+     * @param mid
+     */
+    void addToLove(String[] mid);
+
+    /**
+     * 取消收藏歌曲
+     *
+     * @param mid
+     */
+    void disableLove(String[] mid);
+
+    /**
+     * 保存播放历史
+     *
+     * @param mid
+     */
+    void saveHistory(String mid);
+
+    /**
+     * 清空播放历史
+     */
+    void clearHistory();
 
     void closeDB();
 }
