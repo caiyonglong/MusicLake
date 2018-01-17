@@ -40,6 +40,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.SongQueueLoader;
 import com.cyl.musiclake.ui.main.MainActivity;
@@ -81,6 +82,7 @@ public class MusicPlayerService extends Service {
     public static final int QQ_MUSIC_URL = 6; //播放出错
     public static final int PREPARE_ASYNC_UPDATE = 7; //PrepareAsync装载进程
     public static final int PREPARE_ASYNC_ENDED = 8; //PrepareAsync异步装载完成
+    public static final int PREPARE_QQ_MUSIC = 9; //PrepareAsync异步装载完成
 
     private static final int NOTIFY_MODE_NONE = 0;
     private static final int NOTIFY_MODE_FOREGROUND = 1;
@@ -93,13 +95,8 @@ public class MusicPlayerService extends Service {
     private MusicPlayerEngine mPlayer = null;
     public PowerManager.WakeLock mWakeLock;
 
-    //工作线程和Handler
-    private MusicPlayerHandler mHandler;
-    private HandlerThread mWorkThread;
-    //主线程Handler
-    private Handler mMainHandler;
 
-    private static Music mPlayingMusic = null;
+    public Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
     private int mPlayingPos = -1;
 
@@ -119,6 +116,12 @@ public class MusicPlayerService extends Service {
     private boolean isRunningForeground = false;
     private boolean isMusicPlaying = false;
 
+    //工作线程和Handler
+    private MusicPlayerHandler mHandler;
+    private HandlerThread mWorkThread;
+    //主线程Handler
+    private Handler mMainHandler;
+
     private class MusicPlayerHandler extends Handler {
         private final WeakReference<MusicPlayerService> mService;
         private float mCurrentVolume = 1.0f;
@@ -135,10 +138,10 @@ public class MusicPlayerService extends Service {
             synchronized (service) {
                 switch (msg.what) {
                     case TRACK_WENT_TO_NEXT://mPlayer播放完成后下一首
-                        service.next();
+                        mMainHandler.post(service::next);
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完成后结束
-                        service.next();
+                        mMainHandler.post(service::next);
 //                        service.seekTo(0);
 //                        service.playMusic(mPlayingPos);
 //                        if (service.mRepeatMode == PLAY_MODE_REPEAT) {
@@ -160,6 +163,18 @@ public class MusicPlayerService extends Service {
                     case PREPARE_ASYNC_ENDED:
                         Log.e(TAG, "PREPARE_ASYNC_ENDED");
                         notifyChange(META_CHANGED);
+                        break;
+                    case PREPARE_QQ_MUSIC:
+                        QQApiServiceImpl.getQQApiKey()
+                                .subscribe(map -> {
+                                    String guid = map.keySet().iterator().next();
+                                    String apiKey = map.get(guid);
+                                    String url = Constants.BASE_URL_QQ_MUSIC_URL +
+                                            service.mPlayingMusic.getPrefix() + service.mPlayingMusic.getId() + ".mp3?vkey=" + apiKey + "&guid=" + guid + "&fromtag=30";
+                                    Log.e(TAG, guid + "---" + apiKey);
+                                    Log.e(TAG, url);
+                                    mMainHandler.post(() -> mPlayer.setDataSource(url));
+                                });
                         break;
                 }
             }
@@ -415,11 +430,13 @@ public class MusicPlayerService extends Service {
      */
     public void playMusic(Music music) {
         Log.e(TAG, music.toString());
-//        if (music.getType() == Music.Type.QQ && (music.getUri() == null || music.getUri().length() > 0)) {
-//        } else {
-        mPlayingMusic = music;
-        mPlayer.setDataSource(mPlayingMusic.getUri());
-//        }
+        if (music.getType() == Music.Type.QQ && (music.getUri() == null || music.getUri().length() > 0)) {
+            mPlayingMusic = music;
+            mHandler.sendEmptyMessage(PREPARE_QQ_MUSIC);
+        } else {
+            mPlayingMusic = music;
+            mPlayer.setDataSource(mPlayingMusic.getUri());
+        }
         isMusicPlaying = true;
         updateNotification();
     }

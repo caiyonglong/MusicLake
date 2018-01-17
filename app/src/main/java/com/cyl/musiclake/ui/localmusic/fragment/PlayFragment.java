@@ -85,8 +85,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     //textView
     @BindView(R.id.song_title)
     TextView mTvName;
-    @BindView(R.id.song_artist)
-    TextView tv_artist;
     @BindView(R.id.song_elapsed_time)
     TextView tv_time;
     @BindView(R.id.song_duration)
@@ -316,7 +314,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     public void setArtist(String artist) {
-        tv_artist.setText(artist);
         mTvArtist.setText(artist);
         mTvTip.setText(artist);
     }
@@ -336,18 +333,18 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
             paletteColor = mSwatch.getRgb();
             int artistColor = mSwatch.getTitleTextColor();
             mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-            tv_artist.setTextColor(artistColor);
+            mTvTip.setTextColor(artistColor);
         } else {
             mSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
             if (mSwatch != null) {
                 paletteColor = mSwatch.getRgb();
                 int artistColor = mSwatch.getTitleTextColor();
                 mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-                tv_artist.setTextColor(artistColor);
+//                mTvTip.setTextColor(artistColor);
             } else {
 //                paletteColor= Color.parseColor();
                 mTvName.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-                tv_artist.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+//                mTvTip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
             }
         }
         //set icon color

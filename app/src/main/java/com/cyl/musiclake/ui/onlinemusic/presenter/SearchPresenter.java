@@ -1,16 +1,13 @@
 package com.cyl.musiclake.ui.onlinemusic.presenter;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;

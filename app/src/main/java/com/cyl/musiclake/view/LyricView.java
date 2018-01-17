@@ -25,9 +25,8 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.cyl.musiclake.utils.ConvertUtils;
-
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -679,6 +678,7 @@ public class LyricView extends View {
                 mLineCount = mLyricInfo.song_lines.size();
                 invalidateView();
             } catch (IOException e) {
+                Log.e("--", "IOException");
                 e.printStackTrace();
             }
         } else {
@@ -723,7 +723,8 @@ public class LyricView extends View {
             // 歌词内容,需要考虑一行歌词有多个时间戳的情况
             int lastIndexOfRightBracket = line.lastIndexOf("]");
             String content = line.substring(lastIndexOfRightBracket + 1, line.length());
-
+            //去除trc歌词中每个字的时间长
+            content = content.replaceAll("<[0-9]{1,5}>", "");
             String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
             String arrTimes[] = times.split("-");
             for (String temp : arrTimes) {
@@ -881,7 +882,8 @@ public class LyricView extends View {
      */
     public void setLyricContent(String lyricInfo, String charsetName) {
         if (lyricInfo != null && lyricInfo.length() > 0) {
-            setupLyricResource(ConvertUtils.string2InputStream(lyricInfo, charsetName), charsetName);
+            InputStream inputStream = new ByteArrayInputStream(lyricInfo.getBytes());
+            setupLyricResource(inputStream, charsetName);
         } else {
             reset("暂无歌词");
         }

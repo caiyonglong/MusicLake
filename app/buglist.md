@@ -129,3 +129,6 @@ public class MultiTouchViewPager extends ViewPager {
     }
 }
 ```
+
+9、InputEventReceiver: Attempted to finish an input event but the input event receiver has already been disposed.
+

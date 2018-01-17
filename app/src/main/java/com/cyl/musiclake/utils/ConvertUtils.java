@@ -1,13 +1,13 @@
 package com.cyl.musiclake.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -137,8 +137,9 @@ public class ConvertUtils {
     public static InputStream string2InputStream(final String string, final String charsetName) {
         if (string == null || isSpace(charsetName)) return null;
         try {
-            return new ByteArrayInputStream(string.getBytes(charsetName));
-        } catch (UnsupportedEncodingException e) {
+            return new ByteArrayInputStream(string.getBytes());
+        } catch (Exception e) {
+            Log.e("--", "UnsupportedEncodingException");
             e.printStackTrace();
             return null;
         }

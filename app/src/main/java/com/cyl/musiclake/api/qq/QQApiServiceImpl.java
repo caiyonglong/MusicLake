@@ -85,7 +85,8 @@ public class QQApiServiceImpl {
                     System.out.println(qqLyricInfo.toString());
                     String lyric = null;
                     byte[] asByte = Base64.decode(qqLyricInfo.getLyric(), Base64.DEFAULT);
-//                  单元测试用  byte[] asByte =  java.util.Base64.getDecoder().decode(qqLyricInfo.getLyric());
+//                  单元测试用
+//                    byte[] asByte = java.util.Base64.getDecoder().decode(qqLyricInfo.getLyric());
                     try {
                         lyric = new String(asByte, "utf-8");
                     } catch (UnsupportedEncodingException e) {

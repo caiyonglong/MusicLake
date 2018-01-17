@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -34,38 +34,35 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_down" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+
+            <TextView
+                android:id="@+id/song_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:lines="1"
+                android:text="@string/play_no_resource"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_common" />
 
-                <TextView
-                    android:id="@+id/song_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="无音乐"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_common" />
+            <ImageView
+                android:id="@+id/iv_love"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/play_page_back_selector"
+                android:backgroundTint="@color/white"
+                android:scaleType="centerInside"
+                android:src="@drawable/item_favorite"
+                tools:targetApi="lollipop" />
 
-                <TextView
-                    android:id="@+id/song_artist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text=""
-                    android:textColor="@color/grey"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
         <com.cyl.musiclake.view.MultiTouchViewPager
             android:id="@+id/viewpager_player"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1" />
 
         <LinearLayout
@@ -91,10 +88,13 @@
                     android:id="@+id/song_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:paddingEnd="20dp"
                     android:paddingRight="20dp"
-                    android:text="00:00"
-                    android:textColor="@color/translucent_white" />
+                    android:text="@string/play_time"
+                    android:textColor="@color/translucent_white"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/song_elapsed_time"
@@ -104,8 +104,10 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:paddingLeft="20dp"
-                    android:text="00:00"
-                    android:textColor="@color/translucent_white" />
+                    android:paddingStart="20dp"
+                    android:text="@string/play_time"
+                    android:textColor="@color/translucent_white"
+                    tools:ignore="RtlSymmetry" />
 
             </RelativeLayout>
 
@@ -186,5 +188,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include layout="@layout/play_control_menu" />
+    <include
+        layout="@layout/play_control_menu" />
 </RelativeLayout>

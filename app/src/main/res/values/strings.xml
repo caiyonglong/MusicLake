@@ -131,4 +131,6 @@
     <string name="sure">确定</string>
     <string name="error_playing_track">Error Play</string>
     <string name="folders">文件夹</string>
+    <string name="play_time">00:00</string>
+    <string name="play_no_resource">无音乐</string>
 </resources>

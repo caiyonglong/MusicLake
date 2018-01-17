@@ -133,7 +133,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                         @Override
                         public void onNext(String lyricInfo) {
                             Log.e(TAG, lyricInfo);
-                            mView.showLyric(lyricInfo);
+                            String content = lyricInfo.replaceAll("<[0-9]{1,5}>", "");
+                            mView.showLyric(content);
                         }
 
                         @Override
@@ -175,7 +176,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             }
         }
 
-        final String title = music.getArtist();
+        final String title = music.getTitle();
         final String artist = ConvertUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         if (TextUtils.isEmpty(title) && TextUtils.isEmpty(artist)) {
             mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));

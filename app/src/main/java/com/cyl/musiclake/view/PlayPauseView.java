@@ -52,6 +52,8 @@ public class PlayPauseView extends View {
     private void init(Context context, AttributeSet attrs) {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
         mLeftPath = new Path();
         mRightPath = new Path();
         mRect = new Rect();
