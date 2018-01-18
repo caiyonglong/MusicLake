@@ -1,4 +1,4 @@
-package com.cyl.musiclake.view.custom;
+package com.cyl.musiclake.utils;
 
 import android.util.Log;
 
@@ -8,7 +8,8 @@ public class LogUtil {
     /**
      * 默认的tag
      */
-    public static final String defaultTag = "dota";
+    private static final boolean IS_DEBUG = true;
+    public static final String defaultTag = "MusicLake";
     public static final int VERBOSE = 1;
     public static final int DEBUG = 2;
     public static final int INFO = 3;
@@ -22,77 +23,78 @@ public class LogUtil {
 
 
     public static void v(String tag, String msg) {
-        if (LEVEL <= VERBOSE) {
+        if (LEVEL <= VERBOSE && IS_DEBUG) {
             Log.v(tag, msg);
         }
     }
 
     public static void d(String tag, String msg) {
-        if (LEVEL <= DEBUG) {
+        if (LEVEL <= DEBUG && IS_DEBUG) {
             Log.d(tag, msg);
         }
     }
 
     public static void i(String tag, String msg) {
-        if (LEVEL <= INFO) {
+        if (LEVEL <= INFO && IS_DEBUG) {
             Log.i(tag, msg);
         }
     }
 
     public static void w(String tag, String msg) {
-        if (LEVEL <= WARN) {
+        if (LEVEL <= WARN && IS_DEBUG) {
             Log.w(tag, msg);
         }
     }
 
     public static void e(String tag, String msg) {
-        if (LEVEL <= ERROR) {
+        if (LEVEL <= ERROR && IS_DEBUG) {
             Log.e(tag, msg);
         }
     }
 
     public static void v(String msg) {
-        if (LEVEL <= VERBOSE) {
+        if (LEVEL <= VERBOSE && IS_DEBUG) {
             Log.v(defaultTag, msg);
         }
     }
 
     public static void d(String msg) {
-        if (LEVEL <= DEBUG) {
+        if (LEVEL <= DEBUG && IS_DEBUG) {
             Log.d(defaultTag, msg);
         }
     }
 
     public static void i(String msg) {
-        if (LEVEL <= INFO) {
+        if (LEVEL <= INFO && IS_DEBUG) {
             Log.i(defaultTag, msg);
         }
     }
 
     public static void w(String msg) {
-        if (LEVEL <= WARN) {
+        if (LEVEL <= WARN && IS_DEBUG) {
             Log.w(defaultTag, msg);
         }
     }
 
     public static void e(String msg) {
-        if (LEVEL <= ERROR) {
+        if (LEVEL <= ERROR && IS_DEBUG) {
             Log.e(defaultTag, msg);
         }
     }
 
-    public static void m(String msg){
+    public static void m(String msg) {
         String methodName = new Exception().getStackTrace()[1].getMethodName();
-        Log.v(defaultTag,methodName+":    "+msg);
-    }
-    public static void m(int msg){
-        String methodName = new Exception().getStackTrace()[1].getMethodName();
-        Log.v(defaultTag,methodName+":    "+msg+"");
+        Log.v(defaultTag, methodName + ":    " + msg);
     }
 
-    public static void m(){
+    public static void m(int msg) {
         String methodName = new Exception().getStackTrace()[1].getMethodName();
-        Log.v(defaultTag,methodName);
+        Log.v(defaultTag, methodName + ":    " + msg + "");
+    }
+
+    public static void m() {
+        String methodName = new Exception().getStackTrace()[1].getMethodName();
+        Log.v(defaultTag, methodName);
     }
 
     public static void v(int msg) {

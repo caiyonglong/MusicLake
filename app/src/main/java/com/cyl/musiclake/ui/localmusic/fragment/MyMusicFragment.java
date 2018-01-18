@@ -28,6 +28,8 @@ import butterknife.OnClick;
 public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialog.mCallBack, MyMusicContract.View {
     @BindView(R.id.iv_local)
     ItemView mLocal;
+    @BindView(R.id.iv_recently)
+    ItemView mRecently;
     @BindView(R.id.iv_favorite)
     ItemView mLove;
     @BindView(R.id.iv_download)
@@ -87,9 +89,16 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     protected void initDatas() {
         mPresenter.loadSongs();
         mPresenter.loadPlaylist();
-
         mLocal.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
-        mLove.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
+        mRecently.setOnClickListener(v -> {
+            Playlist playlist = new Playlist();
+            playlist.setId("1");
+            playlist.setName("最近");
+            NavigateUtil.navigateToPlaylist(getActivity(), playlist, null);
+        });
+        mLove.setOnClickListener(v -> {
+            NavigateUtil.navigateToLoveMusic(getActivity(), null);
+        });
         mDownload.setOnClickListener(v -> NavigateUtil.navigateToDownload(getActivity(), null));
 
         RxBus.getInstance().register(Playlist.class)

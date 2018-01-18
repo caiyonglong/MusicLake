@@ -81,7 +81,6 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         setHasOptionsMenu(true);
     }
 

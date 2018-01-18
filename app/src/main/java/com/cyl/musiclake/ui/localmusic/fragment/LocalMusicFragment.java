@@ -5,10 +5,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
+import com.cyl.musiclake.utils.Extras;
 
 import butterknife.BindView;
 
@@ -23,8 +25,10 @@ public class LocalMusicFragment extends BaseFragment {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    public static LocalMusicFragment newInstance() {
+
+    public static LocalMusicFragment newInstance(String flag) {
         Bundle args = new Bundle();
+        args.putString(Extras.IS_LOVE, flag);
         LocalMusicFragment fragment = new LocalMusicFragment();
         fragment.setArguments(args);
         return fragment;
@@ -38,6 +42,9 @@ public class LocalMusicFragment extends BaseFragment {
     @Override
     public void initViews() {
         mToolbar.setTitle("本地歌曲");
+        if (getArguments().getString(Extras.IS_LOVE).equals("love")) {
+            mToolbar.setTitle("收藏");
+        }
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -53,10 +60,15 @@ public class LocalMusicFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(SongsFragment.newInstance(), "歌曲");
-        adapter.addFragment(AlbumFragment.newInstance(), "专辑");
-        adapter.addFragment(ArtistFragment.newInstance(), "艺术家");
-        adapter.addFragment(new FoldersFragment(), "文件夹");
+        if (getArguments().getString(Extras.IS_LOVE).equals("love")) {
+            mTabLayout.setVisibility(View.GONE);
+            adapter.addFragment(SongsFragment.newInstance("love"), "收藏");
+        } else {
+            adapter.addFragment(SongsFragment.newInstance("local"), "歌曲");
+            adapter.addFragment(AlbumFragment.newInstance(), "专辑");
+            adapter.addFragment(ArtistFragment.newInstance(), "艺术家");
+            adapter.addFragment(new FoldersFragment(), "文件夹");
+        }
         viewPager.setAdapter(adapter);
     }
 }

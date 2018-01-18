@@ -78,7 +78,7 @@ public class OnlineMusicListPresenter implements OnlineMusicListContract.Present
                         List<Music> musicList = new ArrayList<>();
                         for (OnlineMusicInfo songInfo : result.getSong_list()) {
                             Music music = new Music();
-                            music.setType(Music.Type.ONLINE);
+                            music.setType(Music.Type.BAIDU);
                             music.setId(songInfo.getSong_id());
                             music.setAlbum(songInfo.getAlbum_title());
                             music.setArtist(songInfo.getArtist_name());
@@ -125,7 +125,7 @@ public class OnlineMusicListPresenter implements OnlineMusicListContract.Present
                         DownloadInfo.JBitrate jBitrate = result.getBitrate();
 
                         Music music = new Music();
-                        music.setType(Music.Type.ONLINE);
+                        music.setType(Music.Type.BAIDU);
                         music.setAlbum(songInfo.getAlbum_title());
                         music.setArtist(songInfo.getAuthor());
                         music.setTitle(songInfo.getTitle());

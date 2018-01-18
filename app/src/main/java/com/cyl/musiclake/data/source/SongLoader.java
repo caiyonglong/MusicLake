@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
+import com.cyl.musiclake.data.source.db.DBData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,8 @@ import io.reactivex.Observable;
 
 
 public class SongLoader {
-    private static Context context;
 
-    public static Observable<List<Music>> getSongsForCursor(final Cursor cursor) {
+    public static Observable<List<Music>> getSongsForCursor(Context context, final Cursor cursor) {
         return Observable.create(subscriber -> {
             List<Music> arrayList = new ArrayList<>();
             if ((cursor != null) && (cursor.moveToFirst()))
@@ -44,65 +44,60 @@ public class SongLoader {
         });
     }
 
-//    public static Observable<List<Music>> getFavoriteSong(final Context context) {
-//        Cursor cursor = FavoriteSong.getInstance(context).getFavoriteSong();
-//        SortedCursor retCursor = TopTracksLoader.makeSortedCursor(context, cursor, 0);
-//        return SongLoader.getSongsForCursor(retCursor);
-//    }
+    public static Observable<List<Music>> getFavoriteSong(final Context context) {
+        return Observable.create(subscriber -> {
+            try {
+                DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+                Cursor cursor = dbDaoImpl.makeSongCursor(DBData.IS_LOVE + "= ? ", new String[]{"1"}, DBData.MUSIC_NAME);
+                List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
+                dbDaoImpl.closeDB();
+                subscriber.onNext(results);
+                subscriber.onComplete();
+            } catch (Exception e) {
+                e.printStackTrace();
+                subscriber.onError(e);
+            }
+        });
+    }
 
+    public static Observable<Music> updateFavoriteSong(final Context context, Music music) {
+        return Observable.create(subscriber -> {
+            try {
+                DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+                music.setLove(!music.isLove());
+                dbDaoImpl.insertSong(music);
+                dbDaoImpl.updateSong(music);
+                dbDaoImpl.closeDB();
+                subscriber.onNext(music);
+                subscriber.onComplete();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+    }
 
     /**
-     * 添加歌曲到歌单
+     * 本地歌曲
+     * 添加歌曲
      */
     private static void insertSongs(Context context, List<Music> musics) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.clearQueue();
         dbDaoImpl.insertSongs(musics);
         dbDaoImpl.closeDB();
     }
 
-    /**
-     * 添加歌曲到歌单
-     */
-    public static List<Music> getPlayQueue(Context context) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        List<Music> results = dbDaoImpl.getQueue();
-        dbDaoImpl.closeDB();
-        return results;
-    }
-
-
-    /**
-     * 添加歌曲到歌单
-     */
-    public static void updateQueue(Context context, List<Music> musics) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.updateQueue(musics);
-        dbDaoImpl.closeDB();
-    }
-
-    /**
-     * 移除歌曲到歌单
-     */
-    public static void clearQueue(Context context) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.clearQueue();
-        dbDaoImpl.closeDB();
-    }
-
-
     public static Observable<List<Music>> getAllSongs(Context context) {
-        return getSongsForCursor(makeSongCursor(context, null, null));
+        return getSongsForCursor(context, makeSongCursor(context, null, null));
     }
 
     public static Observable<List<Music>> searchSongs(Context context, String searchString) {
-        return getSongsForCursor(makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
+        return getSongsForCursor(context, makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 new String[]{"%" + searchString + "%", "%" + searchString + "%", "%" + searchString + "%"}));
     }
 
     public static Observable<List<Music>> getSongListInFolder(Context context, String path) {
         String[] whereArgs = new String[]{path + "%"};
-        return getSongsForCursor(makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null));
+        return getSongsForCursor(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null));
     }
 
     public static Cursor makeSongCursor(Context context, String selection, String[] paramArrayOfString) {

@@ -25,9 +25,9 @@ public class QQApiServiceImpl {
      */
     @SuppressWarnings({"unchecked", "varargs"})
     public static Observable<List<Music>> search(String key, int limit, int page) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("p", page + ""); //page
-        params.put("n", limit + "");//limit
+        Map<String, String> params = new HashMap<>();
+        params.put("p", String.valueOf(page)); //page
+        params.put("n", String.valueOf(limit));//limit
         params.put("w", key);// key
         params.put("aggr", "1");
         params.put("cr", "1");
@@ -41,6 +41,7 @@ public class QQApiServiceImpl {
                         QQApiModel.DataBean.SongBean.ListBean song = songList.get(i);
                         Music music = new Music();
                         music.setType(Music.Type.QQ);
+                        music.setOnline(true);
                         music.setId(song.getSongmid());
                         music.setTitle(song.getSongname());
                         music.setArtist(song.getSinger().get(0).getName());
@@ -50,13 +51,12 @@ public class QQApiServiceImpl {
                         music.setDuration(song.getPubtime());
                         //qq音乐播放地址前缀,代表音乐品质 M500一般,M800高
                         music.setPrefix(song.getSize128() != 0 ? "M500" : "M800");
-                        String url = "https://y.gtimg.cn/music/photo_new/T002R300x300M000" + song.getAlbummid() + ".jpg";
-                        music.setCoverUri(url);
-                        String guid = "1.71787218E8";
-                        String apiKey = "CB68B16BED816B3FE7118A3428510100741833CA95C2C780F65D7776B7101F327FFB1EFB33D89DB8A4039D08473E4D46DC9336978AFCACBC";
-                        String songUrl = Constants.BASE_URL_QQ_MUSIC_URL +
-                                music.getPrefix() + music.getId() + ".mp3?vkey=" + apiKey + "&guid=" + guid + "&fromtag=30";
-                        music.setUri(songUrl);
+                        String cover = "https://y.gtimg.cn/music/photo_new/T002R300x300M000" + song.getAlbummid() + ".jpg";
+                        String coverBig = "https://y.gtimg.cn/music/photo_new/T002R500x500M000" + song.getAlbummid() + ".jpg";
+                        String coverSmall = "https://y.gtimg.cn/music/photo_new/T002R150x150M000" + song.getAlbummid() + ".jpg";
+                        music.setCoverUri(cover);
+                        music.setCoverBig(coverBig);
+                        music.setCoverSmall(coverSmall);
                         musicList.add(music);
                     }
                     return Observable.fromArray(musicList);

@@ -15,14 +15,19 @@ public class Playlist implements Serializable {
     private String name;
     //歌单名
     private int count;
+    //创建日期
+    private long date;
+    private String order;
 
     public Playlist() {
     }
 
-    public Playlist(String id, String name, int count) {
+    public Playlist(String id, String name, int count, long date, String order) {
         this.id = id;
         this.name = name;
         this.count = count;
+        this.date = date;
+        this.order = order;
     }
 
     public String getId() {
@@ -49,12 +54,29 @@ public class Playlist implements Serializable {
         this.count = count;
     }
 
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
     @Override
     public String toString() {
         return "Playlist{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", count=" + count +
+                ", date=" + date +
                 '}';
     }
 }

@@ -18,6 +18,7 @@ import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.SongsPresenter;
+import com.cyl.musiclake.utils.Extras;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +44,10 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     private SongsPresenter mPresenter;
 
-    public static SongsFragment newInstance() {
+    public static SongsFragment newInstance(String flag) {
 
         Bundle args = new Bundle();
+        args.putString(Extras.IS_LOVE, flag);
         SongsFragment fragment = new SongsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +55,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     @Override
     protected void initDatas() {
-        mPresenter.loadSongs(null);
+        mPresenter.loadSongs(getArguments().getString(Extras.IS_LOVE));
     }
 
     @Override

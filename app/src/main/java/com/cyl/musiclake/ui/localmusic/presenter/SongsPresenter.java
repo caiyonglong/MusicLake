@@ -45,35 +45,68 @@ public class SongsPresenter implements SongsContract.Presenter {
     @Override
     public void loadSongs(String action) {
         mView.showLoading();
-        AppRepository.getAllSongsRepository(mContext)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Music>>() {
+        if (action.equals("love")) {
+            AppRepository.getFavoriteSong(mContext)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<Music>>() {
 
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(List<Music> musicList) {
-                        if (musicList.size() == 0) {
-                            mView.setEmptyView();
                         }
-                        mView.showSongs(musicList);
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.hideLoading();
-                        e.printStackTrace();
-                    }
+                        @Override
+                        public void onNext(List<Music> musicList) {
+                            if (musicList.size() == 0) {
+                                mView.setEmptyView();
+                            }
+                            mView.showSongs(musicList);
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        mView.hideLoading();
-                    }
-                });
+                        @Override
+                        public void onError(Throwable e) {
+                            mView.hideLoading();
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mView.hideLoading();
+                        }
+                    });
+        } else {
+            AppRepository.getAllSongsRepository(mContext)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<Music>>() {
+
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<Music> musicList) {
+                            if (musicList.size() == 0) {
+                                mView.setEmptyView();
+                            }
+                            mView.showSongs(musicList);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mView.hideLoading();
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mView.hideLoading();
+                        }
+                    });
+        }
+
     }
 
     @Override

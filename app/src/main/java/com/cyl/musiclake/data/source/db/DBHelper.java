@@ -44,47 +44,46 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MTP_TABLE + " ("
                 + DBData.DEFAULT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DBData.MTP_MID + " varchar(20) , "
-                + DBData.MTP_PID + " varchar(50) ) ");
+                + DBData.MTP_MID + " varchar(20)  , "
+                + DBData.MTP_PID + "  varchar(50) , "
+                + DBData.MTP_DATE + "  ) ");
         // 创建歌单表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.PLAYLIST_TABLE + " ("
                 + DBData.PLAYLIST_ID + " varchar(50) PRIMARY KEY, "
-                + DBData.PLAYLIST_NAME + " ) ");
+                + DBData.PLAYLIST_NAME + " ,"
+                + DBData.PLAYLIST_ORDER + " , "
+                + DBData.PLAYLIST_DATE + " ) ");
         // 创建歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + DBData.MUSIC_TABLE + " ("
                 + DBData.MUSIC_ID + " varchar(20) PRIMARY KEY, "
                 + DBData.MUSIC_NAME + " , "
-                + DBData.MUSIC_FILENAME + " , "
 
+                + DBData.MUSIC_FILENAME + " , "
                 + DBData.MUSIC_PATH + " , "
                 + DBData.MUSIC_TIME + " , "
                 + DBData.MUSIC_SIZE + " , "
-                + DBData.MUSIC_ARTIST + " , "
 
+                + DBData.MUSIC_ARTIST_ID + " , "
+                + DBData.MUSIC_ARTIST + " , "
                 + DBData.MUSIC_ALBUM + " , "
                 + DBData.MUSIC_ALBUM_ID + " , "
-                + DBData.MUSIC_ALBUM_PATH + " , "
+
+                + DBData.MUSIC_COVER + " , "
+                + DBData.MUSIC_COVER_BIG + " , "
+                + DBData.MUSIC_COVER_SMALL + " , "
+                + DBData.MUSIC_TYPE + " , "
+
+                + DBData.IS_LOVE + " , "
+                + DBData.IS_ONLINE + " , "
+                + DBData.MUSIC_PREFIX + " , "
 
                 + DBData.MUSIC_YEARS + " ) ");
 
-        // 创建播放队列表
-        db.execSQL("CREATE TABLE IF NOT EXISTS "
-                + DBData.QUEUE_TABLE + " ("
-                + DBData.QUEUE_QID + " varchar(20) PRIMARY KEY, "
-                + DBData.MUSIC_ID + " ) ");
-        // 创建收藏表
-        db.execSQL("CREATE TABLE IF NOT EXISTS "
-                + DBData.COLLECTIONS_TABLE + " ("
-                + DBData.CID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DBData.MUSIC_ID + ", "
-                + DBData.TIME + " ) ");
-        // 创建历史表
-        db.execSQL("CREATE TABLE IF NOT EXISTS "
-                + DBData.HISTORY_TABLE + " ("
-                + DBData.HID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DBData.MUSIC_ID + " ) ");
+        //默认新建播放队列和最近播放
+        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.PLAY_QUEUE + " ,'播放队列','','')");
+        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.HISTORY + " ,'最近播放','','')");
     }
 
     @Override
@@ -93,9 +92,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBData.PLAYLIST_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.MUSIC_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.MTP_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + DBData.QUEUE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + DBData.COLLECTIONS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + DBData.HISTORY_TABLE);
     }
 
 }

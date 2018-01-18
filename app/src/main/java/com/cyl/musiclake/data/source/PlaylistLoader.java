@@ -1,10 +1,13 @@
 package com.cyl.musiclake.data.source;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
+import com.cyl.musiclake.data.source.db.DBData;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.List;
 
@@ -14,6 +17,8 @@ import io.reactivex.Observable;
  * 作者：yonglong on 2016/11/6 17:02
  */
 public class PlaylistLoader {
+    private static final String TAG = "PlaylistLoader";
+
     /**
      * 获取全部歌单
      *
@@ -22,7 +27,17 @@ public class PlaylistLoader {
      */
     public static List<Playlist> getPlaylist(Context context) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        List<Playlist> results = dbDaoImpl.getAllPlaylist();
+        String sql = "SELECT *" +
+                " , " + "(SELECT count(" +
+                DBData.MTP_TABLE + ".mid ) FROM " +
+                DBData.MTP_TABLE + " WHERE " +
+                DBData.MTP_TABLE + ".pid = " +
+                DBData.PLAYLIST_TABLE + ".pid) AS num FROM " +
+                DBData.PLAYLIST_TABLE + " where " +
+                DBData.PLAYLIST_TABLE + "." + DBData.PLAYLIST_DATE + "!= null ";
+        LogUtil.d(TAG, sql + "----");
+        Cursor cursor = dbDaoImpl.makeCursor(sql);
+        List<Playlist> results = dbDaoImpl.getAllPlaylistForCursor(cursor);
         dbDaoImpl.closeDB();
         return results;
     }
@@ -37,7 +52,7 @@ public class PlaylistLoader {
     public static long createPlaylist(Context context, String name) {
         long pid = -1;
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        pid = dbDaoImpl.newPlayList(name);
+        pid = dbDaoImpl.addPlayList(name);
         dbDaoImpl.closeDB();
         return pid;
     }
@@ -58,7 +73,14 @@ public class PlaylistLoader {
     public static Observable<List<Music>> getMusicForPlaylist(Context context, String playlist_id) {
         return Observable.create(subscriber -> {
             DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-            List<Music> results = dbDaoImpl.getSongs(playlist_id);
+            String sql = "select * from "
+                    + DBData.MUSIC_TABLE + " , "
+                    + DBData.MTP_TABLE + " where "
+                    + DBData.MUSIC_TABLE + ".mid = "
+                    + DBData.MTP_TABLE + ".mid " + "and "
+                    + DBData.MTP_TABLE + ".pid=" + playlist_id;
+            Cursor cursor = dbDaoImpl.makeCursor(sql);
+            List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
             dbDaoImpl.closeDB();
             subscriber.onNext(results);
             subscriber.onComplete();
@@ -72,7 +94,7 @@ public class PlaylistLoader {
         boolean result = false;
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
         if (!dbDaoImpl.checkSongPlaylist(pid, mid)) {
-            dbDaoImpl.insertSong(pid, mid);
+            dbDaoImpl.insertSongToPlaylist(pid, mid);
             result = true;
         }
         dbDaoImpl.closeDB();

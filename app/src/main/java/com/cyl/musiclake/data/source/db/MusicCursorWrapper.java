@@ -16,13 +16,23 @@ public class MusicCursorWrapper extends CursorWrapper {
         Music music = new Music();
         music.setId(getString(getColumnIndex(DBData.MUSIC_ID)));
         music.setTitle(getString(getColumnIndex(DBData.MUSIC_NAME)));
+        music.setArtistId(getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
         music.setArtist(getString(getColumnIndex(DBData.MUSIC_ARTIST)));
         music.setAlbum(getString(getColumnIndex(DBData.MUSIC_ALBUM)));
         music.setAlbumId(getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
+
         music.setDuration(getLong(getColumnIndex(DBData.MUSIC_TIME)));
         music.setUri(getString(getColumnIndex(DBData.MUSIC_PATH)));
-        music.setCoverUri(getString(getColumnIndex(DBData.MUSIC_ALBUM_PATH)));
+        music.setCoverUri(getString(getColumnIndex(DBData.MUSIC_COVER)));
+        music.setCoverBig(getString(getColumnIndex(DBData.MUSIC_COVER_BIG)));
+        music.setCoverSmall(getString(getColumnIndex(DBData.MUSIC_COVER_SMALL)));
         music.setFileName(getString(getColumnIndex(DBData.MUSIC_FILENAME)));
+        music.setPrefix(getString(getColumnIndex(DBData.MUSIC_PREFIX)));
+        music.setLove(getInt(getColumnIndex(DBData.MUSIC_FILENAME)) == 1);
+        music.setOnline(getInt(getColumnIndex(DBData.IS_ONLINE)) == 1);
+        String type = getString(getColumnIndex(DBData.MUSIC_TYPE));
+        music.setType(type);
+
         music.setFileSize(getLong(getColumnIndex(DBData.MUSIC_SIZE)));
         music.setYear(getString(getColumnIndex(DBData.MUSIC_YEARS)));
         return music;
@@ -31,8 +41,10 @@ public class MusicCursorWrapper extends CursorWrapper {
     public Playlist getPlaylist() {
         String id = getString(getColumnIndex(DBData.PLAYLIST_ID));
         String name = getString(getColumnIndex(DBData.PLAYLIST_NAME));
+        long create_time = getLong(getColumnIndex(DBData.PLAYLIST_DATE));
+        String order = getString(getColumnIndex(DBData.PLAYLIST_ORDER));
         int num = getInt(getColumnIndex("num"));
-        return new Playlist(id, name, num);
+        return new Playlist(id, name, num, create_time, order);
     }
 
 }

@@ -25,7 +25,7 @@ public interface DBDao {
      *
      * @param title
      */
-    long newPlayList(String title);
+    long addPlayList(String title);
 
     /**
      * 加入歌单
@@ -33,7 +33,7 @@ public interface DBDao {
      * @param pId
      * @param mId
      */
-    void insertSong(String pId, String mId);
+    void insertSongToPlaylist(String pId, String mId);
 
     /**
      * 从歌单中移除
@@ -59,74 +59,37 @@ public interface DBDao {
     void insertSongs(List<Music> songs);
 
     /**
-     * 第一次进入清空本地音乐
-     */
-    void clearSongs();
-
-
-    /**
      * 获取所有歌单
      *
      * @return
      */
-    List<Playlist> getAllPlaylist();
+    List<Playlist> getAllPlaylistForCursor(Cursor cursor);
 
     /**
-     * 获取歌单中所有音乐
-     *
-     * @param pId
-     * @return
-     */
-    List<Music> getSongs(String pId);
-
-    /**
-     * 获取播放队列
+     * 获取歌单中音乐
      *
      * @return
      */
-    List<Music> getQueue();
+    List<Music> getSongsForCursor(Cursor cursor);
 
     /**
-     * 更新播放队列
+     * 更新歌曲
+     */
+    void updateSong(Music music);
+
+    /**
+     * 第一次进入清空本地音乐
+     */
+    void deleteSongForId(String[] ids);
+
+    /**
+     * 生成游标
      *
-     * @param songs
+     * @param sql sql语句
+     * @return
      */
-    void updateQueue(List<Music> songs);
+    Cursor makeCursor(String sql);
 
-    void clearQueue();
-
-
-    /**
-     * 获取收藏歌曲
-     *
-     */
-    List<Music> getAllLoves(Cursor cursor);
-
-    /**
-     * 收藏歌曲
-     *
-     * @param mid
-     */
-    void addToLove(String[] mid);
-
-    /**
-     * 取消收藏歌曲
-     *
-     * @param mid
-     */
-    void disableLove(String[] mid);
-
-    /**
-     * 保存播放历史
-     *
-     * @param mid
-     */
-    void saveHistory(String mid);
-
-    /**
-     * 清空播放历史
-     */
-    void clearHistory();
 
     void closeDB();
 }

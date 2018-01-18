@@ -24,9 +24,9 @@ public class ApiManagerServiceTest1 {
     @Test
     public void searchByQQ() throws Exception {
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("p", 1); //page
-        params.put("n", 10);//limit
+        Map<String, String> params = new HashMap<>();
+        params.put("p", String.valueOf(1)); //page
+        params.put("n", String.valueOf(10));//limit
         params.put("w", "薛之谦");// key
         params.put("aggr", "1");
         params.put("cr", "1");

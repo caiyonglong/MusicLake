@@ -42,7 +42,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.SongQueueLoader;
+import com.cyl.musiclake.data.source.PlayQueueLoader;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -513,7 +513,7 @@ public class MusicPlayerService extends Service {
 
     private void refresh() {
         PreferencesUtils.saveCurrentSongId(mPlayingPos);
-        SongQueueLoader.updateQueue(this, mPlaylist);
+        PlayQueueLoader.updateQueue(this, mPlaylist);
     }
 
     /**
@@ -948,7 +948,7 @@ public class MusicPlayerService extends Service {
 
         mWakeLock.release();
 
-        SongQueueLoader.updateQueue(this, mPlaylist);
+        PlayQueueLoader.updateQueue(this, mPlaylist);
         PreferencesUtils.saveCurrentSongId(mPlayingPos);
         cancelNotification();
 

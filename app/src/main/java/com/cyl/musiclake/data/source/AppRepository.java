@@ -21,6 +21,14 @@ public class AppRepository {
         return SongLoader.getAllSongs(mContext);
     }
 
+    public static Observable<Music> updateFavoriteSongRepository(Context mContext, Music music) {
+        return SongLoader.updateFavoriteSong(mContext, music);
+    }
+
+    public static Observable<List<Music>> getFavoriteSong(Context mContext) {
+        return SongLoader.getFavoriteSong(mContext);
+    }
+
     public static Observable<List<Music>> getArtistSongsRepository(Context mContext, long id) {
         return ArtistSongLoader.getSongsForArtist(mContext, id);
     }

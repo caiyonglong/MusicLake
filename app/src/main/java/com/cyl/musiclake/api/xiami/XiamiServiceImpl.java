@@ -29,10 +29,10 @@ public class XiamiServiceImpl {
      */
     @SuppressWarnings({"unchecked", "varargs"})
     public static Observable<List<Music>> search(String key, int limit, int page) {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("v", "2.0"); //page
-        params.put("page", page); //page
-        params.put("limit", limit);//limit
+        params.put("page", String.valueOf(page)); //page
+        params.put("limit", String.valueOf(limit));//limit
         params.put("key", key);// key
         params.put("r", "search/songs");
         params.put("app_key", "1");
@@ -45,6 +45,7 @@ public class XiamiServiceImpl {
                         XiamiModel.DataBean.SongsBean song = songs.get(i);
                         Music music = new Music();
                         music.setType(Music.Type.XIAMI);
+                        music.setOnline(true);
                         music.setId(String.valueOf(song.getSong_id()));
                         music.setTitle(song.getSong_name());
                         music.setArtist(song.getArtist_name());
@@ -52,7 +53,13 @@ public class XiamiServiceImpl {
                         music.setAlbum(song.getAlbum_name());
                         music.setAlbumId(song.getAlbum_id());
                         music.setUri(song.getListen_file());
-                        music.setCoverUri(song.getArtist_logo());
+
+                        String cover = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_250w_250h";
+                        String coverBig = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_400w_400h";
+                        String coverSmall = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_150w_150h";
+                        music.setCoverUri(cover);
+                        music.setCoverBig(coverBig);
+                        music.setCoverSmall(coverSmall);
                         music.setLrcPath(song.getLyric());
                         musicList.add(music);
                     }

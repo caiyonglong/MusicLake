@@ -42,11 +42,11 @@ public interface ApiManagerService {
 
     @Headers({"referer: https://y.qq.com/portal/player.html"})
     @GET
-    Observable<QQApiModel> searchByQQ(@Url String baseUrl, @QueryMap Map<String, Object> params);
+    Observable<QQApiModel> searchByQQ(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @Headers({"referer: http://h.xiami.com/"})
     @GET
-    Observable<XiamiModel> searchByXiaMi(@Url String baseUrl, @QueryMap Map<String, Object> params);
+    Observable<XiamiModel> searchByXiaMi(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     //    @Headers({"referer: https://y.qq.com/portal/player.html"})
     @GET

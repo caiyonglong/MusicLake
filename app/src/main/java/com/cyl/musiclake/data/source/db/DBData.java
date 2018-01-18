@@ -11,46 +11,43 @@ public class DBData {
      */
     public static final String PLAYLIST_TABLE = "playlist";
     public static final String PLAYLIST_ID = "pid";
-    public static final String PLAYLIST_NAME = "pName";
+    public static final String PLAYLIST_NAME = "name";
+    public static final String PLAYLIST_ORDER = "play_order";
+    public static final String PLAYLIST_DATE = "date_create";
 
     /**
      * 歌曲信息表
      */
     public static final String MUSIC_TABLE = "music";
     public static final String MUSIC_ID = "mid";
-    public static final String MUSIC_NAME = "mName";
-    public static final String MUSIC_PATH = "mPath";
-    public static final String MUSIC_TIME = "mTime";
-    public static final String MUSIC_SIZE = "mSize";
-    public static final String MUSIC_ARTIST = "mArtist";
-    public static final String MUSIC_ALBUM = "mAlbum";
-    public static final String MUSIC_ALBUM_ID = "mAlbumId";
-    public static final String MUSIC_ALBUM_PATH = "mAlbumPath";
+    public static final String MUSIC_NAME = "name";
+    public static final String MUSIC_PATH = "path";
+    public static final String MUSIC_TIME = "duration";
+    public static final String MUSIC_SIZE = "size";
+    public static final String MUSIC_ARTIST = "artist";
+    public static final String MUSIC_ARTIST_ID = "artist_id";
+    public static final String MUSIC_ALBUM = "album";
+    public static final String MUSIC_ALBUM_ID = "album_id";
+    public static final String MUSIC_COVER = "cover";
+    public static final String MUSIC_COVER_BIG = "coverBig";
+    public static final String MUSIC_COVER_SMALL = "coverSmall";
     public static final String MUSIC_YEARS = "years";
-    public static final String MUSIC_FILENAME = "mFilename";
+    public static final String MUSIC_FILENAME = "filename";
+    public static final String IS_LOVE = "is_love";
+    public static final String IS_ONLINE = "is_online";
     public static final String MUSIC_TYPE = "type";
+    public static final String MUSIC_PREFIX = "prefix";
 
     /**
-     * mp信息表
+     * music playlist关联表
      */
-    public static final String MTP_TABLE = "musicToPlaylist";
+    public static final String MTP_TABLE = "music_playlist";
     public static final String MTP_PID = "pid";
     public static final String MTP_MID = "mid";
-    /**
-     * 播放队列信息表
-     */
-    public static final String QUEUE_TABLE = "playQueue";
-    public static final String QUEUE_QID = "queue_id";
-    /**
-     * 收藏表
-     */
-    public static final String COLLECTIONS_TABLE = "collections";
-    public static final String CID = "love_id";
-    public static final String TIME = "time";
+    public static final String MTP_DATE = "date_added";
 
-    /**
-     * 播放历史列表
-     */
-    public static final String HISTORY_TABLE = "history";
-    public static final String HID = "history_id";
+    public static final String PLAY_QUEUE = "0";
+    public static final String HISTORY = "1";
+
+
 }

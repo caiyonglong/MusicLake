@@ -95,11 +95,28 @@ public class NavigateUtil {
 
         if (transitionViews != null) {
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
-            fragment = LocalMusicFragment.newInstance();
+            fragment = LocalMusicFragment.newInstance("local");
         } else {
             transaction.setCustomAnimations(R.anim.activity_fade_in,
                     R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = LocalMusicFragment.newInstance();
+            fragment = LocalMusicFragment.newInstance("local");
+        }
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(fragment.getTag()).commit();
+    }
+
+    public static void navigateToLoveMusic(Activity context, Pair<View, String> transitionViews) {
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
+
+        if (transitionViews != null) {
+            transaction.addSharedElement(transitionViews.first, transitionViews.second);
+            fragment = LocalMusicFragment.newInstance("love");
+        } else {
+            transaction.setCustomAnimations(R.anim.activity_fade_in,
+                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
+            fragment = LocalMusicFragment.newInstance("love");
         }
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);

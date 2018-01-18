@@ -1,6 +1,5 @@
 package com.cyl.musiclake.data.model;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,7 +11,7 @@ import android.os.Parcelable;
 public class Music implements Parcelable {
     // 歌曲类型 本地/网络
     private Type type;
-    // [本地歌曲]歌曲id
+    // 歌曲id
     private String id;
     // 音乐标题
     private String title;
@@ -24,20 +23,26 @@ public class Music implements Parcelable {
     private long artistId;
     // 专辑id
     private long albumId;
-    // 专辑id
+    // 专辑内歌曲个数
     private int trackNumber;
     // 持续时间
     private long duration;
+    // 收藏
+    private boolean love;
+    // [本地|网络]
+    private boolean online;
     // 音乐路径
     private String uri;
-    // [网络歌曲] 音乐歌词地址
+    // [本地|网络] 音乐歌词地址
     private String lrcPath;
-    // [本地歌曲]专辑封面路径
+    // [本地|网络]专辑封面路径
     private String coverUri;
+    // [网络]专辑封面
+    private String coverBig;
+    // [网络]small封面
+    private String coverSmall;
     // 文件名
     private String fileName;
-    // [网络歌曲]专辑封面bitmap
-    private Bitmap cover;
     // 文件大小
     private long fileSize;
     // 发行日期
@@ -56,6 +61,7 @@ public class Music implements Parcelable {
         this.trackNumber = trackNumber;
         this.uri = uri;
         this.type = Type.LOCAL;
+        this.online = false;
     }
 
 
@@ -73,12 +79,10 @@ public class Music implements Parcelable {
         this.coverUri = "";
         this.fileSize = -1;
         this.duration = -1;
-        this.cover = null;
 
         this.year = "未知";
         this.type = Type.LOCAL;
     }
-
 
     protected Music(Parcel in) {
         id = in.readString();
@@ -89,13 +93,17 @@ public class Music implements Parcelable {
         albumId = in.readLong();
         trackNumber = in.readInt();
         duration = in.readLong();
+        love = in.readByte() != 0;
+        online = in.readByte() != 0;
         uri = in.readString();
         lrcPath = in.readString();
         coverUri = in.readString();
+        coverBig = in.readString();
+        coverSmall = in.readString();
         fileName = in.readString();
-        cover = in.readParcelable(Bitmap.class.getClassLoader());
         fileSize = in.readLong();
         year = in.readString();
+        prefix = in.readString();
     }
 
     public static final Creator<Music> CREATOR = new Creator<Music>() {
@@ -166,12 +174,20 @@ public class Music implements Parcelable {
         this.artist = artist;
     }
 
-    public Bitmap getCover() {
-        return cover;
+    public boolean isOnline() {
+        return online;
     }
 
-    public void setCover(Bitmap cover) {
-        this.cover = cover;
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    public boolean isLove() {
+        return love;
+    }
+
+    public void setLove(boolean love) {
+        this.love = love;
     }
 
     public String getCoverUri() {
@@ -180,6 +196,22 @@ public class Music implements Parcelable {
 
     public void setCoverUri(String coverUri) {
         this.coverUri = coverUri;
+    }
+
+    public String getCoverBig() {
+        return coverBig;
+    }
+
+    public void setCoverBig(String coverBig) {
+        this.coverBig = coverBig;
+    }
+
+    public String getCoverSmall() {
+        return coverSmall;
+    }
+
+    public void setCoverSmall(String coverSmall) {
+        this.coverSmall = coverSmall;
     }
 
     public long getDuration() {
@@ -253,28 +285,43 @@ public class Music implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(title);
-        parcel.writeString(artist);
-        parcel.writeString(album);
-        parcel.writeLong(artistId);
-        parcel.writeLong(albumId);
-        parcel.writeInt(trackNumber);
-        parcel.writeLong(duration);
-        parcel.writeString(uri);
-        parcel.writeString(lrcPath);
-        parcel.writeString(coverUri);
-        parcel.writeString(fileName);
-        parcel.writeParcelable(cover, i);
-        parcel.writeLong(fileSize);
-        parcel.writeString(year);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(artist);
+        dest.writeString(album);
+        dest.writeLong(artistId);
+        dest.writeLong(albumId);
+        dest.writeInt(trackNumber);
+        dest.writeLong(duration);
+        dest.writeByte((byte) (love ? 1 : 0));
+        dest.writeByte((byte) (online ? 1 : 0));
+        dest.writeString(uri);
+        dest.writeString(lrcPath);
+        dest.writeString(coverUri);
+        dest.writeString(coverBig);
+        dest.writeString(coverSmall);
+        dest.writeString(fileName);
+        dest.writeLong(fileSize);
+        dest.writeString(year);
+        dest.writeString(prefix);
     }
+
+    public void setType(String type) {
+        if (type.equals("qq")) {
+            this.type = Type.QQ;
+        } else if (type.equals("xiami")) {
+            this.type = Type.XIAMI;
+        } else {
+            this.type = Type.LOCAL;
+        }
+    }
+
 
     public enum Type {
         QQ,
         XIAMI,
-        ONLINE,
+        BAIDU,
         LOCAL
     }
 
@@ -290,13 +337,17 @@ public class Music implements Parcelable {
                 ", albumId=" + albumId +
                 ", trackNumber=" + trackNumber +
                 ", duration=" + duration +
+                ", love=" + love +
+                ", online=" + online +
                 ", uri='" + uri + '\'' +
                 ", lrcPath='" + lrcPath + '\'' +
                 ", coverUri='" + coverUri + '\'' +
+                ", coverBig='" + coverBig + '\'' +
+                ", coverSmall='" + coverSmall + '\'' +
                 ", fileName='" + fileName + '\'' +
-                ", cover=" + cover +
                 ", fileSize=" + fileSize +
                 ", year='" + year + '\'' +
+                ", prefix='" + prefix + '\'' +
                 '}';
     }
 }

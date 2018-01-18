@@ -77,6 +77,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     MaterialIconView skip_next;
     @BindView(R.id.iv_back)
     ImageView iv_back;
+    @BindView(R.id.iv_love)
+    ImageView mIvLove;
     @BindView(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
     @BindView(R.id.playOrPause)
@@ -140,6 +142,11 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @OnClick(R.id.previous)
     void prev() {
         mPresenter.onPreviousClick();
+    }
+
+    @OnClick(R.id.iv_love)
+    void love() {
+        mPresenter.updateFavoriteSong();
     }
 
 
@@ -419,6 +426,15 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mProgressBar.setProgress(progress);
         tv_time.setText(FormatUtil.formatTime(progress));
         mLrcView.setCurrentTimeMillis(progress);
+    }
+
+    @Override
+    public void updateFavorite(boolean love) {
+        if (love) {
+            mIvLove.setImageResource(R.drawable.item_favorite_love);
+        } else {
+            mIvLove.setImageResource(R.drawable.item_favorite);
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
 import com.cyl.musiclake.utils.ConvertUtils;
@@ -194,6 +195,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setOtherInfo("虾米音乐");
         }
 
+        mView.updateFavorite(music.isLove());
+
         if (!isPlayPauseClick) {
             String url = null;
             if (music.getType() == Music.Type.LOCAL && music.getAlbumId() != -1) {
@@ -231,4 +234,34 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         }
     };
 
+    public void updateFavoriteSong() {
+        Music music = PlayManager.getPlayingMusic();
+        if (music == null)
+            return;
+
+        AppRepository.updateFavoriteSongRepository(mContext, music)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Music>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Music music) {
+                        mView.updateFavorite(music.isLove());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 }

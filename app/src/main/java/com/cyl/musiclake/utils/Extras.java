@@ -40,4 +40,5 @@ public class Extras {
     public static final String TING_UID = "ting_uid";
 
 
+    public static String IS_LOVE = "is_love";
 }

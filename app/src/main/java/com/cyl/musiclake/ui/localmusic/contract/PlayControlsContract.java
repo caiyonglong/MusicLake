@@ -35,6 +35,8 @@ public interface PlayControlsContract {
 
         void updateProgress(int progress);
 
+        void updateFavorite(boolean love);
+
         void setProgressMax(int max);
 
         void setErrorInfo(String message);
