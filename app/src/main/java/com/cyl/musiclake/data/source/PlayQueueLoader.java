@@ -60,6 +60,7 @@ public class PlayQueueLoader {
      */
     public static void updateQueue(Context context, List<Music> musics) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.insertSongs(musics);
         dbDaoImpl.clearPlayQueue();
         for (int i = 0; i < musics.size(); i++) {
             dbDaoImpl.insertSongToPlaylist(DBData.PLAY_QUEUE, musics.get(i).getId());

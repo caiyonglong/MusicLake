@@ -85,7 +85,7 @@ public class SqliteDao {
 	 * 
 	 * @param url
 	 *            下载地址
-	 * @return List<DownloadInfo>(下载器id/线程id、开始下载的节点、结束下载的节点、完成的进度、下载器网络标识/下载地址)
+	 * @return List<BaiduSongInfo>(下载器id/线程id、开始下载的节点、结束下载的节点、完成的进度、下载器网络标识/下载地址)
 	 */
 	public synchronized List<DownloadInfo> getDownloadInfos(String url) {
 		SQLiteDatabase database = dbHelper.getReadableDatabase();

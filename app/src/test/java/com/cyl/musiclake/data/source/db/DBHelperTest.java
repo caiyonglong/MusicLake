@@ -51,25 +51,80 @@ public class DBHelperTest extends TestCase {
 
         System.out.println(sql2);
         String insert;
-        insert = "insert into " + DBData.PLAYLIST_TABLE + " values ( " + "00000 ,'播放队列',100" + " )";
-        System.out.println(insert);
-        insert = "insert into " + DBData.PLAYLIST_TABLE + " values ( " + "00001 ,'最近播放',100" + " )";
+        insert = "insert into " + DBData.PLAYLIST_TABLE + " values (00000 ,'播放队列',10,233555)";
         System.out.println(insert);
 
-        String select = "SELECT " +
-                DBData.PLAYLIST_TABLE + ".pid, " +
-                DBData.PLAYLIST_TABLE + ".name " + " , " + "(SELECT count(" +
+
+        String select = "SELECT *" +
+                " , " + "(SELECT count(" +
                 DBData.MTP_TABLE + ".mid ) FROM " +
                 DBData.MTP_TABLE + " WHERE " +
                 DBData.MTP_TABLE + ".pid = " +
                 DBData.PLAYLIST_TABLE + ".pid) AS num FROM " +
-                DBData.PLAYLIST_TABLE;
+                DBData.PLAYLIST_TABLE + " where " +
+                DBData.PLAYLIST_TABLE + "." + DBData.PLAYLIST_DATE + "is not null ";
+
         System.out.println(select);
 
-        select = "select * from music inner join music_playlist " +
-                "where music.mid = music_playlist.mid " +
-                "and music_playlist.pid=0";
+
+        select = "select * from "
+                + DBData.MUSIC_TABLE + " , "
+                + DBData.MTP_TABLE + " where "
+                + DBData.MUSIC_TABLE + ".mid = "
+                + DBData.MTP_TABLE + ".mid " + "and "
+                + DBData.MTP_TABLE + ".pid=0"  ;
+
         System.out.println(select);
+
+        sql = "SELECT DISTINCT " +
+                " music.mid, " +
+                " music.name, " +
+                " music.filename, " +
+                " music.path, " +
+                " music.duration, " +
+                " music.size, " +
+                " music.artist_id, " +
+                " music.artist, " +
+                " music.album, " +
+                " music.album_id, " +
+                " music.cover, " +
+                " music.coverBig, " +
+                " music.coverSmall, " +
+                " music.type, " +
+                " music.is_love, " +
+                " music.is_online, " +
+                " music.prefix, " +
+                " music.years, " +
+                " ( " +
+                "  SELECT " +
+                "   music_playlist.date_added " +
+                "  FROM " +
+                "   music_playlist " +
+                "  WHERE " +
+                "   music_playlist.pid = 0 " +
+                "  AND music_playlist.mid = music.mid " +
+                "  ORDER BY " +
+                "   music_playlist.date_added DESC " +
+                " ) AS time, " +
+                " ( " +
+                "  SELECT " +
+                "   Count(music_playlist.mid) " +
+                "  FROM " +
+                "   music_playlist " +
+                "  WHERE " +
+                "   music_playlist.pid = 0 " +
+                "  AND music_playlist.mid = music.mid " +
+                " ) AS num " +
+                "FROM " +
+                " music_playlist, " +
+                " music " +
+                "WHERE " +
+                " music_playlist.mid = music.mid " +
+                "AND music_playlist.pid = 0 " +
+                "ORDER BY " +
+                " time DESC";
+
+        System.out.println(sql);
 
     }
 }

@@ -33,6 +33,15 @@ public class PreferencesUtils {
         saveLong(MUSIC_ID, id);
     }
 
+    public static long getPosition() {
+        return getLong(POSITION, 0);
+    }
+
+    public static void savePosition(long id) {
+        saveLong(POSITION, id);
+    }
+
+
     public static int getPlayMode() {
         return getInt(PLAY_MODE, 0);
     }

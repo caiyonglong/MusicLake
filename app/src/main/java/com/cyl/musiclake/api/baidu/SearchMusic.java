@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.onlinemusic.model;
+package com.cyl.musiclake.api.baidu;
 
 import java.util.List;
 

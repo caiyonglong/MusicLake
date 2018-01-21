@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.onlinemusic.contract;
 
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.base.BaseView;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists;
+import com.cyl.musiclake.api.baidu.OnlinePlaylists;
 
 import java.util.List;
 

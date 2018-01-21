@@ -17,7 +17,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.onlinemusic.contract.ArtistInfoContract;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineArtistInfo;
+import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 import com.cyl.musiclake.ui.onlinemusic.presenter.ArtistInfoPresenter;
 import com.cyl.musiclake.utils.Extras;
 import com.cyl.musiclake.utils.ToastUtils;

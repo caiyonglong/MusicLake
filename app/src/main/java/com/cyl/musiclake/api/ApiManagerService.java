@@ -1,15 +1,15 @@
 package com.cyl.musiclake.api;
 
+import com.cyl.musiclake.api.baidu.BaiduSongInfo;
 import com.cyl.musiclake.api.qq.QQApiKey;
 import com.cyl.musiclake.api.qq.QQApiModel;
 import com.cyl.musiclake.api.qq.QQLyricInfo;
 import com.cyl.musiclake.api.xiami.XiamiModel;
-import com.cyl.musiclake.ui.download.download.DownloadInfo;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.location.Location;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineArtistInfo;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicList;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists;
+import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
+import com.cyl.musiclake.api.baidu.BaiduMusicList;
+import com.cyl.musiclake.api.baidu.OnlinePlaylists;
 
 import java.util.List;
 import java.util.Map;
@@ -70,13 +70,13 @@ public interface ApiManagerService {
     @GET
     Observable<ApiModel<OnlineArtistInfo>> getArtistInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
-    @GET("ting")
-    Observable<OnlinePlaylists> getOnlinePlaylist(@QueryMap Map<String, String> params);
+    @GET
+    Observable<OnlinePlaylists> getOnlinePlaylist(@Url String baseUrl,@QueryMap Map<String, String> params);
 
-    @GET("ting")
-    Observable<OnlineMusicList> getOnlineSongs(@QueryMap Map<String, String> params);
+    @GET
+    Observable<BaiduMusicList> getOnlineSongs(@Url String baseUrl, @QueryMap Map<String, String> params);
 
-    @GET("ting")
-    Observable<DownloadInfo> getTingSongInfo(@QueryMap Map<String, String> params);
+    @GET
+    Observable<BaiduSongInfo> getTingSongInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
 }

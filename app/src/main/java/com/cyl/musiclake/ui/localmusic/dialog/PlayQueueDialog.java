@@ -21,10 +21,15 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.adapter.PlayQueueAdapter;
+import com.cyl.musiclake.ui.localmusic.contract.PlayQueueContract;
+import com.cyl.musiclake.ui.localmusic.presenter.PlayQueuePresenter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.PreferencesUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +39,7 @@ import butterknife.OnClick;
  * Created by hefuyi on 2016/12/27.
  */
 
-public class PlayQueueDialog extends DialogFragment {
+public class PlayQueueDialog extends DialogFragment implements PlayQueueContract.View {
 
     @BindView(R.id.tv_play_mode)
     TextView tvPlayMode;
@@ -47,12 +52,13 @@ public class PlayQueueDialog extends DialogFragment {
     @BindView(R.id.bottomsheet)
     LinearLayout root;
 
-    private PlayQueueAdapter mAdapter = new PlayQueueAdapter(null);
+    private PlayQueueAdapter mAdapter;
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private final int PLAY_MODE_RANDOM = 0;
     private final int PLAY_MODE_LOOP = 1;
     private final int PLAY_MODE_REPEAT = 2;
     private Palette.Swatch mSwatch;
+    private PlayQueuePresenter mPresenter;
 
 
     @Override
@@ -81,30 +87,39 @@ public class PlayQueueDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mPresenter = new PlayQueuePresenter(getContext());
+        mPresenter.attachView(this);
         if (mSwatch != null) {
             root.setBackgroundColor(mSwatch.getRgb());
-            mAdapter.setPaletteSwatch(mSwatch);
+            if (mAdapter != null)
+                mAdapter.setPaletteSwatch(mSwatch);
             int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
             tvPlayMode.setTextColor(blackWhiteColor);
             ivPlayMode.setColorFilter(blackWhiteColor);
             clearAll.setColorFilter(blackWhiteColor);
         }
+        mAdapter = new PlayQueueAdapter(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
-        updateAdapter();
+        mAdapter.bindToRecyclerView(recyclerView);
+        mPresenter.loadSongs();
         updatePlayMode();
         initListener();
     }
 
     private void initListener() {
-        mAdapter.setOnItemClickListener((adapter, view1, position) -> {
-            PlayManager.play(position);
-            mAdapter.setNewData(PlayManager.getPlayList());
-        });
-        mAdapter.setOnItemChildClickListener((adapter, view12, position) -> {
-            if (view12.getId() == R.id.iv_more) {
-                PlayManager.removeFromQueue(position);
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_love && view.getId() != R.id.iv_clear) {
+                PlayManager.play(position);
                 mAdapter.setNewData(PlayManager.getPlayList());
+            }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            switch (view.getId()) {
+                case R.id.iv_clear:
+                    PlayManager.removeFromQueue(position);
+                    mAdapter.setNewData(PlayManager.getPlayList());
+                    break;
             }
         });
     }
@@ -132,10 +147,6 @@ public class PlayQueueDialog extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    public void updateAdapter() {
-        mAdapter.setNewData(PlayManager.getPlayList());
     }
 
     public void dismiss() {
@@ -173,10 +184,32 @@ public class PlayQueueDialog extends DialogFragment {
                 .positiveText(R.string.sure)
                 .negativeText(R.string.cancel)
                 .onPositive((dialog, which) -> {
-                    PlayManager.clearQueue();
+                    mPresenter.clearQueue();
+                    mPresenter.loadSongs();
                     dismiss();
                 })
                 .onNegative((dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showSongs(List<Music> songs) {
+        mAdapter.setNewData(songs);
+    }
+
+    @Override
+    public void showEmptyView() {
+        mAdapter.setNewData(null);
+        mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 }

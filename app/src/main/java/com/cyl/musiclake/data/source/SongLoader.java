@@ -48,13 +48,34 @@ public class SongLoader {
         return Observable.create(subscriber -> {
             try {
                 DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-                Cursor cursor = dbDaoImpl.makeSongCursor(DBData.IS_LOVE + "= ? ", new String[]{"1"}, DBData.MUSIC_NAME);
+                String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.IS_LOVE + "= 1";
+                Cursor cursor = dbDaoImpl.makeCursor(sql);
                 List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
                 dbDaoImpl.closeDB();
                 subscriber.onNext(results);
                 subscriber.onComplete();
             } catch (Exception e) {
                 e.printStackTrace();
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    public static Observable<Music> getMusicInfo(final Context context, Music music) {
+        return Observable.create(subscriber -> {
+            try {
+                DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+                String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.MUSIC_ID + " = '" + music.getId()+"'";
+                Cursor cursor = dbDaoImpl.makeCursor(sql);
+                List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
+                if (results.size() != 0) {
+                    subscriber.onNext(results.get(0));
+                } else {
+                    subscriber.onNext(music);
+                }
+                dbDaoImpl.closeDB();
+                subscriber.onComplete();
+            } catch (Exception e) {
                 subscriber.onError(e);
             }
         });
@@ -83,6 +104,16 @@ public class SongLoader {
     private static void insertSongs(Context context, List<Music> musics) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
         dbDaoImpl.insertSongs(musics);
+        dbDaoImpl.closeDB();
+    }
+
+    /**
+     * 本地歌曲
+     * 移除歌曲
+     */
+    public static void removeSong(Context context, Music music) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.deleteSongForId(music.getId());
         dbDaoImpl.closeDB();
     }
 

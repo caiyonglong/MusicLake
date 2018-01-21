@@ -8,10 +8,10 @@
 //
 //import com.cyl.musiclake.callback.JsonCallback;
 //import com.cyl.musiclake.R;
-//import com.cyl.musiclake.ui.download.download.DownloadInfo;
+//import com.cyl.musiclake.api.baidu.BaiduSongInfo;
 //import com.cyl.musiclake.ui.music.model.Lrc;
 //import com.cyl.musiclake.ui.music.model.Music;
-//import com.cyl.musiclake.ui.onlinemusic.model.SearchMusic;
+//import com.cyl.musiclake.api.baidu.SearchMusic;
 //import com.cyl.musiclake.utils.Constants;
 //import com.cyl.musiclake.utils.FileUtils;
 //import com.cyl.musiclake.utils.NetworkUtils;
@@ -80,9 +80,9 @@
 //                .addParams(Constants.PARAM_METHOD, Constants.METHOD_DOWNLOAD_MUSIC)
 //                .addParams(Constants.PARAM_SONG_ID, songList.getSong_id())
 //                .build()
-//                .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
+//                .execute(new JsonCallback<BaiduSongInfo>(BaiduSongInfo.class) {
 //                    @Override
-//                    public void onResponse(final DownloadInfo response) {
+//                    public void onResponse(final BaiduSongInfo response) {
 //                        if (response == null) {
 //                            onFail(null, null);
 //                            return;

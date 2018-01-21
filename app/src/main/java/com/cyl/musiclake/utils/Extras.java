@@ -4,12 +4,14 @@ package com.cyl.musiclake.utils;
  * 作者：yonglong on 2016/9/24 10:57
  * 邮箱：643872807@qq.com
  * 版本：2.5
+ * 标志类
  */
 
 public class Extras {
-    public static String BILLBOARD_TYPE = "billboard_type";
-    public static String BILLBOARD_TITLE = "billboard_title";
-    public static String BILLBOARD_ALBUM = "billboard_album";
+    public static final String BILLBOARD_DESC = "billboard_desc";
+    public static final String BILLBOARD_TYPE = "billboard_type";
+    public static final String BILLBOARD_TITLE = "billboard_title";
+    public static final String BILLBOARD_ALBUM = "billboard_album";
 
     public static final String ALBUM = "album";
 
@@ -40,5 +42,11 @@ public class Extras {
     public static final String TING_UID = "ting_uid";
 
 
-    public static String IS_LOVE = "is_love";
+    public static final String SONG_CATEGORY = "category";
+    public static final String IS_LOVE = "is_love";
+    public static final String LOCAL_MUSIC = "local_music";
+    public static final String PLAY_HISTORY = "history";
+    public static final String FOLDER_PATH = "folder_path";
+    public static final String FOLDER_NAME = "folder_name";
+
 }

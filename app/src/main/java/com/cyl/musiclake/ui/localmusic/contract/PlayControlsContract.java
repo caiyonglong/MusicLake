@@ -40,6 +40,8 @@ public interface PlayControlsContract {
         void setProgressMax(int max);
 
         void setErrorInfo(String message);
+
+        void updatePanelLayout(boolean scroll);
     }
 
     interface Presenter extends BasePresenter<View> {

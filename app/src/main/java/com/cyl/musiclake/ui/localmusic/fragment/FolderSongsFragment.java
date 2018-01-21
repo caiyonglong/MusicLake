@@ -1,8 +1,12 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
+
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,74 +16,116 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.SongLoader;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
-import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
+import com.cyl.musiclake.ui.localmusic.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.localmusic.presenter.SongsPresenter;
+import com.cyl.musiclake.ui.localmusic.presenter.FolderSongPresenter;
 import com.cyl.musiclake.utils.Extras;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-/**
- * 功能：本地歌曲列表
- * 作者：yonglong on 2016/8/10 20:49
- * 邮箱：643872807@qq.com
- * 版本：2.5
- */
-public class SongsFragment extends BaseFragment implements SongsContract.View {
+public class FolderSongsFragment extends BaseFragment implements FolderSongsContract.View {
+
+    FolderSongPresenter mPresenter;
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @BindView(R.id.tv_empty)
     TextView tv_empty;
     @BindView(R.id.loading)
     LinearLayout loading;
+
     private SongAdapter mAdapter;
-    private List<Music> musicList = new ArrayList<>();
+    private String path;
 
-    private SongsPresenter mPresenter;
+    public static FolderSongsFragment newInstance(String path) {
 
-    public static SongsFragment newInstance(String flag) {
         Bundle args = new Bundle();
-        args.putString(Extras.SONG_CATEGORY, flag);
-        SongsFragment fragment = new SongsFragment();
+        args.putString(Extras.FOLDER_PATH, path);
+
+        FolderSongsFragment fragment = new FolderSongsFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.unsubscribe();
+    }
+
+
+    @Override
+    public void showEmptyView() {
+        mAdapter.setEmptyView(R.layout.view_song_empty);
+    }
+
+
     @Override
     protected void initDatas() {
-        mPresenter.loadSongs(getArguments().getString(Extras.SONG_CATEGORY));
+
+//        if (Build.VERSION.SDK_INT < 21 && view.findViewById(R.id.status_bar) != null) {
+//            view.findViewById(R.id.status_bar).setVisibility(View.GONE);
+//            if (Build.VERSION.SDK_INT >= 19) {
+//                int statusBarHeight = DensityUtil.getStatusBarHeight(getContext());
+//                view.findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
+//            }
+//        }
+
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST, true));
+
+        mPresenter.loadSongs(path);
+
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview_songs;
+        return R.layout.frag_list_layout;
     }
 
     @Override
     public void initViews() {
-        mPresenter = new SongsPresenter(getActivity());
+
+        toolbar.setTitle(R.string.folders);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        final ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setTitle(R.string.folders);
+
+        mPresenter = new FolderSongPresenter(getActivity());
+        mPresenter.attachView(this);
+        if (getArguments() != null) {
+            path = getArguments().getString(Extras.FOLDER_PATH);
+        }
+
+        mAdapter = new SongAdapter(null);
+
         mPresenter.attachView(this);
 
-        mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+        setHasOptionsMenu(true);
+
     }
 
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                mPresenter.playMusic(musicList, position);
+                PlayManager.setPlayList(adapter.getData());
+                PlayManager.play(position);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -88,7 +134,8 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        mPresenter.playMusic(musicList, position);
+                        PlayManager.setPlayList(adapter.getData());
+                        PlayManager.play(position);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -113,8 +160,6 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
                                 .title("提示")
                                 .content("是否移除这首歌曲？")
                                 .onPositive((dialog, which) -> {
-                                    SongLoader.removeSong(getActivity(), musicList.get(position));
-                                    mAdapter.notifyItemChanged(position);
                                 })
                                 .positiveText("确定")
                                 .negativeText("取消")
@@ -146,15 +191,8 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     }
 
     @Override
-    public void showSongs(List<Music> songList) {
-        musicList.clear();
-        musicList.addAll(songList);
-        mAdapter.setNewData(songList);
-    }
-
-    @Override
-    public void setEmptyView() {
-        mAdapter.setEmptyView(R.layout.view_song_empty);
+    public void showSongs(List<Music> musicList) {
+        mAdapter.setNewData(musicList);
     }
 
 }

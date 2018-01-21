@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.onlinemusic.model;
+package com.cyl.musiclake.api.baidu;
 
 import java.util.List;
 
@@ -22,6 +22,9 @@ public class OnlinePlaylists {
         String name;
         String comment;
         String pic_s192;
+        String pic_s210;
+        String pic_s260;
+        String pic_s444;
 
         public List<MusicLists> getContent() {
             return content;
@@ -49,6 +52,34 @@ public class OnlinePlaylists {
 
         public String getPic_s192() {
             return pic_s192;
+        }
+
+        public void setPic_s192(String pic_s192) {
+            this.pic_s192 = pic_s192;
+        }
+
+        public String getPic_s210() {
+            return pic_s210;
+        }
+
+        public void setPic_s210(String pic_s210) {
+            this.pic_s210 = pic_s210;
+        }
+
+        public String getPic_s260() {
+            return pic_s260;
+        }
+
+        public void setPic_s260(String pic_s260) {
+            this.pic_s260 = pic_s260;
+        }
+
+        public String getPic_s444() {
+            return pic_s444;
+        }
+
+        public void setPic_s444(String pic_s444) {
+            this.pic_s444 = pic_s444;
         }
 
         public String getType() {

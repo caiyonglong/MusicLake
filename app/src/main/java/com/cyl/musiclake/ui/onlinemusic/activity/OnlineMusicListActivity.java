@@ -15,12 +15,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlineMusicListContract;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicInfo;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicList;
 import com.cyl.musiclake.ui.onlinemusic.presenter.OnlineMusicListPresenter;
 import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.Extras;
@@ -41,7 +40,7 @@ import butterknife.BindView;
 public class OnlineMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
 
     private static final String TAG = "OnlineMusicListActivity";
-    private List<OnlineMusicInfo> mMusicLists = new ArrayList<>();
+    private List<BaiduMusicInfo> mMusicLists = new ArrayList<>();
     private List<Music> musicList = new ArrayList<>();
     private SongAdapter mAdapter;
 
@@ -62,6 +61,8 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
     private int mOffset = 0;
     private String title;
     private String type;
+    private String desc;
+    private String pic;
     private OnlineMusicListPresenter mPresenter;
     private int mCurrentCounter = 0;
     private int TOTAL_COUNTER = 10;
@@ -75,6 +76,8 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
     protected void initView() {
         title = getIntent().getStringExtra(Extras.BILLBOARD_TITLE);
         type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
+        desc = getIntent().getStringExtra(Extras.BILLBOARD_DESC);
+        pic = getIntent().getStringExtra(Extras.BILLBOARD_ALBUM);
         mToolbar.setTitle(title);
 
         setSupportActionBar(mToolbar);
@@ -97,6 +100,7 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+        showHeaderInfo();
 
         mPresenter.loadOnlineMusicList(type, 10, mOffset);
     }
@@ -105,23 +109,23 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            mPresenter.playCurrentMusic(music.getId());
+            mPresenter.playCurrentMusic(music);
         });
-        mAdapter.setUpFetchListener(() -> {
-            mOffset = 0;
-            mPresenter.loadOnlineMusicList(type, 10, mOffset);
-        });
-        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            if (mCurrentCounter >= TOTAL_COUNTER) {
-                //数据全部加载完毕
-                mAdapter.loadMoreEnd();
-            } else {
-                //成功获取更多数据
-                mPresenter.loadOnlineMusicList(type, 10, mOffset);
-                mCurrentCounter = mAdapter.getData().size();
-                TOTAL_COUNTER = 10 * mOffset;
-            }
-        }, 1000), mRecyclerView);
+//        mAdapter.setUpFetchListener(() -> {
+//            mOffset = 0;
+//            mPresenter.loadOnlineMusicList(type, 10, mOffset);
+//        });
+//        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
+//            if (mCurrentCounter >= TOTAL_COUNTER) {
+//                //数据全部加载完毕
+//                mAdapter.loadMoreEnd();
+//            } else {
+//                //成功获取更多数据
+//                mPresenter.loadOnlineMusicList(type, 10, mOffset);
+//                mCurrentCounter = mAdapter.getData().size();
+//                TOTAL_COUNTER = 10 * mOffset;
+//            }
+//        }, 1000), mRecyclerView);
     }
 
     @Override
@@ -135,7 +139,6 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this, 150));
         mViewHeader.setLayoutParams(params);
 
-        mIvBackground = (ImageView) mViewHeader.findViewById(R.id.iv_header_bg);
         mIvCover = (ImageView) mViewHeader.findViewById(R.id.iv_cover);
         mTvTitle = (TextView) mViewHeader.findViewById(R.id.tv_title);
         mTvDate = (TextView) mViewHeader.findViewById(R.id.tv_update_date);
@@ -156,19 +159,13 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         mAdapter.loadMoreFail();
     }
 
-    @Override
-    public void showHeaderInfo(OnlineMusicList.JBillboard playlistInfo) {
-        mTvTitle.setText(playlistInfo.getName());
-        if (playlistInfo.getUpdate_date() == null)
-            playlistInfo.setUpdate_date("暂无记录");
-        mTvDate.setText(getString(R.string.recent_update, playlistInfo.getUpdate_date()));
-        mTvDesc.setText(playlistInfo.getComment());
+
+    public void showHeaderInfo() {
+        mTvTitle.setText(title);
+//        mTvDate.setText(getString(R.string.recent_update, playlistInfo.getUpdate_date()));
+        mTvDesc.setText(desc);
         GlideApp.with(this)
-                .load(playlistInfo.getPic_s640())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(mIvBackground);
-        GlideApp.with(this)
-                .load(playlistInfo.getPic_s444())
+                .load(pic)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mIvCover);
         mAdapter.setHeaderView(mViewHeader, 0);

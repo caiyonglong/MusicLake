@@ -12,8 +12,8 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.utils.ColorUtil;
-import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.ConvertUtils;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
     private Palette.Swatch mSwatch;
 
     public PlayQueueAdapter(List<Music> musicList) {
-        super(R.layout.item_music, musicList);
+        super(R.layout.item_play_queue, musicList);
     }
 
     @Override
@@ -36,18 +36,21 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
         } else {
             url = item.getCoverUri();
         }
-
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(R.drawable.ic_clear)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into((ImageView) holder.getView(R.id.iv_more));
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into((ImageView) holder.getView(R.id.iv_cover));
+        if (url != null) {
+            GlideApp.with(mContext)
+                    .asBitmap()
+                    .load(url)
+                    .error(R.drawable.default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into((ImageView) holder.getView(R.id.iv_cover));
+        }
+        if (item.getType() == Music.Type.QQ) {
+            holder.setText(R.id.tv_source, "qq");
+        } else if (item.getType() == Music.Type.XIAMI) {
+            holder.setText(R.id.tv_source, "虾米");
+        } else {
+            holder.getView(R.id.tv_source).setVisibility(View.GONE);
+        }
 
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
@@ -61,6 +64,9 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
             holder.setTextColor(R.id.tv_title, ColorUtil.getOpaqueColor(artistColor));
             holder.setTextColor(R.id.tv_artist, artistColor);
         }
+
+        holder.addOnClickListener(R.id.iv_clear);
+        holder.addOnClickListener(R.id.iv_love);
     }
 
     public void setPaletteSwatch(Palette.Swatch mSwatch) {

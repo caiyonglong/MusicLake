@@ -8,7 +8,7 @@ import com.cyl.musiclake.ui.base.BaseView;
 
 import java.util.List;
 
-public interface PlayqueueSongContract {
+public interface PlayQueueContract {
 
     interface View extends BaseView {
 
@@ -16,10 +16,14 @@ public interface PlayqueueSongContract {
 
         void showSongs(List<Music> songs);
 
+        void showEmptyView();
+
     }
 
     interface Presenter extends BasePresenter<View> {
 
         void loadSongs();
+
+        void clearQueue();
     }
 }

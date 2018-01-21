@@ -308,9 +308,9 @@ public class Music implements Parcelable {
     }
 
     public void setType(String type) {
-        if (type.equals("qq")) {
+        if (type.equals("QQ")) {
             this.type = Type.QQ;
-        } else if (type.equals("xiami")) {
+        } else if (type.equals("XIAMI")) {
             this.type = Type.XIAMI;
         } else {
             this.type = Type.LOCAL;

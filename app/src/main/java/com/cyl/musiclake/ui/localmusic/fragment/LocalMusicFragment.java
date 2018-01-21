@@ -28,7 +28,7 @@ public class LocalMusicFragment extends BaseFragment {
 
     public static LocalMusicFragment newInstance(String flag) {
         Bundle args = new Bundle();
-        args.putString(Extras.IS_LOVE, flag);
+        args.putString(Extras.SONG_CATEGORY, flag);
         LocalMusicFragment fragment = new LocalMusicFragment();
         fragment.setArguments(args);
         return fragment;
@@ -42,7 +42,7 @@ public class LocalMusicFragment extends BaseFragment {
     @Override
     public void initViews() {
         mToolbar.setTitle("本地歌曲");
-        if (getArguments().getString(Extras.IS_LOVE).equals("love")) {
+        if (getArguments().getString(Extras.SONG_CATEGORY).equals(Extras.IS_LOVE)) {
             mToolbar.setTitle("收藏");
         }
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
@@ -60,11 +60,11 @@ public class LocalMusicFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        if (getArguments().getString(Extras.IS_LOVE).equals("love")) {
+        if (getArguments().getString(Extras.SONG_CATEGORY).equals(Extras.IS_LOVE)) {
             mTabLayout.setVisibility(View.GONE);
-            adapter.addFragment(SongsFragment.newInstance("love"), "收藏");
+            adapter.addFragment(SongsFragment.newInstance(Extras.IS_LOVE), "收藏");
         } else {
-            adapter.addFragment(SongsFragment.newInstance("local"), "歌曲");
+            adapter.addFragment(SongsFragment.newInstance(Extras.LOCAL_MUSIC), "歌曲");
             adapter.addFragment(AlbumFragment.newInstance(), "专辑");
             adapter.addFragment(ArtistFragment.newInstance(), "艺术家");
             adapter.addFragment(new FoldersFragment(), "文件夹");

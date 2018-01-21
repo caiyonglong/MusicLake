@@ -72,30 +72,32 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
     public void setNextDataSource(final String path) {
         try {
+            Log.e(TAG, "--" + path);
             mCurrentMediaPlayer.setNextMediaPlayer(null);
+
+            if (mNextMediaPlayer != null) {
+                mNextMediaPlayer.release();
+                mNextMediaPlayer = null;
+            }
+            if (path == null) {
+                return;
+            }
+            mNextMediaPlayer = new MediaPlayer();
+            mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
+            mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
+            if (setDataSourceImpl(mNextMediaPlayer, path)) {
+                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
+            } else {
+                if (mNextMediaPlayer != null) {
+                    mNextMediaPlayer.release();
+                    mNextMediaPlayer = null;
+                }
+            }
         } catch (IllegalArgumentException e) {
             Log.i(TAG, "Next media player is current one, continuing");
         } catch (IllegalStateException e) {
             Log.e(TAG, "Media player not initialized!");
             return;
-        }
-        if (mNextMediaPlayer != null) {
-            mNextMediaPlayer.release();
-            mNextMediaPlayer = null;
-        }
-        if (path == null) {
-            return;
-        }
-        mNextMediaPlayer = new MediaPlayer();
-        mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
-        mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
-        if (setDataSourceImpl(mNextMediaPlayer, path)) {
-            mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
-        } else {
-            if (mNextMediaPlayer != null) {
-                mNextMediaPlayer.release();
-                mNextMediaPlayer = null;
-            }
         }
     }
 

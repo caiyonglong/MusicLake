@@ -136,3 +136,6 @@ public class MultiTouchViewPager extends ViewPager {
 10、重构数据库，当插入十几条数据或更多时，其中重复的数据更新数据库，不重复的添加进去，能不能用一条语句实现？
 
 11、再次设计数据库，播放队列，播放历史设计成一种特殊的歌单数据。
+
+12、增加setNextMediaPlayer方法时，抛出异常
+E/MediaPlayer: next player is not prepared

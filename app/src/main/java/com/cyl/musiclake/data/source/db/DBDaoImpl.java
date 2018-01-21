@@ -177,8 +177,8 @@ public class DBDaoImpl implements DBDao {
      * 删除音乐表单中数据
      */
     @Override
-    public void deleteSongForId(String[] ids) {
-        db.delete(DBData.MUSIC_TABLE, DBData.MUSIC_ID + " = ?", ids);
+    public void deleteSongForId(String mid) {
+        db.delete(DBData.MUSIC_TABLE, DBData.MUSIC_ID + " = ?", new String[]{mid});
     }
 
     /**

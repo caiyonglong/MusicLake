@@ -7,8 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicInfo;
 
 import java.util.List;
 
@@ -18,25 +18,25 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class OnlineMusicAdapter extends BaseQuickAdapter<OnlineMusicInfo, BaseViewHolder> {
+public class OnlineMusicAdapter extends BaseQuickAdapter<BaiduMusicInfo, BaseViewHolder> {
 //        RecyclerView.Adapter<OnlineMusicAdapter.ItemHolder> {
 
-    public OnlineMusicAdapter(List<OnlineMusicInfo> musicInfos) {
+    public OnlineMusicAdapter(List<BaiduMusicInfo> musicInfos) {
         super(R.layout.item_music, musicInfos);
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, OnlineMusicInfo onlineMusicInfo) {
+    protected void convert(BaseViewHolder holder, BaiduMusicInfo baiduMusicInfo) {
         Music music = new Music();
-        music.setTitle(onlineMusicInfo.getTitle());
-        music.setArtist(onlineMusicInfo.getArtist_name());
-        music.setAlbum(onlineMusicInfo.getAlbum_title());
-        music.setCoverUri(onlineMusicInfo.getPic_big());
-        music.setId(onlineMusicInfo.getSong_id());
-        music.setLrcPath(onlineMusicInfo.getLrclink());
+        music.setTitle(baiduMusicInfo.getTitle());
+        music.setArtist(baiduMusicInfo.getArtist_name());
+        music.setAlbum(baiduMusicInfo.getAlbum_title());
+        music.setCoverUri(baiduMusicInfo.getPic_big());
+        music.setId(baiduMusicInfo.getSong_id());
+        music.setLrcPath(baiduMusicInfo.getLrclink());
 
-        holder.setText(R.id.tv_title, onlineMusicInfo.getTitle());
-        holder.setText(R.id.tv_artist, onlineMusicInfo.getArtist_name());
+        holder.setText(R.id.tv_title, baiduMusicInfo.getTitle());
+        holder.setText(R.id.tv_artist, baiduMusicInfo.getArtist_name());
 
         GlideApp.with(mContext)
                 .load(music.getCoverUri())
@@ -77,7 +77,7 @@ public class OnlineMusicAdapter extends BaseQuickAdapter<OnlineMusicInfo, BaseVi
 //        });
 //
 //    }
-//    private void getMusicInfo(OnlineMusicInfo onlineMusicInfo) {
+//    private void getMusicInfo(BaiduMusicInfo onlineMusicInfo) {
 //        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 //        dialog.setTitle(onlineMusicInfo.getTitle());
 //        StringBuilder sb = new StringBuilder();
@@ -97,7 +97,7 @@ public class OnlineMusicAdapter extends BaseQuickAdapter<OnlineMusicInfo, BaseVi
 //    }
 
 
-//    private void conver(OnlineMusicInfo onlineMusicInfo) {
+//    private void conver(BaiduMusicInfo onlineMusicInfo) {
 //
 //        new PlayOnlineMusic(context, onlineMusicInfo) {
 //            @Override

@@ -14,7 +14,7 @@ import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.OnlineAdapter;
 import com.cyl.musiclake.ui.onlinemusic.activity.OnlineMusicListActivity;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists.Billboard;
+import com.cyl.musiclake.api.baidu.OnlinePlaylists.Billboard;
 import com.cyl.musiclake.ui.onlinemusic.presenter.OnlinePlaylistPresenter;
 import com.cyl.musiclake.utils.Extras;
 
@@ -83,6 +83,8 @@ public class OnlinePlaylistFragment extends BaseFragment implements OnlinePlayli
             Billboard billboard = (Billboard) adapter.getItem(position);
             Intent intent = new Intent(getActivity(), OnlineMusicListActivity.class);
             intent.putExtra(Extras.BILLBOARD_TITLE, billboard.getName());
+            intent.putExtra(Extras.BILLBOARD_DESC, billboard.getComment());
+            intent.putExtra(Extras.BILLBOARD_ALBUM, billboard.getPic_s260());
             intent.putExtra(Extras.BILLBOARD_TYPE, billboard.getType());
             startActivity(intent);
         });

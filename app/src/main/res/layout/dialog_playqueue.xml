@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottomsheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,26 +8,29 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal">
+        android:layout_height="50dp"
+        android:elevation="5dp"
+        android:orientation="horizontal"
+        tools:targetApi="lollipop">
 
         <TextView
             android:id="@+id/tv_play_mode"
             style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="false"
             android:layout_centerVertical="true"
-            android:paddingLeft="16dp" />
+            android:layout_margin="10dp"
+            android:text="@string/tv_play_mode"
+            tools:ignore="RelativeOverlap" />
 
         <ImageView
             android:id="@+id/clear_all"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_delete" />
@@ -44,7 +48,7 @@
 
         <View
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
+            android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
             android:background="@color/grey" />
 
@@ -53,7 +57,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_songs"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
+        android:layout_height="250dp"
         android:orientation="vertical" />
 
 </LinearLayout>

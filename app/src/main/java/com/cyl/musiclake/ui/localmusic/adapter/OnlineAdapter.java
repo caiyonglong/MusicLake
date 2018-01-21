@@ -6,7 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists.Billboard;
+import com.cyl.musiclake.api.baidu.OnlinePlaylists.Billboard;
 
 import java.util.List;
 

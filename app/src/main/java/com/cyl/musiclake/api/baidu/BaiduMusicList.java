@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.onlinemusic.model;
+package com.cyl.musiclake.api.baidu;
 
 import java.util.List;
 
@@ -6,15 +6,15 @@ import java.util.List;
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
-public class OnlineMusicList {
-    private List<OnlineMusicInfo> song_list;
+public class BaiduMusicList {
+    private List<BaiduMusicInfo> song_list;
     private JBillboard billboard;
 
-    public List<OnlineMusicInfo> getSong_list() {
+    public List<BaiduMusicInfo> getSong_list() {
         return song_list;
     }
 
-    public void setSong_list(List<OnlineMusicInfo> song_list) {
+    public void setSong_list(List<BaiduMusicInfo> song_list) {
         this.song_list = song_list;
     }
 

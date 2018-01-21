@@ -8,8 +8,12 @@ import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.GlideApp;
 
 
 /**
@@ -65,6 +69,35 @@ public class CoverLoader {
         private static CoverLoader instance = new CoverLoader();
     }
 
+    private Bitmap bitmap = null;
+
+    public Bitmap loadBitmapByGlide(Context context, String uri) {
+        try {
+            if (TextUtils.isEmpty(uri)) {
+                bitmap = mThumbnailCache.get(KEY_NULL);
+                if (bitmap == null) {
+                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    mThumbnailCache.put(KEY_NULL, bitmap);
+                }
+            } else {
+                GlideApp.with(context)
+                        .asBitmap()
+                        .load(uri)
+                        .error(R.drawable.default_cover)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                bitmap = resource;
+                            }
+                        });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
     public Bitmap loadThumbnail(String uri) {
         Bitmap bitmap = null;
         try {
@@ -90,34 +123,6 @@ public class CoverLoader {
         return bitmap;
     }
 
-
-    public Bitmap loadBlur(String uri) {
-        Bitmap bitmap = null;
-        try {
-            if (TextUtils.isEmpty(uri)) {
-                bitmap = mBlurCache.get(KEY_NULL);
-                if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.music_eight);
-                    bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
-                    mBlurCache.put(KEY_NULL, bitmap);
-                }
-            } else {
-                bitmap = mBlurCache.get(uri);
-                if (bitmap == null) {
-                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
-                    if (bitmap == null) {
-                        bitmap = loadBlur(null);
-                    } else {
-                        bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
-                    }
-                    mBlurCache.put(uri, bitmap);
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return bitmap;
-    }
 
     public Bitmap loadRound(String uri) {
         Bitmap bitmap = null;
@@ -201,13 +206,17 @@ public class CoverLoader {
             return null;
         }
         String uri = null;
-        Cursor cursor = context.getContentResolver().query(
-                Uri.parse("content://media/external/audio/albums/" + albumId),
-                new String[]{"album_art"}, null, null, null);
-        if (cursor != null) {
-            cursor.moveToNext();
-            uri = cursor.getString(0);
-            cursor.close();
+        try {
+            Cursor cursor = context.getContentResolver().query(
+                    Uri.parse("content://media/external/audio/albums/" + albumId),
+                    new String[]{"album_art"}, null, null, null);
+            if (cursor != null) {
+                cursor.moveToNext();
+                uri = cursor.getString(0);
+                cursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return uri;
     }

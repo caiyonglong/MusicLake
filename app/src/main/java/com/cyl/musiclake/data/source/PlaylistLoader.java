@@ -34,7 +34,7 @@ public class PlaylistLoader {
                 DBData.MTP_TABLE + ".pid = " +
                 DBData.PLAYLIST_TABLE + ".pid) AS num FROM " +
                 DBData.PLAYLIST_TABLE + " where " +
-                DBData.PLAYLIST_TABLE + "." + DBData.PLAYLIST_DATE + "!= null ";
+                DBData.PLAYLIST_TABLE + "." + DBData.PLAYLIST_DATE + " is not null ";
         LogUtil.d(TAG, sql + "----");
         Cursor cursor = dbDaoImpl.makeCursor(sql);
         List<Playlist> results = dbDaoImpl.getAllPlaylistForCursor(cursor);
@@ -72,13 +72,19 @@ public class PlaylistLoader {
      */
     public static Observable<List<Music>> getMusicForPlaylist(Context context, String playlist_id) {
         return Observable.create(subscriber -> {
-            DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
             String sql = "select * from "
                     + DBData.MUSIC_TABLE + " , "
                     + DBData.MTP_TABLE + " where "
                     + DBData.MUSIC_TABLE + ".mid = "
                     + DBData.MTP_TABLE + ".mid " + "and "
-                    + DBData.MTP_TABLE + ".pid=" + playlist_id;
+                    + DBData.MTP_TABLE + ".pid=" + playlist_id + " ORDER BY music_playlist.date_added DESC";
+
+            DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+            if (playlist_id.equals("1")) {
+                sql = "SELECT DISTINCT  music.mid,  music.name,  music.filename,  music.path,  music.duration,  music.size,  music.artist_id,  music.artist,  music.album,  music.album_id,  music.cover,  music.coverBig,  music.coverSmall,  music.type,  music.is_love,  music.is_online,  music.prefix,  music.years,  (   SELECT    music_playlist.date_added   FROM    music_playlist   WHERE    music_playlist.pid = 0   AND music_playlist.mid = music.mid   ORDER BY    music_playlist.date_added DESC  ) AS time,  (   SELECT    Count(music_playlist.mid)   FROM    music_playlist   WHERE    music_playlist.pid = 0   AND music_playlist.mid = music.mid  ) AS num FROM  music_playlist,  music WHERE  music_playlist.mid = music.mid AND music_playlist.pid = 1 ORDER BY  time DESC";
+            } else if (playlist_id.equals("0")) {
+                sql = "SELECT DISTINCT  music.mid,  music.name,  music.filename,  music.path,  music.duration,  music.size,  music.artist_id,  music.artist,  music.album,  music.album_id,  music.cover,  music.coverBig,  music.coverSmall,  music.type,  music.is_love,  music.is_online,  music.prefix,  music.years,  (   SELECT    music_playlist.date_added   FROM    music_playlist   WHERE    music_playlist.pid = 0   AND music_playlist.mid = music.mid   ORDER BY    music_playlist.date_added DESC  ) AS time,  (   SELECT    Count(music_playlist.mid)   FROM    music_playlist   WHERE    music_playlist.pid = 0   AND music_playlist.mid = music.mid  ) AS num FROM  music_playlist,  music WHERE  music_playlist.mid = music.mid AND music_playlist.pid = 0 ORDER BY  time DESC";
+            }
             Cursor cursor = dbDaoImpl.makeCursor(sql);
             List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
             dbDaoImpl.closeDB();
@@ -104,9 +110,9 @@ public class PlaylistLoader {
     /**
      * 移除歌曲到歌单
      */
-    public static void removeSong(Context context, String pid, long mid) {
+    public static void removeSong(Context context, String pid, String mid) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.removeSong(pid, String.valueOf(mid));
+        dbDaoImpl.removeSong(pid, mid);
         dbDaoImpl.closeDB();
     }
 

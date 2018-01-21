@@ -18,6 +18,7 @@ import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.MetaChangedEvent;
+import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -78,8 +79,9 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         // Track changes
         filter.addAction(MusicPlayerService.META_CHANGED);
         // Update a list, probably the playlist fragment's
-        filter.addAction(MusicPlayerService.REFRESH);
-        // If a playlist has changed, notify us
+        filter.addAction(MusicPlayerService.PLAY_QUEUE_CHANGE);
+        // If a queue has cleared, notify us
+        filter.addAction(MusicPlayerService.PLAY_QUEUE_CLEAR);
         filter.addAction(MusicPlayerService.PLAYLIST_CHANGED);
         // If there is an error playing a track
         filter.addAction(MusicPlayerService.TRACK_ERROR);
@@ -122,9 +124,12 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                     case MusicPlayerService.META_CHANGED:
                         RxBus.getInstance().post(new MetaChangedEvent());
                         break;
-                    case MusicPlayerService.REFRESH:
+                    case MusicPlayerService.PLAY_QUEUE_CHANGE:
+                        break;
+                    case MusicPlayerService.PLAY_QUEUE_CLEAR:
                         break;
                     case MusicPlayerService.PLAYLIST_CHANGED:
+                        RxBus.getInstance().post(new Playlist());
                         break;
                     case MusicPlayerService.TRACK_ERROR:
                         final String errorMsg = context.getString(R.string.error_playing_track);
@@ -149,6 +154,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     protected void onResume() {
         super.onResume();
     }
+
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         mService = IMusicService.Stub.asInterface(iBinder);

@@ -1,16 +1,12 @@
 package com.cyl.musiclake.ui.onlinemusic.activity;
 
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
@@ -20,7 +16,6 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.SearchPresenter;
-import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import java.lang.reflect.Field;
@@ -126,8 +121,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                     searchResults.clear();
                     mProgressDialog.show();
                     mPresenter.search(queryString, 10, mOffset);
-                } else {
-                    ToastUtils.show(getApplicationContext(), "不能搜索空文本");
                 }
             });
         } catch (Exception e) {
@@ -142,8 +135,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             mOffset = 1;
             searchResults.clear();
             mPresenter.search(query, 10, mOffset);
-        } else {
-            ToastUtils.show(getApplicationContext(), "不能搜索空文本");
         }
         return true;
     }
@@ -154,8 +145,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             mOffset = 1;
             searchResults.clear();
             mPresenter.search(newText, 10, mOffset);
-        } else {
-            ToastUtils.show(getApplicationContext(), "不能搜索空文本");
         }
         return true;
     }
@@ -163,53 +152,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    private void setOnPopupMenuListener(View view, final int position) {
-        PopupMenu mPopupmenu = new PopupMenu(this, view);
-        mPopupmenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_play:
-//                        play(searchResults.get(position));
-                        break;
-                    case R.id.popup_song_detail:
-                        getMusicInfo(searchResults.get(position));
-                        break;
-                    case R.id.popup_song_goto_artist:
-//                        Intent intent = new Intent(SearchActivity.this, ArtistInfoActivity.class);
-//                        intent.putExtra(Extras.TING_UID, searchResults.get(position).getar());
-//                        startActivity(intent);
-                        break;
-                    case R.id.popup_song_download:
-                        break;
-
-                }
-                return false;
-            }
-        });
-        mPopupmenu.inflate(R.menu.popup_song_online);
-        mPopupmenu.show();
-    }
-
-    private void getMusicInfo(Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("歌曲信息");
-        StringBuilder sb = new StringBuilder();
-        sb.append("歌曲名：")
-                .append(ConvertUtils.getTitle(music.getTitle()))
-                .append("\n\n")
-                .append("歌手：")
-                .append(ConvertUtils.getArtist(music.getArtist()))
-                .append("\n\n")
-                .append("专辑：")
-                .append(music.getAlbum())
-                .append("\n\n")
-                .append("专辑Id：")
-                .append(music.getAlbumId());
-        dialog.setMessage(sb.toString());
-        dialog.show();
     }
 
 
@@ -224,6 +166,9 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showSearchResult(List<Music> list) {
+        if (list.size() == 0) {
+            mAdapter.setEmptyView(R.layout.view_song_empty);
+        }
         if (mOffset == 1) {
             mAdapter.setNewData(list);
         } else {

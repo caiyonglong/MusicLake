@@ -20,4 +20,9 @@
     <item
         android:id="@+id/popup_song_addto_queue"
         android:title="添加到歌单" />
+
+    <item
+        android:id="@+id/popup_song_delete"
+        android:title="删除" />
+
 </menu>

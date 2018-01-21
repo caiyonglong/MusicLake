@@ -22,8 +22,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.MyPagerAdapter;
@@ -32,7 +30,6 @@ import com.cyl.musiclake.ui.localmusic.dialog.PlayQueueDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.PlayControlsPresenter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
@@ -199,14 +196,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     protected void initDatas() {
         mPresenter = new PlayControlsPresenter(getContext());
         mPresenter.attachView(this);
+        mPresenter.subscribe();
 
-        RxBus.getInstance().register(MetaChangedEvent.class)
-                .subscribe(metaChangedEvent -> {
-                    if (mPresenter != null) {
-                        mPresenter.updateNowPlayingCard();
-                        mPresenter.loadLyric();
-                    }
-                });
     }
 
     private void setupViewPager(MultiTouchViewPager viewPager) {
@@ -295,7 +286,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
         mCivImage.setImageBitmap(albumArt);
-        ivPlayingBg.setImageBitmap(ImageUtils.blur(albumArt, 50));
 
         if (operatingAnim != null) {
             if (PlayManager.isPlaying()) {
@@ -311,6 +301,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @Override
     public void setAlbumArt(Drawable albumArt) {
         ivPlayingBg.setBackground(albumArt);
+//        ivPlayingBg.setImageBitmap(ImageUtils.blur(albumArt, 50));
     }
 
     @Override
@@ -335,7 +326,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPalette = palette;
         mSwatch = ColorUtil.getMostPopulousSwatch(palette);
 
-        int paletteColor = Color.BLACK;
+        int paletteColor = Color.WHITE;
         if (mSwatch != null) {
             paletteColor = mSwatch.getRgb();
             int artistColor = mSwatch.getTitleTextColor();
@@ -347,11 +338,11 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 paletteColor = mSwatch.getRgb();
                 int artistColor = mSwatch.getTitleTextColor();
                 mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-//                mTvTip.setTextColor(artistColor);
+                mTvTip.setTextColor(artistColor);
             } else {
-//                paletteColor= Color.parseColor();
+                paletteColor = Color.WHITE;
                 mTvName.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-//                mTvTip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                mTvTip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
             }
         }
         //set icon color
@@ -421,7 +412,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     public void updateProgress(int progress) {
-
         mSeekBar.setProgress(progress);
         mProgressBar.setProgress(progress);
         tv_time.setText(FormatUtil.formatTime(progress));
@@ -447,6 +437,14 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @Override
     public void setErrorInfo(String message) {
         ToastUtils.show(getContext(), message);
+    }
+
+    @Override
+    public void updatePanelLayout(boolean scroll) {
+        if (!scroll) {
+            mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+        mSlidingUpPaneLayout.setTouchEnabled(scroll);
     }
 
     @Override

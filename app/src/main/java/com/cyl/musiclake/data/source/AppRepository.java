@@ -29,6 +29,10 @@ public class AppRepository {
         return SongLoader.getFavoriteSong(mContext);
     }
 
+    public static Observable<Music> getMusicInfo(Context mContext, Music music) {
+        return SongLoader.getMusicInfo(mContext, music);
+    }
+
     public static Observable<List<Music>> getArtistSongsRepository(Context mContext, long id) {
         return ArtistSongLoader.getSongsForArtist(mContext, id);
     }
@@ -51,6 +55,10 @@ public class AppRepository {
 
     public static Observable<List<FolderInfo>> getFolderInfosRepository(Context mContext) {
         return FolderLoader.getFoldersWithSong(mContext);
+    }
+
+    public static Observable<List<Music>> getFolderSongsRepository(Context mContext, String path) {
+        return SongLoader.getSongListInFolder(mContext, path);
     }
 
 }

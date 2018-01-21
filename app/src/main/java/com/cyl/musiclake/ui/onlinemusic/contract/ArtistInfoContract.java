@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.onlinemusic.contract;
 
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.base.BaseView;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineArtistInfo;
+import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 
 public interface ArtistInfoContract {
 

@@ -82,8 +82,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.MUSIC_YEARS + " ) ");
 
         //默认新建播放队列和最近播放
-        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.PLAY_QUEUE + " ,'播放队列','','')");
-        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.HISTORY + " ,'最近播放','','')");
+        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.PLAY_QUEUE + " ,'播放队列', '" + DBData.PLAYLIST_NAME + "',null)");
+        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.HISTORY + " ,'最近播放', '" + DBData.PLAYLIST_NAME + "' ,null)");
     }
 
     @Override

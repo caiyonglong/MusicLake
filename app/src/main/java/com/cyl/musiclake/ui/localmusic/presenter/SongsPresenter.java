@@ -6,6 +6,7 @@ import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
+import com.cyl.musiclake.utils.Extras;
 
 import java.util.List;
 
@@ -45,8 +46,38 @@ public class SongsPresenter implements SongsContract.Presenter {
     @Override
     public void loadSongs(String action) {
         mView.showLoading();
-        if (action.equals("love")) {
+        if (action.equals(Extras.IS_LOVE)) {
             AppRepository.getFavoriteSong(mContext)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<Music>>() {
+
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<Music> musicList) {
+                            if (musicList.size() == 0) {
+                                mView.setEmptyView();
+                            }
+                            mView.showSongs(musicList);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mView.hideLoading();
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mView.hideLoading();
+                        }
+                    });
+        } else if (action.equals(Extras.PLAY_HISTORY)) {
+            AppRepository.getPlaylistSongsRepository(mContext, "1")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<List<Music>>() {

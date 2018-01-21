@@ -3,15 +3,26 @@ package com.cyl.musiclake.utils;
 import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.RequiresApi;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 
@@ -46,7 +57,7 @@ public class ImageUtils {
         int length = source.getWidth() < source.getHeight() ? source.getWidth() : source.getHeight();
         Paint paint = new Paint();
         paint.setAntiAlias(true);
-        Bitmap target = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
+        Bitmap target = Bitmap.createBitmap(length, length, Config.ARGB_8888);
         Canvas canvas = new Canvas(target);
         canvas.drawCircle(length / 2, length / 2, length / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
@@ -56,6 +67,7 @@ public class ImageUtils {
 
     public static final int BLUR_RADIUS = 30;
 
+
     /**
      * 模糊图片
      *
@@ -63,7 +75,7 @@ public class ImageUtils {
      * @param radius
      * @return
      */
-    public static Bitmap blur(Bitmap sentBitmap, int radius) {
+    public static Drawable blur(Context context, Bitmap sentBitmap, int radius) {
 
         // Stack Blur v1.0 from
         // http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
@@ -290,7 +302,7 @@ public class ImageUtils {
 
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
-        return (bitmap);
+        return new BitmapDrawable(context.getResources(), bitmap);
     }
 
     /**
@@ -354,7 +366,7 @@ public class ImageUtils {
 
             options.inSampleSize = 500;
             options.inJustDecodeBounds = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            options.inPreferredConfig = Config.ARGB_8888;
             bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
 
         } catch (Exception e) {

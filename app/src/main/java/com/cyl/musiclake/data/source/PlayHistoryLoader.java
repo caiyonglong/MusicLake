@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * 作者：yonglong on 2016/11/4 22:30
  */
-
 public class PlayHistoryLoader {
 
     private static String TAG = "PlayQueueLoader";
@@ -20,12 +19,10 @@ public class PlayHistoryLoader {
     /**
      * 添加歌曲到歌单
      */
-    private static void addSongToHistory(Context context, List<Music> musics) {
+    public static void addSongToHistory(Context context, Music music) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.insertSongs(musics);
-        for (int i = 0; i < musics.size(); i++) {
-            dbDaoImpl.insertSongToPlaylist(DBData.HISTORY, musics.get(i).getId());
-        }
+        dbDaoImpl.insertSong(music);
+        dbDaoImpl.insertSongToPlaylist(DBData.HISTORY, music.getId());
         dbDaoImpl.closeDB();
     }
 //    /**
@@ -48,7 +45,7 @@ public class PlayHistoryLoader {
         String sql = "select * from music inner join music_playlist " +
                 "where music.mid = music_playlist.mid " +
                 "and music_playlist.pid=1";
-        Cursor cursor = dbDaoImpl.makeCursor(sql);
+         Cursor cursor = dbDaoImpl.makeCursor(sql);
         List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
         dbDaoImpl.closeDB();
         return results;

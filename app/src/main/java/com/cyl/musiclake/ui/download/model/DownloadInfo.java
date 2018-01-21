@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.download.model;
 
 /**
  * 
- * 项目名称：MultithreadedDownload 类名称：DownloadInfo 类描述： 下载的信息 创建人：wpy
+ * 项目名称：MultithreadedDownload 类名称：BaiduSongInfo 类描述： 下载的信息 创建人：wpy
  * 创建时间：2014-10-10 下午3:57:21
  * 
  */

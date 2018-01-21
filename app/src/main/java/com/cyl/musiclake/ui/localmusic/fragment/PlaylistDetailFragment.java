@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,13 +27,11 @@ import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlaylistDetailContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.PlaylistDetailPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.Extras;
-import com.cyl.musiclake.utils.ConvertUtils;
-import com.cyl.musiclake.utils.FormatUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +112,8 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                         PlayManager.play(position);
                         break;
                     case R.id.popup_song_detail:
-                        getMusicInfo(musicList.get(position));
+                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                                .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_goto_album:
                         Log.e("album", musicList.get(position).toString() + "");
@@ -131,6 +129,18 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                     case R.id.popup_song_addto_queue:
                         AddPlaylistDialog.newInstance(musicList.get(position)).show(getChildFragmentManager(), "ADD_PLAYLIST");
                         break;
+                    case R.id.popup_song_delete:
+                        new MaterialDialog.Builder(getContext())
+                                .title("提示")
+                                .content("是否删除这首歌曲？")
+                                .onPositive((dialog, which) -> {
+                                    PlaylistLoader.removeSong(getActivity(), mPlaylist.getId(), musicList.get(position).getId());
+                                    mAdapter.notifyItemChanged(position);
+                                })
+                                .positiveText("确定")
+                                .negativeText("取消")
+                                .show();
+                        break;
                 }
                 return false;
             });
@@ -139,31 +149,6 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
         });
     }
 
-
-    private void getMusicInfo(Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(ConvertUtils.getTitle(music.getTitle()));
-        StringBuilder sb = new StringBuilder();
-        sb.append("艺术家：")
-                .append(music.getArtist())
-                .append("\n\n")
-                .append("专辑：")
-                .append(music.getAlbum())
-                .append("\n\n")
-                .append("播放时长：")
-                .append(FormatUtil.formatTime(music.getDuration()))
-                .append("\n\n")
-                .append("文件名称：")
-                .append(music.getFileName())
-                .append("\n\n")
-                .append("文件大小：")
-                .append(FormatUtil.formatSize(music.getFileSize()))
-                .append("\n\n")
-                .append("文件路径：")
-                .append(new File(music.getUri()).getParent());
-        dialog.setMessage(sb.toString());
-        dialog.show();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -196,7 +181,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                 startActivity(intent3);
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void onBackPress() {
@@ -205,6 +190,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_playlist_detail, menu);
     }
 

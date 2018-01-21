@@ -11,6 +11,7 @@ interface IMusicService {
     void prev();
     void next();
     void refresh();
+    void update(in Music music);
     void setLoopMode(int loopmode);
     void seekTo(int ms);
     int position();

@@ -228,7 +228,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_my, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(intent);
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isNavigatingMain() {

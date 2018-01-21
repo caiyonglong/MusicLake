@@ -31,7 +31,7 @@ public class FolderAdapter extends BaseQuickAdapter<FolderInfo, BaseViewHolder> 
         Drawable image = mContext.getResources().getDrawable(R.drawable.ic_folder);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (image != null) {
-                image.setTint(Color.BLUE);
+                image.setTint(Color.parseColor("#4A90E2"));
             }
         }
         ImageView cover = holder.getView(R.id.iv_cover);

@@ -16,8 +16,11 @@ import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.ui.localmusic.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.DownloadFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.LocalMusicFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.PlaylistDetailFragment;
+import com.cyl.musiclake.ui.localmusic.fragment.RecentlyFragment;
+import com.cyl.musiclake.utils.Extras;
 
 /**
  * Created by yonglong on 2016/12/24.
@@ -97,10 +100,29 @@ public class NavigateUtil {
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
             fragment = LocalMusicFragment.newInstance("local");
         } else {
-            transaction.setCustomAnimations(R.anim.activity_fade_in,
-                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
+//            transaction.setCustomAnimations(R.anim.activity_fade_in,
+//                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
             fragment = LocalMusicFragment.newInstance("local");
         }
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(fragment.getTag()).commit();
+    }
+
+    public static void navigateToFloderSongs(Activity context, String path) {
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
+
+        fragment = FolderSongsFragment.newInstance(path);
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(fragment.getTag()).commit();
+    }
+
+    public static void navigateRecentlyMusic(Activity context) {
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
+        fragment = RecentlyFragment.newInstance();
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(fragment.getTag()).commit();
@@ -110,14 +132,7 @@ public class NavigateUtil {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 
-        if (transitionViews != null) {
-            transaction.addSharedElement(transitionViews.first, transitionViews.second);
-            fragment = LocalMusicFragment.newInstance("love");
-        } else {
-            transaction.setCustomAnimations(R.anim.activity_fade_in,
-                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = LocalMusicFragment.newInstance("love");
-        }
+        fragment = LocalMusicFragment.newInstance(Extras.IS_LOVE);
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(fragment.getTag()).commit();

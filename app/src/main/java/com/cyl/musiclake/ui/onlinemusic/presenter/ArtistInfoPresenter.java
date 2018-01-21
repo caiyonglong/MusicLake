@@ -5,7 +5,7 @@ import android.content.Context;
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.ui.onlinemusic.contract.ArtistInfoContract;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlineArtistInfo;
+import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 import com.cyl.musiclake.utils.Constants;
 
 import java.util.HashMap;

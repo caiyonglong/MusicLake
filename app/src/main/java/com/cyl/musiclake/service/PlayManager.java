@@ -249,6 +249,15 @@ public class PlayManager {
         }
     }
 
+    public static void updateFavorite(Music music) {
+        try {
+            if (mService != null)
+                mService.update(music);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void removeFromQueue(int adapterPosition) {
         try {
             if (mService != null)

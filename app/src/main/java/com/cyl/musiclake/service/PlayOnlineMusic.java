@@ -9,9 +9,9 @@
 //
 //import com.cyl.musiclake.R;
 //import com.cyl.musiclake.callback.JsonCallback;
-//import com.cyl.musiclake.ui.download.download.DownloadInfo;
+//import com.cyl.musiclake.api.baidu.BaiduSongInfo;
 //import com.cyl.musiclake.ui.music.model.Music;
-//import com.cyl.musiclake.ui.onlinemusic.model.OnlineMusicInfo;
+//import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
 //import com.cyl.musiclake.utils.Constants;
 //import com.cyl.musiclake.utils.FileUtils;
 //import com.cyl.musiclake.utils.NetworkUtils;
@@ -30,10 +30,10 @@
 // */
 //public abstract class PlayOnlineMusic {
 //    private Context mContext;
-//    private OnlineMusicInfo mOnlineMusic;
+//    private BaiduMusicInfo mOnlineMusic;
 //    private int mCounter = 0;
 //
-//    public PlayOnlineMusic(Context context, OnlineMusicInfo mOnlineMusic) {
+//    public PlayOnlineMusic(Context context, BaiduMusicInfo mOnlineMusic) {
 //        this.mContext = context;
 //        this.mOnlineMusic = mOnlineMusic;
 //    }
@@ -87,7 +87,7 @@
 //                .addParams(Constants.PARAM_METHOD, Constants.METHOD_DOWNLOAD_MUSIC)
 //                .addParams(Constants.PARAM_SONG_ID, mOnlineMusic.getSong_id())
 //                .build()
-//                .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
+//                .execute(new JsonCallback<BaiduSongInfo>(BaiduSongInfo.class) {
 //
 //                    @Override
 //                    public void onError(Call call, Exception e) {
@@ -95,7 +95,7 @@
 //                    }
 //
 //                    @Override
-//                    public void onResponse(DownloadInfo response) {
+//                    public void onResponse(BaiduSongInfo response) {
 //                        if (response == null) {
 //                            onFail(null, null);
 //                            return;

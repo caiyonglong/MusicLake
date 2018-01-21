@@ -80,7 +80,7 @@ public interface DBDao {
     /**
      * 第一次进入清空本地音乐
      */
-    void deleteSongForId(String[] ids);
+    void deleteSongForId(String mid);
 
     /**
      * 生成游标

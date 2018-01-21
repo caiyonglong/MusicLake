@@ -3,10 +3,13 @@ package com.cyl.musiclake.ui.localmusic.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.FolderInfo;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.FolderAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.FoldersContract;
 import com.cyl.musiclake.ui.localmusic.presenter.FoldersPresenter;
@@ -53,6 +56,17 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         mAdapter.bindToRecyclerView(recyclerView);
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
+                NavigateUtil.navigateToFloderSongs(getActivity(), folderInfo.folderPath);
+            }
+        });
     }
 
     @Override

@@ -2,9 +2,9 @@ package com.cyl.musiclake.ui.onlinemusic.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.api.ApiManager;
+import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
+import com.cyl.musiclake.api.baidu.OnlinePlaylists;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
-import com.cyl.musiclake.ui.onlinemusic.model.OnlinePlaylists;
 import com.cyl.musiclake.utils.Constants;
 
 import java.util.HashMap;
@@ -48,9 +48,7 @@ public class OnlinePlaylistPresenter implements OnlinePlaylistContract.Presenter
     public void loadOnlinePlaylist() {
         Map<String, String> params = new HashMap<>();
         params.put(Constants.PARAM_METHOD, Constants.METHOD_CATEGORY);
-
-        ApiManager.getInstance().apiService
-                .getOnlinePlaylist(params)
+        BaiduApiServiceImpl.getOnlinePlaylist()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<OnlinePlaylists>() {

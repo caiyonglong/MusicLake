@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.onlinemusic.model;
+package com.cyl.musiclake.api.baidu;
 
 /**
  * Created by yonglong on 2016/11/30.

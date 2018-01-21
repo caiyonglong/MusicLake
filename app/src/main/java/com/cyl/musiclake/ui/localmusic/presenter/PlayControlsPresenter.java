@@ -3,7 +3,10 @@ package com.cyl.musiclake.ui.localmusic.presenter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,16 +15,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
+import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
-import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.ImageUtils;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -56,6 +61,13 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     @Override
     public void subscribe() {
+        RxBus.getInstance().register(MetaChangedEvent.class)
+                .subscribe(metaChangedEvent -> {
+                    if (mContext != null) {
+                        updateNowPlayingCard();
+                        loadLyric();
+                    }
+                });
     }
 
     @Override
@@ -164,9 +176,15 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         Log.d(TAG, "updateNowPlayingCard" + mProgress);
         Music music = PlayManager.getPlayingMusic();
         if (music == null) {
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_cover);
+            mView.setAlbumArt(bitmap);
+            mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
+            mView.setArtist("");
+            mView.updatePanelLayout(false);
             return;
+        } else {
+            mView.updatePanelLayout(true);
         }
-
         if (PlayManager.isPlaying()) {
             if (!mView.getPlayPauseStatus()) {//true表示按钮为待暂停状态
                 mView.setPlayPauseButton(true);
@@ -177,8 +195,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             }
         }
 
-        final String title = music.getTitle();
-        final String artist = ConvertUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        final String title = PlayManager.getSongName();
+        final String artist = PlayManager.getSongArtist();
         if (TextUtils.isEmpty(title) && TextUtils.isEmpty(artist)) {
             mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
             mView.setArtist("");
@@ -195,30 +213,43 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setOtherInfo("虾米音乐");
         }
 
-        mView.updateFavorite(music.isLove());
+        //获取当前歌曲状态
+        AppRepository.getMusicInfo(mContext, music)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(music1 -> mView.updateFavorite(music1.isLove()));
 
         if (!isPlayPauseClick) {
             String url = null;
             if (music.getType() == Music.Type.LOCAL && music.getAlbumId() != -1) {
                 url = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
-            } else {
-                url = music.getCoverUri();
+            } else if (music.getType() == Music.Type.QQ) {
+                url = music.getCoverBig();
+            } else if (music.getType() == Music.Type.XIAMI) {
+                url = music.getCoverBig();
             }
-            if (mContext != null) {
-                GlideApp.with(mContext)
-                        .asBitmap()
-                        .load(url)
-                        .error(R.drawable.default_cover)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                mView.setAlbumArt(resource);
-                                new Palette.Builder(resource).generate(palette ->
-                                        mView.setPalette(palette));
-                            }
-                        });
-            }
+            GlideApp.with(mContext)
+                    .asBitmap()
+                    .load(url)
+                    .error(R.drawable.default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            mView.setAlbumArt(resource);
+                            mView.setAlbumArt(ImageUtils.blur(mContext, resource, 40));
+                            new Palette.Builder(resource).generate(palette -> mView.setPalette(palette));
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
+                            Bitmap bitmap = CoverLoader.getInstance().loadThumbnail(null);
+                            mView.setAlbumArt(bitmap);
+                            mView.setAlbumArt(mContext.getResources().getDrawable(R.drawable.bg_frag_player));
+                            new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
+                        }
+                    });
         }
         isPlayPauseClick = false;
         mView.setProgressMax(PlayManager.getDuration());
@@ -230,7 +261,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         public void run() {
             mProgress = PlayManager.getCurrentPosition();
             mView.updateProgress(mProgress);
-            mHandler.postDelayed(updateProgress, 100);
+            mHandler.postDelayed(updateProgress, 500);
         }
     };
 
@@ -238,30 +269,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         Music music = PlayManager.getPlayingMusic();
         if (music == null)
             return;
-
-        AppRepository.updateFavoriteSongRepository(mContext, music)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Music>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Music music) {
-                        mView.updateFavorite(music.isLove());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        PlayManager.updateFavorite(music);
+        mView.updateFavorite(!PlayManager.getPlayingMusic().isLove());
     }
 }

@@ -16,6 +16,11 @@ public interface MyMusicContract {
         void showEmptyView();
 
         void showPlaylist(List<Playlist> playlists);
+
+        void showHistory(List<Music> musicList);
+
+        void showLoveList(List<Music> musicList);
+
     }
 
     interface Presenter extends BasePresenter<View> {

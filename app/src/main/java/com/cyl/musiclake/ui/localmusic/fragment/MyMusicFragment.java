@@ -91,10 +91,7 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
         mPresenter.loadPlaylist();
         mLocal.setOnClickListener(v -> NavigateUtil.navigateToLocalMusic(getActivity(), null));
         mRecently.setOnClickListener(v -> {
-            Playlist playlist = new Playlist();
-            playlist.setId("1");
-            playlist.setName("最近");
-            NavigateUtil.navigateToPlaylist(getActivity(), playlist, null);
+            NavigateUtil.navigateRecentlyMusic(getActivity());
         });
         mLove.setOnClickListener(v -> {
             NavigateUtil.navigateToLoveMusic(getActivity(), null);
@@ -103,7 +100,10 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
         RxBus.getInstance().register(Playlist.class)
                 .subscribe(playlist -> {
-                    mPresenter.loadPlaylist();
+                    if (mPresenter != null) {
+                        mPresenter.loadSongs();
+                        mPresenter.loadPlaylist();
+                    }
                 });
     }
 
@@ -141,6 +141,16 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     @Override
     public void showPlaylist(List<Playlist> playlists) {
         mAdapter.setNewData(playlists);
+    }
+
+    @Override
+    public void showHistory(List<Music> musicList) {
+        mRecently.setSongsNum(musicList.size());
+    }
+
+    @Override
+    public void showLoveList(List<Music> musicList) {
+        mLove.setSongsNum(musicList.size());
     }
 
     @Override

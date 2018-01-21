@@ -5,6 +5,7 @@ import android.database.CursorWrapper;
 
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.utils.LogUtil;
 
 public class MusicCursorWrapper extends CursorWrapper {
 
@@ -28,13 +29,13 @@ public class MusicCursorWrapper extends CursorWrapper {
         music.setCoverSmall(getString(getColumnIndex(DBData.MUSIC_COVER_SMALL)));
         music.setFileName(getString(getColumnIndex(DBData.MUSIC_FILENAME)));
         music.setPrefix(getString(getColumnIndex(DBData.MUSIC_PREFIX)));
-        music.setLove(getInt(getColumnIndex(DBData.MUSIC_FILENAME)) == 1);
+        music.setLove(getInt(getColumnIndex(DBData.IS_LOVE)) == 1);
         music.setOnline(getInt(getColumnIndex(DBData.IS_ONLINE)) == 1);
         String type = getString(getColumnIndex(DBData.MUSIC_TYPE));
         music.setType(type);
-
         music.setFileSize(getLong(getColumnIndex(DBData.MUSIC_SIZE)));
         music.setYear(getString(getColumnIndex(DBData.MUSIC_YEARS)));
+        LogUtil.e(music.toString());
         return music;
     }
 

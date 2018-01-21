@@ -95,21 +95,8 @@ public class Constants {
     public static final String FILENAME_LRC = ".lrc";
     public static final int MUSIC_LIST_SIZE = 10;
 
-    public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/";//"/ting";
-    public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
-    public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
-    public static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
-    public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
-    public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";
-    public static final String METHOD_LRC = "baidu.ting.song.lry";
-    public static final String PARAM_METHOD = "method";
-    public static final String PARAM_TYPE = "type";
-    public static final String PARAM_SIZE = "size";
-    public static final String PARAM_PAGESIZE = "page_size";
-    public static final String PARAM_OFFSET = "offset";
-    public static final String PARAM_SONG_ID = "songid";
-    public static final String PARAM_TING_UID = "tinguid";
-    public static final String PARAM_QUERY = "query";
+    public static final String BASE_URL = "http://musicapi.qianqian.com/v1/restserver/ting/";//"/ting";
+
 
     public static final String BASE_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
             "from=android&version=5.8.2.0&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2";
@@ -149,4 +136,25 @@ public class Constants {
      * 虾米音乐Api*************************************************
      */
     public static final String BASE_URL_XIAMI_MUSIC = "http://api.xiami.com/web?";
+    /**
+     * 百度音乐Api*************************************************
+     */
+    public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/v1/restserver/ting?";
+    public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
+    public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
+    public static final String METHOD_MUSIC_INFO = "baidu.ting.song.getInfos";
+    public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
+    public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";
+    public static final String METHOD_LRC = "baidu.ting.song.lry";
+
+    public static final String PARAM_METHOD = "method";
+    public static final String PARAM_TYPE = "type";
+    public static final String PARAM_SIZE = "size";
+    public static final String PARAM_PAGESIZE = "page_size";
+    public static final String PARAM_OFFSET = "offset";
+    public static final String PARAM_SONG_ID = "songid";
+    public static final String PARAM_TING_UID = "tinguid";
+    public static final String PARAM_QUERY = "query";
+
+
 }

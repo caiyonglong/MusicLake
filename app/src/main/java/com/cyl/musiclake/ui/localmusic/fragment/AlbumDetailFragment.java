@@ -12,12 +12,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.AlbumDetailContract;
+import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.AlbumDetailPresenter;
 import com.cyl.musiclake.utils.Extras;
 
@@ -97,6 +101,40 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_more) {
+                List<Music> musicList = adapter.getData();
+                PlayManager.setPlayList(musicList);
+                PlayManager.play(position);
+            }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.popup_song_play:
+                        PlayManager.setPlayList((List<Music>) adapter.getData());
+                        PlayManager.play(position);
+                        break;
+                    case R.id.popup_song_detail:
+                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                                .show(getChildFragmentManager(), getTag());
+                        break;
+                    case R.id.popup_song_addto_queue:
+                        AddPlaylistDialog.newInstance(musicInfos.get(position))
+                                .show(getChildFragmentManager(), "ADD_PLAYLIST");
+                        break;
+
+                }
+                return false;
+            });
+            popupMenu.inflate(R.menu.popup_album);
+            popupMenu.show();
+        });
     }
 
     @Override

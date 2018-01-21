@@ -1,18 +1,21 @@
-package com.cyl.musiclake.ui.onlinemusic.model;
+package com.cyl.musiclake.api.baidu;
 
 /**
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
-public class OnlineMusicInfo {
+public class BaiduMusicInfo {
     private String pic_big;
+    private String pic_radio;
     private String pic_small;
     private String lrclink;
     private String song_id;
     private String title;
     private String ting_uid;
     private String album_title;
+    private long album_id;
     private String artist_name;
+    private long artist_id;
 
 
     public String getPic_big() {
@@ -77,5 +80,29 @@ public class OnlineMusicInfo {
 
     public void setArtist_name(String artist_name) {
         this.artist_name = artist_name;
+    }
+
+    public String getPic_radio() {
+        return pic_radio;
+    }
+
+    public void setPic_radio(String pic_radio) {
+        this.pic_radio = pic_radio;
+    }
+
+    public long getAlbum_id() {
+        return album_id;
+    }
+
+    public void setAlbum_id(long album_id) {
+        this.album_id = album_id;
+    }
+
+    public long getArtist_id() {
+        return artist_id;
+    }
+
+    public void setArtist_id(long artist_id) {
+        this.artist_id = artist_id;
     }
 }
