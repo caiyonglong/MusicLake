@@ -132,7 +132,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
                         }
                     });
-        } else if (music.getType() == Music.Type.XIAMI) {
+        } else if (music.getType() == Music.Type.XIAMI || music.getType() == Music.Type.BAIDU) {
             Log.e(TAG, music.getLrcPath());
             XiamiServiceImpl.getXimaiLyric(music.getLrcPath())
                     .subscribeOn(Schedulers.io())
@@ -204,13 +204,20 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setTitle(title);
             mView.setArtist(artist);
         }
-
+        String picUrl = null;
         if (music.getType() == Music.Type.LOCAL) {
+            if (music.getAlbumId() != -1)
+                picUrl = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
             mView.setOtherInfo("本地音乐");
         } else if (music.getType() == Music.Type.QQ) {
+            picUrl = music.getCoverBig();
             mView.setOtherInfo("QQ音乐");
         } else if (music.getType() == Music.Type.XIAMI) {
+            picUrl = music.getCoverBig();
             mView.setOtherInfo("虾米音乐");
+        } else if (music.getType() == Music.Type.BAIDU) {
+            picUrl = music.getCoverBig();
+            mView.setOtherInfo("百度音乐");
         }
 
         //获取当前歌曲状态
@@ -220,17 +227,9 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                 .subscribe(music1 -> mView.updateFavorite(music1.isLove()));
 
         if (!isPlayPauseClick) {
-            String url = null;
-            if (music.getType() == Music.Type.LOCAL && music.getAlbumId() != -1) {
-                url = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
-            } else if (music.getType() == Music.Type.QQ) {
-                url = music.getCoverBig();
-            } else if (music.getType() == Music.Type.XIAMI) {
-                url = music.getCoverBig();
-            }
             GlideApp.with(mContext)
                     .asBitmap()
-                    .load(url)
+                    .load(picUrl)
                     .error(R.drawable.default_cover)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .into(new SimpleTarget<Bitmap>() {

@@ -57,7 +57,7 @@ public interface ApiManagerService {
     @GET
     Observable<QQLyricInfo> getQQLyric(@Url String baseUrl);
 
-    @Headers({"referer: http://h.xiami.com/"})
+//    @Headers({"referer: http://h.xiami.com/"})
     @GET
     Observable<ResponseBody> getXiamiLyric(@Url String baseUrl);
 

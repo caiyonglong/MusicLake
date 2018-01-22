@@ -312,6 +312,8 @@ public class Music implements Parcelable {
             this.type = Type.QQ;
         } else if (type.equals("XIAMI")) {
             this.type = Type.XIAMI;
+        } else if (type.equals("BAIDU")) {
+            this.type = Type.BAIDU;
         } else {
             this.type = Type.LOCAL;
         }

@@ -1,16 +1,14 @@
 package com.cyl.musiclake.ui.onlinemusic.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlineMusicListContract;
-import com.cyl.musiclake.utils.Constants;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -89,6 +87,7 @@ public class OnlineMusicListPresenter implements OnlineMusicListContract.Present
 
                     @Override
                     public void onNext(Music result) {
+                        Log.e("baidu_play", result.toString());
                         PlayManager.playOnline(result);
                     }
 

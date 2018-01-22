@@ -16,7 +16,6 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.SearchPresenter;
-import com.cyl.musiclake.utils.ToastUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -85,7 +84,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             Music music = (Music) adapter.getItem(position);
             Log.e("TAH", music.toString());
             PlayManager.playOnline(music);
-            PlayManager.setPlayList(adapter.getData());
+//            PlayManager.setPlayList(adapter.getData());
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             if (mCurrentCounter >= TOTAL_COUNTER) {

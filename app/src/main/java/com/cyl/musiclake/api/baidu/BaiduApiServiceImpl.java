@@ -61,31 +61,24 @@ public class BaiduApiServiceImpl {
 
     public static Observable<Music> getTingSongInfo(String mid) {
         Map<String, String> params = new HashMap<>();
-
-        params.put(Constants.PARAM_METHOD, Constants.METHOD_MUSIC_INFO);
-        params.put(Constants.PARAM_SONG_ID, mid);
-
-        return ApiManager.getInstance().apiService.getTingSongInfo(Constants.BASE_URL_BAIDU_MUSIC, params)
+        String Url = "http://music.baidu.com/data/music/links?songIds=" + mid;
+        return ApiManager.getInstance().apiService.getTingSongInfo(Url, params)
                 .flatMap(baiduSongInfo -> {
                     Music music = new Music();
-                    BaiduSongInfo.SonginfoBean songInfo = baiduSongInfo.getSonginfo();
-                    List<BaiduSongInfo.SongurlBean.UrlBean> songurlBeans = baiduSongInfo.getSongurl().getUrl();
-                    for (int i = 0; i < songurlBeans.size(); i++) {
-                        if (songurlBeans.get(i).getShow_link() != null) {
-                            music.setUri(songurlBeans.get(i).getShow_link());
-                            break;
-                        }
-                    }
+                    BaiduSongInfo.DataBean.SongListBean songInfo = baiduSongInfo.getData().getSongList().get(0);
                     music.setType(Music.Type.BAIDU);
-                    music.setAlbum(songInfo.getAlbum_title());
-                    music.setAlbumId(songInfo.getArtist_id());
-                    music.setArtistId(songInfo.getAlbum_id());
-                    music.setArtist(songInfo.getAuthor());
-                    music.setTitle(songInfo.getTitle());
-                    music.setLrcPath(songInfo.getLrclink());
-                    music.setCoverSmall(songInfo.getPic_small());
-                    music.setCoverUri(songInfo.getPic_big());
-                    music.setCoverBig(songInfo.getPic_huge());
+                    music.setId(songInfo.getSongId());
+                    music.setAlbum(songInfo.getAlbumName());
+                    music.setAlbumId(songInfo.getArtistId());
+                    music.setArtistId(songInfo.getArtistId());
+                    music.setArtist(songInfo.getArtistName());
+                    music.setTitle(songInfo.getSongName());
+                    music.setUri(songInfo.getSongLink());
+                    music.setFileSize(songInfo.getSize());
+                    music.setLrcPath(songInfo.getLrcLink());
+                    music.setCoverSmall(songInfo.getSongPicSmall());
+                    music.setCoverUri(songInfo.getSongPicBig());
+                    music.setCoverBig(songInfo.getSongPicRadio());
 
                     return Observable.create((ObservableOnSubscribe<Music>) e -> {
                         if (music.getUri() != null) {
