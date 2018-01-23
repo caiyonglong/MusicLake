@@ -134,4 +134,20 @@
     <string name="play_time">00:00</string>
     <string name="play_no_resource">无音乐</string>
     <string name="tv_play_mode">随机播放</string>
+
+
+    <string name="delete">删除</string>
+    <string name="pause">暂停</string>
+    <string name="start">开始</string>
+    <string name="tasks_manager_demo_status_loading">加载中...</string>
+    <string name="tasks_manager_demo_status_pending">队列中</string>
+    <string name="tasks_manager_demo_status_started">开始下载</string>
+    <string name="tasks_manager_demo_status_connected">已连接上</string>
+    <string name="tasks_manager_demo_status_progress">下载中...</string>
+    <string name="tasks_manager_demo_status_downloading" formatted="false">正在下载 %d</string>
+    <string name="tasks_manager_demo_status_error">出错</string>
+    <string name="tasks_manager_demo_status_paused">暂停</string>
+    <string name="tasks_manager_demo_status_completed">下载完成</string>
+    <string name="tasks_manager_demo_status_not_downloaded">未下载</string>
+
 </resources>

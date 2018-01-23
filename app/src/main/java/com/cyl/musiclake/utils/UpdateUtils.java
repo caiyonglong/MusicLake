@@ -11,7 +11,7 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
 import com.cyl.musiclake.ui.common.Constants;
-import com.cyl.musiclake.ui.download.download.UpdateInfo;
+import com.cyl.musiclake.data.model.UpdateInfo;
 
 /**
  * 功能: 软件更新工具类

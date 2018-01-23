@@ -64,6 +64,8 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.sothree.slidinguppanel:library:3.3.1'
+
+    compile 'com.liulishuo.filedownloader:library:1.6.9'
 //
 //    testCompile 'org.robolectric:robolectric:3.1.2'
 //    testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'

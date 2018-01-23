@@ -18,13 +18,13 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.FolderSongPresenter;
-import com.cyl.musiclake.ui.common.Extras;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     @BindView(R.id.tv_empty)
     TextView tv_empty;
@@ -74,16 +74,6 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
     @Override
     protected void initDatas() {
 
-//        if (Build.VERSION.SDK_INT < 21 && view.findViewById(R.id.status_bar) != null) {
-//            view.findViewById(R.id.status_bar).setVisibility(View.GONE);
-//            if (Build.VERSION.SDK_INT >= 19) {
-//                int statusBarHeight = DensityUtil.getStatusBarHeight(getContext());
-//                view.findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
-//            }
-//        }
-
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST, true));
-
         mPresenter.loadSongs(path);
 
     }
@@ -95,29 +85,21 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
 
     @Override
     public void initViews() {
-
-        toolbar.setTitle(R.string.folders);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        final ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setTitle(R.string.folders);
+        mToolbar.setTitle("文件夹");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         mPresenter = new FolderSongPresenter(getActivity());
         mPresenter.attachView(this);
         if (getArguments() != null) {
             path = getArguments().getString(Extras.FOLDER_PATH);
         }
-
         mAdapter = new SongAdapter(null);
-
-        mPresenter.attachView(this);
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
         setHasOptionsMenu(true);
-
     }
 
     @Override

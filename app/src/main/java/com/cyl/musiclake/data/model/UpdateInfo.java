@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.download.download;
+package com.cyl.musiclake.data.model;
 
 /**
  * 作者：yonglong on 2016/9/23 09:45

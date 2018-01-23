@@ -5,24 +5,24 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlineMusicListContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.OnlineMusicListPresenter;
-import com.cyl.musiclake.ui.common.Constants;
-import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -57,7 +57,6 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
     TextView mTvDate;
     TextView mTvDesc;
 
-    private MaterialDialog mProgressDialog;
     private int mOffset = 0;
     private String title;
     private String type;
@@ -92,7 +91,7 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         mPresenter.attachView(this);
 
         mAdapter = new SongAdapter(musicList);
-        mAdapter.setUpFetchEnable(true);
+        mAdapter.setUpFetchEnable(false);
         mAdapter.setEnableLoadMore(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -115,17 +114,17 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
 //            mOffset = 0;
 //            mPresenter.loadOnlineMusicList(type, 10, mOffset);
 //        });
-//        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-//            if (mCurrentCounter >= TOTAL_COUNTER) {
-//                //数据全部加载完毕
-//                mAdapter.loadMoreEnd();
-//            } else {
-//                //成功获取更多数据
-//                mPresenter.loadOnlineMusicList(type, 10, mOffset);
-//                mCurrentCounter = mAdapter.getData().size();
-//                TOTAL_COUNTER = 10 * mOffset;
-//            }
-//        }, 1000), mRecyclerView);
+        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
+            if (mCurrentCounter >= TOTAL_COUNTER) {
+                //数据全部加载完毕
+                mAdapter.loadMoreEnd();
+            } else {
+                //成功获取更多数据
+                mPresenter.loadOnlineMusicList(type, 10, mOffset);
+                mCurrentCounter = mAdapter.getData().size();
+                TOTAL_COUNTER = 10 * (mOffset + 1);
+            }
+        }, 1000), mRecyclerView);
     }
 
     @Override
@@ -143,6 +142,8 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         mTvTitle = (TextView) mViewHeader.findViewById(R.id.tv_title);
         mTvDate = (TextView) mViewHeader.findViewById(R.id.tv_update_date);
         mTvDesc = (TextView) mViewHeader.findViewById(R.id.tv_comment);
+
+        mTvDate.setText("最近更新：" + FormatUtil.distime(System.currentTimeMillis()));
     }
 
     @Override
@@ -159,6 +160,14 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         mAdapter.loadMoreFail();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void showHeaderInfo() {
         mTvTitle.setText(title);
@@ -178,7 +187,7 @@ public class OnlineMusicListActivity extends BaseActivity implements OnlineMusic
         } else {
             mAdapter.addData(musicList);
         }
-        mOffset += Constants.MUSIC_LIST_SIZE;
+        mOffset++;
         mAdapter.loadMoreComplete();
     }
 }

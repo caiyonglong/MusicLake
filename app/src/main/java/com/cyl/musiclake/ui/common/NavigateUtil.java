@@ -145,11 +145,11 @@ public class NavigateUtil {
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
             fragment = DownloadFragment.newInstance();
         } else {
-            transaction.setCustomAnimations(R.anim.activity_fade_in,
-                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
+//            transaction.setCustomAnimations(R.anim.activity_fade_in,
+//                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
             fragment = DownloadFragment.newInstance();
         }
-        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+//        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(fragment.getTag()).commit();
     }

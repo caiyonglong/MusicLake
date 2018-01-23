@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
 import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -26,15 +25,16 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.download.TasksManager;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.TransitionAnimationUtils;
-import com.cyl.musiclake.ui.download.DownloadService;
 import com.cyl.musiclake.ui.localmusic.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.PlayQueueDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.PlayControlsPresenter;
 import com.cyl.musiclake.utils.ColorUtil;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
@@ -167,13 +167,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 ).positiveText("确定")
                 .negativeText("取消")
                 .onPositive((materialDialog, dialogAction) -> {
-                    Intent intent = new Intent();
-                    intent.setClass(getContext(), DownloadService.class);
-                    intent.putExtra("mid", music.getId());
-                    intent.putExtra("downloadUrl", music.getUri());
-                    intent.putExtra("name", music.getTitle());
-                    intent.putExtra("flag", "start");
-                    getActivity().startService(intent);
+                    TasksManager.getImpl().addTask(music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
+                    ToastUtils.show(getContext(), "下载任务添加成功");
                 }).build().show();
     }
 

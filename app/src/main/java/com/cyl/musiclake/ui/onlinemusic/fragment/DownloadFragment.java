@@ -10,8 +10,8 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.ViewPagerAdapter;
-import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
-import com.cyl.musiclake.utils.FileUtils;
+
+import butterknife.BindView;
 
 /**
  * Created by yonglong on 2016/11/26.
@@ -19,11 +19,12 @@ import com.cyl.musiclake.utils.FileUtils;
 
 public class DownloadFragment extends BaseFragment {
     //Toolbar
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    //TabLayout
-    TabLayout mTabLayout;
-
+    @BindView(R.id.m_viewpager)
     ViewPager mViewPager;
+    @BindView(R.id.tabs)
+    TabLayout mTabLayout;
 
     public static DownloadFragment newInstance() {
 
@@ -52,24 +53,18 @@ public class DownloadFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         final ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (ab != null) {
-            ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle("");
-        }
-        mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        mTabLayout.setSelectedTabIndicatorHeight(5);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.m_viewpager);
+        ab.setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(DownloadingFragment.newInstance(), "正在下载");
-        adapter.addFragment(FolderSongsFragment.newInstance(FileUtils.getMusicDir()), "已下载");
+        adapter.addFragment(DownloadManagerFragment.newInstance(), "正在下载");
+//        adapter.addFragment(DownloadManagerFragment.newInstance(), "已下载");
         viewPager.setAdapter(adapter);
     }
 
