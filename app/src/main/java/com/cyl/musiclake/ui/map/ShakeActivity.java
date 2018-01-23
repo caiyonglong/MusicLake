@@ -19,7 +19,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.map.location.Location;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.utils.ShakeManager;
 
 import java.util.ArrayList;

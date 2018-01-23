@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
@@ -30,6 +29,7 @@ import butterknife.BindView;
  */
 public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchContract.View {
 
+    private static final String TAG = "SearchActivity";
     //搜索信息
     private String queryString;
     private SearchAdapter mAdapter;
@@ -82,9 +82,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            Log.e("TAH", music.toString());
-            PlayManager.playOnline(music);
-//            PlayManager.setPlayList(adapter.getData());
+            Log.e(TAG, music.toString());
+            mPresenter.play(music);
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             if (mCurrentCounter >= TOTAL_COUNTER) {

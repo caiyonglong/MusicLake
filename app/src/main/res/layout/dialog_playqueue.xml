@@ -4,11 +4,13 @@
     android:id="@+id/bottomsheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/colorPrimary"
         android:elevation="5dp"
         android:orientation="horizontal"
         tools:targetApi="lollipop">
@@ -21,6 +23,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:text="@string/tv_play_mode"
+            android:textColor="@color/white"
             tools:ignore="RelativeOverlap" />
 
         <ImageView
@@ -45,12 +48,6 @@
             android:layout_marginTop="16dp"
             android:layout_toLeftOf="@+id/clear_all"
             android:src="@drawable/ic_repeat_one" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/grey" />
 
     </RelativeLayout>
 

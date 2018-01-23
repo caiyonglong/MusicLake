@@ -18,7 +18,6 @@ import com.cyl.musiclake.api.GlideApp;
 
 /**
  * 专辑封面图片加载器
- * Created by wcy on 2015/11/27.
  */
 public class CoverLoader {
     private static final String KEY_NULL = "null";

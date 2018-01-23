@@ -1,4 +1,4 @@
-package com.cyl.musiclake.utils;
+package com.cyl.musiclake.ui.common;
 
 import android.os.Environment;
 
@@ -145,7 +145,6 @@ public class Constants {
     public static final String METHOD_MUSIC_INFO = "baidu.ting.song.getInfos";
     public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";
-    public static final String METHOD_LRC = "baidu.ting.song.lry";
 
     public static final String PARAM_METHOD = "method";
     public static final String PARAM_TYPE = "type";
@@ -155,6 +154,4 @@ public class Constants {
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
     public static final String PARAM_QUERY = "query";
-
-
 }

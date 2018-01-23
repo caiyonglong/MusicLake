@@ -18,7 +18,7 @@ import com.cyl.musiclake.data.source.PlayHistoryLoader;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
 import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.localmusic.fragment;
+package com.cyl.musiclake.ui.onlinemusic.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.localmusic.adapter.ViewPagerAdapter;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.localmusic.adapter.ViewPagerAdapter;
+import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
+import com.cyl.musiclake.utils.FileUtils;
 
 /**
  * Created by yonglong on 2016/11/26.
@@ -66,8 +68,8 @@ public class DownloadFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new DownloadingFragment().newInstance(1), "正在下载");
-        adapter.addFragment(new DownloadingFragment().newInstance(0), "已下载");
+        adapter.addFragment(DownloadingFragment.newInstance(), "正在下载");
+        adapter.addFragment(FolderSongsFragment.newInstance(FileUtils.getMusicDir()), "已下载");
         viewPager.setAdapter(adapter);
     }
 

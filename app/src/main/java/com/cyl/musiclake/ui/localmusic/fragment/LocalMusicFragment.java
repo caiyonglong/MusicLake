@@ -10,7 +10,7 @@ import android.view.View;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 
 import butterknife.BindView;
 

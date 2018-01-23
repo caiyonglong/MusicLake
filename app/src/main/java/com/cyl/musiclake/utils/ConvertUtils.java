@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

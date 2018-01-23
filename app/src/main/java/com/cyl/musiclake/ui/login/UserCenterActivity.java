@@ -23,7 +23,7 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.login.user.UserStatus;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;

@@ -1,8 +1,6 @@
 package com.cyl.musiclake.api.baidu;
 
 /**
- * JavaBean
- * Created by wcy on 2015/12/20.
  */
 public class BaiduMusicInfo {
     private String pic_big;

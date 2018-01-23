@@ -3,9 +3,9 @@ package com.cyl.musiclake.ui.onlinemusic.presenter;
 import android.content.Context;
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
-import com.cyl.musiclake.api.baidu.OnlinePlaylists;
+import com.cyl.musiclake.api.baidu.BaiduMusicList;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,14 +51,14 @@ public class OnlinePlaylistPresenter implements OnlinePlaylistContract.Presenter
         BaiduApiServiceImpl.getOnlinePlaylist()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<OnlinePlaylists>() {
+                .subscribe(new Observer<BaiduMusicList>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
 
                     @Override
-                    public void onNext(OnlinePlaylists result) {
-                        List<OnlinePlaylists.Billboard> mBillboards = result.getContent();
+                    public void onNext(BaiduMusicList result) {
+                        List<BaiduMusicList.Billboard> mBillboards = result.getContent();
                         //移除T榜
                         mBillboards.remove(3);
                         mView.showOnlineSongs(mBillboards);

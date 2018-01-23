@@ -1,87 +1,110 @@
 package com.cyl.musiclake.ui.download;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 
-import com.cyl.musiclake.ui.download.db.SqliteDao;
-import com.cyl.musiclake.ui.download.model.DownloaderInfo;
+import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.download.db.DBDao;
+import com.cyl.musiclake.ui.download.model.DownloadTaskInfo;
 import com.cyl.musiclake.ui.download.model.FileState;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.utils.FileUtils;
 
+import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 
 /**
- * 项目名称：MultithreadedDownload 类名称：DownloadService 类描述： 后台下载 创建人：wpy
- * 创建时间：2014-10-10 下午5:18:31
+ * 下载服务
  */
 public class DownloadService extends Service {
 
+    private static final String TAG = "DownloadService";
     // 下载器
-    private Downloader downloader;
+    private DownloadTask downloadTask;
 
-    DownloadListener downloadListener;
+    private DownloadListener downloadListener;
 
-    private SqliteDao dao;
+    private DBDao dao;
     /**
      * 存放各个下载器
      */
-    private Map<String, Downloader> downloaders = new HashMap<String, Downloader>();
+    private Map<String, DownloadTask> downloadTasks = new HashMap<String, DownloadTask>();
 
     /**
      * 存放每个下载文件的总长度
      */
-    private Map<String, Integer> fileSizes = new HashMap<String, Integer>();
+    private Map<String, Integer> sizeMap = new HashMap<String, Integer>();
     /**
      * 存放每个下载文件完成的长度
      */
-    private Map<String, Integer> completeSizes = new HashMap<String, Integer>();
+    private Map<String, Integer> progressMap = new HashMap<String, Integer>();
 
     /**
      * 消息处理 接收Download中每个线程传输过来的数据
      */
-    private Handler mHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == 1) {
-                String url = (String) msg.obj;
-                int length = msg.arg1;
+    private DownloadHandler mHandler;
 
-                int completeSize = completeSizes.get(url);
-                completeSize = completeSize + length;
-                completeSizes.put(url, completeSize);
+    @SuppressLint("HandlerLeak")
+    private class DownloadHandler extends Handler {
+        private final WeakReference<DownloadService> mService;
 
-                // Log.e("test>>", "消息处理器Handler当前进度：" + completeSize);
-
-                int fileSize = fileSizes.get(url);
-                if (completeSize == fileSize) {// 下载完成
-                    dao.updataStateByUrl(url);
-                    downloaders.get(url).delete(url);
-                    downloaders.remove(url);
-                    if (downloaders.isEmpty()) {// 如果全部下载完成，关闭service
-                        stopSelf();
-                    }
-                }
-                // 发送广播更新下载管理的进度
-                Intent intent = new Intent();
-                intent.setAction(Constants.DOWNLOADMANAGEACTION);
-                intent.putExtra("completeSize", completeSize);
-                intent.putExtra("url", url);
-                DownloadService.this.sendBroadcast(intent);
-
-            }
+        public DownloadHandler(DownloadService service) {
+            mService = new WeakReference<DownloadService>(service);
         }
 
-        ;
-    };
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    String url = (String) msg.obj;
+                    int length = msg.arg1;
+                    int progress = progressMap.get(url);
+                    progress = progress + length;
+                    progressMap.put(url, progress);
+                    Log.e(TAG, "下载进度：" + progress);
+                    int size = sizeMap.get(url);
+                    dao.updateFileState(url, length);
+                    // 下载完成
+                    if (progress == size) {
+                        dao.updateStateByUrl(url, 0);
+                        if (downloadListener != null) {
+                            downloadListener.onDownloadFinished(new File(FileUtils.getMusicDir() + url.substring(url.lastIndexOf("/"))));
+                        }
+                        downloadTasks.get(url).delete(url);
+                        downloadTasks.remove(url);
+                        // 更新下载管理的进度
+                        if (downloadTasks.isEmpty()) {
+                            // 如果全部下载完成，关闭service
+                            stopSelf();
+                        }
+                    }
+                    if (downloadListener != null) {
+                        // 更新下载管理的进度
+                        downloadListener.oDownloading(url, progress);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void setDownloadListener(DownloadListener downloadListener) {
+        this.downloadListener = downloadListener;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        dao = new SqliteDao(this);
+        mHandler = new DownloadHandler(this);
+        dao = new DBDao(this);
     }
 
     @Override
@@ -89,18 +112,40 @@ public class DownloadService extends Service {
         String urlPath = intent.getStringExtra("downloadUrl");
         String name = intent.getStringExtra("name");
         String flag = intent.getStringExtra("flag");
-        if (flag.equals("startDownload")) {
-            startDownload(name, urlPath, true);
-        }
-        if (flag.equals("changeState")) {
-            changeState(name, urlPath);
+        String mid = intent.getStringExtra("mid");
+        if (flag.equals("start")) {
+            startDownload(mid, name, urlPath, true);
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
+    DownloadManagerBinder myBinder;
+
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        if (myBinder == null) {
+            myBinder = new DownloadManagerBinder(this);
+        }
+        return myBinder;
+    }
+
+
+    public class DownloadManagerBinder extends Binder implements IDownloadService {
+        private final WeakReference<DownloadService> mService;
+
+        private DownloadManagerBinder(final DownloadService service) {
+            mService = new WeakReference<DownloadService>(service);
+        }
+
+        @Override
+        public void updateStatus(String mid, String name, String url) {
+            mService.get().updateStatus(mid, name, url);
+        }
+
+        @Override
+        public void addProgressCallBack(DownloadListener downloadListener) {
+            mService.get().setDownloadListener(downloadListener);
+        }
     }
 
     /**
@@ -108,43 +153,38 @@ public class DownloadService extends Service {
      *
      * @param urlPath 下载地址
      */
-    private void startDownload(final String name, final String urlPath,
+    private void startDownload(final String mid, final String name, final String urlPath,
                                final boolean isFirst) {
-        Log.e("test>>", "文件的名称：" + name);
-        Log.e("test>>", "文件的下载地址：" + urlPath);
+        Log.e(TAG, "开始下载: mid =" + mid + " name= " + name
+                + " url=" + urlPath + " isFist=" + isFirst);
         // 初始化一个下载器
-        downloader = downloaders.get(urlPath);
-        if (null == downloader) {
-            downloader = new Downloader(name, urlPath, Constants.LOCALPATH,
+        downloadTask = downloadTasks.get(urlPath);
+        if (null == downloadTask) {
+            downloadTask = new DownloadTask(name, urlPath,
                     Constants.THREADCOUNT, this, mHandler);
-            downloaders.put(urlPath, downloader);
+            downloadTasks.put(urlPath, downloadTask);
         }
-        if (downloader.isDownloading()) {
+        if (downloadTask.isDownloading()) {
             return;
         }
-
+        //开启一个线程下载
         new Thread() {
             public void run() {
-                DownloaderInfo downloaderInfo = downloader.getDownloaderInfos();
-                completeSizes.put(urlPath, downloaderInfo.getComplete());
-
-                if (fileSizes.get(urlPath) == null) {
-                    fileSizes.put(urlPath, downloaderInfo.getFileSize());
+                DownloadTaskInfo downloadTaskInfo = downloadTask.getDownloaderInfos();
+                progressMap.put(urlPath, downloadTaskInfo.getProgress());
+                if (sizeMap.get(urlPath) == null) {
+                    sizeMap.put(urlPath, downloadTaskInfo.getSize());
                 }
-
                 // FileState state = dao.query(urlPath);
                 if (isFirst) {
-                    Log.e("test>>", "文件：" + name + "第一次下载");
-                    FileState fileState = new FileState(name, urlPath, 1,
-                            downloaderInfo.getComplete(),
-                            downloaderInfo.getFileSize());
+                    Log.e(TAG, "第一次下载：" + name);
+                    FileState fileState = new FileState(mid, name, urlPath, 1,
+                            downloadTaskInfo.getProgress(),
+                            downloadTaskInfo.getSize());
                     dao.saveFileState(fileState);
                 }
-
-                downloader.download();
+                downloadTask.download();
             }
-
-            ;
         }.start();
     }
 
@@ -153,17 +193,21 @@ public class DownloadService extends Service {
      *
      * @param url 下载地址
      */
-    public void changeState(String name, String url) {
-        Downloader loader = downloaders.get(url);
-        if (loader != null) {
-            if (loader.isDownloading()) {// 正在下载
-                loader.setPause();
-            } else if (loader.isPause()) {// 暂停
-                loader.reset();
-                this.startDownload(name, url, false);
+    public void updateStatus(String mid, String name, String url) {
+        Log.e(TAG, "更新下载状态：暂停|下载 " + name);
+        DownloadTask task = downloadTasks.get(url);
+        if (task != null) {
+            if (task.isDownloading()) {// 正在下载
+                task.setPause();
+                dao.updateStateByUrl(url, 2);
+            } else if (task.isPause()) {// 暂停
+                task.reset();
+                dao.updateStateByUrl(url, 1);
+                startDownload(mid, name, url, false);
             }
         } else {
-            startDownload(name, url, false);
+            dao.updateStateByUrl(url, 1);
+            startDownload(mid, name, url, false);
         }
     }
 }

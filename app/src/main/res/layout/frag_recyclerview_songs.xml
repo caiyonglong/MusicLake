@@ -11,7 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/cardColor"
-        android:fadeScrollbars="true" />
+        app:fastScrollEnabled="true"
+        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@color/white_pressed"
+        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@color/white_pressed" />
+
 
     <include layout="@layout/item_loading" />
 </RelativeLayout>

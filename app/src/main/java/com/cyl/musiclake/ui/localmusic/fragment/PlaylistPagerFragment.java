@@ -12,7 +12,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.ui.localmusic.activity.PlaylistDetailActivity;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.utils.SystemUtils;
 
 import butterknife.BindView;

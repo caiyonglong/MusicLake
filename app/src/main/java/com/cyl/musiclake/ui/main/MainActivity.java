@@ -25,7 +25,7 @@ import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.onlinemusic.activity.SearchActivity;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;

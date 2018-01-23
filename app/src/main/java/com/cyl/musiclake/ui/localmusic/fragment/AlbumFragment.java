@@ -15,7 +15,7 @@ import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.AlbumAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.AlbumsContract;
 import com.cyl.musiclake.ui.localmusic.presenter.AlbumPresenter;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

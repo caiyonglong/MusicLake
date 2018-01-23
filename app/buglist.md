@@ -139,3 +139,8 @@ public class MultiTouchViewPager extends ViewPager {
 
 12、增加setNextMediaPlayer方法时，抛出异常
 E/MediaPlayer: next player is not prepared
+
+13、Observable.flatmap 操作符的使用
+
+14、Attempt to invoke interface method 接口
+下载服务接口更新下载状态。

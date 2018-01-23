@@ -6,7 +6,7 @@ import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.ui.onlinemusic.contract.ArtistInfoContract;
 import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.HashMap;
 import java.util.Map;

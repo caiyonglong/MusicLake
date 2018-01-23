@@ -9,9 +9,6 @@ import java.util.Date;
 /**
  * <br>
  * <b>进行一些转换工作</b></br>
- *
- * @author CWD
- * @version 2013.05.18 v1.0
  */
 public class FormatUtil {
 
@@ -31,6 +28,7 @@ public class FormatUtil {
         int s = (int) (time % 60);
         return (m > 9 ? m : "0" + m) + ":" + (s > 9 ? s : "0" + s);
     }
+
     /**
      * 格式化文件大小
      *
@@ -71,7 +69,7 @@ public class FormatUtil {
     }
 
     public static float Distance(double long1, double lat1, double long2,
-                                  double lat2) {
+                                 double lat2) {
         double a, b, R;
         R = 6378137; // 地球半径
         lat1 = lat1 * Math.PI / 180.0;
@@ -111,16 +109,16 @@ public class FormatUtil {
                     - min * 60 * 1000 - s * 1000);
 
             //距当前时间大于15天时输出年月日
-            if (day>15){
-                timeString=dateFormat1.format(parse);
-            }else if (day>0){
-                timeString= day+"天前";
-            }else if (hour>0){
-                timeString= hour+"小时前";
-            }else if (min>0){
-                timeString= min+"分钟前";
-            }else {
-                timeString= s +"秒前";
+            if (day > 15) {
+                timeString = dateFormat1.format(parse);
+            } else if (day > 0) {
+                timeString = day + "天前";
+            } else if (hour > 0) {
+                timeString = hour + "小时前";
+            } else if (min > 0) {
+                timeString = min + "分钟前";
+            } else {
+                timeString = s + "秒前";
             }
 
         } catch (ParseException e) {

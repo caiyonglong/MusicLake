@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.download.download.UpdateInfo;
 
 /**

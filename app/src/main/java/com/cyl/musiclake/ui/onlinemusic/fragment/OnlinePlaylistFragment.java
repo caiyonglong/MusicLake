@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.localmusic.adapter.OnlineAdapter;
+import com.cyl.musiclake.ui.onlinemusic.adapter.OnlineAdapter;
 import com.cyl.musiclake.ui.onlinemusic.activity.OnlineMusicListActivity;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
-import com.cyl.musiclake.api.baidu.OnlinePlaylists.Billboard;
+import com.cyl.musiclake.api.baidu.BaiduMusicList.Billboard;
 import com.cyl.musiclake.ui.onlinemusic.presenter.OnlinePlaylistPresenter;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 
 import java.util.List;
 

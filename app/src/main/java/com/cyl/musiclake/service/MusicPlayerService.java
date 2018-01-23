@@ -45,8 +45,8 @@ import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.data.source.PlayHistoryLoader;
 import com.cyl.musiclake.data.source.PlayQueueLoader;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.main.MainActivity;
-import com.cyl.musiclake.utils.Constants;
 import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.PreferencesUtils;
@@ -136,8 +136,6 @@ public class MusicPlayerService extends Service {
     //主线程Handler
     private Handler mMainHandler;
 
-    private String guid;
-    private String qqApikey;
 
     private class MusicPlayerHandler extends Handler {
         private final WeakReference<MusicPlayerService> mService;
@@ -182,14 +180,11 @@ public class MusicPlayerService extends Service {
                         notifyChange(META_CHANGED);
                         break;
                     case PREPARE_QQ_MUSIC:
-                        QQApiServiceImpl.getQQApiKey()
-                                .subscribe(map -> {
-                                    guid = map.keySet().iterator().next();
-                                    qqApikey = map.get(guid);
-                                    String url = Constants.BASE_URL_QQ_MUSIC_URL +
-                                            service.mPlayingMusic.getPrefix() + service.mPlayingMusic.getId() + ".mp3?vkey=" + qqApikey + "&guid=" + guid + "&fromtag=30";
-                                    Log.e(TAG, url);
-                                    mMainHandler.post(() -> mPlayer.setDataSource(url));
+                        QQApiServiceImpl.getMusicInfo(mPlayingMusic)
+                                .subscribe(music -> {
+                                    Log.e(TAG, music.toString());
+                                    mPlayingMusic = music;
+                                    mMainHandler.post(() -> mPlayer.setDataSource(mPlayingMusic.getUri()));
                                 });
                         break;
                     case SAVE_HISTORY:
@@ -507,12 +502,10 @@ public class MusicPlayerService extends Service {
         mHandler.sendEmptyMessage(SAVE_HISTORY);
         if (music.getType() == Music.Type.QQ && (music.getUri() == null || music.getUri().length() == 0)) {
             mPlayingMusic = music;
-            if (qqApikey == null || guid == null) {
+            if (mPlayingMusic.getUri() != null) {
                 mHandler.sendEmptyMessage(PREPARE_QQ_MUSIC);
             } else {
-                String url = Constants.BASE_URL_QQ_MUSIC_URL +
-                        mPlayingMusic.getPrefix() + mPlayingMusic.getId() + ".mp3?vkey=" + qqApikey + "&guid=" + guid + "&fromtag=30";
-                mPlayingMusic.setUri(url);
+                mPlayingMusic.setUri(mPlayingMusic.getUri());
             }
         } else {
             mPlayingMusic = music;

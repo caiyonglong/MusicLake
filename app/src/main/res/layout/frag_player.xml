@@ -119,18 +119,18 @@
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/skip_lrc"
+                <ImageView
+                    android:id="@+id/skip_download"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/white"
                     android:gravity="center"
                     android:scaleType="center"
-                    android:text="词"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:src="@drawable/item_download"
+                    tools:targetApi="lollipop" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/previous"
@@ -188,6 +188,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        layout="@layout/play_control_menu" />
+    <include layout="@layout/play_control_menu" />
 </RelativeLayout>

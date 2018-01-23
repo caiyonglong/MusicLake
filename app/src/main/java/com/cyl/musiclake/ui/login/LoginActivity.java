@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseActivity;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 

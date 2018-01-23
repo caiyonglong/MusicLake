@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.localmusic.adapter;
 
-import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,7 +10,6 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 
@@ -22,7 +20,6 @@ import java.util.List;
  */
 
 public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
-    private Palette.Swatch mSwatch;
 
     public PlayQueueAdapter(List<Music> musicList) {
         super(R.layout.item_play_queue, musicList);
@@ -36,18 +33,20 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
         } else {
             url = item.getCoverUri();
         }
-        if (url != null) {
-            GlideApp.with(mContext)
-                    .asBitmap()
-                    .load(url)
-                    .error(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into((ImageView) holder.getView(R.id.iv_cover));
-        }
+
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(url)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into((ImageView) holder.getView(R.id.iv_cover));
+
         if (item.getType() == Music.Type.QQ) {
             holder.setText(R.id.tv_source, "qq");
         } else if (item.getType() == Music.Type.XIAMI) {
             holder.setText(R.id.tv_source, "虾米");
+        } else if (item.getType() == Music.Type.BAIDU) {
+            holder.setText(R.id.tv_source, "百度");
         } else {
             holder.getView(R.id.tv_source).setVisibility(View.GONE);
         }
@@ -59,17 +58,8 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
         } else {
             holder.getView(R.id.v_playing).setVisibility(View.GONE);
         }
-        if (mSwatch != null) {
-            int artistColor = mSwatch.getTitleTextColor();
-            holder.setTextColor(R.id.tv_title, ColorUtil.getOpaqueColor(artistColor));
-            holder.setTextColor(R.id.tv_artist, artistColor);
-        }
 
         holder.addOnClickListener(R.id.iv_clear);
         holder.addOnClickListener(R.id.iv_love);
-    }
-
-    public void setPaletteSwatch(Palette.Swatch mSwatch) {
-        this.mSwatch = mSwatch;
     }
 }

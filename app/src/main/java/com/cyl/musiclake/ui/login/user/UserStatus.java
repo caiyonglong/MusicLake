@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.login.user;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 /**
  * Created by 永龙 on 2015/12/22.

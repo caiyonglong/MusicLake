@@ -2,7 +2,7 @@ package com.cyl.musiclake.api.baidu;
 
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import io.reactivex.ObservableOnSubscribe;
 public class BaiduApiServiceImpl {
 //    http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.0.7.1&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2
 
-    public static Observable<OnlinePlaylists> getOnlinePlaylist() {
+    public static Observable<BaiduMusicList> getOnlinePlaylist() {
         Map<String, String> params = new HashMap<>();
         params.put(Constants.PARAM_METHOD, Constants.METHOD_CATEGORY);// key
         params.put("operator", "1");
@@ -38,9 +38,9 @@ public class BaiduApiServiceImpl {
         params.put(Constants.PARAM_OFFSET, String.valueOf(mOffset));
 
         return ApiManager.getInstance().apiService.getOnlineSongs(Constants.BASE_URL_BAIDU_MUSIC, params)
-                .flatMap(bdMusicList -> {
+                .flatMap(baiduSongList -> {
                     List<Music> musicList = new ArrayList<>();
-                    for (BaiduMusicInfo songInfo : bdMusicList.getSong_list()) {
+                    for (BaiduMusicInfo songInfo : baiduSongList.getSong_list()) {
                         Music music = new Music();
                         music.setType(Music.Type.BAIDU);
                         music.setId(songInfo.getSong_id());
@@ -91,4 +91,16 @@ public class BaiduApiServiceImpl {
                 });
     }
 
+//    public static Observable<OnlineArtistInfo> getArtistInfo(String artistId) {
+//        Map<String, String> params = new HashMap<>();
+//
+//        params.put(Constants.PARAM_METHOD, Constants.METHOD_ARTIST_INFO);
+//        params.put(Constants.PARAM_TING_UID, artistId);
+//
+//        return ApiManager.getInstance().apiService.getArtistInfo(Constants.BASE_URL_BAIDU_MUSIC, params)
+//                .flatMap(baiduSongInfo -> {
+////                    baiduSongInfo.getData();
+//                    return Observable.fromArray(baiduSongInfo);
+//                });
+//    }
 }

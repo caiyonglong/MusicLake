@@ -23,7 +23,7 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.onlinemusic.activity.SearchActivity;
 import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 

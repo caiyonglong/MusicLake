@@ -21,8 +21,8 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.OnlineMusicListContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.OnlineMusicListPresenter;
-import com.cyl.musiclake.utils.Constants;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 

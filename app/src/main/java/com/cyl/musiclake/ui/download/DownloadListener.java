@@ -9,14 +9,16 @@ import java.io.File;
 public interface DownloadListener {
     /**
      * 下载进度
-     * @param url       下载链接
+     *
+     * @param url      下载链接
      * @param finished 下载进度
      */
-    public  void  oDownloading(String url, int finished);
+    public void oDownloading(String url, int finished);
 
     /**
      * 下载完成
-     * @param downloadFile  下载完成后的文件
+     *
+     * @param downloadFile 下载完成后的文件
      */
-    public  void onDownloadFinished(File downloadFile);
+    public void onDownloadFinished(File downloadFile);
 }

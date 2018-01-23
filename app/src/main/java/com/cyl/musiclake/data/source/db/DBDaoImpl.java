@@ -169,7 +169,7 @@ public class DBDaoImpl implements DBDao {
      */
     public void insertSong(Music music) {
         ContentValues values = getMusicContentValues(music);
-        LogUtil.e(TAG, music.toString());
+        LogUtil.e(TAG, music.toString() + "---");
         db.insertWithOnConflict(DBData.MUSIC_TABLE, null, values, CONFLICT_IGNORE);
     }
 

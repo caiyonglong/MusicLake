@@ -1,10 +1,11 @@
 package com.cyl.musiclake.api.qq;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import io.reactivex.Observable;
  */
 
 public class QQApiServiceImpl {
+    private static final String TAG = "QQApiServiceImpl";
+
     /**
      * @param
      * @return
@@ -64,16 +67,19 @@ public class QQApiServiceImpl {
     }
 
     @SuppressWarnings({"unchecked", "varargs"})
-    public static Observable<Map<String, String>> getQQApiKey() {
+    public static Observable<Music> getMusicInfo(Music music) {
         double guid = Math.floor(Math.random() * 1000000000);
         String requestUrl = Constants.BASE_URL_QQ_MUSIC_KEY + "json=3&guid=" + guid + "&format=json";
         return ApiManager.getInstance().apiService.getTokenKey(requestUrl)
                 .flatMap(qqApiKey -> {
                     String key = qqApiKey.getKey();
-                    Map<String, String> map = new HashMap<>();
-                    map.put(String.valueOf(guid), key);
-                    return Observable.fromArray(map);
+                    String url = Constants.BASE_URL_QQ_MUSIC_URL +
+                            music.getPrefix() + music.getId() + ".mp3?vkey=" + key + "&guid=" + guid + "&fromtag=30";
+                    Log.e(TAG, url);
+                    music.setUri(url);
+                    return Observable.fromArray(music);
                 });
+
     }
 
     @SuppressWarnings({"unchecked", "varargs"})

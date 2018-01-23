@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -26,7 +24,6 @@ import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.adapter.PlayQueueAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlayQueueContract;
 import com.cyl.musiclake.ui.localmusic.presenter.PlayQueuePresenter;
-import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.PreferencesUtils;
 
 import java.util.List;
@@ -49,17 +46,13 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     ImageView clearAll;
     @BindView(R.id.recycler_view_songs)
     RecyclerView recyclerView;
-    @BindView(R.id.bottomsheet)
-    LinearLayout root;
 
     private PlayQueueAdapter mAdapter;
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private final int PLAY_MODE_RANDOM = 0;
     private final int PLAY_MODE_LOOP = 1;
     private final int PLAY_MODE_REPEAT = 2;
-    private Palette.Swatch mSwatch;
     private PlayQueuePresenter mPresenter;
-
 
     @Override
     public void onStart() {
@@ -89,22 +82,17 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         mPresenter = new PlayQueuePresenter(getContext());
         mPresenter.attachView(this);
-        if (mSwatch != null) {
-            root.setBackgroundColor(mSwatch.getRgb());
-            if (mAdapter != null)
-                mAdapter.setPaletteSwatch(mSwatch);
-            int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
-            tvPlayMode.setTextColor(blackWhiteColor);
-            ivPlayMode.setColorFilter(blackWhiteColor);
-            clearAll.setColorFilter(blackWhiteColor);
-        }
+
         mAdapter = new PlayQueueAdapter(null);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerView);
-        mPresenter.loadSongs();
+
         updatePlayMode();
+
         initListener();
+        mPresenter.loadSongs();
     }
 
     private void initListener() {
@@ -124,25 +112,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         });
     }
 
-    public void setPaletteSwatch(Palette.Swatch swatch) {
-        if (swatch == null) {
-            return;
-        }
-        mSwatch = swatch;
-        if (root != null) {
-            root.setBackgroundColor(mSwatch.getRgb());
-            int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
-            tvPlayMode.setTextColor(blackWhiteColor);
-            ivPlayMode.setColorFilter(blackWhiteColor);
-            clearAll.setColorFilter(blackWhiteColor);
-            mAdapter.setPaletteSwatch(mSwatch);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle arg0) {
-        super.onActivityCreated(arg0);
-    }
 
     @Override
     public void onDestroyView() {

@@ -5,7 +5,7 @@ import android.webkit.WebSettings;
 
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -39,7 +39,26 @@ public class ApiManager {
     }
 
     private ApiManager() {
-        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+
+        ProgressListener listener = new ProgressListener() {
+            @Override
+            public void onLoading(long total, long progress, boolean finish) {
+
+            }
+        };
+
+        OkHttpClient.Builder builder = new OkHttpClient()
+                .newBuilder();
+//                .addInterceptor(new Interceptor() {
+//                    @Override
+//                    public Response intercept(Chain chain) throws IOException {
+//                        Request request = chain.request();
+//                        Response originalResponse = chain.proceed(request);
+//                        return originalResponse.newBuilder()
+//                                .body(new FileResponseBody(originalResponse.body(), listener))
+//                                .build();
+//                    }
+//                });
 //        builder.addInterceptor(chain -> {
         //获取本地user_agent;
 //            String userAgentString = getUserAgent();

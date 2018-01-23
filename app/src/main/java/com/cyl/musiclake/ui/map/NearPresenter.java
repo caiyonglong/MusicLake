@@ -8,7 +8,7 @@ import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.ui.login.UserModel;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.location.Location;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.List;
 import java.util.Map;

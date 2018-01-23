@@ -5,6 +5,7 @@ import android.content.Context;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 
 import java.util.List;
@@ -67,6 +68,38 @@ public class SearchPresenter implements SearchContract.Presenter {
                         mView.hideLoading();
                     }
                 });
+    }
+
+    @Override
+    public void play(Music music) {
+        if (music.getType() == Music.Type.QQ) {
+            QQApiServiceImpl.getMusicInfo(music)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Music>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Music music) {
+                            PlayManager.playOnline(music);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            PlayManager.playOnline(music);
+        }
     }
 
 

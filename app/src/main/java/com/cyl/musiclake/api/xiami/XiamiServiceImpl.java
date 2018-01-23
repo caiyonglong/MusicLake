@@ -2,7 +2,7 @@ package com.cyl.musiclake.api.xiami;
 
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.utils.Constants;
+import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +53,6 @@ public class XiamiServiceImpl {
                         music.setAlbum(song.getAlbum_name());
                         music.setAlbumId(song.getAlbum_id());
                         music.setUri(song.getListen_file());
-
                         String cover = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_250w_250h";
                         String coverBig = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_400w_400h";
                         String coverSmall = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_150w_150h";

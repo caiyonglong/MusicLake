@@ -12,7 +12,7 @@ public class BaiduApiServiceImplTest extends TestCase {
     public void testPlaylist() {
         BaiduApiServiceImpl.getOnlinePlaylist()
                 .subscribe(result -> {
-                    List<OnlinePlaylists.Billboard> mBillboards = result.getContent();
+                    List<BaiduMusicList.Billboard> mBillboards = result.getContent();
                     //移除T榜
                     mBillboards.remove(3);
                     System.out.println(mBillboards.get(0).getComment());
@@ -29,13 +29,13 @@ public class BaiduApiServiceImplTest extends TestCase {
         System.out.println("------------------------------------");
         BaiduApiServiceImpl.getTingSongInfo("569080829")
                 .subscribe(music -> {
-                   System.out.println(music.getTitle());
-                   System.out.println(music.getArtist());
-                   System.out.println(music.getArtistId());
-                   System.out.println(music.getUri());
-                   System.out.println(music.getLrcPath());
-                   System.out.println(music.getCoverUri());
-                   System.out.println(music.getUri());
+                    System.out.println(music.getTitle());
+                    System.out.println(music.getArtist());
+                    System.out.println(music.getArtistId());
+                    System.out.println(music.getUri());
+                    System.out.println(music.getLrcPath());
+                    System.out.println(music.getCoverUri());
+                    System.out.println(music.getUri());
                 });
 
     }

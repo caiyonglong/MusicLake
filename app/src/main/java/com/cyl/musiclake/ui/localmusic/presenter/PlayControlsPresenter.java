@@ -178,7 +178,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         if (music == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_cover);
             mView.setAlbumArt(bitmap);
-            mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
+            mView.setTitle(mContext.getResources().getString(R.string.app_name));
             mView.setArtist("");
             mView.updatePanelLayout(false);
             return;
@@ -198,7 +198,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         final String title = PlayManager.getSongName();
         final String artist = PlayManager.getSongArtist();
         if (TextUtils.isEmpty(title) && TextUtils.isEmpty(artist)) {
-            mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
+            mView.setTitle(mContext.getResources().getString(R.string.app_name));
             mView.setArtist("");
         } else {
             mView.setTitle(title);

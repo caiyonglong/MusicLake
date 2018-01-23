@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.localmusic.contract;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
@@ -12,8 +11,6 @@ import com.cyl.musiclake.ui.base.BaseView;
 public interface PlayControlsContract {
 
     interface View extends BaseView {
-
-        Context getContext();
 
         void setAlbumArt(Bitmap albumArt);
 

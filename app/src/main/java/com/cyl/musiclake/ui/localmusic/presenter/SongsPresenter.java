@@ -6,7 +6,7 @@ import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 
 import java.util.List;
 

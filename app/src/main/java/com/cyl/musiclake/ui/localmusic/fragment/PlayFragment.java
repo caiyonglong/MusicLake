@@ -1,11 +1,13 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -21,9 +23,13 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.TransitionAnimationUtils;
+import com.cyl.musiclake.ui.download.DownloadService;
 import com.cyl.musiclake.ui.localmusic.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.PlayQueueDialog;
@@ -88,8 +94,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     TextView tv_time;
     @BindView(R.id.song_duration)
     TextView tv_duration;
-    @BindView(R.id.skip_lrc)
-    TextView skip_lrc;
+    @BindView(R.id.skip_download)
+    ImageView skip_download;
 
     @BindView(R.id.song_progress)
     SeekBar mSeekBar;
@@ -146,15 +152,38 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPresenter.updateFavoriteSong();
     }
 
+    @OnClick(R.id.skip_download)
+    void download() {
+        Music music = PlayManager.getPlayingMusic();
+        if (music != null && music.getType() == Music.Type.LOCAL) {
+            ToastUtils.show(getContext(), "不能下载此歌曲!");
+            return;
+        }
+        new MaterialDialog.Builder(getContext())
+                .title("歌曲下载")
+                .content("歌名：  " + music.getTitle() +
+                        "\n歌曲id：" + music.getId() +
+                        "\n下载地址：\n" + music.getUri()
+                ).positiveText("确定")
+                .negativeText("取消")
+                .onPositive((materialDialog, dialogAction) -> {
+                    Intent intent = new Intent();
+                    intent.setClass(getContext(), DownloadService.class);
+                    intent.putExtra("mid", music.getId());
+                    intent.putExtra("downloadUrl", music.getUri());
+                    intent.putExtra("name", music.getTitle());
+                    intent.putExtra("flag", "start");
+                    getActivity().startService(intent);
+                }).build().show();
+    }
+
+    Handler mhandler;
 
     @OnClick(R.id.ic_detail)
     void openPlayQueue() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         if (playQueueDialog == null) {
             playQueueDialog = new PlayQueueDialog();
-        }
-        if (mPalette != null) {
-            playQueueDialog.setPaletteSwatch(mPalette.getVibrantSwatch());
         }
         playQueueDialog.show(fm, "fragment_bottom_dialog");
     }
@@ -197,6 +226,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPresenter = new PlayControlsPresenter(getContext());
         mPresenter.attachView(this);
         mPresenter.subscribe();
+
+        mhandler = new Handler();
 
     }
 
@@ -300,8 +331,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     public void setAlbumArt(Drawable albumArt) {
-        ivPlayingBg.setBackground(albumArt);
-//        ivPlayingBg.setImageBitmap(ImageUtils.blur(albumArt, 50));
+        TransitionAnimationUtils.startChangeAnimation(ivPlayingBg, albumArt);
+//        ivPlayingBg.setBackground(albumArt);
     }
 
     @Override
@@ -348,9 +379,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //set icon color
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
         int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
-        if (playQueueDialog != null && mSwatch != null) {
-            playQueueDialog.setPaletteSwatch(mSwatch);
-        }
+
         mLrcView.setHighLightTextColor(blackWhiteColor);
         mLrcView.setDefaultColor(blackWhiteColor);
         tv_time.setTextColor(blackWhiteColor);

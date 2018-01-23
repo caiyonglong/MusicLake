@@ -1,15 +1,15 @@
 package com.cyl.musiclake.api;
 
+import com.cyl.musiclake.api.baidu.BaiduMusicList;
 import com.cyl.musiclake.api.baidu.BaiduSongInfo;
+import com.cyl.musiclake.api.baidu.BaiduSongList;
+import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 import com.cyl.musiclake.api.qq.QQApiKey;
 import com.cyl.musiclake.api.qq.QQApiModel;
 import com.cyl.musiclake.api.qq.QQLyricInfo;
 import com.cyl.musiclake.api.xiami.XiamiModel;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.location.Location;
-import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
-import com.cyl.musiclake.api.baidu.BaiduMusicList;
-import com.cyl.musiclake.api.baidu.OnlinePlaylists;
 
 import java.util.List;
 import java.util.Map;
@@ -17,9 +17,11 @@ import java.util.Map;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 /**
@@ -71,12 +73,15 @@ public interface ApiManagerService {
     Observable<ApiModel<OnlineArtistInfo>> getArtistInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @GET
-    Observable<OnlinePlaylists> getOnlinePlaylist(@Url String baseUrl,@QueryMap Map<String, String> params);
+    Observable<BaiduMusicList> getOnlinePlaylist(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @GET
-    Observable<BaiduMusicList> getOnlineSongs(@Url String baseUrl, @QueryMap Map<String, String> params);
+    Observable<BaiduSongList> getOnlineSongs(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @GET
     Observable<BaiduSongInfo> getTingSongInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
+    @Streaming
+    @GET
+    Observable<ResponseBody> downloadFile(@Url String downloadUrl, @HeaderMap Map<String, String> params);
 }

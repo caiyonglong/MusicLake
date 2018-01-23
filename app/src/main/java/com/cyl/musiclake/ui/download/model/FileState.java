@@ -1,90 +1,92 @@
 package com.cyl.musiclake.ui.download.model;
 
 /**
- * 
- * 项目名称：MultithreadedDownload 类名称：FileState 类描述： 下载文件的状态信息 创建人：wpy
- * 创建时间：2014-10-11 下午5:16:55
- * 
+ *
+ *
  */
 public class FileState {
 
-	private String name;// 文件名称
-	private String url;// 下载地址
-	private int state;// 当前的下载状态 1 正在下载 0 已下载
-	private int completeSize;// 下载的完成进度
-	private int fileSize;// 文件的长度
+    private String mid; //歌曲信息
+    private String name;// 文件名称
+    private String url;// 下载地址
+    private int state;// 当前的下载状态 1 正在下载 0 已下载
+    private int finish;// 下载的完成进度
+    private int fileSize;// 文件的长度
 
-	/**
-	 * 
-	 * @param name
-	 *            文件名称
-	 * @param url
-	 *            下载地址
-	 * @param state
-	 *            当前的下载状态 1 正在下载 0 已下载
-	 * @param completeSize
-	 *            下载的完成进度
-	 * @param fileSize
-	 *            文件的长度
-	 */
-	public FileState(String name, String url, int state, int completeSize,
-			int fileSize) {
-		this.name = name;
-		this.url = url;
-		this.state = state;
-		this.completeSize = completeSize;
-		this.fileSize = fileSize;
-	}
+    /**
+     * @param name     文件名称
+     * @param url      下载地址
+     * @param state    当前的下载状态 1 正在下载 0 已下载
+     * @param finish   下载的完成进度
+     * @param fileSize 文件的长度
+     */
+    public FileState(String mid, String name, String url, int state, int finish,
+                     int fileSize) {
+        this.mid = mid;
+        this.name = name;
+        this.url = url;
+        this.state = state;
+        this.finish = finish;
+        this.fileSize = fileSize;
+    }
 
-	public FileState() {
+    public FileState() {
 
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getMid() {
+        return mid;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getState() {
-		return state;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setState(int state) {
-		this.state = state;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public int getCompleteSize() {
-		return completeSize;
-	}
+    public int getState() {
+        return state;
+    }
 
-	public void setCompleteSize(int completeSize) {
-		this.completeSize = completeSize;
-	}
+    public void setState(int state) {
+        this.state = state;
+    }
 
-	public int getFileSize() {
-		return fileSize;
-	}
+    public int getFinish() {
+        return finish;
+    }
 
-	public void setFileSize(int fileSize) {
-		this.fileSize = fileSize;
-	}
+    public void setCompleteSize(int finish) {
+        this.finish = finish;
+    }
 
-	@Override
-	public String toString() {
-		return "FileState [name=" + name + ", url=" + url + ", state=" + state
-				+ ", completeSize=" + completeSize + ", fileSize=" + fileSize
-				+ "]";
-	}
+    public int getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    @Override
+    public String toString() {
+        return "FileState [name=" + name + ", url=" + url + ", state=" + state
+                + ", finish=" + finish + ", fileSize=" + fileSize
+                + "]";
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.localmusic.adapter;
+package com.cyl.musiclake.ui.onlinemusic.adapter;
 
 import android.widget.ImageView;
 

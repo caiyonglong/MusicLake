@@ -15,12 +15,11 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.ui.localmusic.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.ArtistSongsFragment;
-import com.cyl.musiclake.ui.localmusic.fragment.DownloadFragment;
+import com.cyl.musiclake.ui.onlinemusic.fragment.DownloadFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.LocalMusicFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.RecentlyFragment;
-import com.cyl.musiclake.utils.Extras;
 
 /**
  * Created by yonglong on 2016/12/24.

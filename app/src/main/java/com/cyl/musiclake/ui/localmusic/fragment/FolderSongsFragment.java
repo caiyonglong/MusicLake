@@ -24,7 +24,7 @@ import com.cyl.musiclake.ui.localmusic.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.FolderSongPresenter;
-import com.cyl.musiclake.utils.Extras;
+import com.cyl.musiclake.ui.common.Extras;
 
 import java.util.List;
 
