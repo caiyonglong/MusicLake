@@ -503,7 +503,12 @@ public class MusicPlayerService extends Service {
      */
     public void play(Music music) {
         setNextTrack();
-        mPlaylist.add(mPlayingPos, music);
+        if (mPlayingPos == -1 || mPlaylist.size() == 0) {
+            mPlaylist.add(music);
+            mPlayingPos = 0;
+        } else {
+            mPlaylist.add(mPlayingPos, music);
+        }
         playMusic(music);
     }
 

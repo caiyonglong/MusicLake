@@ -14,12 +14,14 @@ public class TasksManagerModel {
     public final static String NAME = "name";
     public final static String URL = "url";
     public final static String PATH = "path";
+    public final static String FINISH = "finish";
 
     private int id;
     private String mid;
     private String name;
     private String url;
     private String path;
+    private boolean finish;
     private Music music;
 
     public int getId() {
@@ -62,6 +64,14 @@ public class TasksManagerModel {
         this.path = path;
     }
 
+    public boolean isFinish() {
+        return finish;
+    }
+
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
+
     public Music getMusic() {
         return music;
     }
@@ -77,6 +87,7 @@ public class TasksManagerModel {
         cv.put(NAME, name);
         cv.put(URL, url);
         cv.put(PATH, path);
+        cv.put(FINISH, finish);
         return cv;
     }
 }

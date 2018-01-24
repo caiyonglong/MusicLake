@@ -170,7 +170,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 ).positiveText("确定")
                 .negativeText("取消")
                 .onPositive((materialDialog, dialogAction) -> {
-                    TasksManagerModel model = TasksManager.getImpl().addTask(music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
+                    TasksManagerModel model =
+                            TasksManager.getImpl().addTask(music.getId(), music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
                     ToastUtils.show(getContext(), "下载任务添加成功");
                     BaseDownloadTask task = FileDownloader.getImpl()
                             .create(model.getUrl())

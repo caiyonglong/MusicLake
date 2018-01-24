@@ -33,7 +33,7 @@ public class TasksManager {
 
     private TasksManager() {
         dbController = new TasksManagerDBController();
-        modelList = dbController.getAllTasks();
+        modelList = dbController.getAllTasks(false);
     }
 
     private SparseArray<BaseDownloadTask> taskSparseArray = new SparseArray<>();
@@ -153,11 +153,22 @@ public class TasksManager {
         return modelList.size();
     }
 
+    public List<TasksManagerModel> getModelList() {
+        return dbController.getAllTasks(true);
+    }
+
     public TasksManagerModel addTask(final String name, final String url) {
         return addTask(url, createPath(url));
     }
 
-    public TasksManagerModel addTask(final String name, final String url, final String path) {
+    public void finishTask(int id) {
+
+        TasksManagerModel model = getById(id);
+        dbController.finishTask(model);
+
+    }
+
+    public TasksManagerModel addTask(final String mid, final String name, final String url, final String path) {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
             return null;
         }
@@ -167,7 +178,7 @@ public class TasksManager {
         if (model != null) {
             return model;
         }
-        final TasksManagerModel newModel = dbController.addTask(name, url, path);
+        final TasksManagerModel newModel = dbController.addTask(mid, name, url, path);
         if (newModel != null) {
             modelList.add(newModel);
         }

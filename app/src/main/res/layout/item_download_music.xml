@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_card"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="15dp">
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -18,7 +17,7 @@
             android:id="@+id/task_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="task: asdasf"
+            android:text="歌名"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp" />
 
@@ -27,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:text="status: connected"
-            android:textColor="@android:color/secondary_text_dark"
+            android:text="进度 10%"
+            android:textColor="@android:color/background_dark"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -39,15 +38,15 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1.0" />
 
-
     </LinearLayout>
 
     <Button
         android:id="@+id/task_action_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_marginLeft="10dp"
         android:background="@drawable/btn_bg"
-        android:textColor="@android:color/black"
+        android:text="开始"
+        android:textColor="@android:color/white"
         android:textSize="14sp" />
 </LinearLayout>

@@ -83,7 +83,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.MUSIC_PREFIX + " , "
 
                 + DBData.MUSIC_YEARS + " ) ");
-
         //创建下载文件数据库
         db.execSQL("CREATE TABLE IF NOT EXISTS "
                 + TasksManagerDBController.TABLE_NAME
@@ -93,13 +92,15 @@ public class DBHelper extends SQLiteOpenHelper {
                         + "%s VARCHAR, " // mid
                         + "%s VARCHAR, " // name
                         + "%s VARCHAR, " // url
-                        + "%s VARCHAR " // path
+                        + "%s VARCHAR, " // path
+                        + "%s INTEGER " // finish
                         + ")"
                 , TasksManagerModel.ID
                 , TasksManagerModel.MID
                 , TasksManagerModel.NAME
                 , TasksManagerModel.URL
                 , TasksManagerModel.PATH
+                , TasksManagerModel.FINISH
 
         ));
 

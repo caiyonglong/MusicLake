@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 public class TasksManagerDBController {
-    public final static String TABLE_NAME = "tasksmanger";
+    public final static String TABLE_NAME = "download_manger";
     private final SQLiteDatabase db;
 
     public TasksManagerDBController() {
@@ -25,8 +25,9 @@ public class TasksManagerDBController {
         db = openHelper.getWritableDatabase();
     }
 
-    public List<TasksManagerModel> getAllTasks() {
-        final Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+    public List<TasksManagerModel> getAllTasks(boolean finish) {
+        final Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " where "
+                + TasksManagerModel.FINISH + " = " + (finish ? 1 : 0), null);
 
         final List<TasksManagerModel> list = new ArrayList<>();
         try {
@@ -52,7 +53,7 @@ public class TasksManagerDBController {
         return list;
     }
 
-    public TasksManagerModel addTask(final String name, final String url, final String path) {
+    public TasksManagerModel addTask(final String mid, final String name, final String url, final String path) {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
             return null;
         }
@@ -62,13 +63,18 @@ public class TasksManagerDBController {
 
         TasksManagerModel model = new TasksManagerModel();
         model.setId(id);
+        model.setMid(mid);
         model.setName(name);
         model.setUrl(url);
         model.setPath(path);
+        model.setFinish(false);
 
         final boolean succeed = db.insert(TABLE_NAME, null, model.toContentValues()) != -1;
         return succeed ? model : null;
     }
 
-
+    public TasksManagerModel finishTask(TasksManagerModel model) {
+        int succeed = db.update(TABLE_NAME, model.toContentValues(), TasksManagerModel.FINISH + "=?", new String[]{"1"});
+        return succeed != -1 ? model : null;
+    }
 }

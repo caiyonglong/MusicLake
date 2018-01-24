@@ -10,8 +10,6 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.localmusic.adapter.ViewPagerAdapter;
-import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
-import com.cyl.musiclake.utils.FileUtils;
 
 import butterknife.BindView;
 
@@ -66,7 +64,7 @@ public class DownloadFragment extends BaseFragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(DownloadManagerFragment.newInstance(), "正在下载");
-        adapter.addFragment(FolderSongsFragment.newInstance(FileUtils.getMusicDir()), "已下载");
+        adapter.addFragment(DownloadedFragment.newInstance(), "已下载");
         viewPager.setAdapter(adapter);
     }
 

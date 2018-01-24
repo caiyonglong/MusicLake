@@ -55,7 +55,7 @@ public class BaiduApiServiceImpl {
                         music.setCoverBig(songInfo.getPic_radio());
                         musicList.add(music);
                     }
-                    return Observable.fromArrayu(musicList);
+                    return Observable.fromArray(musicList);
                 });
     }
 

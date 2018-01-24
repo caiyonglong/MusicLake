@@ -61,11 +61,16 @@ public class SongLoader {
         });
     }
 
+    public static Music getMusicInfo(final Context context, String mid) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        return dbDaoImpl.getMusicInfo(mid);
+    }
+
     public static Observable<Music> getMusicInfo(final Context context, Music music) {
         return Observable.create(subscriber -> {
             try {
                 DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-                String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.MUSIC_ID + " = '" + music.getId()+"'";
+                String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.MUSIC_ID + " = '" + music.getId() + "'";
                 Cursor cursor = dbDaoImpl.makeCursor(sql);
                 List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
                 if (results.size() != 0) {

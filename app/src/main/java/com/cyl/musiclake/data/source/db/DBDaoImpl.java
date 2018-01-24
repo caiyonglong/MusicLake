@@ -219,6 +219,23 @@ public class DBDaoImpl implements DBDao {
         return results;
     }
 
+    public Music getMusicInfo(String mid) {
+        // 查询歌单
+        String query = "select * from music where mid = '" + mid + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                Music music = new MusicCursorWrapper(cursor).getMusic();
+                return music;
+            }
+        }
+        // 记得关闭游标
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
+
     @Override
     public List<Music> getSongsForCursor(Cursor cursor) {
         List<Music> results = new ArrayList<>();

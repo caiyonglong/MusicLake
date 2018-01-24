@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -123,6 +124,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
             tag.updateDownloaded();
             TasksManager.getImpl().removeTaskForViewHolder(task.getId());
+            TasksManager.getImpl().finishTask(task.getId());
         }
     };
     private View.OnClickListener taskActionOnClickListener = v -> {
@@ -245,14 +247,14 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             this.position = position;
         }
 
-
         public void updateDownloaded() {
             taskPb.setMax(1);
             taskPb.setProgress(1);
             taskStatusTv.setText(R.string.tasks_manager_demo_status_completed);
             taskActionBtn.setText(R.string.delete);
-            TasksManager.getImpl().removeTaskForViewHolder(id);
-
+            taskActionBtn.setVisibility(View.GONE);
+            taskPb.setVisibility(View.GONE);
+            RxBus.getInstance().post(new TasksManagerModel());
         }
 
         public void updateNotDownloaded(final int status, final long sofar, final long total) {
@@ -296,9 +298,9 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
                 case FileDownloadStatus.connected:
                     taskStatusTv.setText(R.string.tasks_manager_demo_status_connected);
                     break;
-                case FileDownloadStatus.progress:
-                    taskStatusTv.setText(R.string.tasks_manager_demo_status_progress);
-                    break;
+//                case FileDownloadStatus.progress:
+//                    taskStatusTv.setText(R.string.tasks_manager_demo_status_progress);
+//                    break;
                 default:
                     taskStatusTv.setText(MyApplication.mContext.getString(
                             R.string.tasks_manager_demo_status_downloading, status));
