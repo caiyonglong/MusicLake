@@ -132,6 +132,10 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
         mCurrentMediaPlayer.pause();
     }
 
+    public boolean isPlaying() {
+        return mCurrentMediaPlayer.isPlaying();
+    }
+
 
     public long duration() {
         return mCurrentMediaPlayer.getDuration();

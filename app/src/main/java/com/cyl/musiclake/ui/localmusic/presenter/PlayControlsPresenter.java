@@ -180,7 +180,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     public void updateNowPlayingCard() {
         Log.d(TAG, "updateNowPlayingCard" + mProgress);
         Music music = PlayManager.getPlayingMusic();
-        if (music == null) {
+        if (music == null || PlayManager.getPlayList().size() == 0) {
             Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_cover);
             mView.setAlbumArt(bitmap);
             mView.setTitle(mContext.getResources().getString(R.string.app_name));

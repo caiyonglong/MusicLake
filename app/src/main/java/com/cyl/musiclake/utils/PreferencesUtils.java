@@ -29,8 +29,8 @@ public class PreferencesUtils {
         return getLong(MUSIC_ID, -1);
     }
 
-    public static void saveCurrentSongId(long id) {
-        saveLong(MUSIC_ID, id);
+    public static void saveCurrentSongId(String mid) {
+        saveString(MUSIC_ID, mid);
     }
 
     public static long getPosition() {

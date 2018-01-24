@@ -92,9 +92,9 @@ public class MusicPlayerService extends Service {
     public static final int QQ_MUSIC_URL = 6; //播放出错
     public static final int PREPARE_ASYNC_UPDATE = 7; //PrepareAsync装载进程
     public static final int PREPARE_ASYNC_ENDED = 8; //PrepareAsync异步装载完成
-    public static final int PREPARE_QQ_MUSIC = 9; //PrepareAsync异步装载完成
-    public static final int SAVE_HISTORY = 10; //PrepareAsync异步装载完成
-    public static final int SAVE_PLAY_QUEUE = 11; //PrepareAsync异步装载完成
+    public static final int PREPARE_QQ_MUSIC = 9; //获取QQ音乐播放状态
+    public static final int SAVE_HISTORY = 10; //保存播放历史
+    public static final int SAVE_PLAY_QUEUE = 11; //保存播放队列
 
     private static final int NOTIFY_MODE_NONE = 0;
     private static final int NOTIFY_MODE_FOREGROUND = 1;
@@ -122,6 +122,7 @@ public class MusicPlayerService extends Service {
     //广播接收者
     ServiceReceiver mServiceReceiver;
     HeadsetReceiver mHeadsetReceiver;
+    HeadsetPlugInReceiver mHeadsetPlugInReceiver;
 
     private NotificationManager mNotificationManager;
     private Notification mNotification;
@@ -129,6 +130,7 @@ public class MusicPlayerService extends Service {
     private MediaSessionCompat mSession;
     private boolean isRunningForeground = false;
     private boolean isMusicPlaying = false;
+    private Bitmap artwork = null;
 
     //工作线程和Handler
     private MusicPlayerHandler mHandler;
@@ -185,7 +187,7 @@ public class MusicPlayerService extends Service {
                         notifyChange(PLAYLIST_CHANGED);
                         break;
                     case SAVE_PLAY_QUEUE:
-
+                        savePlayQueue(true);
                         break;
                 }
             }
@@ -214,6 +216,7 @@ public class MusicPlayerService extends Service {
      */
     private void initConfig() {
         mMainHandler = new Handler();
+        mRepeatMode = PreferencesUtils.getPlayMode();
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PlayerWakelockTag");
@@ -256,7 +259,6 @@ public class MusicPlayerService extends Service {
             @Override
             public void onStop() {
                 pause();
-//                mPausedByTransientLossOfFocus = false;
                 seekTo(0);
                 releaseServiceUiAndStop();
             }
@@ -267,38 +269,23 @@ public class MusicPlayerService extends Service {
     boolean mServiceInUse = false;
 
     /**
-     * 退出services;
+     * 释放通知栏;
      */
     private void releaseServiceUiAndStop() {
-        if (isPlaying()
-//                || mPausedByTransientLossOfFocus
-                || mHandler.hasMessages(TRACK_PLAY_ENDED)
-                ) {
+        if (isPlaying() || mHandler.hasMessages(TRACK_PLAY_ENDED)) {
             return;
         }
 
         if (DEBUG) Log.d(TAG, "Nothing is playing anymore, releasing notification");
         cancelNotification();
-//        mAudioManager.abandonAudioFocus(mAudioFocusListener);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             mSession.setActive(false);
 
-//        if (!mServiceInUse) {
-        savePlayStatus(true);
-
-        stopSelf(mServiceStartId);
-//        }
-    }
-
-    /**
-     * 保存播放位置
-     *
-     * @param b
-     */
-    private void savePlayStatus(boolean b) {
-        PreferencesUtils.saveCurrentSongId(mPlayingPos);
-        PreferencesUtils.savePosition(mPlayer.position());
-        PlayQueueLoader.updateQueue(this, mPlaylist);
+        if (!mServiceInUse) {
+            savePlayQueue(true);
+            stopSelf(mServiceStartId);
+        }
     }
 
 
@@ -346,6 +333,7 @@ public class MusicPlayerService extends Service {
         //实例化过滤器，设置广播
         mServiceReceiver = new ServiceReceiver();
         mHeadsetReceiver = new HeadsetReceiver();
+        mHeadsetPlugInReceiver = new HeadsetPlugInReceiver();
         IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
@@ -359,6 +347,7 @@ public class MusicPlayerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Got new intent " + intent + ", startId = " + startId);
         mServiceStartId = startId;
+        mServiceInUse = true;
         if (intent != null) {
             final String action = intent.getAction();
 
@@ -423,7 +412,6 @@ public class MusicPlayerService extends Service {
         if (mPlaylist.size() == 1) {
             return 0;
         }
-        mRepeatMode = PreferencesUtils.getPlayMode();
         if (mRepeatMode == PLAY_MODE_REPEAT) {
             if (mPlayingPos < 0) {
                 return 0;
@@ -452,7 +440,6 @@ public class MusicPlayerService extends Service {
         if (mPlaylist.size() == 1) {
             return 0;
         }
-        mRepeatMode = PreferencesUtils.getPlayMode();
         if (mRepeatMode == PLAY_MODE_REPEAT) {
             if (mPlayingPos < 0) {
                 return 0;
@@ -493,6 +480,7 @@ public class MusicPlayerService extends Service {
     public void playMusic(Music music) {
         Log.e(TAG, music.toString());
         mHandler.sendEmptyMessage(SAVE_HISTORY);
+
         if (music.getType() == Music.Type.QQ && (music.getUri() == null || music.getUri().length() == 0)) {
             mPlayingMusic = music;
             if (mPlayingMusic.getUri() != null) {
@@ -509,17 +497,14 @@ public class MusicPlayerService extends Service {
     }
 
     /**
-     * 播放音乐
+     * 加入播放队列并播放音乐
      *
      * @param music
      */
     public void play(Music music) {
         setNextTrack();
-        if (music.getType() == Music.Type.BAIDU) {
-            mPlaylist.add(music);
-            mPlayingPos = mPlaylist.size() - 1;
-            playMusic(music);
-        } else playMusic(music);
+        mPlaylist.add(mPlayingPos, music);
+        playMusic(music);
     }
 
 
@@ -559,24 +544,31 @@ public class MusicPlayerService extends Service {
      * @return
      */
     public boolean isPlaying() {
-        if (mPlayer == null) {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            isMusicPlaying = true;
+        } else {
             isMusicPlaying = false;
         }
         return isMusicPlaying;
     }
 
     /**
-     * 判断是否是暂停
+     * 判断是否暂停状态
      *
      * @return
      */
     public boolean isPause() {
-        if (mPlayer == null) {
-            isMusicPlaying = false;
+        if (mPlayer != null && !mPlayer.isPlaying()) {
+            return true;
         }
-        return !isMusicPlaying;
+        return false;
     }
 
+    /**
+     * 更新歌曲收藏状态
+     *
+     * @param music
+     */
     public void updateFavorite(Music music) {
         AppRepository.updateFavoriteSongRepository(this, music)
                 .subscribeOn(Schedulers.io())
@@ -588,29 +580,42 @@ public class MusicPlayerService extends Service {
     /**
      * 跳到输入的进度
      */
-    public void seekTo(int msec) {
-        if (mPlayer != null && mPlayingMusic != null) {
-            mPlayer.seek(msec);
+    public void seekTo(int pos) {
+        if (mPlayer != null && mPlayer.isInitialized() && mPlayingMusic != null) {
+            mPlayer.seek(pos);
         }
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
+        mServiceInUse = false;
+        savePlayQueue(true);
+
+        releaseServiceUiAndStop();
+        stopSelf(mServiceStartId);
         return true;
+    }
+
+    /**
+     * 保存播放队列
+     *
+     * @param full 是否存储
+     */
+    private void savePlayQueue(boolean full) {
+        if (full) {
+            PlayQueueLoader.updateQueue(this, mPlaylist);
+        }
+        //保存歌曲id
+        PreferencesUtils.saveCurrentSongId(mPlayingMusic.getId());
+        //保存歌曲进度
+        PreferencesUtils.savePosition(mPlayer.position());
+        //保存歌曲状态
+        PreferencesUtils.savePlayMode(mRepeatMode);
     }
 
 
     private void refresh() {
-        mHandler.sendEmptyMessage(SAVE_PLAY_QUEUE);
-    }
-
-    /**
-     * 获取正在播放歌曲的位置
-     *
-     * @return
-     */
-    public int getmPlayingPosition() {
-        return mPlayingPos;
+        mRepeatMode = PreferencesUtils.getPlayMode();
     }
 
     /**
@@ -627,8 +632,12 @@ public class MusicPlayerService extends Service {
             mPlaylist.remove(position);
             mPlayingPos = mPlayingPos - 1;
         }
-        notifyChange(META_CHANGED);
-        notifyChange(PLAY_QUEUE_CHANGE);
+        if (mPlaylist.size() == 0) {
+            clearQueue();
+        } else {
+            notifyChange(META_CHANGED);
+            notifyChange(PLAY_QUEUE_CHANGE);
+        }
     }
 
     /**
@@ -636,6 +645,7 @@ public class MusicPlayerService extends Service {
      */
     public void clearQueue() {
         mPlayingMusic = null;
+        isMusicPlaying = false;
         mPlaylist.clear();
         mPlayer.stop();
 
@@ -644,10 +654,10 @@ public class MusicPlayerService extends Service {
     }
 
     /**
-     * 获取正在播放时间
+     * 获取正在播放进度
      */
     public long getCurrentPosition() {
-        if (mPlayingMusic != null) {
+        if (mPlayingMusic != null && mPlayer != null && mPlayer.isInitialized()) {
             return mPlayer.position();
         } else {
             return 0;
@@ -655,16 +665,19 @@ public class MusicPlayerService extends Service {
     }
 
     /**
-     * 获取时长
+     * 获取总时长
      */
     public long getDuration() {
-        if (mPlayingMusic != null) {
+        if (mPlayingMusic != null && mPlayer != null && mPlayer.isInitialized()) {
             return mPlayer.duration();
         } else {
             return 0;
         }
     }
 
+    /**
+     * 缓存下一首不指定位置
+     */
     private void setNextTrack() {
         setNextTrack(getNextPosition());
     }
@@ -685,11 +698,13 @@ public class MusicPlayerService extends Service {
     }
 
 
+    /**
+     * 发送更新广播
+     *
+     * @param what
+     */
     private void notifyChange(final String what) {
         if (DEBUG) Log.d(TAG, "notifyChange: what = " + what);
-//        if (what.equals(POSITION_CHANGED)) {
-//            return;
-//        }
 
         final Intent intent = new Intent(what);
         intent.putExtra("artist", getArtistName());
@@ -700,6 +715,11 @@ public class MusicPlayerService extends Service {
     }
 
 
+    /**
+     * 获取标题
+     *
+     * @return
+     */
     public String getTitle() {
         if (mPlayingMusic != null) {
             return mPlayingMusic.getTitle();
@@ -707,6 +727,11 @@ public class MusicPlayerService extends Service {
         return null;
     }
 
+    /**
+     * 获取歌手专辑
+     *
+     * @return
+     */
     private String getArtistName() {
         if (mPlayingMusic != null) {
             return ConvertUtils.getArtistAndAlbum(mPlayingMusic.getArtist(), mPlayingMusic.getAlbum());
@@ -714,6 +739,11 @@ public class MusicPlayerService extends Service {
         return null;
     }
 
+    /**
+     * 获取专辑名
+     *
+     * @return
+     */
     private String getAlbumName() {
         if (mPlayingMusic != null) {
             return mPlayingMusic.getArtist();
@@ -721,6 +751,11 @@ public class MusicPlayerService extends Service {
         return null;
     }
 
+    /**
+     * 获取当前音乐
+     *
+     * @return
+     */
     private Music getPlayingMusic() {
         if (mPlayingMusic != null) {
             return mPlayingMusic;
@@ -729,12 +764,22 @@ public class MusicPlayerService extends Service {
     }
 
 
+    /**
+     * 设置播放队列
+     *
+     * @param playQueue
+     */
     private void setPlayQueue(List<Music> playQueue) {
         mPlaylist.clear();
         mPlaylist.addAll(playQueue);
     }
 
 
+    /**
+     * 获取播放队列
+     *
+     * @return
+     */
     private List<Music> getPlayQueue() {
         if (mPlaylist.size() > 0) {
             return mPlaylist;
@@ -743,6 +788,11 @@ public class MusicPlayerService extends Service {
     }
 
 
+    /**
+     * 获取当前音乐在播放队列中的位置
+     *
+     * @return
+     */
     private int getPlayPosition() {
         if (mPlayingPos >= 0) {
             return mPlayingPos;
@@ -776,11 +826,27 @@ public class MusicPlayerService extends Service {
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
+        artwork = CoverLoader.getInstance().loadThumbnail(null);
+
+        GlideApp.with(this)
+                .asBitmap()
+                .load(coverUrl)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        artwork = resource;
+                    }
+                });
+
+
         Builder builder = new Builder(this, initChannelId())
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTitle())
                 .setContentText(text)
+                .setLargeIcon(artwork)
                 .setWhen(mNotificationPostTime)
                 .addAction(R.drawable.ic_skip_previous,
                         "",
@@ -792,32 +858,19 @@ public class MusicPlayerService extends Service {
                         retrievePlaybackAction(ACTION_NEXT))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP));
-
-        GlideApp.with(this)
-                .asBitmap()
-                .load(coverUrl)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        builder.setLargeIcon(resource);
-                    }
-                });
         if (SystemUtils.isJellyBeanMR1()) {
             builder.setShowWhen(false);
         }
-
         if (SystemUtils.isLollipop()) {
             //线控
             isRunningForeground = true;
-
             builder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
                     .setMediaSession(mSession.getSessionToken())
                     .setShowActionsInCompactView(0, 1, 2, 3);
             builder.setStyle(style);
         }
+
         mNotification = builder.build();
     }
 
@@ -888,7 +941,6 @@ public class MusicPlayerService extends Service {
             newNotifyMode = NOTIFY_MODE_NONE;
         }
 
-
         startForeground(NOTIFICATION_ID, mNotification);
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
@@ -941,35 +993,33 @@ public class MusicPlayerService extends Service {
         }
     }
 
-//    /**
-//     * 耳机插入广播接收器
-//     */
-//    public class HeadsetPlugInReceiver extends BroadcastReceiver {
-//
-//        final IntentFilter filter;
-//
-//        public HeadsetPlugInReceiver() {
-//            filter = new IntentFilter();
-//
-//            if (Build.VERSION.SDK_INT >= 21) {
-//                filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
-//            } else {
-//                filter.addAction(Intent.ACTION_HEADSET_PLUG);
-//            }
-//        }
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent != null && intent.hasExtra("state")
-//                    && AppConfigs.isResumeAudioWhenPlugin) {
-//
-//                //通过判断 "state" 来知道状态
-//                final boolean isPlugIn = intent.getExtras().getInt("state") == 1;
-//
-//            }
-//        }
-//
-//    }
+    /**
+     * 耳机插入广播接收器
+     */
+    public class HeadsetPlugInReceiver extends BroadcastReceiver {
+
+        final IntentFilter filter;
+
+        public HeadsetPlugInReceiver() {
+            filter = new IntentFilter();
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+            } else {
+                filter.addAction(Intent.ACTION_HEADSET_PLUG);
+            }
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && intent.hasExtra("state")) {
+                //通过判断 "state" 来知道状态
+                final boolean isPlugIn = intent.getExtras().getInt("state") == 1;
+                Log.e(TAG, "耳机插入状态 ：" + isPlugIn);
+            }
+        }
+    }
+
 
     /**
      * 耳机拔出广播接收器
@@ -1038,15 +1088,14 @@ public class MusicPlayerService extends Service {
             mWorkThread = null;
         }
 
-        mWakeLock.release();
         cancelNotification();
 
         //注销广播
         unregisterReceiver(mServiceReceiver);
         unregisterReceiver(mHeadsetReceiver);
+        unregisterReceiver(mHeadsetPlugInReceiver);
 
-        releaseServiceUiAndStop();
-        Log.d("TAG", "ondestory");
+        mWakeLock.release();
     }
 
     private class IMusicServiceStub extends IMusicService.Stub {
@@ -1158,10 +1207,8 @@ public class MusicPlayerService extends Service {
 
         @Override
         public boolean isPause() throws RemoteException {
-            return mService.get().isPause();
+            return !mService.get().isPlaying();
         }
-
     }
-
 
 }

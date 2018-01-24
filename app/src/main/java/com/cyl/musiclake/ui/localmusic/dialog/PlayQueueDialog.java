@@ -126,6 +126,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     public void onPlayModeClick() {
         PreferencesUtils.savePlayMode(PreferencesUtils.getPlayMode());
         updatePlayMode();
+        PlayManager.refresh();
     }
 
     public void updatePlayMode() {
