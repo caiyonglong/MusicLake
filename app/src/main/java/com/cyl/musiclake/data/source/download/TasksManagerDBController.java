@@ -1,10 +1,11 @@
-package com.cyl.musiclake.download;
+package com.cyl.musiclake.data.source.download;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.data.source.db.DBHelper;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class TasksManagerDBController {
     private final SQLiteDatabase db;
 
     public TasksManagerDBController() {
-        TasksManagerDBOpenHelper openHelper = new TasksManagerDBOpenHelper(MyApplication.mContext);
+        DBHelper openHelper = DBHelper.getInstance(MyApplication.mContext);
 
         db = openHelper.getWritableDatabase();
     }
@@ -36,6 +37,7 @@ public class TasksManagerDBController {
             do {
                 TasksManagerModel model = new TasksManagerModel();
                 model.setId(c.getInt(c.getColumnIndex(TasksManagerModel.ID)));
+                model.setMid(c.getString(c.getColumnIndex(TasksManagerModel.MID)));
                 model.setName(c.getString(c.getColumnIndex(TasksManagerModel.NAME)));
                 model.setUrl(c.getString(c.getColumnIndex(TasksManagerModel.URL)));
                 model.setPath(c.getString(c.getColumnIndex(TasksManagerModel.PATH)));

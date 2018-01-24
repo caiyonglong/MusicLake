@@ -115,7 +115,8 @@
     <string name="unable_to_play_exception">播放异常</string>
     <string name="loading">努力加载中...</string>
     <string name="tip_empty_song">暂无音乐，在线搜索添加音乐</string>
-    <string name="tip_empty_playlist">新建歌单</string>
+    <string name="tip_empty_queue">播放队列为空</string>
+    <string name="tip_empty_playlist">暂无歌单，点击右上角新建</string>
     <string name="recent_update">最近更新：%s</string>
 
     <string name="search">搜索</string>

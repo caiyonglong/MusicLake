@@ -34,7 +34,7 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
 
     FolderSongPresenter mPresenter;
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -80,7 +80,7 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_list_layout;
+        return R.layout.fragment_recyclerview;
     }
 
     @Override

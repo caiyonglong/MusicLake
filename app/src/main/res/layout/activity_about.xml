@@ -6,8 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:background="@drawable/music_ten">
+        android:layout_height="320dp">
 
         <ImageView
             android:id="@+id/head_img"

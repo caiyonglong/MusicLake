@@ -16,8 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.login.user.UserStatus;
 import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.ui.login.user.UserStatus;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -71,7 +71,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return;
         }
 
-        if (holder instanceof CommViewHolder){
+        if (holder instanceof CommViewHolder) {
             final Secret dynamic = myDatas.get(position);
             final CommViewHolder newHolder = (CommViewHolder) holder;
 
@@ -137,6 +137,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public final static int TYPE_FOOTER = 3;//底部--往往是loading_more
     public final static int TYPE_NORMAL = 1; // 正常的一条文章
+
     @Override
     public int getItemViewType(int position) {
 
@@ -173,7 +174,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-
     @Override
     public int getItemCount() {
         return myDatas.size();
@@ -189,7 +189,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public RelativeLayout rl_user;
         public LinearLayout container;
         public CircleImageView user_logo;
-//        public TextView content_time;
+        //        public TextView content_time;
         public TextView content_text;
         public TextView item_action_comment;
         public TextView item_action_love;
@@ -209,6 +209,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         }
     }
+
     /**
      * 底部加载更多
      */

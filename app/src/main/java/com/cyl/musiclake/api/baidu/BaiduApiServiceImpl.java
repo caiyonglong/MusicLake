@@ -59,6 +59,7 @@ public class BaiduApiServiceImpl {
                 });
     }
 
+    //{"errorCode":22232,"data":{"xcode":"","songList":""}}
     public static Observable<Music> getTingSongInfo(String mid) {
         Map<String, String> params = new HashMap<>();
         String Url = "http://music.baidu.com/data/music/links?songIds=" + mid;

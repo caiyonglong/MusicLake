@@ -40,25 +40,8 @@ public class ApiManager {
 
     private ApiManager() {
 
-        ProgressListener listener = new ProgressListener() {
-            @Override
-            public void onLoading(long total, long progress, boolean finish) {
-
-            }
-        };
-
         OkHttpClient.Builder builder = new OkHttpClient()
                 .newBuilder();
-//                .addInterceptor(new Interceptor() {
-//                    @Override
-//                    public Response intercept(Chain chain) throws IOException {
-//                        Request request = chain.request();
-//                        Response originalResponse = chain.proceed(request);
-//                        return originalResponse.newBuilder()
-//                                .body(new FileResponseBody(originalResponse.body(), listener))
-//                                .build();
-//                    }
-//                });
 //        builder.addInterceptor(chain -> {
         //获取本地user_agent;
 //            String userAgentString = getUserAgent();

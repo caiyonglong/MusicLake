@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.api.baidu.BaiduMusicList;
-import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +46,8 @@ public class OnlinePlaylistPresenter implements OnlinePlaylistContract.Presenter
 
     @Override
     public void loadOnlinePlaylist() {
+        mView.showLoading();
+
         Map<String, String> params = new HashMap<>();
         params.put(Constants.PARAM_METHOD, Constants.METHOD_CATEGORY);
         BaiduApiServiceImpl.getOnlinePlaylist()

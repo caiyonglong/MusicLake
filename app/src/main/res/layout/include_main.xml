@@ -4,6 +4,7 @@
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:gravity="bottom"
     sothree:umanoDragView="@+id/controls_container"
     sothree:umanoOverlay="false"
@@ -13,13 +14,14 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-         />
+        android:layout_height="match_parent" />
 
     <FrameLayout
+
         android:id="@+id/controls_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" />
 
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -11,7 +11,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
 import com.cyl.musiclake.ui.localmusic.fragment.MyMusicFragment;
-import com.cyl.musiclake.ui.onlinemusic.fragment.OnlinePlaylistFragment;
+import com.cyl.musiclake.ui.onlinemusic.fragment.BaiduPlaylistFragment;
 
 import butterknife.BindView;
 
@@ -67,7 +67,7 @@ public class MainFragment extends BaseFragment {
     private void setupViewPager(ViewPager mViewPager) {
         mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.newInstance(), "我的音乐");
-        mAdapter.addFragment(OnlinePlaylistFragment.newInstance(), "发现");
+        mAdapter.addFragment(BaiduPlaylistFragment.newInstance(), "发现");
 //        adapter.addFragment(CommunityFragment.newInstance(1), "音乐湖");
         mViewPager.setAdapter(mAdapter);
     }

@@ -83,7 +83,7 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_album;
+        return R.layout.fragment_recyclerview_collapsingtoolbar;
     }
 
     @Override

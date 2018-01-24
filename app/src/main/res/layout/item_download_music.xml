@@ -48,7 +48,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:background="@drawable/btn_bg"
-        android:text="Start"
         android:textColor="@android:color/black"
         android:textSize="14sp" />
 </LinearLayout>

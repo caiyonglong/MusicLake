@@ -39,7 +39,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
     private List<Music> searchResults = new ArrayList<>();
@@ -170,7 +170,9 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void hideLoading() {
-        mProgressDialog.cancel();
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+        }
     }
 
     @Override
@@ -189,6 +191,5 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showEmptyView() {
-
     }
 }

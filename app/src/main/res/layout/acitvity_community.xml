@@ -5,26 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<!--<com.jcodecraeer.xrecyclerview.XRecyclerView-->
-        <!--android:id="@+id/community_RecyclerView"-->
-        <!--android:layout_marginBottom="56dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fadeScrollbars="true"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshlayout"
-        android:layout_marginBottom="56dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp">
         <!-- 新闻列表展示-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/community_RecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <TextView
         android:id="@+id/tv_empty"
         android:layout_width="wrap_content"
@@ -32,19 +26,19 @@
         android:layout_centerInParent="true"
         android:text="@string/error_connection"
         android:textColor="@color/black"
-        android:visibility="gone"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_mode_edit"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="80dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_mode_edit"
         app:fabSize="normal" />
 </RelativeLayout>

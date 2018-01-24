@@ -157,14 +157,6 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完成后结束
                         mMainHandler.post(service::next);
-//                        service.seekTo(0);
-//                        service.playMusic(mPlayingPos);
-//                        if (service.mRepeatMode == PLAY_MODE_REPEAT) {
-//                            service.seekTo(0);
-//                            mPlayer.start();
-//                        } else {
-//                            service.next();
-//                        }
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
                         break;
@@ -392,6 +384,7 @@ public class MusicPlayerService extends Service {
     public IBinder onBind(Intent intent) {
         return mBindStub;
     }
+
 
     /**
      * 下一首

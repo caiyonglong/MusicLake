@@ -251,6 +251,18 @@ public class Music implements Parcelable {
         return type;
     }
 
+    public String getTypeName() {
+        if (type == Type.QQ) {
+            return "QQ音乐";
+        } else if (type == Type.XIAMI) {
+            return "虾米音乐";
+        } else if (type == Type.BAIDU) {
+            return "百度音乐";
+        } else {
+            return "本地音乐";
+        }
+    }
+
     public void setType(Type type) {
         this.type = type;
     }

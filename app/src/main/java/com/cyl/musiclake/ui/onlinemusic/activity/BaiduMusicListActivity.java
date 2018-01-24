@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.common.Extras;
@@ -37,10 +36,9 @@ import butterknife.BindView;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class OnlineMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
+public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
 
-    private static final String TAG = "OnlineMusicListActivity";
-    private List<BaiduMusicInfo> mMusicLists = new ArrayList<>();
+    private static final String TAG = "BaiduMusicListActivity";
     private List<Music> musicList = new ArrayList<>();
     private SongAdapter mAdapter;
 

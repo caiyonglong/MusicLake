@@ -1,8 +1,9 @@
-package com.cyl.musiclake.download;
+package com.cyl.musiclake.data.source.download;
 
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.cyl.musiclake.ui.onlinemusic.adapter.TaskItemAdapter;
 import com.cyl.musiclake.ui.onlinemusic.fragment.DownloadManagerFragment;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadConnectListener;
@@ -33,19 +34,7 @@ public class TasksManager {
     private TasksManager() {
         dbController = new TasksManagerDBController();
         modelList = dbController.getAllTasks();
-
-//        initDemo();
     }
-
-//    private void initDemo() {
-//        if (modelList.size() <= 0) {
-//            final int demoSize = Constant.BIG_FILE_URLS.length;
-//            for (int i = 0; i < demoSize; i++) {
-//                final String url = Constant.BIG_FILE_URLS[i];
-//                addTask(url);
-//            }
-//        }
-//    }
 
     private SparseArray<BaseDownloadTask> taskSparseArray = new SparseArray<>();
 

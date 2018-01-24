@@ -4,10 +4,9 @@
         <shape>
             <!--<solid android:color="@android:color/transparent" />-->
             <gradient
-                android:startColor="@color/gray"
-                android:endColor="@color/transparent"
                 android:angle="90"
-                />
+                android:endColor="@color/transparent"
+                android:startColor="@color/gray" />
         </shape>
     </item>
     <item android:id="@android:id/progress">

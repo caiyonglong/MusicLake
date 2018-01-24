@@ -37,19 +37,9 @@ public class SearchAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) holder.getView(R.id.iv_cover));
-
-        if (item.getType() == Music.Type.QQ) {
-            holder.setText(R.id.tv_from, "来源于QQ");
-        } else if (item.getType() == Music.Type.XIAMI) {
-            holder.setText(R.id.tv_from, "来源于虾米");
-        }
+        holder.setText(R.id.tv_from, "来源于" + item.getTypeName());
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
-//        if (PlayManager.getPlayingMusic() != null && PlayManager.getPlayingMusic().equals(localItem)) {
-//            holder.v_playing.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.v_playing.setVisibility(View.GONE);
-//        }
         holder.addOnClickListener(R.id.iv_more);
     }
 

@@ -7,20 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.login.RegisterActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="5dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="10dp"
-            android:title="湖科音乐"
-            android:titleTextColor="@color/white" />
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/item_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"

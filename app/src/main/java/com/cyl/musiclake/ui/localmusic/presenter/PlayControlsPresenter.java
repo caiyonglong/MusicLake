@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.localmusic.presenter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,9 +49,11 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     private Handler mHandler;
     private Context mContext;
+    private Activity activity;
 
     public PlayControlsPresenter(Context mContext) {
         this.mContext = mContext;
+        this.activity = (Activity) mContext;
     }
 
     @Override
@@ -63,9 +66,9 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     public void subscribe() {
         RxBus.getInstance().register(MetaChangedEvent.class)
                 .subscribe(metaChangedEvent -> {
-                    if (mContext != null) {
-                        updateNowPlayingCard();
+                    if (!activity.isFinishing()) {
                         loadLyric();
+                        updateNowPlayingCard();
                     }
                 });
     }
@@ -99,6 +102,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         if (music == null) {
             return;
         }
+        if (isPlayPauseClick)
+            return;
         String localLyricInfo = null;
         if (music.getType() == Music.Type.LOCAL) {
             if (music.getUri().endsWith(".mp3")) {
@@ -208,25 +213,19 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         if (music.getType() == Music.Type.LOCAL) {
             if (music.getAlbumId() != -1)
                 picUrl = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
-            mView.setOtherInfo("本地音乐");
-        } else if (music.getType() == Music.Type.QQ) {
+        } else {
             picUrl = music.getCoverBig();
-            mView.setOtherInfo("QQ音乐");
-        } else if (music.getType() == Music.Type.XIAMI) {
-            picUrl = music.getCoverBig();
-            mView.setOtherInfo("虾米音乐");
-        } else if (music.getType() == Music.Type.BAIDU) {
-            picUrl = music.getCoverBig();
-            mView.setOtherInfo("百度音乐");
         }
-
+        //设置音乐来源
+        mView.setOtherInfo(music.getTypeName());
         //获取当前歌曲状态
         AppRepository.getMusicInfo(mContext, music)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(music1 -> mView.updateFavorite(music1.isLove()));
 
-        if (!isPlayPauseClick) {
+        if (!isPlayPauseClick && !activity.isFinishing()) {
+//            CoverLoader.getInstance().getCoverUri(mContext,)
             GlideApp.with(mContext)
                     .asBitmap()
                     .load(picUrl)

@@ -5,8 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.download.TaskItemAdapter;
-import com.cyl.musiclake.download.TasksManager;
+import com.cyl.musiclake.ui.onlinemusic.adapter.TaskItemAdapter;
+import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.liulishuo.filedownloader.FileDownloader;
 
@@ -20,7 +20,7 @@ import butterknife.BindView;
 
 public class DownloadManagerFragment extends BaseFragment {
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
     TaskItemAdapter mAdapter;
@@ -38,7 +38,7 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview;
+        return R.layout.fragment_recyclerview_notoolbar;
     }
 
     @Override
@@ -65,9 +65,7 @@ public class DownloadManagerFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        TasksManager.getImpl().onDestroy();
         mAdapter = null;
-        FileDownloader.getImpl().pauseAll();
         super.onDestroy();
     }
 }

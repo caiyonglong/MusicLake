@@ -93,7 +93,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.onlinemusic.activity.OnlineMusicListActivity"
+            android:name=".ui.onlinemusic.activity.BaiduMusicListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
@@ -112,8 +112,6 @@
             android:screenOrientation="portrait" />
 
         <service android:name="com.cyl.musiclake.service.MusicPlayerService" />
-
-        <service android:name=".ui.download.DownloadService" />
 
         <activity
             android:name=".ui.main.SettingsActivity"

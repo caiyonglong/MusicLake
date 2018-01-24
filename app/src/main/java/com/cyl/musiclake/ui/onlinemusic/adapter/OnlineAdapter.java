@@ -16,7 +16,6 @@ import java.util.List;
  * 版本：2.5
  */
 public class OnlineAdapter extends BaseQuickAdapter<Billboard, BaseViewHolder> {
-//        RecyclerView.Adapter<OnlineAdapter.ItemHolder> {
 
     public OnlineAdapter(List<Billboard> mBillboards) {
         super(R.layout.item_online_large, mBillboards);

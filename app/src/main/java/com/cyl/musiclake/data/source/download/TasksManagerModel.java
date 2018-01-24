@@ -1,4 +1,4 @@
-package com.cyl.musiclake.download;
+package com.cyl.musiclake.data.source.download;
 
 import android.content.ContentValues;
 
@@ -10,11 +10,13 @@ import com.cyl.musiclake.data.model.Music;
 
 public class TasksManagerModel {
     public final static String ID = "id";
+    public final static String MID = "mid";
     public final static String NAME = "name";
     public final static String URL = "url";
     public final static String PATH = "path";
 
     private int id;
+    private String mid;
     private String name;
     private String url;
     private String path;
@@ -26,6 +28,14 @@ public class TasksManagerModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
     }
 
     public String getName() {
@@ -63,6 +73,7 @@ public class TasksManagerModel {
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(ID, id);
+        cv.put(MID, mid);
         cv.put(NAME, name);
         cv.put(URL, url);
         cv.put(PATH, path);

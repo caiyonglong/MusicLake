@@ -56,12 +56,7 @@ public class ApiManagerServiceTest1 {
 
     @Test
     public void searchByXiami() throws Exception {
-        QQApiServiceImpl.getQQApiKey()
-                .subscribe(map -> {
-                    String uid = map.keySet().iterator().next();
-                    String key = map.get(uid);
-                    System.out.println("uid=" + uid + "---" + key);
-                });
+
 
     }
 

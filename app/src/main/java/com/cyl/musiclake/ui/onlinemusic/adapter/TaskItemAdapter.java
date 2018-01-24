@@ -1,4 +1,4 @@
-package com.cyl.musiclake.download;
+package com.cyl.musiclake.ui.onlinemusic.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloadSampleListener;
@@ -247,9 +249,10 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         public void updateDownloaded() {
             taskPb.setMax(1);
             taskPb.setProgress(1);
-
             taskStatusTv.setText(R.string.tasks_manager_demo_status_completed);
             taskActionBtn.setText(R.string.delete);
+            TasksManager.getImpl().removeTaskForViewHolder(id);
+
         }
 
         public void updateNotDownloaded(final int status, final long sofar, final long total) {

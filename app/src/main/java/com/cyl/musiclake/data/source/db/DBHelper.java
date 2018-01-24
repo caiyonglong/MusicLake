@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.cyl.musiclake.data.source.download.TasksManagerDBController;
+import com.cyl.musiclake.data.source.download.TasksManagerModel;
+
 /**
  * Created by 永龙 on 2016/2/23.
  * 版本: 2016-8-12  v2.5
@@ -12,7 +15,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static DBHelper mInstance = null;
 
-    private static String MUSIC_DB_NAME = "hkmusic.db";
+    private static String MUSIC_DB_NAME = "musicLake.db";
     private static int MUSIC_DB_VERSION = 2;
 
 
@@ -80,6 +83,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.MUSIC_PREFIX + " , "
 
                 + DBData.MUSIC_YEARS + " ) ");
+
+        //创建下载文件数据库
+        db.execSQL("CREATE TABLE IF NOT EXISTS "
+                + TasksManagerDBController.TABLE_NAME
+                + String.format(
+                "("
+                        + "%s INTEGER PRIMARY KEY, " // id, download id
+                        + "%s VARCHAR, " // mid
+                        + "%s VARCHAR, " // name
+                        + "%s VARCHAR, " // url
+                        + "%s VARCHAR " // path
+                        + ")"
+                , TasksManagerModel.ID
+                , TasksManagerModel.MID
+                , TasksManagerModel.NAME
+                , TasksManagerModel.URL
+                , TasksManagerModel.PATH
+
+        ));
 
         //默认新建播放队列和最近播放
         db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.PLAY_QUEUE + " ,'播放队列', '" + DBData.PLAYLIST_NAME + "',null)");

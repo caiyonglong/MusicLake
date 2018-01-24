@@ -25,7 +25,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.download.TasksManager;
+import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.TransitionAnimationUtils;
@@ -41,6 +42,8 @@ import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
@@ -167,8 +170,16 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 ).positiveText("确定")
                 .negativeText("取消")
                 .onPositive((materialDialog, dialogAction) -> {
-                    TasksManager.getImpl().addTask(music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
+                    TasksManagerModel model = TasksManager.getImpl().addTask(music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
                     ToastUtils.show(getContext(), "下载任务添加成功");
+                    BaseDownloadTask task = FileDownloader.getImpl()
+                            .create(model.getUrl())
+                            .setTag(music)
+                            .setPath(model.getPath())
+                            .setCallbackProgressTimes(100);
+                    TasksManager.getImpl()
+                            .addTaskForViewHolder(task);
+                    task.start();
                 }).build().show();
     }
 
@@ -218,7 +229,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     protected void initDatas() {
-        mPresenter = new PlayControlsPresenter(getContext());
+        mPresenter = new PlayControlsPresenter(getActivity());
         mPresenter.attachView(this);
         mPresenter.subscribe();
 

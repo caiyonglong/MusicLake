@@ -179,6 +179,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     @Override
     public void showEmptyView() {
         mAdapter.setNewData(null);
-        mAdapter.setEmptyView(R.layout.view_song_empty);
+        mAdapter.setEmptyView(R.layout.view_queue_empty);
     }
 }

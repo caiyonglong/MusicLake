@@ -10,13 +10,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.onlinemusic.adapter.OnlineAdapter;
-import com.cyl.musiclake.ui.onlinemusic.activity.OnlineMusicListActivity;
-import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
 import com.cyl.musiclake.api.baidu.BaiduMusicList.Billboard;
-import com.cyl.musiclake.ui.onlinemusic.presenter.OnlinePlaylistPresenter;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.ui.onlinemusic.activity.BaiduMusicListActivity;
+import com.cyl.musiclake.ui.onlinemusic.adapter.OnlineAdapter;
+import com.cyl.musiclake.ui.onlinemusic.contract.OnlinePlaylistContract;
+import com.cyl.musiclake.ui.onlinemusic.presenter.OnlinePlaylistPresenter;
 
 import java.util.List;
 
@@ -28,10 +28,10 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class OnlinePlaylistFragment extends BaseFragment implements OnlinePlaylistContract.View {
+public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylistContract.View {
 
-    private static final String TAG = "OnlinePlaylistFragment";
-    @BindView(R.id.recyclerview)
+    private static final String TAG = "BaiduPlaylistFragment";
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
     TextView tv_empty;
@@ -44,17 +44,17 @@ public class OnlinePlaylistFragment extends BaseFragment implements OnlinePlayli
     //排行榜集合
     private OnlinePlaylistPresenter mPresenter;
 
-    public static OnlinePlaylistFragment newInstance() {
+    public static BaiduPlaylistFragment newInstance() {
         Bundle args = new Bundle();
 
-        OnlinePlaylistFragment fragment = new OnlinePlaylistFragment();
+        BaiduPlaylistFragment fragment = new BaiduPlaylistFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview_online;
+        return R.layout.fragment_recyclerview_notoolbar;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class OnlinePlaylistFragment extends BaseFragment implements OnlinePlayli
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Billboard billboard = (Billboard) adapter.getItem(position);
-            Intent intent = new Intent(getActivity(), OnlineMusicListActivity.class);
+            Intent intent = new Intent(getActivity(), BaiduMusicListActivity.class);
             intent.putExtra(Extras.BILLBOARD_TITLE, billboard.getName());
             intent.putExtra(Extras.BILLBOARD_DESC, billboard.getComment());
             intent.putExtra(Extras.BILLBOARD_ALBUM, billboard.getPic_s260());
@@ -92,18 +92,17 @@ public class OnlinePlaylistFragment extends BaseFragment implements OnlinePlayli
 
     @Override
     public void showLoading() {
+        loading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
+        loading.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorInfo(String msg) {
-        loading.setVisibility(View.VISIBLE);
-        tv_empty.setText(msg);
-        progress.setVisibility(View.GONE);
-        tv_empty.setVisibility(View.VISIBLE);
+        mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 
     @Override

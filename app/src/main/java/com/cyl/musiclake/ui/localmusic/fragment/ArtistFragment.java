@@ -30,7 +30,7 @@ import butterknife.BindView;
  */
 public class ArtistFragment extends BaseFragment implements ArtistContract.View {
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
     TextView tv_empty;
@@ -63,7 +63,7 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
      */
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview;
+        return R.layout.fragment_recyclerview_notoolbar;
     }
 
     /**

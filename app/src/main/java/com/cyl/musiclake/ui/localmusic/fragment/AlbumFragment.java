@@ -30,7 +30,7 @@ import butterknife.BindView;
  */
 public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
     TextView tv_empty;
@@ -65,7 +65,7 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
      */
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview;
+        return R.layout.fragment_recyclerview_notoolbar;
     }
 
     /**

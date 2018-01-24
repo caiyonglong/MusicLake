@@ -40,16 +40,7 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
                 .error(R.drawable.default_cover)
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into((ImageView) holder.getView(R.id.iv_cover));
-
-        if (item.getType() == Music.Type.QQ) {
-            holder.setText(R.id.tv_source, "qq");
-        } else if (item.getType() == Music.Type.XIAMI) {
-            holder.setText(R.id.tv_source, "虾米");
-        } else if (item.getType() == Music.Type.BAIDU) {
-            holder.setText(R.id.tv_source, "百度");
-        } else {
-            holder.getView(R.id.tv_source).setVisibility(View.GONE);
-        }
+        holder.setText(R.id.tv_source, item.getTypeName());
 
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));

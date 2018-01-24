@@ -35,7 +35,7 @@ import butterknife.BindView;
  */
 public class SongsFragment extends BaseFragment implements SongsContract.View {
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
     TextView tv_empty;
@@ -61,7 +61,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview_songs;
+        return R.layout.fragment_recyclerview_notoolbar;
     }
 
     @Override

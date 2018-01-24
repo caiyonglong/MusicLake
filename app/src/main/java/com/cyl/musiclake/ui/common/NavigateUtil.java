@@ -108,7 +108,7 @@ public class NavigateUtil {
         transaction.addToBackStack(fragment.getTag()).commit();
     }
 
-    public static void navigateToFloderSongs(Activity context, String path) {
+    public static void navigateToFolderSongs(Activity context, String path) {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 

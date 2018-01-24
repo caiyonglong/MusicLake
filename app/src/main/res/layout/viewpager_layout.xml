@@ -2,23 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="160dp"
     android:layout_height="200dp"
-    android:elevation="4dp"
     android:background="@drawable/viewpager_item_bg"
+    android:elevation="4dp"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="68dp"
         android:layout_height="68dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/lem"/>
+        android:layout_marginTop="12dp" />
 
     <ImageView
         android:id="@+id/iv"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -29,7 +28,7 @@
         android:layout_marginTop="16dp"
         android:text="名字"
         android:textColor="@color/black"
-        android:textSize="15sp"/>
+        android:textSize="15sp" />
 
     <RelativeLayout
         android:layout_width="94dp"
@@ -43,19 +42,19 @@
             android:id="@+id/iv_sex"
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
 
-        TextView
+        <TextView
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/iv_sex"
             android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/iv_sex"
             android:gravity="center"
             android:text="##km"
             android:textColor="@color/gray"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <TextView
@@ -70,5 +69,5 @@
         android:gravity="center"
         android:text="查看详情"
         android:textColor="#ffffff"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 </RelativeLayout>

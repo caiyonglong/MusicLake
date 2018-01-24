@@ -82,7 +82,7 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_album;
+        return R.layout.fragment_recyclerview_collapsingtoolbar;
     }
 
     @Override

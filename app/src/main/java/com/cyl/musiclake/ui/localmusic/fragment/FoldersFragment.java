@@ -3,9 +3,7 @@ package com.cyl.musiclake.ui.localmusic.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.FolderInfo;
 import com.cyl.musiclake.ui.base.BaseFragment;
@@ -25,7 +23,7 @@ import butterknife.BindView;
 
 public class FoldersFragment extends BaseFragment implements FoldersContract.View {
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private FolderAdapter mAdapter;
     private FoldersPresenter mPresenter;
@@ -39,7 +37,7 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_recyclerview;
+        return R.layout.fragment_recyclerview_notoolbar;
     }
 
     @Override
@@ -60,12 +58,9 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
 
     @Override
     protected void listener() {
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
-                NavigateUtil.navigateToFloderSongs(getActivity(), folderInfo.folderPath);
-            }
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
+            NavigateUtil.navigateToFolderSongs(getActivity(), folderInfo.folderPath);
         });
     }
 
