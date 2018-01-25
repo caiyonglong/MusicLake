@@ -1,6 +1,8 @@
 package com.cyl.musiclake.ui.main;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
 import com.cyl.musiclake.ui.login.LoginActivity;
 import com.cyl.musiclake.ui.login.UserCenterActivity;
@@ -26,7 +30,6 @@ import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.onlinemusic.activity.SearchActivity;
-import com.cyl.musiclake.ui.common.Constants;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
@@ -81,6 +84,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNick = headerView.findViewById(R.id.header_nick);
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
+//        fullScreen(this);
     }
 
     @Override
@@ -104,6 +108,31 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
+
+                if (newState == PanelState.EXPANDED) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        //是activity_main。xml中的图片可以沉浸到状态栏上
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        //设置状态栏颜色透明。
+                        getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    } else {
+                        //。。。。
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    }
+                }else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        //5.0及以上，不设置透明状态栏，设置会有半透明阴影
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        //是activity_main。xml中的图片可以沉浸到状态栏上
+                        //设置状态栏颜色透明。
+                        getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    } else {
+                        //。。。。
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    }
+                }
+
             }
 
             @Override

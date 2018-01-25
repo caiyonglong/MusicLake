@@ -4,14 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_frag_player"
-    android:fitsSystemWindows="true">
+    android:background="@drawable/bg_frag_player">
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -129,7 +127,7 @@
                     android:backgroundTint="@color/white"
                     android:gravity="center"
                     android:scaleType="center"
-                    android:src="@drawable/item_download"
+                    android:src="@drawable/ic_cloud_download"
                     tools:targetApi="lollipop" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView

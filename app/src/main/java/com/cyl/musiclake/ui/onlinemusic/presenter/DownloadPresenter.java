@@ -9,6 +9,7 @@ import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.ui.onlinemusic.contract.DownloadContract;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,9 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     public void subscribe() {
         RxBus.getInstance().register(TasksManagerModel.class)
                 .subscribe(taskChangedEvent -> {
-                    if (!activity.isFinishing()) {
-                        loadDownloadMusic();
-                    }
+//                    if (!activity.isFinishing()) {
+                    loadDownloadMusic();
+//                    }
                 });
     }
 
@@ -59,10 +60,13 @@ public class DownloadPresenter implements DownloadContract.Presenter {
 
     @Override
     public void loadDownloadMusic() {
+        LogUtil.e("loadDownloadMusic");
         Observable.create((ObservableOnSubscribe<List<Music>>) emitter -> {
             try {
+
                 List<TasksManagerModel> managers = TasksManager.getImpl().getModelList();
                 List<Music> musicList = new ArrayList<>();
+                LogUtil.e("loadDownloadMusic" + managers.size());
                 for (TasksManagerModel model : managers) {
                     Music music = SongLoader.getMusicInfo(mContext, model.getMid());
                     musicList.add(music);

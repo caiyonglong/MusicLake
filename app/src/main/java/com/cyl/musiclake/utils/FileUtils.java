@@ -573,11 +573,11 @@ public class FileUtils {
      * byte数组转文件
      *
      * @param content
-     * @param file_name
+     * @param file_path
      */
-    public static boolean writeByteArrayToFile(byte[] content, String file_name) {
+    public static boolean writeByteArrayToFile(byte[] content, String file_path) {
         try {
-            File file = new File(file_name);
+            File file = new File(file_path);
             FileOutputStream fileW = new FileOutputStream(file.getCanonicalPath());
             fileW.write(content);
             fileW.close();

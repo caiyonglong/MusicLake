@@ -1,16 +1,9 @@
 package com.cyl.musiclake.api;
 
 import com.cyl.musiclake.api.qq.QQApiModel;
-import com.cyl.musiclake.api.qq.QQApiServiceImpl;
-import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
-import com.cyl.musiclake.utils.ConvertUtils;
 
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,49 +56,49 @@ public class ApiManagerServiceTest1 {
     @Test
     public void searchLyricByXiami() throws Exception {
 //        XiamiServiceImpl.getXimaiLyric("http://img.xiami.net/lyric/63/1769253963_1472550789_602.trc")
-        XiamiServiceImpl.getXimaiLyric("http://img.xiami.net/lyric/trc/51/1769253951_1401249723_976.lrc")
-                .subscribe(map -> {
-//                    System.out.println("uid=" + map);
-                    InputStream inputStream = ConvertUtils.string2InputStream(map, "utf-8");
-                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-                    BufferedReader reader = new BufferedReader(inputStreamReader);
-                    String line = null;
-                    LyricInfo lyricInfo = new LyricInfo();
-                    lyricInfo.song_lines = new ArrayList<>();
-                    while ((line = reader.readLine()) != null) {
-                        analyzeLyric(lyricInfo, line);
-                    }
-                    System.out.println(lyricInfo.song_title);
-                    System.out.println(lyricInfo.song_artist);
-                    System.out.println(lyricInfo.song_album);
-                    System.out.println(lyricInfo.song_offset);
-//                    for (LineInfo tt : lyricInfo.song_lines) {
-//                        System.out.println(tt.start);
-//                        System.out.println(tt.content);
+//        XiamiServiceImpl.getXimaiLyric("http://img.xiami.net/lyric/trc/51/1769253951_1401249723_976.lrc")
+//                .subscribe(map -> {
+////                    System.out.println("uid=" + map);
+//                    InputStream inputStream = ConvertUtils.string2InputStream(map, "utf-8");
+//                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+//                    BufferedReader reader = new BufferedReader(inputStreamReader);
+//                    String line = null;
+//                    LyricInfo lyricInfo = new LyricInfo();
+//                    lyricInfo.song_lines = new ArrayList<>();
+//                    while ((line = reader.readLine()) != null) {
+//                        analyzeLyric(lyricInfo, line);
 //                    }
-                });
+//                    System.out.println(lyricInfo.song_title);
+//                    System.out.println(lyricInfo.song_artist);
+//                    System.out.println(lyricInfo.song_album);
+//                    System.out.println(lyricInfo.song_offset);
+////                    for (LineInfo tt : lyricInfo.song_lines) {
+////                        System.out.println(tt.start);
+////                        System.out.println(tt.content);
+////                    }
+//                });
 
     }
 
 
     @Test
     public void searchLyric() throws Exception {
-        QQApiServiceImpl.getQQLyric("001Qu4I30eVFYb")
-                .subscribe(map -> {
-                    InputStream inputStream = ConvertUtils.string2InputStream(map, "utf-8");
-                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-                    BufferedReader reader = new BufferedReader(inputStreamReader);
-                    String line = null;
-                    LyricInfo lyricInfo = new LyricInfo();
-                    lyricInfo.song_lines = new ArrayList<>();
-                    while ((line = reader.readLine()) != null) {
-                        analyzeLyric(lyricInfo, line);
-                    }
-                    System.out.println(lyricInfo.song_title);
-                    System.out.println(lyricInfo.song_artist);
-                    System.out.println(lyricInfo.song_album);
-                    System.out.println(lyricInfo.song_offset);
-                });
+//        QQApiServiceImpl.getQQLyric("001Qu4I30eVFYb")
+//                .subscribe(map -> {
+//                    InputStream inputStream = ConvertUtils.string2InputStream(map, "utf-8");
+//                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+//                    BufferedReader reader = new BufferedReader(inputStreamReader);
+//                    String line = null;
+//                    LyricInfo lyricInfo = new LyricInfo();
+//                    lyricInfo.song_lines = new ArrayList<>();
+//                    while ((line = reader.readLine()) != null) {
+//                        analyzeLyric(lyricInfo, line);
+//                    }
+//                    System.out.println(lyricInfo.song_title);
+//                    System.out.println(lyricInfo.song_artist);
+//                    System.out.println(lyricInfo.song_album);
+//                    System.out.println(lyricInfo.song_offset);
+//                });
     }
 
     class LyricInfo {

@@ -6,6 +6,8 @@ import android.util.Log;
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -83,21 +85,36 @@ public class QQApiServiceImpl {
     }
 
     @SuppressWarnings({"unchecked", "varargs"})
-    public static Observable<String> getQQLyric(String mid) {
-        String mLyricUrl = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=" + mid + "&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
+    public static Observable<String> getQQLyric(Music music) {
+        //本地歌词路径
+        String mLyricPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+        //网络歌词
+        String mLyricUrl = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=" + music.getId() + "&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
+        if (FileUtils.exists(mLyricPath)) {
+            return Observable.create(emitter -> {
+                try {
+                    String lyric = FileUtils.readFile(mLyricPath);
+                    emitter.onNext(lyric);
+                    emitter.onComplete();
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+        }
         return ApiManager.getInstance().apiService.getQQLyric(mLyricUrl)
                 .flatMap(qqLyricInfo -> {
                     System.out.println(mLyricUrl);
                     System.out.println(qqLyricInfo.toString());
                     String lyric = null;
                     byte[] asByte = Base64.decode(qqLyricInfo.getLyric(), Base64.DEFAULT);
-//                  单元测试用
-//                    byte[] asByte = java.util.Base64.getDecoder().decode(qqLyricInfo.getLyric());
                     try {
                         lyric = new String(asByte, "utf-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
+                    //保存文件
+                    boolean save = FileUtils.writeByteArrayToFile(asByte, mLyricPath);
+                    LogUtil.e("保存网络歌词：" + save);
                     return Observable.fromArray(lyric);
                 });
     }

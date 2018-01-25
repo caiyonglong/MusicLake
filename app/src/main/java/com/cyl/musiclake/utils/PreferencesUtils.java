@@ -14,6 +14,7 @@ import com.cyl.musiclake.R;
  */
 public class PreferencesUtils {
     private static final String MUSIC_ID = "music_id";
+    private static final String PLAY_POSITION = "play_position";
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
     private static final String NIGHT_MODE = "night_mode";
@@ -25,8 +26,17 @@ public class PreferencesUtils {
         sContext = context.getApplicationContext();
     }
 
-    public static long getCurrentSongId() {
-        return getLong(MUSIC_ID, -1);
+    public static int getPlayPosition() {
+        return getInt(PLAY_POSITION, -1);
+    }
+
+    public static void setPlayPosition(int position) {
+        saveInt(PLAY_POSITION, position);
+    }
+
+
+    public static String getCurrentSongId() {
+        return getString(MUSIC_ID, "");
     }
 
     public static void saveCurrentSongId(String mid) {

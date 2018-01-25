@@ -33,7 +33,7 @@ public class TasksManager {
 
     private TasksManager() {
         dbController = new TasksManagerDBController();
-        modelList = dbController.getAllTasks(false);
+        modelList = dbController.getAllTasks(0);
     }
 
     private SparseArray<BaseDownloadTask> taskSparseArray = new SparseArray<>();
@@ -154,7 +154,7 @@ public class TasksManager {
     }
 
     public List<TasksManagerModel> getModelList() {
-        return dbController.getAllTasks(true);
+        return dbController.getAllTasks(1);
     }
 
     public TasksManagerModel addTask(final String name, final String url) {

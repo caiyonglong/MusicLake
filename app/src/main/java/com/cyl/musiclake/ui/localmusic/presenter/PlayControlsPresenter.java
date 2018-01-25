@@ -67,7 +67,6 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         RxBus.getInstance().register(MetaChangedEvent.class)
                 .subscribe(metaChangedEvent -> {
                     if (!activity.isFinishing()) {
-                        loadLyric();
                         updateNowPlayingCard();
                     }
                 });
@@ -106,13 +105,14 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             return;
         String localLyricInfo = null;
         if (music.getType() == Music.Type.LOCAL) {
-            if (music.getUri().endsWith(".mp3")) {
-                String lrcPath = music.getUri().replace(".mp3", ".lrc");
+            String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+//            String trcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".trc";
+            if (FileUtils.exists(lrcPath)) {
                 localLyricInfo = FileUtils.readFile(lrcPath);
             }
             mView.showLyric(localLyricInfo);
         } else if (music.getType() == Music.Type.QQ) {
-            QQApiServiceImpl.getQQLyric(music.getId())
+            QQApiServiceImpl.getQQLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<String>() {
@@ -139,7 +139,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                     });
         } else if (music.getType() == Music.Type.XIAMI || music.getType() == Music.Type.BAIDU) {
             Log.e(TAG, music.getLrcPath());
-            XiamiServiceImpl.getXimaiLyric(music.getLrcPath())
+            XiamiServiceImpl.getXimaiLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<String>() {
@@ -151,8 +151,10 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                         @Override
                         public void onNext(String lyricInfo) {
                             Log.e(TAG, lyricInfo);
-                            String content = lyricInfo.replaceAll("<[0-9]{1,5}>", "");
-                            mView.showLyric(content);
+                            if (music.getLrcPath().endsWith(".trc")) {
+                                lyricInfo = lyricInfo.replaceAll("<[0-9]{1,5}>", "");
+                            }
+                            mView.showLyric(lyricInfo);
                         }
 
                         @Override
@@ -225,7 +227,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                 .subscribe(music1 -> mView.updateFavorite(music1.isLove()));
 
         if (!isPlayPauseClick && !activity.isFinishing()) {
-//            CoverLoader.getInstance().getCoverUri(mContext,)
+            loadLyric();
             GlideApp.with(mContext)
                     .asBitmap()
                     .load(picUrl)

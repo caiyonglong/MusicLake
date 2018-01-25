@@ -92,16 +92,13 @@ public class BaiduApiServiceImpl {
                 });
     }
 
-//    public static Observable<OnlineArtistInfo> getArtistInfo(String artistId) {
-//        Map<String, String> params = new HashMap<>();
-//
-//        params.put(Constants.PARAM_METHOD, Constants.METHOD_ARTIST_INFO);
-//        params.put(Constants.PARAM_TING_UID, artistId);
-//
-//        return ApiManager.getInstance().apiService.getArtistInfo(Constants.BASE_URL_BAIDU_MUSIC, params)
-//                .flatMap(baiduSongInfo -> {
-////                    baiduSongInfo.getData();
-//                    return Observable.fromArray(baiduSongInfo);
-//                });
-//    }
+    @SuppressWarnings({"unchecked", "varargs"})
+    public static Observable<String> getBaiduLyric(String lyricPath) {
+        return ApiManager.getInstance().apiService.getXiamiLyric(lyricPath)
+                .flatMap(xiaMiLyricInfo -> {
+                    String lyric = xiaMiLyricInfo.string();
+                    return Observable.fromArray(lyric);
+                });
+    }
+
 }

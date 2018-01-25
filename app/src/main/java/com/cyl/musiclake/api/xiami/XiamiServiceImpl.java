@@ -3,6 +3,8 @@ package com.cyl.musiclake.api.xiami;
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,10 +70,28 @@ public class XiamiServiceImpl {
 
 
     @SuppressWarnings({"unchecked", "varargs"})
-    public static Observable<String> getXimaiLyric(String lyricPath) {
-        return ApiManager.getInstance().apiService.getXiamiLyric(lyricPath)
+    public static Observable<String> getXimaiLyric(Music music) {
+        //本地歌词路径
+        String mLyricPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+        //网络歌词
+        String mLyricUrl = music.getLrcPath();
+        if (FileUtils.exists(mLyricPath)) {
+            return Observable.create(emitter -> {
+                try {
+                    String lyric = FileUtils.readFile(mLyricPath);
+                    emitter.onNext(lyric);
+                    emitter.onComplete();
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+        }
+        return ApiManager.getInstance().apiService.getXiamiLyric(mLyricUrl)
                 .flatMap(xiaMiLyricInfo -> {
                     String lyric = xiaMiLyricInfo.string();
+                    //保存文件
+                    boolean save = FileUtils.writeText(mLyricPath, lyric);
+                    LogUtil.e("保存网络歌词：" + save);
                     return Observable.fromArray(lyric);
                 });
     }

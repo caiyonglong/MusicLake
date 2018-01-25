@@ -14,8 +14,6 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.liulishuo.filedownloader.BaseDownloadTask;
-import com.liulishuo.filedownloader.FileDownloadListener;
-import com.liulishuo.filedownloader.FileDownloadSampleListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
@@ -28,105 +26,8 @@ import java.io.File;
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
 
-    private FileDownloadListener taskDownloadListener = new FileDownloadSampleListener() {
+    private FileDownloadListener taskDownloadListener = new FileDownloadListener();
 
-        private TaskItemViewHolder checkCurrentHolder(final BaseDownloadTask task) {
-            final TaskItemViewHolder tag = (TaskItemViewHolder) task.getTag();
-            if (tag.id != task.getId()) {
-                return null;
-            }
-
-            return tag;
-        }
-
-        @Override
-        protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            super.pending(task, soFarBytes, totalBytes);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.updateDownloading(FileDownloadStatus.pending, soFarBytes
-                    , totalBytes);
-            tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_pending);
-        }
-
-        @Override
-        protected void started(BaseDownloadTask task) {
-            super.started(task);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_started);
-        }
-
-        @Override
-        protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
-            super.connected(task, etag, isContinue, soFarBytes, totalBytes);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.updateDownloading(FileDownloadStatus.connected, soFarBytes
-                    , totalBytes);
-            tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_connected);
-        }
-
-        @Override
-        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            super.progress(task, soFarBytes, totalBytes);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.updateDownloading(FileDownloadStatus.progress, soFarBytes
-                    , totalBytes);
-        }
-
-        @Override
-        protected void error(BaseDownloadTask task, Throwable e) {
-            super.error(task, e);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.updateNotDownloaded(FileDownloadStatus.error, task.getLargeFileSoFarBytes()
-                    , task.getLargeFileTotalBytes());
-            TasksManager.getImpl().removeTaskForViewHolder(task.getId());
-        }
-
-        @Override
-        protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            super.paused(task, soFarBytes, totalBytes);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.updateNotDownloaded(FileDownloadStatus.paused, soFarBytes, totalBytes);
-            tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_paused);
-            TasksManager.getImpl().removeTaskForViewHolder(task.getId());
-        }
-
-        @Override
-        protected void completed(BaseDownloadTask task) {
-            super.completed(task);
-            final TaskItemViewHolder tag = checkCurrentHolder(task);
-            if (tag == null) {
-                return;
-            }
-
-            tag.updateDownloaded();
-            TasksManager.getImpl().removeTaskForViewHolder(task.getId());
-            TasksManager.getImpl().finishTask(task.getId());
-        }
-    };
     private View.OnClickListener taskActionOnClickListener = v -> {
         if (v.getTag() == null) {
             return;
@@ -186,7 +87,6 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
         holder.taskActionBtn.setEnabled(true);
 
-
         if (TasksManager.getImpl().isReady()) {
             final int status = TasksManager.getImpl().getStatus(model.getId(), model.getPath());
             if (status == FileDownloadStatus.pending || status == FileDownloadStatus.started ||
@@ -240,7 +140,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         /**
          * download id
          */
-        private int id;
+        public int id;
 
         public void update(final int id, final int position) {
             this.id = id;
@@ -303,17 +203,17 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 //                    break;
                 default:
                     taskStatusTv.setText(MyApplication.mContext.getString(
-                            R.string.tasks_manager_demo_status_downloading, status));
+                            R.string.tasks_manager_demo_status_downloading, (int) (percent * 100)));
                     break;
             }
 
             taskActionBtn.setText(R.string.pause);
         }
 
-        private TextView taskNameTv;
-        private TextView taskStatusTv;
-        private ProgressBar taskPb;
-        private Button taskActionBtn;
+        public TextView taskNameTv;
+        public TextView taskStatusTv;
+        public ProgressBar taskPb;
+        public Button taskActionBtn;
 
         private void assignViews() {
             taskNameTv = (TextView) findViewById(R.id.task_name_tv);

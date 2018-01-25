@@ -25,9 +25,9 @@ public class TasksManagerDBController {
         db = openHelper.getWritableDatabase();
     }
 
-    public List<TasksManagerModel> getAllTasks(boolean finish) {
+    public List<TasksManagerModel> getAllTasks(int finish) {
         final Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " where "
-                + TasksManagerModel.FINISH + " = " + (finish ? 1 : 0), null);
+                + TasksManagerModel.FINISH + "=" + finish, null);
 
         final List<TasksManagerModel> list = new ArrayList<>();
         try {
@@ -42,6 +42,7 @@ public class TasksManagerDBController {
                 model.setName(c.getString(c.getColumnIndex(TasksManagerModel.NAME)));
                 model.setUrl(c.getString(c.getColumnIndex(TasksManagerModel.URL)));
                 model.setPath(c.getString(c.getColumnIndex(TasksManagerModel.PATH)));
+                model.setFinish(c.getInt(c.getColumnIndex(TasksManagerModel.FINISH)) == 1);
                 list.add(model);
             } while (c.moveToPrevious());
         } finally {

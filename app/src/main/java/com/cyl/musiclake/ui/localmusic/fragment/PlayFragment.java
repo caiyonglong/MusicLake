@@ -34,6 +34,7 @@ import com.cyl.musiclake.ui.localmusic.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.PlayQueueDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.PlayControlsPresenter;
+import com.cyl.musiclake.ui.onlinemusic.adapter.FileDownloadListener;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
@@ -175,9 +176,9 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                     ToastUtils.show(getContext(), "下载任务添加成功");
                     BaseDownloadTask task = FileDownloader.getImpl()
                             .create(model.getUrl())
-                            .setTag(music)
                             .setPath(model.getPath())
-                            .setCallbackProgressTimes(100);
+                            .setCallbackProgressTimes(100)
+                            .setListener(new FileDownloadListener());
                     TasksManager.getImpl()
                             .addTaskForViewHolder(task);
                     task.start();
@@ -189,9 +190,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @OnClick(R.id.ic_detail)
     void openPlayQueue() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        if (playQueueDialog == null) {
-            playQueueDialog = new PlayQueueDialog();
-        }
+        playQueueDialog = PlayQueueDialog.newInstance();
         playQueueDialog.show(fm, "fragment_bottom_dialog");
     }
 

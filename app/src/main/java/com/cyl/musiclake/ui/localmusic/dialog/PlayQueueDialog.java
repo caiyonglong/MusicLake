@@ -54,6 +54,15 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     private final int PLAY_MODE_REPEAT = 2;
     private PlayQueuePresenter mPresenter;
 
+    public static PlayQueueDialog newInstance() {
+
+        Bundle args = new Bundle();
+
+        PlayQueueDialog fragment = new PlayQueueDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onStart() {
         super.onStart();

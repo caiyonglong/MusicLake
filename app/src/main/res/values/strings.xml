@@ -145,7 +145,7 @@
     <string name="tasks_manager_demo_status_started">开始下载</string>
     <string name="tasks_manager_demo_status_connected">已连接上</string>
     <string name="tasks_manager_demo_status_progress">下载中...</string>
-    <string name="tasks_manager_demo_status_downloading" formatted="false">正在下载 %d</string>
+    <string name="tasks_manager_demo_status_downloading" formatted="false">正在下载 %d\%</string>
     <string name="tasks_manager_demo_status_error">出错</string>
     <string name="tasks_manager_demo_status_paused">暂停</string>
     <string name="tasks_manager_demo_status_completed">下载完成</string>

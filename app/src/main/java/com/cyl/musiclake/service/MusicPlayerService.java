@@ -97,8 +97,6 @@ public class MusicPlayerService extends Service {
     public static final int SAVE_PLAY_QUEUE = 11; //保存播放队列
 
     private static final int NOTIFY_MODE_NONE = 0;
-    private static final int NOTIFY_MODE_FOREGROUND = 1;
-    private static int mNotifyMode = 0;
     private final int NOTIFICATION_ID = 0x123;
     private long mNotificationPostTime = 0;
     private int mServiceStartId = -1;
@@ -295,7 +293,7 @@ public class MusicPlayerService extends Service {
     public void reloadPlayQueue() {
         mPlaylist.clear();
         mPlaylist = PlayQueueLoader.getPlayQueue(this);
-        mPlayingPos = (int) PreferencesUtils.getCurrentSongId();
+        mPlayingPos = PreferencesUtils.getPlayPosition();
         mPlayer.seek(PreferencesUtils.getPosition());
         notifyChange(META_CHANGED);
     }
@@ -612,6 +610,8 @@ public class MusicPlayerService extends Service {
         }
         //保存歌曲id
         PreferencesUtils.saveCurrentSongId(mPlayingMusic.getId());
+        //保存歌曲id
+        PreferencesUtils.setPlayPosition(mPlayingPos);
         //保存歌曲进度
         PreferencesUtils.savePosition(mPlayer.position());
         //保存歌曲状态
@@ -811,11 +811,10 @@ public class MusicPlayerService extends Service {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         final String albumName = getAlbumName();
         final String artistName = getArtistName();
-        final boolean isPlaying = isPlaying();
         String text = TextUtils.isEmpty(albumName)
                 ? artistName : artistName + " - " + albumName;
 
-        int playButtonResId = isPlaying
+        int playButtonResId = isMusicPlaying
                 ? R.drawable.ic_pause : R.drawable.ic_play_arrow_white_18dp;
 
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
@@ -833,25 +832,12 @@ public class MusicPlayerService extends Service {
         }
         artwork = CoverLoader.getInstance().loadThumbnail(null);
 
-        GlideApp.with(this)
-                .asBitmap()
-                .load(coverUrl)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        artwork = resource;
-                    }
-                });
-
 
         Builder builder = new Builder(this, initChannelId())
-                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_icon)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTitle())
                 .setContentText(text)
-                .setLargeIcon(artwork)
                 .setWhen(mNotificationPostTime)
                 .addAction(R.drawable.ic_skip_previous,
                         "",
@@ -863,6 +849,8 @@ public class MusicPlayerService extends Service {
                         retrievePlaybackAction(ACTION_NEXT))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP));
+
+
         if (SystemUtils.isJellyBeanMR1()) {
             builder.setShowWhen(false);
         }
@@ -876,6 +864,21 @@ public class MusicPlayerService extends Service {
             builder.setStyle(style);
         }
 
+
+        GlideApp.with(this)
+                .asBitmap()
+                .load(coverUrl)
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        artwork = resource;
+                        builder.setLargeIcon(artwork);
+                        mNotification = builder.build();
+
+                    }
+                });
         mNotification = builder.build();
     }
 
@@ -939,26 +942,9 @@ public class MusicPlayerService extends Service {
      * 更新状态栏通知
      */
     private void updateNotification() {
-        final int newNotifyMode;
-        if (isPlaying()) {
-            newNotifyMode = NOTIFY_MODE_FOREGROUND;
-        } else {
-            newNotifyMode = NOTIFY_MODE_NONE;
-        }
-
-        startForeground(NOTIFICATION_ID, mNotification);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-
-        if (mNotifyMode != newNotifyMode) {
-            if (mNotifyMode == NOTIFY_MODE_FOREGROUND) {
-                stopForeground(true);
-            } else if (newNotifyMode == NOTIFY_MODE_NONE) {
-                mNotificationManager.cancel(NOTIFICATION_ID);
-                mNotificationPostTime = 0;
-            }
-        }
         initNotify();
         startForeground(NOTIFICATION_ID, mNotification);
+        mNotificationManager.notify(NOTIFICATION_ID, mNotification);
     }
 
 
@@ -968,7 +954,6 @@ public class MusicPlayerService extends Service {
     private void cancelNotification() {
         stopForeground(true);
         mNotificationManager.cancel(NOTIFICATION_ID);
-        mNotifyMode = NOTIFY_MODE_NONE;
         isRunningForeground = false;
     }
 
