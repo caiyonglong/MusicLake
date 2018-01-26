@@ -49,6 +49,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -402,7 +403,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     }
 
     @Override
-    public void showLyric(String lyricInfo) {
+    public void showLyric(String lyricInfo, boolean isFilePath) {
         //初始化歌词配置
         mLrcView.setLineSpace(15.0f);
         mLrcView.setTextSize(17.0f);
@@ -414,8 +415,11 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
             }
         });
         if (lyricInfo != null) {
-            //设置歌词信息
-            mLrcView.setLyricContent(lyricInfo, "utf-8");
+            if (isFilePath) {
+                mLrcView.setLyricFile(new File(lyricInfo), "utf-8");
+            } else {
+                mLrcView.setLyricContent(lyricInfo, "utf-8");
+            }
         } else {
             mLrcView.reset("暂无歌词");
         }

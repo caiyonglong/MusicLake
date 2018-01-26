@@ -25,6 +25,8 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.cyl.musiclake.utils.LogUtil;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -719,7 +721,7 @@ public class LyricView extends View {
         if (line != null && line.startsWith("[by:")) {
             return;
         }
-        if (line != null && index == 9 && line.trim().length() > 10) {
+        if (line != null && line.trim().length() > 10) {
             // 歌词内容,需要考虑一行歌词有多个时间戳的情况
             int lastIndexOfRightBracket = line.lastIndexOf("]");
             String content = line.substring(lastIndexOfRightBracket + 1, line.length());
@@ -882,6 +884,7 @@ public class LyricView extends View {
      */
     public void setLyricContent(String lyricInfo, String charsetName) {
         if (lyricInfo != null && lyricInfo.length() > 0) {
+            LogUtil.e("LyricView ", lyricInfo);
             InputStream inputStream = new ByteArrayInputStream(lyricInfo.getBytes());
             setupLyricResource(inputStream, charsetName);
         } else {

@@ -144,3 +144,9 @@ E/MediaPlayer: next player is not prepared
 
 14、Attempt to invoke interface method 接口
 下载服务接口更新下载状态。
+
+15、AudioManager控制播放
+
+16、播放暂停恢复，音量变化
+
+17、线控

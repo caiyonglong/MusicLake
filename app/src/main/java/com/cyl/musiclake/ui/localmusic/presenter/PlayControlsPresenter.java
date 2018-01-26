@@ -106,11 +106,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         String localLyricInfo = null;
         if (music.getType() == Music.Type.LOCAL) {
             String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
-//            String trcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".trc";
-            if (FileUtils.exists(lrcPath)) {
-                localLyricInfo = FileUtils.readFile(lrcPath);
-            }
-            mView.showLyric(localLyricInfo);
+            mView.showLyric(lrcPath, true);
         } else if (music.getType() == Music.Type.QQ) {
             QQApiServiceImpl.getQQLyric(music)
                     .subscribeOn(Schedulers.io())
@@ -124,12 +120,12 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                         @Override
                         public void onNext(String lyricInfo) {
                             Log.e(TAG, lyricInfo);
-                            mView.showLyric(lyricInfo);
+                            mView.showLyric(lyricInfo, false);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mView.showLyric(null);
+                            mView.showLyric(null, false);
                         }
 
                         @Override
@@ -151,15 +147,12 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                         @Override
                         public void onNext(String lyricInfo) {
                             Log.e(TAG, lyricInfo);
-                            if (music.getLrcPath().endsWith(".trc")) {
-                                lyricInfo = lyricInfo.replaceAll("<[0-9]{1,5}>", "");
-                            }
-                            mView.showLyric(lyricInfo);
+                            mView.showLyric(lyricInfo, false);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mView.showLyric(null);
+                            mView.showLyric(null, false);
                         }
 
                         @Override
@@ -168,7 +161,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                         }
                     });
         } else {
-            mView.showLyric(null);
+            mView.showLyric(null, false);
         }
     }
 

@@ -147,9 +147,8 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     }
 
 
-    public long seek(final long whereto) {
+    public void seek(final long whereto) {
         mCurrentMediaPlayer.seekTo((int) whereto);
-        return whereto;
     }
 
 
@@ -200,7 +199,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         mHandler.sendEmptyMessage(PREPARE_ASYNC_ENDED);
-        mp.start();
+//        mp.start();
     }
 
     @Override

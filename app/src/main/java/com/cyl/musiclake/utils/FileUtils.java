@@ -565,7 +565,7 @@ public class FileUtils {
     }
 
     public static boolean writeText(String filePath, String content) {
-        return writeText(filePath, content);
+        return writeText(new File(filePath), content);
     }
 
 

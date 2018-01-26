@@ -24,7 +24,7 @@ public interface PlayControlsContract {
 
         void setPalette(Palette palette);
 
-        void showLyric(String lyric);
+        void showLyric(String lyric, boolean isFilePath);
 
         void setPlayPauseButton(boolean isPlaying);
 

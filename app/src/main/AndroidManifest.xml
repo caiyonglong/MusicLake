@@ -118,7 +118,11 @@
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait" />
         <!--社区-->
-
+        <receiver android:name=".service.MediaButtonIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".ui.zone.CommentActivity"
