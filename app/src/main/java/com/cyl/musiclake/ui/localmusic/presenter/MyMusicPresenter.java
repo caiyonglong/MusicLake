@@ -7,6 +7,7 @@ import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.ui.localmusic.contract.MyMusicContract;
+import com.cyl.musiclake.utils.FileUtils;
 
 import java.util.List;
 
@@ -96,8 +97,7 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
 
                     }
                 });
-
-        AppRepository.getPlaylistSongsRepository(mContext, "1")
+        AppRepository.getPlayHistoryRepository(mContext)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
@@ -109,6 +109,30 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
                     @Override
                     public void onNext(List<Music> musicList) {
                         mView.showHistory(musicList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        AppRepository.getFolderSongsRepository(mContext, FileUtils.getMusicDir())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Music>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Music> musicList) {
+                        mView.showDownloadList(musicList);
                     }
 
                     @Override

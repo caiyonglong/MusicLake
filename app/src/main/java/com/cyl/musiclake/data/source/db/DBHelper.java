@@ -65,6 +65,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 + DBData.MUSIC_FILENAME + " , "
                 + DBData.MUSIC_PATH + " , "
+                + DBData.MUSIC_LRC_PATH + " , "
                 + DBData.MUSIC_TIME + " , "
                 + DBData.MUSIC_SIZE + " , "
 

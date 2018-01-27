@@ -48,7 +48,6 @@ import com.cyl.musiclake.data.source.PlayHistoryLoader;
 import com.cyl.musiclake.data.source.PlayQueueLoader;
 import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.main.MainActivity;
-import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.SystemUtils;
@@ -204,16 +203,19 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_WENT_TO_NEXT: //mplayer播放完毕切换到下一首
                         service.setAndRecordPlayPos(service.mNextPlayPos);
+                        service.play();
+                        service.notifyChange(META_CHANGED);
+                        service.updateNotification();
                         service.setNextTrack();
 //                        service.updateCursor(service.mPlaylist.get(service.mPlayPos).mId);
 //                        service.bumpSongCount(); //更新歌曲的播放次数
-                        service.notifyChange(META_CHANGED);
-                        service.updateNotification();
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完毕且暂时没有下一首
                         if (service.mRepeatMode == PLAY_MODE_REPEAT) {
                             service.seekTo(0);
+                            service.play();
                         } else {
+                            service.next();
 //                            service.gotoNext(false);
                         }
                         break;
@@ -476,7 +478,7 @@ public class MusicPlayerService extends Service {
         }
 //        scheduleDelayedShutdown();
         if (intent != null && intent.getBooleanExtra(FROM_MEDIA_BUTTON, false)) {
-            MediaButtonIntentReceiver.completeWakefulIntent(intent);
+//            MediaButtonIntentReceiver.completeWakefulIntent(intent);
         }
 
         return START_NOT_STICKY;
@@ -604,7 +606,7 @@ public class MusicPlayerService extends Service {
 
         //QQ音乐的播放地址有一段时间后失效，所以需要动态获取播放地址
         if (mPlayingMusic.getType() == Music.Type.QQ) {
-            mHandler.sendEmptyMessage(PREPARE_QQ_MUSIC);
+            mHandler.obtainMessage(PREPARE_QQ_MUSIC, false);
         } else {
             mPlayer.setDataSource(mPlayingMusic.getUri());
         }
@@ -905,7 +907,8 @@ public class MusicPlayerService extends Service {
      */
     private String getArtistName() {
         if (mPlayingMusic != null) {
-            return ConvertUtils.getArtistAndAlbum(mPlayingMusic.getArtist(), mPlayingMusic.getAlbum());
+            return mPlayingMusic.getArtist();
+//            return ConvertUtils.getArtistAndAlbum(mPlayingMusic.getArtist(), mPlayingMusic.getAlbum());
         }
         return null;
     }
@@ -1040,7 +1043,6 @@ public class MusicPlayerService extends Service {
                         artwork = resource;
                         builder.setLargeIcon(artwork);
                         mNotification = builder.build();
-
                     }
                 });
         mNotification = builder.build();

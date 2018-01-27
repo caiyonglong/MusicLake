@@ -47,7 +47,7 @@ public class PlayQueueLoader {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
         String sql = "select * from music inner join music_playlist " +
                 "where music.mid = music_playlist.mid " +
-                "and music_playlist.pid=0";
+                "and music_playlist.pid=0 ORDER BY music_playlist.date_added DESC";
         Cursor cursor = dbDaoImpl.makeCursor(sql);
         List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
         dbDaoImpl.closeDB();

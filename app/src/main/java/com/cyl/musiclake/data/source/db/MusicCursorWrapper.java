@@ -24,6 +24,7 @@ public class MusicCursorWrapper extends CursorWrapper {
 
         music.setDuration(getLong(getColumnIndex(DBData.MUSIC_TIME)));
         music.setUri(getString(getColumnIndex(DBData.MUSIC_PATH)));
+        music.setLrcPath(getString(getColumnIndex(DBData.MUSIC_LRC_PATH)));
         music.setCoverUri(getString(getColumnIndex(DBData.MUSIC_COVER)));
         music.setCoverBig(getString(getColumnIndex(DBData.MUSIC_COVER_BIG)));
         music.setCoverSmall(getString(getColumnIndex(DBData.MUSIC_COVER_SMALL)));

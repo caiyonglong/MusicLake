@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -50,6 +52,14 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
     Toolbar mToolbar;
     @BindView(R.id.album_art)
     ImageView album_art;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
+
+    @OnClick(R.id.fab)
+    void onPlayAll() {
+        PlayManager.setPlayList(musicList);
+        PlayManager.play(0);
+    }
 
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
@@ -216,9 +226,8 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
 
     @Override
     public void showPlaylistSongs(List<Music> songList) {
-        musicList.clear();
-        musicList.addAll(songList);
-        mAdapter.setNewData(songList);
+        musicList = songList;
+        mAdapter.setNewData(musicList);
     }
 
     @Override

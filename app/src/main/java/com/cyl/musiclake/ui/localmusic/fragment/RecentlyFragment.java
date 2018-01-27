@@ -2,24 +2,29 @@ package com.cyl.musiclake.ui.localmusic.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.PlayHistoryLoader;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.PageAdapter;
+import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
+import com.cyl.musiclake.ui.localmusic.contract.RecentlyContract;
+import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.localmusic.presenter.RecentlyPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.ui.common.Extras;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,14 +32,21 @@ import butterknife.BindView;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class RecentlyFragment extends BaseFragment {
-    @BindView(R.id.m_viewpager)
-    ViewPager viewPager;
-    @BindView(R.id.tabs)
-    TabLayout mTabLayout;
+public class RecentlyFragment extends BaseFragment implements RecentlyContract.View {
+
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    PageAdapter adapter;
+
+    private SongAdapter mAdapter;
+    private List<Music> musicInfos = new ArrayList<>();
+    private RecentlyPresenter mPresenter;
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.fragment_recyclerview;
+    }
 
     public static RecentlyFragment newInstance() {
         Bundle args = new Bundle();
@@ -43,33 +55,84 @@ public class RecentlyFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.frag_music;
-    }
 
     @Override
     public void initViews() {
         mToolbar.setTitle("播放历史");
-        mTabLayout.setVisibility(View.GONE);
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
+
+        mAdapter = new SongAdapter(musicInfos);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerView);
     }
 
     @Override
     protected void initDatas() {
-        setupViewPager(viewPager);
-        mTabLayout.setupWithViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(1);
-        viewPager.setCurrentItem(0);
+        mPresenter = new RecentlyPresenter(getContext());
+        mPresenter.attachView(this);
+        mPresenter.loadSongs();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(SongsFragment.newInstance(Extras.PLAY_HISTORY), "歌曲");
-        viewPager.setAdapter(adapter);
+    @Override
+    public void showLoading() {
+
     }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showSongs(List<Music> songs) {
+        musicInfos = songs;
+        mAdapter.setNewData(songs);
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_more) {
+                List<Music> musicList = adapter.getData();
+                PlayManager.setPlayList(musicList);
+                PlayManager.play(position);
+            }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.popup_song_play:
+                        PlayManager.setPlayList((List<Music>) adapter.getData());
+                        PlayManager.play(position);
+                        break;
+                    case R.id.popup_song_detail:
+                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                                .show(getChildFragmentManager(), getTag());
+                        break;
+                    case R.id.popup_song_addto_queue:
+                        AddPlaylistDialog.newInstance(musicInfos.get(position))
+                                .show(getChildFragmentManager(), "ADD_PLAYLIST");
+                        break;
+
+                }
+                return false;
+            });
+            popupMenu.inflate(R.menu.popup_album);
+            popupMenu.show();
+        });
+    }
+
+
+    @Override
+    public void showEmptyView() {
+        mAdapter.setEmptyView(R.layout.view_song_empty);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -81,7 +144,7 @@ public class RecentlyFragment extends BaseFragment {
                         .content("是否清空播放历史？")
                         .onPositive((dialog, which) -> {
                             PlayHistoryLoader.clearPlayHistory(getActivity());
-                            adapter.notifyDataSetChanged();
+                            mAdapter.notifyDataSetChanged();
                         })
                         .positiveText("确定")
                         .negativeText("取消")
@@ -90,12 +153,12 @@ public class RecentlyFragment extends BaseFragment {
             case R.id.action_share:
                 Intent intent3 = new Intent(getActivity(), EditActivity.class);
                 StringBuilder content = new StringBuilder();
-                List<Music> musicList = PlayHistoryLoader.getPlayHistory(getContext());
-                if (musicList.size() > 0) {
+
+                if (musicInfos.size() > 0) {
                     content = new StringBuilder("分享歌单\n");
                 }
-                for (int i = 0; i < musicList.size(); i++) {
-                    content.append(musicList.get(i).getTitle()).append("---").append(musicList.get(i).getArtist());
+                for (int i = 0; i < musicInfos.size(); i++) {
+                    content.append(musicInfos.get(i).getTitle()).append("---").append(musicInfos.get(i).getArtist());
                     content.append("\n");
                 }
                 intent3.putExtra("content", content.toString());

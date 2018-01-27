@@ -22,6 +22,7 @@ public class DBData {
     public static final String MUSIC_ID = "mid";
     public static final String MUSIC_NAME = "name";
     public static final String MUSIC_PATH = "path";
+    public static final String MUSIC_LRC_PATH = "lrc_path";
     public static final String MUSIC_TIME = "duration";
     public static final String MUSIC_SIZE = "size";
     public static final String MUSIC_ARTIST = "artist";

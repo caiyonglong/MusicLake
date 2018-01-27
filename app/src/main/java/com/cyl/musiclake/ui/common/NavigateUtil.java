@@ -2,6 +2,9 @@ package com.cyl.musiclake.ui.common;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,11 +18,13 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.ui.localmusic.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.ArtistSongsFragment;
-import com.cyl.musiclake.ui.onlinemusic.fragment.DownloadFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.LocalMusicFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.localmusic.fragment.RecentlyFragment;
+import com.cyl.musiclake.ui.onlinemusic.fragment.DownloadFragment;
+
+import java.io.File;
 
 /**
  * Created by yonglong on 2016/12/24.
@@ -171,4 +176,9 @@ public class NavigateUtil {
         transaction.addToBackStack(fragment.getTag()).commit();
     }
 
+    public static void scanFileAsync(Context ctx, String filePath) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanIntent.setData(Uri.fromFile(new File(filePath)));
+        ctx.sendBroadcast(scanIntent);
+    }
 }

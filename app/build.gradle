@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.2'
     defaultConfig {
         applicationId "com.cyl.musiclake"
         minSdkVersion 17
@@ -64,7 +64,6 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.sothree.slidinguppanel:library:3.4.0'
-
     compile 'com.liulishuo.filedownloader:library:1.6.9'
 //
 //    testCompile 'org.robolectric:robolectric:3.1.2'

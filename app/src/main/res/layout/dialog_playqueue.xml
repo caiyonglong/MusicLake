@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
-        android:elevation="2dp"
         android:orientation="horizontal"
         tools:targetApi="lollipop">
 
@@ -36,7 +35,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/ic_delete" />
+            android:src="@drawable/ic_delete"
+            tools:ignore="RtlHardcoded" />
 
         <ImageView
             android:id="@+id/iv_play_mode"
@@ -44,17 +44,18 @@
             android:layout_height="24dp"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
-            android:layout_toLeftOf="@+id/clear_all"
-            android:src="@drawable/ic_repeat_one" />
+            android:layout_toStartOf="@+id/clear_all"
+            android:src="@drawable/ic_repeat_one"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_songs"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:orientation="vertical" />
 
 </LinearLayout>

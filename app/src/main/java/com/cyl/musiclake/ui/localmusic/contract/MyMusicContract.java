@@ -21,6 +21,8 @@ public interface MyMusicContract {
 
         void showLoveList(List<Music> musicList);
 
+        void showDownloadList(List<Music> musicList);
+
     }
 
     interface Presenter extends BasePresenter<View> {

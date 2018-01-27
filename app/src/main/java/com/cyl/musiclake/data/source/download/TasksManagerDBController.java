@@ -74,8 +74,8 @@ public class TasksManagerDBController {
         return succeed ? model : null;
     }
 
-    public TasksManagerModel finishTask(TasksManagerModel model) {
-        int succeed = db.update(TABLE_NAME, model.toContentValues(), TasksManagerModel.FINISH + "=?", new String[]{"1"});
-        return succeed != -1 ? model : null;
+    public void finishTask(TasksManagerModel model) {
+        model.setFinish(true);
+        db.update(TABLE_NAME, model.toContentValues(), TasksManagerModel.FINISH + "=?", new String[]{"1"});
     }
 }

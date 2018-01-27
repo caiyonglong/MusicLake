@@ -104,8 +104,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         if (isPlayPauseClick)
             return;
         String localLyricInfo = null;
-        if (music.getType() == Music.Type.LOCAL) {
-            String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+        String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+        if (FileUtils.exists(lrcPath)) {
             mView.showLyric(lrcPath, true);
         } else if (music.getType() == Music.Type.QQ) {
             QQApiServiceImpl.getQQLyric(music)
@@ -135,6 +135,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                     });
         } else if (music.getType() == Music.Type.XIAMI || music.getType() == Music.Type.BAIDU) {
             Log.e(TAG, music.getLrcPath());
+
             XiamiServiceImpl.getXimaiLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -230,7 +231,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             mView.setAlbumArt(resource);
-                            mView.setAlbumArt(ImageUtils.blur(mContext, resource, 40));
+                            mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(resource, mContext, 12));
                             new Palette.Builder(resource).generate(palette -> mView.setPalette(palette));
                         }
 

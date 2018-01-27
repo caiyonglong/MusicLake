@@ -154,6 +154,11 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     }
 
     @Override
+    public void showDownloadList(List<Music> musicList) {
+        mDownload.setSongsNum(musicList.size());
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mPresenter.unsubscribe();

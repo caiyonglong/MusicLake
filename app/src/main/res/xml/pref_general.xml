@@ -19,15 +19,14 @@
 
         <PreferenceScreen
             android:key="key_cache"
-            android:title="@string/pref_title_clear"></PreferenceScreen>
+            android:title="@string/pref_title_clear" />
         <PreferenceScreen
             android:key="key_update"
-            android:title="@string/pref_title_update"></PreferenceScreen>
+            android:title="@string/pref_title_update" />
         <PreferenceScreen
             android:key="key_about"
-            android:title="@string/pref_title_about"></PreferenceScreen>
+            android:title="@string/pref_title_about" />
 
     </PreferenceCategory>
-
 
 </PreferenceScreen>

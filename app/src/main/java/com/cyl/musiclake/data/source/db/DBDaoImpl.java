@@ -293,6 +293,7 @@ public class DBDaoImpl implements DBDao {
         values.put(DBData.MUSIC_ALBUM_ID, music.getAlbumId());
 
         values.put(DBData.MUSIC_PATH, music.getUri());
+        values.put(DBData.MUSIC_LRC_PATH, music.getLrcPath());
         values.put(DBData.MUSIC_FILENAME, music.getFileName());
         values.put(DBData.MUSIC_TIME, music.getDuration());
         values.put(DBData.MUSIC_SIZE, music.getFileSize());

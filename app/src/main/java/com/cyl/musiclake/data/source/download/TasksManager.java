@@ -162,10 +162,8 @@ public class TasksManager {
     }
 
     public void finishTask(int id) {
-
         TasksManagerModel model = getById(id);
         dbController.finishTask(model);
-
     }
 
     public TasksManagerModel addTask(final String mid, final String name, final String url, final String path) {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <color name="backgroundColor">#E8E8E0</color>
     <color name="setting_blue">#4A90E2</color>
     <color name="logo_blue">#2f88f1</color>
@@ -19,7 +18,7 @@
     <color name="black">#000000</color>
 
     <color name="black_semi_transparent">#B2000000</color>
-    <color name="background">#e5e5e5</color>
+    <color name="background">#ffffff</color>
     <color name="half_black">#808080</color>
     <color name="white_pressed">#f1f1f1</color>
 

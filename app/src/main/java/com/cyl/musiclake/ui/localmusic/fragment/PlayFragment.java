@@ -64,7 +64,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     //整个容器
     @BindView(R.id.container)
     LinearLayout mContainer;
-    @BindView(R.id.next_buttom)
+    @BindView(R.id.play_next)
     ImageButton mBtnNext;
     @BindView(R.id.song_progress_normal)
     ProgressBar mProgressBar;
@@ -77,8 +77,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @BindView(R.id.album)
     ImageView mIvAlbum;
 
-    @BindView(R.id.ic_detail)
-    ImageView ic_detail;
+    @BindView(R.id.skip_queue)
+    MaterialIconView skip_queue;
     @BindView(R.id.previous)
     MaterialIconView skip_prev;
     @BindView(R.id.skip_next)
@@ -100,7 +100,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @BindView(R.id.song_duration)
     TextView tv_duration;
     @BindView(R.id.skip_download)
-    ImageView skip_download;
+    MaterialIconView skip_download;
 
     @BindView(R.id.song_progress)
     SeekBar mSeekBar;
@@ -132,7 +132,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPresenter.onNextClick();
     }
 
-    @OnClick(R.id.next_buttom)
+    @OnClick(R.id.play_next)
     void nextButtom() {
         mPresenter.onNextClick();
     }
@@ -188,7 +188,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     Handler mhandler;
 
-    @OnClick(R.id.ic_detail)
+    @OnClick(R.id.skip_queue)
     void openPlayQueue() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         playQueueDialog = PlayQueueDialog.newInstance();
@@ -364,7 +364,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPalette = palette;
         mSwatch = ColorUtil.getMostPopulousSwatch(palette);
 
-        int paletteColor = Color.WHITE;
+        int paletteColor;
         if (mSwatch != null) {
             paletteColor = mSwatch.getRgb();
             int artistColor = mSwatch.getTitleTextColor();
@@ -386,18 +386,18 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //set icon color
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
         int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
-
-        mLrcView.setHighLightTextColor(blackWhiteColor);
-        mLrcView.setDefaultColor(blackWhiteColor);
+        mLrcView.setHighLightTextColor(statusBarColor);
+        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
         tv_time.setTextColor(blackWhiteColor);
         mTvTip.setTextColor(blackWhiteColor);
         tv_duration.setTextColor(blackWhiteColor);
-//        mLrcView.setTouchable(false);
         mLrcView.setHintColor(blackWhiteColor);
 //        mBtnNext.setEnabled(true);
 //        mBtnNext.setcolo(blackWhiteColor);
         skip_prev.setColor(blackWhiteColor);
         skip_next.setColor(blackWhiteColor);
+        skip_queue.setColor(blackWhiteColor);
+        skip_download.setColor(blackWhiteColor);
         mPlayOrPause.setBtnColor(blackWhiteColor);
         mPlayOrPause.setEnabled(true);
     }
@@ -407,6 +407,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //初始化歌词配置
         mLrcView.setLineSpace(15.0f);
         mLrcView.setTextSize(17.0f);
+        mLrcView.setTouchable(true);
         mLrcView.setPlayable(true);
         mLrcView.setOnPlayerClickListener((progress, content) -> {
             PlayManager.seekTo((int) progress);

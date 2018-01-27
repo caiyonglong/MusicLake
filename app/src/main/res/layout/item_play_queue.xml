@@ -64,14 +64,15 @@
 
             <TextView
                 android:id="@+id/tv_source"
-                android:layout_width="40dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_tv_source"
                 android:contentDescription="@null"
                 android:gravity="center"
                 android:padding="2dp"
                 android:scaleType="centerInside"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/iv_clear"

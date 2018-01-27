@@ -92,6 +92,7 @@ public class LyricView extends View {
     private ValueAnimator mFlingAnimator;
     private boolean mPlayable = false;
     private boolean mSliding = false;
+    private boolean mTouchable = true;
 
     public LyricView(Context context) {
         super(context);
@@ -312,6 +313,10 @@ public class LyricView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.e("LyricView_onTouchEvent", event.getAction() + "----");
+
+        if (!mTouchable) {
+            return super.onTouchEvent(event);
+        }
 
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
@@ -608,6 +613,7 @@ public class LyricView extends View {
         return scrollable() && (mScrollY > mLineHeight * (mLineCount - 1) || mScrollY < 0);
     }
 
+    @SuppressLint("HandlerLeak")
     Handler postman = new Handler() {
 
         @Override
@@ -719,6 +725,9 @@ public class LyricView extends View {
             return;
         }
         if (line != null && line.startsWith("[by:")) {
+            return;
+        }
+        if (line != null && line.startsWith("[total:")) {
             return;
         }
         if (line != null && line.trim().length() > 10) {
@@ -969,6 +978,10 @@ public class LyricView extends View {
 
     public void setPlayable(boolean playable) {
         mPlayable = playable;
+    }
+
+    public void setTouchable(boolean touchable) {
+        mTouchable = touchable;
     }
 
     public void setHintColor(int color) {

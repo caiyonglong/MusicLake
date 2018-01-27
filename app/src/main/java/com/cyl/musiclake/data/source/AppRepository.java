@@ -53,6 +53,10 @@ public class AppRepository {
         return PlaylistLoader.getMusicForPlaylist(mContext, playlistId);
     }
 
+    public static Observable<List<Music>> getPlayHistoryRepository(Context mContext) {
+        return PlayHistoryLoader.getPlayHistory(mContext);
+    }
+
     public static Observable<List<FolderInfo>> getFolderInfosRepository(Context mContext) {
         return FolderLoader.getFoldersWithSong(mContext);
     }

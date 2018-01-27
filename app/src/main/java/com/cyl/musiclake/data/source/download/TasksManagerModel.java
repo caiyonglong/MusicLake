@@ -2,8 +2,6 @@ package com.cyl.musiclake.data.source.download;
 
 import android.content.ContentValues;
 
-import com.cyl.musiclake.data.model.Music;
-
 /**
  * Created by yonglong on 2018/1/23.
  */
@@ -22,7 +20,6 @@ public class TasksManagerModel {
     private String url;
     private String path;
     private boolean finish;
-    private Music music;
 
     public int getId() {
         return id;
@@ -70,14 +67,6 @@ public class TasksManagerModel {
 
     public void setFinish(boolean finish) {
         this.finish = finish;
-    }
-
-    public Music getMusic() {
-        return music;
-    }
-
-    public void setMusic(Music music) {
-        this.music = music;
     }
 
     public ContentValues toContentValues() {

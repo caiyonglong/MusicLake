@@ -98,6 +98,8 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         recyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerView);
 
+        recyclerView.scrollToPosition(PlayManager.getCurrentPosition());
+
         updatePlayMode();
 
         initListener();

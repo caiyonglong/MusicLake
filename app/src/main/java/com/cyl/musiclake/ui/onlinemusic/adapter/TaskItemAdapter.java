@@ -13,6 +13,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
+import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.utils.FileUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
@@ -101,6 +103,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             } else if (TasksManager.getImpl().isDownloaded(status)) {
                 // already downloaded and exist
                 holder.updateDownloaded();
+                TasksManager.getImpl().finishTask(model.getId());
             } else if (status == FileDownloadStatus.progress) {
                 // downloading
                 holder.updateDownloading(status, TasksManager.getImpl().getSoFar(model.getId())
@@ -154,6 +157,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskActionBtn.setText(R.string.delete);
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
+            NavigateUtil.scanFileAsync(MyApplication.mContext, FileUtils.getMusicDir());
             RxBus.getInstance().post(new TasksManagerModel());
         }
 

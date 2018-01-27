@@ -107,7 +107,6 @@ public class FileDownloadListener extends FileDownloadSampleListener {
 
         tag.updateDownloaded();
         TasksManager.getImpl().removeTaskForViewHolder(task.getId());
-        TasksManager.getImpl().finishTask(task.getId());
     }
 
 }

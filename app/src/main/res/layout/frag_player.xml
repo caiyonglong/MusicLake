@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="top"
     android:background="@drawable/bg_frag_player">
 
     <ImageView
@@ -16,6 +18,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="24dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -29,6 +32,7 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/play_page_back_selector"
+                android:contentDescription="TODO"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_down" />
 
@@ -114,20 +118,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <ImageView
+                <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_download"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:backgroundTint="@color/white"
                     android:gravity="center"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_cloud_download"
+                    app:materialIcon="cloud_download"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
                     tools:targetApi="lollipop" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
@@ -136,6 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_previous"
                     app:materialIcon="skip_previous"
@@ -171,20 +177,23 @@
                     app:materialIconColor="@color/white"
                     app:materialIconSize="48dp" />
 
-                <ImageView
-                    android:id="@+id/ic_detail"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_queue"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_detail" />
+                    android:src="@drawable/ic_detail"
+                    app:materialIcon="playlist_play"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp" />
 
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
 
-    <include layout="@layout/play_control_menu" />
-</RelativeLayout>
+    <include
+        layout="@layout/play_control_menu"/>
+</android.support.design.widget.CoordinatorLayout>

@@ -63,6 +63,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
     private OnlineMusicListPresenter mPresenter;
     private int mCurrentCounter = 0;
     private int TOTAL_COUNTER = 10;
+    private int limit = 10;
 
     @Override
     protected int getLayoutResID() {
@@ -118,9 +119,9 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
                 mAdapter.loadMoreEnd();
             } else {
                 //成功获取更多数据
-                mPresenter.loadOnlineMusicList(type, 10, mOffset);
+                mPresenter.loadOnlineMusicList(type, limit, mOffset);
                 mCurrentCounter = mAdapter.getData().size();
-                TOTAL_COUNTER = 10 * (mOffset + 1);
+                TOTAL_COUNTER = limit + mOffset;
             }
         }, 1000), mRecyclerView);
     }
@@ -185,7 +186,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
         } else {
             mAdapter.addData(musicList);
         }
-        mOffset++;
+        mOffset = +limit;
         mAdapter.loadMoreComplete();
     }
 }

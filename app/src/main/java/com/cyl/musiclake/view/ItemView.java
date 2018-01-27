@@ -67,10 +67,8 @@ public class ItemView extends LinearLayout {
 
         mName.setText(name);
         mDesc.setText(desc);
-
         mIcon.setImageDrawable(icon);
     }
-
 
     public void setSongsNum(int num) {
         mDesc.setText(num + " 首");

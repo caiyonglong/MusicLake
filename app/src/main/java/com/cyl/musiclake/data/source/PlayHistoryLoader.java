@@ -9,6 +9,8 @@ import com.cyl.musiclake.data.source.db.DBData;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * 作者：yonglong on 2016/11/4 22:30
  */
@@ -40,15 +42,23 @@ public class PlayHistoryLoader {
     /**
      * 获取播放队列
      */
-    public static List<Music> getPlayHistory(Context context) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        String sql = "select * from music inner join music_playlist " +
-                "where music.mid = music_playlist.mid " +
-                "and music_playlist.pid=1";
-         Cursor cursor = dbDaoImpl.makeCursor(sql);
-        List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
-        dbDaoImpl.closeDB();
-        return results;
+    public static Observable<List<Music>> getPlayHistory(Context context) {
+        return Observable.create(subscriber -> {
+            String sql = "select *,count(name) as num,max(music_playlist.date_added) as time " +
+                    "from music inner join music_playlist where music.mid = music_playlist.mid  and music_playlist.pid=1 " +
+                    "GROUP BY music.name ORDER BY time DESC";
+            try {
+                DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+
+                Cursor cursor = dbDaoImpl.makeCursor(sql);
+                List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
+                dbDaoImpl.closeDB();
+                subscriber.onNext(results);
+                subscriber.onComplete();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
     }
 
 
