@@ -76,6 +76,6 @@ public class TasksManagerDBController {
 
     public void finishTask(TasksManagerModel model) {
         model.setFinish(true);
-        db.update(TABLE_NAME, model.toContentValues(), TasksManagerModel.FINISH + "=?", new String[]{"1"});
+        db.rawQuery("update " + TABLE_NAME + " set " + TasksManagerModel.FINISH + "=1 where id=" + model.getId(), null);
     }
 }

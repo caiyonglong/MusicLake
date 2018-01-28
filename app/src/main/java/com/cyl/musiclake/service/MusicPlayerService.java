@@ -203,10 +203,10 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_WENT_TO_NEXT: //mplayer播放完毕切换到下一首
                         service.setAndRecordPlayPos(service.mNextPlayPos);
-                        service.play();
                         service.notifyChange(META_CHANGED);
                         service.updateNotification();
                         service.setNextTrack();
+                        service.play();
 //                        service.updateCursor(service.mPlaylist.get(service.mPlayPos).mId);
 //                        service.bumpSongCount(); //更新歌曲的播放次数
                         break;
@@ -989,13 +989,6 @@ public class MusicPlayerService extends Service {
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
         nowPlayingIntent.setAction(Constants.DEAULT_NOTIFICATION);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        String coverUrl = null;
-        if (mPlayingMusic != null && mPlayingMusic.getType() == Music.Type.LOCAL
-                && mPlayingMusic.getAlbumId() != -1) {
-            coverUrl = CoverLoader.getInstance().getCoverUri(this, mPlayingMusic.getAlbumId());
-        } else if (mPlayingMusic != null) {
-            coverUrl = mPlayingMusic.getCoverUri();
-        }
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
@@ -1032,19 +1025,22 @@ public class MusicPlayerService extends Service {
             builder.setStyle(style);
         }
 
-        GlideApp.with(this)
-                .asBitmap()
-                .load(coverUrl)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        artwork = resource;
-                        builder.setLargeIcon(artwork);
-                        mNotification = builder.build();
-                    }
-                });
+        if (mPlayingMusic != null) {
+            String coverUrl = mPlayingMusic.getCoverUri();
+            GlideApp.with(this)
+                    .asBitmap()
+                    .load(coverUrl)
+                    .error(R.drawable.default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            artwork = resource;
+                            builder.setLargeIcon(artwork);
+                            mNotification = builder.build();
+                        }
+                    });
+        }
         mNotification = builder.build();
     }
 

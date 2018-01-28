@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_share_white"
         android:title="分享"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="添加音乐"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -54,9 +54,9 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
     }
 
     @Override
-    public void loadAlbumSongs(long albumID) {
+    public void loadAlbumSongs(String albumName) {
         mView.showLoading();
-        AppRepository.getAlbumSongsRepository(mContext, albumID)
+        AppRepository.getAlbumSongsRepository(mContext, albumName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {

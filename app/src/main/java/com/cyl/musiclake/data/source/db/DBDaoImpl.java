@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cyl.musiclake.data.model.Album;
+import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.utils.LogUtil;
@@ -24,7 +26,6 @@ import static com.cyl.musiclake.data.source.db.DBData.PLAYLIST_TABLE;
  */
 public class DBDaoImpl implements DBDao {
     private static final String TAG = "DBDaoImpl";
-    private DBHelper helper;
     private SQLiteDatabase db;
 
     /**
@@ -34,7 +35,7 @@ public class DBDaoImpl implements DBDao {
      */
     public DBDaoImpl(Context context) {
         // TODO Auto-generated constructor stub
-        helper = DBHelper.getInstance(context);
+        DBHelper helper = DBHelper.getInstance(context);
         db = helper.getWritableDatabase();
     }
 
@@ -80,23 +81,23 @@ public class DBDaoImpl implements DBDao {
      */
     @Override
     public long addPlayList(String title) {
-//        db.beginTransaction();
+        db.beginTransaction();
         long pid = System.currentTimeMillis();
-//        try {
-        ContentValues values = new ContentValues();
-        // 开始组装第一条数据
-        values.put(DBData.PLAYLIST_ID, pid);
-        values.put(DBData.PLAYLIST_NAME, title);
-        values.put(DBData.PLAYLIST_DATE, System.currentTimeMillis());
-        values.put(DBData.PLAYLIST_ORDER, DBData.PLAYLIST_NAME);
-        db.insertWithOnConflict(DBData.PLAYLIST_TABLE, null, values, CONFLICT_IGNORE);
-        LogUtil.e(TAG, "--newPlayList--" + pid);
-//        db.setTransactionSuccessful();
-//        } catch (Exception e) {
-//            pid = -1;
-//        } finally {
-//            db.endTransaction();
-//        }
+        try {
+            ContentValues values = new ContentValues();
+            // 开始组装第一条数据
+            values.put(DBData.PLAYLIST_ID, pid);
+            values.put(DBData.PLAYLIST_NAME, title);
+            values.put(DBData.PLAYLIST_DATE, System.currentTimeMillis());
+            values.put(DBData.PLAYLIST_ORDER, DBData.PLAYLIST_NAME);
+            pid = db.insertWithOnConflict(DBData.PLAYLIST_TABLE, null, values, CONFLICT_IGNORE);
+            LogUtil.e(TAG, "--newPlayList--" + pid);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            pid = -1;
+        } finally {
+            db.endTransaction();
+        }
         return pid;
     }
 
@@ -108,7 +109,7 @@ public class DBDaoImpl implements DBDao {
      */
     @Override
     public void insertSongToPlaylist(String pId, String mId) {
-        LogUtil.d(TAG, "--insertSong--" + pId + "_--" + mId);
+        LogUtil.d(TAG, "insertSongToPlaylist--" + pId + "_--" + mId);
         ContentValues values = new ContentValues();
         values.put(MTP_PID, pId);
         values.put(MTP_MID, mId);
@@ -124,7 +125,7 @@ public class DBDaoImpl implements DBDao {
      * @return
      */
     @Override
-    public boolean checkSongPlaylist(String pId, String mId) {
+    public boolean hasSongPlaylist(String pId, String mId) {
         boolean result = false;
         Cursor cursor = db.query(MTP_TABLE
                 , null
@@ -133,10 +134,10 @@ public class DBDaoImpl implements DBDao {
                 , null
                 , null
                 , null);
-
         if (cursor.getCount() > 0) {
             result = true;
         }
+        cursor.close();
         return result;
     }
 
@@ -147,7 +148,7 @@ public class DBDaoImpl implements DBDao {
      * @param mId
      */
     @Override
-    public void removeSong(String pId, String mId) {
+    public void removeSongPlaylist(String pId, String mId) {
         db.delete(MTP_TABLE, MTP_PID + " = ? and " +
                 MTP_MID + " = ? ", new String[]{pId, mId});
     }
@@ -219,6 +220,12 @@ public class DBDaoImpl implements DBDao {
         return results;
     }
 
+    /**
+     * 获取音乐信息
+     *
+     * @param mid
+     * @return
+     */
     public Music getMusicInfo(String mid) {
         // 查询歌单
         String query = "select * from music where mid = '" + mid + "'";
@@ -236,12 +243,15 @@ public class DBDaoImpl implements DBDao {
         return null;
     }
 
+    /**
+     * 获取音乐集合
+     *
+     * @param cursor
+     * @return
+     */
     @Override
     public List<Music> getSongsForCursor(Cursor cursor) {
         List<Music> results = new ArrayList<>();
-        // 查询歌单
-//        String sql = "select * from music,musicToPlaylist where music.mid = musicToPlaylist.mid and musicToPlaylist.pid=" + pId;
-//        Cursor cursor = db.rawQuery(query, null);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Music music = new MusicCursorWrapper(cursor).getMusic();
@@ -257,22 +267,67 @@ public class DBDaoImpl implements DBDao {
     }
 
     /**
-     * 更新music
+     * 获取专辑集合
+     *
+     * @param cursor
+     * @return
+     */
+    public List<Album> getAlbumsForCursor(Cursor cursor) {
+        List<Album> results = new ArrayList<>();
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Album album = new MusicCursorWrapper(cursor).getAlbum();
+                LogUtil.d(TAG, "getAlbum:" + album.toString());
+                results.add(album);
+            }
+        }
+        // 记得关闭游标
+        if (cursor != null) {
+            cursor.close();
+        }
+        return results;
+    }
+
+    /**
+     * 获取歌手集合
+     *
+     * @param cursor
+     * @return
+     */
+    public List<Artist> getArtistsForCursor(Cursor cursor) {
+        List<Artist> results = new ArrayList<>();
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Artist artist = new MusicCursorWrapper(cursor).getArtist();
+                LogUtil.d(TAG, "getArtist:" + artist.toString());
+                results.add(artist);
+            }
+        }
+        // 记得关闭游标
+        if (cursor != null) {
+            cursor.close();
+        }
+        return results;
+    }
+
+
+    /**
+     * 更新音乐
      *
      * @param music
      */
     @Override
     public void updateSong(Music music) {
-//        db.beginTransaction();
-//        try {
-        String mid = music.getId();
-        ContentValues values = getMusicContentValues(music);
-        db.update(DBData.MUSIC_TABLE, values, DBData.MUSIC_ID + " = ?",
-                new String[]{mid});
-//            db.setTransactionSuccessful();
-//        } finally {
-//            db.endTransaction();
-//        }
+        db.beginTransaction();
+        try {
+            String mid = music.getId();
+            ContentValues values = getMusicContentValues(music);
+            db.update(DBData.MUSIC_TABLE, values, DBData.MUSIC_ID + " = ?",
+                    new String[]{mid});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     @Override
@@ -288,7 +343,7 @@ public class DBDaoImpl implements DBDao {
         values.put(DBData.MUSIC_ID, music.getId());
         values.put(DBData.MUSIC_NAME, music.getTitle());
         values.put(DBData.MUSIC_ARTIST, music.getArtist());
-        values.put(DBData.MUSIC_ARTIST_ID, music.getArtist());
+        values.put(DBData.MUSIC_ARTIST_ID, music.getArtistId());
         values.put(DBData.MUSIC_ALBUM, music.getAlbum());
         values.put(DBData.MUSIC_ALBUM_ID, music.getAlbumId());
 

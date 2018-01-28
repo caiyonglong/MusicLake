@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
 import com.cyl.musiclake.data.source.db.DBData;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,53 +18,137 @@ import io.reactivex.Observable;
 
 public class SongLoader {
 
-    public static Observable<List<Music>> getSongsForCursor(Context context, final Cursor cursor) {
-        return Observable.create(subscriber -> {
-            List<Music> arrayList = new ArrayList<>();
-            if ((cursor != null) && (cursor.moveToFirst()))
-                do {
-                    long id = cursor.getLong(0);
-                    String title = cursor.getString(1);
-                    String artist = cursor.getString(2);
-                    String album = cursor.getString(3);
-                    int duration = cursor.getInt(4);
-                    int trackNumber = cursor.getInt(5);
-                    long artistId = cursor.getInt(6);
-                    long albumId = cursor.getLong(7);
-                    String path = cursor.getString(8);
-
-                    arrayList.add(new Music(id, albumId, artistId, title, artist, album, duration, trackNumber, path));
-                }
-                while (cursor.moveToNext());
-            if (cursor != null) {
-                cursor.close();
-            }
-            insertSongs(context, arrayList);
-            subscriber.onNext(arrayList);
-            subscriber.onComplete();
-        });
-    }
-
-    public static Observable<List<Music>> getFavoriteSong(final Context context) {
+    /**
+     * cursor 获取音乐集合
+     *
+     * @param context
+     * @param cursor
+     * @return
+     */
+    private static Observable<List<Music>> getSongsForCursor(Context context, final Cursor cursor) {
         return Observable.create(subscriber -> {
             try {
-                DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-                String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.IS_LOVE + "= 1";
-                Cursor cursor = dbDaoImpl.makeCursor(sql);
-                List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
-                dbDaoImpl.closeDB();
+                DBDaoImpl dbDao = new DBDaoImpl(context);
+                List<Music> results = dbDao.getSongsForCursor(cursor);
+                cursor.close();
                 subscriber.onNext(results);
                 subscriber.onComplete();
             } catch (Exception e) {
-                e.printStackTrace();
                 subscriber.onError(e);
             }
         });
     }
 
+    /**
+     * Android 扫描获取到的数据
+     *
+     * @param context
+     * @param cursor
+     * @return
+     */
+    public static Observable<List<Music>> getSongsForMedia(Context context, final Cursor cursor) {
+        return Observable.create(subscriber -> {
+            DBDaoImpl dbDao = new DBDaoImpl(context);
+            List<Music> results = new ArrayList<>();
+            try {
+                if ((cursor != null) && (cursor.moveToFirst())) {
+                    do {
+                        long id = cursor.getLong(0);
+                        String title = cursor.getString(1);
+                        String artist = cursor.getString(2);
+                        String album = cursor.getString(3);
+                        int duration = cursor.getInt(4);
+                        int trackNumber = cursor.getInt(5);
+                        long artistId = cursor.getInt(6);
+                        long albumId = cursor.getLong(7);
+                        String path = cursor.getString(8);
+                        String coverUri = CoverLoader.getInstance().getCoverUri(context, albumId);
+                        Music music = dbDao.getMusicInfo(id + "");
+                        if (music != null) {
+                            if (coverUri != null) {
+                                music.setCoverUri(coverUri);
+                            }
+                        } else {
+                            music = new Music(id, albumId, artistId, title, artist, album, duration, trackNumber, path);
+                        }
+                        results.add(music);
+                    } while (cursor.moveToNext());
+                }
+                if (cursor != null) {
+                    cursor.close();
+                }
+                subscriber.onNext(results);
+                subscriber.onComplete();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    /**
+     * Android 扫描获取到的数据
+     *
+     * @param context
+     * @param cursor
+     * @return
+     */
+    public static Observable<List<Music>> getSongsForDB(Context context, final Cursor cursor) {
+        DBDaoImpl dbDao = new DBDaoImpl(context);
+        if ((cursor != null) && (cursor.moveToFirst())) {
+            do {
+                long id = cursor.getLong(0);
+                String title = cursor.getString(1);
+                String artist = cursor.getString(2);
+                String album = cursor.getString(3);
+                int duration = cursor.getInt(4);
+                int trackNumber = cursor.getInt(5);
+                long artistId = cursor.getInt(6);
+                long albumId = cursor.getLong(7);
+                String path = cursor.getString(8);
+                String coverUri = CoverLoader.getInstance().getCoverUri(context, albumId);
+                Music music = dbDao.getMusicInfo(id + "");
+                if (music != null) {
+                    if (coverUri != null) {
+                        music.setCoverUri(coverUri);
+                        updateMusic(dbDao, music);
+                    }
+                } else {
+                    music = new Music(id, albumId, artistId, title, artist, album, duration, trackNumber, path);
+                    dbDao.insertSong(music);
+                }
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.IS_ONLINE + "=0";
+        Cursor mCursor = dbDao.makeCursor(sql);
+        return getSongsForCursor(context, mCursor);
+    }
+
+    /**
+     * 获取所有收藏的歌曲
+     *
+     * @param context
+     * @return
+     */
+    public static Observable<List<Music>> getFavoriteSong(final Context context) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.IS_LOVE + "= 1";
+        Cursor cursor = dbDaoImpl.makeCursor(sql);
+        return getSongsForCursor(context, cursor);
+    }
+
     public static Music getMusicInfo(final Context context, String mid) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
         return dbDaoImpl.getMusicInfo(mid);
+    }
+
+    public static List<Music> getSongsForDB(Context context) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        String sql = "select * from " + DBData.MUSIC_TABLE;
+        Cursor cursor = dbDaoImpl.makeCursor(sql);
+        return dbDaoImpl.getSongsForCursor(cursor);
     }
 
     public static Observable<Music> getMusicInfo(final Context context, Music music) {
@@ -114,6 +199,14 @@ public class SongLoader {
 
     /**
      * 本地歌曲
+     * 添加歌曲
+     */
+    private static void updateMusic(DBDaoImpl dbDaoImpl, Music music) {
+        dbDaoImpl.updateSong(music);
+    }
+
+    /**
+     * 本地歌曲
      * 移除歌曲
      */
     public static void removeSong(Context context, Music music) {
@@ -123,17 +216,17 @@ public class SongLoader {
     }
 
     public static Observable<List<Music>> getAllSongs(Context context) {
-        return getSongsForCursor(context, makeSongCursor(context, null, null));
+        return getSongsForDB(context, makeSongCursor(context, null, null));
     }
 
     public static Observable<List<Music>> searchSongs(Context context, String searchString) {
-        return getSongsForCursor(context, makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
+        return getSongsForMedia(context, makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 new String[]{"%" + searchString + "%", "%" + searchString + "%", "%" + searchString + "%"}));
     }
 
     public static Observable<List<Music>> getSongListInFolder(Context context, String path) {
         String[] whereArgs = new String[]{path + "%"};
-        return getSongsForCursor(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null));
+        return getSongsForMedia(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null));
     }
 
     public static Cursor makeSongCursor(Context context, String selection, String[] paramArrayOfString) {

@@ -11,7 +11,6 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.ui.localmusic.contract.PlaylistDetailContract;
-import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -96,12 +95,9 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
                     public void onNext(List<Music> musicList) {
                         String url = null;
                         for (int i = 0; i < musicList.size(); i++) {
-                            long id = musicList.get(i).getAlbumId();
-                            if (id != -1) {
-                                url = CoverLoader.getInstance()
-                                        .getCoverUri(mContext, id);
+                            url = musicList.get(i).getCoverUri();
+                            if (url != null)
                                 break;
-                            }
                         }
                         GlideApp.with(mContext)
                                 .load(url)

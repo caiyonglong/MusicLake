@@ -53,7 +53,7 @@ public class LyricView extends View {
     private int mHintColor = Color.parseColor("#FFFFFF");  // 提示语颜色
     private int mDefaultColor = Color.parseColor("#FFFFFF");  // 默认字体颜色
     private int mIndicatorColor = Color.parseColor("#EFEFEF");  // 指示器颜色
-    private int mHighLightColor = Color.parseColor("#4FC5C7");  // 当前播放位置的颜色
+    private int mHighLightColor = Color.parseColor("#ffb701");  // 当前播放位置的颜色
     private int mCurrentShowColor = Color.parseColor("#AAAAAA");  // 当前拖动位置的颜色
 
     private int mLineCount;  // 行数
@@ -730,7 +730,7 @@ public class LyricView extends View {
         if (line != null && line.startsWith("[total:")) {
             return;
         }
-        if (line != null && line.trim().length() > 10) {
+        if (line.startsWith("[0") && line.trim().length() > 10) {
             // 歌词内容,需要考虑一行歌词有多个时间戳的情况
             int lastIndexOfRightBracket = line.lastIndexOf("]");
             String content = line.substring(lastIndexOfRightBracket + 1, line.length());

@@ -43,17 +43,11 @@ public class ShowDetailDialog extends DialogFragment {
                 .append("播放时长：")
                 .append(FormatUtil.formatTime(music.getDuration()))
                 .append("\n\n")
-                .append("文件名称：")
-                .append(music.getFileName())
-                .append("\n\n")
-                .append("文件大小：")
-                .append(FormatUtil.formatSize(music.getFileSize()))
-                .append("\n\n")
                 .append("文件路径：")
                 .append(new File(music.getUri()).getParent());
 
         return new MaterialDialog.Builder(getActivity())
-                .title("增加到歌单")
+                .title("歌曲详情")
                 .content(sb.toString())
                 .positiveText("确定")
                 .build();

@@ -7,9 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseActivity;
@@ -17,7 +17,6 @@ import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.SearchPresenter;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     SearchPresenter mPresenter = new SearchPresenter();
 
     private int mCurrentCounter = 0;
-    private int TOTAL_COUNTER = 10;
+    private int TOTAL_COUNTER =20;
+    private int limit = 10;
 
     @Override
     protected int getLayoutResID() {
@@ -65,6 +65,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     protected void initData() {
 
         mAdapter = new SearchAdapter(searchResults);
+        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -82,7 +83,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Music music = (Music) adapter.getItem(position);
+            Music music = searchResults.get(position);
             Log.e(TAG, music.toString());
             mPresenter.play(music);
         });
@@ -92,9 +93,9 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                 mAdapter.loadMoreEnd();
             } else {
                 //成功获取更多数据
-                mPresenter.search(queryString, 10, mOffset);
+                mPresenter.search(queryString, limit, mOffset);
                 mCurrentCounter = mAdapter.getData().size();
-                TOTAL_COUNTER = 10 * mOffset;
+                TOTAL_COUNTER = limit * mOffset * 2;
             }
         }, 1000), mRecyclerView);
     }
@@ -107,24 +108,24 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         searchView.onActionViewExpanded();
         searchView.setQueryHint(getString(R.string.search_tips));
         searchView.setOnQueryTextListener(this);
-        searchView.setSubmitButtonEnabled(true);
-        try {
-            Field field = searchView.getClass().getDeclaredField("mGoButton");
-            field.setAccessible(true);
-            ImageView mGoButton = (ImageView) field.get(searchView);
-            mGoButton.setImageResource(R.drawable.ic_search_white_18dp);
-            mGoButton.setOnClickListener(v -> {
-                queryString = searchView.getQuery().toString();
-                if (queryString.length() > 0) {
-                    mOffset = 1;
-                    searchResults.clear();
-                    mProgressDialog.show();
-                    mPresenter.search(queryString, 10, mOffset);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        searchView.setSubmitButtonEnabled(true);
+//        try {
+//            Field field = searchView.getClass().getDeclaredField("mGoButton");
+//            field.setAccessible(true);
+//            ImageView mGoButton = (ImageView) field.get(searchView);
+//            mGoButton.setImageResource(R.drawable.ic_search_white_18dp);
+//            mGoButton.setOnClickListener(v -> {
+//                queryString = searchView.getQuery().toString();
+//                if (queryString.length() > 0) {
+//                    mOffset = 1;
+//                    searchResults.clear();
+//                    mProgressDialog.show();
+//                    mPresenter.search(queryString, limit, mOffset);
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -143,7 +144,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         if (query.length() > 0) {
             mOffset = 1;
             searchResults.clear();
-            mPresenter.search(query, 10, mOffset);
+            mPresenter.search(query, limit, mOffset);
         }
         return true;
     }
@@ -153,7 +154,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         if (newText.length() > 0) {
             mOffset = 1;
             searchResults.clear();
-            mPresenter.search(newText, 10, mOffset);
+            mPresenter.search(newText, limit, mOffset);
         }
         return true;
     }
@@ -177,16 +178,10 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showSearchResult(List<Music> list) {
-        if (list.size() == 0) {
-            mAdapter.setEmptyView(R.layout.view_song_empty);
-        }
-        if (mOffset == 1) {
-            mAdapter.setNewData(list);
-        } else {
-            mAdapter.addData(list);
-        }
+        mOffset = mOffset + 1;
         searchResults.addAll(list);
-        mOffset++;
+        mAdapter.addData(list);
+        mAdapter.loadMoreComplete();
     }
 
     @Override

@@ -26,6 +26,7 @@ public class Extras {
     public static final String PLAYLIST_NAME = "playlist_name";
 
     public static final String TRANSITIONNAME = "transitionName";
+    public static final String TRANSITION = "transition";
 
     public static final String ALBUM_ID = "album_id";
     public static final String ARTIST_ID = "artist_id";

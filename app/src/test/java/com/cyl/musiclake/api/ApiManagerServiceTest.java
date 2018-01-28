@@ -1,5 +1,8 @@
 package com.cyl.musiclake.api;
 
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
+import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
+import com.cyl.musiclake.data.model.Music;
 import com.google.gson.Gson;
 
 import junit.framework.TestCase;
@@ -8,10 +11,27 @@ import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * Created by D22434 on 2018/1/5.
  */
 public class ApiManagerServiceTest extends TestCase {
+    public void testsearch() {
+        String key = "薛之谦";
+        int limit = 8;
+        int page = 1;
+        Observable.merge(QQApiServiceImpl.search(key, limit, page),
+                XiamiServiceImpl.search(key, limit, page))
+                .subscribe(musicList -> {
+                    System.out.println(musicList.size());
+                    for (Music mus :
+                            musicList) {
+                        System.out.println(mus.toString());
+                    }
+                });
+    }
+
     public void testQQ() {
         Gson gson = new Gson();
         //获取单个歌曲信息
@@ -66,6 +86,7 @@ public class ApiManagerServiceTest extends TestCase {
     private class Key {
         String key;
     }
+
     private class LyricInfo {
 
         /**

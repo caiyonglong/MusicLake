@@ -43,9 +43,9 @@ public class ArtistSongsPresenter implements ArtistSongContract.Presenter {
 
 
     @Override
-    public void loadSongs(long artistID) {
+    public void loadSongs(String artistName) {
         mView.showLoading();
-        AppRepository.getArtistSongsRepository(mContext, artistID)
+        AppRepository.getArtistSongsRepository(mContext, artistName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {

@@ -15,6 +15,7 @@
             android:id="@+id/iv_album"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:transitionName="transition_album_art"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/default_cover" />
 

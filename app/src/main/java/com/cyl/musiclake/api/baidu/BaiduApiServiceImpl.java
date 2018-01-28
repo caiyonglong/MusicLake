@@ -43,6 +43,7 @@ public class BaiduApiServiceImpl {
                     for (BaiduMusicInfo songInfo : baiduSongList.getSong_list()) {
                         Music music = new Music();
                         music.setType(Music.Type.BAIDU);
+                        music.setOnline(true);
                         music.setId(songInfo.getSong_id());
                         music.setAlbum(songInfo.getAlbum_title());
                         music.setAlbumId(songInfo.getAlbum_id());

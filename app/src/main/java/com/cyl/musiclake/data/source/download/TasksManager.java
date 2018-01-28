@@ -154,7 +154,7 @@ public class TasksManager {
     }
 
     public List<TasksManagerModel> getModelList() {
-        return dbController.getAllTasks(1);
+        return modelList;
     }
 
     public TasksManagerModel addTask(final String name, final String url) {

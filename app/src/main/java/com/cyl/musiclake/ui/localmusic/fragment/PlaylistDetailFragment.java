@@ -1,8 +1,10 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +24,10 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.data.source.PlaylistLoader;
+import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.PlaylistDetailContract;
@@ -31,7 +35,7 @@ import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.PlaylistDetailPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +70,14 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
     private Playlist mPlaylist;
     private PlaylistDetailPresenter mPresenter;
 
-    public static PlaylistDetailFragment newInstance(Playlist playlist) {
-
+    public static PlaylistDetailFragment newInstance(Playlist playlist, boolean useTransition, String transitionName) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(Extras.PLAYLIST, playlist);
+        args.putBoolean(Extras.TRANSITION, useTransition);
+        if (useTransition) {
+            args.putString(Extras.TRANSITIONNAME, transitionName);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,6 +96,13 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setHasOptionsMenu(true);
+
+        if (getArguments().getBoolean(Extras.TRANSITION)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                album_art.setTransitionName(getArguments().getString("transition_name"));
+            }
+        }
+
     }
 
     @Override
@@ -160,6 +174,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
     }
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -189,6 +204,35 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                 }
                 intent3.putExtra("content", content.toString());
                 startActivity(intent3);
+                break;
+            case R.id.action_add:
+                List<String> titles = new ArrayList<>();
+                List<Music> addMusicList = SongLoader.getSongsForDB(getContext());
+                for (Music music : addMusicList) {
+                    titles.add(music.getTitle() + "-" + music.getArtist());
+                }
+                new MaterialDialog.Builder(getActivity())
+                        .title("新增歌曲")
+                        .iconRes(R.drawable.ic_playlist_add)
+                        .content("快速添加歌曲，更加方便地添加所需要的歌曲到当前目录")
+                        .positiveText("确定")
+                        .items(titles)
+                        .itemsCallbackMultiChoice(null, (dialog, which, text) -> false)
+                        .onPositive((dialog, which) -> {
+                            dialog.dismiss();
+                            int sum = dialog.getSelectedIndices().length, num = 0;
+                            for (int i = 0; i < sum; i++) {
+                                int index = dialog.getSelectedIndices()[i];
+                                boolean success = PlaylistLoader.addToPlaylist(getContext(), mPlaylist.getId(), addMusicList.get(index).getId());
+                                if (success) {
+                                    num++;
+                                }
+                            }
+                            mPresenter.loadPlaylistSongs(mPlaylist.getId());
+                            mPresenter.loadPlaylistArt(mPlaylist.getId());
+                            ToastUtils.show(getContext(), num + "首添加成功，" + (sum - num) + "首已存在此歌单添加失败");
+                            RxBus.getInstance().post(new Playlist());
+                        }).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -33,12 +33,12 @@ public class AppRepository {
         return SongLoader.getMusicInfo(mContext, music);
     }
 
-    public static Observable<List<Music>> getArtistSongsRepository(Context mContext, long id) {
-        return ArtistSongLoader.getSongsForArtist(mContext, id);
+    public static Observable<List<Music>> getArtistSongsRepository(Context mContext, String artistName) {
+        return ArtistSongLoader.getSongsForArtist(mContext, artistName);
     }
 
-    public static Observable<List<Music>> getAlbumSongsRepository(Context mContext, long id) {
-        return AlbumSongLoader.getSongsForAlbum(mContext, id);
+    public static Observable<List<Music>> getAlbumSongsRepository(Context mContext, String name) {
+        return AlbumSongLoader.getSongsForAlbum(mContext, name);
     }
 
     public static Observable<List<Artist>> getAllArtistsRepository(Context mContext) {

@@ -205,13 +205,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setTitle(title);
             mView.setArtist(artist);
         }
-        String picUrl = null;
-        if (music.getType() == Music.Type.LOCAL) {
-            if (music.getAlbumId() != -1)
-                picUrl = CoverLoader.getInstance().getCoverUri(mContext, music.getAlbumId());
-        } else {
-            picUrl = music.getCoverBig();
-        }
+        String picUrl = music.getCoverBig();
         //设置音乐来源
         mView.setOtherInfo(music.getTypeName());
         //获取当前歌曲状态

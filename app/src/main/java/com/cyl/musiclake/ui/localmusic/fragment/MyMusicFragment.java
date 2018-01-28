@@ -1,9 +1,13 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
+import android.view.View;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
@@ -79,10 +83,14 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void listener() {
-        mAdapter.setOnItemClickListener((adapter, view, position) ->
-                NavigateUtil.navigateToPlaylist(getActivity(), (Playlist) adapter.getItem(position), null));
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    Pair<View, String> tranitionViews = new Pair<View, String>(view.findViewById(R.id.iv_album), "transition_album_art" + position);
+                    NavigateUtil.navigateToPlaylist(getActivity(), (Playlist) adapter.getItem(position), tranitionViews);
+                }
+        );
     }
 
     @Override

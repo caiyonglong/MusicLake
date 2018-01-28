@@ -17,7 +17,7 @@ public interface ArtistSongContract {
 
     interface Presenter extends BasePresenter<View> {
 
-        void loadSongs(long artistID);
+        void loadSongs(String artistName);
     }
 
 }

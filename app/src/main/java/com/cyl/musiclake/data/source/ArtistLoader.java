@@ -2,11 +2,10 @@ package com.cyl.musiclake.data.source;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.MediaStore;
 
 import com.cyl.musiclake.data.model.Artist;
+import com.cyl.musiclake.data.source.db.DBDaoImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -18,53 +17,31 @@ import io.reactivex.Observable;
 
 public class ArtistLoader {
 
-    private static Observable<Artist> getArtist(final Cursor cursor) {
+    private static Observable<List<Artist>> getArtistsForDB(Context context, Cursor cursor) {
         return Observable.create(subscriber -> {
-            Artist artist = new Artist();
-            if (cursor != null) {
-                if (cursor.moveToFirst())
-                    artist = new Artist(cursor.getLong(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
+            try {
+                DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+                List<Artist> results = dbDaoImpl.getArtistsForCursor(cursor);
+                dbDaoImpl.closeDB();
+                subscriber.onNext(results);
+                subscriber.onComplete();
+            } catch (Exception e) {
+                e.printStackTrace();
+                subscriber.onError(e);
             }
-            if (cursor != null) {
-                cursor.close();
-            }
-            subscriber.onNext(artist);
-            subscriber.onComplete();
-        });
-
-    }
-
-    private static Observable<List<Artist>> getArtistsForCursor(final Cursor cursor) {
-        return Observable.create(subscriber -> {
-            List<Artist> arrayList = new ArrayList<Artist>();
-            if ((cursor != null) && (cursor.moveToFirst()))
-                do {
-                    arrayList.add(new Artist(cursor.getLong(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3)));
-                }
-                while (cursor.moveToNext());
-            if (cursor != null) {
-                cursor.close();
-            }
-            subscriber.onNext(arrayList);
-            subscriber.onComplete();
         });
     }
 
+    /**
+     * 获取所有艺术家
+     *
+     * @param context
+     * @return
+     */
     public static Observable<List<Artist>> getAllArtists(Context context) {
-        return getArtistsForCursor(makeArtistCursor(context, null, null));
-    }
-
-    public static Observable<Artist> getArtist(Context context, long id) {
-        return getArtist(makeArtistCursor(context, "_id=?", new String[]{String.valueOf(id)}));
-    }
-
-    public static Observable<List<Artist>> getArtists(Context context, String paramString) {
-        return getArtistsForCursor(makeArtistCursor(context, "artist LIKE ?", new String[]{"%" + paramString + "%"}));
-    }
-
-    private static Cursor makeArtistCursor(Context context, String selection, String[] paramArrayOfString) {
-        final String artistSortOrder = MediaStore.Audio.Media.ARTIST;
-        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI, new String[]{"_id", "artist", "number_of_albums", "number_of_tracks"}, selection, paramArrayOfString, artistSortOrder);
-        return cursor;
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        String sql = "SELECT music.artist_id,music.artist,count(music.name) as num FROM music where music.is_online=0 GROUP BY music.artist";
+        Cursor cursor = dbDaoImpl.makeCursor(sql);
+        return getArtistsForDB(context, cursor);
     }
 }

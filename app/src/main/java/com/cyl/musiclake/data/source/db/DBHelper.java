@@ -13,11 +13,10 @@ import com.cyl.musiclake.data.source.download.TasksManagerModel;
  */
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static DBHelper mInstance = null;
+    private static DBHelper mInstance = null;
 
     private static String MUSIC_DB_NAME = "musicLake.db";
     private static int MUSIC_DB_VERSION = 2;
-
 
     /**
      * 创建数据库
@@ -56,6 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DBData.PLAYLIST_ID + " varchar(50) PRIMARY KEY, "
                 + DBData.PLAYLIST_NAME + " ,"
                 + DBData.PLAYLIST_ORDER + " , "
+                + DBData.PLAYLIST_COVER + " , "
                 + DBData.PLAYLIST_DATE + " ) ");
         // 创建歌曲表
         db.execSQL("CREATE TABLE IF NOT EXISTS "
@@ -106,8 +106,8 @@ public class DBHelper extends SQLiteOpenHelper {
         ));
 
         //默认新建播放队列和最近播放
-        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.PLAY_QUEUE + " ,'播放队列', '" + DBData.PLAYLIST_NAME + "',null)");
-        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.HISTORY + " ,'最近播放', '" + DBData.PLAYLIST_NAME + "' ,null)");
+        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.PLAY_QUEUE + " ,'播放队列', '" + DBData.PLAYLIST_NAME + "',null,null)");
+        db.execSQL("insert into " + DBData.PLAYLIST_TABLE + " values ( " + DBData.HISTORY + " ,'最近播放', '" + DBData.PLAYLIST_NAME + "' ,null,null)");
     }
 
     @Override
@@ -116,6 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBData.PLAYLIST_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.MUSIC_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBData.MTP_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TasksManagerDBController.TABLE_NAME);
     }
 
 }

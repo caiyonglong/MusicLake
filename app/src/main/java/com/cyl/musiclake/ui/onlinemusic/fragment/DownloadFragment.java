@@ -63,8 +63,8 @@ public class DownloadFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(DownloadManagerFragment.newInstance(), "正在下载");
         adapter.addFragment(DownloadedFragment.newInstance(), "已下载");
+        adapter.addFragment(DownloadManagerFragment.newInstance(), "正在下载");
         viewPager.setAdapter(adapter);
     }
 

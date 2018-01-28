@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -159,17 +160,23 @@ public class NavigateUtil {
         transaction.addToBackStack(fragment.getTag()).commit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void navigateToPlaylist(Activity context, Playlist playlist, Pair<View, String> transitionViews) {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 
+
         if (transitionViews != null) {
+
+            Transition changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform);
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
-            fragment = PlaylistDetailFragment.newInstance(playlist);
+            fragment = PlaylistDetailFragment.newInstance(playlist,true, transitionViews.second);
+            fragment.setSharedElementEnterTransition(changeImage);
+
         } else {
             transaction.setCustomAnimations(R.anim.activity_fade_in,
                     R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = PlaylistDetailFragment.newInstance(playlist);
+            fragment = PlaylistDetailFragment.newInstance(playlist,false,null);
         }
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);

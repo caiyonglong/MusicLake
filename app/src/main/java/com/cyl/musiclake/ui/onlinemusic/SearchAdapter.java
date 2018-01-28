@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.ConvertUtils;
 
 import java.util.List;
@@ -27,12 +26,7 @@ public class SearchAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder holder, Music item) {
-        String url;
-        if (item.getType() == Music.Type.LOCAL && item.getAlbumId() != -1) {
-            url = CoverLoader.getInstance().getCoverUri(mContext, item.getAlbumId());
-        } else {
-            url = item.getCoverUri();
-        }
+        String url = item.getCoverUri();
         GlideApp.with(mContext)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

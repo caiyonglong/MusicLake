@@ -18,6 +18,7 @@ public class Playlist implements Serializable {
     //创建日期
     private long date;
     private String order;
+    private String coverUri;
 
     public Playlist() {
     }

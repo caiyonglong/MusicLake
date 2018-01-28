@@ -5,17 +5,14 @@ import android.content.Context;
 
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.SongLoader;
-import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.ui.onlinemusic.contract.DownloadContract;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -61,22 +58,7 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     @Override
     public void loadDownloadMusic() {
         LogUtil.e("loadDownloadMusic");
-        Observable.create((ObservableOnSubscribe<List<Music>>) emitter -> {
-            try {
-
-                List<TasksManagerModel> managers = TasksManager.getImpl().getModelList();
-                List<Music> musicList = new ArrayList<>();
-                LogUtil.e("loadDownloadMusic" + managers.size());
-                for (TasksManagerModel model : managers) {
-                    Music music = SongLoader.getMusicInfo(mContext, model.getMid());
-                    musicList.add(music);
-                }
-                emitter.onNext(musicList);
-                emitter.onComplete();
-            } catch (Exception e) {
-                emitter.onError(e);
-            }
-        }).subscribeOn(Schedulers.io())
+        AppRepository.getFolderSongsRepository(mContext, FileUtils.getMusicDir()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
                     @Override

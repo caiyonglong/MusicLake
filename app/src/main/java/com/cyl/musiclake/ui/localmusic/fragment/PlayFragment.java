@@ -386,7 +386,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //set icon color
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
         int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
-        mLrcView.setHighLightTextColor(statusBarColor);
+//        mLrcView.setHighLightTextColor(statusBarColor);
         mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
         tv_time.setTextColor(blackWhiteColor);
         mTvTip.setTextColor(blackWhiteColor);

@@ -22,7 +22,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
             android:background="@drawable/default_cover"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:transitionName="transition_album_art" />
 
         <LinearLayout
             android:layout_width="match_parent"

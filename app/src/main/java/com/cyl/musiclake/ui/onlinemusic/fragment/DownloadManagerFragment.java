@@ -5,12 +5,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.onlinemusic.adapter.TaskItemAdapter;
 import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.liulishuo.filedownloader.FileDownloader;
+import com.cyl.musiclake.ui.onlinemusic.adapter.TaskItemAdapter;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -24,7 +26,7 @@ public class DownloadManagerFragment extends BaseFragment {
     RecyclerView mRecyclerView;
 
     TaskItemAdapter mAdapter;
-
+    List<TasksManagerModel> models=new ArrayList<>();
     public static DownloadManagerFragment newInstance() {
         Bundle args = new Bundle();
         DownloadManagerFragment fragment = new DownloadManagerFragment();
@@ -34,6 +36,7 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     protected void initDatas() {
+        TasksManager.getImpl().onCreate(new WeakReference<>(this));
     }
 
     @Override
@@ -43,10 +46,10 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        mAdapter = new TaskItemAdapter();
+        models=TasksManager.getImpl().getModelList();
+        mAdapter = new TaskItemAdapter(getContext(),models);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        TasksManager.getImpl().onCreate(new WeakReference<>(this));
     }
 
     public void postNotifyDataChanged() {

@@ -58,16 +58,6 @@ public class PlaylistLoader {
     }
 
     /**
-     //     * 扫描歌单歌曲
-     //     */
-//    public static List<Music> getMusicForPlaylist(Context context, String playlist_id) {
-//        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-//        List<Music> results = dbDaoImpl.getSongs(playlist_id);
-//        dbDaoImpl.closeDB();
-//        return results;
-//    }
-
-    /**
      * 扫描歌单歌曲
      */
     public static Observable<List<Music>> getMusicForPlaylist(Context context, String playlist_id) {
@@ -93,13 +83,20 @@ public class PlaylistLoader {
         });
     }
 
+    public static boolean addMusicList(Context context, String pid, List<Music> musicList) {
+        for (Music music : musicList) {
+            addToPlaylist(context, pid, music.getId());
+        }
+        return true;
+    }
+
     /**
      * 添加歌曲到歌单
      */
     public static boolean addToPlaylist(Context context, String pid, String mid) {
         boolean result = false;
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        if (!dbDaoImpl.checkSongPlaylist(pid, mid)) {
+        if (!dbDaoImpl.hasSongPlaylist(pid, mid)) {
             dbDaoImpl.insertSongToPlaylist(pid, mid);
             result = true;
         }
@@ -112,7 +109,7 @@ public class PlaylistLoader {
      */
     public static void removeSong(Context context, String pid, String mid) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.removeSong(pid, mid);
+        dbDaoImpl.removeSongPlaylist(pid, mid);
         dbDaoImpl.closeDB();
     }
 

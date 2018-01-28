@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.onlinemusic.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +16,29 @@ import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yonglong on 2018/1/23.
  */
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
+    private static final String TAG = "TaskItemAdapter";
+    private Context mContext;
+    private List<TasksManagerModel> models = new ArrayList<>();
+
+    public TaskItemAdapter(Context context, List<TasksManagerModel> models) {
+        mContext = context;
+        this.models = models;
+    }
 
     private FileDownloadListener taskDownloadListener = new FileDownloadListener();
 
@@ -102,6 +114,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
                 holder.updateNotDownloaded(status, 0, 0);
             } else if (TasksManager.getImpl().isDownloaded(status)) {
                 // already downloaded and exist
+                LogUtil.e(TAG, "already downloaded and exist");
                 holder.updateDownloaded();
                 TasksManager.getImpl().finishTask(model.getId());
             } else if (status == FileDownloadStatus.progress) {
@@ -119,12 +132,10 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         }
     }
 
-
     @Override
     public int getItemCount() {
-        return TasksManager.getImpl().getTaskCounts();
+        return models.size();
     }
-
 
     public class TaskItemViewHolder extends RecyclerView.ViewHolder {
         public TaskItemViewHolder(View itemView) {

@@ -18,12 +18,12 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.AlbumDetailPresenter;
-import com.cyl.musiclake.ui.common.Extras;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +73,13 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         transitionName = getArguments().getString(Extras.TRANSITIONNAME);
         title = getArguments().getString(Extras.PLAYLIST_NAME);
 
-        if (transitionName != null)
+        if (transitionName != null) {
             album_art.setTransitionName(transitionName);
+            album_art.setHasTransientState(true);
+        }
         if (title != null)
             collapsing_toolbar.setTitle(title);
-        mPresenter.loadAlbumSongs(albumID);
+        mPresenter.loadAlbumSongs(title);
         mPresenter.loadAlbumArt(albumID);
     }
 

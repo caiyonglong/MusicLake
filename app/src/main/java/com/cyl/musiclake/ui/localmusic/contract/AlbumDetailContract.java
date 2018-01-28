@@ -30,7 +30,7 @@ public interface AlbumDetailContract {
 
         void subscribe(long albumID);
 
-        void loadAlbumSongs(long albumID);
+        void loadAlbumSongs(String albumName);
 
         void loadAlbumArt(long albumID);
 

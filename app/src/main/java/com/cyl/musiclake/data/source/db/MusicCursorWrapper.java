@@ -3,6 +3,8 @@ package com.cyl.musiclake.data.source.db;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
+import com.cyl.musiclake.data.model.Album;
+import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.utils.LogUtil;
@@ -28,6 +30,7 @@ public class MusicCursorWrapper extends CursorWrapper {
         music.setCoverUri(getString(getColumnIndex(DBData.MUSIC_COVER)));
         music.setCoverBig(getString(getColumnIndex(DBData.MUSIC_COVER_BIG)));
         music.setCoverSmall(getString(getColumnIndex(DBData.MUSIC_COVER_SMALL)));
+
         music.setFileName(getString(getColumnIndex(DBData.MUSIC_FILENAME)));
         music.setPrefix(getString(getColumnIndex(DBData.MUSIC_PREFIX)));
         music.setLove(getInt(getColumnIndex(DBData.IS_LOVE)) == 1);
@@ -47,6 +50,22 @@ public class MusicCursorWrapper extends CursorWrapper {
         String order = getString(getColumnIndex(DBData.PLAYLIST_ORDER));
         int num = getInt(getColumnIndex("num"));
         return new Playlist(id, name, num, create_time, order);
+    }
+
+    public Album getAlbum() {
+        long id = getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID));
+        String name = getString(getColumnIndex(DBData.MUSIC_ALBUM));
+        long artistId = getLong(getColumnIndex(DBData.MUSIC_ARTIST_ID));
+        String artist = getString(getColumnIndex(DBData.MUSIC_ARTIST));
+        int num = getInt(getColumnIndex("num"));
+        return new Album(id, name, artist, artistId, num);
+    }
+
+    public Artist getArtist() {
+        long id = getLong(getColumnIndex(DBData.MUSIC_ARTIST_ID));
+        String name = getString(getColumnIndex(DBData.MUSIC_ARTIST));
+        int num = getInt(getColumnIndex("num"));
+        return new Artist(id, name, num, num);
     }
 
 }
