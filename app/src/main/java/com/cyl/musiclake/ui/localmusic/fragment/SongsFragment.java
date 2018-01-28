@@ -15,13 +15,14 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.SongsContract;
 import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.localmusic.presenter.SongsPresenter;
-import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
         mPresenter.attachView(this);
 
         mAdapter = new SongAdapter(musicList);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+        mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -112,9 +113,10 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
                         break;
                     case R.id.popup_song_delete:
                         new MaterialDialog.Builder(getContext())
-                                .title("提示")
-                                .content("是否移除这首歌曲？")
+                                .title("警告")
+                                .content("是否删除这首歌曲？")
                                 .onPositive((dialog, which) -> {
+                                    FileUtils.delFile(musicList.get(position).getUri());
                                     SongLoader.removeSong(getActivity(), musicList.get(position));
                                     mAdapter.notifyItemChanged(position);
                                 })

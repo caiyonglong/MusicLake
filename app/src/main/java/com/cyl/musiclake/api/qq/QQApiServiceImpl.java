@@ -64,6 +64,7 @@ public class QQApiServiceImpl {
                         music.setCoverSmall(coverSmall);
                         musicList.add(music);
                     }
+                    LogUtil.e("search", page + "--" + limit + "qq :" + musicList.size());
                     return Observable.fromArray(musicList);
                 });
     }

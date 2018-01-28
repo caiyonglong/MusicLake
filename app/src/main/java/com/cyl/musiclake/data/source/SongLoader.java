@@ -206,8 +206,7 @@ public class SongLoader {
     }
 
     /**
-     * 本地歌曲
-     * 移除歌曲
+     * 删除歌曲
      */
     public static void removeSong(Context context, Music music) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);

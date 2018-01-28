@@ -62,7 +62,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
     private String pic;
     private OnlineMusicListPresenter mPresenter;
     private int mCurrentCounter = 0;
-    private int TOTAL_COUNTER = 10;
+    private int TOTAL_COUNTER = 0;
     private int limit = 10;
 
     @Override
@@ -90,7 +90,6 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
         mPresenter.attachView(this);
 
         mAdapter = new SongAdapter(musicList);
-        mAdapter.setUpFetchEnable(false);
         mAdapter.setEnableLoadMore(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -109,19 +108,13 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
             Music music = (Music) adapter.getItem(position);
             mPresenter.playCurrentMusic(music);
         });
-//        mAdapter.setUpFetchListener(() -> {
-//            mOffset = 0;
-//            mPresenter.loadOnlineMusicList(type, 10, mOffset);
-//        });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            if (mCurrentCounter >= TOTAL_COUNTER) {
+            if (mCurrentCounter < TOTAL_COUNTER) {
                 //数据全部加载完毕
                 mAdapter.loadMoreEnd();
             } else {
                 //成功获取更多数据
                 mPresenter.loadOnlineMusicList(type, limit, mOffset);
-                mCurrentCounter = mAdapter.getData().size();
-                TOTAL_COUNTER = limit + mOffset;
             }
         }, 1000), mRecyclerView);
     }
@@ -181,12 +174,11 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
 
     @Override
     public void showOnlineMusicList(List<Music> musicList) {
-        if (mOffset == 0) {
-            mAdapter.setNewData(musicList);
-        } else {
-            mAdapter.addData(musicList);
-        }
-        mOffset = +limit;
+        this.musicList.addAll(musicList);
+        mAdapter.setNewData(this.musicList);
+        mOffset = mOffset + limit;
+        mCurrentCounter = mAdapter.getData().size();
+        TOTAL_COUNTER = mOffset;
         mAdapter.loadMoreComplete();
     }
 }

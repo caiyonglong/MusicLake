@@ -3,14 +3,24 @@ package com.cyl.musiclake.ui.onlinemusic.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.PopupMenu;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.data.source.SongLoader;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.SongAdapter;
+import com.cyl.musiclake.ui.localmusic.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.localmusic.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.onlinemusic.contract.DownloadContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.DownloadPresenter;
+import com.cyl.musiclake.utils.FileUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,14 +34,71 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    SongAdapter mAdapter;
-    DownloadPresenter mPresenter;
+    private SongAdapter mAdapter;
+    private DownloadPresenter mPresenter;
+    private List<Music> musicList = new ArrayList<>();
 
     public static DownloadedFragment newInstance() {
         Bundle args = new Bundle();
         DownloadedFragment fragment = new DownloadedFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    protected void listener() {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_more) {
+                PlayManager.setPlayList(musicList);
+                PlayManager.play(position);
+            }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Music music = (Music) adapter.getItem(position);
+            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.popup_song_play:
+                        PlayManager.setPlayList(musicList);
+                        PlayManager.play(position);
+                        break;
+                    case R.id.popup_song_detail:
+                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                                .show(getChildFragmentManager(), getTag());
+                        break;
+                    case R.id.popup_song_goto_album:
+                        Log.e("album", music.toString() + "");
+                        NavigateUtil.navigateToAlbum(getActivity(),
+                                music.getAlbumId(),
+                                music.getAlbum(), null);
+                        break;
+                    case R.id.popup_song_goto_artist:
+                        NavigateUtil.navigateToArtist(getActivity(),
+                                music.getArtistId(),
+                                music.getArtist(), null);
+                        break;
+                    case R.id.popup_song_addto_queue:
+                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
+                        break;
+                    case R.id.popup_song_delete:
+                        new MaterialDialog.Builder(getContext())
+                                .title("提示")
+                                .content("是否删除这首歌曲？")
+                                .onPositive((dialog, which) -> {
+                                    FileUtils.delFile(musicList.get(position).getUri());
+                                    SongLoader.removeSong(getActivity(), musicList.get(position));
+                                    mAdapter.notifyItemChanged(position);
+                                })
+                                .positiveText("确定")
+                                .negativeText("取消")
+                                .show();
+                        break;
+                }
+                return false;
+            });
+            popupMenu.inflate(R.menu.popup_song);
+            popupMenu.show();
+        });
     }
 
     @Override
@@ -48,7 +115,7 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
 
     @Override
     public void initViews() {
-        mAdapter = new SongAdapter(null);
+        mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -76,6 +143,7 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
 
     @Override
     public void showSongs(List<Music> musicList) {
+        this.musicList = musicList;
         mAdapter.setNewData(musicList);
         if (musicList.size() == 0) {
             mAdapter.setEmptyView(R.layout.view_song_empty);

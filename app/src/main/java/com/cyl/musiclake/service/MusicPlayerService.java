@@ -39,6 +39,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.IMusicService;
+import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
@@ -51,6 +52,7 @@ import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.SystemUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -220,6 +222,8 @@ public class MusicPlayerService extends Service {
                         }
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
+                        ToastUtils.show(MyApplication.mContext, (String) msg.obj);
+                        service.next();
                         break;
                     case RELEASE_WAKELOCK://释放电源锁
                         service.mWakeLock.release();
@@ -603,13 +607,12 @@ public class MusicPlayerService extends Service {
         Log.e(TAG, music.toString());
         mPlayingMusic = music;
         mHandler.sendEmptyMessage(SAVE_HISTORY);
-
         //QQ音乐的播放地址有一段时间后失效，所以需要动态获取播放地址
-        if (mPlayingMusic.getType() == Music.Type.QQ) {
-            mHandler.obtainMessage(PREPARE_QQ_MUSIC, false);
-        } else {
-            mPlayer.setDataSource(mPlayingMusic.getUri());
-        }
+//        if (mPlayingMusic.getType() == Music.Type.QQ) {
+//            mHandler.obtainMessage(PREPARE_QQ_MUSIC, false);
+//        } else {
+        mPlayer.setDataSource(mPlayingMusic.getUri());
+//        }
 //        play();
     }
 
@@ -860,11 +863,11 @@ public class MusicPlayerService extends Service {
         if (DEBUG) Log.d(TAG, "setNextTrack: next play position = " + mNextPlayPos);
         if (mNextPlayPos >= 0 && mPlaylist != null && mNextPlayPos < mPlaylist.size()) {
             //QQ音乐的播放地址有一段时间后失效，所以需要动态获取播放地址
-            if (mPlaylist.get(mNextPlayPos).getType() == Music.Type.QQ) {
-                mHandler.obtainMessage(PREPARE_QQ_MUSIC, true);
-            } else {
-                mPlayer.setNextDataSource(mPlaylist.get(mNextPlayPos).getUri());
-            }
+//            if (mPlaylist.get(mNextPlayPos).getType() == Music.Type.QQ) {
+//                mHandler.obtainMessage(PREPARE_QQ_MUSIC, true);
+//            } else {
+            mPlayer.setNextDataSource(mPlaylist.get(mNextPlayPos).getUri());
+//            }
         } else {
             mPlayer.setNextDataSource(null);
         }

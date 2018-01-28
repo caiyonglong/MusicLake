@@ -16,6 +16,7 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.onlinemusic.SearchAdapter;
 import com.cyl.musiclake.ui.onlinemusic.contract.SearchContract;
 import com.cyl.musiclake.ui.onlinemusic.presenter.SearchPresenter;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private String queryString;
     private SearchAdapter mAdapter;
     private MaterialDialog mProgressDialog;
-    private int mOffset = 1;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -46,8 +46,10 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     SearchPresenter mPresenter = new SearchPresenter();
 
     private int mCurrentCounter = 0;
-    private int TOTAL_COUNTER =20;
+    private int TOTAL_COUNTER = 0;
     private int limit = 10;
+    private int mOffset = 1;
+
 
     @Override
     protected int getLayoutResID() {
@@ -65,7 +67,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     protected void initData() {
 
         mAdapter = new SearchAdapter(searchResults);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        mAdapter.setEnableLoadMore(true);
+        mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -88,14 +91,14 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             mPresenter.play(music);
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            if (mCurrentCounter >= TOTAL_COUNTER) {
+            TOTAL_COUNTER = limit * mOffset * 2;
+            if (mCurrentCounter < TOTAL_COUNTER) {
                 //数据全部加载完毕
                 mAdapter.loadMoreEnd();
             } else {
+                mOffset++;
                 //成功获取更多数据
                 mPresenter.search(queryString, limit, mOffset);
-                mCurrentCounter = mAdapter.getData().size();
-                TOTAL_COUNTER = limit * mOffset * 2;
             }
         }, 1000), mRecyclerView);
     }
@@ -108,24 +111,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         searchView.onActionViewExpanded();
         searchView.setQueryHint(getString(R.string.search_tips));
         searchView.setOnQueryTextListener(this);
-//        searchView.setSubmitButtonEnabled(true);
-//        try {
-//            Field field = searchView.getClass().getDeclaredField("mGoButton");
-//            field.setAccessible(true);
-//            ImageView mGoButton = (ImageView) field.get(searchView);
-//            mGoButton.setImageResource(R.drawable.ic_search_white_18dp);
-//            mGoButton.setOnClickListener(v -> {
-//                queryString = searchView.getQuery().toString();
-//                if (queryString.length() > 0) {
-//                    mOffset = 1;
-//                    searchResults.clear();
-//                    mProgressDialog.show();
-//                    mPresenter.search(queryString, limit, mOffset);
-//                }
-//            });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -144,6 +129,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         if (query.length() > 0) {
             mOffset = 1;
             searchResults.clear();
+            queryString = query;
             mPresenter.search(query, limit, mOffset);
         }
         return true;
@@ -154,6 +140,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         if (newText.length() > 0) {
             mOffset = 1;
             searchResults.clear();
+            queryString = newText;
             mPresenter.search(newText, limit, mOffset);
         }
         return true;
@@ -178,10 +165,11 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showSearchResult(List<Music> list) {
-        mOffset = mOffset + 1;
         searchResults.addAll(list);
-        mAdapter.addData(list);
+        mAdapter.setNewData(searchResults);
         mAdapter.loadMoreComplete();
+        mCurrentCounter = mAdapter.getData().size();
+        LogUtil.e("search", mCurrentCounter + "--" + TOTAL_COUNTER + "--" + mOffset);
     }
 
     @Override

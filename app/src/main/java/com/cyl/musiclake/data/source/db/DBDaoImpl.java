@@ -179,6 +179,7 @@ public class DBDaoImpl implements DBDao {
      */
     @Override
     public void deleteSongForId(String mid) {
+        db.delete(DBData.MTP_TABLE, DBData.MUSIC_ID + " = ?", new String[]{mid});
         db.delete(DBData.MUSIC_TABLE, DBData.MUSIC_ID + " = ?", new String[]{mid});
     }
 

@@ -64,6 +64,7 @@ public class XiamiServiceImpl {
                         music.setLrcPath(song.getLyric());
                         musicList.add(music);
                     }
+                    LogUtil.e("search", page + "--" + limit + "xiami :" + musicList.size());
                     return Observable.fromArray(musicList);
                 });
     }
