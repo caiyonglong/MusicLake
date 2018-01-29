@@ -44,7 +44,6 @@ public class AlbumPresenter implements AlbumsContract.Presenter {
     @Override
     public void loadAlbums(String action) {
         mView.showLoading();
-
         AppRepository.getAllAlbumsRepository(mContext)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

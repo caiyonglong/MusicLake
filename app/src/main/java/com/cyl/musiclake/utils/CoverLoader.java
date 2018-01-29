@@ -1,18 +1,12 @@
 package com.cyl.musiclake.utils;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -20,6 +14,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.data.model.Music;
 
 
 /**
@@ -228,61 +223,20 @@ public class CoverLoader {
         return uri;
     }
 
-
-    /**
-     * Glide 加载 简单判空封装 防止异步加载数据时调用Glide 抛出异常
-     *
-     * @param context
-     * @param url           加载图片的url地址  String
-     * @param imageView     加载图片的ImageView 控件
-     * @param default_image 图片展示错误的本地图片 id
-     */
-    public void glideLoad(Context context, String url, ImageView imageView, int default_image) {
-        if (context != null) {
-            GlideApp.with(context)
-                    .load(url)
-                    .centerCrop()
-                    .error(default_image)
-                    .into(imageView);
-        } else {
-            Log.i(TAG, "Picture loading failed,context is null");
-        }
+    public String getCoverUriByMusic(Music music) {
+        if (music.getCoverBig() != null)
+            return music.getCoverBig();
+        else if (music.getCoverUri() != null)
+            return music.getCoverUri();
+        else return music.getCoverSmall();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public void glideLoad(Activity activity, String url, ImageView imageView, int default_image) {
-        if (!activity.isDestroyed()) {
-            GlideApp.with(activity)
-                    .load(url)
-                    .centerCrop()
-                    .error(default_image)
-                    .into(imageView);
-        } else {
-            Log.i(TAG, "Picture loading failed,activity is Destroyed");
-        }
-    }
-
-    public void glideLoad(Fragment fragment, String url, ImageView imageView, int default_image) {
-        if (fragment != null && fragment.getActivity() != null) {
-            GlideApp.with(fragment)
-                    .load(url)
-                    .centerCrop()
-                    .error(default_image)
-                    .into(imageView);
-        } else {
-            Log.i(TAG, "Picture loading failed,fragment is null");
-        }
-    }
-
-    public void glideLoad(android.app.Fragment fragment, String url, ImageView imageView, int default_image) {
-        if (fragment != null && fragment.getActivity() != null) {
-            GlideApp.with(fragment)
-                    .load(url)
-                    .centerCrop()
-                    .error(default_image)
-                    .into(imageView);
-        } else {
-            Log.i(TAG, "Picture loading failed,android.app.Fragment is null");
-        }
+    public int getCoverUriByRandom() {
+        int[] Bitmaps = {R.drawable.music_one, R.drawable.music_two, R.drawable.music_three,
+                R.drawable.music_four, R.drawable.music_five, R.drawable.music_six,
+                R.drawable.music_seven, R.drawable.music_eight, R.drawable.music_nine,
+                R.drawable.music_ten, R.drawable.music_eleven, R.drawable.music_twelve};
+        int random = (int) (Math.random() * 12);
+        return Bitmaps[random];
     }
 }

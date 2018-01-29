@@ -162,7 +162,7 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
 
     @Override
     public void showAlbumArt(Drawable albumArt) {
-
+        album_art.setImageDrawable(albumArt);
     }
 
     @Override

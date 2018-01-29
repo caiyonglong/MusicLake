@@ -1,5 +1,7 @@
 package com.cyl.musiclake.ui.localmusic.contract;
 
+import android.graphics.Bitmap;
+
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.base.BaseView;
@@ -13,6 +15,8 @@ public interface ArtistSongContract {
         void showEmptyView();
 
         void showSongs(List<Music> songList);
+
+        void showAlbumArt(Bitmap bitmap);
     }
 
     interface Presenter extends BasePresenter<View> {

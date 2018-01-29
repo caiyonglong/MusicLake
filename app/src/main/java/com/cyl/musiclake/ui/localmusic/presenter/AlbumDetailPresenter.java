@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.data.source.AppRepository;
@@ -92,7 +91,7 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(CoverLoader.getInstance().getCoverUri(mContext, albumID))
-                .error(R.drawable.default_cover)
+                .error(CoverLoader.getInstance().getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
@@ -101,6 +100,4 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
                     }
                 });
     }
-
-
 }

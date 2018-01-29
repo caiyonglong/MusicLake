@@ -144,6 +144,7 @@ public class MusicPlayerService extends Service {
     private AudioManager mAudioManager;
 
     private NotificationManager mNotificationManager;
+    private Builder mNotificationBuilder;
     private Notification mNotification;
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private MediaSessionCompat mSession;
@@ -215,7 +216,7 @@ public class MusicPlayerService extends Service {
                     case TRACK_PLAY_ENDED://mPlayer播放完毕且暂时没有下一首
                         if (service.mRepeatMode == PLAY_MODE_REPEAT) {
                             service.seekTo(0);
-                            service.play();
+                            mMainHandler.post(service::play);
                         } else {
                             service.next();
 //                            service.gotoNext(false);
@@ -839,11 +840,10 @@ public class MusicPlayerService extends Service {
      * 获取总时长
      */
     public long getDuration() {
-        if (mPlayingMusic != null && mPlayer != null && mPlayer.isInitialized()) {
+        if (mPlayer.isInitialized()) {
             return mPlayer.duration();
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -996,8 +996,7 @@ public class MusicPlayerService extends Service {
             mNotificationPostTime = System.currentTimeMillis();
         }
         artwork = CoverLoader.getInstance().loadThumbnail(null);
-
-        Builder builder = new Builder(this, initChannelId())
+        mNotificationBuilder = new Builder(this, initChannelId())
                 .setSmallIcon(R.drawable.ic_icon)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTitle())
@@ -1016,16 +1015,16 @@ public class MusicPlayerService extends Service {
 
 
         if (SystemUtils.isJellyBeanMR1()) {
-            builder.setShowWhen(false);
+            mNotificationBuilder.setShowWhen(false);
         }
         if (SystemUtils.isLollipop()) {
             //线控
             isRunningForeground = true;
-            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
                     .setMediaSession(mSession.getSessionToken())
                     .setShowActionsInCompactView(0, 1, 2, 3);
-            builder.setStyle(style);
+            mNotificationBuilder.setStyle(style);
         }
 
         if (mPlayingMusic != null) {
@@ -1034,17 +1033,16 @@ public class MusicPlayerService extends Service {
                     .asBitmap()
                     .load(coverUrl)
                     .error(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            artwork = resource;
-                            builder.setLargeIcon(artwork);
-                            mNotification = builder.build();
+                            mNotificationBuilder.setLargeIcon(resource);
+                            mNotification = mNotificationBuilder.build();
                         }
                     });
         }
-        mNotification = builder.build();
+        mNotification = mNotificationBuilder.build();
     }
 
 

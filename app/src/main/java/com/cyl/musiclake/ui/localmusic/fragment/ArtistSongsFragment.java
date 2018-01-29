@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.localmusic.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -157,5 +158,10 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
     @Override
     public void showSongs(List<Music> songList) {
         mAdapter.setNewData(songList);
+    }
+
+    @Override
+    public void showAlbumArt(Bitmap bitmap) {
+        album_art.setImageBitmap(bitmap);
     }
 }

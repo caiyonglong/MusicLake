@@ -1,12 +1,16 @@
 package com.cyl.musiclake.ui.localmusic.adapter;
 
 import android.os.Build;
+import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -23,6 +27,11 @@ public class ArtistAdapter extends BaseQuickAdapter<Artist, BaseViewHolder> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             helper.getView(R.id.album).setTransitionName(Constants.TRANSTITION_ALBUM);
         }
+
+        GlideApp.with(mContext)
+                .load(CoverLoader.getInstance().getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into((ImageView) helper.getView(R.id.album));
     }
 
 }

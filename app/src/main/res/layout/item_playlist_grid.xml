@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
             android:background="@drawable/default_cover"
             android:scaleType="fitXY"
             android:transitionName="transition_album_art" />
@@ -28,10 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -51,7 +47,6 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:text="歌单名"
-                android:textColor="@color/black"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

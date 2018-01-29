@@ -11,11 +11,11 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Artist;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.common.NavigateUtil;
 import com.cyl.musiclake.ui.localmusic.adapter.ArtistAdapter;
 import com.cyl.musiclake.ui.localmusic.contract.ArtistContract;
 import com.cyl.musiclake.ui.localmusic.presenter.ArtistPresenter;
-import com.cyl.musiclake.ui.common.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

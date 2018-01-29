@@ -31,7 +31,7 @@ public class AlbumAdapter extends BaseQuickAdapter<Album, BaseViewHolder> {
 
         GlideApp.with(mContext)
                 .load(CoverLoader.getInstance().getCoverUri(mContext, album.getId()))
-                .error(R.drawable.default_cover)
+                .error(CoverLoader.getInstance().getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) helper.getView(R.id.album));
 

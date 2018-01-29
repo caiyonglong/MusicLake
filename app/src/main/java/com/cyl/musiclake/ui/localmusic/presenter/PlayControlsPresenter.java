@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
@@ -205,7 +203,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setTitle(title);
             mView.setArtist(artist);
         }
-        String picUrl = music.getCoverBig();
+        String picUrl = CoverLoader.getInstance().getCoverUriByMusic(music);
         //设置音乐来源
         mView.setOtherInfo(music.getTypeName());
         //获取当前歌曲状态
@@ -218,24 +216,15 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             loadLyric();
             GlideApp.with(mContext)
                     .asBitmap()
-                    .load(picUrl)
-                    .error(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .load(picUrl != null ? picUrl : CoverLoader.getInstance().getCoverUriByRandom())
+                    .error(CoverLoader.getInstance().getCoverUriByRandom())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             mView.setAlbumArt(resource);
                             mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(resource, mContext, 12));
                             new Palette.Builder(resource).generate(palette -> mView.setPalette(palette));
-                        }
-
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            Bitmap bitmap = CoverLoader.getInstance().loadThumbnail(null);
-                            mView.setAlbumArt(bitmap);
-                            mView.setAlbumArt(mContext.getResources().getDrawable(R.drawable.bg_frag_player));
-                            new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
                         }
                     });
         }
