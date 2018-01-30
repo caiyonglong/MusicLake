@@ -20,6 +20,7 @@ import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.data.model.StatusChangedEvent;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.localmusic.contract.PlayControlsContract;
@@ -66,6 +67,12 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                 .subscribe(metaChangedEvent -> {
                     if (!activity.isFinishing()) {
                         updateNowPlayingCard();
+                    }
+                });
+        RxBus.getInstance().register(StatusChangedEvent.class)
+                .subscribe(metaChangedEvent -> {
+                    if (!activity.isFinishing()) {
+                        updatePlayStatus();
                     }
                 });
     }
@@ -184,15 +191,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         } else {
             mView.updatePanelLayout(true);
         }
-        if (PlayManager.isPlaying()) {
-            if (!mView.getPlayPauseStatus()) {//true表示按钮为待暂停状态
-                mView.setPlayPauseButton(true);
-            }
-        } else {
-            if (mView.getPlayPauseStatus()) {
-                mView.setPlayPauseButton(false);
-            }
-        }
+
 
         final String title = PlayManager.getSongName();
         final String artist = PlayManager.getSongArtist();
@@ -231,6 +230,19 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         isPlayPauseClick = false;
         mView.setProgressMax(PlayManager.getDuration());
         mHandler.post(updateProgress);
+    }
+
+    @Override
+    public void updatePlayStatus() {
+        if (PlayManager.isPlaying()) {
+            if (!mView.getPlayPauseStatus()) {//true表示按钮为待暂停状态
+                mView.setPlayPauseButton(true);
+            }
+        } else {
+            if (mView.getPlayPauseStatus()) {
+                mView.setPlayPauseButton(false);
+            }
+        }
     }
 
     private Runnable updateProgress = new Runnable() {

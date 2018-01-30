@@ -21,8 +21,10 @@ import android.widget.Toast;
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.data.model.HistoryChangedEvent;
 import com.cyl.musiclake.data.model.MetaChangedEvent;
 import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.data.model.StatusChangedEvent;
 import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -129,6 +131,10 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                         RxBus.getInstance().post(new MetaChangedEvent());
                         break;
                     case MusicPlayerService.PLAY_QUEUE_CHANGE:
+                        RxBus.getInstance().post(new HistoryChangedEvent());
+                        break;
+                    case MusicPlayerService.PLAY_STATE_CHANGED:
+                        RxBus.getInstance().post(new StatusChangedEvent());
                         break;
                     case MusicPlayerService.PLAY_QUEUE_CLEAR:
                         break;

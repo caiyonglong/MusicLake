@@ -1,6 +1,7 @@
 package com.cyl.musiclake.service;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -8,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -23,9 +23,8 @@ import com.cyl.musiclake.ui.main.MainActivity;
  * Long press: voice search
  */
 //在WakefulBroadcastReceiver中调用startWakefulService来启动MusicService在后台播放音乐,
-// 这样service具有wake_lock权限,并且wake_lock由WakefulBroadcastReceiver自动管理
 
-public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
+public class MediaButtonIntentReceiver extends BroadcastReceiver {
     private static final boolean DEBUG = false;
     private static final String TAG = "ButtonIntentReceiver";
 
@@ -87,7 +86,6 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
                     }
                     break;
             }
-            releaseWakeLockIfHandlerIdle();
         }
     };
 
@@ -102,8 +100,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         i.setAction(MusicPlayerService.SERVICE_CMD);
         i.putExtra(MusicPlayerService.CMD_NAME, command);
         i.putExtra(MusicPlayerService.FROM_MEDIA_BUTTON, true);
-//        context.startService(i);
-        startWakefulService(context, i);
+        context.startService(i);
     }
 
     private static void acquireWakeLockAndSendMessage(Context context, Message msg, long delay) {
@@ -147,7 +144,6 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
             if (event == null) {
                 return;
             }
-
             final int keycode = event.getKeyCode();
             final int action = event.getAction();
             final long eventtime = event.getEventTime();

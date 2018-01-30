@@ -118,8 +118,12 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
 
     public void stop() {
-        mCurrentMediaPlayer.reset();
-        mIsInitialized = false;
+        try {
+            mCurrentMediaPlayer.reset();
+            mIsInitialized = false;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -143,9 +147,12 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
 
     public long position() {
-        return mCurrentMediaPlayer.getCurrentPosition();
+        try {
+            return mCurrentMediaPlayer.getCurrentPosition();
+        } catch (IllegalStateException e) {
+            return -1;
+        }
     }
-
 
     public void seek(final long whereto) {
         mCurrentMediaPlayer.seekTo((int) whereto);
@@ -199,7 +206,6 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         mHandler.sendEmptyMessage(PREPARE_ASYNC_ENDED);
-//        mp.start();
     }
 
     @Override

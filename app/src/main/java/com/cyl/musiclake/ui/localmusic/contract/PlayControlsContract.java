@@ -52,6 +52,7 @@ public interface PlayControlsContract {
         void onNextClick();
 
         void updateNowPlayingCard();
+        void updatePlayStatus();
 
     }
 }
