@@ -127,6 +127,7 @@ public class MusicPlayerService extends Service {
 
     public Music mPlayingMusic = null;
     private List<Music> mPlaylist = new ArrayList<>();
+    private List<Integer> mHistoryPos = new ArrayList<>();
     private int mPlayingPos = -1;
     private int mNextPlayPos = -1;
 
@@ -391,6 +392,7 @@ public class MusicPlayerService extends Service {
      */
     public void reloadPlayQueue() {
         mPlaylist.clear();
+        mHistoryPos.clear();
         mPlaylist = PlayQueueLoader.getPlayQueue(this);
         mPlayingPos = PreferencesUtils.getPlayPosition();
         mPlayer.seek(PreferencesUtils.getPosition());
@@ -499,7 +501,6 @@ public class MusicPlayerService extends Service {
      */
     private void prev() {
         synchronized (this) {
-            setNextTrack(mPlayingPos);
             mPlayingPos = getPreviousPosition();
             LogUtil.e(TAG, "prev: " + mPlayingPos);
             stop(false);
@@ -514,8 +515,12 @@ public class MusicPlayerService extends Service {
      */
     private void playCurrentAndNext() {
         synchronized (this) {
+            if (mPlayingPos > mPlaylist.size() && mPlayingPos == -1) {
+                return;
+            }
             mPlayingMusic = mPlaylist.get(mPlayingPos);
             saveHistory();
+            mHistoryPos.add(mPlayingPos);
             mPlayer.setDataSource(mPlayingMusic.getUri());
         }
     }
@@ -585,14 +590,10 @@ public class MusicPlayerService extends Service {
             if (mPlayingPos < 0) {
                 return 0;
             }
-        } else if (mRepeatMode == PLAY_MODE_LOOP) {
-            if (mPlayingPos == 0) {
-                return mPlaylist.size() - 1;
-            } else if (mPlayingPos > 0) {
-                return mPlayingPos - 1;
-            }
-        } else if (mRepeatMode == PLAY_MODE_RANDOM) {
-            return new Random().nextInt(mPlaylist.size());
+        } else {
+            int pos = mHistoryPos.size();
+            if (pos >= 1)
+                mPlayingPos = mHistoryPos.get(pos - 1);
         }
         return mPlayingPos;
     }
@@ -796,7 +797,11 @@ public class MusicPlayerService extends Service {
         Log.e(TAG, position + "---" + mPlayingPos + "---" + mPlaylist.size());
         if (position == mPlayingPos) {
             mPlaylist.remove(position);
-            playMusic(position);
+            if (mPlaylist.size() == 0) {
+                clearQueue();
+            } else {
+                playMusic(position);
+            }
         } else if (position > mPlayingPos) {
             mPlaylist.remove(position);
         } else if (position < mPlayingPos) {
@@ -812,9 +817,11 @@ public class MusicPlayerService extends Service {
     public void clearQueue() {
         mPlayingMusic = null;
         isMusicPlaying = false;
+        mPlayingPos = -1;
         mPlaylist.clear();
-        mPlayer.stop();
-
+        mHistoryPos.clear();
+        stop(true);
+        notifyChange(META_CHANGED);
         notifyChange(PLAY_QUEUE_CLEAR);
     }
 
@@ -941,6 +948,7 @@ public class MusicPlayerService extends Service {
      */
     private void setPlayQueue(List<Music> playQueue) {
         mPlaylist.clear();
+        mHistoryPos.clear();
         mPlaylist.addAll(playQueue);
     }
 

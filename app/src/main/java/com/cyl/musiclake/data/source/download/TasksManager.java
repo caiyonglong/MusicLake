@@ -3,8 +3,8 @@ package com.cyl.musiclake.data.source.download;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import com.cyl.musiclake.ui.onlinemusic.adapter.TaskItemAdapter;
-import com.cyl.musiclake.ui.onlinemusic.fragment.DownloadManagerFragment;
+import com.cyl.musiclake.ui.music.online.adapter.TaskItemAdapter;
+import com.cyl.musiclake.ui.music.online.fragment.DownloadManagerFragment;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadConnectListener;
 import com.liulishuo.filedownloader.FileDownloader;

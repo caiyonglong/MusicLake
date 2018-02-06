@@ -124,21 +124,21 @@
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_download"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
-                    app:materialIcon="cloud_download"
+                    app:materialIcon="arrow_collapse_down"
                     app:materialIconColor="@color/white"
                     app:materialIconSize="48dp"
                     tools:targetApi="lollipop" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/previous"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -164,11 +164,10 @@
                     app:gap_width="15"
                     tools:targetApi="lollipop" />
 
-
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -179,8 +178,8 @@
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_queue"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -194,6 +193,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        layout="@layout/play_control_menu"/>
+    <include layout="@layout/play_control_menu" />
 </android.support.design.widget.CoordinatorLayout>

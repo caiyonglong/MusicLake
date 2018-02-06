@@ -82,10 +82,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".ui.localmusic.activity.PlaylistDetailActivity"
+            android:name=".ui.music.local.activity.PlaylistDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.onlinemusic.activity.ArtistInfoActivity"
+            android:name=".ui.music.online.activity.ArtistInfoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.zone.NearPeopleAcivity"
@@ -93,7 +93,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.onlinemusic.activity.BaiduMusicListActivity"
+            android:name=".ui.music.online.activity.BaiduMusicListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
@@ -101,7 +101,7 @@
             android:name=".ui.map.ShakeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.onlinemusic.activity.SearchActivity" />
+        <activity android:name=".ui.music.online.activity.SearchActivity" />
         <activity
             android:name=".ui.zone.EditActivity"
             android:label="@string/app_name"

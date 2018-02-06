@@ -41,7 +41,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
-    protected void initDatas() {
+    protected void loadData() {
         if (UserStatus.getstatus(getActivity())) {
 
             user = UserStatus.getUserInfo(getActivity());

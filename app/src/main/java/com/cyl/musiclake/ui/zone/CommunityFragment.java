@@ -82,7 +82,7 @@
 //
 //
 //    @Override
-//    protected void initDatas() {
+//    protected void loadData() {
 //
 //        MyAdapter = new CommunityAdapter(getContext(), mdatas);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

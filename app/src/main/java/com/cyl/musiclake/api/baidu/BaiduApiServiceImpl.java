@@ -56,7 +56,14 @@ public class BaiduApiServiceImpl {
                         music.setCoverBig(songInfo.getPic_radio());
                         musicList.add(music);
                     }
-                    return Observable.fromArray(musicList);
+                    return Observable.create((ObservableOnSubscribe<List<Music>>) e -> {
+                        try {
+                            e.onNext(musicList);
+                            e.onComplete();
+                        } catch (Exception ep) {
+                            e.onError(ep);
+                        }
+                    });
                 });
     }
 
@@ -69,6 +76,7 @@ public class BaiduApiServiceImpl {
                     Music music = new Music();
                     BaiduSongInfo.DataBean.SongListBean songInfo = baiduSongInfo.getData().getSongList().get(0);
                     music.setType(Music.Type.BAIDU);
+                    music.setOnline(true);
                     music.setId(songInfo.getSongId());
                     music.setAlbum(songInfo.getAlbumName());
                     music.setAlbumId(songInfo.getArtistId());

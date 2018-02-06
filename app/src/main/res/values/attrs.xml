@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="PlayPauseView">
-        <attr name="bg_color" format="color"/>
-        <attr name="btn_color" format="color"/>
-        <attr name="gap_width" format="float"/>
-        <attr name="space_padding" format="float"/>
-        <attr name="anim_duration" format="integer"/>
+        <attr name="bg_color" format="color" />
+        <attr name="btn_color" format="color" />
+        <attr name="gap_width" format="float" />
+        <attr name="space_padding" format="float" />
+        <attr name="anim_duration" format="integer" />
         <attr name="anim_direction">
-            <enum name="positive" value="1"/>
-            <enum name="negative" value="2"/>
+            <enum name="positive" value="1" />
+            <enum name="negative" value="2" />
         </attr>
     </declare-styleable>
 
@@ -31,9 +31,14 @@
     </declare-styleable>
 
     <!--音乐条目属性-->
-    <declare-styleable name="ItemView">
+    <declare-styleable name="LocalItemView">
         <attr name="tv_name" format="reference|string" />
-        <attr name="iv_icon" format="reference|integer" />
+        <attr name="iv_icon" format="enum">
+            <enum name="arrow_collapse_down" value="3" />
+            <enum name="heart_outline" value="1" />
+            <enum name="library_music" value="0" />
+            <enum name="timetable" value="2" />
+        </attr>
         <attr name="tv_desc" format="reference|string" />
         <attr name="iv_icon_color" format="reference|color" />
     </declare-styleable>

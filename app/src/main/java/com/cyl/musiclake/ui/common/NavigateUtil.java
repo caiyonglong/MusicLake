@@ -17,13 +17,14 @@ import android.view.View;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Playlist;
-import com.cyl.musiclake.ui.localmusic.fragment.AlbumDetailFragment;
-import com.cyl.musiclake.ui.localmusic.fragment.ArtistSongsFragment;
-import com.cyl.musiclake.ui.localmusic.fragment.FolderSongsFragment;
-import com.cyl.musiclake.ui.localmusic.fragment.LocalMusicFragment;
-import com.cyl.musiclake.ui.localmusic.fragment.PlaylistDetailFragment;
-import com.cyl.musiclake.ui.localmusic.fragment.RecentlyFragment;
-import com.cyl.musiclake.ui.onlinemusic.fragment.DownloadFragment;
+import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
+import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
+import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
+import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment;
+import com.cyl.musiclake.ui.music.local.fragment.LoveFragment;
+import com.cyl.musiclake.ui.music.local.fragment.PlaylistDetailFragment;
+import com.cyl.musiclake.ui.music.local.fragment.RecentlyFragment;
+import com.cyl.musiclake.ui.music.online.fragment.DownloadFragment;
 
 import java.io.File;
 
@@ -33,21 +34,6 @@ import java.io.File;
  */
 
 public class NavigateUtil {
-    /**
-     * 跳转到专辑
-     */
-//    public static void navigateToAlbum(Activity context, long albumID, boolean isAlbum, String title) {
-//
-//        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-//        transaction.setCustomAnimations(R.anim.activity_fade_in,
-//                R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-//        Fragment fragment = AlbumDetailFragment.newInstance(albumID, isAlbum, title, null);
-//
-//        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
-//        transaction.add(R.id.fragment_container, fragment);
-//        transaction.addToBackStack(title).commit();
-//    }
-
 
     /**
      * 跳转到专辑
@@ -137,7 +123,7 @@ public class NavigateUtil {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 
-        fragment = LocalMusicFragment.newInstance(Extras.IS_LOVE);
+        fragment = LoveFragment.newInstance();
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(fragment.getTag()).commit();
@@ -170,13 +156,13 @@ public class NavigateUtil {
 
             Transition changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform);
             transaction.addSharedElement(transitionViews.first, transitionViews.second);
-            fragment = PlaylistDetailFragment.newInstance(playlist,true, transitionViews.second);
+            fragment = PlaylistDetailFragment.newInstance(playlist, true, transitionViews.second);
             fragment.setSharedElementEnterTransition(changeImage);
 
         } else {
             transaction.setCustomAnimations(R.anim.activity_fade_in,
                     R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = PlaylistDetailFragment.newInstance(playlist,false,null);
+            fragment = PlaylistDetailFragment.newInstance(playlist, false, null);
         }
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);

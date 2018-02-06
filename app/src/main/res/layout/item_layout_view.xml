@@ -4,25 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <net.steamcrafted.materialiconlib.MaterialIconView
         android:id="@+id/iv_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_music_note" />
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="center"
+        app:materialIconColor="@color/colorPrimary"
+        app:materialIconSize="28dp" />
 
-    <!--<net.steamcrafted.materialiconlib.MaterialIconView-->
-    <!--android:id="@+id/iv_icon"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_margin="10dp"-->
-    <!--app:materialIconSize="24dp" />-->
 
     <TextView
         android:id="@+id/tv_name"
@@ -46,13 +38,17 @@
         android:layout_toStartOf="@+id/iv_play"
         android:text="n 首歌曲" />
 
-    <ImageView
+    <net.steamcrafted.materialiconlib.MaterialIconView
         android:id="@+id/iv_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="10dp"
-        android:src="@drawable/item_play" />
+        android:scaleType="center"
+        app:materialIcon="play_circle_outline"
+        app:materialIconColor="@color/colorPrimary"
+        app:materialIconSize="24dp" />
+
 </RelativeLayout>

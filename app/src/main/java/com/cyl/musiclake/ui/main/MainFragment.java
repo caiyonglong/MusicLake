@@ -10,8 +10,8 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.PageAdapter;
-import com.cyl.musiclake.ui.localmusic.fragment.MyMusicFragment;
-import com.cyl.musiclake.ui.onlinemusic.fragment.BaiduPlaylistFragment;
+import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
+import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 
 import butterknife.BindView;
 
@@ -20,6 +20,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
+@SuppressWarnings("ConstantConditions")
 public class MainFragment extends BaseFragment {
 
     @BindView(R.id.m_viewpager)
@@ -40,14 +41,8 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
-    protected void initDatas() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        final ActionBar toggle = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (toggle != null) {
-            toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
-            toggle.setDisplayHomeAsUpEnabled(true);
-        }
+    protected void loadData() {
+
     }
 
     @Override
@@ -57,18 +52,26 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void initViews() {
+        if (getActivity() != null) {
+            AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+            appCompatActivity.setSupportActionBar(mToolbar);
+            appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+            final ActionBar toggle = appCompatActivity.getSupportActionBar();
+            if (toggle != null) {
+                toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
+                toggle.setDisplayHomeAsUpEnabled(true);
+            }
+        }
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
-
         setupViewPager(mViewPager);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(1);
     }
 
     private void setupViewPager(ViewPager mViewPager) {
         mAdapter = new PageAdapter(getChildFragmentManager());
-        mAdapter.addFragment(MyMusicFragment.newInstance(), "我的音乐");
+        mAdapter.addFragment(MyMusicFragment.newInstance(), "我的");
         mAdapter.addFragment(BaiduPlaylistFragment.newInstance(), "发现");
-//        adapter.addFragment(CommunityFragment.newInstance(1), "音乐湖");
         mViewPager.setAdapter(mAdapter);
     }
 

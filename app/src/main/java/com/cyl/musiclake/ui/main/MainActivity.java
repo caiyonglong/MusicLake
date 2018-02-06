@@ -19,14 +19,14 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.common.Constants;
-import com.cyl.musiclake.ui.localmusic.fragment.PlayFragment;
+import com.cyl.musiclake.ui.music.local.fragment.PlayFragment;
 import com.cyl.musiclake.ui.login.LoginActivity;
 import com.cyl.musiclake.ui.login.UserCenterActivity;
 import com.cyl.musiclake.ui.login.UserContract;
 import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.onlinemusic.activity.SearchActivity;
+import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -34,7 +34,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.ui.localmusic.fragment.PlayFragment.topContainer;
+import static com.cyl.musiclake.ui.music.local.fragment.PlayFragment.topContainer;
 
 /**
  * 描述 主要的Activity

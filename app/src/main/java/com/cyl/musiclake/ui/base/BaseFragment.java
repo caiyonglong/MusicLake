@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * 作者：YongLong on 2016/8/8 16:58
@@ -22,21 +24,28 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseFragment extends RxFragment {
     public View rootView;
+    private Unbinder mUnbinder;
+    private int count;//记录开启进度条的情况 只能开一个
+    //当前Fragment是否处于可见状态标志，防止因ViewPager的缓存机制而导致回调函数的触发
+    private boolean isFragmentVisible;
+    //是否是第一次开启网络加载
+    public boolean isViewCreated;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(getLayoutId(), container, false);
+        if (rootView == null)
+            rootView = inflater.inflate(getLayoutId(), container, false);
+        mUnbinder = ButterKnife.bind(this, rootView);
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
         initViews();
-        initDatas();
         listener();
-        setImmersionStateMode(getActivity());
+        isViewCreated = true;
+        lazyLoad();
     }
 
     /**
@@ -48,28 +57,20 @@ public abstract class BaseFragment extends RxFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-//                    |WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
             );
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    // | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-//            window.setNavigationBarColor(Color.TRANSPARENT);
         } else {
             // 透明状态栏
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // 透明导航栏
-            // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
     }
 
     protected void listener() {
 
     }
-
-
-    protected abstract void initDatas();
 
     @Override
     public void onAttach(Activity activity) {
@@ -81,9 +82,77 @@ public abstract class BaseFragment extends RxFragment {
         super.onDetach();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
+
     public abstract int getLayoutId();
 
     public abstract void initViews();
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (rootView == null) {
+            return;
+        }
+        if (isVisibleToUser) {
+            isFragmentVisible = true;
+            lazyLoad();
+        } else {
+            isFragmentVisible = false;
+        }
+    }
+
+    private void lazyLoad() {
+        //这里进行双重标记判断,是因为setUserVisibleHint会多次回调,并且会在onCreateView执行前回调,必须确保onCreateView加载完毕且页面可见,才加载数据
+        if (isViewCreated && isFragmentVisible) {
+            loadData();
+            //数据加载完毕,恢复标记,防止重复加载
+            isViewCreated = false;
+            isFragmentVisible = false;
+            Log.e(getClass().getName(), "isVisible :可见加载数据");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            setUserVisibleHint(true);
+        }
+    }
+
+    /**
+     * 开启加载进度条
+     */
+    public void startProgressDialog() {
+        count++;
+        if (count == 1) {
+        }
+    }
+
+    /**
+     * 开启加载进度条
+     *
+     * @param msg
+     */
+    public void startProgressDialog(String msg) {
+    }
+
+    /**
+     * 停止加载进度条
+     */
+    public void stopProgressDialog() {
+        count--;
+        if (count == 0) {
+        }
+    }
+
+    protected void loadData() {
+
+    }
 
 }

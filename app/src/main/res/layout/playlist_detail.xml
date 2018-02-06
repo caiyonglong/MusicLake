@@ -25,6 +25,7 @@
                 android:id="@+id/album_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="-24dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:transitionName="transition_album_art"
@@ -49,8 +50,8 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         style="@style/FabStyle"
-        android:src="@drawable/ic_play_arrow_black_18dp"
         android:tag="bg_tint_accent_color"
+        android:src="@drawable/ic_play_arrow_white_18dp"
         app:fab_size="normal"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end" />
