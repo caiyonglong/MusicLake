@@ -150,3 +150,7 @@ E/MediaPlayer: next player is not prepared
 16、播放暂停恢复，音量变化
 
 17、线控
+
+18、对于ViewPager+Fragment+Tablayout中 懒加载优化。
+
+19、

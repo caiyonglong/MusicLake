@@ -75,6 +75,17 @@ public class FileUtils {
         return dir;
     }
 
+
+    /**
+     * 判断外部存储是否可用
+     *
+     * @return true: 可用
+     */
+    public static boolean isSDcardAvailable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
     /**
      * 可创建多个文件夹
      * dirPath 文件路径

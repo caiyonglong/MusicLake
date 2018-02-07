@@ -23,7 +23,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.app.NotificationCompat;
@@ -38,7 +37,6 @@ import android.util.Log;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
@@ -485,7 +483,7 @@ public class MusicPlayerService extends Service {
     /**
      * 下一首
      */
-    private void next() {
+    public void next() {
         synchronized (this) {
             mPlayingPos = getNextPosition();
             Log.e(TAG, "next: " + mPlayingPos);
@@ -499,7 +497,7 @@ public class MusicPlayerService extends Service {
     /**
      * 上一首
      */
-    private void prev() {
+    public void prev() {
         synchronized (this) {
             mPlayingPos = getPreviousPosition();
             LogUtil.e(TAG, "prev: " + mPlayingPos);
@@ -536,9 +534,7 @@ public class MusicPlayerService extends Service {
         }
 
         if (remove_status_icon) {
-            stopForeground(true);
-        } else {
-            stopForeground(false);
+            cancelNotification();
         }
 
         if (remove_status_icon) {
@@ -603,7 +599,7 @@ public class MusicPlayerService extends Service {
      *
      * @param position
      */
-    private void playMusic(int position) {
+    public void playMusic(int position) {
         if (position >= mPlaylist.size() || position == -1) {
             mPlayingPos = getNextPosition();
         } else {
@@ -619,7 +615,7 @@ public class MusicPlayerService extends Service {
     /**
      * 音乐播放
      */
-    private void play() {
+    public void play() {
         int status = mAudioManager.requestAudioFocus(audioFocusChangeListener,
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
@@ -680,7 +676,7 @@ public class MusicPlayerService extends Service {
     /**
      * 播放暂停
      */
-    private void playPause() {
+    public void playPause() {
         if (isPlaying()) {
             pause();
         } else {
@@ -786,7 +782,7 @@ public class MusicPlayerService extends Service {
     }
 
 
-    private void refresh() {
+    public void refresh() {
         mRepeatMode = PreferencesUtils.getPlayMode();
     }
 
@@ -908,7 +904,7 @@ public class MusicPlayerService extends Service {
      *
      * @return
      */
-    private String getArtistName() {
+    public String getArtistName() {
         if (mPlayingMusic != null) {
             return mPlayingMusic.getArtist();
 //            return ConvertUtils.getArtistAndAlbum(mPlayingMusic.getArtist(), mPlayingMusic.getAlbum());
@@ -933,7 +929,7 @@ public class MusicPlayerService extends Service {
      *
      * @return
      */
-    private Music getPlayingMusic() {
+    public Music getPlayingMusic() {
         if (mPlayingMusic != null) {
             return mPlayingMusic;
         }
@@ -946,7 +942,7 @@ public class MusicPlayerService extends Service {
      *
      * @param playQueue
      */
-    private void setPlayQueue(List<Music> playQueue) {
+    public void setPlayQueue(List<Music> playQueue) {
         mPlaylist.clear();
         mHistoryPos.clear();
         mPlaylist.addAll(playQueue);
@@ -958,7 +954,7 @@ public class MusicPlayerService extends Service {
      *
      * @return
      */
-    private List<Music> getPlayQueue() {
+    public List<Music> getPlayQueue() {
         if (mPlaylist.size() > 0) {
             return mPlaylist;
         }
@@ -971,7 +967,7 @@ public class MusicPlayerService extends Service {
      *
      * @return
      */
-    private int getPlayPosition() {
+    public int getPlayPosition() {
         if (mPlayingPos >= 0) {
             return mPlayingPos;
         } else return 0;
@@ -1282,119 +1278,6 @@ public class MusicPlayerService extends Service {
         unregisterReceiver(mHeadsetPlugInReceiver);
 
         mWakeLock.release();
-    }
-
-    private class IMusicServiceStub extends IMusicService.Stub {
-        private final WeakReference<MusicPlayerService> mService;
-
-        private IMusicServiceStub(final MusicPlayerService service) {
-            mService = new WeakReference<MusicPlayerService>(service);
-        }
-
-        @Override
-        public void playOnline(Music music) throws RemoteException {
-            mService.get().play(music);
-        }
-
-        @Override
-        public void play(int id) throws RemoteException {
-            mService.get().playMusic(id);
-        }
-
-        @Override
-        public void playPause() throws RemoteException {
-            mService.get().playPause();
-        }
-
-        @Override
-        public void prev() throws RemoteException {
-            mService.get().prev();
-        }
-
-        @Override
-        public void next() throws RemoteException {
-            mService.get().next();
-        }
-
-        @Override
-        public void refresh() throws RemoteException {
-            mService.get().refresh();
-        }
-
-        @Override
-        public void update(Music music) throws RemoteException {
-            mService.get().updateFavorite(music);
-        }
-
-        @Override
-        public void setLoopMode(int loopmode) throws RemoteException {
-        }
-
-        @Override
-        public void seekTo(int ms) throws RemoteException {
-            mService.get().seekTo(ms);
-        }
-
-        @Override
-        public String getSongName() throws RemoteException {
-            return mService.get().getTitle();
-        }
-
-        @Override
-        public String getSongArtist() throws RemoteException {
-            return mService.get().getArtistName();
-        }
-
-        @Override
-        public Music getPlayingMusic() throws RemoteException {
-            return mService.get().getPlayingMusic();
-        }
-
-        @Override
-        public void setPlayList(List<Music> playlist) throws RemoteException {
-            mService.get().setPlayQueue(playlist);
-        }
-
-        @Override
-        public List<Music> getPlayList() throws RemoteException {
-            return mService.get().getPlayQueue();
-        }
-
-        @Override
-        public void removeFromQueue(int position) throws RemoteException {
-            mService.get().removeFromQueue(position);
-        }
-
-        @Override
-        public void clearQueue() throws RemoteException {
-            mService.get().clearQueue();
-        }
-
-        @Override
-        public int position() throws RemoteException {
-            return mService.get().getPlayPosition();
-        }
-
-        @Override
-        public int getDuration() throws RemoteException {
-            return (int) mService.get().getDuration();
-        }
-
-        @Override
-        public int getCurrentPosition() throws RemoteException {
-            return (int) mService.get().getCurrentPosition();
-        }
-
-
-        @Override
-        public boolean isPlaying() throws RemoteException {
-            return mService.get().isPlaying();
-        }
-
-        @Override
-        public boolean isPause() throws RemoteException {
-            return !mService.get().isPlaying();
-        }
     }
 
 }

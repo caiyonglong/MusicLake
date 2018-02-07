@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme" parent="MyThemeBlue"></style>
+
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--选中状态icon的颜色和字体颜色-->

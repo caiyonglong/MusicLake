@@ -11,8 +11,6 @@
 
 
     <style name="AppTheme" parent="MyThemeBlue">
-        <item name="android:listDivider">@drawable/divider_bg</item>
-
     </style>
 
     <!-- 为主色调 -->
