@@ -16,11 +16,11 @@ import com.cyl.musiclake.data.model.Playlist;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.ui.music.local.adapter.LocalAdapter;
 import com.cyl.musiclake.ui.music.local.adapter.PlaylistAdapter;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;
 import com.cyl.musiclake.ui.music.local.dialog.CreatePlaylistDialog;
 import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter;
-import com.cyl.musiclake.view.LocalItemView;
 
 import java.util.List;
 
@@ -31,16 +31,18 @@ import butterknife.OnClick;
  * Created by Monkey on 2015/6/29.
  */
 public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialog.mCallBack, MyMusicContract.View {
-    @BindView(R.id.iv_local)
-    LocalItemView mLocal;
-    @BindView(R.id.iv_recently)
-    LocalItemView mRecently;
-    @BindView(R.id.iv_favorite)
-    LocalItemView mLove;
-    @BindView(R.id.iv_download)
-    LocalItemView mDownload;
+    //    @BindView(R.id.iv_local)
+//    LocalItemView mLocal;
+//    @BindView(R.id.iv_recently)
+//    LocalItemView mRecently;
+//    @BindView(R.id.iv_favorite)
+//    LocalItemView mLove;
+//    @BindView(R.id.iv_download)
+//    LocalItemView mDownload;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.hor_recyclerView)
+    RecyclerView mHorRecyclerView;
     @BindView(R.id.scroll_view)
     NestedScrollView mNestedScrollView;
 
@@ -54,6 +56,7 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     private static final String TAG_CREATE = "create_playlist";
     private List<Playlist> mData;
     private PlaylistAdapter mAdapter;
+    private LocalAdapter mLocalAdapter;
     private MyMusicPresenter mPresenter;
 
     public static MyMusicFragment newInstance() {
@@ -75,6 +78,14 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setSmoothScrollbarEnabled(false);
+
+        mHorRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mHorRecyclerView.setNestedScrollingEnabled(false);
+
+        mLocalAdapter = new LocalAdapter();
+        mHorRecyclerView.setAdapter(mLocalAdapter);
+        mLocalAdapter.bindToRecyclerView(mHorRecyclerView);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setNestedScrollingEnabled(false);
 
@@ -90,6 +101,18 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
                     Pair<View, String> transitionViews = new Pair<View, String>(view.findViewById(R.id.iv_album), "transition_album_art" + position);
                     NavigateUtil.navigateToPlaylist(getActivity(), (Playlist) adapter.getItem(position), transitionViews);
+                }
+        );
+        mLocalAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    if (position == 0) {
+                        NavigateUtil.navigateToLocalMusic(getActivity(), null);
+                    } else if (position == 1) {
+                        NavigateUtil.navigateRecentlyMusic(getActivity());
+                    } else if (position == 2) {
+                        NavigateUtil.navigateToLoveMusic(getActivity(), null);
+                    } else if (position == 3) {
+                        NavigateUtil.navigateToDownload(getActivity(), null);
+                    }
                 }
         );
         RxBus.getInstance().register(Playlist.class)
@@ -130,16 +153,7 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
     @Override
     public void showSongs(List<Music> songList) {
-        mLocal.setSongsNum(songList.size());
-        mLocal.setOnItemClickListener(view -> {
-                    if (view.getId() == R.id.iv_play) {
-                        PlayManager.play(0);
-                        PlayManager.setPlayList(songList);
-                    } else {
-                        NavigateUtil.navigateToLocalMusic(getActivity(), null);
-                    }
-                }
-        );
+        mLocalAdapter.setSongsNum(0,songList.size());
     }
 
     @Override
@@ -154,41 +168,17 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
     @Override
     public void showHistory(List<Music> musicList) {
-        mRecently.setSongsNum(musicList.size());
-        mRecently.setOnItemClickListener(view -> {
-            if (view.getId() == R.id.iv_play) {
-                PlayManager.play(0);
-                PlayManager.setPlayList(musicList);
-            } else {
-                NavigateUtil.navigateRecentlyMusic(getActivity());
-            }
-        });
+        mLocalAdapter.setSongsNum(1, musicList.size());
     }
 
     @Override
     public void showLoveList(List<Music> musicList) {
-        mLove.setSongsNum(musicList.size());
-        mLove.setOnItemClickListener(view -> {
-            if (view.getId() == R.id.iv_play) {
-                PlayManager.play(0);
-                PlayManager.setPlayList(musicList);
-            } else {
-                NavigateUtil.navigateToLoveMusic(getActivity(), null);
-            }
-        });
+        mLocalAdapter.setSongsNum(2, musicList.size());
     }
 
     @Override
     public void showDownloadList(List<Music> musicList) {
-        mDownload.setSongsNum(musicList.size());
-        mDownload.setOnItemClickListener((view) -> {
-            if (view.getId() == R.id.iv_play) {
-                PlayManager.play(0);
-                PlayManager.setPlayList(musicList);
-            } else {
-                NavigateUtil.navigateToDownload(getActivity(), null);
-            }
-        });
+        mLocalAdapter.setSongsNum(3, musicList.size());
     }
 
     @Override

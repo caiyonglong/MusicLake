@@ -29,7 +29,7 @@ public class FolderLoader {
         final String[] projection = new String[]{MediaStore.Files.FileColumns.DATA,
                 "count(" + MediaStore.Files.FileColumns.PARENT + ") as " + num_of_songs};
 
-        final String selection = " is_music=1 AND title != '' " + " ) " + " group by ( "
+        final String selection = "duration>60000 AND is_music=1 AND title != '' " + " ) " + " group by ( "
                 + MediaStore.Files.FileColumns.PARENT;
 
         return Observable.create(subscriber -> {
