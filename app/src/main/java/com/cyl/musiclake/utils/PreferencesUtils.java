@@ -17,6 +17,7 @@ public class PreferencesUtils {
     private static final String PLAY_POSITION = "play_position";
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
+    private static final String WIFI_MODE = "wifi_mode";
     private static final String NIGHT_MODE = "night_mode";
     private static final String POSITION = "position";
 
@@ -68,21 +69,14 @@ public class PreferencesUtils {
         saveString(SPLASH_URL, url);
     }
 
-    public static boolean enableMobileNetworkPlay() {
-        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_play), false);
+    public static boolean getWifiMode() {
+        return getBoolean(sContext.getString(R.string.setting_key_mobile_wifi), false);
     }
 
-    public static void saveMobileNetworkPlay(boolean enable) {
-        saveBoolean(sContext.getString(R.string.setting_key_mobile_network_play), enable);
+    public static void saveWifiMode(boolean enable) {
+        saveBoolean(sContext.getString(R.string.setting_key_mobile_wifi), enable);
     }
 
-    public static boolean enableMobileNetworkDownload() {
-        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_download), false);
-    }
-
-    public static void saveMobileNetworkDownload(boolean enable) {
-        saveBoolean(sContext.getString(R.string.setting_key_mobile_network_download), enable);
-    }
 
     public static boolean isNightMode() {
         return getBoolean(NIGHT_MODE, false);

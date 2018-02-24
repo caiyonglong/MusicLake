@@ -25,6 +25,8 @@ public interface UserContract {
         void uploadHeader(String user_id, String path);
 
         void getUserInfo();
+
+        void logout();
     }
 
     interface Model {

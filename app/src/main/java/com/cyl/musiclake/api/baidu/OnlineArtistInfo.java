@@ -17,7 +17,7 @@ public class OnlineArtistInfo {
     // 歌手简介
     private String intro;
     // 头像
-    private String avatar_s1000;
+    private String avatar_big;
     // 姓名
     private String name;
     // 生日
@@ -71,12 +71,12 @@ public class OnlineArtistInfo {
         this.intro = intro;
     }
 
-    public String getAvatar_s1000() {
-        return avatar_s1000;
+    public String getAvatar_big() {
+        return avatar_big;
     }
 
-    public void setAvatar_s1000(String avatar_s1000) {
-        this.avatar_s1000 = avatar_s1000;
+    public void setAvatar_big(String avatar_big) {
+        this.avatar_big = avatar_big;
     }
 
     public String getName() {
@@ -95,4 +95,18 @@ public class OnlineArtistInfo {
         this.birth = birth;
     }
 
+    @Override
+    public String toString() {
+        return "OnlineArtistInfo{" +
+                "constellation='" + constellation + '\'' +
+                ", weight=" + weight +
+                ", stature=" + stature +
+                ", country='" + country + '\'' +
+                ", url='" + url + '\'' +
+                ", intro='" + intro + '\'' +
+                ", avatar_big='" + avatar_big + '\'' +
+                ", name='" + name + '\'' +
+                ", birth='" + birth + '\'' +
+                '}';
+    }
 }

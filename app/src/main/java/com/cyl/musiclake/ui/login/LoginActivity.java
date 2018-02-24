@@ -13,8 +13,10 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -162,5 +164,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void showErrorInfo(String msg) {
         ToastUtils.show(this, msg);
+    }
+
+    @Override
+    public void success(User user) {
+        RxBus.getInstance().post(user);
+        finish();
     }
 }

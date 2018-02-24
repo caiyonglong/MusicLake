@@ -48,7 +48,7 @@ public class BaiduApiServiceImpl {
                         music.setAlbum(songInfo.getAlbum_title());
                         music.setAlbumId(songInfo.getAlbum_id());
                         music.setArtist(songInfo.getArtist_name());
-                        music.setArtistId(songInfo.getArtist_id());
+                        music.setArtistId(Long.parseLong(songInfo.getTing_uid()));
                         music.setTitle(songInfo.getTitle());
                         music.setLrcPath(songInfo.getLrclink());
                         music.setCoverSmall(songInfo.getPic_small());

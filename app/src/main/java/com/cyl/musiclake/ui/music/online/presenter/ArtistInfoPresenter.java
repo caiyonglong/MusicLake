@@ -3,10 +3,9 @@ package com.cyl.musiclake.ui.music.online.presenter;
 import android.content.Context;
 
 import com.cyl.musiclake.api.ApiManager;
-import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
 import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,18 +51,14 @@ public class ArtistInfoPresenter implements ArtistInfoContract.Presenter {
                 .getArtistInfo(Constants.BASE_URL, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ApiModel<OnlineArtistInfo>>() {
+                .subscribe(new Observer<OnlineArtistInfo>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
 
                     @Override
-                    public void onNext(ApiModel<OnlineArtistInfo> result) {
-                        if (result.getStatus().equals("success")) {
-                            mView.showArtistInfo(result.getData());
-                        } else {
-                            mView.showErrorInfo(result.getMessage());
-                        }
+                    public void onNext(OnlineArtistInfo result) {
+                        mView.showArtistInfo(result);
                     }
 
                     @Override

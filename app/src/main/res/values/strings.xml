@@ -101,8 +101,7 @@
     <string name="song_list_item_title_2">2.%1$s - %2$s</string>
     <string name="song_list_item_title_3">3.%1$s - %2$s</string>
 
-    <string name="setting_key_mobile_network_play">mobile_network_play</string>
-    <string name="setting_key_mobile_network_download">mobile_network_download</string>
+    <string name="setting_key_mobile_wifi">mobile_wifi</string>
     <string name="setting_key_sound_effect">sound_effect</string>
 
     <string name="tips">温馨提示</string>

@@ -20,6 +20,5 @@
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
         </item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

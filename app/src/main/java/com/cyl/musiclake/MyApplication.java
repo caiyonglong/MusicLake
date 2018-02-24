@@ -28,14 +28,9 @@ public class MyApplication extends Application {
         mContext = this;
         UpdateUtils.init(this);
         PreferencesUtils.init(this);
-
-        // just for open the log in this demo project.
         FileDownloadLog.NEED_LOG = true;
-
         /**
-         * just for cache Application's Context, and ':filedownloader' progress will NOT be launched
-         * by below code, so please do not worry about performance.
-         * @see FileDownloader#init(Context)
+         * 初始化文件下载
          */
         FileDownloader.setupOnApplicationOnCreate(this)
                 .connectionCreator(new FileDownloadUrlConnection
@@ -45,7 +40,5 @@ public class MyApplication extends Application {
                         .proxy(Proxy.NO_PROXY) // set proxy
                 ))
                 .commit();
-
-
     }
 }

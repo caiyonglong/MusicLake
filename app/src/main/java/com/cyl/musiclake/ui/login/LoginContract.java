@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.base.BaseView;
+import com.cyl.musiclake.ui.login.user.User;
 
 import java.util.Map;
 
@@ -16,6 +17,8 @@ public interface LoginContract {
 
     interface View extends BaseView {
         void showErrorInfo(String msg);
+
+        void success(User user);
     }
 
     interface Presenter extends BasePresenter<LoginContract.View> {

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,13 +22,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.login.user.UserStatus;
-import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.io.File;
 import java.util.HashMap;
@@ -46,22 +45,86 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
     Toolbar mToolbar;
     @BindView(R.id.header_img)
     CircleImageView header_img;
-    @BindView(R.id.action_a)
-    FloatingActionButton fab_a;
-    @BindView(R.id.action_b)
-    FloatingActionButton fab_b;
-    @BindView(R.id.action_menu)
-    FloatingActionsMenu action_menu;
 
     @OnClick(R.id.header_img)
     void updateHeader(View view) {
         showPopupWindow(view);
     }
 
-    TextInputLayout et_name, et_nick, et_phone, et_email;
+    @BindView(R.id.nick)
+    TextView nick;
+    @BindView(R.id.user_name)
+    TextView user_name;
+    @BindView(R.id.email)
+    TextView email;
+    @BindView(R.id.phone)
+    TextView phone;
+    @BindView(R.id.logout)
+    CardView logout;
 
-    @OnClick(R.id.action_a)
-    void a() {
+    @OnClick(R.id.logout)
+    void logout() {
+        mPresenter.logout();
+        mPresenter.subscribe();
+        finish();
+    }
+
+    private PopupWindow popWindow;
+    private LayoutInflater layoutInflater;
+    private TextView photograph, albums;
+    private LinearLayout cancel;
+    private TextInputLayout et_name, et_nick, et_phone, et_email;
+
+
+    public static final int PHOTOZOOM = 0; // 相册/拍照
+    public static final int PHOTOTAKE = 1; // 相册/拍照
+    public static final int IMAGE_COMPLETE = 2; // 结果
+    public static final int CROPREQCODE = 3; // 截取
+    private String photoSavePath;//保存路径
+    private String photoSaveName;//图pian名
+    private String path;//图片全路径
+    private User mUserInfo;//图片全路径
+
+    private UserPresenter mPresenter;
+
+    @Override
+    protected int getLayoutResID() {
+        return R.layout.user_center_main;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_update:
+                updateInfo();
+                break;
+            case R.id.action_privacy:
+                changePrivacy();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void initView() {
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void initData() {
+        mPresenter = new UserPresenter();
+        mPresenter.attachView(this);
+        mPresenter.getUserInfo();
+    }
+
+
+    private void updateInfo() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title("修改信息")
                 .inputType(InputType.TYPE_CLASS_TEXT |
@@ -101,13 +164,9 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
         et_email.getEditText().setText(mUserInfo.getEmail());
 
         dialog.show();
-        if (action_menu.isExpanded()) {
-            action_menu.collapse();
-        }
     }
 
-    @OnClick(R.id.action_b)
-    void b() {
+    void changePrivacy() {
         final int item = mUserInfo.getSecret();
 
         new MaterialDialog.Builder(this)
@@ -126,67 +185,7 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
                 })
                 .positiveText("选择")
                 .show();
-        if (action_menu.isExpanded()) {
-            action_menu.collapse();
-        }
     }
-
-    @BindView(R.id.nick)
-    TextView nick;
-    @BindView(R.id.user_name)
-    TextView user_name;
-    @BindView(R.id.email)
-    TextView email;
-    @BindView(R.id.phone)
-    TextView phone;
-    @BindView(R.id.logout)
-    CardView logout;
-
-
-    private PopupWindow popWindow;
-    private LayoutInflater layoutInflater;
-    private TextView photograph, albums;
-    private LinearLayout cancel;
-
-    public static final int PHOTOZOOM = 0; // 相册/拍照
-    public static final int PHOTOTAKE = 1; // 相册/拍照
-    public static final int IMAGE_COMPLETE = 2; // 结果
-    public static final int CROPREQCODE = 3; // 截取
-    private String photoSavePath;//保存路径
-    private String photoSaveName;//图pian名
-    private String path;//图片全路径
-    private User mUserInfo;//图片全路径
-
-    private UserPresenter mPresenter;
-
-    @Override
-    protected int getLayoutResID() {
-        return R.layout.user_center_main;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void initData() {
-        mPresenter = new UserPresenter();
-        mPresenter.attachView(this);
-        mPresenter.getUserInfo();
-    }
-
 
     /**
      * 显示popWindow
@@ -196,7 +195,7 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
     @SuppressWarnings("deprecation")
     private void showPopupWindow(View parent) {
         if (popWindow == null) {
-            View view = layoutInflater.inflate(R.layout.pop_image_select, null);
+            View view = LayoutInflater.from(this).inflate(R.layout.pop_image_select, null);
             popWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
             initPop(view);
         }
@@ -275,14 +274,11 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (action_menu.isExpanded()) {
-            action_menu.collapse();
-        } else {
-            finish();
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
     }
+
 
     @Override
     public void showLoading() {

@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
@@ -158,11 +158,21 @@ public class LoginPresenter implements LoginContract.Presenter {
                             params.put(Constants.USER_SEX, gender);
                             params.put(Constants.USER_IMG, iconUrl);
                             params.put(Constants.USER_ID, mTencent.getOpenId());
+                            User userInfo = new User();
+                            userInfo.setId(mTencent.getOpenId());
+                            userInfo.setUrl(iconUrl);
+                            userInfo.setSex(gender);
+                            userInfo.setName(nickName);
+                            userInfo.setNick(nickName);
+                            //保存用户信息
+                            userModel.savaInfo(userInfo);
                         } catch (JSONException e) {
                             ToastUtils.show(mContext, "网络异常，请稍后重试！");
                             e.printStackTrace();
                         }
                         mView.hideLoading();
+                        //登录成功
+                        mView.success(userModel.getUserInfo());
                     }
 
                     @Override

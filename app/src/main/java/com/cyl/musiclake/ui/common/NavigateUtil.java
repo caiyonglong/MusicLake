@@ -59,9 +59,6 @@ public class NavigateUtil {
         transaction.addToBackStack(title).commit();
     }
 
-    /**
-     * 跳转到专辑
-     */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void navigateToArtist(Activity context, long artistID, String title, Pair<View, String> transitionViews) {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
@@ -169,6 +166,12 @@ public class NavigateUtil {
         transaction.addToBackStack(fragment.getTag()).commit();
     }
 
+    /**
+     * 扫描文件夹
+     *
+     * @param ctx
+     * @param filePath
+     */
     public static void scanFileAsync(Context ctx, String filePath) {
         Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         scanIntent.setData(Uri.fromFile(new File(filePath)));

@@ -1,10 +1,13 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
+import android.graphics.Color;
 import android.os.Build;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
@@ -35,11 +39,15 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
     LinearLayout li_container;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @BindView(R.id.loading)
     LinearLayout loading;
     @BindView(R.id.tv_empty)
     TextView tv_empty;
+    @BindView(R.id.album_art)
+    ImageView mAlbum;
     @BindView(R.id.progress)
     ProgressBar progress;
 
@@ -58,10 +66,11 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     protected void initData() {
-        String tingUid = getIntent().getStringExtra(Extras.TING_UID);
+        long tingUid = getIntent().getLongExtra(Extras.TING_UID, -1);
+        Log.e(TAG, tingUid + "=tinguid");
         mPresenter = new ArtistInfoPresenter();
         mPresenter.attachView(this);
-        mPresenter.loadArtistInfo(tingUid);
+        mPresenter.loadArtistInfo(tingUid + "");
     }
 
     @Override
@@ -91,9 +100,9 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     public void showArtistInfo(OnlineArtistInfo artistInfo) {
-
+        Log.e(TAG,artistInfo.toString());
         String name = artistInfo.getName();
-        String avatarUri = artistInfo.getAvatar_s1000();
+        String avatarUri = artistInfo.getAvatar_big();
         String country = artistInfo.getCountry();
         String constellation = artistInfo.getConstellation();
         float stature = artistInfo.getStature();
@@ -102,67 +111,81 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
         String intro = artistInfo.getIntro();
         String url = artistInfo.getUrl();
         if (!TextUtils.isEmpty(avatarUri)) {
-            ImageView ivAvatar = new ImageView(this);
-            ivAvatar.setImageResource(R.drawable.default_cover);
-            ivAvatar.setScaleType(ImageView.ScaleType.FIT_XY);
             GlideApp.with(this)
                     .load(url)
-                    .into(ivAvatar);
-
-            li_container.addView(ivAvatar);
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(R.drawable.default_cover)
+                    .into(mAlbum);
         }
         if (!TextUtils.isEmpty(name)) {
-            toolbar.setTitle(name);
+            collapsingToolbarLayout.setTitle(name);
             TextView tvName = new TextView(this);
+            tvName.setBackgroundResource(R.drawable.bg_card);
             tvName.setTextSize(18);
-            tvName.setPadding(0, 0, 0, 10);
+            tvName.setTextColor(Color.BLACK);
+            tvName.setPadding(10, 10, 10, 10);
             tvName.setText("姓名：" + name);
             li_container.addView(tvName);
         }
         if (!TextUtils.isEmpty(country)) {
             TextView tvCountry = new TextView(this);
+            tvCountry.setBackgroundResource(R.drawable.bg_card);
             tvCountry.setTextSize(18);
-            tvCountry.setPadding(0, 0, 0, 10);
+            tvCountry.setTextColor(Color.BLACK);
+            tvCountry.setPadding(10, 10, 10, 10);
             tvCountry.setText("国籍：" + country);
             li_container.addView(tvCountry);
         }
         if (!TextUtils.isEmpty(constellation) && !constellation.equals("未知")) {
             TextView tvConstellation =
                     new TextView(this);
+
+            tvConstellation.setBackgroundResource(R.drawable.bg_card);
             tvConstellation.setTextSize(18);
+            tvConstellation.setTextColor(Color.BLACK);
             tvConstellation.setText("星座：" + constellation);
+            tvConstellation.setPadding(10, 10, 10, 10);
             li_container.addView(tvConstellation);
         }
         if (stature != 0f) {
             TextView tvStature = new TextView(this);
+            tvStature.setBackgroundResource(R.drawable.bg_card);
             tvStature.setTextSize(18);
-            tvStature.setPadding(0, 0, 0, 10);
+            tvStature.setTextColor(Color.BLACK);
+            tvStature.setPadding(10, 10, 10, 10);
             tvStature.setText("身高：" + stature);
             li_container.addView(tvStature);
         }
         if (weight != 0f) {
             TextView tvWeight = new TextView(this);
+            tvWeight.setBackgroundResource(R.drawable.bg_card);
             tvWeight.setTextSize(18);
-            tvWeight.setPadding(0, 0, 0, 10);
+            tvWeight.setTextColor(Color.BLACK);
+            tvWeight.setPadding(10, 10, 10, 10);
             tvWeight.setText("体重：" + weight);
             li_container.addView(tvWeight);
         }
         if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {
             TextView tvBirth = new TextView(this);
+            tvBirth.setBackgroundResource(R.drawable.bg_card);
             tvBirth.setTextSize(18);
-            tvBirth.setPadding(0, 0, 0, 10);
+            tvBirth.setTextColor(Color.BLACK);
+            tvBirth.setPadding(10, 10, 10, 10);
             tvBirth.setText("出生日期：" + birth);
             li_container.addView(tvBirth);
         }
         if (!TextUtils.isEmpty(intro)) {
             TextView tvIntro = new TextView(this);
+            tvIntro.setBackgroundResource(R.drawable.bg_card);
             tvIntro.setTextSize(18);
-            tvIntro.setPadding(0, 0, 0, 10);
+            tvIntro.setTextColor(Color.BLACK);
+            tvIntro.setPadding(10, 10, 10, 10);
             tvIntro.setText("简介：" + intro);
             li_container.addView(tvIntro);
         }
         if (!TextUtils.isEmpty(url)) {
             TextView tvUrl = new TextView(this);
+            tvUrl.setBackgroundResource(R.drawable.bg_card);
             String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 tvUrl.setText(Html.fromHtml(String.format(html, url), 1));
@@ -170,7 +193,7 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
                 tvUrl.setText(Html.fromHtml(String.format(html, url)));
             }
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
-            tvUrl.setPadding(0, 0, 0, 10);
+            tvUrl.setPadding(10, 10, 10, 10);
             tvUrl.setGravity(Gravity.CENTER);
             li_container.addView(tvUrl);
         }

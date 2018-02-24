@@ -4,7 +4,6 @@ package com.cyl.musiclake.ui.main;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.DataClearmanager;
+import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 
@@ -63,7 +63,6 @@ public class SettingsActivity extends BaseActivity {
 
         private PreferenceScreen preference_about, preference_cache, preference_update;
         public SwitchPreference wifi_mode;
-        public CheckBoxPreference night_mode;
 
         public GeneralPreferenceFragment() {
         }
@@ -88,17 +87,13 @@ public class SettingsActivity extends BaseActivity {
             preference_cache = (PreferenceScreen) findPreference("key_cache");
 
             wifi_mode = (SwitchPreference) findPreference("wifi_mode");
-            night_mode = (CheckBoxPreference) findPreference("night_mode");
 
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-//                        String size = DataClearmanager.getTotalCacheSize(getActivity());
-//                        preference_cache.setSummary(size);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            new Handler().post(() -> {
+                try {
+                    String size = DataClearmanager.getTotalCacheSize(getActivity());
+                    preference_cache.setSummary(size);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
 
@@ -106,16 +101,15 @@ public class SettingsActivity extends BaseActivity {
             preference_update.setOnPreferenceClickListener(this);
             preference_cache.setOnPreferenceClickListener(this);
 
+            wifi_mode.setChecked(PreferencesUtils.getWifiMode());
 
-            wifi_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Log.e("sss", newValue.toString());
-
-                    return false;
-                }
+            wifi_mode.setOnPreferenceChangeListener((preference, newValue) -> {
+                Log.e("sss", newValue.toString());
+                boolean wifiMode = (boolean) newValue;
+                wifi_mode.setChecked(wifiMode);
+                PreferencesUtils.saveWifiMode(wifiMode);
+                return false;
             });
-
         }
 
         @Override
@@ -132,20 +126,17 @@ public class SettingsActivity extends BaseActivity {
                     }
                     break;
                 case "key_cache":
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                //清除缓存
-                                DataClearmanager.cleanApplicationData(getActivity());
-                                ToastUtils.show(getActivity(), "清除成功");
-                                String size = DataClearmanager.getTotalCacheSize(getActivity());
-                                preference_cache.setSummary(size);
-                            } catch (Exception e) {
-                                //清除失败
-                                ToastUtils.show(getActivity(), "清除失败");
-                                e.printStackTrace();
-                            }
+                    new Handler().post(() -> {
+                        try {
+                            //清除缓存
+                            DataClearmanager.cleanApplicationData(getActivity());
+                            ToastUtils.show(getActivity(), "清除成功");
+                            String size = DataClearmanager.getTotalCacheSize(getActivity());
+                            preference_cache.setSummary(size);
+                        } catch (Exception e) {
+                            //清除失败
+                            ToastUtils.show(getActivity(), "清除失败");
+                            e.printStackTrace();
                         }
                     });
                     break;
@@ -156,8 +147,6 @@ public class SettingsActivity extends BaseActivity {
             }
             return false;
         }
-
-
     }
 
 }

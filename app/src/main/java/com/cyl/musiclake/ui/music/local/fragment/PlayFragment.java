@@ -22,29 +22,24 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.source.download.TasksManager;
-import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.common.TransitionAnimationUtils;
+import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.local.contract.PlayControlsContract;
 import com.cyl.musiclake.ui.music.local.dialog.PlayQueueDialog;
 import com.cyl.musiclake.ui.music.local.presenter.PlayControlsPresenter;
-import com.cyl.musiclake.ui.music.online.adapter.FileDownloadListener;
+import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.utils.ColorUtil;
-import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
-import com.liulishuo.filedownloader.BaseDownloadTask;
-import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
@@ -164,26 +159,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
             ToastUtils.show(getContext(), "不能下载此歌曲!");
             return;
         }
-        new MaterialDialog.Builder(getContext())
-                .title("歌曲下载")
-                .content("歌名：  " + music.getTitle() +
-                        "\n歌曲id：" + music.getId() +
-                        "\n下载地址：\n" + music.getUri()
-                ).positiveText("确定")
-                .negativeText("取消")
-                .onPositive((materialDialog, dialogAction) -> {
-                    TasksManagerModel model =
-                            TasksManager.getImpl().addTask(music.getId(), music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
-                    ToastUtils.show(getContext(), "下载任务添加成功");
-                    BaseDownloadTask task = FileDownloader.getImpl()
-                            .create(model.getUrl())
-                            .setPath(model.getPath())
-                            .setCallbackProgressTimes(100)
-                            .setListener(new FileDownloadListener());
-                    TasksManager.getImpl()
-                            .addTaskForViewHolder(task);
-                    task.start();
-                }).build().show();
+        DownloadDialog.newInstance(music)
+                .show(getChildFragmentManager(), getTag());
     }
 
     Handler mhandler;
@@ -325,6 +302,10 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
         mCivImage.setImageBitmap(albumArt);
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).mImageView.setImageBitmap(albumArt);
+        }
 
         if (operatingAnim != null) {
             if (PlayManager.isPlaying()) {
@@ -524,7 +505,9 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPresenter.unsubscribe();
+        if (mPresenter != null) {
+            mPresenter.unsubscribe();
+        }
     }
 
     @Override

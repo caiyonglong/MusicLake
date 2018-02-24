@@ -3,10 +3,11 @@ package com.cyl.musiclake.ui.login;
 
 import android.content.Context;
 
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.ui.login.user.User;
 
 import java.util.Map;
 
@@ -33,7 +34,10 @@ public class UserPresenter implements UserContract.Presenter {
 
     @Override
     public void subscribe() {
-
+        RxBus.getInstance().register(User.class)
+                .subscribe(playlist -> {
+                    mView.updateView(userModel.getUserInfo());
+                });
     }
 
     @Override
@@ -60,7 +64,7 @@ public class UserPresenter implements UserContract.Presenter {
                         if (userInfo.getStatus().equals("success")) {
                             //保存用户信息
                             userModel.savaInfo(userInfo.getData());
-                            mView.updateView(userInfo.getData());
+                            mView.updateView(userModel.getUserInfo());
                         } else {
                             mView.showErrorInfo(userInfo.getMessage());
                         }
@@ -118,5 +122,10 @@ public class UserPresenter implements UserContract.Presenter {
     @Override
     public void getUserInfo() {
         mView.updateView(userModel.getUserInfo());
+    }
+
+    @Override
+    public void logout() {
+        userModel.cleanInfo();
     }
 }

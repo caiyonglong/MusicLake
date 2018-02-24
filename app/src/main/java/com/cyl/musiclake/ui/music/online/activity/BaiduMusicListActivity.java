@@ -1,8 +1,10 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,6 +22,8 @@ import com.cyl.musiclake.data.model.Music;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.common.Extras;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.contract.OnlineMusicListContract;
 import com.cyl.musiclake.ui.music.online.presenter.OnlineMusicListPresenter;
 import com.cyl.musiclake.utils.FormatUtil;
@@ -105,8 +110,35 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_more) {
+                Music music = (Music) adapter.getItem(position);
+                mPresenter.playCurrentMusic(music);
+            }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            mPresenter.playCurrentMusic(music);
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.popup_song_detail:
+                        ShowDetailDialog.newInstance(music)
+                                .show(getSupportFragmentManager(), getLocalClassName());
+                        break;
+                    case R.id.popup_song_goto_artist:
+                        Log.e(TAG, music.toString());
+                        Intent intent = new Intent(this, ArtistInfoActivity.class);
+                        intent.putExtra(Extras.TING_UID, music.getArtistId());
+                        startActivity(intent);
+                        break;
+                    case R.id.popup_song_download:
+                        DownloadDialog.newInstance(music)
+                                .show(getSupportFragmentManager(), getLocalClassName());
+                        break;
+                }
+                return false;
+            });
+            popupMenu.inflate(R.menu.popup_song_online);
+            popupMenu.show();
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             if (mCurrentCounter < TOTAL_COUNTER) {

@@ -10,8 +10,7 @@
     <attr name="progressDrawableWithBackground" format="reference" />
 
 
-    <style name="AppTheme" parent="MyThemeBlue">
-    </style>
+    <style name="AppTheme" parent="MyThemeBlue"></style>
 
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
@@ -33,7 +32,7 @@
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-
+    <!--夜间模式-->
     <style name="MyThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--选中状态icon的颜色和字体颜色-->

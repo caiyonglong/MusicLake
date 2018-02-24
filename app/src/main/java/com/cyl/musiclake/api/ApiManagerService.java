@@ -70,7 +70,7 @@ public interface ApiManagerService {
     Observable<ApiModel<List<Location>>> getNearPeopleInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @GET
-    Observable<ApiModel<OnlineArtistInfo>> getArtistInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
+    Observable<OnlineArtistInfo> getArtistInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @GET
     Observable<BaiduMusicList> getOnlinePlaylist(@Url String baseUrl, @QueryMap Map<String, String> params);

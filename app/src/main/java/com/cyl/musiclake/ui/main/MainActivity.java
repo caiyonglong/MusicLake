@@ -19,13 +19,12 @@ import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.common.Constants;
-import com.cyl.musiclake.ui.music.local.fragment.PlayFragment;
 import com.cyl.musiclake.ui.login.LoginActivity;
-import com.cyl.musiclake.ui.login.UserCenterActivity;
 import com.cyl.musiclake.ui.login.UserContract;
 import com.cyl.musiclake.ui.login.UserPresenter;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.ui.map.ShakeActivity;
+import com.cyl.musiclake.ui.music.local.fragment.PlayFragment;
 import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -51,7 +50,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    ImageView mImageView;
+    public ImageView mImageView;
     CircleImageView mAvatarIcon;
     TextView mName;
     TextView mNick;
@@ -71,7 +70,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-
         //菜单栏的头部控件初始化
         headerView = mNavigationView.getHeaderView(0);
         mImageView = headerView.findViewById(R.id.header_bg);
@@ -80,7 +78,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNick = headerView.findViewById(R.id.header_nick);
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
-//        fullScreen(this);
     }
 
     @Override
@@ -126,7 +123,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         headerView.setOnClickListener(v -> {
             if (login_status) {
-                mTargetClass = UserCenterActivity.class;
+//                mTargetClass = UserCenterActivity.class;
             } else {
                 mTargetClass = LoginActivity.class;
             }
@@ -225,8 +222,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             home.addCategory(Intent.CATEGORY_HOME);
             startActivity(home);
-//            return true;
-//            super.onBackPressed();
         } else {
             super.onBackPressed();
         }
@@ -283,6 +278,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void updateView(User user) {
         if (user != null) {
+            Log.e("TAG", user.toString());
             login_status = true;
             mName.setText(user.getName());
             mNick.setText(user.getNick());

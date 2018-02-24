@@ -42,9 +42,8 @@ public class OnlineMusicAdapter extends BaseQuickAdapter<BaiduMusicInfo, BaseVie
                 .load(music.getCoverUri())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) holder.getView(R.id.iv_cover));
-//        holder.getView(R.id.iv_more);
-//        holder.getView(R.id.v_playing);
-//        setOnPopupMenuListener();
+
+        holder.addOnClickListener(R.id.iv_more);
     }
 
     //    private void setOnPopupMenuListener(ItemHolder holder, final int position) {

@@ -2,10 +2,10 @@
 
     <PreferenceCategory android:title="@string/info_common_settings">
 
-        <CheckBoxPreference
-            android:key="night_mode"
-            android:summary="应用夜间模式到整个应用"
-            android:title="夜间模式" />
+        <!--<CheckBoxPreference-->
+            <!--android:key="night_mode"-->
+            <!--android:summary="应用夜间模式到整个应用"-->
+            <!--android:title="夜间模式" />-->
 
         <SwitchPreference
             android:defaultValue="true"

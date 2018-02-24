@@ -79,7 +79,9 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     @Override
     public void unsubscribe() {
-        mHandler.removeCallbacks(updateProgress);
+        if (updateProgress != null) {
+            mHandler.removeCallbacks(updateProgress);
+        }
     }
 
     @SuppressLint("StaticFieldLeak")

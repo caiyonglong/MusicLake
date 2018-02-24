@@ -7,42 +7,38 @@
         android:id="@+id/header_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#449D8B"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/music_eight" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
         android:orientation="vertical"
-        android:padding="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:gravity="center">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/header_face"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_account_circle" />
-        </FrameLayout>
 
+            <TextView
+                android:id="@+id/header_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/header_author_name"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/header_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:lines="1"
-            android:text="@string/header_author_name"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/header_nick"
