@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.online.contract;
 
 
-import com.cyl.musiclake.ui.base.BasePresenter;
-import com.cyl.musiclake.ui.base.BaseView;
+import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.base.BaseView;
 import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 
 public interface ArtistInfoContract {

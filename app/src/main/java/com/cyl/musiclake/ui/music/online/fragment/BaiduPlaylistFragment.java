@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.baidu.BaiduMusicList.Billboard;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;

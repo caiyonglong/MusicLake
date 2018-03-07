@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.base;
+package com.cyl.musiclake.base;
 
 
 public interface BasePresenter<T extends BaseView> {

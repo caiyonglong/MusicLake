@@ -5,7 +5,7 @@ import android.webkit.WebSettings;
 
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.common.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

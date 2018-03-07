@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.common;
+package com.cyl.musiclake.common;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;

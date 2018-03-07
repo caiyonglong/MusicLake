@@ -12,7 +12,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.utils.ConvertUtils;

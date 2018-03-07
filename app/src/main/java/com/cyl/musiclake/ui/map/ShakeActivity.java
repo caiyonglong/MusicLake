@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.service.MusicPlayerService;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.map.location.Location;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.ShakeManager;
 
 import java.util.ArrayList;

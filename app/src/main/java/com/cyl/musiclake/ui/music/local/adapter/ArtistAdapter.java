@@ -8,8 +8,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.data.model.Artist;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;

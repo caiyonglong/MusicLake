@@ -23,10 +23,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.TransitionAnimationUtils;
+import com.cyl.musiclake.service.FloatLyricViewManager;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.TransitionAnimationUtils;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.local.contract.PlayControlsContract;
@@ -37,9 +38,10 @@ import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
-import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
+import com.cyl.musiclake.view.lyric.LyricPraseUtils;
+import com.cyl.musiclake.view.lyric.LyricView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
@@ -403,8 +405,10 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         if (lyricInfo != null) {
             if (isFilePath) {
                 mLrcView.setLyricFile(new File(lyricInfo), "utf-8");
+                FloatLyricViewManager.setLyric(LyricPraseUtils.setLyricResource(new File(lyricInfo)));
             } else {
                 mLrcView.setLyricContent(lyricInfo, "utf-8");
+                FloatLyricViewManager.setLyric(LyricPraseUtils.setLyricResource(lyricInfo));
             }
         } else {
             mLrcView.reset("暂无歌词");

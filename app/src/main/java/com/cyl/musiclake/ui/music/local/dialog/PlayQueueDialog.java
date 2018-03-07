@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.PlayQueueAdapter;
 import com.cyl.musiclake.ui.music.local.contract.PlayQueueContract;

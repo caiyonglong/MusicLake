@@ -1,4 +1,4 @@
-package com.cyl.musiclake.data.model;
+package com.cyl.musiclake.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;

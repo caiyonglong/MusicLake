@@ -10,8 +10,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
-import com.cyl.musiclake.data.model.UpdateInfo;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.bean.UpdateInfo;
+import com.cyl.musiclake.common.Constants;
 
 /**
  * 功能: 软件更新工具类

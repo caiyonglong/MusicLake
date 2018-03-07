@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 

@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.local.adapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Playlist;
 
 import java.util.List;
 

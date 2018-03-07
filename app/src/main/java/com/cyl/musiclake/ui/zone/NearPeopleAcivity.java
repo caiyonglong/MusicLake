@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.login.user.User;
 
 import java.util.ArrayList;

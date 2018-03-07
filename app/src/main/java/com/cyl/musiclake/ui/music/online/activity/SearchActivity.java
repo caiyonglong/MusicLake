@@ -10,8 +10,8 @@ import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.music.online.SearchAdapter;
 import com.cyl.musiclake.ui.music.online.contract.SearchContract;
 import com.cyl.musiclake.ui.music.online.presenter.SearchPresenter;

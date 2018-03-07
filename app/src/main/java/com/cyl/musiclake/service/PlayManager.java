@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.cyl.musiclake.IMusicService;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 
 import java.util.ArrayList;
 import java.util.List;

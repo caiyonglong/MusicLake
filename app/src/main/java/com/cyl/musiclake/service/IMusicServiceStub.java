@@ -3,7 +3,7 @@ package com.cyl.musiclake.service;
 import android.os.RemoteException;
 
 import com.cyl.musiclake.IMusicService;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

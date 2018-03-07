@@ -1,10 +1,10 @@
-package com.cyl.musiclake.data.model;
+package com.cyl.musiclake.event;
 
 /**
  * Created by D22434 on 2018/1/10.
  */
 
-public class HistoryChangedEvent {
+public class MetaChangedEvent {
     private String id;
     private String name;
     private String artist;
@@ -38,7 +38,7 @@ public class HistoryChangedEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HistoryChangedEvent that = (HistoryChangedEvent) o;
+        MetaChangedEvent that = (MetaChangedEvent) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;

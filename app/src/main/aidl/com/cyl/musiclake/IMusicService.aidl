@@ -2,7 +2,7 @@
 package com.cyl.musiclake;
 
 // Declare any non-default types here with import statements
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 
 interface IMusicService {
     void playOnline(in Music music);

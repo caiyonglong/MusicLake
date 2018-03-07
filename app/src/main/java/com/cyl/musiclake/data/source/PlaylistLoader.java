@@ -3,8 +3,8 @@ package com.cyl.musiclake.data.source;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
 import com.cyl.musiclake.data.source.db.DBData;
 import com.cyl.musiclake.utils.LogUtil;

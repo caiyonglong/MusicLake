@@ -11,11 +11,10 @@ import android.view.View;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
-import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.LocalAdapter;
 import com.cyl.musiclake.ui.music.local.adapter.PlaylistAdapter;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;

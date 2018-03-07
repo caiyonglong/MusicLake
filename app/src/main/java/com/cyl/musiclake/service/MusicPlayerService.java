@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -23,6 +24,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.app.NotificationCompat;
@@ -37,21 +39,19 @@ import android.util.Log;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.data.source.PlayHistoryLoader;
 import com.cyl.musiclake.data.source.PlayQueueLoader;
-import com.cyl.musiclake.ui.common.Constants;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.SystemUtils;
-import com.cyl.musiclake.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -78,6 +78,8 @@ public class MusicPlayerService extends Service {
     public static final String ACTION_PREV = "com.cyl.music_lake.notify.prev";// 上一首广播标志
     public static final String ACTION_TOGGLE_PAUSE = "com.cyl.music_lake.notify.play_state";// 播放暂停广播
 
+    public static final String ACTION_LYRIC = "com.cyl.music_lake.notify.lyric";// 播放暂停广播
+
     public static final String PLAY_STATE_CHANGED = "com.cyl.music_lake.play_state";// 播放暂停广播
 
     public static final String PLAYLIST_CHANGED = "com.cyl.music_lake.playlist_change";
@@ -96,6 +98,8 @@ public class MusicPlayerService extends Service {
     public static final String CMD_PAUSE = "pause";//按键暂停
     public static final String CMD_PLAY = "play";//按键播放
     public static final String CMD_STOP = "stop";//按键停止
+    public static final String CMD_FORWARD = "forward";//按键停止
+    public static final String CMD_REWIND = "reward";//按键停止
     public static final String SERVICE_CMD = "cmd_service";//状态改变
     public static final String FROM_MEDIA_BUTTON = "media";//状态改变
     public static final String CMD_NAME = "name";//状态改变
@@ -139,7 +143,10 @@ public class MusicPlayerService extends Service {
     HeadsetReceiver mHeadsetReceiver;
     HeadsetPlugInReceiver mHeadsetPlugInReceiver;
 
+    private FloatLyricViewManager mFloatLyricViewManager;
+
     private AudioManager mAudioManager;
+    private ComponentName mediaButtonReceiverComponent;
 
     private NotificationManager mNotificationManager;
     private Builder mNotificationBuilder;
@@ -214,8 +221,9 @@ public class MusicPlayerService extends Service {
                         }
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
-                        ToastUtils.show(MyApplication.mContext, (String) msg.obj);
-                        service.next();
+                        LogUtil.e(TAG, msg.obj + "---");
+//                        ToastUtils.show(MyApplication.mContext, (String) msg.obj);
+//                        service.next();
                         break;
                     case RELEASE_WAKELOCK://释放电源锁
                         service.mWakeLock.release();
@@ -309,9 +317,8 @@ public class MusicPlayerService extends Service {
     private void initConfig() {
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        ComponentName mediaButtonReceiverComponent = new ComponentName(getPackageName(),
+        mediaButtonReceiverComponent = new ComponentName(getPackageName(),
                 MediaButtonIntentReceiver.class.getName());
-        mAudioManager.registerMediaButtonEventReceiver(mediaButtonReceiverComponent);
 
         mMainHandler = new Handler();
         mRepeatMode = PreferencesUtils.getPlayMode();
@@ -319,6 +326,8 @@ public class MusicPlayerService extends Service {
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PlayerWakelockTag");
+
+        mFloatLyricViewManager = new FloatLyricViewManager(this);
     }
 
 
@@ -327,7 +336,10 @@ public class MusicPlayerService extends Service {
      * MediaSessionCompat用于告诉系统及其他应用当前正在播放的内容,以及接收什么类型的播放控制
      */
     private void setUpMediaSession() {
-        mSession = new MediaSessionCompat(this, "Listener");
+        mSession = new MediaSessionCompat(this, "Listener"
+                , mediaButtonReceiverComponent, null);
+        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPause() {
@@ -362,7 +374,7 @@ public class MusicPlayerService extends Service {
                 releaseServiceUiAndStop();
             }
         });
-        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mSession.isActive();
     }
 
     /**
@@ -488,7 +500,7 @@ public class MusicPlayerService extends Service {
             mPlayingPos = getNextPosition();
             Log.e(TAG, "next: " + mPlayingPos);
             setNextTrack(); //设置nextMediaPlayer
-            stop(false);
+//            stop(false);
             playCurrentAndNext();
             notifyChange(META_CHANGED);
         }
@@ -501,7 +513,7 @@ public class MusicPlayerService extends Service {
         synchronized (this) {
             mPlayingPos = getPreviousPosition();
             LogUtil.e(TAG, "prev: " + mPlayingPos);
-            stop(false);
+//            stop(false);
             playCurrentAndNext();
 //            play();
             notifyChange(META_CHANGED);
@@ -519,6 +531,7 @@ public class MusicPlayerService extends Service {
             mPlayingMusic = mPlaylist.get(mPlayingPos);
             saveHistory();
             mHistoryPos.add(mPlayingPos);
+            isMusicPlaying =true;
             mPlayer.setDataSource(mPlayingMusic.getUri());
         }
     }
@@ -630,8 +643,7 @@ public class MusicPlayerService extends Service {
         intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
         sendBroadcast(intent);
 
-        mAudioManager.registerMediaButtonEventReceiver(new ComponentName(getPackageName(),
-                MediaButtonIntentReceiver.class.getName()));
+        mAudioManager.registerMediaButtonEventReceiver(mediaButtonReceiverComponent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             mSession.setActive(true);
 
@@ -1007,6 +1019,8 @@ public class MusicPlayerService extends Service {
                 .addAction(R.drawable.ic_skip_next,
                         "",
                         retrievePlaybackAction(ACTION_NEXT))
+                .addAction(R.drawable.ic_icon, "歌词",
+                        retrievePlaybackAction(ACTION_LYRIC))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP));
 
@@ -1161,6 +1175,17 @@ public class MusicPlayerService extends Service {
             mPausedByTransientLossOfFocus = false;
             seekTo(0);
             releaseServiceUiAndStop();
+        } else if (ACTION_LYRIC.equals(action)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(getApplicationContext())) {
+                    //启动Activity让用户授权
+                    Intent intent1 = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    intent1.setData(Uri.parse("package:" + getPackageName()));
+                    startActivity(intent);
+                } else {
+                    mFloatLyricViewManager.startFloatLyric();
+                }
+            }
         }
     }
 
@@ -1277,7 +1302,8 @@ public class MusicPlayerService extends Service {
         unregisterReceiver(mHeadsetReceiver);
         unregisterReceiver(mHeadsetPlugInReceiver);
 
-        mWakeLock.release();
+        if (mWakeLock.isHeld())
+            mWakeLock.release();
     }
 
 }

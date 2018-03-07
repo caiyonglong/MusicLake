@@ -3,7 +3,7 @@ package com.cyl.musiclake.data.source;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.cyl.musiclake.data.model.Artist;
+import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
 
 import java.util.List;

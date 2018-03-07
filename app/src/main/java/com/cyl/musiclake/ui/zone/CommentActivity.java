@@ -16,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.login.user.UserStatus;
-import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 

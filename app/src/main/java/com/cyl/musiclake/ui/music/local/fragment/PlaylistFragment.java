@@ -14,9 +14,9 @@ import android.view.MenuItem;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.source.PlaylistLoader;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.ui.music.local.adapter.MyViewPagerAdapter;
-import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.local.dialog.CreatePlaylistDialog;
 import com.cyl.musiclake.view.MultiViewPager;
 

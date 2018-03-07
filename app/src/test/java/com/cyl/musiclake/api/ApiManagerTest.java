@@ -1,7 +1,7 @@
 package com.cyl.musiclake.api;
 
 import com.cyl.musiclake.api.qq.QQApiModel;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.common.Constants;
 import com.google.gson.Gson;
 
 import junit.framework.TestCase;

@@ -2,10 +2,10 @@ package com.cyl.musiclake.data.source;
 
 import android.content.Context;
 
-import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.data.model.Artist;
-import com.cyl.musiclake.data.model.FolderInfo;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.bean.FolderInfo;
+import com.cyl.musiclake.bean.Music;
 
 import java.util.List;
 

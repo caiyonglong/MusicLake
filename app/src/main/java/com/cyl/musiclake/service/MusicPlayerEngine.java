@@ -10,7 +10,6 @@ import android.util.Log;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import static com.cyl.musiclake.service.MusicPlayerService.PREPARE_ASYNC_ENDED;
 import static com.cyl.musiclake.service.MusicPlayerService.PREPARE_ASYNC_UPDATE;
 import static com.cyl.musiclake.service.MusicPlayerService.RELEASE_WAKELOCK;
 import static com.cyl.musiclake.service.MusicPlayerService.TRACK_PLAY_ENDED;
@@ -22,7 +21,7 @@ import static com.cyl.musiclake.service.MusicPlayerService.TRACK_WENT_TO_NEXT;
  */
 
 public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnBufferingUpdateListener {
+        MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
 
     private String TAG = "MusicPlayerEngine";
 
@@ -57,8 +56,8 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             } else {
                 player.setDataSource(path);
             }
-            player.prepareAsync();
-            player.setOnPreparedListener(this);
+            player.prepare();
+//            player.setOnPreparedListener(this);
             player.setOnBufferingUpdateListener(this);
         } catch (final IOException todo) {
             return false;
@@ -67,12 +66,13 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
         }
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+        player.start();
         return true;
     }
 
     public void setNextDataSource(final String path) {
         try {
-            Log.e(TAG, "--" + path);
+            Log.e(TAG, "-setNextDataSource-" + path);
             mCurrentMediaPlayer.setNextMediaPlayer(null);
 
             if (mNextMediaPlayer != null) {
@@ -202,11 +202,11 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             mHandler.sendEmptyMessage(RELEASE_WAKELOCK);
         }
     }
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        mHandler.sendEmptyMessage(PREPARE_ASYNC_ENDED);
-    }
+//
+//    @Override
+//    public void onPrepared(MediaPlayer mp) {
+//        mHandler.sendEmptyMessage(PREPARE_ASYNC_ENDED);
+//    }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {

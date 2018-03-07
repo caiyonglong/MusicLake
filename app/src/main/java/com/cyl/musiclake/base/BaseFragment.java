@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.base;
+package com.cyl.musiclake.base;
 
 import android.app.Activity;
 import android.os.Bundle;

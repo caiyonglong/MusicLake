@@ -1,4 +1,4 @@
-package com.cyl.musiclake.view;
+package com.cyl.musiclake.view.lyric;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

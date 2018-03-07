@@ -1,9 +1,9 @@
 package com.cyl.musiclake.ui.music.local.contract;
 
 
-import com.cyl.musiclake.data.model.Artist;
-import com.cyl.musiclake.ui.base.BasePresenter;
-import com.cyl.musiclake.ui.base.BaseView;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.base.BaseView;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.MyApplication;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 
 
 /**

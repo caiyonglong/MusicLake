@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.cyl.musiclake.view.LyricView
+    <com.cyl.musiclake.view.lyric.LyricView
         android:id="@+id/lyricShow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

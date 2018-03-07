@@ -1,4 +1,4 @@
-package com.cyl.musiclake.view;
+package com.cyl.musiclake.view.lyric;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 

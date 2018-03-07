@@ -3,10 +3,10 @@ package com.cyl.musiclake.data.source.db;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.data.model.Artist;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.utils.LogUtil;
 
 public class MusicCursorWrapper extends CursorWrapper {

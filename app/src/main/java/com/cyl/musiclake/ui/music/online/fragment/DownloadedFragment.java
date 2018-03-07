@@ -8,11 +8,11 @@ import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;

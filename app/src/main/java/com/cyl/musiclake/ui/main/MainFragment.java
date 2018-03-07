@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.PageAdapter;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.PageAdapter;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 

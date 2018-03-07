@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.base;
+package com.cyl.musiclake.base;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -16,10 +16,10 @@ import android.widget.Toast;
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.data.model.HistoryChangedEvent;
-import com.cyl.musiclake.data.model.MetaChangedEvent;
-import com.cyl.musiclake.data.model.Playlist;
-import com.cyl.musiclake.data.model.StatusChangedEvent;
+import com.cyl.musiclake.event.HistoryChangedEvent;
+import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.service.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -108,18 +108,18 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
 
     private final static class PlaybackStatus extends BroadcastReceiver {
 
-        private final WeakReference<BaseActivity> mReference;
+        private final WeakReference<BaseActivity> mReferences;
 
 
         public PlaybackStatus(final BaseActivity activity) {
-            mReference = new WeakReference<BaseActivity>(activity);
+            mReferences = new WeakReference<BaseActivity>(activity);
         }
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
             Log.e("PlaybackStatus", "接收到广播-------------" + action);
-            BaseActivity baseActivity = mReference.get();
+            BaseActivity baseActivity = (BaseActivity) mReferences.get();
             if (baseActivity != null && action != null) {
                 switch (action) {
                     case MusicPlayerService.META_CHANGED:
@@ -134,7 +134,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                     case MusicPlayerService.PLAY_QUEUE_CLEAR:
                         break;
                     case MusicPlayerService.PLAYLIST_CHANGED:
-                        RxBus.getInstance().post(new Playlist());
+                        RxBus.getInstance().post(new PlaylistEvent());
                         break;
                     case MusicPlayerService.TRACK_ERROR:
                         final String errorMsg = context.getString(R.string.error_playing_track);

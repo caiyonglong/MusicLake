@@ -9,10 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Artist;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.Constants;
-import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.ArtistAdapter;
 import com.cyl.musiclake.ui.music.local.contract.ArtistContract;
 import com.cyl.musiclake.ui.music.local.presenter.ArtistPresenter;

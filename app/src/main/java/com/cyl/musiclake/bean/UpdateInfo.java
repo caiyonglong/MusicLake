@@ -1,4 +1,4 @@
-package com.cyl.musiclake.data.model;
+package com.cyl.musiclake.bean;
 
 /**
  * 作者：yonglong on 2016/9/23 09:45

@@ -1,6 +1,7 @@
 package com.cyl.musiclake.service;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.utils.LogUtil;
+
+import java.util.List;
 
 /**
  * 需要在manifest文件中注册
@@ -22,7 +26,6 @@ import com.cyl.musiclake.ui.main.MainActivity;
  * Triple press: previous track
  * Long press: voice search
  */
-//在WakefulBroadcastReceiver中调用startWakefulService来启动MusicService在后台播放音乐,
 
 public class MediaButtonIntentReceiver extends BroadcastReceiver {
     private static final boolean DEBUG = false;
@@ -53,13 +56,13 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                     if (!mLaunched) {
                         final Context context = (Context) msg.obj;
                         final Intent i = new Intent();
+                        i.putExtra("autoshuffle", "true");
                         i.setClass(context, MainActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(i);
                         mLaunched = true;
                     }
                     break;
-
                 case MSG_HEADSET_DOUBLE_CLICK_TIMEOUT: //双击时间阈值内
                     final int clickCount = msg.arg1;
                     final String command;
@@ -81,8 +84,8 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                     }
 
                     if (command != null) {
-                        final Context context = (Context) msg.obj;
-                        startService(context, command);
+                        final Context context1 = (Context) msg.obj;
+                        startService(context1, command);
                     }
                     break;
             }
@@ -137,10 +140,18 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         final String intentAction = intent.getAction();
+        LogUtil.e(TAG, "intentAction = " + intentAction);
         if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction)) { //当耳机拔出时暂停播放
-            startService(context, MusicPlayerService.CMD_PAUSE);
+            if (isMusicServiceRunning(context)) {
+                Intent i = new Intent(context, MusicPlayerService.class);
+                i.setAction(MusicPlayerService.SERVICE_CMD);
+                i.putExtra(MusicPlayerService.CMD_NAME, MusicPlayerService.CMD_PAUSE);
+                //for multi user,when use BT play music,should start service match current user
+                context.startService(i);
+            }
         } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) { //耳机按钮事件
             final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+            LogUtil.e(TAG, "keycode = " + event.getKeyCode());
             if (event == null) {
                 return;
             }
@@ -169,6 +180,16 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
                     command = MusicPlayerService.CMD_PLAY;
                     break;
+                /// M: AVRCP and Android Music AP supports the FF/REWIND @{
+                case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+                    command = MusicPlayerService.CMD_FORWARD;
+                    break;
+                case KeyEvent.KEYCODE_MEDIA_REWIND:
+                    command = MusicPlayerService.CMD_REWIND;
+                    break;
+                default:
+                    break;
+                /// @}
             }
             if (command != null) {
                 if (action == KeyEvent.ACTION_DOWN) {
@@ -217,5 +238,27 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                 releaseWakeLockIfHandlerIdle();
             }
         }
+    }
+
+    /**
+     * M: Check whether Music service is running.
+     *
+     * @param context The context
+     * @return If running, return true, otherwise false.
+     */
+    private boolean isMusicServiceRunning(Context context) {
+        boolean isServiceRuning = false;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final int maxServciesNum = 100;
+        List<ActivityManager.RunningServiceInfo> list = am.getRunningServices(maxServciesNum);
+        for (ActivityManager.RunningServiceInfo info : list) {
+            if (MusicPlayerService.class.getName().equals(info.service.getClassName())) {
+                isServiceRuning = true;
+                break;
+            }
+        }
+        LogUtil.d(TAG, "isMusicServiceRunning "
+                + isServiceRuning + ", Runing service num is " + list.size());
+        return isServiceRuning;
     }
 }

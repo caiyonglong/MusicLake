@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.online.contract.OnlineMusicListContract;
 

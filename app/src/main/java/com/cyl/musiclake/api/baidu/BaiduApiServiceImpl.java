@@ -1,8 +1,8 @@
 package com.cyl.musiclake.api.baidu;
 
 import com.cyl.musiclake.api.ApiManager;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

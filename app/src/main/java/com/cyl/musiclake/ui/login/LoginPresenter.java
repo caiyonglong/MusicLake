@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.login.user.User;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.tencent.connect.UserInfo;

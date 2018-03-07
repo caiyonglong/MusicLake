@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.db.DBDaoImpl;
 import com.cyl.musiclake.data.source.db.DBData;
 import com.cyl.musiclake.utils.CoverLoader;

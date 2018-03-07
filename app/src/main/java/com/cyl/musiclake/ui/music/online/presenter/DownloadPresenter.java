@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.ui.music.online.contract.DownloadContract;

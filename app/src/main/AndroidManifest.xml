@@ -31,6 +31,10 @@
     <!--定位包、导航包需要的额外权限（注：基础权限也需要）-->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
     <application
         android:name="com.cyl.musiclake.MyApplication"
         android:allowBackup="true"
@@ -119,7 +123,7 @@
             android:screenOrientation="portrait" />
         <!--社区-->
         <receiver android:name=".service.MediaButtonIntentReceiver">
-            <intent-filter>
+            <intent-filter android:priority="999999999">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>

@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cyl.musiclake.data.model.Album;
-import com.cyl.musiclake.data.model.Artist;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;

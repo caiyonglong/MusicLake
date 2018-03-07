@@ -6,7 +6,7 @@ import android.content.Context;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.common.Constants;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.login.user.User;
 
 import java.util.Map;

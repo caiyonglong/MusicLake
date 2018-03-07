@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.common;
+package com.cyl.musiclake.common;
 
 /**
  * 作者：yonglong on 2016/9/24 10:57

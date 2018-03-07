@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.Extras;
-import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;

@@ -8,8 +8,8 @@ import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.utils.ToastUtils;
 

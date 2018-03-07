@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.login;
 
-import com.cyl.musiclake.ui.base.BasePresenter;
-import com.cyl.musiclake.ui.base.BaseView;
+import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.base.BaseView;
 import com.cyl.musiclake.ui.login.user.User;
 
 import java.util.Map;

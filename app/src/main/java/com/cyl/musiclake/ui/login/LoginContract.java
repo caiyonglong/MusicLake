@@ -3,8 +3,8 @@ package com.cyl.musiclake.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.cyl.musiclake.ui.base.BasePresenter;
-import com.cyl.musiclake.ui.base.BaseView;
+import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.base.BaseView;
 import com.cyl.musiclake.ui.login.user.User;
 
 import java.util.Map;

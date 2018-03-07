@@ -7,9 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.Extras;
-import com.cyl.musiclake.ui.common.PageAdapter;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.common.PageAdapter;
 
 import butterknife.BindView;
 

@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.local.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.contract.SongsContract;

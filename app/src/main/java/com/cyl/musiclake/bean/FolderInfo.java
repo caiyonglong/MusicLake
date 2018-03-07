@@ -1,4 +1,4 @@
-package com.cyl.musiclake.data.model;
+package com.cyl.musiclake.bean;
 
 public class FolderInfo {
 

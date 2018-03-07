@@ -16,10 +16,10 @@
 //
 //import com.cyl.musiclake.R;
 //import com.cyl.musiclake.callback.SecretCallback;
-//import com.cyl.musiclake.ui.base.BaseFragment;
+//import com.cyl.musiclake.base.BaseFragment;
 //import com.cyl.musiclake.ui.login.user.UserStatus;
-//import com.cyl.musiclake.ui.common.Constants;
-//import com.cyl.musiclake.ui.common.Extras;
+//import com.cyl.musiclake.common.Constants;
+//import com.cyl.musiclake.common.Extras;
 //import com.cyl.musiclake.utils.ToastUtils;
 //import com.zhy.http.okhttp.OkHttpUtils;
 //

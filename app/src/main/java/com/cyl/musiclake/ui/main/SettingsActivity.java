@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.utils.DataClearmanager;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.ToastUtils;

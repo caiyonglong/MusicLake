@@ -5,9 +5,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.FolderInfo;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.common.NavigateUtil;
+import com.cyl.musiclake.bean.FolderInfo;
+import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
 import com.cyl.musiclake.ui.music.local.presenter.FoldersPresenter;

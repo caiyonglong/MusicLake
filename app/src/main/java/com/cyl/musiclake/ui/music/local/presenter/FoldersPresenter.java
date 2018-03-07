@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.local.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.data.model.FolderInfo;
+import com.cyl.musiclake.bean.FolderInfo;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
 

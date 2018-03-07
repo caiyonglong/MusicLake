@@ -8,7 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 
 import java.util.List;
 

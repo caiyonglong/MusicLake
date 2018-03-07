@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.model.FolderInfo;
+import com.cyl.musiclake.bean.FolderInfo;
 
 import java.util.List;
 

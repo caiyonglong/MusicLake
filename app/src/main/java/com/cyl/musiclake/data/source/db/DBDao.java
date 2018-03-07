@@ -2,8 +2,8 @@ package com.cyl.musiclake.data.source.db;
 
 import android.database.Cursor;
 
-import com.cyl.musiclake.data.model.Music;
-import com.cyl.musiclake.data.model.Playlist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 
 import java.util.List;
 

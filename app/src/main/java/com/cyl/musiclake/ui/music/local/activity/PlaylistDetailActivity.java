@@ -17,13 +17,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.data.model.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.PlaylistLoader;
-import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
 import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.ui.common.Extras;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 

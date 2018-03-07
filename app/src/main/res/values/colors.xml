@@ -81,7 +81,7 @@
     <color name="blueGrey">#607d8b</color>
 
     <color name="translucent_white">#80FFFFFF</color>
-    <color name="translucent_black">#80000000</color>
+    <color name="translucent_black">#bb000000</color>
     <color name="translucent_grey">#809E9E9E</color>
     <color name="translucent_white_8p">#14FFFFFF</color>
     <color name="translucent_white_16p">#29FFFFFF</color>

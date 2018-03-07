@@ -65,6 +65,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.sothree.slidinguppanel:library:3.4.0'
     compile 'com.liulishuo.filedownloader:library:1.6.9'
+    compile 'com.github.florent37:shapeofview:1.0.4'
 
 //    compile 'com.gyf.barlibrary:barlibrary:2.3.0'
 //
