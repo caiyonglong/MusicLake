@@ -17,7 +17,7 @@ import java.io.File;
 class ExternalCacheDiskFactory extends DiskLruCacheFactory {
 
     public ExternalCacheDiskFactory(Context context) {
-        this(context, DiskCache.Factory.DEFAULT_DISK_CACHE_DIR, DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE);
+        this(context, FileUtils.getImageDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE);
     }
 
     public ExternalCacheDiskFactory(Context context, int diskCacheSize) {

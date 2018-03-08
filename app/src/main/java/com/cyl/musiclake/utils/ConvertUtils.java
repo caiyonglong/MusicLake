@@ -3,7 +3,7 @@ package com.cyl.musiclake.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Constants;
 
@@ -30,10 +30,10 @@ public class ConvertUtils {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
-            artist = MyApplication.getInstance().getString(R.string.unknown);
+            artist = MusicApp.getInstance().getString(R.string.unknown);
         }
         if (TextUtils.isEmpty(title)) {
-            title = MyApplication.getInstance().getString(R.string.unknown);
+            title = MusicApp.getInstance().getString(R.string.unknown);
         }
         return artist + " - " + title + Constants.FILENAME_MP3;
     }
@@ -49,10 +49,10 @@ public class ConvertUtils {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
-            artist = MyApplication.getInstance().getString(R.string.unknown);
+            artist = MusicApp.getInstance().getString(R.string.unknown);
         }
         if (TextUtils.isEmpty(title)) {
-            title = MyApplication.getInstance().getString(R.string.unknown);
+            title = MusicApp.getInstance().getString(R.string.unknown);
         }
         return artist + " - " + title + Constants.FILENAME_LRC;
     }
@@ -66,7 +66,7 @@ public class ConvertUtils {
     public static String getTitle(String title) {
         title = stringFilter(title);
         if (TextUtils.isEmpty(title)) {
-            title = MyApplication.getInstance().getString(R.string.unknown);
+            title = MusicApp.getInstance().getString(R.string.unknown);
         }
         return title;
     }
@@ -80,7 +80,7 @@ public class ConvertUtils {
     public static String getArtist(String artist) {
         artist = stringFilter(artist);
         if (TextUtils.isEmpty(artist)) {
-            artist = MyApplication.getInstance().getString(R.string.unknown);
+            artist = MusicApp.getInstance().getString(R.string.unknown);
         }
         return artist;
     }

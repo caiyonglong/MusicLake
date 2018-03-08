@@ -153,5 +153,7 @@
 
     <string name="play_next">播放下一首</string>
     <string name="album">专辑</string>
+    <string name="desktop_lyric">桌面歌词</string>
+    <string name="desktop_lyric_des">点击请求悬浮窗权限</string>
 
 </resources>

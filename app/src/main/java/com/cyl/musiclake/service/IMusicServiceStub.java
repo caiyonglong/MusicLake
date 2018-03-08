@@ -101,6 +101,11 @@ public class IMusicServiceStub extends IMusicService.Stub {
     }
 
     @Override
+    public void showDesktopLyric(boolean show) throws RemoteException {
+        mService.get().showDesktopLyric(show);
+    }
+
+    @Override
     public int position() throws RemoteException {
         return mService.get().getPlayPosition();
     }

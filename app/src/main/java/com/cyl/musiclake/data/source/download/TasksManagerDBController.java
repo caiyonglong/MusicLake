@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.data.source.db.DBHelper;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
@@ -20,7 +20,7 @@ public class TasksManagerDBController {
     private final SQLiteDatabase db;
 
     public TasksManagerDBController() {
-        DBHelper openHelper = DBHelper.getInstance(MyApplication.mContext);
+        DBHelper openHelper = DBHelper.getInstance(MusicApp.mContext);
 
         db = openHelper.getWritableDatabase();
     }

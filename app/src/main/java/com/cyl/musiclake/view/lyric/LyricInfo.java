@@ -17,6 +17,7 @@ public class LyricInfo {
     String song_album;  // 专辑
 
     long song_offset;  // 偏移量
+    long duration;  // 偏移量
 
     public List<LineInfo> getSong_lines() {
         return song_lines;
@@ -56,6 +57,10 @@ public class LyricInfo {
 
     public void setSong_offset(long song_offset) {
         this.song_offset = song_offset;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     static class LineInfo {

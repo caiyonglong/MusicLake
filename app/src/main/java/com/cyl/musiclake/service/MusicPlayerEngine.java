@@ -202,11 +202,6 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             mHandler.sendEmptyMessage(RELEASE_WAKELOCK);
         }
     }
-//
-//    @Override
-//    public void onPrepared(MediaPlayer mp) {
-//        mHandler.sendEmptyMessage(PREPARE_ASYNC_ENDED);
-//    }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {

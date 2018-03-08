@@ -267,6 +267,15 @@ public class PlayManager {
         }
     }
 
+    public static void showDesktopLyric(boolean isShow) {
+        try {
+            if (mService != null)
+                mService.showDesktopLyric(isShow);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static final class ServiceBinder implements ServiceConnection {
         private final ServiceConnection mCallback;
         private final Context mContext;

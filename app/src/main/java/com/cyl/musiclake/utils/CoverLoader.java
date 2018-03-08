@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.bean.Music;
@@ -78,7 +78,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mThumbnailCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.default_cover);
                     mThumbnailCache.put(KEY_NULL, bitmap);
                 }
             } else {
@@ -106,7 +106,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mThumbnailCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.default_cover);
                     mThumbnailCache.put(KEY_NULL, bitmap);
                 }
             } else {
@@ -132,7 +132,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mRoundCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.music_eight);
+                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.music_eight);
                     bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
                     bitmap = ImageUtils.createCircleImage(bitmap);
                     mRoundCache.put(KEY_NULL, bitmap);
@@ -162,7 +162,7 @@ public class CoverLoader {
             if (TextUtils.isEmpty(uri)) {
                 bitmap = mRoundCache.get(KEY_NULL);
                 if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_cover);
+                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.default_cover);
                     bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
                     mRoundCache.put(KEY_NULL, bitmap);
                 }

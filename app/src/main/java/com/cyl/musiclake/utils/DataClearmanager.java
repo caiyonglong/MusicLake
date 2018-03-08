@@ -70,15 +70,15 @@ public class DataClearmanager {
             deleteFilesByDirectory(context.getExternalCacheDir());
         }
     }
+
     /**
      * * 清除自定义路径下的文件，使用需小心，请不要误删。而且只支持目录下的文件删除 * *
      *
      * @param filePath
-     * */
+     */
     public static void cleanCustomCache(String filePath) {
         deleteFilesByDirectory(new File(filePath));
     }
-
 
 
     /**
@@ -189,6 +189,7 @@ public class DataClearmanager {
     public static String getCacheSize(File file) throws Exception {
         return getFormatSize(getFolderSize(file));
     }
+
     public static String getTotalCacheSize(Context context) throws Exception {
         long cacheSize = getFolderSize(context.getCacheDir());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -206,11 +207,8 @@ public class DataClearmanager {
         cleanInternalCache(context);
         cleanExternalCache(context);
         cleanFiles(context);
-//        cleanDatabases(context); 数据库暂时不清
-//        cleanSharedPreference(context);
+        cleanSharedPreference(context);
         cleanFiles(context);
-        //清除缓存的歌词
-        cleanCustomCache(FileUtils.getLrcDir());
         //清除缓存的用户头像
         cleanCustomCache(FileUtils.getImageDir());
     }

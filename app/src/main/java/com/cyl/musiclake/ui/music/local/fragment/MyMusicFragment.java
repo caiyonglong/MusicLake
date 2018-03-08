@@ -30,14 +30,6 @@ import butterknife.OnClick;
  * Created by Monkey on 2015/6/29.
  */
 public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialog.mCallBack, MyMusicContract.View {
-    //    @BindView(R.id.iv_local)
-//    LocalItemView mLocal;
-//    @BindView(R.id.iv_recently)
-//    LocalItemView mRecently;
-//    @BindView(R.id.iv_favorite)
-//    LocalItemView mLove;
-//    @BindView(R.id.iv_download)
-//    LocalItemView mDownload;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.hor_recyclerView)

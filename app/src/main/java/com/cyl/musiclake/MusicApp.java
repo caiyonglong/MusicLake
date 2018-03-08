@@ -12,14 +12,19 @@ import com.liulishuo.filedownloader.util.FileDownloadLog;
 
 import java.net.Proxy;
 
-public class MyApplication extends Application {
-    private static MyApplication sInstance;
+public class MusicApp extends Application {
+    private static MusicApp sInstance;
     private PlayManager.ServiceToken mToken;
     public static Context mContext;
 
-    public static synchronized MyApplication getInstance() {
+    public static synchronized MusicApp getInstance() {
         return sInstance;
     }
+
+    public static Context getAppContext() {
+        return sInstance.getApplicationContext();
+    }
+
 
     @Override
     public void onCreate() {

@@ -36,7 +36,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
-        android:name="com.cyl.musiclake.MyApplication"
+        android:name="com.cyl.musiclake.MusicApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -120,6 +120,7 @@
         <activity
             android:name=".ui.main.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
         <!--社区-->
         <receiver android:name=".service.MediaButtonIntentReceiver">

@@ -3,10 +3,13 @@
     <PreferenceCategory android:title="@string/info_common_settings">
 
         <!--<CheckBoxPreference-->
-            <!--android:key="night_mode"-->
-            <!--android:summary="应用夜间模式到整个应用"-->
-            <!--android:title="夜间模式" />-->
-
+        <!--android:key="night_mode"-->
+        <!--android:summary="应用夜间模式到整个应用"-->
+        <!--android:title="夜间模式" />-->
+        <PreferenceScreen
+            android:key="key_lyric"
+            android:summary="@string/desktop_lyric_des"
+            android:title="@string/desktop_lyric" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="wifi_mode"

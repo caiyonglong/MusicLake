@@ -6,24 +6,26 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
 
-/**
- * Created by hefuyi on 2017/1/2.
- */
-
 public class RxBus {
-
+    private static volatile RxBus sRxBus;
+    // 主题
     private final FlowableProcessor<Object> mBus;
 
-    private RxBus() {
+    // PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
+    public RxBus() {
         mBus = PublishProcessor.create().toSerialized();
     }
 
-    private static class Holder {
-        private static RxBus instance = new RxBus();
-    }
-
+    // 单例RxBus
     public static RxBus getInstance() {
-        return Holder.instance;
+        if (sRxBus == null) {
+            synchronized (RxBus.class) {
+                if (sRxBus == null) {
+                    sRxBus = new RxBus();
+                }
+            }
+        }
+        return sRxBus;
     }
 
     public void post(@NonNull Object obj) {
@@ -39,18 +41,5 @@ public class RxBus {
      */
     public <T> Flowable<T> register(Class<T> clz) {
         return mBus.ofType(clz);
-    }
-
-    public Flowable<Object> register() {
-        return mBus;
-    }
-
-    public void unregisterAll() {
-        //会将所有由mBus生成的Flowable都置completed状态后续的所有消息都收不到了
-        mBus.onComplete();
-    }
-
-    public boolean hasSubscribers() {
-        return mBus.hasSubscribers();
     }
 }

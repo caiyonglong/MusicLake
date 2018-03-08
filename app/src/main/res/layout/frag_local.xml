@@ -19,51 +19,8 @@
             android:id="@+id/hor_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_card" />
-
-        <!--<com.cyl.musiclake.view.LocalItemView-->
-            <!--android:id="@+id/iv_local"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/white"-->
-            <!--android:foreground="?android:attr/selectableItemBackground"-->
-            <!--app:iv_icon="library_music"-->
-            <!--app:iv_icon_color="@color/colorPrimary"-->
-            <!--app:tv_desc="0首"-->
-            <!--app:tv_name="本地音乐" />-->
-
-        <!--<com.cyl.musiclake.view.LocalItemView-->
-            <!--android:id="@+id/iv_recently"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/white"-->
-            <!--android:foreground="?android:attr/selectableItemBackground"-->
-            <!--app:iv_icon="timetable"-->
-            <!--app:iv_icon_color="@color/orange"-->
-            <!--app:tv_desc="0首"-->
-            <!--app:tv_name="最近播放" />-->
-
-        <!--<com.cyl.musiclake.view.LocalItemView-->
-            <!--android:id="@+id/iv_favorite"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/white"-->
-            <!--android:foreground="?android:attr/selectableItemBackground"-->
-            <!--app:iv_icon="heart_outline"-->
-            <!--app:iv_icon_color="@color/red"-->
-            <!--app:tv_desc="0首"-->
-            <!--app:tv_name="收藏" />-->
-
-        <!--<com.cyl.musiclake.view.LocalItemView-->
-            <!--android:id="@+id/iv_download"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/white"-->
-            <!--android:foreground="?android:attr/selectableItemBackground"-->
-            <!--app:iv_icon="arrow_collapse_down"-->
-            <!--app:tv_desc="0首"-->
-            <!--app:tv_name="下载" />-->
+            android:background="@drawable/bg_card"
+            android:padding="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

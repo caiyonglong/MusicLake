@@ -3,23 +3,33 @@ package com.cyl.musiclake.service;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
+import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
+import com.cyl.musiclake.view.lyric.LyricPraseUtils;
 
+import java.io.File;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class FloatLyricViewManager {
+    private static final String TAG = "FloatLyricViewManager";
     private static FloatLyricView mFloatLyricView;
     private static WindowManager.LayoutParams mFloatLyricViewParams;
     private static WindowManager mWindowManager;
@@ -37,12 +47,18 @@ public class FloatLyricViewManager {
         mContext = context;
     }
 
-    public static void stopFloatLyric() {
+    public void stopFloatLyric() {
         // Service被终止的同时也停止定时器继续运行
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
+    }
+
+
+    public void updatePlayStatus(boolean isPlaying) {
+        if (mFloatLyricView != null)
+            mFloatLyricView.setPlayStatus(isPlaying);
     }
 
     public void startFloatLyric() {
@@ -53,16 +69,18 @@ public class FloatLyricViewManager {
         }
     }
 
-    public static void setLyric(LyricInfo mLyricInfo) {
+    public void setLyric(LyricInfo lyricInfo) {
         isFirstSettings = true;
-        FloatLyricViewManager.mLyricInfo = mLyricInfo;
-        LogUtil.e("lyric = ", mLyricInfo.getSong_album() + "---" + mLyricInfo.getSong_lines().size());
+        mLyricInfo = lyricInfo;
+        if (lyricInfo != null)
+            LogUtil.e("lyric = ", mLyricInfo.getSong_album() + "---" + mLyricInfo.getSong_lines().size());
     }
 
     class RefreshTask extends TimerTask {
 
         @Override
         public void run() {
+            LogUtil.e(TAG, "is showing = " + isHome());
             // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
             if (!isHome() && !isWindowShowing()) {
                 handler.post(new Runnable() {
@@ -96,6 +114,7 @@ public class FloatLyricViewManager {
     private boolean isHome() {
         ActivityManager mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> rti = mActivityManager.getRunningTasks(1);
+        LogUtil.e(TAG, "top : " + mContext.getPackageName() + "----" + rti.get(0).topActivity.getPackageName());
         return rti.get(0).topActivity.getPackageName().equals(mContext.getPackageName());
     }
 
@@ -105,8 +124,11 @@ public class FloatLyricViewManager {
      *
      * @param context 必须为应用程序的Context.
      */
-    public static void createFloatLyricView(Context context) {
+    public void createFloatLyricView(Context context) {
         WindowManager windowManager = getWindowManager(context);
+        Point size = new Point();
+        windowManager.getDefaultDisplay().getSize(size);
+
         int screenWidth = windowManager.getDefaultDisplay().getWidth();
         int screenHeight = windowManager.getDefaultDisplay().getHeight();
         if (mFloatLyricView == null) {
@@ -119,15 +141,15 @@ public class FloatLyricViewManager {
                 mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                 mFloatLyricViewParams.gravity = Gravity.LEFT | Gravity.TOP;
-                mFloatLyricViewParams.width = FloatLyricView.viewWidth;
-                mFloatLyricViewParams.height = FloatLyricView.viewHeight;
+                mFloatLyricViewParams.width = mFloatLyricView.viewWidth;
+                mFloatLyricViewParams.height = mFloatLyricView.viewHeight;
                 mFloatLyricViewParams.x = screenWidth;
                 mFloatLyricViewParams.y = screenHeight / 2;
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-        } else if (isFirstSettings && mFloatLyricView != null) {
-            mFloatLyricView.lyricTextView.setLyricInfo(mLyricInfo);
+        } else if (isFirstSettings) {
+            mFloatLyricView.mLyricText.setLyricInfo(mLyricInfo);
             isFirstSettings = false;
         }
     }
@@ -137,7 +159,7 @@ public class FloatLyricViewManager {
      *
      * @param context 必须为应用程序的Context.
      */
-    public static void removeFloatLyricView(Context context) {
+    public void removeFloatLyricView(Context context) {
         if (mFloatLyricView != null) {
             WindowManager windowManager = getWindowManager(context);
             windowManager.removeView(mFloatLyricView);
@@ -146,35 +168,95 @@ public class FloatLyricViewManager {
     }
 
     /**
-     * 隐藏窗体view
-     *
-     * @param context 必须为应用程序的Context.
-     */
-    public static void hiddenFloatBackground(Context context) {
-        if (mFloatLyricView != null) {
-            View view = mFloatLyricView.findViewById(R.id.small_bg);
-            RelativeLayout rl = (RelativeLayout) mFloatLyricView.findViewById(R.id.rl_layout);
-            LinearLayout ll = (LinearLayout) mFloatLyricView.findViewById(R.id.ll_layout);
-            if (rl.getVisibility() == View.INVISIBLE) {
-                rl.setVisibility(View.VISIBLE);
-                ll.setVisibility(View.VISIBLE);
-                view.setVisibility(View.VISIBLE);
-            } else {
-                rl.setVisibility(View.INVISIBLE);
-                ll.setVisibility(View.INVISIBLE);
-                view.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    /**
      * 更新小悬浮窗的TextView上的数据，显示内存使用的百分比。
      *
      * @param context 可传入应用程序上下文。
      */
-    public static void updateLyric(Context context) {
+    public void updateLyric(Context context) {
         if (mFloatLyricView != null) {
-            mFloatLyricView.lyricTextView.setCurrentTimeMillis(PlayManager.getCurrentPosition());
+            mFloatLyricView.mLyricText.setCurrentTimeMillis(PlayManager.getCurrentPosition());
+        }
+    }
+
+    public void loadLyric() {
+        Music music = PlayManager.getPlayingMusic();
+        if (music == null) {
+            return;
+        }
+        //先判断本地是否存在歌词
+        String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+        LogUtil.e("lrcPath : " + lrcPath);
+        if (FileUtils.exists(lrcPath)) {
+            LogUtil.e("isFile");
+            setLyric(LyricPraseUtils.setLyricResource(new File(lrcPath)));
+        } else if (music.getType() == Music.Type.QQ) {
+            QQApiServiceImpl.getQQLyric(music)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String lyricInfo) {
+                            Log.e(TAG, lyricInfo);
+                            if (lyricInfo != null) {
+                                LyricInfo tt = LyricPraseUtils.setLyricResource(lyricInfo);
+                                tt.setDuration(PlayManager.getDuration());
+                                setLyric(tt);
+                            } else {
+                                setLyric(null);
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            setLyric(null);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else if (music.getType() == Music.Type.XIAMI || music.getType() == Music.Type.BAIDU) {
+            Log.e(TAG, music.getLrcPath());
+            XiamiServiceImpl.getXimaiLyric(music)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String lyricInfo) {
+                            Log.e(TAG, lyricInfo);
+                            if (lyricInfo != null) {
+                                LyricInfo tt = LyricPraseUtils.setLyricResource(lyricInfo);
+                                tt.setDuration(PlayManager.getDuration());
+                                setLyric(tt);
+                            } else {
+                                setLyric(null);
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            setLyric(null);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            LogUtil.e("isFile");
+            setLyric(null);
         }
     }
 
@@ -183,6 +265,7 @@ public class FloatLyricViewManager {
      *
      * @return 有悬浮窗显示在桌面上返回true，没有的话返回false。
      */
+
     public static boolean isWindowShowing() {
         return mFloatLyricView != null;
     }

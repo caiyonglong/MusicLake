@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.data.source.download.TasksManager;
@@ -168,7 +168,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskActionBtn.setText(R.string.delete);
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
-            NavigateUtil.scanFileAsync(MyApplication.mContext, FileUtils.getMusicDir());
+            NavigateUtil.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
             RxBus.getInstance().post(new TasksManagerModel());
         }
 
@@ -217,7 +217,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 //                    taskStatusTv.setText(R.string.tasks_manager_demo_status_progress);
 //                    break;
                 default:
-                    taskStatusTv.setText(MyApplication.mContext.getString(
+                    taskStatusTv.setText(MusicApp.mContext.getString(
                             R.string.tasks_manager_demo_status_downloading, (int) (percent * 100)));
                     break;
             }

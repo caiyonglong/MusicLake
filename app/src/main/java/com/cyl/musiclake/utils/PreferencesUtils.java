@@ -2,6 +2,7 @@ package com.cyl.musiclake.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
@@ -18,8 +19,11 @@ public class PreferencesUtils {
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
     private static final String WIFI_MODE = "wifi_mode";
+    private static final String LYRIC_MODE = "lyric_mode";
     private static final String NIGHT_MODE = "night_mode";
     private static final String POSITION = "position";
+    private static final String DESKTOP_LYRIC_SIZE = "desktop_lyric_size";
+    private static final String DESKTOP_LYRIC_COLOR = "desktop_lyric_color";
 
     private static Context sContext;
 
@@ -77,6 +81,14 @@ public class PreferencesUtils {
         saveBoolean(sContext.getString(R.string.setting_key_mobile_wifi), enable);
     }
 
+    public static boolean isShowLyricView() {
+        return getBoolean(sContext.getString(R.string.setting_key_mobile_wifi), false);
+    }
+
+    public static void showLyricView(boolean enable) {
+        saveBoolean(sContext.getString(R.string.setting_key_mobile_wifi), enable);
+    }
+
 
     public static boolean isNightMode() {
         return getBoolean(NIGHT_MODE, false);
@@ -86,12 +98,44 @@ public class PreferencesUtils {
         saveBoolean(NIGHT_MODE, on);
     }
 
+
+    public static float getFontSize() {
+        return getFloat(DESKTOP_LYRIC_SIZE, 30);
+    }
+
+    public static void saveFontSize(float size) {
+        saveFloat(DESKTOP_LYRIC_SIZE, size);
+    }
+
+
+    public static void saveFontColor(int color) {
+        saveInt(DESKTOP_LYRIC_COLOR, color);
+    }
+
+    public static int getFontColor() {
+        return getInt(DESKTOP_LYRIC_COLOR, Color.RED);
+    }
+
+
+    /**
+     * -------------------------------------------------------
+     * <p>底层操作
+     * -------------------------------------------------------
+     */
     private static boolean getBoolean(String key, boolean defValue) {
         return getPreferences().getBoolean(key, defValue);
     }
 
     private static void saveBoolean(String key, boolean value) {
         getPreferences().edit().putBoolean(key, value).apply();
+    }
+
+    private static float getFloat(String key, float defValue) {
+        return getPreferences().getFloat(key, defValue);
+    }
+
+    private static void saveFloat(String key, float value) {
+        getPreferences().edit().putFloat(key, value).apply();
     }
 
     private static int getInt(String key, int defValue) {

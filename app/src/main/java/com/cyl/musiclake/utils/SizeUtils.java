@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.cyl.musiclake.MyApplication;
+import com.cyl.musiclake.MusicApp;
 
 /**
  * 作者：yonglong on 2016/8/22 19:20
@@ -18,7 +18,7 @@ public class SizeUtils {
      *
      */
     public static int getScreenWidth() {
-        WindowManager windowManager = (WindowManager) MyApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) MusicApp.getInstance().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();// 创建了一张白纸
         windowManager.getDefaultDisplay().getMetrics(outMetrics);// 给白纸设置宽高
         return outMetrics.widthPixels;

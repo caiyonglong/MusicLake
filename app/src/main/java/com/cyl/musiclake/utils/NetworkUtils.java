@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
+import com.cyl.musiclake.MusicApp;
+
 /**
  * 作者：yonglong on 2016/9/9 02:01
  * 邮箱：643872807@qq.com
@@ -22,6 +24,7 @@ public class NetworkUtils {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo();
     }
+
     /**
      * 判断网络是否可用
      * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
@@ -33,15 +36,15 @@ public class NetworkUtils {
         NetworkInfo info = getActiveNetworkInfo(context);
         return info != null && info.isAvailable();
     }
+
     /**
      * 判断网络是否连接
      * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
      *
-     * @param context 上下文
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static boolean isConnected(Context context) {
-        NetworkInfo info = getActiveNetworkInfo(context);
+    public static boolean isConnected() {
+        NetworkInfo info = getActiveNetworkInfo(MusicApp.getAppContext());
         return info != null && info.isConnected();
     }
 

@@ -4,33 +4,38 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.service.FloatLyricViewManager;
+import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.utils.PreferencesUtils;
+import com.rtugeek.android.colorseekbar.ColorSeekBar;
+
+import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
+import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.lang.reflect.Field;
 
 /**
- * Author   : D22434
- * version  : 2018/2/9
- * function :
+ * 桌面歌词View
  */
-public class FloatLyricView extends LinearLayout {
+public class FloatLyricView extends LinearLayout implements View.OnClickListener {
 
     /**
      * 记录小悬浮窗的宽度
      */
-    public static int viewWidth;
+    public int viewWidth;
 
     /**
      * 记录小悬浮窗的高度
      */
-    public static int viewHeight;
+    public int viewHeight;
 
     /**
      * 记录系统状态栏的高度
@@ -76,31 +81,69 @@ public class FloatLyricView extends LinearLayout {
      * 记录手指按下时在小悬浮窗的View上的纵坐标的值
      */
     private float yInView;
+    private float mFontSize;
+    private int mFontColor;
+    private boolean mMovement;
+    private boolean isHiddenSettings;
 
-    public LyricTextView lyricTextView;
-    public SeekBar seekBar;
-
+    public LyricTextView mLyricText;
+    public SeekBar mSizeSeekBar;
+    public ColorSeekBar mColorSeekBar;
+    private MaterialIconView mLockButton, mPreButton, mNextButton, mPlayButton, mSettingsButton;
+    private ImageButton mCloseButton;
+    private LinearLayout mSettingLinearLayout;
+    private RelativeLayout mRelLyricView;
+    private LinearLayout mLinLyricView;
+    private FrameLayout mFrameBackground;
+    private View mRootView;
 
     public FloatLyricView(Context context) {
         super(context);
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        LayoutInflater.from(context).inflate(R.layout.float_lyric_view, this);
+        mRootView = LayoutInflater.from(context).inflate(R.layout.float_lyric_view, this);
         FrameLayout view = findViewById(R.id.small_window_layout);
         viewWidth = view.getLayoutParams().width;
         viewHeight = view.getLayoutParams().height;
-        lyricTextView = findViewById(R.id.lyric);
-        ImageButton IBtn = findViewById(R.id.btn_close);
-        IBtn.setOnClickListener(v -> {
-            FloatLyricViewManager.stopFloatLyric();
-            FloatLyricViewManager.removeFloatLyricView(getContext());
-        });
+        mMovement = true;
+        isHiddenSettings = true;
 
-        seekBar = findViewById(R.id.sb_size);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mSizeSeekBar = findViewById(R.id.sb_size);
+        mColorSeekBar = findViewById(R.id.sb_color);
+        mLyricText = findViewById(R.id.lyric);
+        mCloseButton = findViewById(R.id.btn_close);
+        mLockButton = findViewById(R.id.btn_lock);
+        mPreButton = findViewById(R.id.btn_previous);
+        mPlayButton = findViewById(R.id.btn_play);
+        mNextButton = findViewById(R.id.btn_next);
+        mSettingsButton = findViewById(R.id.btn_settings);
+        mSettingLinearLayout = findViewById(R.id.ll_settings);
+        mRelLyricView = findViewById(R.id.rl_layout);
+        mLinLyricView = findViewById(R.id.ll_layout);
+        mFrameBackground = findViewById(R.id.small_bg);
+
+        mCloseButton.setOnClickListener(this);
+        mLockButton.setOnClickListener(this);
+        mPreButton.setOnClickListener(this);
+        mPlayButton.setOnClickListener(this);
+        mNextButton.setOnClickListener(this);
+        mSettingsButton.setOnClickListener(this);
+
+        mFontSize = PreferencesUtils.getFontSize();
+        mLyricText.setFontSizeScale(mFontSize);
+        mSizeSeekBar.setProgress((int) mFontSize);
+
+        mFontColor = PreferencesUtils.getFontColor();
+        mLyricText.setFontColorScale(mFontColor);
+        mColorSeekBar.setColorBarPosition(mFontColor);
+
+        setPlayStatus(PlayManager.isPlaying());
+
+        mSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 Log.e("TEST", progress + "---" + fromUser);
-                lyricTextView.setFontSizeScale((float) (progress * 0.1 + 30));
+                mLyricText.setFontSizeScale((float) (progress * 0.1 + 30));
+                PreferencesUtils.saveFontSize((float) (progress * 0.1 + 30));
             }
 
             @Override
@@ -111,6 +154,13 @@ public class FloatLyricView extends LinearLayout {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+        mColorSeekBar.setOnColorChangeListener(new ColorSeekBar.OnColorChangeListener() {
+            @Override
+            public void onColorChangeListener(int colorBarPosition, int alphaBarPosition, int color) {
+                mLyricText.setFontColorScale(color);
+                PreferencesUtils.saveFontColor(color);
             }
         });
     }
@@ -137,7 +187,7 @@ public class FloatLyricView extends LinearLayout {
             case MotionEvent.ACTION_UP:
                 // 如果手指离开屏幕时，xDownInScreen和xInScreen相等，且yDownInScreen和yInScreen相等，则视为触发了单击事件。
                 if (xDownInScreen == xInScreen && yDownInScreen == yInScreen) {
-                    openBigWindow();
+                    toggleLyricView();
                 }
                 break;
             default:
@@ -159,6 +209,7 @@ public class FloatLyricView extends LinearLayout {
      * 更新小悬浮窗在屏幕中的位置。
      */
     private void updateViewPosition() {
+        if (!mMovement) return;
         mParams.x = (int) (xInScreen - xInView);
         mParams.y = (int) (yInScreen - yInView);
         windowManager.updateViewLayout(this, mParams);
@@ -167,9 +218,24 @@ public class FloatLyricView extends LinearLayout {
     /**
      * toggle背景
      */
-    private void openBigWindow() {
-        FloatLyricViewManager.hiddenFloatBackground(getContext());
+    private void toggleLyricView() {
+        if (mRootView != null) {
+            if (mRelLyricView.getVisibility() == View.INVISIBLE) {
+                mRelLyricView.setVisibility(View.VISIBLE);
+                mLinLyricView.setVisibility(View.VISIBLE);
+                mFrameBackground.setVisibility(View.VISIBLE);
+            } else {
+                if (!isHiddenSettings) {
+                    isHiddenSettings = true;
+                    updateSettingStatus(isHiddenSettings);
+                }
+                mLinLyricView.setVisibility(View.INVISIBLE);
+                mRelLyricView.setVisibility(View.INVISIBLE);
+                mFrameBackground.setVisibility(View.INVISIBLE);
+            }
+        }
     }
+
 
     /**
      * 用于获取状态栏的高度。
@@ -189,6 +255,53 @@ public class FloatLyricView extends LinearLayout {
             }
         }
         return statusBarHeight;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_close:
+                PlayManager.showDesktopLyric(false);
+                break;
+            case R.id.btn_lock:
+                mMovement = !mMovement;
+                if (mMovement) {
+                    mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN);
+                } else {
+                    mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK);
+                }
+                break;
+            case R.id.btn_previous:
+                PlayManager.prev();
+                break;
+            case R.id.btn_play:
+                PlayManager.playPause();
+                setPlayStatus(PlayManager.isPlaying());
+                break;
+            case R.id.btn_next:
+                PlayManager.next();
+                break;
+            case R.id.btn_settings:
+                isHiddenSettings = !isHiddenSettings;
+                updateSettingStatus(isHiddenSettings);
+                break;
+        }
+    }
+
+    public void setPlayStatus(boolean isPlaying) {
+        if (isPlaying) {
+            mPlayButton.setIcon(MaterialDrawableBuilder.IconValue.PAUSE);
+        } else {
+            mPlayButton.setIcon(MaterialDrawableBuilder.IconValue.PLAY);
+        }
+    }
+
+    public void updateSettingStatus(boolean isHidden) {
+        if (isHidden) {
+            mSettingLinearLayout.setVisibility(GONE);
+        } else {
+            mSettingLinearLayout.setVisibility(VISIBLE);
+        }
     }
 
 }

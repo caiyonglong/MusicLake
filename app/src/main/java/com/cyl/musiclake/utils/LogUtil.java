@@ -116,4 +116,8 @@ public class LogUtil {
     public static void e(int msg) {
         LogUtil.e(msg + "");
     }
+
+    public static void spec(int widthSpeMode) {
+        Log.d(defaultTag, "value = " + widthSpeMode);
+    }
 }

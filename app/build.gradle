@@ -66,6 +66,7 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:3.4.0'
     compile 'com.liulishuo.filedownloader:library:1.6.9'
     compile 'com.github.florent37:shapeofview:1.0.4'
+    compile 'com.github.rtugeek:ColorSeekBar:1.6.2'
 
 //    compile 'com.gyf.barlibrary:barlibrary:2.3.0'
 //

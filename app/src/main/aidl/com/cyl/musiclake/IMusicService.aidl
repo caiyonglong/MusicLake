@@ -26,4 +26,5 @@ interface IMusicService {
     List<Music> getPlayList();
     void removeFromQueue(int position);
     void clearQueue();
+    void showDesktopLyric(boolean show);
 }
