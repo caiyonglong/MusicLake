@@ -3,6 +3,8 @@ package com.cyl.musiclake.api.baidu;
 import com.cyl.musiclake.api.ApiManager;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,10 +104,28 @@ public class BaiduApiServiceImpl {
     }
 
     @SuppressWarnings({"unchecked", "varargs"})
-    public static Observable<String> getBaiduLyric(String lyricPath) {
-        return ApiManager.getInstance().apiService.getXiamiLyric(lyricPath)
-                .flatMap(xiaMiLyricInfo -> {
-                    String lyric = xiaMiLyricInfo.string();
+    public static Observable<String> getBaiduLyric(Music music) {
+        //本地歌词路径
+        String mLyricPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+        //网络歌词
+        String mLyricUrl = music.getLrcPath();
+        if (FileUtils.exists(mLyricPath)) {
+            return Observable.create(emitter -> {
+                try {
+                    String lyric = FileUtils.readFile(mLyricPath);
+                    emitter.onNext(lyric);
+                    emitter.onComplete();
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+        }
+        return ApiManager.getInstance().apiService.getBaiduLyric(mLyricUrl)
+                .flatMap(baiDuLyricInfo -> {
+                    String lyric = baiDuLyricInfo.string();
+                    //保存文件
+                    boolean save = FileUtils.writeText(mLyricPath, lyric);
+                    LogUtil.e("保存网络歌词：" + save);
                     return Observable.fromArray(lyric);
                 });
     }

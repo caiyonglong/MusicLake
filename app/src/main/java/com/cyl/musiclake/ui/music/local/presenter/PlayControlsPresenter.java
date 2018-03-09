@@ -16,8 +16,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.api.qq.QQApiServiceImpl;
-import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
+import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.event.MetaChangedEvent;
@@ -27,7 +26,9 @@ import com.cyl.musiclake.ui.music.local.contract.PlayControlsContract;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ImageUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -110,66 +111,38 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         }
         if (isPlayPauseClick)
             return;
-        String localLyricInfo = null;
         String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
         if (FileUtils.exists(lrcPath)) {
             mView.showLyric(lrcPath, true);
-        } else if (music.getType() == Music.Type.QQ) {
-            QQApiServiceImpl.getQQLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(String lyricInfo) {
-                            Log.e(TAG, lyricInfo);
-                            mView.showLyric(lyricInfo, false);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            mView.showLyric(null, false);
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        } else if (music.getType() == Music.Type.XIAMI || music.getType() == Music.Type.BAIDU) {
-            Log.e(TAG, music.getLrcPath());
-
-            XiamiServiceImpl.getXimaiLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(String lyricInfo) {
-                            Log.e(TAG, lyricInfo);
-                            mView.showLyric(lyricInfo, false);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            mView.showLyric(null, false);
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
         } else {
-            mView.showLyric(null, false);
+            Observable observable = MusicApi.getLyricInfo(music);
+            if (observable == null) {
+                LogUtil.e(TAG, "本地文件为空");
+                mView.showLyric(null, false);
+            }
+            if (observable != null)
+                observable.subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String lyricInfo) {
+                        Log.e(TAG, lyricInfo);
+                        mView.showLyric(lyricInfo, false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.showLyric(null, false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
         }
     }
 

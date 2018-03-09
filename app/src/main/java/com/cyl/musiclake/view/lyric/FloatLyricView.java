@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.service.PlayManager;
@@ -87,6 +88,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
     private boolean isHiddenSettings;
 
     public LyricTextView mLyricText;
+    public TextView mTitle;
     public SeekBar mSizeSeekBar;
     public ColorSeekBar mColorSeekBar;
     private MaterialIconView mLockButton, mPreButton, mNextButton, mPlayButton, mSettingsButton;
@@ -107,6 +109,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         mMovement = true;
         isHiddenSettings = true;
 
+        mTitle = findViewById(R.id.music_title);
         mSizeSeekBar = findViewById(R.id.sb_size);
         mColorSeekBar = findViewById(R.id.sb_color);
         mLyricText = findViewById(R.id.lyric);
@@ -156,12 +159,9 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
 
             }
         });
-        mColorSeekBar.setOnColorChangeListener(new ColorSeekBar.OnColorChangeListener() {
-            @Override
-            public void onColorChangeListener(int colorBarPosition, int alphaBarPosition, int color) {
-                mLyricText.setFontColorScale(color);
-                PreferencesUtils.saveFontColor(color);
-            }
+        mColorSeekBar.setOnColorChangeListener((colorBarPosition, alphaBarPosition, color) -> {
+            mLyricText.setFontColorScale(color);
+            PreferencesUtils.saveFontColor(color);
         });
     }
 

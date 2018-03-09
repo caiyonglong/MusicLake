@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -17,6 +18,7 @@ import android.util.Log;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.utils.DataClearmanager;
 import com.cyl.musiclake.utils.PreferencesUtils;
+import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 
@@ -28,8 +30,9 @@ import com.cyl.musiclake.utils.UpdateUtils;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
-    private PreferenceScreen preference_about, preference_cache, preference_update, mLyricPreference;
-    public SwitchPreference mWifiSwitch, mLyricSwitch;
+    private PreferenceScreen preference_about, preference_cache, preference_update;
+    public SwitchPreference mWifiSwitch;
+    public CheckBoxPreference mLyricCheckBox;
 
 
     public static SettingsFragment newInstance() {
@@ -50,7 +53,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         preference_cache = (PreferenceScreen) findPreference("key_cache");
 
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
-        mLyricPreference = (PreferenceScreen) findPreference("key_lyric");
+        mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
 
         new Handler().post(() -> {
             try {
@@ -74,18 +77,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             PreferencesUtils.saveWifiMode(wifiMode);
             return false;
         });
-        mLyricPreference.setOnPreferenceClickListener(preference -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.canDrawOverlays(getContext())) {
-                    ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
-                    //启动Activity让用户授权
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                    intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-                    startActivityForResult(intent, 100);
-                } else {
-                    ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
-                }
-            }
+        mLyricCheckBox.setOnPreferenceClickListener(preference -> {
+            if (!mLyricCheckBox.isChecked())
+                checkPermission();
             return true;
         });
     }
@@ -124,5 +118,45 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         }
         return true;
+    }
+
+    private boolean checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(getContext())) {
+                ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
+                //启动Activity让用户授权
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                startActivityForResult(intent, 100);
+            } else {
+                mLyricCheckBox.setChecked(true);
+                mLyricCheckBox.setEnabled(false);
+                ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
+            }
+        }
+        if (SystemUtils.isLollipop()) {
+            ToastUtils.show(getActivity(), "获取<有权查看使用权限的应用>权限");
+            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            startActivity(intent);
+        }
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.canDrawOverlays(getActivity())) {
+                    mLyricCheckBox.setChecked(true);
+                    mLyricCheckBox.setEnabled(false);
+                    ToastUtils.show(getContext(), "权限已打开");
+                } else {
+                    mLyricCheckBox.setChecked(false);
+                    mLyricCheckBox.setEnabled(true);
+                    ToastUtils.show(getContext(), "悬浮窗权限已被拒绝，请手动前往设置中设置");
+                }
+            }
+        }
     }
 }

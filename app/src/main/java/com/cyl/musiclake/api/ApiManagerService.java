@@ -63,6 +63,10 @@ public interface ApiManagerService {
     @GET
     Observable<ResponseBody> getXiamiLyric(@Url String baseUrl);
 
+//    @Headers({"referer: http://h.xiami.com/"})
+    @GET
+    Observable<ResponseBody> getBaiduLyric(@Url String baseUrl);
+
     @POST
     Observable<ApiModel<User>> getUserInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 

@@ -6,7 +6,7 @@
         <!--android:key="night_mode"-->
         <!--android:summary="应用夜间模式到整个应用"-->
         <!--android:title="夜间模式" />-->
-        <PreferenceScreen
+        <CheckBoxPreference
             android:key="key_lyric"
             android:summary="@string/desktop_lyric_des"
             android:title="@string/desktop_lyric" />

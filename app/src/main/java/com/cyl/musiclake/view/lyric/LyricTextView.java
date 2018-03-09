@@ -36,7 +36,7 @@ public class LyricTextView extends View {
     /**
      * 是否有歌词
      */
-    private boolean blLrc = false;
+    private boolean hasLyric = false;
 
     /**
      * 当前歌词的第几个字
@@ -97,7 +97,7 @@ public class LyricTextView extends View {
         mHighLightPaint.setTextSize(fontSizeScale);
         mHighLightPaint.setColor(fontColorScale);
 
-        if (!blLrc) {
+        if (!hasLyric) {
 
             float tipTextWidth = mTextPaint.measureText(mDefaultHint);
             Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
@@ -144,16 +144,19 @@ public class LyricTextView extends View {
     }
 
     public boolean getBlLrc() {
-        return blLrc;
+        return hasLyric;
     }
 
-    public void setBlLrc(boolean blLrc) {
-        this.blLrc = blLrc;
+    public void setBlLrc(boolean hasLyric) {
+        this.hasLyric = hasLyric;
+        invalidateView();
     }
 
     public void setContent(String content) {
         this.content = content;
-        setBlLrc(true);
+        if (content != null) {
+            setBlLrc(true);
+        }
         invalidateView();
     }
 
@@ -173,12 +176,12 @@ public class LyricTextView extends View {
      * @param lyricInfo 歌词文件
      */
     public void setLyricInfo(LyricInfo lyricInfo) {
-        mLyricInfo = lyricInfo;
-        if (mLyricInfo != null) {
-            blLrc = true;
+        if (lyricInfo != null) {
+            mLyricInfo = lyricInfo;
+            hasLyric = true;
             mLineCount = mLyricInfo.song_lines.size();
         } else {
-            blLrc = false;
+            hasLyric = false;
             mDefaultHint = "音乐湖，暂无歌词";
         }
         invalidateView();

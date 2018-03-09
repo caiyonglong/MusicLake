@@ -1,16 +1,21 @@
 package com.cyl.musiclake.service;
 
 import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
-import com.cyl.musiclake.api.qq.QQApiServiceImpl;
-import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
+import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
@@ -20,13 +25,14 @@ import com.cyl.musiclake.view.lyric.LyricPraseUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class FloatLyricViewManager {
     private static final String TAG = "FloatLyricViewManager";
@@ -34,8 +40,8 @@ public class FloatLyricViewManager {
     private static WindowManager.LayoutParams mFloatLyricViewParams;
     private static WindowManager mWindowManager;
     private Handler handler = new Handler();
-    private static LyricInfo mLyricInfo;
-    private static boolean isFirstSettings = false;
+    private LyricInfo mLyricInfo;
+    private boolean isFirstSettingLyric; //第一次设置歌词
 
     /**
      * 定时器，定时进行检测当前应该创建还是移除悬浮窗。
@@ -69,40 +75,27 @@ public class FloatLyricViewManager {
         }
     }
 
+    /**
+     * 设置歌词
+     *
+     * @param lyricInfo
+     */
     public void setLyric(LyricInfo lyricInfo) {
-        isFirstSettings = true;
         mLyricInfo = lyricInfo;
-        if (lyricInfo != null)
-            LogUtil.e("lyric = ", mLyricInfo.getSong_album() + "---" + mLyricInfo.getSong_lines().size());
+        isFirstSettingLyric = true;
     }
 
     class RefreshTask extends TimerTask {
-
         @Override
         public void run() {
             LogUtil.e(TAG, "is showing = " + isHome());
             // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
             if (!isHome() && !isWindowShowing()) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        createFloatLyricView(mContext);
-                    }
-                });
+                handler.post(() -> createFloatLyricView(mContext));
             } else if (isHome() && isWindowShowing()) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeFloatLyricView(mContext);
-                    }
-                });
+                handler.post(() -> removeFloatLyricView(mContext));
             } else if (isWindowShowing()) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateLyric(mContext);
-                    }
-                });
+                handler.post(() -> updateLyric(mContext));
             }
         }
 
@@ -112,10 +105,14 @@ public class FloatLyricViewManager {
      * 判断当前界面是否是应用界面
      */
     private boolean isHome() {
-        ActivityManager mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> rti = mActivityManager.getRunningTasks(1);
-        LogUtil.e(TAG, "top : " + mContext.getPackageName() + "----" + rti.get(0).topActivity.getPackageName());
-        return rti.get(0).topActivity.getPackageName().equals(mContext.getPackageName());
+        try {
+            String topPackageName = getProcess();
+            LogUtil.e(TAG, "top : " + mContext.getPackageName() + "----" + topPackageName);
+            return topPackageName.equals(mContext.getPackageName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -133,7 +130,6 @@ public class FloatLyricViewManager {
         int screenHeight = windowManager.getDefaultDisplay().getHeight();
         if (mFloatLyricView == null) {
             mFloatLyricView = new FloatLyricView(context);
-            isFirstSettings = true;
             if (mFloatLyricViewParams == null) {
                 mFloatLyricViewParams = new WindowManager.LayoutParams();
                 mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_PHONE;
@@ -148,9 +144,6 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-        } else if (isFirstSettings) {
-            mFloatLyricView.mLyricText.setLyricInfo(mLyricInfo);
-            isFirstSettings = false;
         }
     }
 
@@ -174,6 +167,11 @@ public class FloatLyricViewManager {
      */
     public void updateLyric(Context context) {
         if (mFloatLyricView != null) {
+            if (isFirstSettingLyric) {
+                mFloatLyricView.mTitle.setText(PlayManager.getSongName());
+                mFloatLyricView.mLyricText.setLyricInfo(mLyricInfo);
+                isFirstSettingLyric = false;
+            }
             mFloatLyricView.mLyricText.setCurrentTimeMillis(PlayManager.getCurrentPosition());
         }
     }
@@ -189,75 +187,43 @@ public class FloatLyricViewManager {
         if (FileUtils.exists(lrcPath)) {
             LogUtil.e("isFile");
             setLyric(LyricPraseUtils.setLyricResource(new File(lrcPath)));
-        } else if (music.getType() == Music.Type.QQ) {
-            QQApiServiceImpl.getQQLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(String lyricInfo) {
-                            Log.e(TAG, lyricInfo);
-                            if (lyricInfo != null) {
-                                LyricInfo tt = LyricPraseUtils.setLyricResource(lyricInfo);
-                                tt.setDuration(PlayManager.getDuration());
-                                setLyric(tt);
-                            } else {
-                                setLyric(null);
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            setLyric(null);
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        } else if (music.getType() == Music.Type.XIAMI || music.getType() == Music.Type.BAIDU) {
-            Log.e(TAG, music.getLrcPath());
-            XiamiServiceImpl.getXimaiLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(String lyricInfo) {
-                            Log.e(TAG, lyricInfo);
-                            if (lyricInfo != null) {
-                                LyricInfo tt = LyricPraseUtils.setLyricResource(lyricInfo);
-                                tt.setDuration(PlayManager.getDuration());
-                                setLyric(tt);
-                            } else {
-                                setLyric(null);
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            setLyric(null);
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
         } else {
-            LogUtil.e("isFile");
-            setLyric(null);
+            Observable observable = MusicApi.getLyricInfo(music);
+            if (observable == null) {
+                LogUtil.e(TAG, "本地文件为空");
+                setLyric(null);
+            }
+            if (observable != null)
+                observable.subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String lyricInfo) {
+                        Log.e(TAG, lyricInfo);
+                        if (lyricInfo != null) {
+                            LyricInfo tt = LyricPraseUtils.setLyricResource(lyricInfo);
+                            tt.setDuration(PlayManager.getDuration());
+                            setLyric(tt);
+                        } else {
+                            setLyric(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        setLyric(null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
         }
+
     }
 
     /**
@@ -281,5 +247,51 @@ public class FloatLyricViewManager {
             mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         }
         return mWindowManager;
+    }
+
+    private String getProcess() throws Exception {
+        if (Build.VERSION.SDK_INT >= 21) {
+            return getProcessNew();
+        } else {
+            return getProcessOld();
+        }
+    }
+
+    private String topPackageName = null;
+
+    //API 21 and above
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private String getProcessNew() throws Exception {
+        UsageStatsManager mUsageStatsManager = (UsageStatsManager) MusicApp.getAppContext().getSystemService(Context.USAGE_STATS_SERVICE);
+        long time = System.currentTimeMillis();
+        // We get usage stats for the last 10 seconds
+        List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 5, time);
+        // Sort the stats by the last time used
+
+        if (stats != null) {
+            SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
+            for (UsageStats usageStats : stats) {
+                mySortedMap.put(usageStats.getLastTimeUsed(), usageStats);
+            }
+            if (!mySortedMap.isEmpty()) {
+                topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
+                Log.e("TopPackage Name", topPackageName);
+            }
+        }
+        return topPackageName;
+    }
+
+    //API below 21
+    @SuppressWarnings("deprecation")
+    private String getProcessOld() throws Exception {
+        String topPackageName = null;
+        ActivityManager activity = (ActivityManager) MusicApp.getAppContext().getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTask = activity.getRunningTasks(1);
+        if (runningTask != null) {
+            ActivityManager.RunningTaskInfo taskTop = runningTask.get(0);
+            ComponentName componentTop = taskTop.topActivity;
+            topPackageName = componentTop.getPackageName();
+        }
+        return topPackageName;
     }
 }
