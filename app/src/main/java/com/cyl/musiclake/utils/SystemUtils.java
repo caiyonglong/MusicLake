@@ -1,8 +1,18 @@
 package com.cyl.musiclake.utils;
 
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
+
+import com.cyl.musiclake.MusicApp;
+
+import java.util.List;
 
 /**
  * android系统工具类
@@ -32,25 +42,75 @@ public class SystemUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
-
-    public static boolean isAccessibilitySettingsOn(Context context) {
-        int accessibilityEnabled = 0;
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(context.getContentResolver(),
-                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-        } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        if (accessibilityEnabled == 1) {
-            String services = Settings.Secure.getString(context.getContentResolver(),
-                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (services != null) {
-                return services.toLowerCase().contains(context.getPackageName().toLowerCase());
-            }
-        }
-        return false;
+    /**
+     * 判断是否打开悬浮窗权限&&“有权查看使用权限的应用”这个选项
+     *
+     * @return
+     */
+    public static boolean isOpenFloatWindow() {
+        return isOpenSystemWindow() && isOpenUsageAccess();
     }
 
+    /**
+     * 判断是否打开“悬浮窗权限”
+     *
+     * @return
+     */
+    public static boolean isOpenSystemWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.canDrawOverlays(MusicApp.getAppContext());
+        } else {
+            return true;
+        }
+    }
+
+
+    /**
+     * 判断是否打开“有权查看使用权限的应用”这个选项
+     *
+     * @return
+     */
+    public static boolean isOpenUsageAccess() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && isNoOptions()) {
+            return isNoSwitch();
+        } else {
+            return true;
+        }
+    }
+
+
+    /**
+     * 判断当前设备中有没有“有权查看使用权限的应用”这个选项
+     *
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static boolean isNoOptions() {
+        PackageManager packageManager = MusicApp.getAppContext().getPackageManager();
+        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
+
+    /**
+     * 判断调用该设备中“有权查看使用权限的应用”这个选项的APP有没有打开
+     *
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static boolean isNoSwitch() {
+        long dujinyang = System.currentTimeMillis();
+        UsageStatsManager usageStatsManager = (UsageStatsManager) MusicApp.getAppContext().getSystemService(Context.USAGE_STATS_SERVICE);
+        List<UsageStats> queryUsageStats = null;
+        if (usageStatsManager != null) {
+            queryUsageStats = usageStatsManager.queryUsageStats(
+                    UsageStatsManager.INTERVAL_BEST, 0, dujinyang);
+        }
+        if (queryUsageStats == null || queryUsageStats.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 
 }

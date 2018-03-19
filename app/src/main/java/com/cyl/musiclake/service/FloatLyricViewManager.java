@@ -21,7 +21,7 @@ import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
-import com.cyl.musiclake.view.lyric.LyricPraseUtils;
+import com.cyl.musiclake.view.lyric.LyricParseUtils;
 
 import java.io.File;
 import java.util.List;
@@ -88,7 +88,6 @@ public class FloatLyricViewManager {
     class RefreshTask extends TimerTask {
         @Override
         public void run() {
-            LogUtil.e(TAG, "is showing = " + isHome());
             // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
             if (!isHome() && !isWindowShowing()) {
                 handler.post(() -> createFloatLyricView(mContext));
@@ -107,8 +106,9 @@ public class FloatLyricViewManager {
     private boolean isHome() {
         try {
             String topPackageName = getProcess();
-            LogUtil.e(TAG, "top : " + mContext.getPackageName() + "----" + topPackageName);
-            return topPackageName.equals(mContext.getPackageName());
+            if (topPackageName != null) {
+                return topPackageName.equals(mContext.getPackageName());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,6 +144,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
+            loadLyric();
         }
     }
 
@@ -173,6 +174,7 @@ public class FloatLyricViewManager {
                 isFirstSettingLyric = false;
             }
             mFloatLyricView.mLyricText.setCurrentTimeMillis(PlayManager.getCurrentPosition());
+            mFloatLyricView.mLyricText.setDurationMillis(PlayManager.getDuration());
         }
     }
 
@@ -183,17 +185,14 @@ public class FloatLyricViewManager {
         }
         //先判断本地是否存在歌词
         String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
-        LogUtil.e("lrcPath : " + lrcPath);
         if (FileUtils.exists(lrcPath)) {
-            LogUtil.e("isFile");
-            setLyric(LyricPraseUtils.setLyricResource(new File(lrcPath)));
+            LogUtil.e("lrcPath");
+            setLyric(LyricParseUtils.setLyricResource(new File(lrcPath)));
         } else {
-            Observable observable = MusicApi.getLyricInfo(music);
+            Observable<String> observable = MusicApi.getLyricInfo(music);
             if (observable == null) {
-                LogUtil.e(TAG, "本地文件为空");
                 setLyric(null);
-            }
-            if (observable != null)
+            }else {
                 observable.subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -203,13 +202,7 @@ public class FloatLyricViewManager {
                     @Override
                     public void onNext(String lyricInfo) {
                         Log.e(TAG, lyricInfo);
-                        if (lyricInfo != null) {
-                            LyricInfo tt = LyricPraseUtils.setLyricResource(lyricInfo);
-                            tt.setDuration(PlayManager.getDuration());
-                            setLyric(tt);
-                        } else {
-                            setLyric(null);
-                        }
+                        setLyric(LyricParseUtils.setLyricResource(lyricInfo));
                     }
 
                     @Override
@@ -222,8 +215,8 @@ public class FloatLyricViewManager {
 
                     }
                 });
+            }
         }
-
     }
 
     /**

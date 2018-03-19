@@ -56,7 +56,7 @@ public class LyricTextView extends View {
     private Context context;
 
     private String content;
-    private long mStartMilis, mCurrentMilis, mEndMilis;
+    private long mStartMillis, mCurrentMillis, mEndMillis, mDuration;
 
 
     public LyricTextView(Context context, AttributeSet attrs, int defStyle) {
@@ -116,28 +116,37 @@ public class LyricTextView extends View {
 
         } else {
             if (mLyricInfo != null && mLyricInfo.song_lines != null && mLyricInfo.song_lines.size() > 0) {
-                mStartMilis = mLyricInfo.song_lines.get(mCurrentPlayLine).start;
-                if (mCurrentPlayLine == mCurrentPlayLine - 1) {
-                    mEndMilis = mLyricInfo.duration;
+                mStartMillis = mLyricInfo.song_lines.get(mCurrentPlayLine).start;
+                if (mCurrentPlayLine == mLyricInfo.song_lines.size() - 1) {
+                    return;
                 } else {
-                    mEndMilis = mLyricInfo.song_lines.get(mCurrentPlayLine + 1).start;
+                    mEndMillis = mLyricInfo.song_lines.get(mCurrentPlayLine + 1).start;
                 }
                 content = mLyricInfo.song_lines.get(mCurrentPlayLine).content;
-                float tipTextWidth = mTextPaint.measureText(content);
-                Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
-                int height = (int) Math.ceil(fm.descent - fm.top) + 2;
-                mShaderWidth = (float) (1.0 * (mCurrentMilis - mStartMilis) / (mEndMilis - mStartMilis)) * tipTextWidth;
-                LogUtil.e("tmp = " + mShaderWidth);
+                LogUtil.e("tmp =  " + content + " length = " + content.length());
 
-                canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
-                        (getHeight() + height) / 2, mTextPaint);
+                if (content.length() > 0) {
+                    float tipTextWidth = mTextPaint.measureText(content);
+                    Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
+                    int height = (int) Math.ceil(fm.descent - fm.top) + 2;
+                    mShaderWidth = (float) (1.0 * (mCurrentMillis - mStartMillis) / (mEndMillis - mStartMillis)) * tipTextWidth;
+                    canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
+                            (getHeight() + height) / 2, mTextPaint);
 
-                canvas.clipRect((getWidth() - tipTextWidth) / 2,
-                        (getHeight() + height) / 2 - height,
-                        (getWidth() - tipTextWidth) / 2 + mShaderWidth,
-                        (getHeight() + height) / 2 + height);
-                canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
-                        (getHeight() + height) / 2, mHighLightPaint);
+                    canvas.clipRect((getWidth() - tipTextWidth) / 2,
+                            (getHeight() + height) / 2 - height,
+                            (getWidth() - tipTextWidth) / 2 + mShaderWidth,
+                            (getHeight() + height) / 2 + height);
+                    canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
+                            (getHeight() + height) / 2, mHighLightPaint);
+                } else {
+                    content = mLyricInfo.getSong_lines().get(mCurrentPlayLine - 1).content;
+                    float tipTextWidth = mTextPaint.measureText(content);
+                    Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
+                    int height = (int) Math.ceil(fm.descent - fm.top) + 2;
+                    canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
+                            (getHeight() + height) / 2, mHighLightPaint);
+                }
             }
         }
         super.draw(canvas);
@@ -228,9 +237,19 @@ public class LyricTextView extends View {
      */
     public void setCurrentTimeMillis(long current) {
         if (mLyricInfo == null) return;
-        mCurrentMilis = current;
+        mCurrentMillis = current;
         scrollToCurrentTimeMillis(current);
         invalidateView();
+    }
+
+    /**
+     * 设置当前时间显示位置
+     *
+     * @param current 时间戳
+     */
+    public void setDurationMillis(long current) {
+        if (current == 0) return;
+        mDuration = current;
     }
 
 }

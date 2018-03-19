@@ -6,6 +6,15 @@ package com.cyl.musiclake.event;
 
 public class StatusChangedEvent {
     private String name;
+    private boolean isPrepared;
+
+    public boolean isPrepared() {
+        return isPrepared;
+    }
+
+    public void setPrepared(boolean prepared) {
+        isPrepared = prepared;
+    }
 
     public StatusChangedEvent() {
     }

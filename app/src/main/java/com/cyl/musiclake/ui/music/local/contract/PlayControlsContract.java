@@ -26,6 +26,7 @@ public interface PlayControlsContract {
 
         void showLyric(String lyric, boolean isFilePath);
 
+
         void setPlayPauseButton(boolean isPlaying);
 
         boolean getPlayPauseStatus();
@@ -52,6 +53,7 @@ public interface PlayControlsContract {
         void onNextClick();
 
         void updateNowPlayingCard();
+
         void updatePlayStatus();
 
     }

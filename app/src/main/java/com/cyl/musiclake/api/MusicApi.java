@@ -6,6 +6,8 @@ import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.bean.Music;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -23,7 +25,7 @@ public class MusicApi {
      * @param music
      * @return
      */
-    public static Observable getLyricInfo(Music music) {
+    public static Observable<String> getLyricInfo(Music music) {
         if (music.getType() == Music.Type.QQ) {
             return QQApiServiceImpl.getQQLyric(music)
                     .subscribeOn(Schedulers.io())
@@ -49,7 +51,7 @@ public class MusicApi {
      * @param page
      * @return
      */
-    public static Observable searchMusic(String key, int limit, int page) {
+    public static Observable<List<Music>> searchMusic(String key, int limit, int page) {
         return Observable.merge(QQApiServiceImpl.search(key, limit, page), XiamiServiceImpl.search(key, limit, page))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -2,6 +2,9 @@ package com.cyl.musiclake.view.lyric;
 
 import android.util.Log;
 
+import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
 
@@ -17,12 +20,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import io.reactivex.Observable;
+
 /**
  * 歌词解析器
  */
 
-public class LyricPraseUtils {
-    public static LyricInfo mLyricInfo;
+public class LyricParseUtils {
+    private static LyricInfo mLyricInfo;
 
     /**
      * 设置歌词文件
@@ -45,7 +50,7 @@ public class LyricPraseUtils {
      */
     public static LyricInfo setLyricResource(String lyricInfo) {
         if (lyricInfo != null && lyricInfo.length() > 0) {
-            LogUtil.e("LyricView ", lyricInfo);
+//            LogUtil.e("LyricView ", lyricInfo);
             InputStream inputStream = new ByteArrayInputStream(lyricInfo.getBytes());
             return setupLyricResource(inputStream, "utf-8");
         } else {
@@ -91,37 +96,37 @@ public class LyricPraseUtils {
      */
     private static void analyzeLyric(LyricInfo lyricInfo, String line) {
         int index = line.indexOf("]");
-        if (line != null && line.startsWith("[offset:")) {
+        if (line.startsWith("[offset:")) {
             // 时间偏移量
             String string = line.substring(8, index).trim();
             lyricInfo.song_offset = Long.parseLong(string);
             return;
         }
-        if (line != null && line.startsWith("[ti:")) {
+        if (line.startsWith("[ti:")) {
             // title 标题
             String string = line.substring(4, index).trim();
             lyricInfo.song_title = string;
             return;
         }
-        if (line != null && line.startsWith("[ar:")) {
+        if (line.startsWith("[ar:")) {
             // artist 作者
             String string = line.substring(4, index).trim();
             lyricInfo.song_artist = string;
             return;
         }
-        if (line != null && line.startsWith("[al:")) {
+        if (line.startsWith("[al:")) {
             // album 所属专辑
             String string = line.substring(4, index).trim();
             lyricInfo.song_album = string;
             return;
         }
-        if (line != null && line.startsWith("[by:")) {
+        if (line.startsWith("[by:")) {
             return;
         }
-        if (line != null && line.startsWith("[total:")) {
+        if (line.startsWith("[total:")) {
             return;
         }
-        if (line.startsWith("[0") && line.trim().length() > 10) {
+        if (line.startsWith("[0")) {
             // 歌词内容,需要考虑一行歌词有多个时间戳的情况
             int lastIndexOfRightBracket = line.lastIndexOf("]");
             String content = line.substring(lastIndexOfRightBracket + 1, line.length());
@@ -140,7 +145,7 @@ public class LyricPraseUtils {
                  [01:07.00]当你我不小心又想起她
                  */
                 LineInfo lineInfo = new LineInfo();
-                lineInfo.content = content;
+                lineInfo.content = content.trim();
                 lineInfo.start = measureStartTimeMillis(temp);
                 lyricInfo.song_lines.add(lineInfo);
             }
@@ -174,7 +179,6 @@ public class LyricPraseUtils {
             mLyricInfo = null;
         }
     }
-
 
     static class sort implements Comparator<LineInfo> {
 

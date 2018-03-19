@@ -27,19 +27,8 @@ import android.view.animation.OvershootInterpolator;
 
 import com.cyl.musiclake.utils.LogUtil;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Author   : cyl
@@ -640,7 +629,7 @@ public class LyricView extends View {
         int position = 0;
         if (scrollable()) {
             for (int i = 0, size = mLineCount; i < size; i++) {
-                LineInfo lineInfo = mLyricInfo.song_lines.get(i);
+                LyricInfo.LineInfo lineInfo = mLyricInfo.song_lines.get(i);
                 if (lineInfo != null && lineInfo.start > time) {
                     position = i;
                     break;
@@ -661,167 +650,14 @@ public class LyricView extends View {
     }
 
     /**
-     * 初始化歌词信息
-     *
-     * @param inputStream 歌词文件的流信息
-     */
-    private void setupLyricResource(InputStream inputStream, String charsetName) {
-        if (inputStream != null) {
-            try {
-                LyricInfo lyricInfo = new LyricInfo();
-                lyricInfo.song_lines = new ArrayList<>();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charsetName);
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    analyzeLyric(lyricInfo, line);
-                }
-                //歌词排序
-                Collections.sort(lyricInfo.song_lines, new sort());
-                reader.close();
-                inputStream.close();
-                inputStreamReader.close();
-
-                mLyricInfo = lyricInfo;
-                mLineCount = mLyricInfo.song_lines.size();
-                invalidateView();
-            } catch (IOException e) {
-                Log.e("--", "IOException");
-                e.printStackTrace();
-            }
-        } else {
-            mDefaultHint = "暂无歌词";
-            invalidateView();
-        }
-    }
-
-    /**
-     * 逐行解析歌词内容
-     */
-    private void analyzeLyric(LyricInfo lyricInfo, String line) {
-        int index = line.indexOf("]");
-        if (line != null && line.startsWith("[offset:")) {
-            // 时间偏移量
-            String string = line.substring(8, index).trim();
-            lyricInfo.song_offset = Long.parseLong(string);
-            return;
-        }
-        if (line != null && line.startsWith("[ti:")) {
-            // title 标题
-            String string = line.substring(4, index).trim();
-            lyricInfo.song_title = string;
-            return;
-        }
-        if (line != null && line.startsWith("[ar:")) {
-            // artist 作者
-            String string = line.substring(4, index).trim();
-            lyricInfo.song_artist = string;
-            return;
-        }
-        if (line != null && line.startsWith("[al:")) {
-            // album 所属专辑
-            String string = line.substring(4, index).trim();
-            lyricInfo.song_album = string;
-            return;
-        }
-        if (line != null && line.startsWith("[by:")) {
-            return;
-        }
-        if (line != null && line.startsWith("[total:")) {
-            return;
-        }
-        if (line.startsWith("[0") && line.trim().length() > 10) {
-            // 歌词内容,需要考虑一行歌词有多个时间戳的情况
-            int lastIndexOfRightBracket = line.lastIndexOf("]");
-            String content = line.substring(lastIndexOfRightBracket + 1, line.length());
-            //去除trc歌词中每个字的时间长
-            content = content.replaceAll("<[0-9]{1,5}>", "");
-            String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
-            String arrTimes[] = times.split("-");
-            for (String temp : arrTimes) {
-                if (temp.trim().length() == 0) {
-                    continue;
-                }
-                /** [02:34.14][01:07.00]当你我不小心又想起她
-                 *
-                 上面的歌词的就可以拆分为下面两句歌词了
-                 [02:34.14]当你我不小心又想起她
-                 [01:07.00]当你我不小心又想起她
-                 */
-                LineInfo lineInfo = new LineInfo();
-                lineInfo.content = content;
-                lineInfo.start = measureStartTimeMillis(temp);
-                lyricInfo.song_lines.add(lineInfo);
-            }
-        }
-    }
-
-    /**
-     * 将解析得到的表示时间的字符转化为Long型
-     */
-    private static long measureStartTimeMillis(String timeString) {
-        //因为给如的字符串的时间格式为XX:XX.XX,返回的long要求是以毫秒为单位
-        //将字符串 XX:XX.XX 转换为 XX:XX:XX
-        timeString = timeString.replace('.', ':');
-        //将字符串 XX:XX:XX 拆分
-        String[] times = timeString.split(":");
-        // mm:ss:SS
-        return Integer.valueOf(times[0]) * 60 * 1000 +//分
-                Integer.valueOf(times[1]) * 1000 +//秒
-                Integer.valueOf(times[2]);//毫秒
-    }
-
-    /**
-     * 重置歌词内容
-     */
-    private void resetLyricInfo() {
-        if (mLyricInfo != null) {
-            if (mLyricInfo.song_lines != null) {
-                mLyricInfo.song_lines.clear();
-                mLyricInfo.song_lines = null;
-            }
-            mLyricInfo = null;
-        }
-    }
-
-    /**
      * 初始化控件
      */
     private void resetView() {
         mCurrentPlayLine = mCurrentShowLine = 0;
-        resetLyricInfo();
+        mLyricInfo = null;
         invalidateView();
         mLineCount = 0;
         mScrollY = 0;
-    }
-
-    class LyricInfo {
-        List<LineInfo> song_lines;
-
-        String song_artist;  // 歌手
-        String song_title;  // 标题
-        String song_album;  // 专辑
-
-        long song_offset;  // 偏移量
-    }
-
-    class LineInfo {
-        String content;  // 歌词内容
-        long start;  // 开始时间
-    }
-
-    class sort implements Comparator<LineInfo> {
-
-        @Override
-        public int compare(LineInfo lrc, LineInfo lrc2) {
-            if (lrc.start < lrc2.start) {
-                return -1;
-            } else if ((lrc.start > lrc2.start)) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
     }
 
     public interface OnPlayerClickListener {
@@ -873,16 +709,10 @@ public class LyricView extends View {
      * @param charsetName 解析字符集
      */
     public void setLyricFile(File file, String charsetName) {
-        if (file != null && file.exists()) {
-            try {
-                setupLyricResource(new FileInputStream(file), charsetName);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else {
-            mDefaultHint = "暂无歌词";
-            invalidateView();
-        }
+        mLyricInfo = LyricParseUtils.setLyricResource(file);
+        if (mLyricInfo != null && mLyricInfo.getSong_lines() != null)
+            mLineCount = mLyricInfo.getSong_lines().size();
+        invalidateView();
     }
 
     /**
@@ -892,13 +722,11 @@ public class LyricView extends View {
      * @param charsetName 解析字符集
      */
     public void setLyricContent(String lyricInfo, String charsetName) {
-        if (lyricInfo != null && lyricInfo.length() > 0) {
-            LogUtil.e("LyricView ", lyricInfo);
-            InputStream inputStream = new ByteArrayInputStream(lyricInfo.getBytes());
-            setupLyricResource(inputStream, charsetName);
-        } else {
-            reset("暂无歌词");
-        }
+        LogUtil.e("LyricView ", lyricInfo);
+        mLyricInfo = LyricParseUtils.setLyricResource(lyricInfo);
+        if (mLyricInfo != null && mLyricInfo.getSong_lines() != null)
+            mLineCount = mLyricInfo.getSong_lines().size();
+        invalidateView();
     }
 
     /**

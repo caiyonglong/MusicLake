@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.main;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -15,6 +14,7 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.utils.DataClearmanager;
 import com.cyl.musiclake.utils.PreferencesUtils;
@@ -33,7 +33,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private PreferenceScreen preference_about, preference_cache, preference_update;
     public SwitchPreference mWifiSwitch;
     public CheckBoxPreference mLyricCheckBox;
-
 
     public static SettingsFragment newInstance() {
         Bundle args = new Bundle();
@@ -77,9 +76,15 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             PreferencesUtils.saveWifiMode(wifiMode);
             return false;
         });
+
+        if (SystemUtils.isOpenFloatWindow()) {
+            mLyricCheckBox.setChecked(true);
+        } else {
+            mLyricCheckBox.setChecked(false);
+        }
+
         mLyricCheckBox.setOnPreferenceClickListener(preference -> {
-            if (!mLyricCheckBox.isChecked())
-                checkPermission();
+            checkPermission();
             return true;
         });
     }
@@ -120,42 +125,46 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         return true;
     }
 
-    private boolean checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(getContext())) {
-                ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
-                //启动Activity让用户授权
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-                startActivityForResult(intent, 100);
-            } else {
-                mLyricCheckBox.setChecked(true);
-                mLyricCheckBox.setEnabled(false);
-                ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
-            }
-        }
-        if (SystemUtils.isLollipop()) {
+    private void checkPermission() {
+        if (!SystemUtils.isOpenSystemWindow() && SystemUtils.isMarshmallow()) {
+            ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+            startActivityForResult(intent, 100);
+        } else if (!SystemUtils.isOpenUsageAccess() && SystemUtils.isMarshmallow()) {
             ToastUtils.show(getActivity(), "获取<有权查看使用权限的应用>权限");
             Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            startActivity(intent);
+            startActivityForResult(intent, 101);
+        } else {
+            mLyricCheckBox.setChecked(true);
+            ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
         }
-        return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (SystemUtils.isOpenFloatWindow()) {
+            mLyricCheckBox.setChecked(true);
+        } else {
+            mLyricCheckBox.setChecked(false);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(getActivity())) {
-                    mLyricCheckBox.setChecked(true);
-                    mLyricCheckBox.setEnabled(false);
-                    ToastUtils.show(getContext(), "权限已打开");
-                } else {
-                    mLyricCheckBox.setChecked(false);
-                    mLyricCheckBox.setEnabled(true);
-                    ToastUtils.show(getContext(), "悬浮窗权限已被拒绝，请手动前往设置中设置");
-                }
+            if (SystemUtils.isOpenSystemWindow()) {
+                checkPermission();
+            } else {
+                ToastUtils.show(MusicApp.getAppContext(), "悬浮窗权限已被拒绝！");
+            }
+        } else if (requestCode == 101) {
+            if (SystemUtils.isOpenUsageAccess()) {
+                checkPermission();
+            } else {
+                ToastUtils.show(MusicApp.getAppContext(), "有权查看使用权限的应用权限已被拒绝！");
             }
         }
     }

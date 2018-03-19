@@ -129,7 +129,9 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                         RxBus.getInstance().post(new HistoryChangedEvent());
                         break;
                     case MusicPlayerService.PLAY_STATE_CHANGED:
-                        RxBus.getInstance().post(new StatusChangedEvent());
+                        StatusChangedEvent event = new StatusChangedEvent();
+                        event.setPrepared(intent.getBooleanExtra("prepare", false));
+                        RxBus.getInstance().post(event);
                         break;
                     case MusicPlayerService.PLAY_QUEUE_CLEAR:
                         break;

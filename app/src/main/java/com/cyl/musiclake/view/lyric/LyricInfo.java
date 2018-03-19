@@ -15,9 +15,7 @@ public class LyricInfo {
     String song_artist;  // 歌手
     String song_title;  // 标题
     String song_album;  // 专辑
-
     long song_offset;  // 偏移量
-    long duration;  // 偏移量
 
     public List<LineInfo> getSong_lines() {
         return song_lines;
@@ -59,9 +57,6 @@ public class LyricInfo {
         this.song_offset = song_offset;
     }
 
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
 
     static class LineInfo {
         String content;  // 歌词内容
@@ -74,5 +69,24 @@ public class LyricInfo {
         public void setContent(String content) {
             this.content = content;
         }
+
+        @Override
+        public String toString() {
+            return "LineInfo{" +
+                    "content='" + content + '\'' +
+                    ", start=" + start +
+                    '}' + "\n";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "LyricInfo{" +
+                "song_lines=" + song_lines +
+                ", song_artist='" + song_artist + '\'' +
+                ", song_title='" + song_title + '\'' +
+                ", song_album='" + song_album + '\'' +
+                ", song_offset=" + song_offset +
+                '}';
     }
 }

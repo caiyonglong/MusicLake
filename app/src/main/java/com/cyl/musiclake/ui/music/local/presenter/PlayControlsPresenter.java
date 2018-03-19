@@ -75,6 +75,11 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                     if (!activity.isFinishing()) {
                         updatePlayStatus();
                     }
+                    if (!metaChangedEvent.isPrepared()) {
+                        mView.showLoading();
+                    } else {
+                        mView.hideLoading();
+                    }
                 });
     }
 
@@ -115,12 +120,11 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         if (FileUtils.exists(lrcPath)) {
             mView.showLyric(lrcPath, true);
         } else {
-            Observable observable = MusicApi.getLyricInfo(music);
+            Observable<String> observable = MusicApi.getLyricInfo(music);
             if (observable == null) {
                 LogUtil.e(TAG, "本地文件为空");
                 mView.showLyric(null, false);
-            }
-            if (observable != null)
+            } else {
                 observable.subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -143,6 +147,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
                     }
                 });
+            }
         }
     }
 
@@ -203,7 +208,6 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
                     });
         }
         isPlayPauseClick = false;
-        mView.setProgressMax(PlayManager.getDuration());
         mHandler.post(updateProgress);
     }
 
@@ -225,6 +229,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         public void run() {
             mProgress = PlayManager.getCurrentPosition();
             mView.updateProgress(mProgress);
+            mView.setProgressMax(PlayManager.getDuration());
             mHandler.postDelayed(updateProgress, 500);
         }
     };

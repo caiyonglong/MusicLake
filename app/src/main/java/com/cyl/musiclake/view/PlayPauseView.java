@@ -8,23 +8,32 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.cyl.musiclake.R;
 
+/**
+ * 自定义暂停播放按钮，包括自定义进度条
+ */
 public class PlayPauseView extends View {
 
     private int mWidth; //View宽度
     private int mHeight; //View高度
     private Paint mPaint;
+    private Paint mRingPaint; //圆弧
     private Path mLeftPath; //暂停时左侧竖条Path
     private Path mRightPath; //暂停时右侧竖条Path
+    private float mBorderWidth; //两个暂停竖条中间的空隙,默认为两侧竖条的宽度
     private float mGapWidth; //两个暂停竖条中间的空隙,默认为两侧竖条的宽度
     private float mProgress; //动画Progress
     private Rect mRect;
+    private RectF mRingRect;
     private boolean isPlaying;
+    private boolean isLoading;
+    private float startAngle, sweepAngle;
     private float mRectWidth;  //圆内矩形宽度
     private float mRectHeight; //圆内矩形高度
     private int mRectLT;  //矩形左侧上侧坐标
@@ -54,13 +63,22 @@ public class PlayPauseView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
+        mRingPaint = new Paint();
+        mRingPaint.setAntiAlias(true);
+        mRingPaint.setColor(Color.parseColor("#ec407a"));
+        mRingPaint.setStrokeWidth(mBorderWidth);
+        mRingPaint.setStrokeCap(Paint.Cap.ROUND);
+        mRingPaint.setStrokeJoin(Paint.Join.ROUND);
+
         mLeftPath = new Path();
         mRightPath = new Path();
         mRect = new Rect();
+        mRingRect = new RectF();
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseView);
         mBgColor = ta.getColor(R.styleable.PlayPauseView_bg_color, Color.WHITE);
         mBtnColor = ta.getColor(R.styleable.PlayPauseView_btn_color, Color.BLACK);
         mGapWidth = ta.getFloat(R.styleable.PlayPauseView_gap_width, 0);
+        mBorderWidth = ta.getFloat(R.styleable.PlayPauseView_border_width, 0);
         mDirection = ta.getInt(R.styleable.PlayPauseView_anim_direction, Direction.POSITIVE.value);
         mPadding = ta.getFloat(R.styleable.PlayPauseView_space_padding, 0);
         mAnimDuration = ta.getInt(R.styleable.PlayPauseView_anim_duration, 200);
@@ -109,6 +127,7 @@ public class PlayPauseView extends View {
         if (getSpacePadding() > mRadius / Math.sqrt(2) || mPadding < 0) {
             mPadding = mRadius / 3f; //默认值
         }
+        mRingRect = new RectF(0, 0, mWidth, mHeight);
         float space = (float) (mRadius / Math.sqrt(2) - mPadding); //矩形宽高的一半
         mRectLT = (int) (mRadius - space);
         int rectRB = (int) (mRadius + space);
@@ -123,6 +142,8 @@ public class PlayPauseView extends View {
         mGapWidth = getGapWidth() != 0 ? getGapWidth() : mRectWidth / 3;
         mProgress = isPlaying ? 0 : 1;
         mAnimDuration = getAnimDuration() < 0 ? 200 : getAnimDuration();
+        startAngle = -90;
+        sweepAngle = 120;
     }
 
     @Override
@@ -137,6 +158,9 @@ public class PlayPauseView extends View {
         mPaint.setColor(mBgColor);
         canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
 //        canvas.drawRect(mRect, mPaint);
+//        if (isLoading) {
+//            canvas.drawArc(mRingRect, startAngle, sweepAngle, true, mRingPaint); //
+//        }
 
         float distance = mGapWidth * (1 - mProgress);  //暂停时左右两边矩形距离
         float barWidth = mRectWidth / 2 - distance / 2;     //一个矩形的宽度
@@ -283,6 +307,11 @@ public class PlayPauseView extends View {
 
     public void setBtnColor(int btnColor) {
         mBtnColor = btnColor;
+        invalidate();
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
         invalidate();
     }
 

@@ -148,21 +148,36 @@
                     app:materialIconColor="@color/white"
                     app:materialIconSize="48dp" />
 
-                <com.cyl.musiclake.view.PlayPauseView
-                    android:id="@+id/playOrPause"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:elevation="5dp"
-                    android:scaleType="fitXY"
-                    android:translationZ="5dp"
-                    app:anim_duration="300"
-                    app:bg_color="#55ffffff"
-                    app:btn_color="@color/white"
-                    app:gap_width="15"
-                    tools:targetApi="lollipop" />
+                <FrameLayout
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <com.cyl.musiclake.view.PlayPauseView
+                        android:id="@+id/playOrPause"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:elevation="5dp"
+                        android:scaleType="fitXY"
+                        android:translationZ="5dp"
+                        app:anim_duration="300"
+                        app:bg_color="#55ffffff"
+                        app:btn_color="@color/white"
+                        app:gap_width="15"
+                        tools:targetApi="lollipop" />
+
+                    <ProgressBar
+                        android:id="@+id/pb_loading"
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_next"

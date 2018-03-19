@@ -5,11 +5,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.util.Log;
+
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import static com.cyl.musiclake.service.MusicPlayerService.PLAYER_PREPARED;
 import static com.cyl.musiclake.service.MusicPlayerService.PREPARE_ASYNC_UPDATE;
 import static com.cyl.musiclake.service.MusicPlayerService.RELEASE_WAKELOCK;
 import static com.cyl.musiclake.service.MusicPlayerService.TRACK_PLAY_ENDED;
@@ -21,7 +23,7 @@ import static com.cyl.musiclake.service.MusicPlayerService.TRACK_WENT_TO_NEXT;
  */
 
 public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
+        MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener {
 
     private String TAG = "MusicPlayerEngine";
 
@@ -29,12 +31,12 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
     private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
 
-    private MediaPlayer mNextMediaPlayer;
-
     private Handler mHandler;
 
     //是否已经初始化
     private boolean mIsInitialized = false;
+    //是否已经初始化
+    private boolean mIsPrepared = false;
 
     public MusicPlayerEngine(final MusicPlayerService service) {
         mService = new WeakReference<MusicPlayerService>(service);
@@ -43,64 +45,30 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
     public void setDataSource(final String path) {
         mIsInitialized = setDataSourceImpl(mCurrentMediaPlayer, path);
-        if (mIsInitialized) {
-            setNextDataSource(null);
-        }
     }
 
     private boolean setDataSourceImpl(final MediaPlayer player, final String path) {
         try {
+            if (player.isPlaying()) player.stop();
+            mIsPrepared = false;
             player.reset();
             if (path.startsWith("content://")) {
                 player.setDataSource(mService.get(), Uri.parse(path));
             } else {
                 player.setDataSource(path);
             }
-            player.prepare();
-//            player.setOnPreparedListener(this);
+            player.prepareAsync();
+            player.setOnPreparedListener(this);
             player.setOnBufferingUpdateListener(this);
+            player.setOnErrorListener(this);
+            player.setOnCompletionListener(this);
         } catch (final IOException todo) {
             return false;
         } catch (final IllegalArgumentException todo) {
             return false;
         }
-        player.setOnCompletionListener(this);
-        player.setOnErrorListener(this);
-        player.start();
         return true;
     }
-
-    public void setNextDataSource(final String path) {
-        try {
-            Log.e(TAG, "-setNextDataSource-" + path);
-            mCurrentMediaPlayer.setNextMediaPlayer(null);
-
-            if (mNextMediaPlayer != null) {
-                mNextMediaPlayer.release();
-                mNextMediaPlayer = null;
-            }
-            if (path == null) {
-                return;
-            }
-            mNextMediaPlayer = new MediaPlayer();
-            mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
-            mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
-            if (setDataSourceImpl(mNextMediaPlayer, path)) {
-                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
-            } else {
-                if (mNextMediaPlayer != null) {
-                    mNextMediaPlayer.release();
-                    mNextMediaPlayer = null;
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            Log.i(TAG, "Next media player is current one, continuing");
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Media player not initialized!");
-            return;
-        }
-    }
-
 
     public void setHandler(final Handler handler) {
         mHandler = handler;
@@ -111,6 +79,9 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
         return mIsInitialized;
     }
 
+    public boolean isPrepared() {
+        return mIsPrepared;
+    }
 
     public void start() {
         mCurrentMediaPlayer.start();
@@ -121,6 +92,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
         try {
             mCurrentMediaPlayer.reset();
             mIsInitialized = false;
+            mIsPrepared = false;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
@@ -141,8 +113,15 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     }
 
 
+    /**
+     * getDuration 只能在prepared之后才能调用，不然会报-38错误
+     *
+     * @return
+     */
     public long duration() {
-        return mCurrentMediaPlayer.getDuration();
+        if (mIsPrepared) {
+            return mCurrentMediaPlayer.getDuration();
+        } else return 0;
     }
 
 
@@ -169,7 +148,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
     @Override
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
-        Log.w(TAG, "Music Server Error what: " + what + " extra: " + extra);
+        LogUtil.e(TAG, "Music Server Error what: " + what + " extra: " + extra);
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                 final MusicPlayerService service = mService.get();
@@ -185,16 +164,14 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             default:
                 break;
         }
-        return false;
+        return true;
     }
 
 
     @Override
     public void onCompletion(final MediaPlayer mp) {
-        if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
-            mCurrentMediaPlayer.release();
-            mCurrentMediaPlayer = mNextMediaPlayer;
-            mNextMediaPlayer = null;
+        LogUtil.e(TAG, "onCompletion");
+        if (mp == mCurrentMediaPlayer) {
             mHandler.sendEmptyMessage(TRACK_WENT_TO_NEXT);
         } else {
             mService.get().mWakeLock.acquire(30000);
@@ -205,7 +182,16 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        LogUtil.e(TAG, "onBufferingUpdate" + percent);
         Message message = mHandler.obtainMessage(PREPARE_ASYNC_UPDATE, percent);
+        mHandler.sendMessage(message);
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+        mIsPrepared = true;
+        Message message = mHandler.obtainMessage(PLAYER_PREPARED);
         mHandler.sendMessage(message);
     }
 

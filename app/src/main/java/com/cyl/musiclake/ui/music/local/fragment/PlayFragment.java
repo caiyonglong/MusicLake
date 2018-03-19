@@ -86,6 +86,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     ImageView ivPlayingBg;
     @BindView(R.id.playOrPause)
     PlayPauseView mPlayOrPause;
+    @BindView(R.id.pb_loading)
+    ProgressBar mLoadingPrepared;
 
     //textView
     @BindView(R.id.song_title)
@@ -474,12 +476,12 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     public void showLoading() {
-
+        mLoadingPrepared.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        mLoadingPrepared.setVisibility(View.GONE);
     }
 
     @Override
