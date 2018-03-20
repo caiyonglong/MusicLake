@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,16 +10,24 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.event.ScheduleTaskEvent;
+import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.utils.DataClearmanager;
+import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
+
+import static com.cyl.musiclake.service.MusicPlayerService.SCHEDULE_CHANGED;
 
 /**
  * Author   : D22434
@@ -31,8 +38,11 @@ import com.cyl.musiclake.utils.UpdateUtils;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
     private PreferenceScreen preference_about, preference_cache, preference_update;
-    public SwitchPreference mWifiSwitch;
+    public SwitchPreference mWifiSwitch, mTimingSwitch;
     public CheckBoxPreference mLyricCheckBox;
+    private int time = 0;
+    private int[] times = new int[]{0, 15, 30, 45, 60};
+
 
     public static SettingsFragment newInstance() {
         Bundle args = new Bundle();
@@ -47,12 +57,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         addPreferencesFromResource(R.xml.pref_general);
         setHasOptionsMenu(true);
 
-        preference_about = (PreferenceScreen) findPreference("key_about");
-        preference_update = (PreferenceScreen) findPreference("key_update");
-        preference_cache = (PreferenceScreen) findPreference("key_cache");
-
-        mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
-        mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
+        initView();
 
         new Handler().post(() -> {
             try {
@@ -63,12 +68,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             }
         });
 
-        preference_about.setOnPreferenceClickListener(this);
-        preference_update.setOnPreferenceClickListener(this);
-        preference_cache.setOnPreferenceClickListener(this);
 
         mWifiSwitch.setChecked(PreferencesUtils.getWifiMode());
-
         mWifiSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
             Log.e("sss", newValue.toString());
             boolean wifiMode = (boolean) newValue;
@@ -76,31 +77,101 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             PreferencesUtils.saveWifiMode(wifiMode);
             return false;
         });
-
         if (SystemUtils.isOpenFloatWindow()) {
             mLyricCheckBox.setChecked(true);
         } else {
             mLyricCheckBox.setChecked(false);
         }
+        updateTimeSwitch(MusicPlayerService.mShutdownScheduled);
+        RxBus.getInstance().register(ScheduleTaskEvent.class)
+                .subscribe(metaChangedEvent -> {
+                    if (mTimingSwitch != null) {
+                        mTimingSwitch.setSummary(FormatUtil.formatTime(MusicPlayerService.time));
+                    }
+                });
+    }
 
-        mLyricCheckBox.setOnPreferenceClickListener(preference -> {
-            checkPermission();
-            return true;
-        });
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        preference_about = (PreferenceScreen) findPreference("key_about");
+        preference_update = (PreferenceScreen) findPreference("key_update");
+        preference_cache = (PreferenceScreen) findPreference("key_cache");
+        mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
+        mTimingSwitch = (SwitchPreference) findPreference("key_timing");
+        mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
+
+        preference_about.setOnPreferenceClickListener(this);
+        preference_update.setOnPreferenceClickListener(this);
+        preference_cache.setOnPreferenceClickListener(this);
+        mTimingSwitch.setOnPreferenceClickListener(this);
+        mLyricCheckBox.setOnPreferenceClickListener(this);
+    }
+
+    /**
+     * 开启对话框
+     */
+    private void openDialog() {
+        new MaterialDialog.Builder(getActivity())
+                .title("定时关闭")
+                .items("不开启", "15分钟", "30分钟", "45分钟", "60分钟", "自定义")
+                .itemsCallbackSingleChoice(0, (dialog, itemView, which, text) -> {
+                    if (which == 0) {
+                        updateTimeSwitch(false);
+                    } else if (which == 5) {
+                        dialog.cancel();
+                        new MaterialDialog.Builder(getActivity())
+                                .title("自定义时间")
+                                .inputType(InputType.TYPE_CLASS_NUMBER)//可以输入的类型-电话号码
+                                .input("分钟（不能大于24小时）", "", (dialog1, input) -> Log.i("yqy", "输入的是：" + input))
+                                .inputRange(1, 3)
+                                .onPositive((dialog12, which1) -> {
+                                    if (dialog12.getInputEditText().length() > 4) {
+                                        dialog12.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                                    } else {
+                                        dialog12.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+                                        time = Integer.parseInt(dialog12.getInputEditText().getText().toString());
+                                        updateTimeSwitch(true);
+                                        startTimerService();
+                                    }
+                                }).show();
+                    } else {
+                        time = times[which];
+                        updateTimeSwitch(true);
+                        startTimerService();
+                    }
+                    return false;
+                }).build()
+                .show();
+    }
+
+    /**
+     * 更新定时器开关
+     *
+     * @param mOpen
+     */
+    private void updateTimeSwitch(boolean mOpen) {
+        MusicPlayerService.mShutdownScheduled = mOpen;
+        mTimingSwitch.setChecked(mOpen);
+    }
+
+    /**
+     * 开启service中定时任务
+     */
+    private void startTimerService() {
+        Intent intent = new Intent(getActivity(), MusicPlayerService.class);
+        intent.setAction(SCHEDULE_CHANGED);
+        intent.putExtra("time", time);
+        getActivity().startService(intent);
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case "key_about":
-                try {
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle("关于")
-                            .setMessage("湖科音乐湖\n当前版本号" + UpdateUtils.getVersion())
-                            .show();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
                 break;
             case "key_cache":
                 new Handler().post(() -> {
@@ -120,12 +191,25 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case "key_update":
                 UpdateUtils.checkUpdate(getActivity());
                 break;
-
+            case "key_timing":
+                if (MusicPlayerService.mShutdownScheduled) {
+                    mTimingSwitch.setChecked(true);
+                } else {
+                    mTimingSwitch.setChecked(false);
+                }
+                openDialog();
+                break;
+            case "key_lyric":
+                checkLyricPermission();
+                break;
         }
         return true;
     }
 
-    private void checkPermission() {
+    /**
+     * 检查桌面歌词所需的权限
+     */
+    private void checkLyricPermission() {
         if (!SystemUtils.isOpenSystemWindow() && SystemUtils.isMarshmallow()) {
             ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
@@ -156,13 +240,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
             if (SystemUtils.isOpenSystemWindow()) {
-                checkPermission();
+                checkLyricPermission();
             } else {
                 ToastUtils.show(MusicApp.getAppContext(), "悬浮窗权限已被拒绝！");
             }
         } else if (requestCode == 101) {
             if (SystemUtils.isOpenUsageAccess()) {
-                checkPermission();
+                checkLyricPermission();
             } else {
                 ToastUtils.show(MusicApp.getAppContext(), "有权查看使用权限的应用权限已被拒绝！");
             }

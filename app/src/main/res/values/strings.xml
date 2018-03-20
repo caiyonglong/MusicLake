@@ -153,7 +153,24 @@
 
     <string name="play_next">播放下一首</string>
     <string name="album">专辑</string>
-    <string name="desktop_lyric">桌面歌词</string>
-    <string name="desktop_lyric_des">点击请求悬浮窗权限</string>
+    <string name="setting_lyric">桌面歌词</string>
+    <string name="setting_lyric_des">点击请求悬浮窗权限</string>
+    <string name="setting_timing">定时关闭</string>
+    <string name="setting_timing_summary">定时关闭</string>
+
+    <!--about-->
+    <string name="title_about">关于音乐湖</string>
+    <string name="version">版本号</string>
+    <string name="author">作者</string>
+    <string name="about_des">描述</string>
+    <string name="about_version">软件版本号</string>
+    <string name="about_project">项目地址</string>
+    <string name="about_feedback">意见反馈</string>
+    <string name="about_software">关于软件</string>
+    <string name="about_project_url">https://github.com/caiyonglong/MusicLake</string>
+    <string name="share_title">分享</string>
+    <string name="browser_title">使用系统浏览器打开</string>
+    <string name="share_article_url"><![CDATA[<string name=\"share_article_url\">%1$s分享【%2$s】：%3$s</string>]]></string>
+
 
 </resources>

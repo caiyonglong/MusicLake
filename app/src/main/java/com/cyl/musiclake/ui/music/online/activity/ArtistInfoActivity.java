@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -100,7 +99,7 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     public void showArtistInfo(OnlineArtistInfo artistInfo) {
-        Log.e(TAG,artistInfo.toString());
+        Log.e(TAG, artistInfo.toString());
         String name = artistInfo.getName();
         String avatarUri = artistInfo.getAvatar_big();
         String country = artistInfo.getCountry();
@@ -187,11 +186,7 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
             TextView tvUrl = new TextView(this);
             tvUrl.setBackgroundResource(R.drawable.bg_card);
             String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                tvUrl.setText(Html.fromHtml(String.format(html, url), 1));
-            } else {
-                tvUrl.setText(Html.fromHtml(String.format(html, url)));
-            }
+            tvUrl.setText(Html.fromHtml(String.format(html, url), 1));
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             tvUrl.setPadding(10, 10, 10, 10);
             tvUrl.setGravity(Gravity.CENTER);

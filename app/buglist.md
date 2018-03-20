@@ -153,4 +153,17 @@ E/MediaPlayer: next player is not prepared
 
 18、对于ViewPager+Fragment+Tablayout中 懒加载优化。
 
-19、
+19、getwidth()和getheight()已经过时使用point
+//屏幕宽高
+   
+         Displaydisplay = getWindowManager().getDefaultDisplay();
+   
+         Pointsize = newPoint();
+   
+         display.getSize(size);
+   
+         width = size.x;
+   
+         height = size.y;
+   
+    

@@ -152,9 +152,6 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
         } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) { //耳机按钮事件
             final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
             LogUtil.e(TAG, "keycode = " + event.getKeyCode());
-            if (event == null) {
-                return;
-            }
             final int keycode = event.getKeyCode();
             final int action = event.getAction();
             final long eventtime = event.getEventTime();

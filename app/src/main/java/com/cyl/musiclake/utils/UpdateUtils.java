@@ -3,13 +3,12 @@ package com.cyl.musiclake.utils;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.bean.UpdateInfo;
 import com.cyl.musiclake.common.Constants;
 
@@ -28,7 +27,11 @@ public class UpdateUtils {
 
     //检查更新
     public static void checkUpdate(final Activity activity) {
-
+//        if (version <= preVersion) {
+        ToastUtils.show(mContext, "暂无更新");
+//        } else {
+//            updateDialog(activity, response);
+//        }
 //        OkHttpUtils
 //                .post()
 //                .url(Constants.DEFAULT_URL)
@@ -65,16 +68,13 @@ public class UpdateUtils {
     private static void updateDialog(final Activity activity, final UpdateInfo updateInfo) {
         String message = "版本号：" + updateInfo.getVersion() + "\n" +
                 "更新日志: " + updateInfo.getChangelog();
-        new AlertDialog.Builder(activity)
-                .setTitle("发现新版本")
-                .setMessage(message)
-                .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        download(activity, updateInfo);
-                    }
-                })
-                .setNegativeButton("稍后提醒", null)
+        new MaterialDialog.Builder(activity)
+                .title("发现新版本")
+                .content(message)
+                .positiveText("立即更新")
+                .onPositive((dialog, which) -> download(activity, updateInfo))
+                .onNegative(null)
+                .negativeText("稍后更新")
                 .show();
     }
 
@@ -112,7 +112,6 @@ public class UpdateUtils {
 
         } catch (Exception e) {
             ToastUtils.show(mContext, "下载异常，请稍后重试！");
-
         }
     }
 }

@@ -8,8 +8,13 @@
         <!--android:title="夜间模式" />-->
         <CheckBoxPreference
             android:key="key_lyric"
-            android:summary="@string/desktop_lyric_des"
-            android:title="@string/desktop_lyric" />
+            android:summary="@string/setting_lyric_des"
+            android:title="@string/setting_lyric" />
+
+        <SwitchPreference
+            android:key="key_timing"
+            android:title="@string/setting_timing" />
+        
         <SwitchPreference
             android:defaultValue="true"
             android:key="wifi_mode"
@@ -28,7 +33,7 @@
             android:title="@string/pref_title_update" />
         <PreferenceScreen
             android:key="key_about"
-            android:title="@string/pref_title_about" />
+            android:title="@string/title_about" />
 
     </PreferenceCategory>
 

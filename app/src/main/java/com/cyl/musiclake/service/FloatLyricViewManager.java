@@ -124,10 +124,10 @@ public class FloatLyricViewManager {
     public void createFloatLyricView(Context context) {
         WindowManager windowManager = getWindowManager(context);
         Point size = new Point();
+        //获取屏幕宽高
         windowManager.getDefaultDisplay().getSize(size);
-
-        int screenWidth = windowManager.getDefaultDisplay().getWidth();
-        int screenHeight = windowManager.getDefaultDisplay().getHeight();
+        int screenWidth = size.x;
+        int screenHeight = size.y;
         if (mFloatLyricView == null) {
             mFloatLyricView = new FloatLyricView(context);
             if (mFloatLyricViewParams == null) {
@@ -192,7 +192,7 @@ public class FloatLyricViewManager {
             Observable<String> observable = MusicApi.getLyricInfo(music);
             if (observable == null) {
                 setLyric(null);
-            }else {
+            } else {
                 observable.subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {

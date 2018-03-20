@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
@@ -363,8 +364,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
                 mTvTip.setTextColor(artistColor);
             } else {
                 paletteColor = Color.WHITE;
-                mTvName.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-                mTvTip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                mTvName.setTextColor(ContextCompat.getColor(getContext(), android.R.color.primary_text_light));
+                mTvTip.setTextColor(ContextCompat.getColor(getContext(), android.R.color.secondary_text_light));
             }
         }
         //set icon color

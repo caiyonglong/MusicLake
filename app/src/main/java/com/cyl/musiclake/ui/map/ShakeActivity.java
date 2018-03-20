@@ -4,7 +4,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +56,7 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
 
     private SensorManager sensorManager;
     private Vibrator vibrator;
+    private VibrationEffect effect;
 
     private final String TAG = "ShakeSensorActivity";
 
@@ -76,11 +80,13 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void initData() {
         mPresenter = new NearPresenter();
         mPresenter.attachView(this);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        effect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
@@ -92,12 +98,13 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
     protected void listener() {
         ShakeManager.with(this).startShakeListener(new ShakeManager.ISensor() {
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSensorChange(float force) {
                 if (force > 14) {
                     secondTime = System.currentTimeMillis();
                     mHandler.postDelayed(jump, 200);
-                    vibrator.vibrate(200);
+                    vibrator.vibrate(effect);
                 }
             }
         });
@@ -190,6 +197,7 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
      */
     private SensorEventListener sensorEventListener = new SensorEventListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onSensorChanged(SensorEvent event) {
             // 传感器信息改变时执行该方法
@@ -201,7 +209,7 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
             // 一般在这三个方向的重力加速度达到40就达到了摇晃手机的状态。
             int medumValue = 19;// 三星 i9250怎么晃都不会超过20，没办法，只设置19了
             if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) {
-                vibrator.vibrate(200);
+                vibrator.vibrate(effect);
 //                Toast.makeText(ShakeActivity.this, "检测到摇晃，执行操作！", Toast.LENGTH_SHORT).show();
                 jumpActivity();
             }

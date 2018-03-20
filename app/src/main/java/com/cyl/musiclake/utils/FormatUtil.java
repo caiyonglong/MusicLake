@@ -15,7 +15,7 @@ public class FormatUtil {
     /**
      * 格式化时间
      *
-     * @param time 时间值
+     * @param time 时间值 (00:00 -23:59:59)
      * @return 时间
      */
     public static String formatTime(long time) {
@@ -24,9 +24,14 @@ public class FormatUtil {
             return "00:00";
         }
         time = time / 1000;
-        int m = (int) (time / 60 % 60);
-        int s = (int) (time % 60);
-        return (m > 9 ? m : "0" + m) + ":" + (s > 9 ? s : "0" + s);
+        int s = (int) (time % 60); // s秒
+        int m = (int) (time / 60 % 60); //m分
+        int h = (int) (time / 60 / 60 % 24); //h小时s
+        if (h > 0) {
+            return (h > 9 ? h : "0" + h) + ":" + (m > 9 ? m : "0" + m) + ":" + (s > 9 ? s : "0" + s);
+        } else {
+            return (m > 9 ? m : "0" + m) + ":" + (s > 9 ? s : "0" + s);
+        }
     }
 
     /**

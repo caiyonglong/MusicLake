@@ -126,6 +126,14 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.AboutActivity"
+            android:label="@string/title_about"
+            android:parentActivityName=".ui.main.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.WebActivity"
+            android:screenOrientation="portrait" />
         <!--社区-->
         <receiver android:name=".service.MediaButtonIntentReceiver">
             <intent-filter android:priority="999999999">

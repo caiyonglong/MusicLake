@@ -19,6 +19,7 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.service.PlayManager;
@@ -84,6 +85,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         // If a queue has cleared, notify us
         filter.addAction(MusicPlayerService.PLAY_QUEUE_CLEAR);
         filter.addAction(MusicPlayerService.PLAYLIST_CHANGED);
+        filter.addAction(MusicPlayerService.SCHEDULE_CHANGED);
         // If there is an error playing a track
         filter.addAction(MusicPlayerService.TRACK_ERROR);
 
@@ -137,6 +139,9 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                         break;
                     case MusicPlayerService.PLAYLIST_CHANGED:
                         RxBus.getInstance().post(new PlaylistEvent());
+                        break;
+                    case MusicPlayerService.SCHEDULE_CHANGED:
+                        RxBus.getInstance().post(new ScheduleTaskEvent());
                         break;
                     case MusicPlayerService.TRACK_ERROR:
                         final String errorMsg = context.getString(R.string.error_playing_track);

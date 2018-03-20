@@ -91,6 +91,7 @@ public class MusicPlayerService extends Service {
     public static final String PLAY_QUEUE_CHANGE = "com.cyl.music_lake.play_queue_change"; //播放队列改变
 
     public static final String META_CHANGED = "com.cyl.music_lake.metachanged";//状态改变(歌曲替换)
+    public static final String SCHEDULE_CHANGED = "com.cyl.music_lake.schedule";//定时广播
 
     public static final String CMD_TOGGLE_PAUSE = "toggle_pause";//按键播放暂停
     public static final String CMD_NEXT = "next";//按键下一首
@@ -116,6 +117,8 @@ public class MusicPlayerService extends Service {
     public static final int AUDIO_FOCUS_CHANGE = 12; //音频焦点改变
     public static final int VOLUME_FADE_DOWN = 13; //音频焦点改变
     public static final int VOLUME_FADE_UP = 14; //音频焦点改变
+
+    public static final int SCHEDULE_TASK = 15; //定时关闭改变
 
     private final int NOTIFICATION_ID = 0x123;
     private long mNotificationPostTime = 0;
@@ -157,6 +160,8 @@ public class MusicPlayerService extends Service {
     private boolean isMusicPlaying = false;
     //暂时失去焦点，会再次回去音频焦点
     private boolean mPausedByTransientLossOfFocus = false;
+
+    public static boolean mShutdownScheduled = false;
 
     private Bitmap artwork = null;
     boolean mServiceInUse = false;
@@ -274,6 +279,20 @@ public class MusicPlayerService extends Service {
                                 }
                                 break;
                             default:
+                        }
+                        break;
+                    case SCHEDULE_TASK:
+                        LogUtil.e(TAG, "定时任务：" + time);
+                        if (time == 0) {
+                            service.stopSelf();
+                            releaseServiceUiAndStop();
+                            System.exit(0);
+                        } else if (time == 10000) {
+                            time = time - 1000;
+                            ToastUtils.show("10秒后将自动关闭应用");
+                        } else {
+                            time = time - 1000;
+                            notifyChange(SCHEDULE_CHANGED);
                         }
                         break;
                 }
@@ -461,15 +480,56 @@ public class MusicPlayerService extends Service {
         if (intent != null) {
             final String action = intent.getAction();
             if (SHUTDOWN.equals(action)) {
-//                mShutdownScheduled = false;
+                LogUtil.e("即将关闭音乐播放器");
+//                mShutdownScheduled = true;
                 releaseServiceUiAndStop();
                 return START_NOT_STICKY;
             }
             handleCommandIntent(intent);
         }
-//        scheduleDelayedShutdown();
+//        scheduleDelayedShutdown();`
         return START_NOT_STICKY;
     }
+
+    private void scheduleDelayedShutdown() {
+        if (mShutdownScheduled) {
+
+        }
+    }
+
+    private Timer timer;
+    private TimerTask task;
+    public static long time;
+
+    /**
+     * 开启定时
+     *
+     * @param totalTime 总时间 分钟单位
+     */
+    private void startRemind(int totalTime) {
+        time = totalTime * 1000 * 60;
+        if (timer == null) {
+            timer = new Timer();
+        }
+        if (task != null) {
+            task.cancel();
+        }
+        if (time == 0) return;
+        mShutdownScheduled = true;
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                if (mShutdownScheduled) {
+                    Message message = Message.obtain();
+                    message.what = SCHEDULE_TASK;
+                    mHandler.sendMessage(message);
+                }
+            }
+        };
+        timer.schedule(task, 0, 1000);
+    }
+
 
     /**
      * 绑定Service
@@ -530,7 +590,7 @@ public class MusicPlayerService extends Service {
             intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
             sendBroadcast(intent);
 
-            mAudioManager.registerMediaButtonEventReceiver(mediaButtonReceiverComponent);
+//            mAudioManager.registerMediaButtonEventReceiver(mediaButtonReceiverComponent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 mSession.setActive(true);
 
@@ -1159,6 +1219,9 @@ public class MusicPlayerService extends Service {
                 //启动Activity让用户授权
                 ToastUtils.show(this, "请前往设置中打开悬浮窗权限");
             }
+        } else if (SCHEDULE_CHANGED.equals(action)) {
+            LogUtil.e(TAG, SCHEDULE_CHANGED + "----" + intent.getIntExtra("time", 0));
+            startRemind(intent.getIntExtra("time", 0));
         }
     }
 
@@ -1264,7 +1327,6 @@ public class MusicPlayerService extends Service {
             mWorkThread.interrupt();
             mWorkThread = null;
         }
-
 
         mAudioManager.abandonAudioFocus(audioFocusChangeListener);
 
