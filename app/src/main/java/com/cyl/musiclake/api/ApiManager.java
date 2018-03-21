@@ -127,7 +127,7 @@ public class ApiManager {
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
-                .client(getOkHttpClient())
+//                .client(getOkHttpClient())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
                 .addConverterFactory(MyGsonConverterFactory.create(gson)) // 使用Gson作为数据转换器
                 .build();

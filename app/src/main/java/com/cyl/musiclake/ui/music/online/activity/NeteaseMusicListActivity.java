@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
-import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,19 +14,21 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
 import com.cyl.musiclake.api.netease.NeteaseList;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.online.DownloadDialog;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.music.online.adapter.NeteaseAdapter;
 import com.cyl.musiclake.ui.music.online.contract.OnlineMusicListContract;
 import com.cyl.musiclake.ui.music.online.presenter.OnlineMusicListPresenter;
 import com.cyl.musiclake.utils.FormatUtil;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -35,6 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
@@ -42,11 +47,11 @@ import butterknife.BindView;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
+public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
 
     private static final String TAG = "BaiduMusicListActivity";
-    private List<Music> musicList = new ArrayList<>();
-    private SongAdapter mAdapter;
+    private List<NeteaseMusic> toplist = new ArrayList<>();
+    private NeteaseAdapter mAdapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -61,15 +66,13 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
     TextView mTvDate;
     TextView mTvDesc;
 
-    private int mOffset = 0;
+    private int idx;
     private String title;
     private String type;
     private String desc;
+    private long time;
     private String pic;
     private OnlineMusicListPresenter mPresenter;
-    private int mCurrentCounter = 0;
-    private int TOTAL_COUNTER = 0;
-    private int limit = 10;
 
     @Override
     protected int getLayoutResID() {
@@ -78,10 +81,8 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
 
     @Override
     protected void initView() {
-        title = getIntent().getStringExtra(Extras.BILLBOARD_TITLE);
-        type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
-        desc = getIntent().getStringExtra(Extras.BILLBOARD_DESC);
-        pic = getIntent().getStringExtra(Extras.BILLBOARD_ALBUM);
+        idx = getIntent().getIntExtra("id", 0);
+        title = getIntent().getStringExtra("title");
         mToolbar.setTitle(title);
 
         setSupportActionBar(mToolbar);
@@ -95,7 +96,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
         mPresenter = new OnlineMusicListPresenter(this);
         mPresenter.attachView(this);
 
-        mAdapter = new SongAdapter(musicList);
+        mAdapter = new NeteaseAdapter(toplist);
         mAdapter.setEnableLoadMore(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -105,35 +106,75 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
         mAdapter.bindToRecyclerView(mRecyclerView);
         showHeaderInfo();
 
-        mPresenter.loadOnlineMusicList(type, 10, mOffset);
+        mPresenter.loadNeteaseMusicList(idx);
     }
 
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                Music music = (Music) adapter.getItem(position);
-                mPresenter.playCurrentMusic(music);
+                LogUtil.e(TAG, toplist.get(position).toString());
+                NeteaseApiServiceImpl.getMusicUrl(toplist.get(position))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Music>() {
+
+                            @Override
+                            public void onSubscribe(Disposable disposable) {
+
+                            }
+
+                            @Override
+                            public void onNext(Music music) {
+                                if (music.getUri() != null) {
+                                    PlayManager.playOnline(music);
+                                } else {
+                                    ToastUtils.show(music.toString());
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            Music music = (Music) adapter.getItem(position);
+            NeteaseMusic music = toplist.get(position);
             PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), getLocalClassName());
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("艺术家：\n")
+                                .append(music.getArtists().get(0).getName())
+                                .append("\n")
+                                .append("专辑：\n")
+                                .append(music.getAlbum())
+                                .append("\n")
+                                .append("播放时长：\n")
+                                .append(FormatUtil.formatTime(music.getDuration()))
+                                .append("\n")
+                                .append("文件路径：\n")
+                                .append(music.getMp3Url())
+                                .append(music.getStatus());
+
+                        new MaterialDialog.Builder(NeteaseMusicListActivity.this)
+                                .title("歌曲详情")
+                                .content(sb.toString())
+                                .positiveText("确定")
+                                .build().show();
                         break;
                     case R.id.popup_song_goto_artist:
                         Log.e(TAG, music.toString());
-                        Intent intent = new Intent(this, ArtistInfoActivity.class);
-                        intent.putExtra(Extras.TING_UID, music.getArtistId());
-                        startActivity(intent);
                         break;
                     case R.id.popup_song_download:
-                        DownloadDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), getLocalClassName());
                         break;
                 }
                 return false;
@@ -141,15 +182,6 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
             popupMenu.inflate(R.menu.popup_song_online);
             popupMenu.show();
         });
-        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            if (mCurrentCounter < TOTAL_COUNTER) {
-                //数据全部加载完毕
-                mAdapter.loadMoreEnd();
-            } else {
-                //成功获取更多数据
-                mPresenter.loadOnlineMusicList(type, limit, mOffset);
-            }
-        }, 1000), mRecyclerView);
     }
 
     @Override
@@ -168,7 +200,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
         mTvDate = (TextView) mViewHeader.findViewById(R.id.tv_update_date);
         mTvDesc = (TextView) mViewHeader.findViewById(R.id.tv_comment);
 
-        mTvDate.setText("最近更新：" + FormatUtil.distime(System.currentTimeMillis()));
+        mTvDate.setVisibility(View.GONE);
     }
 
     @Override
@@ -196,7 +228,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
 
     public void showHeaderInfo() {
         mTvTitle.setText(title);
-//        mTvDate.setText(getString(R.string.recent_update, playlistInfo.getUpdate_date()));
+        mTvDate.setText(getString(R.string.recent_update, FormatUtil.distime(time)));
         mTvDesc.setText(desc);
         GlideApp.with(this)
                 .load(pic)
@@ -207,16 +239,16 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
 
     @Override
     public void showOnlineMusicList(List<Music> musicList) {
-        this.musicList.addAll(musicList);
-        mAdapter.setNewData(this.musicList);
-        mOffset = mOffset + limit;
-        mCurrentCounter = mAdapter.getData().size();
-        TOTAL_COUNTER = mOffset;
-        mAdapter.loadMoreComplete();
+
     }
 
     @Override
     public void showTopList(NeteaseList musicList) {
-
+        desc = musicList.getDescription();
+        pic = musicList.getCoverImgUrl();
+        time = musicList.getUpdateTime();
+        showHeaderInfo();
+        toplist = musicList.getTracks();
+        mAdapter.setNewData(musicList.getTracks());
     }
 }

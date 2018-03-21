@@ -2,6 +2,7 @@ package com.cyl.musiclake.api;
 
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.bean.Music;
@@ -63,4 +64,9 @@ public class MusicApi {
     public static Observable<Music> getMusicInfo(Music music) {
         return QQApiServiceImpl.getMusicInfo(music);
     }
+
+    public static Observable<List<Music>> getTopList(int id) {
+        return NeteaseApiServiceImpl.getTopMusicList(id);
+    }
+
 }

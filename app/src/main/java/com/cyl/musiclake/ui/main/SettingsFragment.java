@@ -25,7 +25,7 @@ import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.cyl.musiclake.utils.UpdateUtils;
+import com.tencent.bugly.beta.Beta;
 
 import static com.cyl.musiclake.service.MusicPlayerService.SCHEDULE_CHANGED;
 
@@ -189,7 +189,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 });
                 break;
             case "key_update":
-                UpdateUtils.checkUpdate(getActivity());
+                Beta.checkUpgrade();
                 break;
             case "key_timing":
                 if (MusicPlayerService.mShutdownScheduled) {

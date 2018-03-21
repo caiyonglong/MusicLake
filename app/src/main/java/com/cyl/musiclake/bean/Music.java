@@ -336,7 +336,8 @@ public class Music implements Parcelable {
         QQ,
         XIAMI,
         BAIDU,
-        LOCAL
+        LOCAL,
+        NETEASE
     }
 
     @Override

@@ -7,14 +7,15 @@ android {
         applicationId "com.cyl.musiclake"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 7
+        versionCode 8
         versionName "4.0.2"
-
         multiDexEnabled true
-
-
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -68,6 +69,11 @@ dependencies {
     compile 'com.github.florent37:shapeofview:1.0.4'
     compile 'com.github.rtugeek:ColorSeekBar:1.6.2'
     compile 'com.just.agentweb:agentweb:4.0.2'
+
+    //注释掉原有bugly的仓库
+    //compile 'com.tencent.bugly:crashreport:latest.release'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.3.2
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    compile 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
 
 //    compile 'com.gyf.barlibrary:barlibrary:2.3.0'
 //

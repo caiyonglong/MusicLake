@@ -4,6 +4,9 @@ import com.cyl.musiclake.api.baidu.BaiduMusicList;
 import com.cyl.musiclake.api.baidu.BaiduSongInfo;
 import com.cyl.musiclake.api.baidu.BaiduSongList;
 import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
+import com.cyl.musiclake.api.netease.NeteaseBase;
+import com.cyl.musiclake.api.netease.NeteaseList;
+import com.cyl.musiclake.api.netease.NeteaseMusicUrl;
 import com.cyl.musiclake.api.qq.QQApiKey;
 import com.cyl.musiclake.api.qq.QQApiModel;
 import com.cyl.musiclake.api.qq.QQLyricInfo;
@@ -59,11 +62,11 @@ public interface ApiManagerService {
     @GET
     Observable<QQLyricInfo> getQQLyric(@Url String baseUrl);
 
-//    @Headers({"referer: http://h.xiami.com/"})
+    //    @Headers({"referer: http://h.xiami.com/"})
     @GET
     Observable<ResponseBody> getXiamiLyric(@Url String baseUrl);
 
-//    @Headers({"referer: http://h.xiami.com/"})
+    //    @Headers({"referer: http://h.xiami.com/"})
     @GET
     Observable<ResponseBody> getBaiduLyric(@Url String baseUrl);
 
@@ -88,4 +91,13 @@ public interface ApiManagerService {
     @Streaming
     @GET
     Observable<ResponseBody> downloadFile(@Url String downloadUrl, @HeaderMap Map<String, String> params);
+
+    @Headers({"referer: http://music.163.com"})
+    @GET()
+    Observable<NeteaseBase<NeteaseList>> getTopList(@Url String Url);
+
+    @Headers({"referer: http://music.163.com"})
+    @GET()
+    Observable<NeteaseMusicUrl> getMusicUrl(@Url String Url);
+
 }

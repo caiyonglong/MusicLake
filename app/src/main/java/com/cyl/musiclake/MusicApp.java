@@ -9,6 +9,8 @@ import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
 import java.net.Proxy;
 
@@ -34,6 +36,7 @@ public class MusicApp extends Application {
         UpdateUtils.init(this);
         PreferencesUtils.init(this);
         FileDownloadLog.NEED_LOG = true;
+        initBugly();
         /**
          * 初始化文件下载
          */
@@ -45,5 +48,10 @@ public class MusicApp extends Application {
                         .proxy(Proxy.NO_PROXY) // set proxy
                 ))
                 .commit();
+    }
+
+    private void initBugly() {
+        Bugly.init(getApplicationContext(), "fd892b37ea", true);
+        Beta.checkUpgrade(false,false);
     }
 }

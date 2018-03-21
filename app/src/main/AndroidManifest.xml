@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cyl.musiclake">
 
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
@@ -31,7 +33,6 @@
     <!-- 用于读取手机当前的状态 -->
     <!--定位包、导航包需要的额外权限（注：基础权限也需要）-->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -106,6 +107,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
+            android:name=".ui.music.online.activity.NeteaseMusicListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue" />
+        <activity
             android:name=".ui.map.ShakeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
@@ -147,7 +153,19 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
         <!--<meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" />-->
     </application>
 

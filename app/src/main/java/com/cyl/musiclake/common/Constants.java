@@ -95,7 +95,7 @@ public class Constants {
     public static final String FILENAME_LRC = ".lrc";
     public static final int MUSIC_LIST_SIZE = 10;
 
-    public static final String BASE_URL = "http://musicapi.qianqian.com/v1/restserver/ting/";//"/ting";
+    public static final String BASE_URL = "http://musicapi.leanapp.cn/";//"/ting";
 
 
     public static final String BASE_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
