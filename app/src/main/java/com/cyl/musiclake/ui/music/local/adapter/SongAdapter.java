@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.ConvertUtils;
 
@@ -19,7 +20,8 @@ import java.util.List;
  * 版本：2.5
  */
 public class SongAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
-//        RecyclerView.Adapter<SongAdapter.ItemHolder> {
+    //        RecyclerView.Adapter<SongAdapter.ItemHolder> {
+    String url = null;
 
     public SongAdapter(List<Music> musicList) {
         super(R.layout.item_music, musicList);
@@ -27,13 +29,30 @@ public class SongAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder holder, Music item) {
-        String url = item.getCoverUri();
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into((ImageView) holder.getView(R.id.iv_cover));
+        url = item.getCoverUri();
+        if (url == null) {
+            MusicApi.getMusicAlbumInfo(item).subscribe(doubanMusic -> {
+                if (doubanMusic.getCount() >= 1) {
+                    url = doubanMusic.getMusics().get(0).getImage();
+                    item.setCoverBig(url);
+                    item.setCoverBig(url);
+                    item.setCoverUri(url);
+                    GlideApp.with(mContext)
+                            .asBitmap()
+                            .load(url)
+                            .error(R.drawable.default_cover)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into((ImageView) holder.getView(R.id.iv_cover));
+                }
+            });
+        } else {
+            GlideApp.with(mContext)
+                    .asBitmap()
+                    .load(url)
+                    .error(R.drawable.default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into((ImageView) holder.getView(R.id.iv_cover));
+        }
 
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));

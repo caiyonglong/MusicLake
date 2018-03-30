@@ -88,7 +88,6 @@ public class NearPeopleAcivity extends BaseActivity {
 
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setSmoothScrollbarEnabled(true);
-        mLinearLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setNestedScrollingEnabled(false);

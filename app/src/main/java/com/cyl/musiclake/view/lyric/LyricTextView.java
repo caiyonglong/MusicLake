@@ -25,9 +25,8 @@ public class LyricTextView extends View {
     /***/
     private int mDefaultMargin = 12;
     private int mDefaultSize = 35; //默认歌词大小
-    private float fontSizeScale = 16;    // 设置字体大小
-    private int fontColorScale = Color.RED;    // 设置字体颜色
-    private Rect mBtnBound, mTimerBound;
+    private float fontSize = 16;    // 设置字体大小
+    private int fontColor = Color.RED;    // 设置字体颜色
 
     private LyricInfo mLyricInfo;
     private String mDefaultHint = "音乐湖";
@@ -90,15 +89,14 @@ public class LyricTextView extends View {
         mHighLightPaint.setAntiAlias(true);
     }
 
+
     @Override
-    public void draw(Canvas canvas) {
-
-        mTextPaint.setTextSize(fontSizeScale);
-        mHighLightPaint.setTextSize(fontSizeScale);
-        mHighLightPaint.setColor(fontColorScale);
-
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        mTextPaint.setTextSize(fontSize);
+        mHighLightPaint.setTextSize(fontSize);
+        mHighLightPaint.setColor(fontColor);
         if (!hasLyric) {
-
             float tipTextWidth = mTextPaint.measureText(mDefaultHint);
             Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
             int height = (int) Math.ceil(fm.descent - fm.top) + 2;
@@ -149,7 +147,6 @@ public class LyricTextView extends View {
                 }
             }
         }
-        super.draw(canvas);
     }
 
     public boolean getBlLrc() {
@@ -170,12 +167,12 @@ public class LyricTextView extends View {
     }
 
     public void setFontColorScale(int fontColorScale) {
-        this.fontColorScale = fontColorScale;
+        this.fontColor = fontColorScale;
         invalidateView();
     }
 
-    public void setFontSizeScale(float fontSizeScale) {
-        this.fontSizeScale = fontSizeScale;
+    public void setFontSizeScale(float progress) {
+        this.fontSize = (float) (mDefaultSize + progress * 0.2);
         invalidateView();
     }
 

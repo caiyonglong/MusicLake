@@ -1,6 +1,6 @@
 package com.cyl.musiclake.api.netease;
 
-import com.cyl.musiclake.api.ApiManager;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.bean.Music;
 
 import java.util.ArrayList;

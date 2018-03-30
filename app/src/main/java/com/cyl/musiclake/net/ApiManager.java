@@ -1,4 +1,4 @@
-package com.cyl.musiclake.api;
+package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
@@ -122,15 +122,31 @@ public class ApiManager {
     }
 
     private ApiManager() {
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
-//                .client(getOkHttpClient())
+                .client(getOkHttpClient())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
                 .addConverterFactory(MyGsonConverterFactory.create(gson)) // 使用Gson作为数据转换器
                 .build();
         apiService = retrofit.create(ApiManagerService.class);
+    }
+
+    private static Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+
+    /**
+     * 获取Service
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> T create(Class<T> clazz) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.douban.com")
+                .client(getOkHttpClient())
+                .addConverterFactory(MyGsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
+        return retrofit.create(clazz);
     }
 }

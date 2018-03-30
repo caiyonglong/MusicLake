@@ -1,6 +1,7 @@
 package com.cyl.musiclake.view.lyric;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.PreferencesUtils;
 import com.rtugeek.android.colorseekbar.ColorSeekBar;
 
@@ -93,6 +95,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
     public ColorSeekBar mColorSeekBar;
     private MaterialIconView mLockButton, mPreButton, mNextButton, mPlayButton, mSettingsButton;
     private ImageButton mCloseButton;
+    private ImageButton mMusicButton;
     private LinearLayout mSettingLinearLayout;
     private RelativeLayout mRelLyricView;
     private LinearLayout mLinLyricView;
@@ -114,6 +117,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         mColorSeekBar = findViewById(R.id.sb_color);
         mLyricText = findViewById(R.id.lyric);
         mCloseButton = findViewById(R.id.btn_close);
+        mMusicButton = findViewById(R.id.music_app);
         mLockButton = findViewById(R.id.btn_lock);
         mPreButton = findViewById(R.id.btn_previous);
         mPlayButton = findViewById(R.id.btn_play);
@@ -125,6 +129,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         mFrameBackground = findViewById(R.id.small_bg);
 
         mCloseButton.setOnClickListener(this);
+        mMusicButton.setOnClickListener(this);
         mLockButton.setOnClickListener(this);
         mPreButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
@@ -145,8 +150,8 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 Log.e("TEST", progress + "---" + fromUser);
-                mLyricText.setFontSizeScale((float) (progress * 0.1 + 30));
-                PreferencesUtils.saveFontSize((float) (progress * 0.1 + 30));
+                mLyricText.setFontSizeScale(progress);
+                PreferencesUtils.saveFontSize(progress);
             }
 
             @Override
@@ -260,6 +265,10 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.music_app:
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                getContext().startActivity(intent);
+                break;
             case R.id.btn_close:
                 PlayManager.showDesktopLyric(false);
                 break;

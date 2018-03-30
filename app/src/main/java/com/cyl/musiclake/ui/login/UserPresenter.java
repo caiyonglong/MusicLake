@@ -4,7 +4,7 @@ package com.cyl.musiclake.ui.login;
 import android.content.Context;
 
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.ApiManager;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.login.user.User;

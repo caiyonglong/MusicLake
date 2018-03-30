@@ -27,7 +27,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.app.NotificationCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -128,6 +127,7 @@ public class MusicPlayerService extends Service {
 
     private MusicPlayerEngine mPlayer = null;
     public PowerManager.WakeLock mWakeLock;
+    private PowerManager powerManager;
 
 
     public Music mPlayingMusic = null;
@@ -141,6 +141,7 @@ public class MusicPlayerService extends Service {
     private final int PLAY_MODE_LOOP = 0;
     private final int PLAY_MODE_RANDOM = 1;
     private final int PLAY_MODE_REPEAT = 2;
+
     //广播接收者
     ServiceReceiver mServiceReceiver;
     HeadsetReceiver mHeadsetReceiver;
@@ -148,20 +149,21 @@ public class MusicPlayerService extends Service {
 
     private FloatLyricViewManager mFloatLyricViewManager;
 
-    private AudioManager mAudioManager;
-    private ComponentName mediaButtonReceiverComponent;
+    private MediaSessionManager mediaSessionManager;
+    private AudioAndFocusManager audioAndFocusManager;
+
 
     private NotificationManager mNotificationManager;
     private Builder mNotificationBuilder;
     private Notification mNotification;
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
-    private MediaSessionCompat mSession;
     private boolean isRunningForeground = false;
     private boolean isMusicPlaying = false;
     //暂时失去焦点，会再次回去音频焦点
     private boolean mPausedByTransientLossOfFocus = false;
 
     public static boolean mShutdownScheduled = false;
+    public static int totalTime = 0;
 
     private Bitmap artwork = null;
     boolean mServiceInUse = false;
@@ -170,30 +172,24 @@ public class MusicPlayerService extends Service {
     private HandlerThread mWorkThread;
     //主线程Handler
     private Handler mMainHandler;
-    //音频焦点
-    private AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            mHandler.obtainMessage(AUDIO_FOCUS_CHANGE, focusChange, 0).sendToTarget();
-        }
-    };
+
     private boolean showLyric;
 
 
-    private class MusicPlayerHandler extends Handler {
+    public class MusicPlayerHandler extends Handler {
         private final WeakReference<MusicPlayerService> mService;
         private float mCurrentVolume = 1.0f;
 
         public MusicPlayerHandler(final MusicPlayerService service, final Looper looper) {
             super(looper);
-            mService = new WeakReference<MusicPlayerService>(service);
+            mService = new WeakReference<>(service);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final MusicPlayerService service = mService.get();
-            synchronized (service) {
+            MusicPlayerService service = mService.get();
+            synchronized (mService) {
                 switch (msg.what) {
                     case VOLUME_FADE_DOWN:
                         mCurrentVolume -= 0.05f;
@@ -253,13 +249,13 @@ public class MusicPlayerService extends Service {
                         break;
                     case AUDIO_FOCUS_CHANGE:
                         switch (msg.arg1) {
-                            case AudioManager.AUDIOFOCUS_LOSS://时期焦点
+                            case AudioManager.AUDIOFOCUS_LOSS://失去音频焦点
                             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT://暂时失去焦点
                                 if (service.isPlaying()) {
-                                    service.mPausedByTransientLossOfFocus =
+                                    mPausedByTransientLossOfFocus =
                                             msg.arg1 == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
                                 }
-                                service.pause();
+                                mMainHandler.post(service::pause);
                                 break;
                             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                                 removeMessages(VOLUME_FADE_UP);
@@ -268,11 +264,11 @@ public class MusicPlayerService extends Service {
                             case AudioManager.AUDIOFOCUS_GAIN://重新获取焦点
                                 //重新获得焦点，且符合播放条件，开始播放
                                 if (!service.isPlaying()
-                                        && service.mPausedByTransientLossOfFocus) {
-                                    service.mPausedByTransientLossOfFocus = false;
+                                        && mPausedByTransientLossOfFocus) {
+                                    mPausedByTransientLossOfFocus = false;
                                     mCurrentVolume = 0f;
                                     service.mPlayer.setVolume(mCurrentVolume);
-                                    service.play();
+                                    mMainHandler.post(service::play);
                                 } else {
                                     removeMessages(VOLUME_FADE_DOWN);
                                     sendEmptyMessage(VOLUME_FADE_UP);
@@ -300,9 +296,6 @@ public class MusicPlayerService extends Service {
         }
     }
 
-    private void setAndRecordPlayPos(int mNextPlayPos) {
-        mPlayingPos = mNextPlayPos;
-    }
 
     @Override
     public void onCreate() {
@@ -315,77 +308,37 @@ public class MusicPlayerService extends Service {
         initMediaPlayer();
         //初始化电话监听服务
         initTelephony();
-        //初始化MediaSession
-        setUpMediaSession();
         //初始化通知
         initNotify();
     }
 
     /**
-     * 参数配置，锁屏
+     * 参数配置，AudioManager、锁屏
      */
     private void initConfig() {
 
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mediaButtonReceiverComponent = new ComponentName(getPackageName(),
-                MediaButtonIntentReceiver.class.getName());
-
-        mMainHandler = new Handler();
+        //初始化主线程Handler
+        mMainHandler = new Handler(Looper.getMainLooper());
         mRepeatMode = PreferencesUtils.getPlayMode();
 
+        //初始化工作线程
+        mWorkThread = new HandlerThread("MusicPlayerThread");
+        mWorkThread.start();
 
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        mHandler = new MusicPlayerHandler(this, mWorkThread.getLooper());
+
+        //电源键
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PlayerWakelockTag");
 
         mFloatLyricViewManager = new FloatLyricViewManager(this);
+
+        //初始化和设置MediaSessionCompat
+        mediaSessionManager = new MediaSessionManager(mBindStub, this, mMainHandler);
+        audioAndFocusManager = new AudioAndFocusManager(this, mHandler);
+        audioAndFocusManager.requestAudioFocus();
     }
 
-
-    /**
-     * 初始化和设置MediaSessionCompat
-     * MediaSessionCompat用于告诉系统及其他应用当前正在播放的内容,以及接收什么类型的播放控制
-     */
-    private void setUpMediaSession() {
-        mSession = new MediaSessionCompat(this, "Listener"
-                , mediaButtonReceiverComponent, null);
-        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mSession.setCallback(new MediaSessionCompat.Callback() {
-            @Override
-            public void onPause() {
-                pause();
-                mPausedByTransientLossOfFocus = false;
-            }
-
-            @Override
-            public void onPlay() {
-                play();
-            }
-
-            @Override
-            public void onSeekTo(long pos) {
-                seekTo((int) pos);
-            }
-
-            @Override
-            public void onSkipToNext() {
-                next();
-            }
-
-            @Override
-            public void onSkipToPrevious() {
-                prev();
-            }
-
-            @Override
-            public void onStop() {
-                pause();
-                seekTo(0);
-                releaseServiceUiAndStop();
-            }
-        });
-        mSession.isActive();
-    }
 
     /**
      * 释放通知栏;
@@ -399,7 +352,7 @@ public class MusicPlayerService extends Service {
         cancelNotification();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            mSession.setActive(false);
+            mediaSessionManager.release();
 
         if (!mServiceInUse) {
             savePlayQueue(true);
@@ -433,11 +386,6 @@ public class MusicPlayerService extends Service {
      * 初始化音乐播放服务
      */
     private void initMediaPlayer() {
-        //初始化工作线程
-        mWorkThread = new HandlerThread("MusicPlayerThread");
-        mWorkThread.start();
-
-        mHandler = new MusicPlayerHandler(this, mWorkThread.getLooper());
 
         mPlayer = new MusicPlayerEngine(this);
         mPlayer.setHandler(mHandler);
@@ -487,14 +435,7 @@ public class MusicPlayerService extends Service {
             }
             handleCommandIntent(intent);
         }
-//        scheduleDelayedShutdown();`
         return START_NOT_STICKY;
-    }
-
-    private void scheduleDelayedShutdown() {
-        if (mShutdownScheduled) {
-
-        }
     }
 
     private Timer timer;
@@ -543,6 +484,9 @@ public class MusicPlayerService extends Service {
         return mBindStub;
     }
 
+    private void setAndRecordPlayPos(int mNextPlayPos) {
+        mPlayingPos = mNextPlayPos;
+    }
 
     /**
      * 下一首
@@ -584,15 +528,12 @@ public class MusicPlayerService extends Service {
             isMusicPlaying = true;
             mPlayer.setDataSource(mPlayingMusic.getUri());
             updateNotification();
+            mediaSessionManager.updateMetaData(mPlayingMusic.getUri());
 
             final Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
             intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
             intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
             sendBroadcast(intent);
-
-//            mAudioManager.registerMediaButtonEventReceiver(mediaButtonReceiverComponent);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                mSession.setActive(true);
 
             if (mPlayer.isInitialized()) {
                 mHandler.removeMessages(VOLUME_FADE_DOWN);
@@ -609,7 +550,7 @@ public class MusicPlayerService extends Service {
      *
      * @param remove_status_icon
      */
-    private void stop(boolean remove_status_icon) {
+    public void stop(boolean remove_status_icon) {
         if (mPlayer != null && mPlayer.isInitialized()) {
             mPlayer.stop();
         }
@@ -698,6 +639,7 @@ public class MusicPlayerService extends Service {
     public void play() {
         if (mPlayer.isInitialized()) {
             mPlayer.start();
+            audioAndFocusManager.requestAudioFocus();
             mHandler.removeMessages(VOLUME_FADE_DOWN);
             mHandler.sendEmptyMessage(VOLUME_FADE_UP); //组件调到正常音量
 
@@ -1058,7 +1000,7 @@ public class MusicPlayerService extends Service {
             isRunningForeground = true;
             mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
-                    .setMediaSession(mSession.getSessionToken())
+                    .setMediaSession(mediaSessionManager.getMediaSession())
                     .setShowActionsInCompactView(0, 1, 2, 3);
             mNotificationBuilder.setStyle(style);
         }
@@ -1220,8 +1162,9 @@ public class MusicPlayerService extends Service {
                 ToastUtils.show(this, "请前往设置中打开悬浮窗权限");
             }
         } else if (SCHEDULE_CHANGED.equals(action)) {
-            LogUtil.e(TAG, SCHEDULE_CHANGED + "----" + intent.getIntExtra("time", 0));
-            startRemind(intent.getIntExtra("time", 0));
+            totalTime = intent.getIntExtra("time", 0);
+            LogUtil.e(TAG, SCHEDULE_CHANGED + "----" + totalTime);
+            startRemind(totalTime);
         }
     }
 
@@ -1328,8 +1271,7 @@ public class MusicPlayerService extends Service {
             mWorkThread = null;
         }
 
-        mAudioManager.abandonAudioFocus(audioFocusChangeListener);
-
+        audioAndFocusManager.abandonAudioFocus();
         cancelNotification();
 
         //注销广播

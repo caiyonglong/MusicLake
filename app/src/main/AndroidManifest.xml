@@ -140,9 +140,9 @@
         <activity
             android:name=".ui.main.WebActivity"
             android:screenOrientation="portrait" />
-        <!--社区-->
+
         <receiver android:name=".service.MediaButtonIntentReceiver">
-            <intent-filter android:priority="999999999">
+            <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>

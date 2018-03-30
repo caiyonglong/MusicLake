@@ -1,4 +1,4 @@
-package com.cyl.musiclake.api;
+package com.cyl.musiclake.net;
 
 import android.content.Context;
 
@@ -14,7 +14,7 @@ import java.io.File;
  * function :
  */
 
-class ExternalCacheDiskFactory extends DiskLruCacheFactory {
+public class ExternalCacheDiskFactory extends DiskLruCacheFactory {
 
     public ExternalCacheDiskFactory(Context context) {
         this(context, FileUtils.getImageDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE);

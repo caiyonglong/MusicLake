@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.online.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.api.ApiManager;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;

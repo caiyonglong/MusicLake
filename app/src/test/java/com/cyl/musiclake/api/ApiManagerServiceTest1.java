@@ -1,6 +1,9 @@
 package com.cyl.musiclake.api;
 
+import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl;
 import com.cyl.musiclake.api.qq.QQApiModel;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.net.ApiManager;
 
 import org.junit.Test;
 
@@ -49,7 +52,11 @@ public class ApiManagerServiceTest1 {
 
     @Test
     public void searchByXiami() throws Exception {
-
+        Music music = new Music();
+        music.setTitle("暧昧");
+        music.setArtist("薛之谦");
+        DoubanApiServiceImpl.getMusicInfo(music);
+        System.out.println(music.getCoverBig());
 
     }
 

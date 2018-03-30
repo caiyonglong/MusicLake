@@ -28,6 +28,8 @@ import com.cyl.musiclake.utils.ToastUtils;
 import com.tencent.bugly.beta.Beta;
 
 import static com.cyl.musiclake.service.MusicPlayerService.SCHEDULE_CHANGED;
+import static com.cyl.musiclake.service.MusicPlayerService.mShutdownScheduled;
+import static com.cyl.musiclake.service.MusicPlayerService.totalTime;
 
 /**
  * Author   : D22434
@@ -116,7 +118,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         new MaterialDialog.Builder(getActivity())
                 .title("定时关闭")
                 .items("不开启", "15分钟", "30分钟", "45分钟", "60分钟", "自定义")
-                .itemsCallbackSingleChoice(0, (dialog, itemView, which, text) -> {
+                .itemsCallbackSingleChoice(getSelectTime(), (dialog, itemView, which, text) -> {
                     if (which == 0) {
                         updateTimeSwitch(false);
                     } else if (which == 5) {
@@ -166,6 +168,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         getActivity().startService(intent);
     }
 
+    private int getSelectTime() {
+        for (int i = 0; i < times.length; i++) {
+            if (totalTime == times[i]) return i;
+        }
+        return 0;
+    }
+
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
@@ -192,12 +201,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 Beta.checkUpgrade();
                 break;
             case "key_timing":
-                if (MusicPlayerService.mShutdownScheduled) {
-                    mTimingSwitch.setChecked(true);
+                if (mShutdownScheduled) {
+                    updateTimeSwitch(false);
                 } else {
                     mTimingSwitch.setChecked(false);
+                    openDialog();
                 }
-                openDialog();
                 break;
             case "key_lyric":
                 checkLyricPermission();

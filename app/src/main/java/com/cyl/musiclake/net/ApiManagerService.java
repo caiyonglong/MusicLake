@@ -1,5 +1,6 @@
-package com.cyl.musiclake.api;
+package com.cyl.musiclake.net;
 
+import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.api.baidu.BaiduMusicList;
 import com.cyl.musiclake.api.baidu.BaiduSongInfo;
 import com.cyl.musiclake.api.baidu.BaiduSongList;

@@ -8,6 +8,8 @@ interface IMusicService {
     void playOnline(in Music music);
     void play(int id);
     void playPause();
+    void pause();
+    void stop();
     void prev();
     void next();
     void refresh();

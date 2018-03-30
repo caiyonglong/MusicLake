@@ -18,7 +18,7 @@ public class IMusicServiceStub extends IMusicService.Stub {
     private final WeakReference<MusicPlayerService> mService;
 
     public IMusicServiceStub(final MusicPlayerService service) {
-        mService = new WeakReference<MusicPlayerService>(service);
+        mService = new WeakReference<>(service);
     }
 
     @Override
@@ -34,6 +34,16 @@ public class IMusicServiceStub extends IMusicService.Stub {
     @Override
     public void playPause() throws RemoteException {
         mService.get().playPause();
+    }
+
+    @Override
+    public void pause() throws RemoteException {
+        mService.get().pause();
+    }
+
+    @Override
+    public void stop() throws RemoteException {
+        mService.get().stop(true);
     }
 
     @Override

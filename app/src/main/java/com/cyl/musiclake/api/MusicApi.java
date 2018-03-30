@@ -2,6 +2,8 @@ package com.cyl.musiclake.api;
 
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
+import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl;
+import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
@@ -69,4 +71,12 @@ public class MusicApi {
         return NeteaseApiServiceImpl.getTopMusicList(id);
     }
 
+    /**
+     * 加载图片
+     */
+    public static Observable<DoubanMusic> getMusicAlbumInfo(Music music) {
+        return DoubanApiServiceImpl.getMusicInfo(music)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

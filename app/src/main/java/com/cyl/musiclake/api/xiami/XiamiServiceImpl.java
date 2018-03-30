@@ -1,6 +1,6 @@
 package com.cyl.musiclake.api.xiami;
 
-import com.cyl.musiclake.api.ApiManager;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.FileUtils;
