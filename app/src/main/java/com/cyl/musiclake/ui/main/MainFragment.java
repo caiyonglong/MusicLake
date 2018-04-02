@@ -66,7 +66,7 @@ public class MainFragment extends BaseFragment {
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
         setupViewPager(mViewPager);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(3);
     }
 
     private void setupViewPager(ViewPager mViewPager) {

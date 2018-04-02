@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -200,18 +202,47 @@ public class NeteaseApiServiceImplTest {
     @Test
     public void getToplist() {
         List<String> list = new ArrayList<>();
-        list.add("云音乐新歌榜");//http://p1.music.126.net/GhhuF6Ep5Tq9IEvLsyCN7w==/18708190348409091.jpg
+        list.add("云音乐新歌榜");
         list.add("云音乐热歌榜");
-        list.add("网易原创歌曲榜");//http://p1.music.126.net/sBzD11nforcuh1jdLSgX7g==/18740076185638788.jpg
-        list.add("云音乐飙升榜");//http://p1.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg
-        list.add("云音乐电音榜");//http://p1.music.126.net/qN-sDLqehN1oHGyov-0EZw==/109951163068669685.jpg
-        list.add("UK排行榜周榜");//http://p1.music.126.net/VQOMRRix9_omZbg4t-pVpw==/18930291695438269.jpg
-//        for (int i = 0; i < list.size(); i++) {
-            Observable<NeteaseList> qqApiModel
-                    = NeteaseApiServiceImpl.getTopList(0);
-            qqApiModel.subscribe(qqApi -> {
-                System.out.println(qqApi.getCoverImgUrl());
-            });
-//        }
+        list.add("网易原创歌曲榜");
+        list.add("云音乐飙升榜");
+        list.add("云音乐电音榜");
+        list.add("UK排行榜周榜");
+        list.add("美国Billboard周榜 ");
+        list.add("KTV嗨榜 ");
+        list.add("iTunes榜 ");
+        list.add("Hit FM Top榜 ");
+        list.add("日本Oricon周榜 ");
+        list.add("韩国Melon排行榜周榜 ");
+        list.add("韩国Mnet排行榜周榜 ");
+        list.add("韩国Melon原声周榜 ");
+        list.add("中国TOP排行榜(港台榜) ");
+        list.add("中国TOP排行榜(内地榜)");
+        list.add("香港电台中文歌曲龙虎榜 ");
+        list.add("华语金曲榜");
+        list.add("中国嘻哈榜");
+        list.add("法国 NRJ EuroHot 30 周榜");
+        list.add("台湾Hito排行榜 ");
+        list.add("Beatport全球电子舞曲榜");
+        list.add("云音乐ACG音乐榜");
+        list.add("云音乐嘻哈榜");
+        Map<String, String> maps = new HashMap<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                Observable<NeteaseList> qqApiModel
+                        = NeteaseApiServiceImpl.getTopList(i);
+                int finalI = i;
+
+                qqApiModel.subscribe(qqApi -> {
+                    maps.put(list.get(finalI), qqApi.getCoverImgUrl());
+                });
+            } catch (Exception e) {
+
+            }
+        }
+        for (int i = 0; i < maps.size(); i++) {
+            System.out.println(maps.get(list.get(i)));
+        }
     }
 }

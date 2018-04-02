@@ -19,7 +19,6 @@ import java.util.List;
  * 版本：2.5
  */
 public class NeteaseAdapter extends BaseQuickAdapter<NeteaseMusic, BaseViewHolder> {
-//        RecyclerView.Adapter<SongAdapter.ItemHolder> {
 
     public NeteaseAdapter(List<NeteaseMusic> musicList) {
         super(R.layout.item_music, musicList);
@@ -36,13 +35,19 @@ public class NeteaseAdapter extends BaseQuickAdapter<NeteaseMusic, BaseViewHolde
                 .into((ImageView) holder.getView(R.id.iv_cover));
 
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getName()));
-        StringBuilder tt = new StringBuilder();
-        for (int i = 0; i < item.getArtists().size(); i++) {
-            tt.append("-").append(item.getArtists().get(i).getName());
-        }
-        holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(tt.toString(), item.getAlbum().getName()));
+        holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(getAuthor(item.getArtists()), item.getAlbum().getName()));
         holder.addOnClickListener(R.id.iv_more);
     }
 
+
+    private String getAuthor(List<NeteaseMusic.ArtistsBeanX> artists) {
+        if (artists.size() == 0) return null;
+
+        StringBuilder artist = new StringBuilder(artists.get(0).getName());
+        for (int i = 1; i < artists.size(); i++) {
+            artist.append(",").append(artists.get(i).getName());
+        }
+        return artist.toString();
+    }
 
 }

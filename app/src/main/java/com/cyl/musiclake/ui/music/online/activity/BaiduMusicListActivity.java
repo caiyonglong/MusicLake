@@ -18,15 +18,14 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.api.netease.NeteaseList;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
-import com.cyl.musiclake.ui.music.online.contract.OnlineMusicListContract;
-import com.cyl.musiclake.ui.music.online.presenter.OnlineMusicListPresenter;
+import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
+import com.cyl.musiclake.ui.music.online.presenter.BaiduListPresenter;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -42,7 +41,7 @@ import butterknife.BindView;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
+public class BaiduMusicListActivity extends BaseActivity implements BaiduListContract.View {
 
     private static final String TAG = "BaiduMusicListActivity";
     private List<Music> musicList = new ArrayList<>();
@@ -66,7 +65,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
     private String type;
     private String desc;
     private String pic;
-    private OnlineMusicListPresenter mPresenter;
+    private BaiduListPresenter mPresenter;
     private int mCurrentCounter = 0;
     private int TOTAL_COUNTER = 0;
     private int limit = 10;
@@ -92,7 +91,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
 
     @Override
     protected void initData() {
-        mPresenter = new OnlineMusicListPresenter(this);
+        mPresenter = new BaiduListPresenter(this);
         mPresenter.attachView(this);
 
         mAdapter = new SongAdapter(musicList);
@@ -128,7 +127,7 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
                     case R.id.popup_song_goto_artist:
                         Log.e(TAG, music.toString());
                         Intent intent = new Intent(this, ArtistInfoActivity.class);
-                        intent.putExtra(Extras.TING_UID, music.getArtistId());
+                        intent.putExtra(Extras.TING_UID, music);
                         startActivity(intent);
                         break;
                     case R.id.popup_song_download:
@@ -213,10 +212,5 @@ public class BaiduMusicListActivity extends BaseActivity implements OnlineMusicL
         mCurrentCounter = mAdapter.getData().size();
         TOTAL_COUNTER = mOffset;
         mAdapter.loadMoreComplete();
-    }
-
-    @Override
-    public void showTopList(NeteaseList musicList) {
-
     }
 }

@@ -4,20 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
+import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.online.activity.NeteaseMusicListActivity;
 import com.cyl.musiclake.ui.music.online.adapter.TopListAdapter;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 功能：在线排行榜
@@ -27,7 +34,7 @@ import butterknife.BindView;
  */
 public class NeteasePlaylistFragment extends BaseFragment {
 
-    private static final String TAG = "BaiduPlaylistFragment";
+    private static final String TAG = "NeteasePlaylistFragment";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
@@ -38,7 +45,35 @@ public class NeteasePlaylistFragment extends BaseFragment {
     LinearLayout loading;
     //适配器
     private TopListAdapter mAdapter;
-    List<String> list = new ArrayList<>();
+    List<NeteaseList> neteaseLists = new ArrayList<>();
+
+    {
+        neteaseLists.clear();
+        neteaseLists.add(new NeteaseList("云音乐新歌榜"));
+        neteaseLists.add(new NeteaseList("云音乐热歌榜"));
+        neteaseLists.add(new NeteaseList("网易原创歌曲榜"));
+        neteaseLists.add(new NeteaseList("云音乐飙升榜"));
+        neteaseLists.add(new NeteaseList("云音乐电音榜"));
+        neteaseLists.add(new NeteaseList("UK排行榜周榜"));
+        neteaseLists.add(new NeteaseList("美国Billboard周榜 "));
+        neteaseLists.add(new NeteaseList("KTV嗨榜 "));
+        neteaseLists.add(new NeteaseList("iTunes榜 "));
+        neteaseLists.add(new NeteaseList("Hit FM Top榜 "));
+        neteaseLists.add(new NeteaseList("日本Oricon周榜 "));
+        neteaseLists.add(new NeteaseList("韩国Melon排行榜周榜 "));
+        neteaseLists.add(new NeteaseList("韩国Mnet排行榜周榜 "));
+        neteaseLists.add(new NeteaseList("韩国Melon原声周榜 "));
+        neteaseLists.add(new NeteaseList("中国TOP排行榜(港台榜) "));
+        neteaseLists.add(new NeteaseList("中国TOP排行榜(内地榜)"));
+        neteaseLists.add(new NeteaseList("香港电台中文歌曲龙虎榜 "));
+        neteaseLists.add(new NeteaseList("华语金曲榜"));
+        neteaseLists.add(new NeteaseList("中国嘻哈榜"));
+        neteaseLists.add(new NeteaseList("法国 NRJ EuroHot 30 周榜"));
+        neteaseLists.add(new NeteaseList("台湾Hito排行榜 "));
+        neteaseLists.add(new NeteaseList("Beatport全球电子舞曲榜"));
+//        list.add("云音乐ACG音乐榜");
+//        list.add("云音乐嘻哈榜");
+    }
 
     public static NeteasePlaylistFragment newInstance() {
         Bundle args = new Bundle();
@@ -58,33 +93,10 @@ public class NeteasePlaylistFragment extends BaseFragment {
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
-        list.add("云音乐新歌榜");
-        list.add("云音乐热歌榜");
-        list.add("网易原创歌曲榜");
-        list.add("云音乐飙升榜");
-        list.add("云音乐电音榜");
-        list.add("UK排行榜周榜");
-        list.add("美国Billboard周榜 ");
-        list.add("KTV嗨榜 ");
-        list.add("iTunes榜 ");
-        list.add("Hit FM Top榜 ");
-        list.add("日本Oricon周榜 ");
-        list.add("韩国Melon排行榜周榜 ");
-        list.add("韩国Mnet排行榜周榜 ");
-        list.add("韩国Melon原声周榜 ");
-        list.add("中国TOP排行榜(港台榜) ");
-        list.add("中国TOP排行榜(内地榜)");
-        list.add("香港电台中文歌曲龙虎榜 ");
-        list.add("华语金曲榜");
-        list.add("中国嘻哈榜");
-        list.add("法国 NRJ EuroHot 30 周榜");
-        list.add("台湾Hito排行榜 ");
-        list.add("Beatport全球电子舞曲榜");
-        list.add("云音乐ACG音乐榜");
-        list.add("云音乐嘻哈榜");
+        mRecyclerView.setLayoutManager(layoutManager);
+
         //适配器
-        mAdapter = new TopListAdapter(list);
+        mAdapter = new TopListAdapter(neteaseLists);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
 
@@ -92,16 +104,56 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
+
+        for (int i = 0; i < neteaseLists.size(); i++) {
+            try {
+                Observable<NeteaseList> observable
+                        = NeteaseApiServiceImpl.getTopList(i);
+                int finalI = i;
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<NeteaseList>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(NeteaseList neteaseList) {
+                                neteaseLists.set(finalI, neteaseList);
+                                LogUtil.e(TAG, finalI + "---" + neteaseList.getName() + "--" + neteaseList.getTrackCount()
+                                        + "---"
+                                        + neteaseList.getTracks().size());
+                                mAdapter.notifyItemChanged(finalI);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            } catch (Exception e) {
+
+            }
+        }
+
     }
 
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Intent intent = new Intent(getActivity(), NeteaseMusicListActivity.class);
-            intent.putExtra("id", position);
-            intent.putExtra("title", list.get(position));
+            intent.putExtra("netease", neteaseLists.get(position));
             startActivity(intent);
         });
     }
 
+    private void updateLists() {
+        mAdapter.setNewData(neteaseLists);
+    }
 }

@@ -2,13 +2,10 @@ package com.cyl.musiclake.ui.music.online.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.net.ApiManager;
-import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
-import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.api.doupan.DoubanMusic;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,35 +38,34 @@ public class ArtistInfoPresenter implements ArtistInfoContract.Presenter {
     }
 
     @Override
-    public void loadArtistInfo(String artistID) {
+    public void loadArtistInfo(Music music) {
         mView.showLoading();
-        Map<String, String> params = new HashMap<>();
-        params.put(Constants.PARAM_METHOD, Constants.METHOD_ARTIST_INFO);
-        params.put(Constants.PARAM_TING_UID, artistID);
-
-        ApiManager.getInstance().apiService
-                .getArtistInfo(Constants.BASE_URL, params)
+        MusicApi.getMusicAlbumInfo(music)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<OnlineArtistInfo>() {
+                .subscribe(new Observer<DoubanMusic>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onNext(OnlineArtistInfo result) {
-                        mView.showArtistInfo(result);
+                    public void onNext(DoubanMusic doubanMusic) {
+                        if (doubanMusic.getCount() >= 1) {
+                            mView.showMusicInfo(doubanMusic);
+                        } else {
+                            mView.showErrorInfo("暂无信息");
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mView.hideLoading();
-                        mView.showErrorInfo("请求数据失败");
+
                     }
 
                     @Override
                     public void onComplete() {
-                        mView.hideLoading();
+
                     }
                 });
     }

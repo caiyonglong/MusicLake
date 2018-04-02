@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,15 +19,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
 import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.online.adapter.NeteaseAdapter;
-import com.cyl.musiclake.ui.music.online.contract.OnlineMusicListContract;
-import com.cyl.musiclake.ui.music.online.presenter.OnlineMusicListPresenter;
+import com.cyl.musiclake.ui.music.online.contract.NeteaseListContract;
+import com.cyl.musiclake.ui.music.online.presenter.NeteaseListPresenter;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SizeUtils;
@@ -36,10 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
@@ -47,7 +44,7 @@ import io.reactivex.schedulers.Schedulers;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusicListContract.View {
+public class NeteaseMusicListActivity extends BaseActivity implements NeteaseListContract.View {
 
     private static final String TAG = "BaiduMusicListActivity";
     private List<NeteaseMusic> toplist = new ArrayList<>();
@@ -68,11 +65,12 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
 
     private int idx;
     private String title;
+    private NeteaseList neteaseList;
     private String type;
     private String desc;
     private long time;
     private String pic;
-    private OnlineMusicListPresenter mPresenter;
+    private NeteaseListPresenter mPresenter;
 
     @Override
     protected int getLayoutResID() {
@@ -81,9 +79,16 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
 
     @Override
     protected void initView() {
-        idx = getIntent().getIntExtra("id", 0);
-        title = getIntent().getStringExtra("title");
-        mToolbar.setTitle(title);
+//        idx = getIntent().getIntExtra("id", 0);
+//        title = getIntent().getStringExtra("netease");
+        neteaseList = (NeteaseList) getIntent().getSerializableExtra("netease");
+        title = neteaseList.getName();
+        desc = neteaseList.getDescription();
+        pic = neteaseList.getCoverImgUrl();
+        time = neteaseList.getTrackUpdateTime();
+        toplist = neteaseList.getTracks();
+
+        mToolbar.setTitle(title + "(" + neteaseList.getTrackCount() + ")");
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -93,10 +98,10 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
 
     @Override
     protected void initData() {
-        mPresenter = new OnlineMusicListPresenter(this);
+        mPresenter = new NeteaseListPresenter(this);
         mPresenter.attachView(this);
 
-        mAdapter = new NeteaseAdapter(toplist);
+        mAdapter = new NeteaseAdapter(neteaseList.getTracks());
         mAdapter.setEnableLoadMore(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -106,7 +111,6 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
         mAdapter.bindToRecyclerView(mRecyclerView);
         showHeaderInfo();
 
-        mPresenter.loadNeteaseMusicList(idx);
     }
 
     @Override
@@ -114,35 +118,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 LogUtil.e(TAG, toplist.get(position).toString());
-                NeteaseApiServiceImpl.getMusicUrl(toplist.get(position))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Music>() {
-
-                            @Override
-                            public void onSubscribe(Disposable disposable) {
-
-                            }
-
-                            @Override
-                            public void onNext(Music music) {
-                                if (music.getUri() != null) {
-                                    PlayManager.playOnline(music);
-                                } else {
-                                    ToastUtils.show(music.toString());
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
+                mPresenter.playCurrentMusic(toplist.get(position));
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -152,18 +128,17 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
                 switch (item.getItemId()) {
                     case R.id.popup_song_detail:
                         StringBuilder sb = new StringBuilder();
-                        sb.append("艺术家：\n")
+                        sb.append("艺术家：")
                                 .append(music.getArtists().get(0).getName())
                                 .append("\n")
-                                .append("专辑：\n")
-                                .append(music.getAlbum())
+                                .append("专辑：")
+                                .append(music.getAlbum().getName())
                                 .append("\n")
-                                .append("播放时长：\n")
+                                .append("播放时长：")
                                 .append(FormatUtil.formatTime(music.getDuration()))
                                 .append("\n")
-                                .append("文件路径：\n")
-                                .append(music.getMp3Url())
-                                .append(music.getStatus());
+                                .append("播放地址：")
+                                .append(music.getMp3Url());
 
                         new MaterialDialog.Builder(NeteaseMusicListActivity.this)
                                 .title("歌曲详情")
@@ -173,6 +148,12 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
                         break;
                     case R.id.popup_song_goto_artist:
                         Log.e(TAG, music.toString());
+                        Music music1 = new Music();
+                        music1.setTitle(music.getName());
+                        music1.setArtist(music.getArtists().get(0).getName());
+                        Intent intent = new Intent(this, ArtistInfoActivity.class);
+                        intent.putExtra(Extras.TING_UID, music1);
+                        startActivity(intent);
                         break;
                     case R.id.popup_song_download:
                         break;
@@ -200,7 +181,6 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
         mTvDate = (TextView) mViewHeader.findViewById(R.id.tv_update_date);
         mTvDesc = (TextView) mViewHeader.findViewById(R.id.tv_comment);
 
-        mTvDate.setVisibility(View.GONE);
     }
 
     @Override
@@ -237,10 +217,6 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
         mAdapter.setHeaderView(mViewHeader, 0);
     }
 
-    @Override
-    public void showOnlineMusicList(List<Music> musicList) {
-
-    }
 
     @Override
     public void showTopList(NeteaseList musicList) {
@@ -250,5 +226,10 @@ public class NeteaseMusicListActivity extends BaseActivity implements OnlineMusi
         showHeaderInfo();
         toplist = musicList.getTracks();
         mAdapter.setNewData(musicList.getTracks());
+    }
+
+    @Override
+    public void playNeteaseMusic(Music music) {
+        PlayManager.playOnline(music);
     }
 }

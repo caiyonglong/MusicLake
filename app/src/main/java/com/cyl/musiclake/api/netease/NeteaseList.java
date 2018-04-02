@@ -1,12 +1,13 @@
 package com.cyl.musiclake.api.netease;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by master on 2018/3/20.
  */
 
-public class NeteaseList {
+public class NeteaseList implements Serializable {
 
     /**
      * subscribers : []
@@ -77,6 +78,13 @@ public class NeteaseList {
     private List<?> subscribers;
     private List<?> tags;
     private List<NeteaseMusic> tracks;
+
+    public NeteaseList() {
+    }
+
+    public NeteaseList(String name) {
+        this.name = name;
+    }
 
     public List<NeteaseMusic> getTracks() {
         return tracks;
@@ -350,7 +358,7 @@ public class NeteaseList {
         this.tags = tags;
     }
 
-    public static class CreatorBean {
+    public static class CreatorBean implements Serializable {
         /**
          * defaultAvatar : false
          * province : 110000

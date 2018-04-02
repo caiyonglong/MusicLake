@@ -1,13 +1,6 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
-import android.graphics.Color;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,14 +11,17 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.api.baidu.OnlineArtistInfo;
+import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.ui.main.WebActivity;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
 import com.cyl.musiclake.ui.music.online.presenter.ArtistInfoPresenter;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by yonglong on 2016/11/30.
@@ -34,12 +30,10 @@ import butterknife.BindView;
 public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContract.View {
 
     private static final String TAG = "ArtistInfoActivity";
-    @BindView(R.id.li_container)
-    LinearLayout li_container;
+    @BindView(R.id.tv_desc)
+    TextView mTvDesc;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @BindView(R.id.loading)
     LinearLayout loading;
@@ -51,6 +45,17 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
     ProgressBar progress;
 
     ArtistInfoPresenter mPresenter;
+    private String url;
+    private String name;
+
+    @OnClick(R.id.btn_detail)
+    void toDetail() {
+        if (url != null && name != null) {
+            WebActivity.start(this, name, url);
+        } else {
+            ToastUtils.show("暂无信息");
+        }
+    }
 
     @Override
     protected int getLayoutResID() {
@@ -65,11 +70,10 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     protected void initData() {
-        long tingUid = getIntent().getLongExtra(Extras.TING_UID, -1);
-        Log.e(TAG, tingUid + "=tinguid");
+        Music music = getIntent().getParcelableExtra(Extras.TING_UID);
         mPresenter = new ArtistInfoPresenter();
         mPresenter.attachView(this);
-        mPresenter.loadArtistInfo(tingUid + "");
+        mPresenter.loadArtistInfo(music);
     }
 
     @Override
@@ -98,106 +102,25 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
     }
 
     @Override
-    public void showArtistInfo(OnlineArtistInfo artistInfo) {
-        Log.e(TAG, artistInfo.toString());
-        String name = artistInfo.getName();
-        String avatarUri = artistInfo.getAvatar_big();
-        String country = artistInfo.getCountry();
-        String constellation = artistInfo.getConstellation();
-        float stature = artistInfo.getStature();
-        float weight = artistInfo.getWeight();
-        String birth = artistInfo.getBirth();
-        String intro = artistInfo.getIntro();
-        String url = artistInfo.getUrl();
-        if (!TextUtils.isEmpty(avatarUri)) {
-            GlideApp.with(this)
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(R.drawable.default_cover)
-                    .into(mAlbum);
-        }
-        if (!TextUtils.isEmpty(name)) {
-            collapsingToolbarLayout.setTitle(name);
-            TextView tvName = new TextView(this);
-            tvName.setBackgroundResource(R.drawable.bg_card);
-            tvName.setTextSize(18);
-            tvName.setTextColor(Color.BLACK);
-            tvName.setPadding(10, 10, 10, 10);
-            tvName.setText("姓名：" + name);
-            li_container.addView(tvName);
-        }
-        if (!TextUtils.isEmpty(country)) {
-            TextView tvCountry = new TextView(this);
-            tvCountry.setBackgroundResource(R.drawable.bg_card);
-            tvCountry.setTextSize(18);
-            tvCountry.setTextColor(Color.BLACK);
-            tvCountry.setPadding(10, 10, 10, 10);
-            tvCountry.setText("国籍：" + country);
-            li_container.addView(tvCountry);
-        }
-        if (!TextUtils.isEmpty(constellation) && !constellation.equals("未知")) {
-            TextView tvConstellation =
-                    new TextView(this);
+    public void showMusicInfo(DoubanMusic doubanMusic) {
 
-            tvConstellation.setBackgroundResource(R.drawable.bg_card);
-            tvConstellation.setTextSize(18);
-            tvConstellation.setTextColor(Color.BLACK);
-            tvConstellation.setText("星座：" + constellation);
-            tvConstellation.setPadding(10, 10, 10, 10);
-            li_container.addView(tvConstellation);
-        }
-        if (stature != 0f) {
-            TextView tvStature = new TextView(this);
-            tvStature.setBackgroundResource(R.drawable.bg_card);
-            tvStature.setTextSize(18);
-            tvStature.setTextColor(Color.BLACK);
-            tvStature.setPadding(10, 10, 10, 10);
-            tvStature.setText("身高：" + stature);
-            li_container.addView(tvStature);
-        }
-        if (weight != 0f) {
-            TextView tvWeight = new TextView(this);
-            tvWeight.setBackgroundResource(R.drawable.bg_card);
-            tvWeight.setTextSize(18);
-            tvWeight.setTextColor(Color.BLACK);
-            tvWeight.setPadding(10, 10, 10, 10);
-            tvWeight.setText("体重：" + weight);
-            li_container.addView(tvWeight);
-        }
-        if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {
-            TextView tvBirth = new TextView(this);
-            tvBirth.setBackgroundResource(R.drawable.bg_card);
-            tvBirth.setTextSize(18);
-            tvBirth.setTextColor(Color.BLACK);
-            tvBirth.setPadding(10, 10, 10, 10);
-            tvBirth.setText("出生日期：" + birth);
-            li_container.addView(tvBirth);
-        }
-        if (!TextUtils.isEmpty(intro)) {
-            TextView tvIntro = new TextView(this);
-            tvIntro.setBackgroundResource(R.drawable.bg_card);
-            tvIntro.setTextSize(18);
-            tvIntro.setTextColor(Color.BLACK);
-            tvIntro.setPadding(10, 10, 10, 10);
-            tvIntro.setText("简介：" + intro);
-            li_container.addView(tvIntro);
-        }
-        if (!TextUtils.isEmpty(url)) {
-            TextView tvUrl = new TextView(this);
-            tvUrl.setBackgroundResource(R.drawable.bg_card);
-            String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
-            tvUrl.setText(Html.fromHtml(String.format(html, url), 1));
-            tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
-            tvUrl.setPadding(10, 10, 10, 10);
-            tvUrl.setGravity(Gravity.CENTER);
-            li_container.addView(tvUrl);
-        }
+        GlideApp.with(this)
+                .asBitmap()
+                .load(doubanMusic.getMusics().get(0).getImage())
+                .error(R.drawable.default_cover)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(mAlbum);
+        DoubanMusic.MusicsBean.AttrsBean attrsBean = doubanMusic.getMusics().get(0).getAttrs();
+        url = doubanMusic.getMusics().get(0).getAlt();
+        name = attrsBean.getSinger().get(0);
+        StringBuilder sb = new StringBuilder();
+        sb.append("歌手：")
+                .append(attrsBean.getSinger().get(0))
+                .append("\n")
+                .append("曲目：")
+                .append(attrsBean.getTracks().get(0));
+        mTvDesc.setText(sb.toString());
 
-        if (li_container.getChildCount() == 0) {
-            loading.setVisibility(View.VISIBLE);
-            tv_empty.setText("暂无信息");
-            progress.setVisibility(View.GONE);
-        }
     }
 
 }

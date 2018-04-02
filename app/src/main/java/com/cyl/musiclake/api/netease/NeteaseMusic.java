@@ -1,12 +1,13 @@
 package com.cyl.musiclake.api.netease;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by master on 2018/3/20.
  */
 
-public class NeteaseMusic {
+public class NeteaseMusic implements Serializable {
     /**
      * name : 海阔天空
      * id : 400162138
@@ -371,7 +372,7 @@ public class NeteaseMusic {
         this.rtUrls = rtUrls;
     }
 
-    public static class AlbumBean {
+    public static class AlbumBean implements Serializable {
         /**
          * name : 华纳23周年纪念精选系列
          * id : 34430029
@@ -586,7 +587,7 @@ public class NeteaseMusic {
             this.artists = artists;
         }
 
-        public static class ArtistBean {
+        public static class ArtistBean implements Serializable {
             /**
              * name :
              * id : 0
@@ -702,7 +703,7 @@ public class NeteaseMusic {
             }
         }
 
-        public static class ArtistsBean {
+        public static class ArtistsBean implements Serializable {
             /**
              * name : Beyond
              * id : 11127
@@ -819,7 +820,7 @@ public class NeteaseMusic {
         }
     }
 
-    public static class HMusicBean {
+    public static class HMusicBean implements Serializable {
         /**
          * name : null
          * id : 1186538478
@@ -915,7 +916,7 @@ public class NeteaseMusic {
         }
     }
 
-    public static class MMusicBean {
+    public static class MMusicBean implements Serializable {
         /**
          * name : null
          * id : 1186538479
@@ -1011,7 +1012,7 @@ public class NeteaseMusic {
         }
     }
 
-    public static class LMusicBean {
+    public static class LMusicBean implements Serializable {
         /**
          * name : null
          * id : 1186538480
@@ -1107,7 +1108,7 @@ public class NeteaseMusic {
         }
     }
 
-    public static class BMusicBean {
+    public static class BMusicBean implements Serializable {
         /**
          * name : null
          * id : 1186538480
@@ -1203,7 +1204,7 @@ public class NeteaseMusic {
         }
     }
 
-    public static class ArtistsBeanX {
+    public static class ArtistsBeanX implements Serializable {
         /**
          * name : Beyond
          * id : 11127
