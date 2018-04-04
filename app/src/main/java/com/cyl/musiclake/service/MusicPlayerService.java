@@ -1017,6 +1017,7 @@ public class MusicPlayerService extends Service {
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             mNotificationBuilder.setLargeIcon(resource);
                             mNotification = mNotificationBuilder.build();
+                            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
                         }
                     });
         }
