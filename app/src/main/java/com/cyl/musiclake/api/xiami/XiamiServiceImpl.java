@@ -1,8 +1,7 @@
 package com.cyl.musiclake.api.xiami;
 
-import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -20,6 +19,10 @@ import io.reactivex.Observable;
 public class XiamiServiceImpl {
 
     private static final String TAG = "XiamiServiceImpl";
+
+    public static XiamiService getApiService() {
+        return ApiManager.getInstance().create(XiamiService.class, "http://api.xiami.com/");
+    }
 
     /**
      * 搜索虾米音乐
@@ -39,7 +42,7 @@ public class XiamiServiceImpl {
         params.put("r", "search/songs");
         params.put("app_key", "1");
         params.put("format", "json");
-        return ApiManager.getInstance().apiService.searchByXiaMi(Constants.BASE_URL_XIAMI_MUSIC, params)
+        return getApiService().searchByXiaMi(params)
                 .flatMap(xiaMiModel -> {
                     List<Music> musicList = new ArrayList<>();
                     List<XiamiModel.DataBean.SongsBean> songs = xiaMiModel.getData().getSongs();
@@ -51,7 +54,7 @@ public class XiamiServiceImpl {
                         music.setId(String.valueOf(song.getSong_id()));
                         music.setTitle(song.getSong_name());
                         music.setArtist(song.getArtist_name());
-                        music.setArtistId(song.getArtist_id());
+                        music.setArtistId(String.valueOf(song.getArtist_id()));
                         music.setAlbum(song.getAlbum_name());
                         music.setAlbumId(song.getAlbum_id());
                         music.setUri(song.getListen_file());
@@ -87,7 +90,7 @@ public class XiamiServiceImpl {
                 }
             });
         }
-        return ApiManager.getInstance().apiService.getXiamiLyric(mLyricUrl)
+        return getApiService().getXiamiLyric(mLyricUrl)
                 .flatMap(xiaMiLyricInfo -> {
                     String lyric = xiaMiLyricInfo.string();
                     //保存文件

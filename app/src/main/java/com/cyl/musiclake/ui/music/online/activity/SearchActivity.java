@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -7,15 +8,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.SearchAdapter;
 import com.cyl.musiclake.ui.music.online.contract.SearchContract;
 import com.cyl.musiclake.ui.music.online.presenter.SearchPresenter;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +93,34 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             Music music = searchResults.get(position);
             Log.e(TAG, music.toString());
             mPresenter.play(music);
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Music music = searchResults.get(position);
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.popup_song_detail:
+                        ShowDetailDialog.newInstance(music)
+                                .show(getSupportFragmentManager(), TAG);
+                        break;
+                    case R.id.popup_song_goto_artist:
+                        Log.e(TAG, music.toString());
+                        Intent intent = new Intent(this, ArtistInfoActivity.class);
+                        intent.putExtra(Extras.TING_UID, music);
+                        startActivity(intent);
+                        break;
+                    case R.id.popup_add_playlist:
+                        mPresenter.addPlaylist(music);
+                        break;
+                    case R.id.popup_song_download:
+                        DownloadDialog.newInstance(music)
+                                .show(getSupportFragmentManager(), getLocalClassName());
+                        break;
+                }
+                return true;
+            });
+            popupMenu.inflate(R.menu.popup_song_online);
+            popupMenu.show();
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             TOTAL_COUNTER = limit * mOffset * 2;
@@ -171,5 +206,30 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public void showEmptyView() {
+        mAdapter.setEmptyView(R.layout.view_song_empty);
+    }
+
+    @Override
+    public void showAddPlaylistDialog(List<Playlist> playlists, Music music) {
+        if (playlists == null) {
+            new MaterialDialog.Builder(this)
+                    .title("增加到歌单")
+                    .content("暂无歌单")
+                    .build().show();
+            return;
+        }
+        new MaterialDialog.Builder(this)
+                .title("增加到歌单")
+                .items(playlists)
+                .itemsCallback((dialog, itemView, which, text) -> {
+                    Playlist playlist = playlists.get(which);
+                    Log.d("addDialog", which + "----" + playlists.get(which).getId() + "------" + music.getId());
+                    mPresenter.collectMusic(playlist.getId(), music);
+                }).build().show();
+    }
+
+    @Override
+    public void showCollectStatus(boolean success, String msg) {
+        ToastUtils.show(msg);
     }
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.ui.login.user.User;
+import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class NearPeopleAcivity extends BaseActivity {
         }
 
         GlideApp.with(this)
-                .load(userinfo.getUrl())
+                .load(userinfo.getAvatar())
                 .into(user_logo);
 
 

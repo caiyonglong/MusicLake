@@ -47,7 +47,7 @@ import com.cyl.musiclake.data.source.PlayQueueLoader;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.PreferencesUtils;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -58,6 +58,10 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.support.v4.app.NotificationCompat.Builder;
@@ -319,7 +323,7 @@ public class MusicPlayerService extends Service {
 
         //初始化主线程Handler
         mMainHandler = new Handler(Looper.getMainLooper());
-        mRepeatMode = PreferencesUtils.getPlayMode();
+        mRepeatMode = SPUtils.getPlayMode();
 
         //初始化工作线程
         mWorkThread = new HandlerThread("MusicPlayerThread");
@@ -367,8 +371,8 @@ public class MusicPlayerService extends Service {
         mPlaylist.clear();
         mHistoryPos.clear();
         mPlaylist = PlayQueueLoader.getPlayQueue(this);
-        mPlayingPos = PreferencesUtils.getPlayPosition();
-        mPlayer.seek(PreferencesUtils.getPosition());
+        mPlayingPos = SPUtils.getPlayPosition();
+        mPlayer.seek(SPUtils.getPosition());
         notifyChange(PLAY_QUEUE_CHANGE);
     }
 
@@ -523,6 +527,41 @@ public class MusicPlayerService extends Service {
                 return;
             }
             mPlayingMusic = mPlaylist.get(mPlayingPos);
+            Observable<Music> observable = null;
+            LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
+            if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("")) {
+                observable = MusicApi.getMusicInfo(mPlayingMusic);
+            }
+            if (observable != null) {
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Music>() {
+
+                            @Override
+                            public void onSubscribe(Disposable disposable) {
+
+                            }
+
+                            @Override
+                            public void onNext(Music music) {
+                                LogUtil.e(TAG, "-----" + music.toString());
+                                saveHistory();
+                                mHistoryPos.add(mPlayingPos);
+                                isMusicPlaying = true;
+                                mPlayer.setDataSource(mPlayingMusic.getUri());
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            }
             saveHistory();
             mHistoryPos.add(mPlayingPos);
             isMusicPlaying = true;
@@ -767,14 +806,14 @@ public class MusicPlayerService extends Service {
         }
         if (mPlayingMusic != null) {
             //保存歌曲id
-            PreferencesUtils.saveCurrentSongId(mPlayingMusic.getId());
+            SPUtils.saveCurrentSongId(mPlayingMusic.getId());
         }
         //保存歌曲id
-        PreferencesUtils.setPlayPosition(mPlayingPos);
+        SPUtils.setPlayPosition(mPlayingPos);
         //保存歌曲进度
-        PreferencesUtils.savePosition(mPlayer.position());
+        SPUtils.savePosition(mPlayer.position());
         //保存歌曲状态
-        PreferencesUtils.savePlayMode(mRepeatMode);
+        SPUtils.savePlayMode(mRepeatMode);
     }
 
     private void saveHistory() {
@@ -784,7 +823,7 @@ public class MusicPlayerService extends Service {
 
 
     public void refresh() {
-        mRepeatMode = PreferencesUtils.getPlayMode();
+        mRepeatMode = SPUtils.getPlayMode();
     }
 
     /**

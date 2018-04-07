@@ -73,11 +73,6 @@ public class Playlist implements Serializable {
 
     @Override
     public String toString() {
-        return "Playlist{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", count=" + count +
-                ", date=" + date +
-                '}';
+        return name;
     }
 }

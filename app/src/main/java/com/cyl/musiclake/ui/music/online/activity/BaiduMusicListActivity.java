@@ -130,6 +130,9 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
                         intent.putExtra(Extras.TING_UID, music);
                         startActivity(intent);
                         break;
+                    case R.id.popup_add_playlist:
+                        ToastUtils.show("暂不支持添加百度音乐");
+                        break;
                     case R.id.popup_song_download:
                         DownloadDialog.newInstance(music)
                                 .show(getSupportFragmentManager(), getLocalClassName());

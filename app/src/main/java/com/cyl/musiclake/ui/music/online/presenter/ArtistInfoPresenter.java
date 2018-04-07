@@ -8,9 +8,7 @@ import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
 
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by D22434 on 2018/1/4.
@@ -40,9 +38,8 @@ public class ArtistInfoPresenter implements ArtistInfoContract.Presenter {
     @Override
     public void loadArtistInfo(Music music) {
         mView.showLoading();
-        MusicApi.getMusicAlbumInfo(music)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        String info = music.getTitle() + "-" + music.getArtist();
+        MusicApi.getMusicAlbumInfo(info)
                 .subscribe(new Observer<DoubanMusic>() {
                     @Override
                     public void onSubscribe(Disposable d) {

@@ -8,8 +8,8 @@ import android.widget.EditText;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.ui.login.user.User;
-import com.cyl.musiclake.ui.login.user.UserStatus;
+import com.cyl.musiclake.ui.my.user.User;
+import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import butterknife.BindView;

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.ui.login.user.User;
+import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.utils.FormatUtil;
 
@@ -52,7 +52,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         holder.location_time.setText(String.format("%s在听：", time));
         holder.user_distance.setVisibility(View.GONE);
         GlideApp.with(mContext)
-                .load(user.getUrl())
+                .load(user.getAvatar())
                 .into(holder.user_img);
         Log.e(TAG, mData.get(position).toString());
 

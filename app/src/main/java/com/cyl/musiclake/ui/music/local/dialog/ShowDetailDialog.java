@@ -7,9 +7,6 @@ import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.utils.FormatUtil;
-
-import java.io.File;
 
 /**
  * 作者：yonglong on 2016/9/14 15:24
@@ -34,17 +31,14 @@ public class ShowDetailDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Music music = getArguments().getParcelable("music");
         StringBuilder sb = new StringBuilder();
-        sb.append("艺术家：")
+        sb.append("歌名：")
+                .append(music.getTitle())
+                .append("\n\n")
+                .append("歌手：")
                 .append(music.getArtist())
                 .append("\n\n")
                 .append("专辑：")
-                .append(music.getAlbum())
-                .append("\n\n")
-                .append("播放时长：")
-                .append(FormatUtil.formatTime(music.getDuration()))
-                .append("\n\n")
-                .append("文件路径：")
-                .append(new File(music.getUri()).getParent());
+                .append(music.getAlbum());
 
         return new MaterialDialog.Builder(getActivity())
                 .title("歌曲详情")

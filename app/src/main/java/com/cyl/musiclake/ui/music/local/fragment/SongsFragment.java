@@ -109,6 +109,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
                                 .onPositive((dialog, which) -> {
                                     FileUtils.delFile(musicList.get(position).getUri());
                                     SongLoader.removeSong(getActivity(), musicList.get(position));
+                                    musicList.remove(position);
                                     mAdapter.notifyItemChanged(position);
                                 })
                                 .positiveText("确定")

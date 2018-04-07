@@ -23,5 +23,4 @@ public class PlaylistAdapter extends BaseQuickAdapter<Playlist, BaseViewHolder> 
         helper.setText(R.id.tv_name, playlist.getName());
         helper.setText(R.id.tv_num, playlist.getCount() + "首");
     }
-
 }

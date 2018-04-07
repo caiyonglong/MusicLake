@@ -96,7 +96,7 @@ public class FetchUtils {
             HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
             conn.setRequestMethod("GET");
             for (String key : headers.keySet()) {
-                conn.setRequestProperty(key,headers.get(key));
+                conn.setRequestProperty(key, headers.get(key));
             }
             conn.setConnectTimeout(5 * 1000);
             conn.setReadTimeout(5 * 1000);
@@ -145,6 +145,80 @@ public class FetchUtils {
                 out.close();
                 result = new String(out.toByteArray());
                 System.out.println("----result");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public static String getHeaderCookie(String baseUrl, Map<String, String> headers, Map<String, String> paramsMap) {
+        String result = "";
+        try {
+            String requestUrl = baseUrl;
+            System.out.println("----success:" + requestUrl);
+            URL uri = new URL(requestUrl);
+            HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
+            conn.setRequestMethod("GET");
+//            for (String key : headers.keySet()) {
+//                conn.setRequestProperty(key, headers.get(key));
+//            }
+            conn.setConnectTimeout(5 * 1000);
+            conn.setReadTimeout(5 * 1000);
+            conn.connect();
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                System.out.println("----success");
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                InputStream in = conn.getInputStream();
+                int bytesRead = 0;
+                byte[] buffer = new byte[1024];
+                while ((bytesRead = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, bytesRead);
+                }
+                out.close();
+                for (int i = 0; i < conn.getHeaderFields().size(); i++) {
+                    if (conn.getHeaderField(i).startsWith("_m_h5_tk=")) {
+                        System.out.println(conn.getHeaderFieldKey(i));
+                        System.out.println(conn.getHeaderField(i));
+                        result = conn.getHeaderField(i);
+                    }
+                }
+//                result = new String(out.toByteArray());
+                System.out.println("----result" + result);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String getDataWithAll(String baseUrl, Map<String, String> headers, Map<String, String> paramsMap) {
+        String result = "";
+        try {
+            String requestUrl = baseUrl;
+            System.out.println("----success:" + requestUrl);
+            URL uri = new URL(requestUrl);
+            HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
+            conn.setRequestMethod("GET");
+//            for (String key : headers.keySet()) {
+//                conn.setRequestProperty(key, headers.get(key));
+//            }
+            conn.setConnectTimeout(5 * 1000);
+            conn.setReadTimeout(5 * 1000);
+            conn.connect();
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                System.out.println("----success");
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                InputStream in = conn.getInputStream();
+                int bytesRead = 0;
+                byte[] buffer = new byte[1024];
+                while ((bytesRead = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, bytesRead);
+                }
+                out.close();
+                result = new String(out.toByteArray());
+                System.out.println("----result" + result);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,14 +22,13 @@ import android.widget.PopupMenu;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.PlaylistDetailContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
@@ -138,27 +138,17 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
                                 .show(getChildFragmentManager(), getTag());
                         break;
-                    case R.id.popup_song_goto_album:
-                        Log.e("album", musicList.get(position).toString() + "");
-                        NavigateUtil.navigateToAlbum(getActivity(),
-                                musicList.get(position).getAlbumId(),
-                                musicList.get(position).getAlbum(), null);
-                        break;
-                    case R.id.popup_song_goto_artist:
-                        NavigateUtil.navigateToAlbum(getActivity(),
-                                musicList.get(position).getArtistId(),
-                                musicList.get(position).getArtist(), null);
-                        break;
                     case R.id.popup_song_addto_queue:
                         AddPlaylistDialog.newInstance(musicList.get(position)).show(getChildFragmentManager(), "ADD_PLAYLIST");
                         break;
                     case R.id.popup_song_delete:
                         new MaterialDialog.Builder(getContext())
                                 .title("提示")
-                                .content("是否删除这首歌曲？")
+                                .content("是否移除这首歌曲？")
                                 .onPositive((dialog, which) -> {
-                                    PlaylistLoader.removeSong(getActivity(), mPlaylist.getId(), musicList.get(position).getId());
-                                    mAdapter.notifyItemChanged(position);
+                                    mPresenter.uncollectMusic(mPlaylist.getId(), position, musicList.get(position));
+//                                    PlaylistLoader.removeSong(getActivity(), mPlaylist.getId(), musicList.get(position).getId());
+//                                    mAdapter.notifyItemChanged(position);
                                 })
                                 .positiveText("确定")
                                 .negativeText("取消")
@@ -167,7 +157,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                 }
                 return false;
             });
-            popupMenu.inflate(R.menu.popup_song);
+            popupMenu.inflate(R.menu.popup_playlist);
             popupMenu.show();
         });
     }
@@ -183,9 +173,26 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                         .title("提示")
                         .content("是否删除这个歌单？")
                         .onPositive((dialog, which) -> {
-                            PlaylistLoader.deletePlaylist(getActivity(), mPlaylist.getId());
-                            RxBus.getInstance().post(new Playlist());
-                            onBackPress();
+                            mPresenter.deletePlaylist(mPlaylist);
+//                            PlaylistLoader.deletePlaylist(getActivity(), mPlaylist.getId());
+//                            RxBus.getInstance().post(new Playlist());
+//                            onBackPress();
+                        })
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .show();
+                break;
+            case R.id.action_rename_playlist:
+                new MaterialDialog.Builder(getActivity())
+                        .title("重命名歌单")
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .inputRangeRes(2, 10, R.color.red)
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input("输入歌单名", mPlaylist.getName(), false, (dialog, input) -> Log.e("=====", input.toString()))
+                        .onPositive((dialog, which) -> {
+                            String title = dialog.getInputEditText().getText().toString();
+                            mPresenter.renamePlaylist(mPlaylist, title);
                         })
                         .positiveText("确定")
                         .negativeText("取消")
@@ -271,6 +278,9 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
     public void showPlaylistSongs(List<Music> songList) {
         musicList = songList;
         mAdapter.setNewData(musicList);
+        if (musicList.size() == 0) {
+            mAdapter.setEmptyView(R.layout.view_song_empty);
+        }
     }
 
     @Override
@@ -284,7 +294,15 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
     }
 
     @Override
-    public void showEmptyView() {
+    public void removeMusic(int position) {
+        musicList.remove(position);
+        mAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public void success(int type) {
+        if (type == 1) {
+            onBackPress();
+        }
     }
 }

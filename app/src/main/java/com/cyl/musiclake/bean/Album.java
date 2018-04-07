@@ -5,9 +5,11 @@ package com.cyl.musiclake.bean;
  */
 
 public class Album {
-    private String name;
+
     private long id;
+    private String name;
     private String artistName;
+    private String cover;
     private long artistId;
     private int count;
 
@@ -40,6 +42,14 @@ public class Album {
 
     public int getCount() {
         return count;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     @Override

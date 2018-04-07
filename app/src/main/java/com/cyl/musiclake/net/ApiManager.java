@@ -2,7 +2,6 @@ package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -76,13 +75,10 @@ public class ApiManager {
     /**
      * 日志拦截器
      */
-    private static final Interceptor mLoggingInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            Response response = chain.proceed(request);
-            return response;
-        }
+    private static final Interceptor mLoggingInterceptor = chain -> {
+        Request request = chain.request();
+        Response response = chain.proceed(request);
+        return response;
     };
 
 
@@ -101,7 +97,7 @@ public class ApiManager {
                             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                             .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                             .addInterceptor(mRewriteCacheControlInterceptor)
-                            .addInterceptor(mLoggingInterceptor)
+//                            .addInterceptor(mLoggingInterceptor)
                             .build();
                 }
             }
@@ -122,13 +118,13 @@ public class ApiManager {
     }
 
     private ApiManager() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(getOkHttpClient())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
-                .addConverterFactory(MyGsonConverterFactory.create(gson)) // 使用Gson作为数据转换器
-                .build();
-        apiService = retrofit.create(ApiManagerService.class);
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(Constants.BASE_URL)
+//                .client(getOkHttpClient())
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
+//                .addConverterFactory(MyGsonConverterFactory.create(gson)) // 使用Gson作为数据转换器
+//                .build();
+//        apiService = retrofit.create(ApiManagerService.class);
     }
 
     private static Gson gson = new GsonBuilder()
@@ -142,8 +138,8 @@ public class ApiManager {
      * @param <T>
      * @return
      */
-    public <T> T create(Class<T> clazz) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.douban.com")
+    public <T> T create(Class<T> clazz, String baseUrl) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .client(getOkHttpClient())
                 .addConverterFactory(MyGsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();

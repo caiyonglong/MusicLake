@@ -109,7 +109,7 @@ public class OnlineMusicAdapter extends BaseQuickAdapter<BaiduMusicInfo, BaseVie
 //            public void onSuccess(Music music) {
 //
 //                ToastUtils.show(context, "正在下载");
-////                PreferencesUtils.
+////                SPUtils.
 //                Intent intent = new Intent(context, DownloadService.class);
 //                intent.putExtra("downloadUrl", music.getUri());
 //                intent.putExtra("name", ConvertUtils.getMp3FileName(music.getArtist(), music.getTitle()));

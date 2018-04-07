@@ -184,7 +184,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         }
         String picUrl = CoverLoader.getInstance().getCoverUriByMusic(music);
         //设置音乐来源
-        mView.setOtherInfo(music.getTypeName());
+        mView.setOtherInfo(music.getTypeName(false));
         //获取当前歌曲状态
         AppRepository.getMusicInfo(mContext, music)
                 .subscribeOn(Schedulers.io())

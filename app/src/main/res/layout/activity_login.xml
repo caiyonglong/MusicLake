@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.login.LoginActivity">
+    tools:context=".ui.my.LoginActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp"
             app:cardUseCompatPadding="true">
@@ -136,14 +137,15 @@
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/qqlogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_above="@+id/cv"
             android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_marginBottom="13dp"
             android:elevation="5dp"
             android:transitionName="loginFab"
-            app:fabSize="normal"
+            app:fab_size="normal"
             app:fab_colorNormal="@color/grean"
             app:fab_colorPressed="@color/lightGreen"
             app:fab_icon="@drawable/qq" />
@@ -153,7 +155,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/cv"
             android:layout_marginTop="12dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/register"
@@ -180,6 +183,7 @@
             android:layout_marginTop="25dp"
             android:src="@drawable/ic_send_white_18dp"
             android:transitionName="loginFab"
+            android:visibility="gone"
             app:fabSize="normal" />
 
         <ProgressBar

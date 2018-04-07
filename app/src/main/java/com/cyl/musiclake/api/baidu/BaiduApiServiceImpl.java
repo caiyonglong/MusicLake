@@ -1,8 +1,8 @@
 package com.cyl.musiclake.api.baidu;
 
-import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -19,6 +19,13 @@ import io.reactivex.ObservableOnSubscribe;
  */
 
 public class BaiduApiServiceImpl {
+    private static final String TAG = "BaiduApiServiceImpl";
+    private static final String Base_Url = "http://musicapi.qianqian.com/";
+
+    public static BaiduApiService getApiService() {
+        return ApiManager.getInstance().create(BaiduApiService.class, Base_Url);
+    }
+
 //    http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.0.7.1&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2
 
     public static Observable<BaiduMusicList> getOnlinePlaylist() {
@@ -27,7 +34,7 @@ public class BaiduApiServiceImpl {
         params.put("operator", "1");
         params.put("kflag", "2");
         params.put("format", "json");
-        return ApiManager.getInstance().apiService.getOnlinePlaylist(Constants.BASE_URL_BAIDU_MUSIC, params)
+        return getApiService().getOnlinePlaylist(params)
                 .flatMap(Observable::fromArray);
     }
 
@@ -39,7 +46,7 @@ public class BaiduApiServiceImpl {
         params.put(Constants.PARAM_SIZE, String.valueOf(limit));
         params.put(Constants.PARAM_OFFSET, String.valueOf(mOffset));
 
-        return ApiManager.getInstance().apiService.getOnlineSongs(Constants.BASE_URL_BAIDU_MUSIC, params)
+        return getApiService().getOnlineSongs(params)
                 .flatMap(baiduSongList -> {
                     List<Music> musicList = new ArrayList<>();
                     for (BaiduMusicInfo songInfo : baiduSongList.getSong_list()) {
@@ -50,7 +57,7 @@ public class BaiduApiServiceImpl {
                         music.setAlbum(songInfo.getAlbum_title());
                         music.setAlbumId(songInfo.getAlbum_id());
                         music.setArtist(songInfo.getArtist_name());
-                        music.setArtistId(Long.parseLong(songInfo.getTing_uid()));
+                        music.setArtistId(songInfo.getTing_uid());
                         music.setTitle(songInfo.getTitle());
                         music.setLrcPath(songInfo.getLrclink());
                         music.setCoverSmall(songInfo.getPic_small());
@@ -73,7 +80,7 @@ public class BaiduApiServiceImpl {
     public static Observable<Music> getTingSongInfo(String mid) {
         Map<String, String> params = new HashMap<>();
         String Url = "http://music.baidu.com/data/music/links?songIds=" + mid;
-        return ApiManager.getInstance().apiService.getTingSongInfo(Url, params)
+        return getApiService().getTingSongInfo(Url, params)
                 .flatMap(baiduSongInfo -> {
                     Music music = new Music();
                     BaiduSongInfo.DataBean.SongListBean songInfo = baiduSongInfo.getData().getSongList().get(0);
@@ -81,7 +88,7 @@ public class BaiduApiServiceImpl {
                     music.setOnline(true);
                     music.setId(songInfo.getSongId());
                     music.setAlbum(songInfo.getAlbumName());
-                    music.setAlbumId(songInfo.getArtistId());
+                    music.setAlbumId(songInfo.getAlbumId());
                     music.setArtistId(songInfo.getArtistId());
                     music.setArtist(songInfo.getArtistName());
                     music.setTitle(songInfo.getSongName());
@@ -120,7 +127,7 @@ public class BaiduApiServiceImpl {
                 }
             });
         }
-        return ApiManager.getInstance().apiService.getBaiduLyric(mLyricUrl)
+        return getApiService().getBaiduLyric(mLyricUrl)
                 .flatMap(baiDuLyricInfo -> {
                     String lyric = baiDuLyricInfo.string();
                     //保存文件

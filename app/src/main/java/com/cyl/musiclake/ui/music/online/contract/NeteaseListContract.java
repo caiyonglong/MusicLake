@@ -6,6 +6,9 @@ import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.base.BaseView;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
+
+import java.util.List;
 
 public interface NeteaseListContract {
 
@@ -14,12 +17,21 @@ public interface NeteaseListContract {
 
         void showTopList(NeteaseList musicList);
 
-        void playNeteaseMusic(Music music);
+        void showMusicInfo(Music music);
+
+        void showAddPlaylistDialog(List<Playlist> playlists, Music music);
+
+        void showCollectStatus(boolean success, String msg);
     }
 
     interface Presenter extends BasePresenter<View> {
         void loadNeteaseMusicList(int idx);
 
-        void playCurrentMusic(NeteaseMusic neteaseMusic);
+        void getMusicInfo(NeteaseMusic neteaseMusic);
+
+        void collectMusic(String pid, Music music);
+
+        void addPlaylist(Music music);
+
     }
 }

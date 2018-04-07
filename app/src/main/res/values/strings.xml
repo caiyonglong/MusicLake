@@ -113,7 +113,7 @@
     <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="unable_to_play_exception">播放异常</string>
     <string name="loading">努力加载中...</string>
-    <string name="tip_empty_song">暂无音乐，在线搜索添加音乐</string>
+    <string name="tip_empty_song">暂无音乐</string>
     <string name="tip_empty_queue">播放队列为空</string>
     <string name="tip_empty_playlist">暂无歌单，点击右上角新建</string>
     <string name="recent_update">最近更新：%s</string>
@@ -172,6 +172,7 @@
     <string name="browser_title">使用系统浏览器打开</string>
     <string name="share_article_url"><![CDATA[<string name=\"share_article_url\">%1$s分享【%2$s】：%3$s</string>]]></string>
     <string name="artist_detail">查看详情</string>
+    <string name="title_test">测试</string>
 
 
 </resources>

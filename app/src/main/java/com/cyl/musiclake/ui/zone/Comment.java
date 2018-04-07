@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.zone;
 
-import com.cyl.musiclake.ui.login.user.User;
+import com.cyl.musiclake.ui.my.user.User;
 
 /**
  * Created by 永龙 on 2016/3/15.

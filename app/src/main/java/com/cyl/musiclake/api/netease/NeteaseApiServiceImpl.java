@@ -1,10 +1,13 @@
 package com.cyl.musiclake.api.netease;
 
-import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -15,9 +18,14 @@ import io.reactivex.ObservableOnSubscribe;
 
 public class NeteaseApiServiceImpl {
     private static final String TAG = "NeteaseApiServiceImpl";
+    private static final String Base_Url = "http://musicapi.leanapp.cn/";
+
+    public static NeteaseApiService getApiService() {
+        return ApiManager.getInstance().create(NeteaseApiService.class, Base_Url);
+    }
 
     public static Observable<List<Music>> getTopMusicList(int ids) {
-        return ApiManager.getInstance().apiService.getTopList("http://musicapi.leanapp.cn/top/list?idx=" + ids)
+        return getApiService().getTopList(ids)
                 .flatMap(topList -> {
                     List<Music> musicList = new ArrayList<>();
                     for (NeteaseMusic songInfo : topList.getResult().getTracks()) {
@@ -28,7 +36,7 @@ public class NeteaseApiServiceImpl {
                         music.setAlbum(songInfo.getAlbum().getName());
                         music.setAlbumId(songInfo.getAlbum().getId());
                         music.setArtist(songInfo.getArtists().get(0).getName());
-                        music.setArtistId(songInfo.getArtists().get(0).getId());
+//                        music.setArtistId(songInfo.getArtists().get(0).getId());
                         music.setTitle(songInfo.getName());
                         music.setCoverSmall(songInfo.getAlbum().getPicUrl());
                         music.setCoverUri(songInfo.getAlbum().getBlurPicUrl());
@@ -47,50 +55,57 @@ public class NeteaseApiServiceImpl {
     }
 
     public static Observable<NeteaseList> getTopList(int ids) {
-        return ApiManager.getInstance().apiService.getTopList("http://musicapi.leanapp.cn/top/list?idx=" + ids)
-                .flatMap(topList -> {
-                    return Observable.create((ObservableOnSubscribe<NeteaseList>) e -> {
-                        try {
-                            e.onNext(topList.getResult());
-                            e.onComplete();
-                        } catch (Exception ep) {
-                            e.onError(ep);
+        return getApiService().getTopList(ids)
+                .flatMap(topList -> Observable.create((ObservableOnSubscribe<NeteaseList>) e -> {
+                    try {
+                        e.onNext(topList.getResult());
+                        e.onComplete();
+                    } catch (Exception ep) {
+                        e.onError(ep);
+                    }
+                }));
+    }
+
+    public static Observable<Music> getMusicUrl(Music music) {
+        return getApiService().getMusicUrl(music.getId())
+                .flatMap(neteaseMusicUrl -> Observable.create((ObservableOnSubscribe<Music>) e -> {
+                    try {
+                        if (neteaseMusicUrl.getCode() == 200) {
+                            music.setUri(neteaseMusicUrl.getData().get(0).getUrl());
                         }
-                    });
+                        e.onNext(music);
+                        e.onComplete();
+                    } catch (Exception ep) {
+                        e.onError(ep);
+                    }
+                }));
+    }
+
+    public static Observable<List<Music>> search(String key, int limit, int page) {
+        Map<String, String> params = new HashMap<>();
+        params.put("offset", String.valueOf(page)); //page
+        params.put("limit", String.valueOf(limit));//limit
+        params.put("keywords", key);// key
+        return getApiService().searchByNetease(params)
+                .flatMap(netease -> {
+                    List<Music> musicList = new ArrayList<>();
+                    List<NeteaseMusic> songList = netease.getResult().getSongs();
+                    for (int i = 0; i < songList.size(); i++) {
+                        NeteaseMusic song = songList.get(i);
+                        Music music = new Music(song);
+                        musicList.add(music);
+                    }
+                    LogUtil.e("search", page + "--" + limit + "qq :" + musicList.size());
+                    return Observable.fromArray(musicList);
                 });
     }
 
-    public static Observable<Music> getMusicUrl(NeteaseMusic neteaseMusic) {
-        return ApiManager.getInstance().apiService.getMusicUrl("http://musicapi.leanapp.cn/music/url?id=" + neteaseMusic.getId())
-                .flatMap(neteaseMusicUrl -> {
-                    return Observable.create((ObservableOnSubscribe<Music>) e -> {
-                        try {
-                            Music music = new Music();
-                            music.setType(Music.Type.NETEASE);
-                            music.setOnline(true);
-                            music.setId(neteaseMusic.getId() + "");
-                            music.setAlbum(neteaseMusic.getAlbum().getName());
-                            music.setAlbumId(neteaseMusic.getAlbum().getId());
-                            String artist = neteaseMusic.getArtists().get(0).getName();
-                            for (int i = 1; i < neteaseMusic.getArtists().size(); i++) {
-                                artist += "-" + neteaseMusic.getArtists().get(i).getName();
-                            }
-                            music.setArtist(artist);
-                            music.setArtistId(neteaseMusic.getArtists().get(0).getId());
-                            music.setTitle(neteaseMusic.getName());
-//                            music.setLrcPath(neteaseMusic.);
-                            music.setCoverSmall(neteaseMusic.getAlbum().getPicUrl());
-                            music.setCoverUri(neteaseMusic.getAlbum().getPicUrl());
-                            music.setCoverBig(neteaseMusic.getAlbum().getPicUrl());
-                            if (neteaseMusicUrl.getCode() == 200) {
-                                music.setUri(neteaseMusicUrl.getData().get(0).getUrl());
-                            }
-                            e.onNext(music);
-                            e.onComplete();
-                        } catch (Exception ep) {
-                            e.onError(ep);
-                        }
-                    });
+    public static Observable<String> getNeteaseLyric(Music music) {
+        return getApiService().getMusicLyric(music.getId())
+                .flatMap(netease -> {
+                    String lyric = netease.getLrc().getLyric();
+                    LogUtil.e("lyric =", lyric);
+                    return Observable.fromArray(lyric);
                 });
     }
 }

@@ -5,8 +5,8 @@ import android.content.Context;
 
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.login.UserModel;
-import com.cyl.musiclake.ui.login.user.User;
+import com.cyl.musiclake.ui.my.UserModel;
+import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.common.Constants;
 

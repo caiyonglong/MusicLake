@@ -7,10 +7,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.data.source.AppRepository;
+import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.musicApi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.music.local.contract.PlaylistDetailContract;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.List;
 
@@ -25,6 +30,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter {
+    private static final String TAG = "PlaylistDetailPresenter";
     private PlaylistDetailContract.View mView;
     private Context mContext;
 
@@ -49,35 +55,59 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
 
     @Override
     public void loadPlaylistSongs(String playlistID) {
-        AppRepository.getPlaylistSongsRepository(mContext, playlistID)
+        MusicApiServiceImpl.getMusicList(playlistID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
-
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onSubscribe(Disposable disposable) {
 
                     }
 
                     @Override
-                    public void onNext(List<Music> musicList) {
-                        if (musicList.size() == 0) {
-                            mView.showEmptyView();
-                        }
-                        mView.showPlaylistSongs(musicList);
+                    public void onNext(List<Music> musicInfos) {
+                        mView.showPlaylistSongs(musicInfos);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        mView.hideLoading();
-                        e.printStackTrace();
+                    public void onError(Throwable throwable) {
+
                     }
 
                     @Override
                     public void onComplete() {
-                        mView.hideLoading();
+
                     }
                 });
+//        AppRepository.getPlaylistSongsRepository(mContext, playlistID)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<List<Music>>() {
+//
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<Music> musicList) {
+//                        if (musicList.size() == 0) {
+//                            mView.showEmptyView();
+//                        }
+//                        mView.showPlaylistSongs(musicList);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.hideLoading();
+//                        e.printStackTrace();
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        mView.hideLoading();
+//                    }
+//                });
     }
 
     @Override
@@ -119,6 +149,99 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
 
                     @Override
                     public void onComplete() {
+                    }
+                });
+    }
+
+    @Override
+    public void deletePlaylist(Playlist playlist) {
+        MusicApiServiceImpl.deletePlaylist(playlist.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        if (integer == 1) {
+                            mView.success(1);
+                            RxBus.getInstance().post(new PlaylistEvent());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void renamePlaylist(Playlist playlist, String title) {
+        MusicApiServiceImpl.renamePlaylist(playlist.getId(), title)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(String status) {
+                        LogUtil.e(TAG, status);
+                        if (status.equals("true")) {
+                            mView.success(1);
+                            RxBus.getInstance().post(new PlaylistEvent());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void uncollectMusic(String pid, int position, Music music) {
+        MusicApiServiceImpl.uncollectMusic(pid, music)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(String status) {
+                        LogUtil.e(TAG, status);
+                        if (status.equals("true")) {
+                            mView.removeMusic(position);
+//                            RxBus.getInstance().post(new PlaylistEvent());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

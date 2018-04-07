@@ -60,7 +60,7 @@ public class NavigateUtil {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void navigateToArtist(Activity context, long artistID, String title, Pair<View, String> transitionViews) {
+    public static void navigateToArtist(Activity context, String artistID, String title, Pair<View, String> transitionViews) {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 

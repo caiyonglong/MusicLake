@@ -1,9 +1,7 @@
 package com.cyl.musiclake.api;
 
-import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl;
 import com.cyl.musiclake.api.qq.QQApiModel;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 
 import org.junit.Test;
 
@@ -30,7 +28,7 @@ public class ApiManagerServiceTest1 {
         params.put("format", "json");
 
         Observable<QQApiModel> qqApiModel
-                = ApiManager.getInstance().apiService.searchByQQ("http://c.y.qq.com/soso/fcgi-bin/search_cp?", params);
+                = QQApiServiceImpl.getApiService().searchByQQ(params);
         qqApiModel.subscribe(qqApi -> {
             List<QQApiModel.DataBean.SongBean.ListBean> data = qqApi.getData().getSong().getList();
             System.out.println(data.size());
@@ -52,11 +50,9 @@ public class ApiManagerServiceTest1 {
 
     @Test
     public void searchByXiami() throws Exception {
-        Music music = new Music();
-        music.setTitle("暧昧");
-        music.setArtist("薛之谦");
-        DoubanApiServiceImpl.getMusicInfo(music);
-        System.out.println(music.getCoverBig());
+        String info = "暧昧-薛之谦";
+//        DoubanMusic doubanMusic = DoubanApiServiceImpl.getMusicInfo(info);
+//        System.out.println(music.getCoverBig());
 
     }
 

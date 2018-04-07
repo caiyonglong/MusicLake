@@ -5,11 +5,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/default_cover_player" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

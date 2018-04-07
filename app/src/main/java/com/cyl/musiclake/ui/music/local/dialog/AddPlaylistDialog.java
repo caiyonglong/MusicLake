@@ -38,6 +38,13 @@ public class AddPlaylistDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        final Music music = getArguments().getParcelable("music");
+        if (music.getType() == Music.Type.LOCAL) {
+            return new MaterialDialog.Builder(getActivity())
+                    .title("增加到歌单")
+                    .content("暂不支持添加本地歌曲到在线歌单")
+                    .build();
+        }
         final List<Playlist> playlists = PlaylistLoader.getPlaylist(getActivity());
         final CharSequence[] chars = new CharSequence[playlists.size() + 1];
         chars[0] = "新建歌单";
@@ -49,7 +56,6 @@ public class AddPlaylistDialog extends DialogFragment {
                 .title("增加到歌单")
                 .items(chars)
                 .itemsCallback((dialog, itemView, which, text) -> {
-                    final Music music = getArguments().getParcelable("music");
                     if (which == 0) {
                         CreatePlaylistDialog createDialog = CreatePlaylistDialog.newInstance(music);
                         createDialog.show(getFragmentManager(), TAG_CREATE);

@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.ui.login.user.User;
-import com.cyl.musiclake.ui.login.user.UserStatus;
+import com.cyl.musiclake.ui.my.user.User;
+import com.cyl.musiclake.ui.my.user.UserStatus;
 
 /**
  * 作者：yonglong on 2016/8/8 17:47

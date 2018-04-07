@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
-import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -30,12 +31,13 @@ import java.util.List;
  * Created by yonglong on 2018/1/23.
  */
 
-public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
+public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
     private Context mContext;
     private List<TasksManagerModel> models = new ArrayList<>();
 
     public TaskItemAdapter(Context context, List<TasksManagerModel> models) {
+        super(R.layout.item_download_music,models);
         mContext = context;
         this.models = models;
     }
@@ -78,21 +80,20 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     };
 
     @Override
-    public TaskItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    protected TaskItemViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
         TaskItemViewHolder holder = new TaskItemViewHolder(
                 LayoutInflater.from(
                         parent.getContext())
                         .inflate(R.layout.item_download_music, parent, false));
 
-        holder.taskActionBtn.setOnClickListener(taskActionOnClickListener);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(TaskItemViewHolder holder, int position) {
-        final TasksManagerModel model = TasksManager.getImpl().get(position);
+    protected void convert(TaskItemViewHolder holder, TasksManagerModel model) {
 
-        holder.update(model.getId(), position);
+        holder.taskActionBtn.setOnClickListener(taskActionOnClickListener);
+        holder.update(model.getId(), holder.getAdapterPosition());
         holder.taskActionBtn.setTag(holder);
         holder.taskNameTv.setText(model.getName());
 
@@ -137,7 +138,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         return models.size();
     }
 
-    public class TaskItemViewHolder extends RecyclerView.ViewHolder {
+    public class TaskItemViewHolder extends BaseViewHolder {
         public TaskItemViewHolder(View itemView) {
             super(itemView);
             assignViews();

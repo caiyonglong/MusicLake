@@ -60,7 +60,7 @@ public class SongLoader {
                         String album = cursor.getString(3);
                         int duration = cursor.getInt(4);
                         int trackNumber = cursor.getInt(5);
-                        long artistId = cursor.getInt(6);
+                        String artistId = cursor.getString(6);
                         long albumId = cursor.getLong(7);
                         String path = cursor.getString(8);
                         String coverUri = CoverLoader.getInstance().getCoverUri(context, albumId);
@@ -103,7 +103,7 @@ public class SongLoader {
                 String album = cursor.getString(3);
                 int duration = cursor.getInt(4);
                 int trackNumber = cursor.getInt(5);
-                long artistId = cursor.getInt(6);
+                String artistId = cursor.getString(6);
                 long albumId = cursor.getLong(7);
                 String path = cursor.getString(8);
                 String coverUri = CoverLoader.getInstance().getCoverUri(context, albumId);

@@ -12,7 +12,7 @@ import com.cyl.musiclake.data.source.download.TasksManagerModel;
 import com.cyl.musiclake.ui.music.online.adapter.FileDownloadListener;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.NetworkUtils;
-import com.cyl.musiclake.utils.PreferencesUtils;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -47,7 +47,7 @@ public class DownloadDialog extends DialogFragment {
                 ).positiveText("确定")
                 .negativeText("取消")
                 .onPositive((materialDialog, dialogAction) -> {
-                    if (!NetworkUtils.isWifiConnected(getContext()) && PreferencesUtils.getWifiMode()) {
+                    if (!NetworkUtils.isWifiConnected(getContext()) && SPUtils.getWifiMode()) {
                         ToastUtils.show(getContext(), "当前不在wifi环境，请在设置中关闭省流量模式");
                     } else {
                         TasksManagerModel model =

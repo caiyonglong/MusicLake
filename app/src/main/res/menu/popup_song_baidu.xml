@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_song_detail"
+        android:title="查看歌曲信息" />
+
+    <item
+        android:id="@+id/popup_song_goto_artist"
+        android:title="查看歌手信息" />
+
+    <item
+        android:id="@+id/popup_song_download"
+        android:title="下载音乐" />
+
+</menu>

@@ -5,9 +5,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.data.source.download.TasksManagerModel;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.online.adapter.TaskItemAdapter;
 
 import java.lang.ref.WeakReference;
@@ -37,6 +37,9 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
+        if (models.size() == 0) {
+
+        }
     }
 
     @Override
@@ -50,17 +53,17 @@ public class DownloadManagerFragment extends BaseFragment {
         mAdapter = new TaskItemAdapter(getContext(), models);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-
+        mAdapter.bindToRecyclerView(mRecyclerView);
         TasksManager.getImpl().onCreate(new WeakReference<>(this));
     }
 
     public void postNotifyDataChanged() {
         if (mAdapter != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mAdapter != null) {
-                        mAdapter.notifyDataSetChanged();
+            getActivity().runOnUiThread(() -> {
+                if (mAdapter != null) {
+                    mAdapter.notifyDataSetChanged();
+                    if (models.size() == 0) {
+                        mAdapter.setEmptyView(R.layout.view_song_empty);
                     }
                 }
             });
@@ -69,7 +72,7 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        TasksManager.getImpl().onDestroy();
         mAdapter = null;
         super.onDestroy();
     }

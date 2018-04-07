@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,16 +13,15 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.PlayHistoryLoader;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.RecentlyContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.RecentlyPresenter;
-import com.cyl.musiclake.ui.zone.EditActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,25 +146,12 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
                         .content("是否清空播放历史？")
                         .onPositive((dialog, which) -> {
                             PlayHistoryLoader.clearPlayHistory(getActivity());
+                            musicInfos.clear();
                             mAdapter.notifyDataSetChanged();
                         })
                         .positiveText("确定")
                         .negativeText("取消")
                         .show();
-                break;
-            case R.id.action_share:
-                Intent intent3 = new Intent(getActivity(), EditActivity.class);
-                StringBuilder content = new StringBuilder();
-
-                if (musicInfos.size() > 0) {
-                    content = new StringBuilder("分享歌单\n");
-                }
-                for (int i = 0; i < musicInfos.size(); i++) {
-                    content.append(musicInfos.get(i).getTitle()).append("---").append(musicInfos.get(i).getArtist());
-                    content.append("\n");
-                }
-                intent3.putExtra("content", content.toString());
-                startActivity(intent3);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -179,6 +164,6 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_playlist_detail, menu);
+        inflater.inflate(R.menu.menu_history, menu);
     }
 }

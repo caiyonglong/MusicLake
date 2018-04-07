@@ -22,7 +22,7 @@ public class LocalAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     public LocalAdapter() {
         super(R.layout.item_layout_view);
         List<String> names = new ArrayList<>();
-        String[] titles = {"本地音乐", "播放历史", "收藏", "下载"};
+        String[] titles = {"本地音乐", "播放历史", "本地收藏", "下载"};
         names.clear();
         values.clear();
         for (int i = 0; i < 4; i++) {

@@ -27,9 +27,9 @@ public class ArtistAdapter extends BaseQuickAdapter<Artist, BaseViewHolder> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             helper.getView(R.id.album).setTransitionName(Constants.TRANSTITION_ALBUM);
         }
-
         GlideApp.with(mContext)
                 .load(CoverLoader.getInstance().getCoverUriByRandom())
+                .error(CoverLoader.getInstance().getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) helper.getView(R.id.album));
     }

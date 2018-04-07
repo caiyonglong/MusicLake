@@ -5,7 +5,12 @@
         android:id="@+id/action_delete_playlist"
         android:icon="@drawable/ic_delete"
         android:title="删除歌单"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_rename_playlist"
+        android:icon="@drawable/ic_mode_edit"
+        android:title="重命名"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white"

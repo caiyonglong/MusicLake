@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
-import com.cyl.musiclake.utils.PreferencesUtils;
+import com.cyl.musiclake.utils.SPUtils;
 import com.rtugeek.android.colorseekbar.ColorSeekBar;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
@@ -136,11 +136,11 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         mNextButton.setOnClickListener(this);
         mSettingsButton.setOnClickListener(this);
 
-        mFontSize = PreferencesUtils.getFontSize();
+        mFontSize = SPUtils.getFontSize();
         mLyricText.setFontSizeScale(mFontSize);
         mSizeSeekBar.setProgress((int) mFontSize);
 
-        mFontColor = PreferencesUtils.getFontColor();
+        mFontColor = SPUtils.getFontColor();
         mLyricText.setFontColorScale(mFontColor);
         mColorSeekBar.setColorBarPosition(mFontColor);
 
@@ -151,7 +151,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 Log.e("TEST", progress + "---" + fromUser);
                 mLyricText.setFontSizeScale(progress);
-                PreferencesUtils.saveFontSize(progress);
+                SPUtils.saveFontSize(progress);
             }
 
             @Override
@@ -166,7 +166,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         });
         mColorSeekBar.setOnColorChangeListener((colorBarPosition, alphaBarPosition, color) -> {
             mLyricText.setFontColorScale(color);
-            PreferencesUtils.saveFontColor(color);
+            SPUtils.saveFontColor(color);
         });
     }
 

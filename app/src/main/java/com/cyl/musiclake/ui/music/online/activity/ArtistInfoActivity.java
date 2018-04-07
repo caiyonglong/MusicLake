@@ -103,7 +103,6 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     public void showMusicInfo(DoubanMusic doubanMusic) {
-
         GlideApp.with(this)
                 .asBitmap()
                 .load(doubanMusic.getMusics().get(0).getImage())
@@ -120,7 +119,5 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
                 .append("曲目：")
                 .append(attrsBean.getTracks().get(0));
         mTvDesc.setText(sb.toString());
-
     }
-
 }

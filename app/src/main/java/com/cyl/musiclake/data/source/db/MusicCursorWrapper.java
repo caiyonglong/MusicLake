@@ -19,7 +19,7 @@ public class MusicCursorWrapper extends CursorWrapper {
         Music music = new Music();
         music.setId(getString(getColumnIndex(DBData.MUSIC_ID)));
         music.setTitle(getString(getColumnIndex(DBData.MUSIC_NAME)));
-        music.setArtistId(getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
+        music.setArtistId(getString(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
         music.setArtist(getString(getColumnIndex(DBData.MUSIC_ARTIST)));
         music.setAlbum(getString(getColumnIndex(DBData.MUSIC_ALBUM)));
         music.setAlbumId(getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID)));

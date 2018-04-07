@@ -88,7 +88,7 @@ public class BaiduSongInfo {
             private String queryId;
             private String songId;
             private String songName;
-            private long artistId;
+            private String artistId;
             private String artistName;
             private long albumId;
             private String albumName;
@@ -133,11 +133,11 @@ public class BaiduSongInfo {
                 this.songName = songName;
             }
 
-            public long getArtistId() {
+            public String getArtistId() {
                 return artistId;
             }
 
-            public void setArtistId(long artistId) {
+            public void setArtistId(String artistId) {
                 this.artistId = artistId;
             }
 

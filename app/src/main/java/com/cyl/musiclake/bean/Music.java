@@ -3,6 +3,10 @@ package com.cyl.musiclake.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cyl.musiclake.api.netease.NeteaseMusic;
+
+import java.util.List;
+
 /**
  * 作者：yonglong on 2016/8/9 10:50
  * 邮箱：643872807@qq.com
@@ -16,11 +20,11 @@ public class Music implements Parcelable {
     // 音乐标题
     private String title;
     // 艺术家
-    private String artist;
+    private String artist;//{123,123,13}
     // 专辑
     private String album;
     // 专辑id
-    private long artistId;
+    private String artistId;//{123,123,13}
     // 专辑id
     private long albumId;
     // 专辑内歌曲个数
@@ -50,7 +54,24 @@ public class Music implements Parcelable {
     //音乐质量/前缀
     private String prefix;
 
-    public Music(long id, long albumId, long artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
+    private Album albumBean;
+    private List<Artist> artists;
+
+    public Music(NeteaseMusic neteaseMusic) {
+        this.id = String.valueOf(neteaseMusic.getId());
+        this.title = neteaseMusic.getName();
+        this.album = neteaseMusic.getAlbum().getName();
+        this.albumId = neteaseMusic.getAlbum().getId();
+        this.artist = neteaseMusic.getAuthors();
+        this.coverUri = neteaseMusic.getAlbum().getPicUrl();
+        this.coverSmall = neteaseMusic.getAlbum().getPicUrl();
+        this.coverBig = neteaseMusic.getAlbum().getPicUrl();
+        this.type = Type.NETEASE;
+        this.online = true;
+    }
+
+
+    public Music(long id, long albumId, String artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
         this.id = String.valueOf(id);
         this.title = title;
         this.artist = artist;
@@ -68,7 +89,7 @@ public class Music implements Parcelable {
     public Music() {
         this.id = "";
         this.albumId = -1;
-        this.artistId = -1;
+        this.artistId = "";
 
         this.title = "未知";
         this.artist = "未知";
@@ -89,7 +110,7 @@ public class Music implements Parcelable {
         title = in.readString();
         artist = in.readString();
         album = in.readString();
-        artistId = in.readLong();
+        artistId = in.readString();
         albumId = in.readLong();
         trackNumber = in.readInt();
         duration = in.readLong();
@@ -142,11 +163,11 @@ public class Music implements Parcelable {
         this.trackNumber = trackNumber;
     }
 
-    public long getArtistId() {
+    public String getArtistId() {
         return artistId;
     }
 
-    public void setArtistId(long artistId) {
+    public void setArtistId(String artistId) {
         this.artistId = artistId;
     }
 
@@ -251,13 +272,19 @@ public class Music implements Parcelable {
         return type;
     }
 
-    public String getTypeName() {
+    /**
+     * @param lower
+     * @return
+     */
+    public String getTypeName(boolean lower) {
         if (type == Type.QQ) {
-            return "QQ音乐";
+            return lower ? "qq" : "QQ音乐";
         } else if (type == Type.XIAMI) {
-            return "虾米音乐";
+            return lower ? "xiami" : "虾米音乐";
         } else if (type == Type.BAIDU) {
-            return "百度音乐";
+            return lower ? "baidu" : "百度音乐";
+        } else if (type == Type.NETEASE) {
+            return lower ? "netease" : "网易云音乐";
         } else {
             return "本地音乐";
         }
@@ -296,13 +323,29 @@ public class Music implements Parcelable {
         return 0;
     }
 
+    public Album getAlbumBean() {
+        return albumBean;
+    }
+
+    public void setAlbumBean(Album albumBean) {
+        this.albumBean = albumBean;
+    }
+
+    public List<Artist> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(title);
         dest.writeString(artist);
         dest.writeString(album);
-        dest.writeLong(artistId);
+        dest.writeString(artistId);
         dest.writeLong(albumId);
         dest.writeInt(trackNumber);
         dest.writeLong(duration);
@@ -320,12 +363,14 @@ public class Music implements Parcelable {
     }
 
     public void setType(String type) {
-        if (type.equals("QQ")) {
+        if (type.equals("QQ") || type.equals("qq")) {
             this.type = Type.QQ;
-        } else if (type.equals("XIAMI")) {
+        } else if (type.equals("XIAMI") || type.equals("xiami")) {
             this.type = Type.XIAMI;
-        } else if (type.equals("BAIDU")) {
+        } else if (type.equals("BAIDU") || type.equals("baidu")) {
             this.type = Type.BAIDU;
+        } else if (type.equals("NETEASE") || type.equals("netease")) {
+            this.type = Type.NETEASE;
         } else {
             this.type = Type.LOCAL;
         }

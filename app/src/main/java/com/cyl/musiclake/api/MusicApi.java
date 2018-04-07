@@ -5,10 +5,15 @@ import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl;
 import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
+import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.musicApi.CollectionInfo;
+import com.cyl.musiclake.musicApi.SourceData;
+import com.cyl.musiclake.utils.LogUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -22,6 +27,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MusicApi {
+    private static final String TAG = "MusicApi";
+
     /**
      * 获取歌词
      *
@@ -41,6 +48,10 @@ public class MusicApi {
             return XiamiServiceImpl.getXimaiLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
+        } else if (music.getType() == Music.Type.NETEASE) {
+            return NeteaseApiServiceImpl.getNeteaseLyric(music)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         } else {
             return null;
         }
@@ -55,7 +66,9 @@ public class MusicApi {
      * @return
      */
     public static Observable<List<Music>> searchMusic(String key, int limit, int page) {
-        return Observable.merge(QQApiServiceImpl.search(key, limit, page), XiamiServiceImpl.search(key, limit, page))
+        return Observable.merge(QQApiServiceImpl.search(key, limit, page),
+                XiamiServiceImpl.search(key, limit, page),
+                NeteaseApiServiceImpl.search(key, limit, page - 1))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -64,19 +77,47 @@ public class MusicApi {
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
      */
     public static Observable<Music> getMusicInfo(Music music) {
-        return QQApiServiceImpl.getMusicInfo(music);
+        if (music.getType() == Music.Type.QQ) {
+            return QQApiServiceImpl.getMusicInfo(music);
+        } else if (music.getType() == Music.Type.NETEASE) {
+            return NeteaseApiServiceImpl.getMusicUrl(music);
+        } else {
+            return null;
+        }
     }
 
-    public static Observable<List<Music>> getTopList(int id) {
-        return NeteaseApiServiceImpl.getTopMusicList(id);
+    public static Observable<NeteaseList> getTopList(int id) {
+        return NeteaseApiServiceImpl.getTopList(id);
     }
 
     /**
      * 加载图片
      */
-    public static Observable<DoubanMusic> getMusicAlbumInfo(Music music) {
-        return DoubanApiServiceImpl.getMusicInfo(music)
+    public static Observable<DoubanMusic> getMusicAlbumInfo(String info) {
+        return DoubanApiServiceImpl.getMusicInfo(info)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static CollectionInfo getCollectInfo(Music music) {
+        CollectionInfo collectionInfo = new CollectionInfo(music.getId(), music.getTypeName(true));
+        SourceData sourceData = new SourceData();
+        sourceData.setCp(false);
+        sourceData.setId(music.getId());
+        sourceData.setSource(music.getTypeName(true));
+        sourceData.setName(music.getTitle());
+        sourceData.setAlbum(new SourceData.AlbumBean(music.getAlbumId() + "", music.getAlbum(), music.getCoverUri()));
+        String[] artistIds = music.getArtistId().split(",");
+        String[] artists = music.getArtist().split(",");
+        List<SourceData.ArtistsBean> artistsBeans = new ArrayList<>();
+        for (int i = 0; i < artists.length; i++) {
+            SourceData.ArtistsBean artistsBean = new SourceData.ArtistsBean(artistIds[i],
+                    artists[i]);
+            artistsBeans.add(artistsBean);
+        }
+        sourceData.setArtists(artistsBeans);
+        collectionInfo.setSourceData(sourceData);
+        LogUtil.e(TAG, collectionInfo.toString());
+        return collectionInfo;
     }
 }

@@ -3,9 +3,9 @@ package com.cyl.musiclake.api.qq;
 import android.util.Base64;
 import android.util.Log;
 
-import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -24,6 +24,10 @@ import io.reactivex.Observable;
 public class QQApiServiceImpl {
     private static final String TAG = "QQApiServiceImpl";
 
+    public static QQApiService getApiService() {
+        return ApiManager.getInstance().create(QQApiService.class, "http://c.y.qq.com/");
+    }
+
     /**
      * @param
      * @return
@@ -38,7 +42,7 @@ public class QQApiServiceImpl {
         params.put("cr", "1");
         params.put("lossless", "1");
         params.put("format", "json");
-        return ApiManager.getInstance().apiService.searchByQQ(Constants.BASE_URL_QQ_MUSIC_SEARCH, params)
+        return getApiService().searchByQQ(params)
                 .flatMap(qqApiModel -> {
                     List<Music> musicList = new ArrayList<>();
                     List<QQApiModel.DataBean.SongBean.ListBean> songList = qqApiModel.getData().getSong().getList();
@@ -49,8 +53,14 @@ public class QQApiServiceImpl {
                         music.setOnline(true);
                         music.setId(song.getSongmid());
                         music.setTitle(song.getSongname());
-                        music.setArtist(song.getSinger().get(0).getName());
-                        music.setArtistId(song.getSinger().get(0).getId());
+                        String artists = song.getSinger().get(0).getName();
+                        String artistIds = song.getSinger().get(0).getId() + "";
+                        for (int j = 1; j < song.getSinger().size(); j++) {
+                            artists += "," + song.getSinger().get(j).getName();
+                            artistIds += "," + song.getSinger().get(j).getId();
+                        }
+                        music.setArtist(artists);
+                        music.setArtistId(artistIds);
                         music.setAlbum(song.getAlbumname());
                         music.setAlbumId(song.getAlbumid());
                         music.setDuration(song.getPubtime());
@@ -73,11 +83,11 @@ public class QQApiServiceImpl {
     public static Observable<Music> getMusicInfo(Music music) {
         double guid = Math.floor(Math.random() * 1000000000);
         String requestUrl = Constants.BASE_URL_QQ_MUSIC_KEY + "json=3&guid=" + guid + "&format=json";
-        return ApiManager.getInstance().apiService.getTokenKey(requestUrl)
+        return getApiService().getTokenKey(requestUrl)
                 .flatMap(qqApiKey -> {
                     String key = qqApiKey.getKey();
                     String url = Constants.BASE_URL_QQ_MUSIC_URL +
-                            music.getPrefix() + music.getId() + ".mp3?vkey=" + key + "&guid=" + guid + "&fromtag=30";
+                            "M500" + music.getId() + ".mp3?vkey=" + key + "&guid=" + guid + "&fromtag=30";
                     Log.e(TAG, url);
                     music.setUri(url);
                     return Observable.fromArray(music);
@@ -102,7 +112,7 @@ public class QQApiServiceImpl {
                 }
             });
         }
-        return ApiManager.getInstance().apiService.getQQLyric(mLyricUrl)
+        return getApiService().getQQLyric(mLyricUrl)
                 .flatMap(qqLyricInfo -> {
                     System.out.println(mLyricUrl);
                     System.out.println(qqLyricInfo.toString());

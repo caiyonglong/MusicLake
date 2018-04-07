@@ -29,7 +29,7 @@ public class PlayQueueAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder holder, Music item) {
 
-        holder.setText(R.id.tv_source, item.getTypeName());
+        holder.setText(R.id.tv_source, item.getTypeName(false));
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
 

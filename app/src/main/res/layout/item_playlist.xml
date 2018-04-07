@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="2dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -15,9 +16,9 @@
             android:id="@+id/iv_album"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:transitionName="transition_album_art"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/default_cover" />
+            android:src="@drawable/default_cover"
+            android:transitionName="transition_album_art" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -42,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="0首" />
+                android:text="0首"
+                android:visibility="gone" />
 
         </LinearLayout>
 

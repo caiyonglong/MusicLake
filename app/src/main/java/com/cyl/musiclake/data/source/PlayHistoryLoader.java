@@ -82,4 +82,12 @@ public class PlayHistoryLoader {
         dbDaoImpl.clearHistory();
         dbDaoImpl.closeDB();
     }
+    /**
+     * 清除歌单
+     */
+    public static void clearLove(Context context) {
+        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+        dbDaoImpl.clearHistory();
+        dbDaoImpl.closeDB();
+    }
 }

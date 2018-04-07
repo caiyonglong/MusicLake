@@ -23,11 +23,14 @@ import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.adapter.NeteaseAdapter;
 import com.cyl.musiclake.ui.music.online.contract.NeteaseListContract;
 import com.cyl.musiclake.ui.music.online.presenter.NeteaseListPresenter;
+import com.cyl.musiclake.utils.DialogUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SizeUtils;
@@ -66,7 +69,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
     private int idx;
     private String title;
     private NeteaseList neteaseList;
-    private String type;
+    private int action = 0; //0 播放，1 下载
     private String desc;
     private long time;
     private String pic;
@@ -117,8 +120,9 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
+                action = 0;
                 LogUtil.e(TAG, toplist.get(position).toString());
-                mPresenter.playCurrentMusic(toplist.get(position));
+                mPresenter.getMusicInfo(toplist.get(position));
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -129,7 +133,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
                     case R.id.popup_song_detail:
                         StringBuilder sb = new StringBuilder();
                         sb.append("艺术家：")
-                                .append(music.getArtists().get(0).getName())
+                                .append(music.getAuthors())
                                 .append("\n")
                                 .append("专辑：")
                                 .append(music.getAlbum().getName())
@@ -155,7 +159,12 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
                         intent.putExtra(Extras.TING_UID, music1);
                         startActivity(intent);
                         break;
+                    case R.id.popup_add_playlist:
+                        mPresenter.addPlaylist(new Music(music));
+                        break;
                     case R.id.popup_song_download:
+                        action = 1;
+                        mPresenter.getMusicInfo(music);
                         break;
                 }
                 return false;
@@ -185,10 +194,12 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
 
     @Override
     public void showLoading() {
+        DialogUtils.showProgressDialog(this, null, null);
     }
 
     @Override
     public void hideLoading() {
+        DialogUtils.dismissDialog();
     }
 
     @Override
@@ -229,7 +240,33 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
     }
 
     @Override
-    public void playNeteaseMusic(Music music) {
-        PlayManager.playOnline(music);
+    public void showMusicInfo(Music music) {
+        if (action == 0) {
+            PlayManager.playOnline(music);
+        } else if (action == 1) {
+            DownloadDialog.newInstance(music)
+                    .show(getSupportFragmentManager(), getLocalClassName());
+        }
+    }
+
+    @Override
+    public void showAddPlaylistDialog(List<Playlist> playlists, Music music) {
+        if (playlists == null) {
+            ToastUtils.show("暂无歌单");
+            return;
+        }
+        new MaterialDialog.Builder(this)
+                .title("增加到歌单")
+                .items(playlists)
+                .itemsCallback((dialog, itemView, which, text) -> {
+                    Playlist playlist = playlists.get(which);
+                    Log.d("addDialog", which + "----" + playlists.get(which).getId() + "------" + music.getId());
+                    mPresenter.collectMusic(playlist.getId(), music);
+                }).build().show();
+    }
+
+    @Override
+    public void showCollectStatus(boolean success, String msg) {
+        ToastUtils.show(msg);
     }
 }

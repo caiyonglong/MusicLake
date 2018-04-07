@@ -10,16 +10,17 @@ import android.util.Pair;
 import android.view.View;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.LocalAdapter;
 import com.cyl.musiclake.ui.music.local.adapter.PlaylistAdapter;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;
 import com.cyl.musiclake.ui.music.local.dialog.CreatePlaylistDialog;
 import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter;
+import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ import butterknife.OnClick;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialog.mCallBack, MyMusicContract.View {
+public class MyMusicFragment extends BaseFragment implements MyMusicContract.View {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.hor_recyclerView)
@@ -39,9 +40,12 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
     @OnClick(R.id.iv_playlist_add)
     void addPlaylist() {
-        CreatePlaylistDialog dialog = CreatePlaylistDialog.newInstance();
-        dialog.setCallBack(this);
-        dialog.show(getChildFragmentManager(), TAG_CREATE);
+        if (UserStatus.getstatus(getContext())) {
+            CreatePlaylistDialog dialog = CreatePlaylistDialog.newInstance();
+            dialog.show(getChildFragmentManager(), TAG_CREATE);
+        } else {
+            ToastUtils.show("请登录");
+        }
     }
 
     private static final String TAG_CREATE = "create_playlist";
@@ -106,13 +110,6 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
                     }
                 }
         );
-        RxBus.getInstance().register(Playlist.class)
-                .subscribe(playlist -> {
-                    if (mPresenter != null) {
-                        mPresenter.loadSongs();
-                        mPresenter.loadPlaylist();
-                    }
-                });
     }
 
     @Override
@@ -128,11 +125,6 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
     }
 
     @Override
-    public void updatePlaylistView() {
-        mPresenter.loadPlaylist();
-    }
-
-    @Override
     public void showLoading() {
 
     }
@@ -144,7 +136,7 @@ public class MyMusicFragment extends BaseFragment implements CreatePlaylistDialo
 
     @Override
     public void showSongs(List<Music> songList) {
-        mLocalAdapter.setSongsNum(0,songList.size());
+        mLocalAdapter.setSongsNum(0, songList.size());
     }
 
     @Override

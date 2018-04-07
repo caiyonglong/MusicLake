@@ -8,6 +8,11 @@
     <item
         android:id="@+id/popup_song_goto_artist"
         android:title="查看歌手信息" />
+
+    <item
+        android:id="@+id/popup_add_playlist"
+        android:title="添加到歌单" />
+
     <item
         android:id="@+id/popup_song_download"
         android:title="下载音乐" />

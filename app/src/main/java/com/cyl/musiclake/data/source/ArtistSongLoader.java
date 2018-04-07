@@ -34,7 +34,7 @@ public class ArtistSongLoader {
      */
     public static Observable<List<Music>> getSongsForArtist(Context context, String artistName) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        String sql = "SELECT * FROM music where music.is_online=0 and artist = '" + artistName + "'";
+        String sql = "SELECT * FROM music where music.is_online=0 and artist like '%" + artistName + "%'";
         Cursor cursor = dbDaoImpl.makeCursor(sql);
         return getSongsForArtistDB(context, cursor);
     }

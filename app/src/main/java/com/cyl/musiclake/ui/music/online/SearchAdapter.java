@@ -31,7 +31,7 @@ public class SearchAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) holder.getView(R.id.iv_cover));
-        holder.setText(R.id.tv_from, "来源于" + item.getTypeName());
+        holder.setText(R.id.tv_from, item.getTypeName(false));
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
         holder.addOnClickListener(R.id.iv_more);

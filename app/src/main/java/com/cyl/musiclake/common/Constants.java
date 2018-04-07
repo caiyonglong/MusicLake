@@ -6,6 +6,10 @@ import android.os.Environment;
  * Created by yonglong on 2016/5/8.
  */
 public class Constants {
+
+    //QQ APP_ID
+    public static final String APP_ID = "101454823";
+
     //社区根目录(头像图片网址前缀)
     public static final String DEFAULT_IMGHEADER = "http://119.29.27.116/hkmusic";
 

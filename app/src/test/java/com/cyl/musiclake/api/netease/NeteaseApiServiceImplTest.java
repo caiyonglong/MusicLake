@@ -1,5 +1,7 @@
 package com.cyl.musiclake.api.netease;
 
+import com.cyl.musiclake.api.MusicApi;
+
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -231,7 +233,7 @@ public class NeteaseApiServiceImplTest {
         for (int i = 0; i < list.size(); i++) {
             try {
                 Observable<NeteaseList> qqApiModel
-                        = NeteaseApiServiceImpl.getTopList(i);
+                        = MusicApi.getTopList(i);
                 int finalI = i;
 
                 qqApiModel.subscribe(qqApi -> {

@@ -28,12 +28,11 @@ public class AlbumAdapter extends BaseQuickAdapter<Album, BaseViewHolder> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             helper.getView(R.id.album).setTransitionName(Constants.TRANSTITION_ALBUM);
         }
-
+        String url = CoverLoader.getInstance().getCoverUri(mContext, album.getId());
         GlideApp.with(mContext)
-                .load(CoverLoader.getInstance().getCoverUri(mContext, album.getId()))
+                .load(url)
                 .error(CoverLoader.getInstance().getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) helper.getView(R.id.album));
-
     }
 }

@@ -30,7 +30,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistFragment extends BaseFragment implements CreatePlaylistDialog.mCallBack {
+public class PlaylistFragment extends BaseFragment  {
 
     private static final String TAG = "PlaylistFragment";
     private static final String TAG_CREATE = "create_playlist";
@@ -91,7 +91,6 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
         switch (item.getItemId()) {
             case R.id.action_new_playlist:
                 CreatePlaylistDialog dialog = CreatePlaylistDialog.newInstance();
-                dialog.setCallBack(this);
                 dialog.show(getChildFragmentManager(), TAG_CREATE);
                 return true;
         }
@@ -148,8 +147,4 @@ public class PlaylistFragment extends BaseFragment implements CreatePlaylistDial
         Log.e("---", "----");
     }
 
-    @Override
-    public void updatePlaylistView() {
-        updateView();
-    }
 }

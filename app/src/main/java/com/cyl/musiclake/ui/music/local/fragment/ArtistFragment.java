@@ -86,7 +86,7 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Artist artist = (Artist) adapter.getItem(position);
             NavigateUtil.navigateToArtist(getActivity(),
-                    artist.getId(),
+                    artist.getId() + "",
                     artist.getName(),
                     new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
         });

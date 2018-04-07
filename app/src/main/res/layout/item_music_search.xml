@@ -67,7 +67,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="20dp" />
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_tv_source"
+                android:padding="2dp"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/iv_more"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_music_list_icon_more" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

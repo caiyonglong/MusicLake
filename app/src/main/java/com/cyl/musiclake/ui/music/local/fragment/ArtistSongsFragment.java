@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.ArtistSongContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
@@ -52,9 +52,9 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
     private List<Music> musicInfos = new ArrayList<>();
     private ArtistSongsPresenter mPresenter;
 
-    public static ArtistSongsFragment newInstance(long id, String title, String transitionName) {
+    public static ArtistSongsFragment newInstance(String id, String title, String transitionName) {
         Bundle args = new Bundle();
-        args.putLong(Extras.ARTIST_ID, id);
+        args.putString(Extras.ARTIST_ID, id);
         args.putString(Extras.PLAYLIST_NAME, title);
         args.putString(Extras.TRANSITIONNAME, transitionName);
 
@@ -154,6 +154,7 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
     @Override
     public void showSongs(List<Music> songList) {
+        musicInfos = songList;
         mAdapter.setNewData(songList);
     }
 

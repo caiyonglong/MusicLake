@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
+import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.online.activity.NeteaseMusicListActivity;
@@ -108,7 +108,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
         for (int i = 0; i < neteaseLists.size(); i++) {
             try {
                 Observable<NeteaseList> observable
-                        = NeteaseApiServiceImpl.getTopList(i);
+                        = MusicApi.getTopList(i);
                 int finalI = i;
                 observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

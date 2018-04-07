@@ -6,11 +6,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,13 +27,13 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
+import com.cyl.musiclake.musicApi.MusicApiUtils;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.local.contract.PlayControlsContract;
 import com.cyl.musiclake.ui.music.local.dialog.PlayQueueDialog;
 import com.cyl.musiclake.ui.music.local.presenter.PlayControlsPresenter;
-import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -112,7 +112,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @OnClick(R.id.iv_back)
     void back() {
-        onBackPressed();
+        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            onBackPressed();
     }
 
     private PlayQueueDialog playQueueDialog = null;
@@ -158,15 +159,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
     @OnClick(R.id.skip_download)
     void download() {
         Music music = PlayManager.getPlayingMusic();
-        if (music != null && music.getType() == Music.Type.LOCAL) {
-            ToastUtils.show(getContext(), "不能下载此歌曲!");
-            return;
-        }
-        DownloadDialog.newInstance(music)
-                .show(getChildFragmentManager(), getTag());
+        MusicApiUtils.checkDownload((AppCompatActivity) getActivity(), music);
     }
-
-    Handler mhandler;
 
     @OnClick(R.id.skip_queue)
     void openPlayQueue() {
@@ -216,7 +210,6 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         mPresenter = new PlayControlsPresenter(getActivity());
         mPresenter.attachView(this);
         mPresenter.subscribe();
-        mhandler = new Handler();
     }
 
     private void setupViewPager(MultiTouchViewPager viewPager) {

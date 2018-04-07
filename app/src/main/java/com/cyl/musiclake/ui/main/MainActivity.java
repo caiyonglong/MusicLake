@@ -14,21 +14,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.ui.login.LoginActivity;
-import com.cyl.musiclake.ui.login.UserContract;
-import com.cyl.musiclake.ui.login.UserPresenter;
-import com.cyl.musiclake.ui.login.user.User;
+import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.local.fragment.PlayFragment;
 import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
+import com.cyl.musiclake.ui.my.LoginActivity;
+import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+import com.tencent.tauth.Tencent;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,7 +43,7 @@ import static com.cyl.musiclake.ui.music.local.fragment.PlayFragment.topContaine
  * @author yonglong
  * @date 2016/8/3
  */
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, UserContract.View {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mSlidingUpPaneLayout;
@@ -58,8 +60,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private View headerView;
     private static final String TAG = "MainActivity";
 
-    private boolean login_status = false;
-    UserPresenter mPresenter;
+    private boolean mIsLogin = false;
 
     Class<?> mTargetClass = null;
 
@@ -71,25 +72,30 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void initView() {
         //菜单栏的头部控件初始化
+        initNavView();
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setItemIconTintList(null);
+
+        setUserStatusInfo();
+        /**登陆成功重新设置用户新*/
+        RxBus.getInstance().register(LoginEvent.class).subscribe(event -> setUserStatusInfo());
+    }
+
+    private void initNavView() {
         headerView = mNavigationView.getHeaderView(0);
         mImageView = headerView.findViewById(R.id.header_bg);
         mAvatarIcon = headerView.findViewById(R.id.header_face);
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        mNavigationView.setItemIconTintList(null);
     }
 
     @Override
     protected void initData() {
-
-        mPresenter = new UserPresenter();
-        mPresenter.attachView(this);
-        mPresenter.getUserInfo();
-
         String from = getIntent().getAction();
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
+
         }
+        //加载主fragment
         navigateLibrary.run();
         navigatePlay.run();
     }
@@ -122,8 +128,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
 
         headerView.setOnClickListener(v -> {
-            if (login_status) {
-//                mTargetClass = UserCenterActivity.class;
+            if (mIsLogin) {
+                new MaterialDialog.Builder(this)
+                        .title("音乐湖")
+                        .content("您确定要退出或切换其他账号吗？")
+                        .positiveText("确定")
+                        .onPositive((materialDialog, dialogAction) -> {
+                            UserStatus.clearUserInfo(this);
+                            UserStatus.saveuserstatus(this, false);
+                            Tencent.createInstance(Constants.APP_ID, this).logout(this);
+                            RxBus.getInstance().post(new LoginEvent());
+                        }).negativeText("取消").show();
             } else {
                 mTargetClass = LoginActivity.class;
             }
@@ -166,7 +181,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (item.getItemId()) {
             case R.id.nav_menu_shake:
                 item.setChecked(true);
-                if (!login_status) {
+                if (!mIsLogin) {
                     mTargetClass = LoginActivity.class;
                 } else {
                     mTargetClass = ShakeActivity.class;
@@ -261,45 +276,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
     @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
-
-    @Override
-    public void showErrorInfo(String msg) {
-
-    }
-
-    @Override
-    public void updateView(User user) {
-        if (user != null) {
-            Log.e("TAG", user.toString());
-            login_status = true;
-            mName.setText(user.getName());
-            mNick.setText(user.getNick());
-            GlideApp.with(this)
-                    .load(user.getUrl())
-                    .placeholder(R.drawable.ic_account_circle)
-                    .error(R.drawable.ic_account_circle)
-                    .into(mAvatarIcon);
-        } else {
-            login_status = false;
-            mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
-            mName.setText("湖科音乐湖");
-            mNick.setText("未登录?去登录/注册吧!");
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         //结束下载任务
         TasksManager.getImpl().onDestroy();
         FileDownloader.getImpl().pauseAll();
         super.onDestroy();
     }
+
+
+    /**
+     * 设置用户状态信息
+     */
+    private void setUserStatusInfo() {
+        mIsLogin = UserStatus.getstatus(this);
+        if (mIsLogin) {
+            GlideApp.with(this)
+                    .load(UserStatus.getUserInfo(this).getAvatar())
+                    .placeholder(R.drawable.ic_account_circle)
+                    .error(R.drawable.ic_account_circle)
+                    .into(mAvatarIcon);
+            mName.setText(UserStatus.getUserInfo(this).getNick());
+            mNick.setText("音乐湖");
+        } else {
+            mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
+            mName.setText("音乐湖");
+            mNick.setText("未登录?去登录/注册吧!");
+        }
+    }
+
 }
