@@ -63,6 +63,8 @@ public class Music implements Parcelable {
         this.album = neteaseMusic.getAlbum().getName();
         this.albumId = neteaseMusic.getAlbum().getId();
         this.artist = neteaseMusic.getAuthors();
+        this.artistId = neteaseMusic.getAuthorIds();
+        this.artist = neteaseMusic.getAuthors();
         this.coverUri = neteaseMusic.getAlbum().getPicUrl();
         this.coverSmall = neteaseMusic.getAlbum().getPicUrl();
         this.coverBig = neteaseMusic.getAlbum().getPicUrl();

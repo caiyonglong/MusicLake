@@ -109,15 +109,19 @@ public class MusicApi {
         sourceData.setSource(music.getTypeName(true));
         sourceData.setName(music.getTitle());
         sourceData.setAlbum(new SourceData.AlbumBean(music.getAlbumId() + "", music.getAlbum(), music.getCoverUri()));
-        String[] artistIds = music.getArtistId().split(",");
-        String[] artists = music.getArtist().split(",");
-        List<SourceData.ArtistsBean> artistsBeans = new ArrayList<>();
-        for (int i = 0; i < artists.length; i++) {
-            SourceData.ArtistsBean artistsBean = new SourceData.ArtistsBean(artistIds[i],
-                    artists[i]);
-            artistsBeans.add(artistsBean);
+        try {
+            String[] artistIds = music.getArtistId().split(",");
+            String[] artists = music.getArtist().split(",");
+            List<SourceData.ArtistsBean> artistsBeans = new ArrayList<>();
+            for (int i = 0; i < artists.length; i++) {
+                SourceData.ArtistsBean artistsBean = new SourceData.ArtistsBean(artistIds[i],
+                        artists[i]);
+                artistsBeans.add(artistsBean);
+            }
+            sourceData.setArtists(artistsBeans);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        sourceData.setArtists(artistsBeans);
         collectionInfo.setSourceData(sourceData);
         LogUtil.e(TAG, collectionInfo.toString());
         return collectionInfo;

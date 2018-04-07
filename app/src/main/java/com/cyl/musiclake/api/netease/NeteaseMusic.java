@@ -370,6 +370,16 @@ public class NeteaseMusic implements Serializable {
         return artist.toString();
     }
 
+    public String getAuthorIds() {
+        if (artists.size() == 0) return null;
+
+        StringBuilder artist = new StringBuilder(artists.get(0).getId());
+        for (int i = 1; i < artists.size(); i++) {
+            artist.append(",").append(artists.get(i).getId());
+        }
+        return artist.toString();
+    }
+
 
     public void setArtists(List<ArtistsBeanX> artists) {
         this.artists = artists;
