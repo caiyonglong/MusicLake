@@ -16,6 +16,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
@@ -111,7 +112,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                         startActivity(intent);
                         break;
                     case R.id.popup_add_playlist:
-                        mPresenter.addPlaylist(music);
+                        AddPlaylistUtils.getPlaylist(this, music);
                         break;
                     case R.id.popup_song_download:
                         mPresenter.getMusicInfo(1, music);
@@ -207,30 +208,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     @Override
     public void showEmptyView() {
         mAdapter.setEmptyView(R.layout.view_song_empty);
-    }
-
-    @Override
-    public void showAddPlaylistDialog(List<Playlist> playlists, Music music) {
-        if (playlists == null) {
-            new MaterialDialog.Builder(this)
-                    .title("增加到歌单")
-                    .content("暂无歌单")
-                    .build().show();
-            return;
-        }
-        new MaterialDialog.Builder(this)
-                .title("增加到歌单")
-                .items(playlists)
-                .itemsCallback((dialog, itemView, which, text) -> {
-                    Playlist playlist = playlists.get(which);
-                    Log.d("addDialog", which + "----" + playlists.get(which).getId() + "------" + music.getId());
-                    mPresenter.collectMusic(playlist.getId(), music);
-                }).build().show();
-    }
-
-    @Override
-    public void showCollectStatus(boolean success, String msg) {
-        ToastUtils.show(msg);
     }
 
     @Override

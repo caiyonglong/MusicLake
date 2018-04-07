@@ -28,10 +28,10 @@ import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.source.PlaylistLoader;
 import com.cyl.musiclake.data.source.SongLoader;
+import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.PlaylistDetailContract;
-import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.PlaylistDetailPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
@@ -139,7 +139,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.newInstance(musicList.get(position)).show(getChildFragmentManager(), "ADD_PLAYLIST");
+                        AddPlaylistUtils.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
                         break;
                     case R.id.popup_song_delete:
                         new MaterialDialog.Builder(getContext())
@@ -147,8 +147,6 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                                 .content("是否移除这首歌曲？")
                                 .onPositive((dialog, which) -> {
                                     mPresenter.uncollectMusic(mPlaylist.getId(), position, musicList.get(position));
-//                                    PlaylistLoader.removeSong(getActivity(), mPlaylist.getId(), musicList.get(position).getId());
-//                                    mAdapter.notifyItemChanged(position);
                                 })
                                 .positiveText("确定")
                                 .negativeText("取消")
@@ -174,9 +172,6 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                         .content("是否删除这个歌单？")
                         .onPositive((dialog, which) -> {
                             mPresenter.deletePlaylist(mPlaylist);
-//                            PlaylistLoader.deletePlaylist(getActivity(), mPlaylist.getId());
-//                            RxBus.getInstance().post(new Playlist());
-//                            onBackPress();
                         })
                         .positiveText("确定")
                         .negativeText("取消")

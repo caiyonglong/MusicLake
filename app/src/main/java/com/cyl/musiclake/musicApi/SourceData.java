@@ -22,7 +22,6 @@ public class SourceData {
     private String name;
     private AlbumBean album;
     private String source;
-    private int commentId;
     private List<ArtistsBean> artists;
 
     public boolean isCp() {
@@ -63,14 +62,6 @@ public class SourceData {
 
     public void setSource(String source) {
         this.source = source;
-    }
-
-    public int getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(int commentId) {
-        this.commentId = commentId;
     }
 
     public List<ArtistsBean> getArtists() {
@@ -129,7 +120,6 @@ public class SourceData {
          * name : 薛之谦
          * avatar : http://pic.xiami.net/images/artistlogo/24/14688337551624_1.jpg
          */
-
         public ArtistsBean(String id, String name) {
             this.id = id;
             this.name = name;
@@ -171,7 +161,6 @@ public class SourceData {
                 ", name='" + name + '\'' +
                 ", album=" + album +
                 ", source='" + source + '\'' +
-                ", commentId=" + commentId +
                 ", artists=" + artists +
                 '}';
     }

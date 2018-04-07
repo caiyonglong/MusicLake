@@ -25,6 +25,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.adapter.NeteaseAdapter;
@@ -160,7 +161,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
                         startActivity(intent);
                         break;
                     case R.id.popup_add_playlist:
-                        mPresenter.addPlaylist(new Music(music));
+                        AddPlaylistUtils.getPlaylist(this, new Music(music));
                         break;
                     case R.id.popup_song_download:
                         action = 1;
@@ -247,26 +248,5 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
             DownloadDialog.newInstance(music)
                     .show(getSupportFragmentManager(), getLocalClassName());
         }
-    }
-
-    @Override
-    public void showAddPlaylistDialog(List<Playlist> playlists, Music music) {
-        if (playlists == null) {
-            ToastUtils.show("暂无歌单");
-            return;
-        }
-        new MaterialDialog.Builder(this)
-                .title("增加到歌单")
-                .items(playlists)
-                .itemsCallback((dialog, itemView, which, text) -> {
-                    Playlist playlist = playlists.get(which);
-                    Log.d("addDialog", which + "----" + playlists.get(which).getId() + "------" + music.getId());
-                    mPresenter.collectMusic(playlist.getId(), music);
-                }).build().show();
-    }
-
-    @Override
-    public void showCollectStatus(boolean success, String msg) {
-        ToastUtils.show(msg);
     }
 }

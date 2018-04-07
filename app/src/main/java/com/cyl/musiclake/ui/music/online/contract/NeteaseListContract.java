@@ -18,20 +18,11 @@ public interface NeteaseListContract {
         void showTopList(NeteaseList musicList);
 
         void showMusicInfo(Music music);
-
-        void showAddPlaylistDialog(List<Playlist> playlists, Music music);
-
-        void showCollectStatus(boolean success, String msg);
     }
 
     interface Presenter extends BasePresenter<View> {
         void loadNeteaseMusicList(int idx);
 
         void getMusicInfo(NeteaseMusic neteaseMusic);
-
-        void collectMusic(String pid, Music music);
-
-        void addPlaylist(Music music);
-
     }
 }

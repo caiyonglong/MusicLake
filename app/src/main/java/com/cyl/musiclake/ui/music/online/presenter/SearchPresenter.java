@@ -71,67 +71,6 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
     @Override
-    public void collectMusic(String pid, Music music) {
-        MusicApiServiceImpl.collectMusic(pid, music)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable disposable) {
-
-                    }
-
-                    @Override
-                    public void onNext(String status) {
-                        LogUtil.e("add", status);
-                        if (status.equals("true")) {
-                            mView.showCollectStatus(true, "收藏成功");
-                            RxBus.getInstance().post(new PlaylistEvent());
-                        } else if (status.equals("false")) {
-                            mView.showCollectStatus(false, "歌曲已存在");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    @Override
-    public void addPlaylist(Music music) {
-        MusicApiServiceImpl.getPlaylist()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Playlist>>() {
-                    @Override
-                    public void onSubscribe(Disposable disposable) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Playlist> playlists) {
-                        mView.showAddPlaylistDialog(playlists, music);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        mView.showAddPlaylistDialog(null, null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    @Override
     public void getMusicInfo(int type, Music music) {
         if (music.getType() == Music.Type.QQ || music.getType() == Music.Type.NETEASE) {
             MusicApi.getMusicInfo(music)
