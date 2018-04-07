@@ -72,6 +72,46 @@ public class XiamiServiceImpl {
                 });
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
+    public static Observable<Music> getMusicInfo(Music musicInfo) {
+        Map<String, String> params = new HashMap<>();
+        params.put("v", "2.0"); //page
+        params.put("page", "1"); //page
+        params.put("limit", "1");//limit
+        params.put("key", musicInfo.getTitle() + "-" + musicInfo.getArtist());// key
+        params.put("r", "search/songs");
+        params.put("app_key", "1");
+        params.put("format", "json");
+        return getApiService().searchByXiaMi(params)
+                .flatMap(xiaMiModel -> {
+                    List<Music> musicList = new ArrayList<>();
+                    List<XiamiModel.DataBean.SongsBean> songs = xiaMiModel.getData().getSongs();
+                    for (int i = 0; i < songs.size(); i++) {
+                        XiamiModel.DataBean.SongsBean song = songs.get(i);
+                        Music music = new Music();
+                        music.setType(Music.Type.XIAMI);
+                        music.setOnline(true);
+                        music.setId(String.valueOf(song.getSong_id()));
+                        music.setTitle(song.getSong_name());
+                        music.setArtist(song.getArtist_name());
+                        music.setArtistId(String.valueOf(song.getArtist_id()));
+                        music.setAlbum(song.getAlbum_name());
+                        music.setAlbumId(song.getAlbum_id());
+                        music.setUri(song.getListen_file());
+                        String cover = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_250w_250h";
+                        String coverBig = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_400w_400h";
+                        String coverSmall = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_150w_150h";
+                        music.setCoverUri(cover);
+                        music.setCoverBig(coverBig);
+                        music.setCoverSmall(coverSmall);
+                        music.setLrcPath(song.getLyric());
+                        musicList.add(music);
+                    }
+                    LogUtil.e("search", "xiami :" + musicList.size());
+                    return Observable.fromArray(musicList.get(0));
+                });
+    }
+
 
     @SuppressWarnings({"unchecked", "varargs"})
     public static Observable<String> getXimaiLyric(Music music) {

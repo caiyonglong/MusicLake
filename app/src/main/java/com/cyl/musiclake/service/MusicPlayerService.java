@@ -545,8 +545,8 @@ public class MusicPlayerService extends Service {
                             @Override
                             public void onNext(Music music) {
                                 LogUtil.e(TAG, "-----" + music.toString());
+                                mPlayingMusic = music;
                                 saveHistory();
-                                mHistoryPos.add(mPlayingPos);
                                 isMusicPlaying = true;
                                 mPlayer.setDataSource(mPlayingMusic.getUri());
                             }
@@ -647,10 +647,15 @@ public class MusicPlayerService extends Service {
             if (mPlayingPos < 0) {
                 return 0;
             }
-        } else {
-            int pos = mHistoryPos.size();
-            if (pos >= 1)
-                mPlayingPos = mHistoryPos.get(pos - 1);
+        } else if (mRepeatMode == PLAY_MODE_LOOP) {
+            if (mPlayingPos == 0) {
+                return mPlaylist.size() - 1;
+            } else if (mPlayingPos > 0) {
+                return mPlayingPos - 1;
+            }
+        } else if (mRepeatMode == PLAY_MODE_RANDOM) {
+            mPlayingPos = new Random().nextInt(mPlaylist.size());
+            return new Random().nextInt(mPlaylist.size());
         }
         return mPlayingPos;
     }

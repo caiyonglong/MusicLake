@@ -8,7 +8,6 @@ import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.musicApi.MusicApiServiceImpl;
-import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.online.contract.SearchContract;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -133,7 +132,7 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
     @Override
-    public void play(Music music) {
+    public void getMusicInfo(int type, Music music) {
         if (music.getType() == Music.Type.QQ || music.getType() == Music.Type.NETEASE) {
             MusicApi.getMusicInfo(music)
                     .subscribeOn(Schedulers.io())
@@ -146,7 +145,7 @@ public class SearchPresenter implements SearchContract.Presenter {
 
                         @Override
                         public void onNext(Music music) {
-                            PlayManager.playOnline(music);
+                            mView.showMusicInfo(type, music);
                         }
 
                         @Override
@@ -160,7 +159,7 @@ public class SearchPresenter implements SearchContract.Presenter {
                         }
                     });
         } else {
-            PlayManager.playOnline(music);
+            mView.showMusicInfo(type, music);
         }
     }
 

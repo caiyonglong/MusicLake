@@ -38,7 +38,7 @@ public class DownloadManagerFragment extends BaseFragment {
     @Override
     protected void loadData() {
         if (models.size() == 0) {
-
+            mAdapter.setEmptyView(R.layout.view_song_empty);
         }
     }
 
@@ -62,9 +62,6 @@ public class DownloadManagerFragment extends BaseFragment {
             getActivity().runOnUiThread(() -> {
                 if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
-                    if (models.size() == 0) {
-                        mAdapter.setEmptyView(R.layout.view_song_empty);
-                    }
                 }
             });
         }

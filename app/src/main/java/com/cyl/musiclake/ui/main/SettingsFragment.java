@@ -39,7 +39,7 @@ import static com.cyl.musiclake.service.MusicPlayerService.totalTime;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
-    private PreferenceScreen preference_about, preference_cache, preference_update, preference_test;
+    private PreferenceScreen mPreferenceAbout, mPreferenceCache, mPreferenceUpdate;
     public SwitchPreference mWifiSwitch, mTimingSwitch;
     public CheckBoxPreference mLyricCheckBox;
     private int time = 0;
@@ -64,7 +64,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         new Handler().post(() -> {
             try {
                 String size = DataClearmanager.getTotalCacheSize(getActivity());
-                preference_cache.setSummary(size);
+                mPreferenceCache.setSummary(size);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -97,18 +97,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * 初始化控件
      */
     private void initView() {
-        preference_about = (PreferenceScreen) findPreference("key_about");
-        preference_update = (PreferenceScreen) findPreference("key_update");
-        preference_cache = (PreferenceScreen) findPreference("key_cache");
-        preference_test = (PreferenceScreen) findPreference("key_test");
+        mPreferenceAbout = (PreferenceScreen) findPreference("key_about");
+        mPreferenceUpdate = (PreferenceScreen) findPreference("key_update");
+        mPreferenceCache = (PreferenceScreen) findPreference("key_cache");
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
         mTimingSwitch = (SwitchPreference) findPreference("key_timing");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
 
-        preference_about.setOnPreferenceClickListener(this);
-        preference_update.setOnPreferenceClickListener(this);
-        preference_cache.setOnPreferenceClickListener(this);
-        preference_test.setOnPreferenceClickListener(this);
+        mPreferenceAbout.setOnPreferenceClickListener(this);
+        mPreferenceUpdate.setOnPreferenceClickListener(this);
+        mPreferenceCache.setOnPreferenceClickListener(this);
         mTimingSwitch.setOnPreferenceClickListener(this);
         mLyricCheckBox.setOnPreferenceClickListener(this);
     }
@@ -180,10 +178,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
-            case "key_test":
-                Intent intent1 = new Intent(getActivity(), TestActivity.class);
-                startActivity(intent1);
-                break;
             case "key_about":
                 Intent intent = new Intent(getActivity(), AboutActivity.class);
                 startActivity(intent);
@@ -195,7 +189,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         DataClearmanager.cleanApplicationData(getActivity());
                         ToastUtils.show(getActivity(), "清除成功");
                         String size = DataClearmanager.getTotalCacheSize(getActivity());
-                        preference_cache.setSummary(size);
+                        mPreferenceCache.setSummary(size);
                     } catch (Exception e) {
                         //清除失败
                         ToastUtils.show(getActivity(), "清除失败");

@@ -19,6 +19,8 @@ public interface SearchContract {
         void showAddPlaylistDialog(List<Playlist> playlists, Music music);
 
         void showCollectStatus(boolean success, String msg);
+
+        void showMusicInfo(int type, Music music);
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -29,7 +31,7 @@ public interface SearchContract {
 
         void addPlaylist(Music music);
 
-        void play(Music music);
+        void getMusicInfo(int type, Music music);
     }
 
 }

@@ -14,7 +14,7 @@
         <SwitchPreference
             android:key="key_timing"
             android:title="@string/setting_timing" />
-        
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="wifi_mode"
@@ -26,9 +26,6 @@
     <PreferenceCategory android:title="@string/pref_header_data_sync">
 
         <PreferenceScreen
-            android:key="key_test"
-            android:title="@string/title_test" />
-        <PreferenceScreen
             android:key="key_cache"
             android:title="@string/pref_title_clear" />
         <PreferenceScreen
@@ -37,7 +34,6 @@
         <PreferenceScreen
             android:key="key_about"
             android:title="@string/title_about" />
-
 
 
     </PreferenceCategory>

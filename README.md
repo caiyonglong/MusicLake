@@ -14,14 +14,13 @@ Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构�
 - [x] 音频焦点控制
 - [x] QQ登录、在线歌单同步
 
-# 已知bug
-- [ ] 歌单中的虾米音乐暂时无法播放（java获取单首虾米音乐的api还未解析出来）
-- [ ] 缺少本地歌曲的专辑图片，使用豆瓣音乐api,获取专辑图片（不知道是不是请求次数太多的原因，有时报400 Bad Request）
-
 # 计划
 - [ ] 优化项目架构
 - [ ] 验证，修复bug
 - [ ] 完善百度音乐，QQ音乐、虾米音乐、网易云音乐的api
+
+# release note
+[点这下载](https://github.com/caiyonglong/MusicLake/releases)
 
 # 音乐来源
 - 绝大部分来源于[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)和[LIU9293/musicAPI](https://github.com/LIU9293/musicAPI)等

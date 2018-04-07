@@ -16,6 +16,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.SearchAdapter;
@@ -92,7 +93,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
             Log.e(TAG, music.toString());
-            mPresenter.play(music);
+            mPresenter.getMusicInfo(0, music);
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
@@ -113,8 +114,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                         mPresenter.addPlaylist(music);
                         break;
                     case R.id.popup_song_download:
-                        DownloadDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), getLocalClassName());
+                        mPresenter.getMusicInfo(1, music);
                         break;
                 }
                 return true;
@@ -231,5 +231,15 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     @Override
     public void showCollectStatus(boolean success, String msg) {
         ToastUtils.show(msg);
+    }
+
+    @Override
+    public void showMusicInfo(int type, Music music) {
+        if (type == 0) {
+            PlayManager.playOnline(music);
+        } else if (type == 1) {
+            DownloadDialog.newInstance(music)
+                    .show(getSupportFragmentManager(), getLocalClassName());
+        }
     }
 }

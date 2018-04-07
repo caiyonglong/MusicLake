@@ -81,6 +81,8 @@ public class MusicApi {
             return QQApiServiceImpl.getMusicInfo(music);
         } else if (music.getType() == Music.Type.NETEASE) {
             return NeteaseApiServiceImpl.getMusicUrl(music);
+        } else if (music.getType() == Music.Type.XIAMI) {
+            return XiamiServiceImpl.getMusicInfo(music);
         } else {
             return null;
         }
