@@ -27,10 +27,10 @@ Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构�
 - [sunzongzheng/musicApi](https://github.com/sunzongzheng/musicApi)
 
 # 项目运行截图
-<img src="screenshots/preview1.png" width="100px"/>
-<img src="screenshots/preview2.png" width="100px"/>
-<img src="screenshots/preview3.png" width="100px"/>
-<img src="screenshots/preview4.png" width="100px"/>
-<img src="screenshots/preview5.png" width="100px"/>
-<img src="screenshots/preview6.png" width="100px"/>
-<img src="screenshots/preview7.png" width="100px"/> 
+<img src="screenshots/preview1.png" width="300px"/>
+<img src="screenshots/preview2.png" width="300px"/>
+<img src="screenshots/preview3.png" width="300px"/>
+<img src="screenshots/preview4.png" width="300px"/>
+<img src="screenshots/preview5.png" width="300px"/>
+<img src="screenshots/preview6.png" width="300px"/>
+<img src="screenshots/preview7.png" width="300px"/> 
