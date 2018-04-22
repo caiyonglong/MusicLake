@@ -20,11 +20,11 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -303,10 +303,7 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
             email.setText(user.getEmail());
             phone.setText(user.getPhone());
             user_name.setText(user.getName());
-
-            GlideApp.with(this)
-                    .load(user.getAvatar())
-                    .into(header_img);
+            CoverLoader.loadImageView(this, user.getAvatar(), header_img);
         } else {
             ToastUtils.show(this, "数据加载失败");
             finish();

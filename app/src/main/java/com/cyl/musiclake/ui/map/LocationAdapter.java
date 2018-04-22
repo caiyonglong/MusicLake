@@ -1,18 +1,19 @@
 package com.cyl.musiclake.ui.map;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.map.location.Location;
+import com.cyl.musiclake.ui.my.user.User;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 
 import java.util.ArrayList;
@@ -22,41 +23,29 @@ import java.util.List;
  * Created by D22434 on 2018/1/4.
  */
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationAdapterHolder> {
+public class LocationAdapter extends BaseQuickAdapter<Location,BaseViewHolder> {
 
 
     private Context mContext;
     private List<Location> mData = new ArrayList<>();
-    private LayoutInflater mLayoutInflater;
     private String TAG = "LocationAdapter";
 
-    public LocationAdapter(Context mContext, List<Location> mData) {
-        this.mContext = mContext;
-        this.mData = mData;
-        mLayoutInflater = LayoutInflater.from(mContext);
+    public LocationAdapter( @Nullable List<Location> data) {
+        super(R.layout.item_near, data);
     }
 
     @Override
-    public LocationAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mView = mLayoutInflater.inflate(R.layout.item_near, parent, false);
-        return new LocationAdapterHolder(mView);
+    protected void convert(BaseViewHolder holder, Location location) {
+        User user = location.getUser();
+        String time = FormatUtil.getTimeDifference(location.getLocation_time());
+        holder.setText(R.id.user_name,user.getName());
+        holder.setText(R.id.user_signature,location.getUser_song());
+        holder.setText(R.id.location_time,String.format("%s在听：", time));
+//        holder.setText(R.id.user_distance,location.getLocation_time());
+        CoverLoader.loadImageView(mContext, user.getAvatar(), holder.getView(R.id.user_img));
+        Log.e(TAG, location.toString());
     }
 
-    @Override
-    public void onBindViewHolder(LocationAdapterHolder holder, int position) {
-
-        User user = mData.get(position).getUser();
-        String time = FormatUtil.getTimeDifference(mData.get(position).getLocation_time());
-        holder.user_name.setText(user.getName());
-        holder.user_signature.setText(mData.get(position).getUser_song());
-        holder.location_time.setText(String.format("%s在听：", time));
-        holder.user_distance.setVisibility(View.GONE);
-        GlideApp.with(mContext)
-                .load(user.getAvatar())
-                .into(holder.user_img);
-        Log.e(TAG, mData.get(position).toString());
-
-    }
 
     @Override
     public int getItemCount() {

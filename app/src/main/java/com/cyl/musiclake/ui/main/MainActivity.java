@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.source.download.TasksManager;
@@ -27,6 +26,7 @@ import com.cyl.musiclake.ui.music.local.fragment.PlayFragment;
 import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -290,11 +290,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void setUserStatusInfo() {
         mIsLogin = UserStatus.getstatus(this);
         if (mIsLogin) {
-            GlideApp.with(this)
-                    .load(UserStatus.getUserInfo(this).getAvatar())
-                    .placeholder(R.drawable.ic_account_circle)
-                    .error(R.drawable.ic_account_circle)
-                    .into(mAvatarIcon);
+            String url = UserStatus.getUserInfo(this).getAvatar();
+            CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(UserStatus.getUserInfo(this).getNick());
             mNick.setText("音乐湖");
         } else {

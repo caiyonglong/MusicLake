@@ -1,12 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
@@ -88,16 +83,8 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
 
     @Override
     public void loadAlbumArt(long albumID) {
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(CoverLoader.getInstance().getCoverUri(mContext, albumID))
-                .error(CoverLoader.getInstance().getCoverUriByRandom())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        mView.showAlbumArt(resource);
-                    }
-                });
+        CoverLoader.loadBitmapById(mContext, albumID, resource -> {
+            mView.showAlbumArt(resource);
+        });
     }
 }

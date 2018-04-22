@@ -8,9 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
@@ -18,6 +16,7 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.main.WebActivity;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
 import com.cyl.musiclake.ui.music.online.presenter.ArtistInfoPresenter;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import butterknife.BindView;
@@ -103,12 +102,7 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     public void showMusicInfo(DoubanMusic doubanMusic) {
-        GlideApp.with(this)
-                .asBitmap()
-                .load(doubanMusic.getMusics().get(0).getImage())
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(mAlbum);
+        CoverLoader.loadImageView(this, doubanMusic.getMusics().get(0).getImage(), mAlbum);
         DoubanMusic.MusicsBean.AttrsBean attrsBean = doubanMusic.getMusics().get(0).getAttrs();
         url = doubanMusic.getMusics().get(0).getAlt();
         name = attrsBean.getSinger().get(0);

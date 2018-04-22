@@ -63,7 +63,7 @@ public class SongLoader {
                         String artistId = cursor.getString(6);
                         long albumId = cursor.getLong(7);
                         String path = cursor.getString(8);
-                        String coverUri = CoverLoader.getInstance().getCoverUri(context, albumId);
+                        String coverUri = CoverLoader.getCoverUri(context, albumId);
                         Music music = dbDao.getMusicInfo(id + "");
                         if (music != null) {
                             if (coverUri != null) {
@@ -106,7 +106,7 @@ public class SongLoader {
                 String artistId = cursor.getString(6);
                 long albumId = cursor.getLong(7);
                 String path = cursor.getString(8);
-                String coverUri = CoverLoader.getInstance().getCoverUri(context, albumId);
+                String coverUri = CoverLoader.getCoverUri(context, albumId);
                 Music music = dbDao.getMusicInfo(id + "");
                 if (music != null) {
                     if (coverUri != null) {

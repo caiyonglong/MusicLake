@@ -85,6 +85,7 @@ dependencies {
 
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile 'com.jaeger.statusbaruitl:library:1.3.5'
 
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
 

@@ -1,20 +1,15 @@
 package com.cyl.musiclake.ui.music.local.presenter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.musicApi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.music.local.contract.PlaylistDetailContract;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.List;
@@ -129,17 +124,9 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
                             if (url != null)
                                 break;
                         }
-                        GlideApp.with(mContext)
-                                .load(url)
-                                .placeholder(R.drawable.default_cover)
-                                .error(R.drawable.default_cover)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(new SimpleTarget<Drawable>() {
-                                    @Override
-                                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                                        mView.showPlaylistArt(resource);
-                                    }
-                                });
+                        CoverLoader.loadBitmap(mContext,url,bitmap -> {
+                            mView.showPlaylistArt(bitmap);
+                        });
                     }
 
                     @Override

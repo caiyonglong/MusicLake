@@ -1,14 +1,11 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
-import android.widget.ImageView;
-
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.utils.ConvertUtils;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -27,13 +24,7 @@ public class NeteaseAdapter extends BaseQuickAdapter<NeteaseMusic, BaseViewHolde
     @Override
     protected void convert(BaseViewHolder holder, NeteaseMusic item) {
         String url = item.getAlbum().getPicUrl();
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url)
-                .error(R.drawable.default_cover)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into((ImageView) holder.getView(R.id.iv_cover));
-
+        CoverLoader.loadImageView(mContext, url, holder.getView(R.id.iv_cover));
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getName()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(getAuthor(item.getArtists()), item.getAlbum().getName()));
         holder.addOnClickListener(R.id.iv_more);

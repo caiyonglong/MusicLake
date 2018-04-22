@@ -3,18 +3,20 @@ package com.cyl.musiclake.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.v4.util.LruCache;
-import android.text.TextUtils;
+import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.bean.Music;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -22,188 +24,11 @@ import com.cyl.musiclake.bean.Music;
  * Glide加载异常处理
  */
 public class CoverLoader {
-    private static final String KEY_NULL = "null";
-    private static final String TAG = "CoverLoader";
-    /**
-     * 缩略图缓存，用于音乐列表
-     */
-    private LruCache<String, Bitmap> mThumbnailCache;
-    /**
-     * 高斯模糊图缓存，用于播放页背景
-     */
-    private LruCache<String, Bitmap> mBlurCache;
-    /**
-     * 圆形图缓存，用于播放页CD
-     */
-    private LruCache<String, Bitmap> mRoundCache;
-
-    private CoverLoader() {
-        // 获取当前进程的可用内存（单位KB）
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // 缓存大小为当前进程可用内存的1/8
-        int cacheSize = maxMemory / 8;
-        mThumbnailCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // 转换为KB，以达到与cacheSize的单位统一
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-        mBlurCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-        mRoundCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+    public interface BitmapCallBack {
+        void showBitmap(Bitmap bitmap);
     }
 
-    public static CoverLoader getInstance() {
-        return SingletonHolder.instance;
-    }
-
-    private static class SingletonHolder {
-        private static CoverLoader instance = new CoverLoader();
-    }
-
-    private Bitmap bitmap = null;
-
-    public Bitmap loadBitmapByGlide(Context context, String uri) {
-        try {
-            if (TextUtils.isEmpty(uri)) {
-                bitmap = mThumbnailCache.get(KEY_NULL);
-                if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.default_cover);
-                    mThumbnailCache.put(KEY_NULL, bitmap);
-                }
-            } else {
-                GlideApp.with(context)
-                        .asBitmap()
-                        .load(uri)
-                        .error(R.drawable.default_cover)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                bitmap = resource;
-                            }
-                        });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    public Bitmap loadThumbnail(String uri) {
-        Bitmap bitmap = null;
-        try {
-            if (TextUtils.isEmpty(uri)) {
-                bitmap = mThumbnailCache.get(KEY_NULL);
-                if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.default_cover);
-                    mThumbnailCache.put(KEY_NULL, bitmap);
-                }
-            } else {
-                bitmap = mThumbnailCache.get(uri);
-                if (bitmap == null) {
-                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 10);
-                    if (bitmap == null) {
-                        bitmap = loadThumbnail(null);
-                    }
-                    mThumbnailCache.put(uri, bitmap);
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return bitmap;
-    }
-
-
-    public Bitmap loadRound(String uri) {
-        Bitmap bitmap = null;
-        try {
-            if (TextUtils.isEmpty(uri)) {
-                bitmap = mRoundCache.get(KEY_NULL);
-                if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.music_eight);
-                    bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
-                    bitmap = ImageUtils.createCircleImage(bitmap);
-                    mRoundCache.put(KEY_NULL, bitmap);
-                }
-            } else {
-                bitmap = mRoundCache.get(uri);
-                if (bitmap == null) {
-                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
-                    if (bitmap == null) {
-                        bitmap = loadRound(null);
-                    } else {
-                        bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
-                        bitmap = ImageUtils.createCircleImage(bitmap);
-                    }
-                    mRoundCache.put(uri, bitmap);
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return bitmap;
-    }
-
-    public Bitmap loadNormal(String uri) {
-        Bitmap bitmap = null;
-        try {
-            if (TextUtils.isEmpty(uri)) {
-                bitmap = mRoundCache.get(KEY_NULL);
-                if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(MusicApp.getInstance().getResources(), R.drawable.default_cover);
-                    bitmap = ImageUtils.resizeImage(bitmap, SizeUtils.getScreenWidth() / 2, SizeUtils.getScreenWidth() / 2);
-                    mRoundCache.put(KEY_NULL, bitmap);
-                }
-            } else {
-                if (bitmap == null) {
-                    bitmap = loadBitmap(uri, SizeUtils.getScreenWidth() / 2);
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return bitmap;
-    }
-
-    /**
-     * 获得指定大小的bitmap
-     */
-    private Bitmap loadBitmap(String uri, int length) {
-        try {
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            // 仅获取大小
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(uri, options);
-            int maxLength = options.outWidth > options.outHeight ? options.outWidth : options.outHeight;
-            // 压缩尺寸，避免卡顿
-            int inSampleSize = maxLength / length;
-            if (inSampleSize < 1) {
-                inSampleSize = 1;
-            }
-            options.inSampleSize = inSampleSize;
-            // 获取bitmap
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeFile(uri, options);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    public String getCoverUri(Context context, long albumId) {
+    public static String getCoverUri(Context context, long albumId) {
         if (albumId == -1) {
             return null;
         }
@@ -223,7 +48,7 @@ public class CoverLoader {
         return uri;
     }
 
-    public String getCoverUriByMusic(Music music) {
+    public static String getCoverUriByMusic(Music music) {
         if (music.getCoverBig() != null)
             return music.getCoverBig();
         else if (music.getCoverUri() != null)
@@ -231,12 +56,113 @@ public class CoverLoader {
         else return music.getCoverSmall();
     }
 
-    public int getCoverUriByRandom() {
+
+    public static int getCoverUriByRandom() {
         int[] Bitmaps = {R.drawable.music_one, R.drawable.music_two, R.drawable.music_three,
                 R.drawable.music_four, R.drawable.music_five, R.drawable.music_six,
                 R.drawable.music_seven, R.drawable.music_eight, R.drawable.music_nine,
                 R.drawable.music_ten, R.drawable.music_eleven, R.drawable.music_twelve};
         int random = (int) (Math.random() * 12);
         return Bitmaps[random];
+    }
+
+    public static void loadImageViewByDouban(Context mContext, String info, ImageView imageView, BitmapCallBack bitmapCallBack) {
+        MusicApi.getMusicAlbumInfo(info)
+                .subscribe(new Observer<DoubanMusic>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(DoubanMusic doubanMusic) {
+                        if (doubanMusic.getCount() >= 1) {
+                            String url = doubanMusic.getMusics().get(0).getImage();
+                            if (imageView != null) {
+                                loadImageView(mContext, url, imageView);
+                            } else if (bitmapCallBack != null) {
+                                loadBitmap(mContext, url, bitmapCallBack);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    public static void loadImageViewByMusic(Context mContext, Music music, ImageView imageView) {
+        String url = getCoverUriByMusic(music);
+        loadImageView(mContext, url, imageView);
+    }
+
+    public static void loadImageViewById(Context mContext, long albumId, ImageView imageView) {
+        String url = getCoverUri(mContext, albumId);
+        loadImageView(mContext, url, imageView);
+    }
+
+    /**
+     * 显示图片
+     *
+     * @param mContext
+     * @param url
+     * @param imageView
+     */
+    public static void loadImageView(Context mContext, String url, ImageView imageView) {
+        GlideApp.with(mContext)
+                .load(url)
+                .error(getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    public static void loadImageView(Context mContext, String url, int defaultUrl, ImageView imageView) {
+        GlideApp.with(mContext)
+                .load(url)
+                .error(defaultUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    /**
+     * 根据id显示
+     *
+     * @param mContext
+     * @param albumId
+     * @param callBack
+     */
+    public static void loadBitmapById(Context mContext, long albumId, BitmapCallBack callBack) {
+        loadBitmap(mContext, getCoverUri(mContext, albumId), callBack);
+    }
+
+    /**
+     * 返回bitmap
+     *
+     * @param mContext
+     * @param url
+     * @param callBack
+     */
+    public static void loadBitmap(Context mContext, String url, BitmapCallBack callBack) {
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(url)
+                .error(getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        if (callBack != null) {
+                            callBack.showBitmap(resource);
+                        }
+                    }
+                });
     }
 }

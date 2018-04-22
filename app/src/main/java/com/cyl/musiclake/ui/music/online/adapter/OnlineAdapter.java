@@ -1,12 +1,10 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
-import android.widget.ImageView;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.baidu.BaiduMusicList.Billboard;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -25,10 +23,7 @@ public class OnlineAdapter extends BaseQuickAdapter<Billboard, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, Billboard mBillboard) {
         if (mBillboard.getName() == null || mBillboard.getPic_s192() == null)
             return;
-        GlideApp.with(mContext)
-                .load(mBillboard.getPic_s192())
-                .error(R.drawable.default_cover)
-                .into((ImageView) helper.getView(R.id.iv_cover));
+        CoverLoader.loadImageView(mContext, mBillboard.getPic_s192(), helper.getView(R.id.iv_cover));
 
         helper.setText(R.id.title, mBillboard.getName());
         List<Billboard.MusicLists> musicLists = mBillboard.getContent();

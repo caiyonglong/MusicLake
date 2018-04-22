@@ -16,14 +16,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
@@ -31,6 +28,7 @@ import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.adapter.NeteaseAdapter;
 import com.cyl.musiclake.ui.music.online.contract.NeteaseListContract;
 import com.cyl.musiclake.ui.music.online.presenter.NeteaseListPresenter;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.DialogUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
@@ -222,10 +220,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
         mTvTitle.setText(title);
         mTvDate.setText(getString(R.string.recent_update, FormatUtil.distime(time)));
         mTvDesc.setText(desc);
-        GlideApp.with(this)
-                .load(pic)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(mIvCover);
+        CoverLoader.loadImageView(this,pic,mIvCover);
         mAdapter.setHeaderView(mViewHeader, 0);
     }
 

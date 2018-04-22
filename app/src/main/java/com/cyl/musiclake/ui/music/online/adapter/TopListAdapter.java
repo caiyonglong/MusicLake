@@ -1,13 +1,11 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
-import android.widget.ImageView;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -26,11 +24,8 @@ public class TopListAdapter extends BaseQuickAdapter<NeteaseList, BaseViewHolder
     protected void convert(BaseViewHolder helper, NeteaseList neteaseList) {
         if (neteaseList.getName() == null || neteaseList.getCoverImgUrl() == null)
             return;
-        GlideApp.with(mContext)
-                .load(neteaseList.getCoverImgUrl())
-                .centerCrop()
-                .error(R.drawable.default_cover)
-                .into((ImageView) helper.getView(R.id.iv_cover));
+        CoverLoader.loadImageView(mContext, neteaseList.getCoverImgUrl(), helper.getView(R.id.iv_cover));
+
 
         helper.setText(R.id.title, neteaseList.getName());
         List<NeteaseMusic> musicLists = neteaseList.getTracks();

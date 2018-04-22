@@ -13,7 +13,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
@@ -33,11 +32,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
@@ -169,7 +164,6 @@ public class MusicPlayerService extends Service {
     public static boolean mShutdownScheduled = false;
     public static int totalTime = 0;
 
-    private Bitmap artwork = null;
     boolean mServiceInUse = false;
     //工作线程和Handler
     private MusicPlayerHandler mHandler;
@@ -1017,7 +1011,6 @@ public class MusicPlayerService extends Service {
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
-        artwork = CoverLoader.getInstance().loadThumbnail(null);
         mNotificationBuilder = new Builder(this, initChannelId())
                 .setSmallIcon(R.drawable.ic_icon)
                 .setContentIntent(clickIntent)
@@ -1051,19 +1044,11 @@ public class MusicPlayerService extends Service {
 
         if (mPlayingMusic != null) {
             String coverUrl = mPlayingMusic.getCoverUri();
-            GlideApp.with(this)
-                    .asBitmap()
-                    .load(coverUrl)
-                    .error(R.drawable.default_cover)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            mNotificationBuilder.setLargeIcon(resource);
-                            mNotification = mNotificationBuilder.build();
-                            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-                        }
-                    });
+            CoverLoader.loadBitmap(this, coverUrl, bitmap -> {
+                mNotificationBuilder.setLargeIcon(bitmap);
+                mNotification = mNotificationBuilder.build();
+                mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+            });
         }
         mNotification = mNotificationBuilder.build();
     }

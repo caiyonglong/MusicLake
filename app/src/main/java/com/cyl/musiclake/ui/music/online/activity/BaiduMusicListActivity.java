@@ -15,17 +15,17 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.ui.main.WebActivity;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
 import com.cyl.musiclake.ui.music.online.presenter.BaiduListPresenter;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -200,10 +200,7 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
         mTvTitle.setText(title);
 //        mTvDate.setText(getString(R.string.recent_update, playlistInfo.getUpdate_date()));
         mTvDesc.setText(desc);
-        GlideApp.with(this)
-                .load(pic)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(mIvCover);
+        CoverLoader.loadImageView(this,pic,mIvCover);
         mAdapter.setHeaderView(mViewHeader, 0);
     }
 

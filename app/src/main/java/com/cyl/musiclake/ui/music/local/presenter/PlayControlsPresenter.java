@@ -10,12 +10,8 @@ import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.AppRepository;
@@ -182,7 +178,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setTitle(title);
             mView.setArtist(artist);
         }
-        String picUrl = CoverLoader.getInstance().getCoverUriByMusic(music);
+        String picUrl = CoverLoader.getCoverUriByMusic(music);
         //设置音乐来源
         mView.setOtherInfo(music.getTypeName(false));
         //获取当前歌曲状态
@@ -193,19 +189,11 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
         if (!isPlayPauseClick && !activity.isFinishing()) {
             loadLyric();
-            GlideApp.with(mContext)
-                    .asBitmap()
-                    .load(picUrl != null ? picUrl : CoverLoader.getInstance().getCoverUriByRandom())
-                    .error(CoverLoader.getInstance().getCoverUriByRandom())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            mView.setAlbumArt(resource);
-                            mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(resource, mContext, 12));
-                            new Palette.Builder(resource).generate(palette -> mView.setPalette(palette));
-                        }
-                    });
+            CoverLoader.loadBitmap(mContext, picUrl, bitmap -> {
+                mView.setAlbumArt(bitmap);
+                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+                new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
+            });
         }
         isPlayPauseClick = false;
         mHandler.post(updateProgress);

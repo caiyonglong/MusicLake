@@ -1,14 +1,11 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
-import android.widget.ImageView;
-
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.baidu.BaiduMusicInfo;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -38,10 +35,7 @@ public class OnlineMusicAdapter extends BaseQuickAdapter<BaiduMusicInfo, BaseVie
         holder.setText(R.id.tv_title, baiduMusicInfo.getTitle());
         holder.setText(R.id.tv_artist, baiduMusicInfo.getArtist_name());
 
-        GlideApp.with(mContext)
-                .load(music.getCoverUri())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into((ImageView) holder.getView(R.id.iv_cover));
+        CoverLoader.loadImageView(mContext, music.getCoverUri(), holder.getView(R.id.iv_cover));
 
         holder.addOnClickListener(R.id.iv_more);
     }
