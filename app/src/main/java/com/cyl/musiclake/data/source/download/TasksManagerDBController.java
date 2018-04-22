@@ -1,11 +1,13 @@
 package com.cyl.musiclake.data.source.download;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.data.source.db.DBHelper;
+import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.util.ArrayList;
@@ -74,8 +76,10 @@ public class TasksManagerDBController {
         return succeed ? model : null;
     }
 
-    public void finishTask(TasksManagerModel model) {
-        model.setFinish(true);
-        db.rawQuery("update " + TABLE_NAME + " set " + TasksManagerModel.FINISH + "=1 where id=" + model.getId(), null);
+    public void finishTask(int id) {
+        ContentValues values = new ContentValues();
+        values.put(TasksManagerModel.FINISH, 1);
+        db.update(TABLE_NAME, values, "id =?", new String[]{id + ""});
+        LogUtil.e("finishTask");
     }
 }

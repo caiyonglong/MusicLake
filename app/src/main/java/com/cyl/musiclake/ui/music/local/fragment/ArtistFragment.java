@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
@@ -9,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.bean.Artist;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.ArtistAdapter;
@@ -28,8 +29,9 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class ArtistFragment extends BaseFragment implements ArtistContract.View {
-
+public class ArtistFragment extends BaseLazyFragment implements ArtistContract.View {
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
@@ -48,13 +50,6 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
         return fragment;
     }
 
-    /**
-     * 初始化数据
-     */
-    @Override
-    protected void loadData() {
-        mPresenter.loadArtists("all");
-    }
 
     /**
      * 初始化视图
@@ -83,6 +78,9 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
 
     @Override
     protected void listener() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadArtists("all");
+        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Artist artist = (Artist) adapter.getItem(position);
             NavigateUtil.navigateToArtist(getActivity(),
@@ -104,11 +102,18 @@ public class ArtistFragment extends BaseFragment implements ArtistContract.View 
     }
 
     @Override
+    public void onLazyLoad() {
+        mPresenter.loadArtists("all");
+    }
+
+    @Override
     public void showLoading() {
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
+        mSwipeRefreshLayout.setRefreshing(false);
         loading.setVisibility(View.GONE);
     }
 

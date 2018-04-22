@@ -1,10 +1,8 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
-import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +17,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.ui.main.WebActivity;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter2;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
@@ -45,7 +42,7 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
 
     private static final String TAG = "BaiduMusicListActivity";
     private List<Music> musicList = new ArrayList<>();
-    private SongAdapter mAdapter;
+    private SongAdapter2 mAdapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -94,7 +91,7 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
         mPresenter = new BaiduListPresenter(this);
         mPresenter.attachView(this);
 
-        mAdapter = new SongAdapter(musicList);
+        mAdapter = new SongAdapter2(musicList);
         mAdapter.setEnableLoadMore(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -123,12 +120,6 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance(music)
                                 .show(getSupportFragmentManager(), getLocalClassName());
-                        break;
-                    case R.id.popup_song_goto_artist:
-                        Log.e(TAG, music.toString());
-                        Intent intent = new Intent(this, ArtistInfoActivity.class);
-                        intent.putExtra(Extras.TING_UID, music);
-                        startActivity(intent);
                         break;
                     case R.id.popup_add_playlist:
                         ToastUtils.show("暂不支持添加百度音乐");
@@ -200,7 +191,7 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
         mTvTitle.setText(title);
 //        mTvDate.setText(getString(R.string.recent_update, playlistInfo.getUpdate_date()));
         mTvDesc.setText(desc);
-        CoverLoader.loadImageView(this,pic,mIvCover);
+        CoverLoader.loadImageView(this, pic, mIvCover);
         mAdapter.setHeaderView(mViewHeader, 0);
     }
 

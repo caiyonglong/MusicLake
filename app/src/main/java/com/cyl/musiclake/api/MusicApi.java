@@ -96,9 +96,7 @@ public class MusicApi {
      * 加载图片
      */
     public static Observable<DoubanMusic> getMusicAlbumInfo(String info) {
-        return DoubanApiServiceImpl.getMusicInfo(info)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return DoubanApiServiceImpl.getMusicInfo(info);
     }
 
     public static CollectionInfo getCollectInfo(Music music) {

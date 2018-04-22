@@ -124,7 +124,6 @@ public class TasksManager {
                 return model;
             }
         }
-
         return null;
     }
 
@@ -162,16 +161,14 @@ public class TasksManager {
     }
 
     public void finishTask(int id) {
-        TasksManagerModel model = getById(id);
-        dbController.finishTask(model);
+        dbController.finishTask( id);
     }
 
-    public TasksManagerModel addTask(final String mid, final String name, final String url, final String path) {
+    public TasksManagerModel addTask(final int id, final String mid, final String name, final String url, final String path) {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
             return null;
         }
 
-        final int id = FileDownloadUtils.generateId(url, path);
         TasksManagerModel model = getById(id);
         if (model != null) {
             return model;
@@ -188,7 +185,6 @@ public class TasksManager {
         if (TextUtils.isEmpty(url)) {
             return null;
         }
-
         return FileDownloadUtils.getDefaultSaveFilePath(url);
     }
 }

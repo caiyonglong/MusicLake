@@ -79,12 +79,13 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
                         mView.hideLoading();
                     }
                 });
+        CoverLoader.loadImageViewByDouban(mContext, albumName, null, resource -> {
+            mView.showAlbumArt(resource);
+        });
     }
 
     @Override
     public void loadAlbumArt(long albumID) {
-        CoverLoader.loadBitmapById(mContext, albumID, resource -> {
-            mView.showAlbumArt(resource);
-        });
+
     }
 }

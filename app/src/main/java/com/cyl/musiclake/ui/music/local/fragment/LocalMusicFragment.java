@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.PageAdapter;
 
@@ -16,7 +16,7 @@ import butterknife.BindView;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class LocalMusicFragment extends BaseFragment {
+public class LocalMusicFragment extends BaseLazyFragment {
     @BindView(R.id.m_viewpager)
     ViewPager viewPager;
     @BindView(R.id.tabs)
@@ -27,7 +27,7 @@ public class LocalMusicFragment extends BaseFragment {
 
     public static LocalMusicFragment newInstance(String flag) {
         Bundle args = new Bundle();
-        args.putString(Extras.SONG_CATEGORY, flag);
+        args.putString(Extras.SONG_DB, flag);
         LocalMusicFragment fragment = new LocalMusicFragment();
         fragment.setArguments(args);
         return fragment;
@@ -48,14 +48,6 @@ public class LocalMusicFragment extends BaseFragment {
         }
     }
 
-    @Override
-    protected void loadData() {
-        setupViewPager(viewPager);
-        mTabLayout.setupWithViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(0);
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
         adapter.addFragment(SongsFragment.newInstance(), "本地");
@@ -63,5 +55,13 @@ public class LocalMusicFragment extends BaseFragment {
         adapter.addFragment(ArtistFragment.newInstance(), "艺术家");
         adapter.addFragment(FoldersFragment.newInstance(), "文件夹");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onLazyLoad() {
+        setupViewPager(viewPager);
+        mTabLayout.setupWithViewPager(viewPager);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setCurrentItem(0);
     }
 }

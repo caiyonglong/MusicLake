@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -16,7 +17,9 @@ import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.bean.Music;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -24,6 +27,8 @@ import io.reactivex.disposables.Disposable;
  * Glide加载异常处理
  */
 public class CoverLoader {
+    private static final String TAG = "CoverLoader";
+
     public interface BitmapCallBack {
         void showBitmap(Bitmap bitmap);
     }
@@ -53,7 +58,8 @@ public class CoverLoader {
             return music.getCoverBig();
         else if (music.getCoverUri() != null)
             return music.getCoverUri();
-        else return music.getCoverSmall();
+        else
+            return music.getCoverSmall();
     }
 
 
@@ -68,6 +74,8 @@ public class CoverLoader {
 
     public static void loadImageViewByDouban(Context mContext, String info, ImageView imageView, BitmapCallBack bitmapCallBack) {
         MusicApi.getMusicAlbumInfo(info)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<DoubanMusic>() {
                     @Override
                     public void onSubscribe(Disposable disposable) {
@@ -76,6 +84,7 @@ public class CoverLoader {
 
                     @Override
                     public void onNext(DoubanMusic doubanMusic) {
+                        Log.d(TAG, "picUrl =" + doubanMusic.getCount());
                         if (doubanMusic.getCount() >= 1) {
                             String url = doubanMusic.getMusics().get(0).getImage();
                             if (imageView != null) {
@@ -88,12 +97,17 @@ public class CoverLoader {
 
                     @Override
                     public void onError(Throwable throwable) {
+                        Log.d(TAG, "throwable =" + throwable.getMessage());
+                        if (imageView != null) {
+                            loadImageView(mContext, String.valueOf(getCoverUriByRandom()), imageView);
+                        } else if (bitmapCallBack != null) {
+                            loadBitmap(mContext, String.valueOf(getCoverUriByRandom()), bitmapCallBack);
+                        }
                         throwable.printStackTrace();
                     }
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
 
@@ -154,6 +168,22 @@ public class CoverLoader {
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(url)
+                .error(getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        if (callBack != null) {
+                            callBack.showBitmap(resource);
+                        }
+                    }
+                });
+    }
+
+    public static void loadBitmap(Context mContext, BitmapCallBack callBack) {
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(getCoverUriByRandom())
                 .error(getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {

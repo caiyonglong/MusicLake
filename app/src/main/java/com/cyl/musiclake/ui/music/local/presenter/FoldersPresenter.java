@@ -59,6 +59,7 @@ public class FoldersPresenter implements FoldersContract.Presenter {
                         if (folderInfos.size() == 0) {
                             mView.showEmptyView();
                         }
+                        mView.hideLoading();
                     }
 
                     @Override

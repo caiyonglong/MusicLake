@@ -1,9 +1,6 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,12 +30,10 @@ import java.util.List;
 
 public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
-    private Context mContext;
     private List<TasksManagerModel> models = new ArrayList<>();
 
-    public TaskItemAdapter(Context context, List<TasksManagerModel> models) {
-        super(R.layout.item_download_music,models);
-        mContext = context;
+    public TaskItemAdapter(List<TasksManagerModel> models) {
+        super(R.layout.item_download_music, models);
         this.models = models;
     }
 
@@ -79,19 +74,17 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
         }
     };
 
-    @Override
-    protected TaskItemViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
-        TaskItemViewHolder holder = new TaskItemViewHolder(
-                LayoutInflater.from(
-                        parent.getContext())
-                        .inflate(R.layout.item_download_music, parent, false));
-
-        return holder;
-    }
+//    @Override
+//    protected TaskItemViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
+//        TaskItemViewHolder holder = new TaskItemViewHolder(
+//                LayoutInflater.from(
+//                        parent.getContext())
+//                        .inflate(R.layout.item_download_music, parent, false));
+//        return holder;
+//    }
 
     @Override
     protected void convert(TaskItemViewHolder holder, TasksManagerModel model) {
-
         holder.taskActionBtn.setOnClickListener(taskActionOnClickListener);
         holder.update(model.getId(), holder.getAdapterPosition());
         holder.taskActionBtn.setTag(holder);
@@ -237,8 +230,6 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
             taskPb = (ProgressBar) findViewById(R.id.task_pb);
             taskActionBtn = (Button) findViewById(R.id.task_action_btn);
         }
-
     }
-
 }
 

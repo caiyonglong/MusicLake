@@ -21,13 +21,10 @@ import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.data.source.PlaylistLoader;
-import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -35,7 +32,6 @@ import com.cyl.musiclake.ui.music.local.contract.PlaylistDetailContract;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.PlaylistDetailPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,35 +201,35 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                 }
                 intent3.putExtra("content", content.toString());
                 startActivity(intent3);
-                break;
-            case R.id.action_add:
-                List<String> titles = new ArrayList<>();
-                List<Music> addMusicList = SongLoader.getSongsForDB(getContext());
-                for (Music music : addMusicList) {
-                    titles.add(music.getTitle() + "-" + music.getArtist());
-                }
-                new MaterialDialog.Builder(getActivity())
-                        .title("新增歌曲")
-                        .iconRes(R.drawable.ic_playlist_add)
-                        .content("快速添加歌曲，更加方便地添加所需要的歌曲到当前目录")
-                        .positiveText("确定")
-                        .items(titles)
-                        .itemsCallbackMultiChoice(null, (dialog, which, text) -> false)
-                        .onPositive((dialog, which) -> {
-                            dialog.dismiss();
-                            int sum = dialog.getSelectedIndices().length, num = 0;
-                            for (int i = 0; i < sum; i++) {
-                                int index = dialog.getSelectedIndices()[i];
-                                boolean success = PlaylistLoader.addToPlaylist(getContext(), mPlaylist.getId(), addMusicList.get(index).getId());
-                                if (success) {
-                                    num++;
-                                }
-                            }
-                            mPresenter.loadPlaylistSongs(mPlaylist.getId());
-                            mPresenter.loadPlaylistArt(mPlaylist.getId());
-                            ToastUtils.show(getContext(), num + "首添加成功，" + (sum - num) + "首已存在此歌单添加失败");
-                            RxBus.getInstance().post(new Playlist());
-                        }).show();
+//                break;
+//            case R.id.action_add:
+//                List<String> titles = new ArrayList<>();
+//                List<Music> addMusicList = SongLoader.getSongsForDB(getContext());
+//                for (Music music : addMusicList) {
+//                    titles.add(music.getTitle() + "-" + music.getArtist());
+//                }
+//                new MaterialDialog.Builder(getActivity())
+//                        .title("新增歌曲")
+//                        .iconRes(R.drawable.ic_playlist_add)
+//                        .content("快速添加歌曲，更加方便地添加所需要的歌曲到当前目录")
+//                        .positiveText("确定")
+//                        .items(titles)
+//                        .itemsCallbackMultiChoice(null, (dialog, which, text) -> false)
+//                        .onPositive((dialog, which) -> {
+//                            dialog.dismiss();
+//                            int sum = dialog.getSelectedIndices().length, num = 0;
+//                            for (int i = 0; i < sum; i++) {
+//                                int index = dialog.getSelectedIndices()[i];
+//                                boolean success = PlaylistLoader.addToPlaylist(getContext(), mPlaylist.getId(), addMusicList.get(index).getId());
+//                                if (success) {
+//                                    num++;
+//                                }
+//                            }
+//                            mPresenter.loadPlaylistSongs(mPlaylist.getId());
+//                            mPresenter.loadPlaylistArt(mPlaylist.getId());
+//                            ToastUtils.show(getContext(), num + "首添加成功，" + (sum - num) + "首已存在此歌单添加失败");
+//                            RxBus.getInstance().post(new Playlist());
+//                        }).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

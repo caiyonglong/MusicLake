@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.online.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
@@ -43,6 +44,8 @@ public class NeteasePlaylistFragment extends BaseFragment {
     ProgressBar progress;
     @BindView(R.id.loading)
     LinearLayout loading;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
     private TopListAdapter mAdapter;
     List<NeteaseList> neteaseLists = new ArrayList<>();
@@ -129,7 +132,6 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
                             @Override
                             public void onError(Throwable e) {
-
                             }
 
                             @Override
@@ -146,6 +148,9 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
     @Override
     protected void listener() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mSwipeRefreshLayout.setRefreshing(false);
+        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Intent intent = new Intent(getActivity(), NeteaseMusicListActivity.class);
             intent.putExtra("netease", neteaseLists.get(position));

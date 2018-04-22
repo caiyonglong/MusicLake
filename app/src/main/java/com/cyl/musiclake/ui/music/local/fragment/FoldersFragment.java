@@ -1,12 +1,13 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.bean.FolderInfo;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
@@ -21,8 +22,9 @@ import butterknife.BindView;
  * Created by D22434 on 2018/1/8.
  */
 
-public class FoldersFragment extends BaseFragment implements FoldersContract.View {
-
+public class FoldersFragment extends BaseLazyFragment implements FoldersContract.View {
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private FolderAdapter mAdapter;
@@ -38,24 +40,12 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
     }
 
     @Override
-    protected void loadData() {
-        mPresenter.loadFolders();
-    }
-
-    @Override
     public int getLayoutId() {
         return R.layout.fragment_recyclerview_notoolbar;
     }
 
     @Override
     public void initViews() {
-//        if (Build.VERSION.SDK_INT < 21 && view.findViewById(R.id.status_bar) != null) {
-//            view.findViewById(R.id.status_bar).setVisibility(View.GONE);
-//            if (Build.VERSION.SDK_INT >= 19) {
-//                int statusBarHeight = DensityUtil.getStatusBarHeight(getContext());
-//                view.findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
-//            }
-//        }
         mAdapter = new FolderAdapter(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
@@ -64,11 +54,13 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
 
         mPresenter = new FoldersPresenter(getActivity());
         mPresenter.attachView(this);
-
     }
 
     @Override
     protected void listener() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadFolders();
+        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
             NavigateUtil.navigateToFolderSongs(getActivity(), folderInfo.folderPath);
@@ -79,6 +71,11 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onLazyLoad() {
+        mPresenter.loadFolders();
     }
 
 
@@ -94,11 +91,11 @@ public class FoldersFragment extends BaseFragment implements FoldersContract.Vie
 
     @Override
     public void showLoading() {
-
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

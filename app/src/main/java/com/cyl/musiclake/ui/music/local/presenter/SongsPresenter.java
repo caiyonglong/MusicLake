@@ -45,7 +45,7 @@ public class SongsPresenter implements SongsContract.Presenter {
     @Override
     public void loadSongs(String action) {
         mView.showLoading();
-        AppRepository.getAllSongsRepository(mContext)
+        AppRepository.getAllSongsRepository(mContext, action)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {

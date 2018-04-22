@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.online.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -35,10 +36,8 @@ public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylis
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
     TextView tv_empty;
-    @BindView(R.id.progress)
-    ProgressBar progress;
-    @BindView(R.id.loading)
-    LinearLayout loading;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
     private OnlineAdapter mAdapter;
     //排行榜集合
@@ -80,6 +79,10 @@ public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylis
 
     @Override
     protected void listener() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadOnlinePlaylist();
+        });
+
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Billboard billboard = (Billboard) adapter.getItem(position);
             Intent intent = new Intent(getActivity(), BaiduMusicListActivity.class);
@@ -93,12 +96,12 @@ public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylis
 
     @Override
     public void showLoading() {
-        loading.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-        loading.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

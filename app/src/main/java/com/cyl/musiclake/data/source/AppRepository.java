@@ -6,6 +6,7 @@ import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.bean.FolderInfo;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Extras;
 
 import java.util.List;
 
@@ -17,8 +18,12 @@ import io.reactivex.Observable;
 
 public class AppRepository {
 
-    public static Observable<List<Music>> getAllSongsRepository(Context mContext) {
-        return SongLoader.getAllSongs(mContext);
+    public static Observable<List<Music>> getAllSongsRepository(Context mContext, String type) {
+        if (type.equals(Extras.SONG_LOCAL)){
+            return SongLoader.getAllLocalSongs(mContext);
+        }else {
+            return SongLoader.getAllSongs(mContext);
+        }
     }
 
     public static Observable<Music> updateFavoriteSongRepository(Context mContext, Music music) {

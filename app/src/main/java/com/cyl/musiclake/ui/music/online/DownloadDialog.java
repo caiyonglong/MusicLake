@@ -47,19 +47,22 @@ public class DownloadDialog extends DialogFragment {
                 ).positiveText("确定")
                 .negativeText("取消")
                 .onPositive((materialDialog, dialogAction) -> {
-                    if (!NetworkUtils.isWifiConnected(getContext()) && SPUtils.getWifiMode()) {
+                    if (music.getUri().isEmpty()) {
+                        ToastUtils.show(getContext(), "下载地址异常！");
+                    } else if (!NetworkUtils.isWifiConnected(getContext()) && SPUtils.getWifiMode()) {
                         ToastUtils.show(getContext(), "当前不在wifi环境，请在设置中关闭省流量模式");
                     } else {
-                        TasksManagerModel model =
-                                TasksManager.getImpl().addTask(music.getId(), music.getTitle(), music.getUri(), FileUtils.getMusicDir() + music.getTitle() + ".mp3");
-                        ToastUtils.show(getContext(), "下载任务添加成功");
+                        ToastUtils.show("下载任务添加成功");
+                        String path = FileUtils.getMusicDir() + music.getTitle() + ".mp3";
                         BaseDownloadTask task = FileDownloader.getImpl()
-                                .create(model.getUrl())
-                                .setPath(model.getPath())
+                                .create(music.getUri())
+                                .setPath(path)
                                 .setCallbackProgressTimes(100)
                                 .setListener(new FileDownloadListener());
                         TasksManager.getImpl()
                                 .addTaskForViewHolder(task);
+                        TasksManagerModel model =
+                                TasksManager.getImpl().addTask(task.getId(), music.getId(), music.getTitle(), music.getUri(), path);
                         task.start();
                     }
                 }).build();

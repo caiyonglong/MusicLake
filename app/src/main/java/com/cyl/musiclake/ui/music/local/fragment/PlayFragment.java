@@ -316,8 +316,8 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
     @Override
     public void setAlbumArt(Drawable albumArt) {
+        //加载背景图过度
         TransitionAnimationUtils.startChangeAnimation(ivPlayingBg, albumArt);
-//        ivPlayingBg.setBackground(albumArt);
     }
 
     @Override

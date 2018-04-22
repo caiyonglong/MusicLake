@@ -25,6 +25,6 @@ public class AlbumAdapter extends BaseQuickAdapter<Album, BaseViewHolder> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             helper.getView(R.id.album).setTransitionName(Constants.TRANSTITION_ALBUM);
         }
-        CoverLoader.loadImageViewById(mContext, album.getId(), helper.getView(R.id.album));
+        CoverLoader.loadImageViewByDouban(mContext, album.getName(), helper.getView(R.id.album), null);
     }
 }

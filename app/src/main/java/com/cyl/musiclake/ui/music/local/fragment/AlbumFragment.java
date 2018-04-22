@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
@@ -9,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.bean.Album;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigateUtil;
 import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter;
@@ -28,8 +29,9 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
-
+public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.View {
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_empty)
@@ -48,15 +50,6 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
         fragment.setArguments(args);
         return fragment;
     }
-
-    /**
-     * 初始化数据
-     */
-    @Override
-    protected void loadData() {
-        mPresenter.loadAlbums("all");
-    }
-
 
     /**
      * 初始化视图
@@ -84,6 +77,9 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
 
     @Override
     protected void listener() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadAlbums("all");
+        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Album album = (Album) adapter.getItem(position);
             NavigateUtil.navigateToAlbum(getActivity(),
@@ -101,12 +97,18 @@ public class AlbumFragment extends BaseFragment implements AlbumsContract.View {
     }
 
     @Override
-    public void showLoading() {
+    public void onLazyLoad() {
+        mPresenter.loadAlbums("all");
+    }
 
+    @Override
+    public void showLoading() {
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

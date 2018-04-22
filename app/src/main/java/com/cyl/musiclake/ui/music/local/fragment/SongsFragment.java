@@ -1,6 +1,8 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,11 +11,11 @@ import android.widget.PopupMenu;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.data.source.SongLoader;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigateUtil;
+import com.cyl.musiclake.data.source.SongLoader;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.SongsContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
@@ -32,7 +34,9 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SongsFragment extends BaseFragment implements SongsContract.View {
+public class SongsFragment extends BaseLazyFragment implements SongsContract.View {
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private SongAdapter mAdapter;
@@ -48,11 +52,6 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     }
 
     @Override
-    protected void loadData() {
-        mPresenter.loadSongs(getArguments().getString(Extras.SONG_CATEGORY));
-    }
-
-    @Override
     public int getLayoutId() {
         return R.layout.fragment_recyclerview_notoolbar;
     }
@@ -61,7 +60,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     public void initViews() {
         mPresenter = new SongsPresenter(getActivity());
         mPresenter.attachView(this);
-
+        mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN);
         mAdapter = new SongAdapter(musicList);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -71,6 +70,8 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     @Override
     protected void listener() {
+        initPullRefresh();
+
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 mPresenter.playMusic(musicList, position);
@@ -124,6 +125,12 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
         });
     }
 
+    private void initPullRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadSongs(Extras.SONG_LOCAL);
+        });
+    }
+
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -131,11 +138,20 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     }
 
     @Override
+    public void onLazyLoad() {
+        mPresenter.loadSongs(Extras.SONG_DB);
+    }
+
+    @Override
     public void showLoading() {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

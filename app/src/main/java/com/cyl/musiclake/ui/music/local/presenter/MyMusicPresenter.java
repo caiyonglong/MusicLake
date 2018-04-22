@@ -5,6 +5,7 @@ import android.content.Context;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.source.AppRepository;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.LoginEvent;
@@ -121,7 +122,7 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
     public void loadSongs() {
         updateHistory();
         updatePlaylist();
-        AppRepository.getAllSongsRepository(mContext)
+        AppRepository.getAllSongsRepository(mContext, Extras.SONG_DB)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {

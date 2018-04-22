@@ -3,7 +3,6 @@ package com.cyl.musiclake.base;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,24 +39,8 @@ public abstract class BaseFragment extends RxFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         initViews();
         listener();
-        if (isLazyLoad()) {
-            isViewCreated = true;
-            lazyLoad();
-        } else {
-            loadData();
-        }
-
+        loadData();
     }
-
-    /**
-     * 是否懒加载
-     *
-     * @return the boolean
-     */
-    protected boolean isLazyLoad() {
-        return true;
-    }
-
 
     protected void listener() {
 
@@ -83,29 +66,8 @@ public abstract class BaseFragment extends RxFragment {
 
     public abstract void initViews();
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (rootView == null) {
-            return;
-        }
-        if (isVisibleToUser) {
-            isFragmentVisible = true;
-            lazyLoad();
-        } else {
-            isFragmentVisible = false;
-        }
-    }
+    protected void loadData() {
 
-    private void lazyLoad() {
-        //这里进行双重标记判断,是因为setUserVisibleHint会多次回调,并且会在onCreateView执行前回调,必须确保onCreateView加载完毕且页面可见,才加载数据
-        if (isViewCreated && isFragmentVisible) {
-            loadData();
-            //数据加载完毕,恢复标记,防止重复加载
-            isViewCreated = false;
-            isFragmentVisible = false;
-            Log.e(getClass().getName(), "isVisible :可见加载数据");
-        }
     }
 
     @Override
@@ -142,8 +104,5 @@ public abstract class BaseFragment extends RxFragment {
         }
     }
 
-    protected void loadData() {
-
-    }
 
 }

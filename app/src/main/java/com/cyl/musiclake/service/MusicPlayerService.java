@@ -864,7 +864,7 @@ public class MusicPlayerService extends Service {
      * 获取正在播放进度
      */
     public long getCurrentPosition() {
-        if (mPlayer.isInitialized()) {
+        if (mPlayer != null && mPlayer.isInitialized()) {
             return mPlayer.position();
         } else {
             return 0;
@@ -875,7 +875,7 @@ public class MusicPlayerService extends Service {
      * 获取总时长
      */
     public long getDuration() {
-        if (mPlayer.isInitialized() && mPlayer.isPrepared()) {
+        if (mPlayer != null && mPlayer.isInitialized() && mPlayer.isPrepared()) {
             return mPlayer.duration();
         }
         return 0;

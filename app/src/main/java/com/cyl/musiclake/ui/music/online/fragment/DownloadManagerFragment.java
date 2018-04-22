@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.online.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -24,6 +25,8 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     TaskItemAdapter mAdapter;
     List<TasksManagerModel> models = new ArrayList<>();
@@ -49,8 +52,10 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     public void initViews() {
+        mSwipeRefreshLayout.setEnabled(false);
+
         models = TasksManager.getImpl().getModelList();
-        mAdapter = new TaskItemAdapter(getContext(), models);
+        mAdapter = new TaskItemAdapter(models);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);

@@ -68,9 +68,11 @@ public class SongLoader {
                         if (music != null) {
                             if (coverUri != null) {
                                 music.setCoverUri(coverUri);
+                                updateMusic(dbDao, music);
                             }
                         } else {
                             music = new Music(id, albumId, artistId, title, artist, album, duration, trackNumber, path);
+                            dbDao.insertSong(music);
                         }
                         results.add(music);
                     } while (cursor.moveToNext());
@@ -95,33 +97,6 @@ public class SongLoader {
      */
     public static Observable<List<Music>> getSongsForDB(Context context, final Cursor cursor) {
         DBDaoImpl dbDao = new DBDaoImpl(context);
-        if ((cursor != null) && (cursor.moveToFirst())) {
-            do {
-                long id = cursor.getLong(0);
-                String title = cursor.getString(1);
-                String artist = cursor.getString(2);
-                String album = cursor.getString(3);
-                int duration = cursor.getInt(4);
-                int trackNumber = cursor.getInt(5);
-                String artistId = cursor.getString(6);
-                long albumId = cursor.getLong(7);
-                String path = cursor.getString(8);
-                String coverUri = CoverLoader.getCoverUri(context, albumId);
-                Music music = dbDao.getMusicInfo(id + "");
-                if (music != null) {
-                    if (coverUri != null) {
-                        music.setCoverUri(coverUri);
-                        updateMusic(dbDao, music);
-                    }
-                } else {
-                    music = new Music(id, albumId, artistId, title, artist, album, duration, trackNumber, path);
-                    dbDao.insertSong(music);
-                }
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
         String sql = "select * from " + DBData.MUSIC_TABLE + " where " + DBData.IS_ONLINE + "=0";
         Cursor mCursor = dbDao.makeCursor(sql);
         return getSongsForCursor(context, mCursor);
@@ -217,6 +192,10 @@ public class SongLoader {
 
     public static Observable<List<Music>> getAllSongs(Context context) {
         return getSongsForDB(context, makeSongCursor(context, null, null));
+    }
+
+    public static Observable<List<Music>> getAllLocalSongs(Context context) {
+        return getSongsForMedia(context, makeSongCursor(context, null, null));
     }
 
     public static Observable<List<Music>> searchSongs(Context context, String searchString) {

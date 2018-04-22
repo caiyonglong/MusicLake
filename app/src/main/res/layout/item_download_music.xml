@@ -5,7 +5,8 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:layout_margin="5dp"
-    android:padding="5dp">
+    android:background="@drawable/bg_card"
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="0dp"

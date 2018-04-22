@@ -43,7 +43,8 @@ public class Extras {
     public static final String TING_UID = "ting_uid";
 
 
-    public static final String SONG_CATEGORY = "category";
+    public static final String SONG_LOCAL = "music_local";
+    public static final String SONG_DB = "music_db";
     public static final String IS_LOVE = "is_love";
     public static final String LOCAL_MUSIC = "local_music";
     public static final String PLAY_HISTORY = "history";

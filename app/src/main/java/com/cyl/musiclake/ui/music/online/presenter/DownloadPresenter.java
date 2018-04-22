@@ -57,6 +57,7 @@ public class DownloadPresenter implements DownloadContract.Presenter {
 
     @Override
     public void loadDownloadMusic() {
+        mView.showLoading();
         LogUtil.e("loadDownloadMusic");
         AppRepository.getFolderSongsRepository(mContext, FileUtils.getMusicDir()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,12 +74,12 @@ public class DownloadPresenter implements DownloadContract.Presenter {
 
                     @Override
                     public void onError(Throwable throwable) {
-
+                        mView.hideLoading();
                     }
 
                     @Override
                     public void onComplete() {
-
+                        mView.hideLoading();
                     }
                 });
     }

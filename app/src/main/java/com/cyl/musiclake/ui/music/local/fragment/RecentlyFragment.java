@@ -17,7 +17,7 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.PlayHistoryLoader;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter2;
 import com.cyl.musiclake.ui.music.local.contract.RecentlyContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
@@ -38,7 +38,7 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    private SongAdapter mAdapter;
+    private SongAdapter2 mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
     private RecentlyPresenter mPresenter;
 
@@ -65,7 +65,7 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mAdapter = new SongAdapter(musicInfos);
+        mAdapter = new SongAdapter2(musicInfos);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);

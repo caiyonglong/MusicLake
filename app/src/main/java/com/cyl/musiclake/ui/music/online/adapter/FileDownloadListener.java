@@ -2,6 +2,8 @@ package com.cyl.musiclake.ui.music.online.adapter;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadSampleListener;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
@@ -14,6 +16,8 @@ import com.liulishuo.filedownloader.model.FileDownloadStatus;
 
 public class FileDownloadListener extends FileDownloadSampleListener {
 
+    private static final String TAG = "FileDownloadListener";
+
     private TaskItemAdapter.TaskItemViewHolder checkCurrentHolder(final BaseDownloadTask task) {
         final TaskItemAdapter.TaskItemViewHolder tag = (TaskItemAdapter.TaskItemViewHolder) task.getTag();
         if (tag != null && tag.id != task.getId()) {
@@ -25,6 +29,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
         super.pending(task, soFarBytes, totalBytes);
+        LogUtil.d(TAG, "pending:" + task.getId() );
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -38,6 +43,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void started(BaseDownloadTask task) {
         super.started(task);
+        LogUtil.d(TAG, "started:" + task.getId() );
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -49,6 +55,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
         super.connected(task, etag, isContinue, soFarBytes, totalBytes);
+        LogUtil.d(TAG, "connected:" + task.getId() + "-" + soFarBytes + "-" + totalBytes);
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -62,6 +69,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
         super.progress(task, soFarBytes, totalBytes);
+        LogUtil.d(TAG, "progress:" + task.getId() + "-" + soFarBytes + "-" + totalBytes);
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -74,6 +82,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void error(BaseDownloadTask task, Throwable e) {
         super.error(task, e);
+        LogUtil.d(TAG, "error:" + task.getId() + "-" + e.getMessage());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -87,6 +96,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
         super.paused(task, soFarBytes, totalBytes);
+        LogUtil.d(TAG, "paused:" + task.getId() + "-" + soFarBytes + "-" + totalBytes);
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -100,6 +110,9 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void completed(BaseDownloadTask task) {
         super.completed(task);
+        LogUtil.d(TAG, "completed:" +task.getId() + "-" + task.getStatus());
+        ToastUtils.show(task.getFilename() + " 下载完成");
+        TasksManager.getImpl().finishTask(task.getId());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;

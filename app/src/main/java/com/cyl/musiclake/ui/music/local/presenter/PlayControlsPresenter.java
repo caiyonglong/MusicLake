@@ -189,11 +189,24 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
         if (!isPlayPauseClick && !activity.isFinishing()) {
             loadLyric();
-            CoverLoader.loadBitmap(mContext, picUrl, bitmap -> {
-                mView.setAlbumArt(bitmap);
-                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
-                new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
-            });
+            Log.d(TAG, "picUrl =" + picUrl);
+            if (picUrl != null) {
+                CoverLoader.loadBitmap(mContext, picUrl, bitmap -> {
+                    mView.setAlbumArt(bitmap);
+                    Log.d(TAG, "loadBitmap =");
+                    mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+                    new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
+                });
+            } else {
+                String info = music.getTitle();
+                Log.d(TAG, "picUrl =" + picUrl);
+                CoverLoader.loadImageViewByDouban(mContext, info, null, bitmap -> {
+                    Log.d(TAG, "loadImageViewByDouban =");
+                    mView.setAlbumArt(bitmap);
+                    mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+                    new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
+                });
+            }
         }
         isPlayPauseClick = false;
         mHandler.post(updateProgress);

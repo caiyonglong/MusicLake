@@ -13,7 +13,6 @@ public interface BaiduListContract {
         void showErrorInfo(String msg);
 
         void showOnlineMusicList(List<Music> musicList);
-
     }
 
     interface Presenter extends BasePresenter<View> {

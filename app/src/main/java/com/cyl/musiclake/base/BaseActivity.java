@@ -126,6 +126,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                 switch (action) {
                     case MusicPlayerService.META_CHANGED:
                         RxBus.getInstance().post(new MetaChangedEvent());
+                        RxBus.getInstance().post(new HistoryChangedEvent());
                         break;
                     case MusicPlayerService.PLAY_QUEUE_CHANGE:
                         RxBus.getInstance().post(new HistoryChangedEvent());
