@@ -6,15 +6,20 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -25,6 +30,7 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.utils.LogUtil;
 
 import java.io.File;
@@ -41,7 +47,7 @@ public class LyricView extends View {
     private int mBtnColor = Color.parseColor("#0091EA");  // 按钮颜色
     private int mHintColor = Color.parseColor("#FFFFFF");  // 提示语颜色
     private int mDefaultColor = Color.parseColor("#FFFFFF");  // 默认字体颜色
-    private int mIndicatorColor = Color.parseColor("#EFEFEF");  // 指示器颜色
+    private int mIndicatorColor = Color.parseColor("#ffb701");  // 指示器颜色
     private int mHighLightColor = Color.parseColor("#ffb701");  // 当前播放位置的颜色
     private int mCurrentShowColor = Color.parseColor("#AAAAAA");  // 当前拖动位置的颜色
 
@@ -72,6 +78,10 @@ public class LyricView extends View {
     private String mDefaultTime = "00:00";
     private String mDefaultHint = "暂无歌词";
     private Paint mTextPaint, mBtnPaint, mIndicatorPaint;
+    private LinearGradient linearGradient;
+    private Bitmap bitmap;
+    private StaticLayout staticLayout;
+    private TextPaint mNextLinePaint;
 
     private OnPlayerClickListener mClickListener;
 
@@ -104,6 +114,7 @@ public class LyricView extends View {
         initAllBounds();
     }
 
+
     /**
      * 初始化需要的尺寸
      */
@@ -124,19 +135,25 @@ public class LyricView extends View {
         mTextPaint = new Paint();
         mTextPaint.setDither(true);
         mTextPaint.setAntiAlias(true);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setTextAlign(Paint.Align.LEFT);
+
+        mNextLinePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        mNextLinePaint.setDither(true);
+        mNextLinePaint.setTextSize(getRawSize(TypedValue.COMPLEX_UNIT_SP, 18));
 
         mIndicatorPaint = new Paint();
         mIndicatorPaint.setDither(true);
         mIndicatorPaint.setAntiAlias(true);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_location);
+
         mIndicatorPaint.setTextSize(getRawSize(TypedValue.COMPLEX_UNIT_SP, 12));
-        mIndicatorPaint.setTextAlign(Paint.Align.CENTER);
+        mIndicatorPaint.setTextAlign(Paint.Align.RIGHT);
 
         mBtnPaint = new Paint();
         mBtnPaint.setDither(true);
         mBtnPaint.setAntiAlias(true);
-        mBtnPaint.setColor(mBtnColor);
-        mBtnPaint.setStrokeWidth(5.0f);
+        mBtnPaint.setColor(mDefaultColor);
+        mBtnPaint.setStrokeWidth(2.0f);
         mBtnPaint.setStyle(Paint.Style.STROKE);
     }
 
@@ -146,12 +163,13 @@ public class LyricView extends View {
         mShaderWidth = getMeasuredHeight() * 0.3f;
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         if (mLyricInfo != null && mLyricInfo.song_lines != null && mLyricInfo.song_lines.size() > 0) {
-            for (int i = 0, size = mLineCount; i < size; i++) {
-                float x = getMeasuredWidth() * 0.5f;
-                float y = getMeasuredHeight() * 0.5f + (i + 0.5f) * mLineHeight - 6 - mLineSpace * 0.5f - mScrollY;
+            for (int i = 0, line = 0, size = mLineCount; i < size; i++, line++) {
+                float x = 0f;//getMeasuredWidth() * 0.5f;
+                float y = getMeasuredHeight() * 0.5f + (line + 0.5f) * mLineHeight - 6 - mLineSpace * 0.5f - mScrollY;
                 if (y + mLineHeight * 0.5f < 0) {
                     continue;
                 }
@@ -159,27 +177,41 @@ public class LyricView extends View {
                     break;
                 }
                 if (i == mCurrentPlayLine - 1) {
-                    mTextPaint.setColor(mHighLightColor);
+                    mNextLinePaint.setColor(mHighLightColor);
                 } else {
                     if (mIndicatorShow && i == mCurrentShowLine - 1) {
-                        mTextPaint.setColor(mCurrentShowColor);
+                        mNextLinePaint.setColor(mCurrentShowColor);
                     } else {
-                        mTextPaint.setColor(mDefaultColor);
+                        mNextLinePaint.setColor(mDefaultColor);
                     }
                 }
                 if (y > getMeasuredHeight() - mShaderWidth || y < mShaderWidth) {
                     if (y < mShaderWidth) {
-                        mTextPaint.setAlpha(26 + (int) (23000.0f * y / mShaderWidth * 0.01f));
+                        mNextLinePaint.setAlpha(26 + (int) (23000.0f * y / mShaderWidth * 0.01f));
                     } else {
-                        mTextPaint.setAlpha(26 + (int) (23000.0f * (getMeasuredHeight() - y) / mShaderWidth * 0.01f));
+                        mNextLinePaint.setAlpha(26 + (int) (23000.0f * (getMeasuredHeight() - y) / mShaderWidth * 0.01f));
                     }
                 } else {
-                    mTextPaint.setAlpha(255);
+                    mNextLinePaint.setAlpha(255);
                 }
-                canvas.drawText(mLyricInfo.song_lines.get(i).content, x, y, mTextPaint);
+                mTextPaint.setTextAlign(Paint.Align.LEFT);
+
+                String tt = mLyricInfo.song_lines.get(i).content;
+                if (tt.trim().length() > 0) {
+                    canvas.save();
+                    int width = getMeasuredWidth() - mTimerBound.width() - mBtnWidth;
+                    canvas.translate(x, y);
+                    staticLayout =
+                            new StaticLayout(tt, mNextLinePaint, width, Layout.Alignment.ALIGN_NORMAL,
+                                    1, 0, true);
+                    line += staticLayout.getLineCount() - 1;
+                    staticLayout.draw(canvas);
+                    canvas.restore();
+                }
             }
         } else {
             mTextPaint.setColor(mHintColor);
+            mTextPaint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(mDefaultHint, getMeasuredWidth() * 0.5f, (getMeasuredHeight() + mLineHeight - 6) * 0.5f, mTextPaint);
         }
         /**
@@ -198,19 +230,17 @@ public class LyricView extends View {
      *
      * @param canvas
      */
+
     private void drawPlayer(Canvas canvas) {
         mBtnBound = new Rect(getMeasuredWidth() - mDefaultMargin - mBtnWidth, (int) (getMeasuredHeight() * 0.5f - mBtnWidth * 0.5f), getMeasuredWidth() - mDefaultMargin, (int) (getMeasuredHeight() * 0.5f + mBtnWidth * 0.5f));
 
-        Path path = new Path();
-        float radio = mBtnBound.width() * 0.3f;
-        float value = (float) Math.sqrt(Math.pow(radio, 2) - Math.pow(radio * 0.5f, 2));
-        path.moveTo(mBtnBound.centerX() - radio * 0.5f, mBtnBound.centerY() - value);
-        path.lineTo(mBtnBound.centerX() - radio * 0.5f, mBtnBound.centerY() + value);
-        path.lineTo(mBtnBound.centerX() + radio, mBtnBound.centerY());
-        path.lineTo(mBtnBound.centerX() - radio * 0.5f, mBtnBound.centerY() - value);
-        mBtnPaint.setAlpha(128);
-        canvas.drawPath(path, mBtnPaint);  // 绘制播放按钮的三角形
-        canvas.drawCircle(mBtnBound.centerX(), mBtnBound.centerY(), mBtnBound.width() * 0.48f, mBtnPaint);  // 绘制圆环
+        try {
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_location);
+            canvas.drawBitmap(bitmap, mBtnBound.centerX(), mBtnBound.top, mBtnPaint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -219,17 +249,25 @@ public class LyricView extends View {
      * @param canvas
      */
     private void drawIndicator(Canvas canvas) {
-        mIndicatorPaint.setColor(mIndicatorColor);
-        mIndicatorPaint.setAlpha(128);
+        //绘制当前时间
+        mIndicatorPaint.setColor(Color.WHITE);
+        mIndicatorPaint.setAlpha(255);
         mIndicatorPaint.setStyle(Paint.Style.FILL);
-        canvas.drawText(measureCurrentTime(), mTimerBound.width() * 0.5f + mDefaultMargin, (getMeasuredHeight() + mTimerBound.height() - 6) * 0.5f, mIndicatorPaint);
+        mIndicatorPaint.setShader(null);
+        canvas.drawText(measureCurrentTime(), getMeasuredWidth() - mBtnBound.width(), getMeasuredHeight() * 0.5f - mTimerBound.height() * 0.5f, mIndicatorPaint);
 
+        //绘制渐变线条
         Path path = new Path();
-        mIndicatorPaint.setStrokeWidth(2.0f);
+        mIndicatorPaint.setStrokeWidth(5.0f);
         mIndicatorPaint.setStyle(Paint.Style.STROKE);
-        mIndicatorPaint.setPathEffect(new DashPathEffect(new float[]{20, 10}, 0));
-        path.moveTo(mTimerBound.width() + mDefaultMargin, getMeasuredHeight() * 0.5f);
-        path.lineTo(mPlayable ? mBtnBound.left - 24 : getMeasuredWidth() - 24, getMeasuredHeight() * 0.5f);
+        float x = getMeasuredWidth() - mBtnBound.width() - mTimerBound.width() * 2;
+        float y = getMeasuredHeight() * 0.5f;
+        linearGradient = new LinearGradient(x, y, x + mTimerBound.width() * 2, y,
+                new int[]{Color.TRANSPARENT, mIndicatorColor},
+                null, LinearGradient.TileMode.CLAMP);
+        mIndicatorPaint.setShader(linearGradient);
+        path.moveTo(x, y);
+        path.lineTo(x + mTimerBound.width() * 2, y);
 
         canvas.drawPath(path, mIndicatorPaint);
     }
@@ -553,17 +591,13 @@ public class LyricView extends View {
      */
     private void smoothScrollTo(float toY) {
         final ValueAnimator animator = ValueAnimator.ofFloat(mScrollY, toY);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                if (mUserTouch) {
-                    animator.cancel();
-                    return;
-                }
-                mScrollY = (float) animation.getAnimatedValue();
-                invalidateView();
+        animator.addUpdateListener(animation -> {
+            if (mUserTouch) {
+                animator.cancel();
+                return;
             }
+            mScrollY = (float) animation.getAnimatedValue();
+            invalidateView();
         });
 
         animator.addListener(new AnimatorListenerAdapter() {
