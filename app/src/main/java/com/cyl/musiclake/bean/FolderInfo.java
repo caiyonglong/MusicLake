@@ -1,6 +1,8 @@
 package com.cyl.musiclake.bean;
 
-public class FolderInfo {
+import org.litepal.crud.DataSupport;
+
+public class FolderInfo extends DataSupport {
 
     public final String folderName;
     public final String folderPath;

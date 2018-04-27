@@ -1,5 +1,8 @@
 package com.cyl.musiclake.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yonglong on 2016/11/23.
  */
@@ -12,6 +15,8 @@ public class Album {
     private String cover;
     private long artistId;
     private int count;
+
+    private List<Music> songs = new ArrayList<>();
 
     public Album() {
     }
@@ -50,6 +55,34 @@ public class Album {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public void setArtistId(long artistId) {
+        this.artistId = artistId;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public List<Music> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(List<Music> songs) {
+        this.songs = songs;
     }
 
     @Override

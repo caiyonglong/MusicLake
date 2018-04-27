@@ -14,6 +14,8 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.tauth.Tencent;
 
+import org.litepal.LitePal;
+
 import java.net.Proxy;
 
 public class MusicApp extends Application {
@@ -36,6 +38,7 @@ public class MusicApp extends Application {
         super.onCreate();
         sInstance = this;
         mContext = this;
+        LitePal.initialize(this);
         UpdateUtils.init(this);
         SPUtils.init(this);
         FileDownloadLog.NEED_LOG = true;

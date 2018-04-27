@@ -1,5 +1,7 @@
 package com.cyl.musiclake.bean;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Playlist implements Serializable {
+public class Playlist extends DataSupport implements Serializable {
     //歌单id
     private String id;
     //歌单名
@@ -69,6 +71,14 @@ public class Playlist implements Serializable {
 
     public void setOrder(String order) {
         this.order = order;
+    }
+
+    public String getCoverUri() {
+        return coverUri;
+    }
+
+    public void setCoverUri(String coverUri) {
+        this.coverUri = coverUri;
     }
 
     @Override

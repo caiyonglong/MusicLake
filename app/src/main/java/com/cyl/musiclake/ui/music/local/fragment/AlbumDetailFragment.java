@@ -13,10 +13,10 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;

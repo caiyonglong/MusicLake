@@ -173,6 +173,8 @@
     <string name="share_article_url"><![CDATA[<string name=\"share_article_url\">%1$s分享【%2$s】：%3$s</string>]]></string>
     <string name="artist_detail">查看详情</string>
     <string name="title_test">测试</string>
+    <string name="playlist_name">歌单名</string>
+    <string name="playlist_creator">创建者</string>
 
 
 </resources>

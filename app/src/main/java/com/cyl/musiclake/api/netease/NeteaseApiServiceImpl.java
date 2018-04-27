@@ -66,6 +66,18 @@ public class NeteaseApiServiceImpl {
                 }));
     }
 
+    public static Observable<List<NeteaseList>> getTopPlaylist() {
+        return getApiService().getNeteasePlaylist()
+                .flatMap(topList -> Observable.create((ObservableOnSubscribe<List<NeteaseList>>) e -> {
+                    try {
+                        e.onNext(topList.getPlaylists());
+                        e.onComplete();
+                    } catch (Exception ep) {
+                        e.onError(ep);
+                    }
+                }));
+    }
+
     public static Observable<Music> getMusicUrl(Music music) {
         return getApiService().getMusicUrl(music.getId())
                 .flatMap(neteaseMusicUrl -> Observable.create((ObservableOnSubscribe<Music>) e -> {

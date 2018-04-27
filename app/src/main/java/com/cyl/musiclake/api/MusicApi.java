@@ -93,6 +93,16 @@ public class MusicApi {
     }
 
     /**
+     * 获取精品歌单
+     *
+     * @param
+     * @return
+     */
+    public static Observable<List<NeteaseList>> getTopPlaylist() {
+        return NeteaseApiServiceImpl.getTopPlaylist();
+    }
+
+    /**
      * 加载图片
      */
     public static Observable<DoubanMusic> getMusicAlbumInfo(String info) {

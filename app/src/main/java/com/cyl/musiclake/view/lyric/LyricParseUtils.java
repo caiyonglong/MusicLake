@@ -2,10 +2,6 @@ package com.cyl.musiclake.view.lyric;
 
 import android.util.Log;
 
-import com.cyl.musiclake.api.MusicApi;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.utils.FileUtils;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
 
 import java.io.BufferedReader;
@@ -19,8 +15,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import io.reactivex.Observable;
 
 /**
  * 歌词解析器

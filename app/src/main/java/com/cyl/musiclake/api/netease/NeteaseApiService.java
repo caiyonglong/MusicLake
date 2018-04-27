@@ -37,4 +37,8 @@ public interface NeteaseApiService {
     @Headers({"referer: http://music.163.com"})
     @GET("search")
     Observable<NeteaseBase<NeteaseSearchMusic>> searchByNetease(@QueryMap Map<String, String> params);
+
+    @Headers({"referer: http://music.163.com"})
+    @GET("top/playlist/highquality")
+    Observable<NeteasePlaylist> getNeteasePlaylist();
 }

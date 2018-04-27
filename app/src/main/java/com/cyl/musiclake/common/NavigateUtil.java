@@ -166,6 +166,13 @@ public class NavigateUtil {
         transaction.addToBackStack(fragment.getTag()).commit();
     }
 
+    public static void navigateFragment(Activity context, Fragment fragment) {
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(fragment.getTag()).commit();
+    }
+
     /**
      * 扫描文件夹
      *

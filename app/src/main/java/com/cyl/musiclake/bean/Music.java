@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.cyl.musiclake.api.netease.NeteaseMusic;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class Music implements Parcelable {
+public class Music extends DataSupport implements Parcelable {
     // 歌曲类型 本地/网络
     private Type type;
     // 歌曲id

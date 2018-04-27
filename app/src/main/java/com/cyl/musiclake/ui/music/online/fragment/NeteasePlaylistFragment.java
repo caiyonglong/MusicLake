@@ -74,8 +74,6 @@ public class NeteasePlaylistFragment extends BaseFragment {
         neteaseLists.add(new NeteaseList("法国 NRJ EuroHot 30 周榜"));
         neteaseLists.add(new NeteaseList("台湾Hito排行榜 "));
         neteaseLists.add(new NeteaseList("Beatport全球电子舞曲榜"));
-//        list.add("云音乐ACG音乐榜");
-//        list.add("云音乐嘻哈榜");
     }
 
     public static NeteasePlaylistFragment newInstance() {

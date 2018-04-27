@@ -44,6 +44,7 @@ import java.text.DecimalFormat;
 
 public class LyricView extends View {
 
+    private static final String TAG = "LyricView";
     private int mBtnColor = Color.parseColor("#0091EA");  // 按钮颜色
     private int mHintColor = Color.parseColor("#FFFFFF");  // 提示语颜色
     private int mDefaultColor = Color.parseColor("#FFFFFF");  // 默认字体颜色
@@ -121,7 +122,7 @@ public class LyricView extends View {
     private void initAllBounds() {
         setTextSize(15);
         setLineSpace(12);
-        mBtnWidth = (int) (getRawSize(TypedValue.COMPLEX_UNIT_SP, 24));
+        mBtnWidth = (int) (getRawSize(TypedValue.COMPLEX_UNIT_SP, 36));
         mTimerBound = new Rect();
         mIndicatorPaint.getTextBounds(mDefaultTime, 0, mDefaultTime.length(), mTimerBound);
 
@@ -169,7 +170,7 @@ public class LyricView extends View {
         if (mLyricInfo != null && mLyricInfo.song_lines != null && mLyricInfo.song_lines.size() > 0) {
             for (int i = 0, line = 0, size = mLineCount; i < size; i++, line++) {
                 float x = 0f;//getMeasuredWidth() * 0.5f;
-                float y = getMeasuredHeight() * 0.5f + (line + 0.5f) * mLineHeight - 6 - mLineSpace * 0.5f - mScrollY;
+                float y = getMeasuredHeight() * 0.5f + (line + 0.5f) * mLineHeight - mScrollY;
                 if (y + mLineHeight * 0.5f < 0) {
                     continue;
                 }
@@ -232,11 +233,12 @@ public class LyricView extends View {
      */
 
     private void drawPlayer(Canvas canvas) {
-        mBtnBound = new Rect(getMeasuredWidth() - mDefaultMargin - mBtnWidth, (int) (getMeasuredHeight() * 0.5f - mBtnWidth * 0.5f), getMeasuredWidth() - mDefaultMargin, (int) (getMeasuredHeight() * 0.5f + mBtnWidth * 0.5f));
-
         try {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_location);
-            canvas.drawBitmap(bitmap, mBtnBound.centerX(), mBtnBound.top, mBtnPaint);
+            mBtnBound = new Rect(getMeasuredWidth() - bitmap.getWidth(), (int) (getMeasuredHeight() * 0.5f - bitmap.getHeight())
+                    , getMeasuredWidth(), (int) (getMeasuredHeight() * 0.5f));
+
+            canvas.drawBitmap(bitmap, mBtnBound.left, mBtnBound.top, mBtnPaint);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -517,14 +519,10 @@ public class LyricView extends View {
         float to = Math.min(Math.max(0, (mScrollY - distance)), (mLineCount - 1) * mLineHeight);   // 综合考虑边界问题后得出的实际滑行距离
 
         mFlingAnimator = ValueAnimator.ofFloat(mScrollY, to);
-        mFlingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mScrollY = (float) animation.getAnimatedValue();
-                measureCurrentLine();
-                invalidateView();
-            }
+        mFlingAnimator.addUpdateListener(animation -> {
+            mScrollY = (float) animation.getAnimatedValue();
+            measureCurrentLine();
+            invalidateView();
         });
 
         mFlingAnimator.addListener(new AnimatorListenerAdapter() {
@@ -665,7 +663,8 @@ public class LyricView extends View {
             for (int i = 0, size = mLineCount; i < size; i++) {
                 LyricInfo.LineInfo lineInfo = mLyricInfo.song_lines.get(i);
                 if (lineInfo != null && lineInfo.start > time) {
-                    position = i;
+                    position = lineInfo.content.trim().isEmpty() ? i-1 : i ;
+                    LogUtil.e(TAG, lineInfo.toString() + "--" + mCurrentPlayLine + "----" + i);
                     break;
                 }
                 if (i == mLineCount - 1) {

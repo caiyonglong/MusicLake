@@ -1,14 +1,21 @@
 package com.cyl.musiclake.bean;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yonglong on 2016/11/23.
  */
 
-public class Artist {
+public class Artist extends DataSupport {
     private String name;
     private long id;
     private int count;
     private int trackNum;
+
+    private List<Music> songs = new ArrayList<>();
 
     public Artist() {
     }
@@ -30,5 +37,33 @@ public class Artist {
 
     public int getCount() {
         return count;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getTrackNum() {
+        return trackNum;
+    }
+
+    public void setTrackNum(int trackNum) {
+        this.trackNum = trackNum;
+    }
+
+    public List<Music> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(List<Music> songs) {
+        this.songs = songs;
     }
 }

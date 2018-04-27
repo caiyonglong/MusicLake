@@ -60,6 +60,7 @@ public class LyricInfo {
 
     static class LineInfo {
         String content;  // 歌词内容
+        int line;  // 歌词内容
         long start;  // 开始时间
 
         public String getContent() {
@@ -68,6 +69,7 @@ public class LyricInfo {
 
         public void setContent(String content) {
             this.content = content;
+            this.line = 1;
         }
 
         @Override

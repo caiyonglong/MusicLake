@@ -13,6 +13,7 @@ import com.cyl.musiclake.common.PageAdapter;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
+import com.jaeger.library.StatusBarUtil;
 
 import butterknife.BindView;
 
@@ -63,6 +64,7 @@ public class MainFragment extends BaseFragment {
                 toggle.setDisplayHomeAsUpEnabled(true);
             }
         }
+
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
         setupViewPager(mViewPager);
@@ -72,6 +74,7 @@ public class MainFragment extends BaseFragment {
     private void setupViewPager(ViewPager mViewPager) {
         mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.newInstance(), "我的");
+//        mAdapter.addFragment(FoundFragment.newInstance(), "发现");
         mAdapter.addFragment(BaiduPlaylistFragment.newInstance(), "百度");
         mAdapter.addFragment(NeteasePlaylistFragment.newInstance(), "网易");
         mViewPager.setAdapter(mAdapter);
