@@ -20,8 +20,6 @@ import butterknife.BindView;
  */
 public class EditActivity extends BaseActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.edit_content)
     EditText mEditText;
     String user_id;
@@ -34,8 +32,6 @@ public class EditActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

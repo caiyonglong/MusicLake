@@ -51,7 +51,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         style="@style/FabStyle"
-        android:src="@drawable/ic_play_arrow_white_18dp"
+        android:src="@drawable/ic_play"
         android:tag="bg_tint_accent_color"
         app:fab_size="normal"
         app:layout_anchor="@id/app_bar"
@@ -61,7 +61,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
         android:background="@color/background"
         android:clipToPadding="false"
         android:paddingTop="10dp"

@@ -13,7 +13,6 @@ import com.cyl.musiclake.common.PageAdapter;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
-import com.jaeger.library.StatusBarUtil;
 
 import butterknife.BindView;
 

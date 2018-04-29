@@ -53,9 +53,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
+public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
-    private static final String TAG = "PlayFragment";
+    private static final String TAG = "PlayControlFragment";
     public static View topContainer;
     //整个容器
     @BindView(R.id.container)
@@ -172,9 +172,9 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
         }
     }
 
-    public static PlayFragment newInstance() {
+    public static PlayControlFragment newInstance() {
         Bundle args = new Bundle();
-        PlayFragment fragment = new PlayFragment();
+        PlayControlFragment fragment = new PlayControlFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -233,7 +233,7 @@ public class PlayFragment extends BaseFragment implements SeekBar.OnSeekBarChang
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("PlayFragment", "--" + position);
+                Log.d("PlayControlFragment", "--" + position);
                 if (position == 1 && mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     mSlidingUpPaneLayout.setTouchEnabled(false);
                 } else {

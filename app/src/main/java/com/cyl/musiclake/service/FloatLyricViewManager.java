@@ -268,7 +268,6 @@ public class FloatLyricViewManager {
             }
             if (!mySortedMap.isEmpty()) {
                 topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
-                Log.e("TopPackage Name", topPackageName);
             }
         }
         return topPackageName;

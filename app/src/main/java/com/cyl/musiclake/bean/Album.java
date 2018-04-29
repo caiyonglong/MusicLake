@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Album {
 
-    private long id;
+    private String id;
     private String name;
     private String artistName;
     private String cover;
@@ -21,7 +21,7 @@ public class Album {
     public Album() {
     }
 
-    public Album(long id, String name, String artistName, long artistId, int count) {
+    public Album(String id, String name, String artistName, long artistId, int count) {
         this.name = name;
         this.id = id;
         this.artistName = artistName;
@@ -33,7 +33,7 @@ public class Album {
         return name;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -57,7 +57,7 @@ public class Album {
         this.cover = cover;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

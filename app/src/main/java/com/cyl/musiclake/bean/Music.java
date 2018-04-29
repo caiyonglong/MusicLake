@@ -28,7 +28,7 @@ public class Music extends DataSupport implements Parcelable {
     // 专辑id
     private String artistId;//{123,123,13}
     // 专辑id
-    private long albumId;
+    private String albumId;
     // 专辑内歌曲个数
     private int trackNumber;
     // 持续时间
@@ -63,7 +63,7 @@ public class Music extends DataSupport implements Parcelable {
         this.id = String.valueOf(neteaseMusic.getId());
         this.title = neteaseMusic.getName();
         this.album = neteaseMusic.getAlbum().getName();
-        this.albumId = neteaseMusic.getAlbum().getId();
+        this.albumId = String.valueOf(neteaseMusic.getAlbum().getId());
         this.artist = neteaseMusic.getAuthors();
         this.artistId = neteaseMusic.getAuthorIds();
         this.artist = neteaseMusic.getAuthors();
@@ -75,7 +75,7 @@ public class Music extends DataSupport implements Parcelable {
     }
 
 
-    public Music(long id, long albumId, String artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
+    public Music(long id, String albumId, String artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
         this.id = String.valueOf(id);
         this.title = title;
         this.artist = artist;
@@ -92,7 +92,7 @@ public class Music extends DataSupport implements Parcelable {
 
     public Music() {
         this.id = "";
-        this.albumId = -1;
+        this.albumId = "";
         this.artistId = "";
 
         this.title = "未知";
@@ -115,7 +115,7 @@ public class Music extends DataSupport implements Parcelable {
         artist = in.readString();
         album = in.readString();
         artistId = in.readString();
-        albumId = in.readLong();
+        albumId = in.readString();
         trackNumber = in.readInt();
         duration = in.readLong();
         love = in.readByte() != 0;
@@ -175,11 +175,11 @@ public class Music extends DataSupport implements Parcelable {
         this.artistId = artistId;
     }
 
-    public long getAlbumId() {
+    public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(long albumId) {
+    public void setAlbumId(String albumId) {
         this.albumId = albumId;
     }
 
@@ -350,7 +350,7 @@ public class Music extends DataSupport implements Parcelable {
         dest.writeString(artist);
         dest.writeString(album);
         dest.writeString(artistId);
-        dest.writeLong(albumId);
+        dest.writeString(albumId);
         dest.writeInt(trackNumber);
         dest.writeLong(duration);
         dest.writeByte((byte) (love ? 1 : 0));

@@ -43,7 +43,7 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
     }
 
     @Override
-    public void subscribe(long albumID) {
+    public void subscribe(String albumID) {
 
     }
 
@@ -85,7 +85,7 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
     }
 
     @Override
-    public void loadAlbumArt(long albumID) {
+    public void loadAlbumArt(String albumID) {
 
     }
 }

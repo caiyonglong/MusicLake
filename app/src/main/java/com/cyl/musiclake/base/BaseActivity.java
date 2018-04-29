@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cyl.musiclake.IMusicService;
@@ -27,6 +29,7 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.cyl.musiclake.service.PlayManager.mService;
@@ -39,10 +42,13 @@ import static com.cyl.musiclake.service.PlayManager.mService;
  */
 public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection {
 
+    @Nullable
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
     protected Handler mHandler;
     private PlayManager.ServiceToken mToken;
     private PlaybackStatus mPlaybackStatus;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,9 +64,15 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         //初始化黄油刀控件绑定框架
         ButterKnife.bind(this);
         initView();
+
+        if (hasToolbar() && mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         initData();
         listener();
     }
+
 
     protected abstract int getLayoutResID();
 
@@ -71,6 +83,17 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     protected void listener() {
 
     }
+
+    protected boolean hasToolbar() {
+        return true;
+    }
+
+    protected void setToolbarTitle(String name) {
+        if (hasToolbar() && mToolbar != null) {
+            mToolbar.setTitle(name);
+        }
+    }
+
 
     @Override
     protected void onStart() {
@@ -151,8 +174,17 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                         break;
                 }
             }
-
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

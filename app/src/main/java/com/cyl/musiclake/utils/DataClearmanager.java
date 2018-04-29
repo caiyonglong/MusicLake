@@ -191,7 +191,7 @@ public class DataClearmanager {
     }
 
     public static String getTotalCacheSize(Context context) throws Exception {
-        long cacheSize = getFolderSize(context.getCacheDir());
+        long cacheSize = getFolderSize(new File(FileUtils.getImageDir()));
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             cacheSize += getFolderSize(context.getExternalCacheDir());
         }

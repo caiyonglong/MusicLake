@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.zone;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -24,8 +23,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class NearPeopleAcivity extends BaseActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.user_name)
     TextView user_name;
     @BindView(R.id.user_logo)
@@ -56,10 +53,6 @@ public class NearPeopleAcivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setTitle("");
     }
 
     @Override

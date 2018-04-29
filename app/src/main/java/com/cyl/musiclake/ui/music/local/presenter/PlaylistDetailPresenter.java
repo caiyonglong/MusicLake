@@ -66,7 +66,7 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
 
                     @Override
                     public void onError(Throwable throwable) {
-
+                        LogUtil.e(TAG, throwable.getMessage());
                     }
 
                     @Override
@@ -124,7 +124,7 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
                             if (url != null)
                                 break;
                         }
-                        CoverLoader.loadBitmap(mContext,url,bitmap -> {
+                        CoverLoader.loadBitmap(mContext, url, bitmap -> {
                             mView.showPlaylistArt(bitmap);
                         });
                     }

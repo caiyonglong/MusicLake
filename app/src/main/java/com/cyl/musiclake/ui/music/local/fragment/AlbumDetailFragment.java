@@ -22,11 +22,13 @@ import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumDetailPresenter;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -46,7 +48,7 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     ImageView album_art;
 
 
-    long albumID;
+    String albumID;
     String transitionName;
     String title;
 
@@ -54,9 +56,15 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     private List<Music> musicInfos = new ArrayList<>();
     private AlbumDetailPresenter mPresenter;
 
-    public static AlbumDetailFragment newInstance(long id, String title, String transitionName) {
+    @OnClick(R.id.fab)
+    void onPlayAll() {
+        PlayManager.setPlayList(musicInfos);
+        PlayManager.play(0);
+    }
+
+    public static AlbumDetailFragment newInstance(String id, String title, String transitionName) {
         Bundle args = new Bundle();
-        args.putLong(Extras.ALBUM_ID, id);
+        args.putString(Extras.ALBUM_ID, id);
         args.putString(Extras.PLAYLIST_NAME, title);
         args.putString(Extras.TRANSITIONNAME, transitionName);
         AlbumDetailFragment fragment = new AlbumDetailFragment();
@@ -77,9 +85,10 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
 
     @Override
     public void initViews() {
-        albumID = getArguments().getLong(Extras.ALBUM_ID);
+        albumID = getArguments().getString(Extras.ALBUM_ID);
         transitionName = getArguments().getString(Extras.TRANSITIONNAME);
         title = getArguments().getString(Extras.PLAYLIST_NAME);
+        StatusBarUtil.setTranslucentForImageViewInFragment(getActivity(),0,album_art);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (transitionName != null) {

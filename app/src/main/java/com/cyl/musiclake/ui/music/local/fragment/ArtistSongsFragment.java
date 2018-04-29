@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -51,6 +52,13 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
     private ArtistSongsPresenter mPresenter;
+
+
+    @OnClick(R.id.fab)
+    void onPlayAll() {
+        PlayManager.setPlayList(musicInfos);
+        PlayManager.play(0);
+    }
 
     public static ArtistSongsFragment newInstance(String id, String title, String transitionName) {
         Bundle args = new Bundle();

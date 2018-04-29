@@ -121,6 +121,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 .itemsCallbackSingleChoice(getSelectTime(), (dialog, itemView, which, text) -> {
                     if (which == 0) {
                         updateTimeSwitch(false);
+                        mTimingSwitch.setSummary(null);
+                        time = times[which];
+                        startTimerService();
                     } else if (which == 5) {
                         dialog.cancel();
                         new MaterialDialog.Builder(getActivity())
@@ -183,19 +186,25 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 startActivity(intent);
                 break;
             case "key_cache":
-                new Handler().post(() -> {
-                    try {
-                        //清除缓存
-                        DataClearmanager.cleanApplicationData(getActivity());
-                        ToastUtils.show(getActivity(), "清除成功");
-                        String size = DataClearmanager.getTotalCacheSize(getActivity());
-                        mPreferenceCache.setSummary(size);
-                    } catch (Exception e) {
-                        //清除失败
-                        ToastUtils.show(getActivity(), "清除失败");
-                        e.printStackTrace();
-                    }
-                });
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.title_warning)
+                        .content(R.string.setting_clear_cache)
+                        .positiveText(R.string.sure)
+                        .onPositive((materialDialog, dialogAction) -> {
+                            new Handler().post(() -> {
+                                try {
+                                    //清除缓存
+                                    DataClearmanager.cleanApplicationData(getActivity());
+                                    ToastUtils.show(getActivity(), "清除成功");
+                                    String size = DataClearmanager.getTotalCacheSize(getActivity());
+                                    mPreferenceCache.setSummary(size);
+                                } catch (Exception e) {
+                                    //清除失败
+                                    ToastUtils.show(getActivity(), "清除失败");
+                                    e.printStackTrace();
+                                }
+                            });
+                        }).show();
                 break;
             case "key_update":
                 Beta.checkUpgrade();
@@ -219,18 +228,22 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * 检查桌面歌词所需的权限
      */
     private void checkLyricPermission() {
-        if (!SystemUtils.isOpenSystemWindow() && SystemUtils.isMarshmallow()) {
-            ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-            intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-            startActivityForResult(intent, 100);
-        } else if (!SystemUtils.isOpenUsageAccess() && SystemUtils.isMarshmallow()) {
-            ToastUtils.show(getActivity(), "获取<有权查看使用权限的应用>权限");
-            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            startActivityForResult(intent, 101);
-        } else {
-            mLyricCheckBox.setChecked(true);
-            ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
+        try {
+            if (!SystemUtils.isOpenSystemWindow() && SystemUtils.isMarshmallow()) {
+                ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                startActivityForResult(intent, 100);
+            } else if (!SystemUtils.isOpenUsageAccess() && SystemUtils.isMarshmallow()) {
+                ToastUtils.show(getActivity(), "获取<有权查看使用权限的应用>权限");
+                Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                startActivityForResult(intent, 101);
+            } else {
+                mLyricCheckBox.setChecked(true);
+                ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

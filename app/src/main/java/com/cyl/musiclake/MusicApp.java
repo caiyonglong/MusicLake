@@ -58,7 +58,7 @@ public class MusicApp extends Application {
     }
 
     private void initBugly() {
-        Bugly.init(getApplicationContext(), "fd892b37ea", true);
+        Bugly.init(getApplicationContext(), Constants.BUG_APP_ID, true);
         Beta.checkUpgrade(false, false);
     }
 

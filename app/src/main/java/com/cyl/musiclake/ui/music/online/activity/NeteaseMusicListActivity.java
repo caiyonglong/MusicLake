@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.music.online.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,9 +54,6 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-
     private View mViewHeader;
     ImageView mIvBackground;
     ImageView mIvCover;
@@ -89,11 +85,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
         pic = neteaseList.getCoverImgUrl();
         time = neteaseList.getTrackUpdateTime();
         toplist = neteaseList.getTracks();
-
-        mToolbar.setTitle(title + "(" + neteaseList.getTrackCount() + ")");
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbarTitle(getResources().getString(R.string.playlist_num, title, neteaseList.getTrackCount()));
         initHeaderView();
     }
 
@@ -220,7 +212,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
         mTvTitle.setText(title);
         mTvDate.setText(getString(R.string.recent_update, FormatUtil.distime(time)));
         mTvDesc.setText(desc);
-        CoverLoader.loadImageView(this,pic,mIvCover);
+        CoverLoader.loadImageView(this, pic, mIvCover);
         mAdapter.setHeaderView(mViewHeader, 0);
     }
 

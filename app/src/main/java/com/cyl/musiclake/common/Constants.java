@@ -139,7 +139,11 @@ public class Constants {
     /**
      * 虾米音乐Api*************************************************
      */
-    public static final String BASE_URL_XIAMI_MUSIC = "http://api.xiami.com/web?";
+    public static final String BASE_XIAMI_URL = "http://api.xiami.com/";
+    /**
+     * 酷狗音乐Api*************************************************
+     */
+    public static final String BASE_KUGOU_URL = "http://lyrics.kugou.com/";
     /**
      * 百度音乐Api*************************************************
      */
@@ -158,4 +162,14 @@ public class Constants {
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
     public static final String PARAM_QUERY = "query";
+
+
+    /**
+     * 在线歌单接口Api*************************************************
+     */
+
+    public static final String BASE_PLAYER_URL = "https://player-node.zzsun.cc/";
+
+    //bugly app_id
+    public static final String BUG_APP_ID = "fd892b37ea";
 }

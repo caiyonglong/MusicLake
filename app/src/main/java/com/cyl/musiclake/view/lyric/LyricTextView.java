@@ -4,17 +4,16 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
 
 public class LyricTextView extends View {
 
-    private int mDefaultColor = Color.parseColor("#FFFFFF");  // 默认字体颜色
-    private int mHighLightColor = Color.parseColor("#ffb701");  // 当前播放位置的颜色
+    private static final String TAG = "LyricTextView";
 
     private int mLineCount = 0;  // 行数
     private float mLineHeight;  // 行高
@@ -113,17 +112,19 @@ public class LyricTextView extends View {
                     (getHeight() + height) / 2, mHighLightPaint);
 
         } else {
+            LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + mLyricInfo.song_lines.size());
+
             if (mLyricInfo != null && mLyricInfo.song_lines != null && mLyricInfo.song_lines.size() > 0) {
                 mStartMillis = mLyricInfo.song_lines.get(mCurrentPlayLine).start;
-                if (mCurrentPlayLine == mLyricInfo.song_lines.size() - 1) {
-                    return;
+                if (mCurrentPlayLine >= mLyricInfo.song_lines.size() - 1) {
+                    mEndMillis = PlayManager.getDuration();
                 } else {
                     mEndMillis = mLyricInfo.song_lines.get(mCurrentPlayLine + 1).start;
                 }
                 content = mLyricInfo.song_lines.get(mCurrentPlayLine).content;
-                LogUtil.e("tmp =  " + content + " length = " + content.length());
+                LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + content.length());
 
-                if (content.length() > 0) {
+                if (content.length() > 0 && mEndMillis > mStartMillis) {
                     float tipTextWidth = mTextPaint.measureText(content);
                     Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
                     int height = (int) Math.ceil(fm.descent - fm.top) + 2;
@@ -137,7 +138,7 @@ public class LyricTextView extends View {
                             (getHeight() + height) / 2 + height);
                     canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
                             (getHeight() + height) / 2, mHighLightPaint);
-                } else {
+                } else if (mCurrentPlayLine > 0) {
                     content = mLyricInfo.getSong_lines().get(mCurrentPlayLine - 1).content;
                     float tipTextWidth = mTextPaint.measureText(content);
                     Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
@@ -186,6 +187,7 @@ public class LyricTextView extends View {
             mLyricInfo = lyricInfo;
             hasLyric = true;
             mLineCount = mLyricInfo.song_lines.size();
+            LogUtil.e(TAG, mLineCount + "===" + mLyricInfo.song_lines.toString());
         } else {
             hasLyric = false;
             mDefaultHint = "音乐湖，暂无歌词";
@@ -223,8 +225,11 @@ public class LyricTextView extends View {
                 position = mLineCount;
             }
         }
-        if (position > 0)
+        if (position > 0) {
             mCurrentPlayLine = position - 1;
+        } else {
+            mCurrentPlayLine = position;
+        }
     }
 
     /**

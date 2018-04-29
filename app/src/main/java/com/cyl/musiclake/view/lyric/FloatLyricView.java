@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,6 +23,8 @@ import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.lang.reflect.Field;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * 桌面歌词View
@@ -97,7 +98,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
     private ImageButton mCloseButton;
     private ImageButton mMusicButton;
     private LinearLayout mSettingLinearLayout;
-    private RelativeLayout mRelLyricView;
+    private LinearLayout mRelLyricView;
     private LinearLayout mLinLyricView;
     private FrameLayout mFrameBackground;
     private View mRootView;
@@ -267,6 +268,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         switch (v.getId()) {
             case R.id.music_app:
                 Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
             case R.id.btn_close:

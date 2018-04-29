@@ -34,9 +34,6 @@ import butterknife.OnClick;
  */
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-
     @BindView(R.id.cv)
     CardView cv;
     @BindView(R.id.fab)
@@ -63,13 +60,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     protected void initData() {
-        mToolbar.setTitle("用户登录");
+        setToolbarTitle("用户登录");
         usernameWrapper.setHint("用户名");
         passwordWrapper.setHint("密码");
         mPresenter = new LoginPresenter();

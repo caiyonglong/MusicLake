@@ -158,8 +158,10 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         Log.d(TAG, "updateNowPlayingCard" + mProgress);
         Music music = PlayManager.getPlayingMusic();
         if (music == null || PlayManager.getPlayList().size() == 0) {
-            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_cover);
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.header_material);
             mView.setAlbumArt(bitmap);
+            mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+            new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
             mView.setTitle(mContext.getResources().getString(R.string.app_name));
             mView.setArtist("");
             mView.updatePanelLayout(false);
@@ -178,7 +180,6 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             mView.setTitle(title);
             mView.setArtist(artist);
         }
-        String picUrl = CoverLoader.getCoverUriByMusic(music);
         //设置音乐来源
         mView.setOtherInfo(music.getTypeName(false));
         //获取当前歌曲状态
@@ -189,24 +190,12 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
         if (!isPlayPauseClick && !activity.isFinishing()) {
             loadLyric();
-            Log.d(TAG, "picUrl =" + picUrl);
-            if (picUrl != null) {
-                CoverLoader.loadBitmap(mContext, picUrl, bitmap -> {
-                    mView.setAlbumArt(bitmap);
-                    Log.d(TAG, "loadBitmap =");
-                    mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
-                    new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
-                });
-            } else {
-                String info = music.getTitle();
-                Log.d(TAG, "picUrl =" + picUrl);
-                CoverLoader.loadImageViewByDouban(mContext, info, null, bitmap -> {
-                    Log.d(TAG, "loadImageViewByDouban =");
-                    mView.setAlbumArt(bitmap);
-                    mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
-                    new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
-                });
-            }
+            CoverLoader.loadImageViewByMusic(mContext, music, bitmap -> {
+                mView.setAlbumArt(bitmap);
+                Log.d(TAG, "loadBitmap =");
+                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+                new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
+            });
         }
         isPlayPauseClick = false;
         mHandler.post(updateProgress);

@@ -1,12 +1,10 @@
 package com.cyl.musiclake.ui.music.local.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
@@ -40,8 +38,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.album_art)
     ImageView album_art;
     @BindView(R.id.foreground)
@@ -65,12 +61,11 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResID() {
-        return R.layout.playlist_detail;
+        return R.layout.frag_playlist_detail;
     }
 
     private void setAlbumart() {
-
-        mToolbar.setTitle(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
+        setToolbarTitle(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
         if (isAlbum == -1) {
             Log.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_FOREGROUND_COLOR) + "==\n"
             );
@@ -99,10 +94,6 @@ public class PlaylistDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setTitleTextColor(Color.WHITE);
-
         if (SystemUtils.isLollipop()) {
             getWindow().getEnterTransition().addListener(new EnterTransition());
         }
@@ -113,9 +104,6 @@ public class PlaylistDetailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case android.R.id.home:
-                finish();
-                break;
             case R.id.action_search:
                 final Intent intent = new Intent(this, SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

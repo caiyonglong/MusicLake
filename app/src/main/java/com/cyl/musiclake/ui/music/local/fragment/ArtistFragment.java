@@ -108,12 +108,14 @@ public class ArtistFragment extends BaseLazyFragment implements ArtistContract.V
 
     @Override
     public void showLoading() {
-        mSwipeRefreshLayout.setRefreshing(true);
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(false);
         loading.setVisibility(View.GONE);
     }
 

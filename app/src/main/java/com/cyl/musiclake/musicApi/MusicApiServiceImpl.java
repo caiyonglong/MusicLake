@@ -4,6 +4,7 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -20,10 +21,9 @@ import io.reactivex.ObservableOnSubscribe;
 
 public class MusicApiServiceImpl {
     private static final String TAG = "MusicApiServiceImpl";
-    private static final String BASE_URL = "https://player-node.zzsun.cc/";
 
     private static MusicApiService getMusicApiService() {
-        return ApiManager.getInstance().create(MusicApiService.class, BASE_URL);
+        return ApiManager.getInstance().create(MusicApiService.class, Constants.BASE_PLAYER_URL);
     }
 
     private static String getToken() {
@@ -47,7 +47,7 @@ public class MusicApiServiceImpl {
                         music.setTitle(musicInfo.getSourceData().getName());
                         music.setType(musicInfo.getSourceData().getSource());
                         music.setAlbum(musicInfo.getSourceData().getAlbum().getName());
-                        music.setAlbumId(Long.parseLong(musicInfo.getSourceData().getAlbum().getId()));
+                        music.setAlbumId(musicInfo.getSourceData().getAlbum().getId());
 
                         String artists = musicInfo.getSourceData().getArtists().get(0).getName();
                         String artistIds = musicInfo.getSourceData().getArtists().get(0).getId();
@@ -110,7 +110,7 @@ public class MusicApiServiceImpl {
 
 
     public static Observable<User> login(String token, String openid) {
-        return ApiManager.getInstance().create(MusicApiService.class, BASE_URL)
+        return ApiManager.getInstance().create(MusicApiService.class, Constants.BASE_PLAYER_URL)
                 .getUserInfo(token, openid)
                 .flatMap(userInfo -> Observable.fromArray(userInfo.getData()));
     }

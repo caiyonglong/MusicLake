@@ -2,6 +2,7 @@ package com.cyl.musiclake.common;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +18,8 @@ import android.view.View;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.service.MusicPlayerService;
+import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
@@ -39,7 +42,7 @@ public class NavigateUtil {
      * 跳转到专辑
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void navigateToAlbum(Activity context, long albumID, String title, Pair<View, String> transitionViews) {
+    public static void navigateToAlbum(Activity context, String albumID, String title, Pair<View, String> transitionViews) {
 
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
@@ -172,6 +175,25 @@ public class NavigateUtil {
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(fragment.getTag()).commit();
     }
+
+
+    public static Intent getNowPlayingIntent(Context context) {
+        final Intent intent = new Intent(context, MainActivity.class);
+        intent.setAction(Constants.DEAULT_NOTIFICATION);
+        return intent;
+    }
+
+    public static Intent getUpdateWidgetIntent(Context context) {
+        final Intent intent = new Intent("com.cyl.music_lake.appwidget_update");
+        return intent;
+    }
+
+    public static Intent getLyricIntent(Context context) {
+        Intent intent = new Intent(MusicPlayerService.ACTION_LYRIC);
+        intent.setComponent(new ComponentName(context, MusicPlayerService.class));
+        return intent;
+    }
+
 
     /**
      * 扫描文件夹

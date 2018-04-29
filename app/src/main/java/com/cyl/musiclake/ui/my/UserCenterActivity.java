@@ -41,8 +41,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class UserCenterActivity extends BaseActivity implements UserContract.View {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.header_img)
     CircleImageView header_img;
 
@@ -111,9 +109,6 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
 
     @Override
     protected void initView() {
-        mToolbar.setTitle("");
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

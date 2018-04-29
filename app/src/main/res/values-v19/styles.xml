@@ -21,4 +21,8 @@
         </item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
+
+    <style name="MainActivityTheme" parent="MyThemeBlue">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>

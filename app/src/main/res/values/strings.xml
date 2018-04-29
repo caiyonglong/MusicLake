@@ -7,8 +7,9 @@
     <string name="action_settings">设置</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>
-    <string name="header_author_name">用户名</string>
+    <string name="header_author_name">登录音乐湖</string>
     <string name="header_author_url">个性标签</string>
+
     <string name="plusone">+1</string>
     <string name="item_clicked" translatable="false">item clicked！</string>
     <string name="item_longclicked" translatable="false">item long clicked！</string>
@@ -69,6 +70,10 @@
     <string name="pref_title_about">关于</string>
     <string name="pref_title_update">检查更新</string>
     <string name="pref_title_clear">清除缓存</string>
+
+
+    <string name="title_warning">警告</string>
+    <string name="setting_clear_cache">是否确认清除所有图片缓存？</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
@@ -175,6 +180,11 @@
     <string name="title_test">测试</string>
     <string name="playlist_name">歌单名</string>
     <string name="playlist_creator">创建者</string>
+
+    <!-- 在线音乐-->
+    <string name="playlist_num">%1$s("%2$d")</string>
+
+    <string name="widget_standard">音乐湖</string>
 
 
 </resources>

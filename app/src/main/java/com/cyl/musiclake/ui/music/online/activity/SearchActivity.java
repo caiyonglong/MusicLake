@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +13,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
@@ -24,7 +22,6 @@ import com.cyl.musiclake.ui.music.online.SearchAdapter;
 import com.cyl.musiclake.ui.music.online.contract.SearchContract;
 import com.cyl.musiclake.ui.music.online.presenter.SearchPresenter;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +41,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private SearchAdapter mAdapter;
     private MaterialDialog mProgressDialog;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
@@ -66,8 +61,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mPresenter.attachView(this);
     }
 

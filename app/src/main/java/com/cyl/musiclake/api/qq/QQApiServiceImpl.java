@@ -62,7 +62,7 @@ public class QQApiServiceImpl {
                         music.setArtist(artists);
                         music.setArtistId(artistIds);
                         music.setAlbum(song.getAlbumname());
-                        music.setAlbumId(song.getAlbumid());
+                        music.setAlbumId(String.valueOf(song.getAlbumid()));
                         music.setDuration(song.getPubtime());
                         //qq音乐播放地址前缀,代表音乐品质 M500一般,M800高
                         music.setPrefix(song.getSize128() != 0 ? "M500" : "M800");

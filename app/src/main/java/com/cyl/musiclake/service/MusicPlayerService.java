@@ -894,10 +894,11 @@ public class MusicPlayerService extends Service {
         intent.putExtra("artist", getArtistName());
         intent.putExtra("album", getAlbumName());
         intent.putExtra("track", getTitle());
+        intent.putExtra("playing", isPlaying());
+
         if (PLAY_STATE_CHANGED.equals(what)) {
             intent.putExtra("prepare", mPlayer.isPrepared());
         }
-        intent.putExtra("playing", isPlaying());
         sendBroadcast(intent);
 
         if (META_CHANGED.equals(what)) {
@@ -1003,7 +1004,7 @@ public class MusicPlayerService extends Service {
                 ? artistName : artistName + " - " + albumName;
 
         int playButtonResId = isMusicPlaying
-                ? R.drawable.ic_pause : R.drawable.ic_play_arrow_white_18dp;
+                ? R.drawable.ic_pause : R.drawable.ic_play;
 
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
         nowPlayingIntent.setAction(Constants.DEAULT_NOTIFICATION);
@@ -1043,8 +1044,7 @@ public class MusicPlayerService extends Service {
         }
 
         if (mPlayingMusic != null) {
-            String coverUrl = mPlayingMusic.getCoverUri();
-            CoverLoader.loadBitmap(this, coverUrl, bitmap -> {
+            CoverLoader.loadImageViewByMusic(this, mPlayingMusic, bitmap -> {
                 mNotificationBuilder.setLargeIcon(bitmap);
                 mNotification = mNotificationBuilder.build();
                 mNotificationManager.notify(NOTIFICATION_ID, mNotification);

@@ -27,11 +27,12 @@ import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter2;
 import com.cyl.musiclake.ui.music.local.contract.PlaylistDetailContract;
 import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.PlaylistDetailPresenter;
 import com.cyl.musiclake.ui.zone.EditActivity;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
         PlayManager.play(0);
     }
 
-    private SongAdapter mAdapter;
+    private SongAdapter2 mAdapter;
     private List<Music> musicList = new ArrayList<>();
     private Playlist mPlaylist;
     private PlaylistDetailPresenter mPresenter;
@@ -80,7 +81,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
 
     @Override
     public int getLayoutId() {
-        return R.layout.playlist_detail;
+        return R.layout.frag_playlist_detail;
     }
 
     @Override
@@ -102,7 +103,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
         mPresenter = new PlaylistDetailPresenter(getContext());
         mPresenter.attachView(this);
 
-        mAdapter = new SongAdapter(musicList);
+        mAdapter = new SongAdapter2(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -163,7 +164,8 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
         int id = item.getItemId();
         switch (id) {
             case R.id.action_delete_playlist:
-                new MaterialDialog.Builder(getContext())
+                LogUtil.e("action_delete_playlist");
+                new MaterialDialog.Builder(getActivity())
                         .title("提示")
                         .content("是否删除这个歌单？")
                         .onPositive((dialog, which) -> {
@@ -174,6 +176,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                         .show();
                 break;
             case R.id.action_rename_playlist:
+                LogUtil.e("action_rename_playlist");
                 new MaterialDialog.Builder(getActivity())
                         .title("重命名歌单")
                         .positiveText("确定")

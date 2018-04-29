@@ -28,11 +28,11 @@ public interface AlbumDetailContract {
 
     interface Presenter extends BasePresenter<View> {
 
-        void subscribe(long albumID);
+        void subscribe(String albumID);
 
         void loadAlbumSongs(String albumName);
 
-        void loadAlbumArt(long albumID);
+        void loadAlbumArt(String albumID);
 
     }
 }

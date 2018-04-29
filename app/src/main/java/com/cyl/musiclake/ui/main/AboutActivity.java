@@ -19,9 +19,6 @@ public class AboutActivity extends BaseActivity {
     private final String url1 = "https://github.com/caiyonglong/MusicLake/issues/new";
     private final String url2 = "https://github.com/caiyonglong/MusicLake/blob/develop/README.md";
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-
     @BindView(R.id.version)
     TextView mVersion;
 
@@ -47,8 +44,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override

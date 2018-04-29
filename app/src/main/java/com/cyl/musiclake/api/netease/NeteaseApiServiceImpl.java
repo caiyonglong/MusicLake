@@ -34,7 +34,7 @@ public class NeteaseApiServiceImpl {
                         music.setOnline(true);
                         music.setId(String.valueOf(songInfo.getId()));
                         music.setAlbum(songInfo.getAlbum().getName());
-                        music.setAlbumId(songInfo.getAlbum().getId());
+                        music.setAlbumId(String.valueOf(songInfo.getAlbum().getId()));
                         music.setArtist(songInfo.getArtists().get(0).getName());
 //                        music.setArtistId(songInfo.getArtists().get(0).getId());
                         music.setTitle(songInfo.getName());

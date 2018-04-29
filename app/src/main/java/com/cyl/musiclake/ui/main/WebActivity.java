@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -24,8 +23,6 @@ import butterknife.BindView;
 public class WebActivity extends BaseActivity {
     private String url;
     private String title;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
 
     @BindView(R.id.webContent)
     FrameLayout mWebContent;
@@ -39,9 +36,7 @@ public class WebActivity extends BaseActivity {
     protected void initView() {
         url = getIntent().getStringExtra("url");
         title = getIntent().getStringExtra("title");
-        mToolbar.setTitle(title);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbarTitle(title);
     }
 
     @Override

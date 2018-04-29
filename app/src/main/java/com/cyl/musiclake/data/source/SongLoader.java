@@ -61,7 +61,7 @@ public class SongLoader {
                         int duration = cursor.getInt(4);
                         int trackNumber = cursor.getInt(5);
                         String artistId = cursor.getString(6);
-                        long albumId = cursor.getLong(7);
+                        String albumId = cursor.getString(7);
                         String path = cursor.getString(8);
                         String coverUri = CoverLoader.getCoverUri(context, albumId);
                         Music music = dbDao.getMusicInfo(id + "");

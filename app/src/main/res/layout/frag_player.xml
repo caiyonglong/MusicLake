@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top"
-    android:background="@drawable/bg_frag_player">
+    android:background="@drawable/bg_frag_player"
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="-24dp"
+        android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="24dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -69,9 +71,9 @@
 
         <LinearLayout
             android:id="@+id/detailView"
-            android:layout_marginTop="@dimen/dp_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
             android:orientation="vertical">
 
             <LinearLayout
@@ -205,4 +207,4 @@
     </LinearLayout>
 
     <include layout="@layout/play_control_menu" />
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

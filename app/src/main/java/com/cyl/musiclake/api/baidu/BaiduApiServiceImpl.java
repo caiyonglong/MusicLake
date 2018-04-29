@@ -55,7 +55,7 @@ public class BaiduApiServiceImpl {
                         music.setOnline(true);
                         music.setId(songInfo.getSong_id());
                         music.setAlbum(songInfo.getAlbum_title());
-                        music.setAlbumId(songInfo.getAlbum_id());
+                        music.setAlbumId(String.valueOf(songInfo.getAlbum_id()));
                         music.setArtist(songInfo.getArtist_name());
                         music.setArtistId(songInfo.getTing_uid());
                         music.setTitle(songInfo.getTitle());
@@ -88,7 +88,7 @@ public class BaiduApiServiceImpl {
                     music.setOnline(true);
                     music.setId(songInfo.getSongId());
                     music.setAlbum(songInfo.getAlbumName());
-                    music.setAlbumId(songInfo.getAlbumId());
+                    music.setAlbumId(String.valueOf(songInfo.getAlbumId()));
                     music.setArtistId(songInfo.getArtistId());
                     music.setArtist(songInfo.getArtistName());
                     music.setTitle(songInfo.getSongName());

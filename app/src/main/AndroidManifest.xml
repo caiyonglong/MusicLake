@@ -58,7 +58,8 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.my.LoginActivity"
             android:screenOrientation="portrait"
@@ -152,6 +153,21 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
+
+        <receiver
+            android:name=".view.desktop.StandardWidget"
+            android:label="@string/widget_standard">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.cyl.music_lake.metachanged" />
+                <action android:name="com.cyl.music_lake.play_state" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_standard" />
+        </receiver>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

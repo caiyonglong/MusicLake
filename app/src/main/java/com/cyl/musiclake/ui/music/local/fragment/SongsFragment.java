@@ -111,7 +111,7 @@ public class SongsFragment extends BaseLazyFragment implements SongsContract.Vie
                                     FileUtils.delFile(musicList.get(position).getUri());
                                     SongLoader.removeSong(getActivity(), musicList.get(position));
                                     musicList.remove(position);
-                                    mAdapter.notifyItemChanged(position);
+                                    mAdapter.setNewData(musicList);
                                 })
                                 .positiveText("确定")
                                 .negativeText("取消")

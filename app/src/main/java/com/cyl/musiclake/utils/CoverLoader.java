@@ -33,8 +33,8 @@ public class CoverLoader {
         void showBitmap(Bitmap bitmap);
     }
 
-    public static String getCoverUri(Context context, long albumId) {
-        if (albumId == -1) {
+    public static String getCoverUri(Context context, String albumId) {
+        if (albumId.equals("-1")) {
             return null;
         }
         String uri = null;
@@ -85,13 +85,14 @@ public class CoverLoader {
                     @Override
                     public void onNext(DoubanMusic doubanMusic) {
                         Log.d(TAG, "picUrl =" + doubanMusic.getCount());
+                        String url = null;
                         if (doubanMusic.getCount() >= 1) {
-                            String url = doubanMusic.getMusics().get(0).getImage();
-                            if (imageView != null) {
-                                loadImageView(mContext, url, imageView);
-                            } else if (bitmapCallBack != null) {
-                                loadBitmap(mContext, url, bitmapCallBack);
-                            }
+                            url = doubanMusic.getMusics().get(0).getImage();
+                        }
+                        if (imageView != null) {
+                            loadImageView(mContext, url, imageView);
+                        } else if (bitmapCallBack != null) {
+                            loadBitmap(mContext, url, bitmapCallBack);
                         }
                     }
 
@@ -99,9 +100,9 @@ public class CoverLoader {
                     public void onError(Throwable throwable) {
                         Log.d(TAG, "throwable =" + throwable.getMessage());
                         if (imageView != null) {
-                            loadImageView(mContext, String.valueOf(getCoverUriByRandom()), imageView);
+                            loadImageView(mContext,null, imageView);
                         } else if (bitmapCallBack != null) {
-                            loadBitmap(mContext, String.valueOf(getCoverUriByRandom()), bitmapCallBack);
+                            loadBitmap(mContext, null, bitmapCallBack);
                         }
                         throwable.printStackTrace();
                     }
@@ -118,7 +119,17 @@ public class CoverLoader {
         loadImageView(mContext, url, imageView);
     }
 
-    public static void loadImageViewById(Context mContext, long albumId, ImageView imageView) {
+    public static void loadImageViewByMusic(Context mContext, Music music, BitmapCallBack callBack) {
+        if (music == null) return;
+        String url = getCoverUriByMusic(music);
+        if (url != null) {
+            loadBitmap(mContext, url, callBack);
+        } else {
+            loadImageViewByDouban(mContext, music.getTitle(), null, callBack);
+        }
+    }
+
+    public static void loadImageViewById(Context mContext, String albumId, ImageView imageView) {
         String url = getCoverUri(mContext, albumId);
         loadImageView(mContext, url, imageView);
     }
@@ -133,7 +144,7 @@ public class CoverLoader {
     public static void loadImageView(Context mContext, String url, ImageView imageView) {
         GlideApp.with(mContext)
                 .load(url)
-                .error(getCoverUriByRandom())
+                .error(R.drawable.default_cover_player)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
@@ -153,7 +164,7 @@ public class CoverLoader {
      * @param albumId
      * @param callBack
      */
-    public static void loadBitmapById(Context mContext, long albumId, BitmapCallBack callBack) {
+    public static void loadBitmapById(Context mContext, String albumId, BitmapCallBack callBack) {
         loadBitmap(mContext, getCoverUri(mContext, albumId), callBack);
     }
 
@@ -167,7 +178,7 @@ public class CoverLoader {
     public static void loadBitmap(Context mContext, String url, BitmapCallBack callBack) {
         GlideApp.with(mContext)
                 .asBitmap()
-                .load(url)
+                .load(url == null ? getCoverUriByRandom() : url)
                 .error(getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
@@ -195,4 +206,22 @@ public class CoverLoader {
                     }
                 });
     }
+
+    public static void loadImageSync(Context mContext, BitmapCallBack callBack) {
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(getCoverUriByRandom())
+                .error(getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        if (callBack != null) {
+                            callBack.showBitmap(resource);
+                        }
+                    }
+                });
+    }
+
+
 }

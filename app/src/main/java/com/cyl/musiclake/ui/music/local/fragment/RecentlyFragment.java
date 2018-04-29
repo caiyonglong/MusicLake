@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.source.PlayHistoryLoader;
+import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter2;
 import com.cyl.musiclake.ui.music.local.contract.RecentlyContract;
@@ -146,8 +148,10 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
                         .content("是否清空播放历史？")
                         .onPositive((dialog, which) -> {
                             PlayHistoryLoader.clearPlayHistory(getActivity());
+                            RxBus.getInstance().post(new HistoryChangedEvent());
                             musicInfos.clear();
                             mAdapter.notifyDataSetChanged();
+                            showEmptyView();
                         })
                         .positiveText("确定")
                         .negativeText("取消")

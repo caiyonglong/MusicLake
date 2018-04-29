@@ -1,6 +1,7 @@
 package com.cyl.musiclake.api.xiami;
 
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
@@ -21,7 +22,7 @@ public class XiamiServiceImpl {
     private static final String TAG = "XiamiServiceImpl";
 
     public static XiamiService getApiService() {
-        return ApiManager.getInstance().create(XiamiService.class, "http://api.xiami.com/");
+        return ApiManager.getInstance().create(XiamiService.class, Constants.BASE_XIAMI_URL);
     }
 
     /**
@@ -56,7 +57,7 @@ public class XiamiServiceImpl {
                         music.setArtist(song.getArtist_name());
                         music.setArtistId(String.valueOf(song.getArtist_id()));
                         music.setAlbum(song.getAlbum_name());
-                        music.setAlbumId(song.getAlbum_id());
+                        music.setAlbumId(String.valueOf(song.getAlbum_id()));
                         music.setUri(song.getListen_file());
                         String cover = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_250w_250h";
                         String coverBig = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_400w_400h";
@@ -96,7 +97,7 @@ public class XiamiServiceImpl {
                         music.setArtist(song.getArtist_name());
                         music.setArtistId(String.valueOf(song.getArtist_id()));
                         music.setAlbum(song.getAlbum_name());
-                        music.setAlbumId(song.getAlbum_id());
+                        music.setAlbumId(String.valueOf(song.getAlbum_id()));
                         music.setUri(song.getListen_file());
                         String cover = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_250w_250h";
                         String coverBig = song.getAlbum_logo() + "@1e_1c_0i_1o_100Q_400w_400h";

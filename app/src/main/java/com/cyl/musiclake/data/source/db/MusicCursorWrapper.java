@@ -22,7 +22,7 @@ public class MusicCursorWrapper extends CursorWrapper {
         music.setArtistId(getString(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
         music.setArtist(getString(getColumnIndex(DBData.MUSIC_ARTIST)));
         music.setAlbum(getString(getColumnIndex(DBData.MUSIC_ALBUM)));
-        music.setAlbumId(getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
+        music.setAlbumId(getString(getColumnIndex(DBData.MUSIC_ALBUM_ID)));
 
         music.setDuration(getLong(getColumnIndex(DBData.MUSIC_TIME)));
         music.setUri(getString(getColumnIndex(DBData.MUSIC_PATH)));
@@ -53,7 +53,7 @@ public class MusicCursorWrapper extends CursorWrapper {
     }
 
     public Album getAlbum() {
-        long id = getLong(getColumnIndex(DBData.MUSIC_ALBUM_ID));
+        String id = getString(getColumnIndex(DBData.MUSIC_ALBUM_ID));
         String name = getString(getColumnIndex(DBData.MUSIC_ALBUM));
         long artistId = getLong(getColumnIndex(DBData.MUSIC_ARTIST_ID));
         String artist = getString(getColumnIndex(DBData.MUSIC_ARTIST));

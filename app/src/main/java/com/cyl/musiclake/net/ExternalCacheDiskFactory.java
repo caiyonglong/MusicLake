@@ -37,9 +37,9 @@ public class ExternalCacheDiskFactory extends DiskLruCacheFactory {
             if (cacheDirectory == null) {
                 return null;
             }
-            if (diskCacheName != null) {
-                return new File(cacheDirectory, diskCacheName);
-            }
+//            if (diskCacheName != null) {
+//                return new File(cacheDirectory, diskCacheName);
+//            }
             return cacheDirectory;
         }, diskCacheSize);
     }

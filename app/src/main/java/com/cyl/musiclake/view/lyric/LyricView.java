@@ -170,7 +170,7 @@ public class LyricView extends View {
         if (mLyricInfo != null && mLyricInfo.song_lines != null && mLyricInfo.song_lines.size() > 0) {
             for (int i = 0, line = 0, size = mLineCount; i < size; i++, line++) {
                 float x = 0f;//getMeasuredWidth() * 0.5f;
-                float y = getMeasuredHeight() * 0.5f + (line + 0.5f) * mLineHeight - mScrollY;
+                float y = getMeasuredHeight() * 0.5f + (line + 0.5f) * mLineHeight - 6 - mLineSpace * 0.5f - mScrollY;
                 if (y + mLineHeight * 0.5f < 0) {
                     continue;
                 }
@@ -663,7 +663,7 @@ public class LyricView extends View {
             for (int i = 0, size = mLineCount; i < size; i++) {
                 LyricInfo.LineInfo lineInfo = mLyricInfo.song_lines.get(i);
                 if (lineInfo != null && lineInfo.start > time) {
-                    position = lineInfo.content.trim().isEmpty() ? i-1 : i ;
+                    position = i;
                     LogUtil.e(TAG, lineInfo.toString() + "--" + mCurrentPlayLine + "----" + i);
                     break;
                 }

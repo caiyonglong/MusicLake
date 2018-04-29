@@ -39,8 +39,6 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
 
     @BindView(R.id.shake)
     ImageView imgBackground;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.shake_result)
     RecyclerView shake_result;
     public List<Location> mydatas = new ArrayList<>();
@@ -74,9 +72,6 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
 
     @Override
     protected void initView() {
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 

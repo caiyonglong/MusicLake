@@ -8,7 +8,6 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
-        android:layout_marginTop="-24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -50,8 +49,8 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         style="@style/FabStyle"
+        android:src="@drawable/ic_play"
         android:tag="bg_tint_accent_color"
-        android:src="@drawable/ic_play_arrow_white_18dp"
         app:fab_size="normal"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end" />
@@ -60,8 +59,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
-        android:clipToPadding="false"
+        android:background="@color/background"
         android:paddingTop="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

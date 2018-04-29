@@ -22,11 +22,12 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.music.local.fragment.PlayFragment;
+import com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment;
 import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.jaeger.library.StatusBarUtil;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -35,7 +36,7 @@ import com.tencent.tauth.Tencent;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.ui.music.local.fragment.PlayFragment.topContainer;
+import static com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment.topContainer;
 
 /**
  * 描述 主要的Activity
@@ -71,10 +72,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
+        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
         //菜单栏的头部控件初始化
         initNavView();
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
+        StatusBarUtil.setTransparentForImageView(this, null);
 
         setUserStatusInfo();
         /**登陆成功重新设置用户新*/
@@ -93,7 +96,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void initData() {
         String from = getIntent().getAction();
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-
+            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
         }
         //加载主fragment
         navigateLibrary.run();
@@ -108,10 +111,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
                 if (newState == PanelState.EXPANDED) {
-                    mSlidingUpPaneLayout.setTouchEnabled(false);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 } else {
-                    mSlidingUpPaneLayout.setTouchEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 }
             }
@@ -127,25 +128,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     mSlidingUpPaneLayout.setTouchEnabled(true);
                 }
             }
-        });
-
-        headerView.setOnClickListener(v -> {
-            if (mIsLogin) {
-                new MaterialDialog.Builder(this)
-                        .title("音乐湖")
-                        .content("您确定要退出或切换其他账号吗？")
-                        .positiveText("确定")
-                        .onPositive((materialDialog, dialogAction) -> {
-                            UserStatus.clearUserInfo(this);
-                            UserStatus.saveuserstatus(this, false);
-                            Tencent.createInstance(Constants.APP_ID, this).logout(this);
-                            RxBus.getInstance().post(new LoginEvent());
-                        }).negativeText("取消").show();
-            } else {
-                mTargetClass = LoginActivity.class;
-            }
-            mDrawerLayout.closeDrawers();
-
         });
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -181,6 +163,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_login_status:
+                if (mIsLogin) {
+                    new MaterialDialog.Builder(this)
+                            .title("音乐湖")
+                            .content("您确定要退出或切换其他账号吗？")
+                            .positiveText("确定")
+                            .onPositive((materialDialog, dialogAction) -> {
+                                UserStatus.clearUserInfo(this);
+                                UserStatus.saveuserstatus(this, false);
+                                Tencent.createInstance(Constants.APP_ID, this).logout(this);
+                                RxBus.getInstance().post(new LoginEvent());
+                            }).negativeText("取消").show();
+                } else {
+                    mTargetClass = LoginActivity.class;
+                }
+                mDrawerLayout.closeDrawers();
+                break;
             case R.id.nav_menu_shake:
                 item.setChecked(true);
                 if (!mIsLogin) {
@@ -198,7 +197,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
         }
         mDrawerLayout.closeDrawers();
-        return true;
+        return false;
     }
 
     /**
@@ -220,7 +219,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     };
     private Runnable navigatePlay = () -> {
-        Fragment fragment = PlayFragment.newInstance();
+        Fragment fragment = PlayControlFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.controls_container, fragment).commit();
     };
@@ -261,7 +260,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 } else {
                     super.onBackPressed();
                 }
-                break;
+                return true;
             case R.id.action_search:
                 Intent intent = new Intent(this, SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -296,9 +295,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(UserStatus.getUserInfo(this).getNick());
             mNick.setText("音乐湖");
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("注销登录").setIcon(R.drawable.ic_exit);
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText("音乐湖");
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("点我登录");
             mNick.setText("未登录?去登录/注册吧!");
         }
     }

@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.my;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +24,6 @@ import butterknife.OnClick;
  */
 public class RegisterActivity extends BaseActivity implements RegisterContract.View {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.emailWrapper)
@@ -67,9 +64,7 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     @Override
     protected void initView() {
-        mToolbar.setTitle("用户注册");
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbarTitle("用户注册");
     }
 
     @Override

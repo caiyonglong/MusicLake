@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.music.online.activity;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,9 +46,6 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-
     private View mViewHeader;
     ImageView mIvBackground;
     ImageView mIvCover;
@@ -78,10 +74,7 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
         type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
         desc = getIntent().getStringExtra(Extras.BILLBOARD_DESC);
         pic = getIntent().getStringExtra(Extras.BILLBOARD_ALBUM);
-        mToolbar.setTitle(title);
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbarTitle(title);
         initHeaderView();
     }
 

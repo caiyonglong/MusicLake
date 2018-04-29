@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <!--<item-->
-        <!--android:id="@+id/nav_menu_shake"-->
-        <!--android:icon="@mipmap/icon_scan"-->
-        <!--android:title="摇一摇" />-->
+        <item
+            android:id="@+id/nav_login_status"
+            android:icon="@drawable/ic_exit" />
 
         <!--<item-->
         <!--android:id="@+id/nav_menu_near"-->

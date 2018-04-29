@@ -31,8 +31,6 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
     private static final String TAG = "ArtistInfoActivity";
     @BindView(R.id.tv_desc)
     TextView mTvDesc;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.loading)
     LinearLayout loading;
@@ -63,8 +61,6 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
 
     @Override
     protected void initView() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

@@ -2,18 +2,13 @@ package com.cyl.musiclake.ui.main;
 
 
 import android.content.Intent;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 
-import butterknife.BindView;
-
 public class SettingsActivity extends BaseActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
 
     @Override
     protected int getLayoutResID() {
@@ -22,8 +17,6 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

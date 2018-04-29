@@ -33,8 +33,6 @@ import butterknife.OnClick;
  */
 public class CommentActivity extends BaseActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.id_cardview)
     CardView id_cardview;
     @BindView(R.id.user_name)
@@ -117,9 +115,6 @@ public class CommentActivity extends BaseActivity {
     @Override
     protected void initView() {
         send_comment.setClickable(true);
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (SystemUtils.isLollipop()) {
             getWindow().setEnterTransition(new Explode());
