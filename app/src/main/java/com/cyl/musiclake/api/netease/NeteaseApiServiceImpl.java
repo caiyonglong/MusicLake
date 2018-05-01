@@ -1,6 +1,7 @@
 package com.cyl.musiclake.api.netease;
 
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -18,10 +19,9 @@ import io.reactivex.ObservableOnSubscribe;
 
 public class NeteaseApiServiceImpl {
     private static final String TAG = "NeteaseApiServiceImpl";
-    private static final String Base_Url = "http://musicapi.leanapp.cn/";
 
     public static NeteaseApiService getApiService() {
-        return ApiManager.getInstance().create(NeteaseApiService.class, Base_Url);
+        return ApiManager.getInstance().create(NeteaseApiService.class, Constants.BASE_NETEASE_URL);
     }
 
     public static Observable<List<Music>> getTopMusicList(int ids) {

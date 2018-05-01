@@ -55,7 +55,7 @@ public class NeteaseMusic implements Serializable {
     private int copyrightId;
     private String disc;
     private int no;
-    private AlbumBean album;
+    private AlbumBean al;
     private boolean starred;
     private double popularity;
     private int score;
@@ -81,7 +81,7 @@ public class NeteaseMusic implements Serializable {
     private Object rurl;
     private String mp3Url;
     private List<?> alias;
-    private List<ArtistsBeanX> artists;
+    private List<ArtistsBeanX> ar;
     private List<?> rtUrls;
 
     public String getName() {
@@ -149,11 +149,11 @@ public class NeteaseMusic implements Serializable {
     }
 
     public AlbumBean getAlbum() {
-        return album;
+        return al;
     }
 
-    public void setAlbum(AlbumBean album) {
-        this.album = album;
+    public void setAlbum(AlbumBean al) {
+        this.al = al;
     }
 
     public boolean isStarred() {
@@ -357,32 +357,32 @@ public class NeteaseMusic implements Serializable {
     }
 
     public List<ArtistsBeanX> getArtists() {
-        return artists;
+        return ar;
     }
 
     public String getAuthors() {
-        if (artists.size() == 0) return null;
+        if (ar.size() == 0) return null;
 
-        StringBuilder artist = new StringBuilder(artists.get(0).getName());
-        for (int i = 1; i < artists.size(); i++) {
-            artist.append(",").append(artists.get(i).getName());
+        StringBuilder artist = new StringBuilder(ar.get(0).getName());
+        for (int i = 1; i < ar.size(); i++) {
+            artist.append(",").append(ar.get(i).getName());
         }
         return artist.toString();
     }
 
     public String getAuthorIds() {
-        if (artists.size() == 0) return null;
+        if (ar.size() == 0) return null;
 
-        StringBuilder artist = new StringBuilder(artists.get(0).getId());
-        for (int i = 1; i < artists.size(); i++) {
-            artist.append(",").append(artists.get(i).getId());
+        StringBuilder artist = new StringBuilder(ar.get(0).getId());
+        for (int i = 1; i < ar.size(); i++) {
+            artist.append(",").append(ar.get(i).getId());
         }
         return artist.toString();
     }
 
 
-    public void setArtists(List<ArtistsBeanX> artists) {
-        this.artists = artists;
+    public void setArtists(List<ArtistsBeanX> ar) {
+        this.ar = ar;
     }
 
     public List<?> getRtUrls() {

@@ -27,6 +27,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
+import com.cyl.musiclake.musicApi.AddPlaylistUtils;
 import com.cyl.musiclake.musicApi.MusicApiUtils;
 import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
@@ -36,6 +37,7 @@ import com.cyl.musiclake.ui.music.local.dialog.PlayQueueDialog;
 import com.cyl.musiclake.ui.music.local.presenter.PlayControlsPresenter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.MultiTouchViewPager;
@@ -43,6 +45,7 @@ import com.cyl.musiclake.view.PlayPauseView;
 import com.cyl.musiclake.view.lyric.LyricView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.io.File;
@@ -52,6 +55,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.cyl.musiclake.service.MusicPlayerService.PLAY_MODE_LOOP;
+import static com.cyl.musiclake.service.MusicPlayerService.PLAY_MODE_RANDOM;
+import static com.cyl.musiclake.service.MusicPlayerService.PLAY_MODE_REPEAT;
 
 public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
@@ -100,21 +107,18 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
     @BindView(R.id.skip_download)
     MaterialIconView skip_download;
 
+    @BindView(R.id.skip_mode)
+    MaterialIconView skip_mode;
+
     @BindView(R.id.song_progress)
     SeekBar mSeekBar;
     @BindView(R.id.viewpager_player)
     MultiTouchViewPager mViewPager;
 
     //ViewPager中界面专辑和歌词
-    LyricView mLrcView;
-    CircleImageView mCivImage;
-    TextView mTvTip, mTvRecourse;
-
-    @OnClick(R.id.iv_back)
-    void back() {
-        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
-            onBackPressed();
-    }
+    private LyricView mLrcView;
+    private CircleImageView mCivImage;
+    private TextView mTvTip, mTvRecourse;
 
     private PlayQueueDialog playQueueDialog = null;
     private Palette mPalette;
@@ -125,10 +129,63 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
     public ObjectAnimator operatingAnim;
     public long currentPlayTime = 0;
+    private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
+    private int playModeId = 0;
+
+//
+//    @OnClick(R.id.container)
+//    void show() {
+//        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED)
+//            mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+//    }
+
+    @OnClick(R.id.iv_back)
+    void back() {
+        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            onBackPressed();
+    }
 
     @OnClick(R.id.skip_next)
     void next() {
         mPresenter.onNextClick();
+    }
+
+//    @OnClick(R.id.skip_lyric)
+//    void show_lyric() {
+////        PlayManager.showDesktopLyric(true);
+//    }
+
+    @OnClick(R.id.skip_share)
+    void share() {
+        MusicApiUtils.qqShare(getActivity(), PlayManager.getPlayingMusic());
+    }
+
+
+    @OnClick(R.id.skip_add)
+    void addPlaylist() {
+        AddPlaylistUtils.getPlaylist((AppCompatActivity) getActivity(), PlayManager.getPlayingMusic());
+    }
+
+    @OnClick(R.id.skip_mode)
+    void changePlayMode() {
+        PlayManager.refresh();
+        updatePlayMode();
+        ToastUtils.show(mPlayMode[playModeId]);
+    }
+
+    private void updatePlayMode() {
+        playModeId = SPUtils.getPlayMode();
+        switch (playModeId) {
+            case PLAY_MODE_LOOP:
+                skip_mode.setIcon(MaterialDrawableBuilder.IconValue.REPEAT);
+                break;
+            case PLAY_MODE_RANDOM:
+                skip_mode.setIcon(MaterialDrawableBuilder.IconValue.SHUFFLE);
+                break;
+            case PLAY_MODE_REPEAT:
+                skip_mode.setIcon(MaterialDrawableBuilder.IconValue.REPEAT_ONCE);
+                break;
+        }
     }
 
     @OnClick(R.id.play_next)
@@ -198,11 +255,17 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
             mViewPager.setOffscreenPageLimit(1);
             mViewPager.setCurrentItem(0);
         }
+        updatePlayMode();
     }
 
     @Override
     protected void listener() {
         mSeekBar.setOnSeekBarChangeListener(this);
+        topContainer.setOnClickListener(v -> {
+            if (mSlidingUpPaneLayout.isTouchEnabled()) {
+                mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            }
+        });
     }
 
     @Override
@@ -365,11 +428,11 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
         int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
 //        mLrcView.setHighLightTextColor(statusBarColor);
-        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
-        tv_time.setTextColor(blackWhiteColor);
-        mTvTip.setTextColor(blackWhiteColor);
-        tv_duration.setTextColor(blackWhiteColor);
-        mLrcView.setHintColor(blackWhiteColor);
+//        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
+//        tv_time.setTextColor(blackWhiteColor);
+//        mTvTip.setTextColor(blackWhiteColor);
+//        tv_duration.setTextColor(blackWhiteColor);
+//        mLrcView.setHintColor(blackWhiteColor);
         if (playQueueDialog != null && mSwatch != null) {
             playQueueDialog.setPaletteSwatch(mSwatch);
         }
@@ -377,8 +440,8 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
 //        mBtnNext.setcolo(blackWhiteColor);
         skip_prev.setColor(blackWhiteColor);
         skip_next.setColor(blackWhiteColor);
-        skip_queue.setColor(blackWhiteColor);
-        skip_download.setColor(blackWhiteColor);
+//        skip_queue.setColor(blackWhiteColor);
+//        skip_download.setColor(blackWhiteColor);
         mPlayOrPause.setBtnColor(blackWhiteColor);
         mPlayOrPause.setEnabled(true);
     }

@@ -122,7 +122,7 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
     public void loadSongs() {
         updateHistory();
         updatePlaylist();
-        AppRepository.getAllSongsRepository(mContext, Extras.SONG_DB)
+        AppRepository.getAllSongsRepository(mContext, Extras.SONG_LOCAL)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {

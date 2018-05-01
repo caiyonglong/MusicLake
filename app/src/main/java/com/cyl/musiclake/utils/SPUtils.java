@@ -62,7 +62,7 @@ public class SPUtils {
     }
 
     public static void savePlayMode(int mode) {
-        saveInt(PLAY_MODE, (mode + 1) % 4);
+        saveInt(PLAY_MODE, (mode + 1) % 3);
     }
 
     public static String getSplashUrl() {

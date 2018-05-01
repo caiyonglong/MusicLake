@@ -108,9 +108,9 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
         for (int i = 0; i < neteaseLists.size(); i++) {
             try {
+                int finalI = i;
                 Observable<NeteaseList> observable
                         = MusicApi.getTopList(i);
-                int finalI = i;
                 observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<NeteaseList>() {
@@ -130,6 +130,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
                             @Override
                             public void onError(Throwable e) {
+                                LogUtil.e(TAG, e.getMessage());
                             }
 
                             @Override
@@ -138,7 +139,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
                             }
                         });
             } catch (Exception e) {
-
+                LogUtil.e(TAG, e.getMessage());
             }
         }
 

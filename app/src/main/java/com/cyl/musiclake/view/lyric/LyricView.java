@@ -206,6 +206,7 @@ public class LyricView extends View {
                             new StaticLayout(tt, mNextLinePaint, width, Layout.Alignment.ALIGN_NORMAL,
                                     1, 0, true);
                     line += staticLayout.getLineCount() - 1;
+//                    mLineHeight = staticLayout.getLineCount() * mLineHeight;
                     staticLayout.draw(canvas);
                     canvas.restore();
                 }
@@ -664,11 +665,11 @@ public class LyricView extends View {
                 LyricInfo.LineInfo lineInfo = mLyricInfo.song_lines.get(i);
                 if (lineInfo != null && lineInfo.start > time) {
                     position = i;
-                    LogUtil.e(TAG, lineInfo.toString() + "--" + mCurrentPlayLine + "----" + i);
+                    LogUtil.d(TAG, lineInfo.toString() + "--" + mCurrentPlayLine + "----" + i);
                     break;
                 }
                 if (i == mLineCount - 1) {
-                    position = mLineCount;
+                    position = mLineCount - 1;
                 }
             }
         }

@@ -28,12 +28,18 @@ import com.cyl.musiclake.ui.music.local.contract.PlayQueueContract;
 import com.cyl.musiclake.ui.music.local.presenter.PlayQueuePresenter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.SPUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.cyl.musiclake.service.MusicPlayerService.PLAY_MODE_LOOP;
+import static com.cyl.musiclake.service.MusicPlayerService.PLAY_MODE_RANDOM;
+import static com.cyl.musiclake.service.MusicPlayerService.PLAY_MODE_REPEAT;
 
 /**
  * Created by hefuyi on 2016/12/27.
@@ -52,18 +58,23 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     @BindView(R.id.sheet)
     LinearLayout root;
 
+    private List<Music> musicList = new ArrayList<>();
     private PlayQueueAdapter mAdapter;
     //播放模式：0顺序播放、1随机播放、2单曲循环
-    private final int PLAY_MODE_RANDOM = 0;
-    private final int PLAY_MODE_LOOP = 1;
-    private final int PLAY_MODE_REPEAT = 2;
     private PlayQueuePresenter mPresenter;
     private Palette.Swatch mSwatch;
+    private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
+    private int playModeId = 0;
+
+    @OnClick(R.id.iv_play_mode)
+    public void onPlayModeClick() {
+        PlayManager.refresh();
+        updatePlayMode();
+        ToastUtils.show(mPlayMode[playModeId]);
+    }
 
     public static PlayQueueDialog newInstance() {
-
         Bundle args = new Bundle();
-
         PlayQueueDialog fragment = new PlayQueueDialog();
         fragment.setArguments(args);
         return fragment;
@@ -120,8 +131,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
 
         recyclerView.scrollToPosition(PlayManager.getCurrentPosition());
 
-        updatePlayMode();
-
         initListener();
         mPresenter.loadSongs();
     }
@@ -137,7 +146,11 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
             switch (view.getId()) {
                 case R.id.iv_clear:
                     PlayManager.removeFromQueue(position);
-                    mAdapter.setNewData(PlayManager.getPlayList());
+                    musicList = PlayManager.getPlayList();
+                    if (musicList.size() == 0)
+                        dismiss();
+                    else
+                        mAdapter.setNewData(musicList);
                     break;
             }
         });
@@ -167,29 +180,26 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         getDialog().dismiss();
     }
 
-    @OnClick(R.id.iv_play_mode)
-    public void onPlayModeClick() {
-        SPUtils.savePlayMode(SPUtils.getPlayMode());
-        updatePlayMode();
-        PlayManager.refresh();
-    }
 
     public void updatePlayMode() {
-        switch (SPUtils.getPlayMode()) {
+        playModeId = SPUtils.getPlayMode();
+        switch (playModeId) {
             case PLAY_MODE_LOOP:
                 ivPlayMode.setImageResource(R.drawable.ic_repeat);
-                tvPlayMode.setText("循环播放");
+                tvPlayMode.setText(getResources().getString(R.string.play_mode,
+                        mPlayMode[playModeId], musicList.size()));
                 break;
             case PLAY_MODE_RANDOM:
                 ivPlayMode.setImageResource(R.drawable.ic_shuffle);
-                tvPlayMode.setText("随机播放");
+                tvPlayMode.setText(getResources().getString(R.string.play_mode,
+                        mPlayMode[playModeId], musicList.size()));
                 break;
             case PLAY_MODE_REPEAT:
                 ivPlayMode.setImageResource(R.drawable.ic_repeat_one);
-                tvPlayMode.setText("单曲播放");
+                tvPlayMode.setText(getResources().getString(R.string.play_mode,
+                        mPlayMode[playModeId], musicList.size()));
                 break;
         }
-
     }
 
     @OnClick(R.id.clear_all)
@@ -219,6 +229,8 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
 
     @Override
     public void showSongs(List<Music> songs) {
+        musicList = songs;
+        updatePlayMode();
         mAdapter.setNewData(songs);
     }
 

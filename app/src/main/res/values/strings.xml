@@ -138,7 +138,10 @@
     <string name="folders">文件夹</string>
     <string name="play_time">00:00</string>
     <string name="play_no_resource">无音乐</string>
-    <string name="tv_play_mode">随机播放</string>
+    <string name="play_mode">%1$s("%2$d")</string>
+    <string name="play_mode_random">随机播放</string>
+    <string name="play_mode_repeat">单曲播放</string>
+    <string name="play_mode_loop">循环播放</string>
 
 
     <string name="delete">删除</string>
@@ -185,6 +188,9 @@
     <string name="playlist_num">%1$s("%2$d")</string>
 
     <string name="widget_standard">音乐湖</string>
+    <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
+    <string name="resource_error">歌曲资源异常</string>
+    <string name="prompt_login">请先登录！</string>
 
 
 </resources>

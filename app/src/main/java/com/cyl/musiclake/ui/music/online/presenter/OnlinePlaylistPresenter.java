@@ -61,8 +61,10 @@ public class OnlinePlaylistPresenter implements OnlinePlaylistContract.Presenter
                     @Override
                     public void onNext(BaiduMusicList result) {
                         List<BaiduMusicList.Billboard> mBillboards = result.getContent();
-                        //移除T榜
-                        mBillboards.remove(3);
+                        if (mBillboards != null && mBillboards.size() > 3) {
+                            //移除T榜
+                            mBillboards.remove(3);
+                        }
                         mView.showOnlineSongs(mBillboards);
                     }
 

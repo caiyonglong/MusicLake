@@ -139,7 +139,7 @@ public class SongsFragment extends BaseLazyFragment implements SongsContract.Vie
 
     @Override
     public void onLazyLoad() {
-        mPresenter.loadSongs(Extras.SONG_DB);
+        mPresenter.loadSongs(Extras.SONG_LOCAL);
     }
 
     @Override

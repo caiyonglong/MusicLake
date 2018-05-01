@@ -69,7 +69,7 @@ public class CoverLoader {
                 R.drawable.music_seven, R.drawable.music_eight, R.drawable.music_nine,
                 R.drawable.music_ten, R.drawable.music_eleven, R.drawable.music_twelve};
         int random = (int) (Math.random() * 12);
-        return Bitmaps[random];
+        return R.drawable.default_cover_player;
     }
 
     public static void loadImageViewByDouban(Context mContext, String info, ImageView imageView, BitmapCallBack bitmapCallBack) {
@@ -100,7 +100,7 @@ public class CoverLoader {
                     public void onError(Throwable throwable) {
                         Log.d(TAG, "throwable =" + throwable.getMessage());
                         if (imageView != null) {
-                            loadImageView(mContext,null, imageView);
+                            loadImageView(mContext, null, imageView);
                         } else if (bitmapCallBack != null) {
                             loadBitmap(mContext, null, bitmapCallBack);
                         }

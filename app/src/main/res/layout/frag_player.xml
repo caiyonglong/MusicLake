@@ -17,6 +17,14 @@
         android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-24dp"
+        android:background="#44000000"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop" />
+
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -121,17 +129,18 @@
                 android:padding="5dp">
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
-                    android:id="@+id/skip_download"
+                    android:id="@+id/skip_mode"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
-                    app:materialIcon="arrow_collapse_down"
+                    app:materialIcon="shuffle"
                     app:materialIconColor="@color/white"
                     app:materialIconSize="48dp"
                     tools:targetApi="lollipop" />
+
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/previous"
@@ -147,8 +156,8 @@
                     app:materialIconSize="48dp" />
 
                 <FrameLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_weight="1"
                     android:gravity="center">
 
@@ -200,6 +209,67 @@
                     app:materialIcon="playlist_play"
                     app:materialIconColor="@color/white"
                     app:materialIconSize="48dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="9dp">
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_download"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:materialIcon="arrow_collapse_down"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_share"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:materialIcon="share"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
+
+                <!--<ImageButton-->
+                    <!--android:id="@+id/skip_lyric"-->
+                    <!--android:layout_width="24dp"-->
+                    <!--android:layout_height="24dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                    <!--android:gravity="center"-->
+                    <!--android:src="@drawable/ic_lyric" />-->
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_add"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:materialIcon="playlist_plus"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
 
             </LinearLayout>
 

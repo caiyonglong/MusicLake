@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 
@@ -29,6 +32,19 @@ public class AddPlaylistUtils {
     private static AppCompatActivity myActivity;
 
     public static void getPlaylist(AppCompatActivity activity, Music music) {
+        if (activity == null) return;
+        if (music == null) {
+            ToastUtils.show((MusicApp.getAppContext().getResources().getString(R.string.resource_error)));
+            return;
+        }
+        if (music.getType() == Music.Type.LOCAL || music.getType() == Music.Type.BAIDU) {
+            ToastUtils.show(MusicApp.getAppContext().getResources().getString(R.string.warning_add_playlist));
+            return;
+        }
+        if (!UserStatus.getstatus(activity)) {
+            ToastUtils.show(MusicApp.getAppContext().getResources().getString(R.string.prompt_login));
+            return;
+        }
         myActivity = activity;
         MusicApiServiceImpl.getPlaylist()
                 .subscribeOn(Schedulers.io())
@@ -46,7 +62,8 @@ public class AddPlaylistUtils {
 
                     @Override
                     public void onError(Throwable throwable) {
-
+                        LogUtil.e("add ==" + throwable.getMessage());
+                        showInfoDialog("警告", "服务器请求异常");
                     }
 
                     @Override
@@ -98,5 +115,21 @@ public class AddPlaylistUtils {
                     }
                 });
     }
+
+    private static MaterialDialog showInfoDialog(String title, String msg) {
+        if (title.isEmpty()) {
+            title = "提示";
+        }
+        if (msg.isEmpty()) {
+            msg = "加载中";
+        }
+        return new MaterialDialog.Builder(myActivity)
+                .title(title)
+                .content(msg)
+                .positiveText(R.string.sure)
+                .onPositive(null)
+                .build();
+    }
+
 
 }

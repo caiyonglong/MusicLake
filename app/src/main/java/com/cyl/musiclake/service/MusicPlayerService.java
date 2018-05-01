@@ -137,9 +137,9 @@ public class MusicPlayerService extends Service {
 
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int mRepeatMode = 0;
-    private final int PLAY_MODE_LOOP = 0;
-    private final int PLAY_MODE_RANDOM = 1;
-    private final int PLAY_MODE_REPEAT = 2;
+    public static final int PLAY_MODE_LOOP = 0;
+    public static final int PLAY_MODE_RANDOM = 1;
+    public static final int PLAY_MODE_REPEAT = 2;
 
     //广播接收者
     ServiceReceiver mServiceReceiver;
@@ -334,7 +334,7 @@ public class MusicPlayerService extends Service {
         //初始化和设置MediaSessionCompat
         mediaSessionManager = new MediaSessionManager(mBindStub, this, mMainHandler);
         audioAndFocusManager = new AudioAndFocusManager(this, mHandler);
-        audioAndFocusManager.requestAudioFocus();
+//        audioAndFocusManager.requestAudioFocus();
     }
 
 
@@ -517,7 +517,7 @@ public class MusicPlayerService extends Service {
      */
     private void playCurrentAndNext() {
         synchronized (this) {
-            if (mPlayingPos > mPlaylist.size() && mPlayingPos == -1) {
+            if (mPlayingPos > mPlaylist.size() || mPlayingPos < 0) {
                 return;
             }
             mPlayingMusic = mPlaylist.get(mPlayingPos);
@@ -560,6 +560,7 @@ public class MusicPlayerService extends Service {
             mHistoryPos.add(mPlayingPos);
             isMusicPlaying = true;
             mPlayer.setDataSource(mPlayingMusic.getUri());
+            audioAndFocusManager.requestAudioFocus();
             updateNotification();
             mediaSessionManager.updateMetaData(mPlayingMusic.getUri());
 
@@ -822,6 +823,7 @@ public class MusicPlayerService extends Service {
 
 
     public void refresh() {
+        SPUtils.savePlayMode(SPUtils.getPlayMode());
         mRepeatMode = SPUtils.getPlayMode();
     }
 
@@ -843,7 +845,7 @@ public class MusicPlayerService extends Service {
             mPlaylist.remove(position);
             mPlayingPos = mPlayingPos - 1;
         }
-        notifyChange(PLAY_QUEUE_CHANGE);
+        notifyChange(PLAY_QUEUE_CLEAR);
     }
 
     /**
@@ -857,6 +859,7 @@ public class MusicPlayerService extends Service {
         mHistoryPos.clear();
         stop(true);
         notifyChange(META_CHANGED);
+        notifyChange(PLAY_STATE_CHANGED);
         notifyChange(PLAY_QUEUE_CLEAR);
     }
 

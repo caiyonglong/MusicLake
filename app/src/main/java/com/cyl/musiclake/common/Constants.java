@@ -169,7 +169,9 @@ public class Constants {
      */
 
     public static final String BASE_PLAYER_URL = "https://player-node.zzsun.cc/";
-
+//    public static final String BASE_NETEASE_URL = "http://192.168.123.44:3000";
+    public static final String BASE_NETEASE_URL = "https://netease.api.zzsun.cc/";
+//    public static final String BASE_NETEASE_URL = "http://musicapi.leanapp.cn/";
     //bugly app_id
     public static final String BUG_APP_ID = "fd892b37ea";
 }

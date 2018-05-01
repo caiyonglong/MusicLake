@@ -21,6 +21,8 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.source.download.TasksManager;
 import com.cyl.musiclake.event.LoginEvent;
+import com.cyl.musiclake.event.PlayQueueEvent;
+import com.cyl.musiclake.service.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment;
 import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
@@ -82,6 +84,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setUserStatusInfo();
         /**登陆成功重新设置用户新*/
         RxBus.getInstance().register(LoginEvent.class).subscribe(event -> setUserStatusInfo());
+        RxBus.getInstance().register(PlayQueueEvent.class).subscribe(event -> setPlaylistQueueChange());
     }
 
     private void initNavView() {
@@ -151,7 +154,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             }
         });
-
     }
 
     /**
@@ -284,6 +286,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onDestroy();
     }
 
+    private void setPlaylistQueueChange() {
+        if (PlayManager.getPlayList().size() == 0) {
+            mSlidingUpPaneLayout.setTouchEnabled(false);
+        } else {
+            mSlidingUpPaneLayout.setTouchEnabled(true);
+        }
+    }
 
     /**
      * 设置用户状态信息

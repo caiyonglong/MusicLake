@@ -31,10 +31,11 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T
     @Override
     public T convert(ResponseBody value) throws IOException {
         String response = value.string();
-        System.out.println(response);
+        System.out.println("GOSN:" + response);
         try {
             return adapter.fromJson(response);
         } catch (Exception e) {
+            System.out.println("GOSN error:" + e.getMessage());
             //解析处理错误
             if (response.substring(0, 17).equals("MusicJsonCallback")) {
                 response = response.substring(response.indexOf("{"), response.lastIndexOf(")"));

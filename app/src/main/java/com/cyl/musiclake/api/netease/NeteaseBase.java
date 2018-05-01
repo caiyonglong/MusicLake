@@ -6,15 +6,15 @@ package com.cyl.musiclake.api.netease;
 
 public class NeteaseBase<T> {
 
-    private T result;
+    private T playlist;
     private int code;
 
     public T getResult() {
-        return result;
+        return playlist;
     }
 
-    public void setResult(T result) {
-        this.result = result;
+    public void setResult(T playlist) {
+        this.playlist = playlist;
     }
 
     public int getCode() {

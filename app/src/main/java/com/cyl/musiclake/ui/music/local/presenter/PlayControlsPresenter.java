@@ -164,7 +164,6 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
             new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
             mView.setTitle(mContext.getResources().getString(R.string.app_name));
             mView.setArtist("");
-            mView.updatePanelLayout(false);
             return;
         } else {
             mView.updatePanelLayout(true);

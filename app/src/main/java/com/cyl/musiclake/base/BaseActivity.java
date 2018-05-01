@@ -20,6 +20,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.PlayQueueEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
@@ -160,7 +161,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
                         RxBus.getInstance().post(event);
                         break;
                     case MusicPlayerService.PLAY_QUEUE_CLEAR:
-                        RxBus.getInstance().post(new HistoryChangedEvent());
+                        RxBus.getInstance().post(new PlayQueueEvent());
                         break;
                     case MusicPlayerService.PLAYLIST_CHANGED:
                         RxBus.getInstance().post(new PlaylistEvent());

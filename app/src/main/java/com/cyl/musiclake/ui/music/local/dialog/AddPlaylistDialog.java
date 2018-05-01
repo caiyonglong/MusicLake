@@ -48,7 +48,6 @@ public class AddPlaylistDialog extends DialogFragment {
         if (music.getType() == Music.Type.LOCAL) {
             return showInfoDialog("增加到歌单", "暂不支持添加本地歌曲到在线歌单");
         }
-
         return null;
     }
 
@@ -109,4 +108,5 @@ public class AddPlaylistDialog extends DialogFragment {
                     }
                 });
     }
+
 }
