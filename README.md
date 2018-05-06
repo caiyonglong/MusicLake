@@ -15,7 +15,7 @@ Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构�
 - [x] QQ登录、在线歌单同步
 
 # 计划
-- [ ] 优化项目架构
+- [ ] 优化项目架构，代码编码规范
 - [ ] 验证，修复bug
 - [ ] 完善百度音乐，QQ音乐、虾米音乐、网易云音乐的api
 
@@ -27,6 +27,7 @@ Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构�
 - [sunzongzheng/musicApi](https://github.com/sunzongzheng/musicApi)
 
 # 项目运行截图
+<p>
 <img src="screenshots/preview1.png" width="300px"/>
 <img src="screenshots/preview2.png" width="300px"/>
 <img src="screenshots/preview3.png" width="300px"/>
@@ -34,3 +35,4 @@ Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构�
 <img src="screenshots/preview5.png" width="300px"/>
 <img src="screenshots/preview6.png" width="300px"/>
 <img src="screenshots/preview7.png" width="300px"/> 
+</p>
