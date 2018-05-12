@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.cyl.musiclake.ui.main.TestActivity">
 
-    <WebView
+    <wendu.dsbridge.DWebView
         android:id="@+id/webview"
         android:layout_width="0dp"
         android:layout_height="match_parent"
