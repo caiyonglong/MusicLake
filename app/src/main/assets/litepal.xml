@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="demo" />
+    <version value="1" />
+    <list>
+        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
+        <!--<mapping class="com.cyl.musiclake.bean.Artist" />-->
+        <!--<mapping class="com.cyl.musiclake.bean.Music" />-->
+        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
+        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
+        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
+    </list>
+</litepal>

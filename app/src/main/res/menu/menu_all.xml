@@ -1,45 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single"
-        >
+    <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_menu_music"
-            android:icon="@mipmap/icon_my"
-            android:title="我的音乐" />
-        <item
-            android:id="@+id/nav_menu_playlist"
-            android:icon="@mipmap/music_playlist"
-            android:title="我的歌单" />
-        <item
-            android:id="@+id/nav_menu_download"
-            android:icon="@mipmap/list_icon_download"
-            android:title="我的下载" />
-        <item
-            android:id="@+id/nav_menu_shake"
-            android:icon="@mipmap/icon_scan"
-            android:title="摇一摇" />
-        <item
-            android:id="@+id/nav_menu_near"
-            android:icon="@mipmap/icon_location"
-            android:title="我的附近" />
-        <item
-            android:title="通用">
-            <menu >
+            android:id="@+id/nav_login_status"
+            android:icon="@drawable/ic_exit" />
+
+        <!--<item-->
+        <!--android:id="@+id/nav_menu_near"-->
+        <!--android:icon="@mipmap/icon_near"-->
+        <!--android:title="附近" />-->
+
+        <item android:title="通用">
+            <menu>
                 <item
                     android:id="@+id/nav_menu_setting"
                     android:icon="@mipmap/icon_setting"
                     android:title="设置" />
                 <item
-                    android:id="@+id/nav_menu_help"
-                    android:icon="@mipmap/icon_setting"
-                    android:title="帮助与反馈" />
-                <item
                     android:id="@+id/nav_menu_exit"
                     android:icon="@mipmap/icon_exit"
                     android:title="退出程序" />
             </menu>
-
         </item>
     </group>
 </menu>

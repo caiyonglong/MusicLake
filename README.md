@@ -1,3 +1,41 @@
-# Music_hnust
-校srip项目，将科大的校园地图与音乐软件结合起来。项目包含客户端和服务端，客户端通过学号进行登录，用户可以发布动态，查看动态，评论，创建本地歌单，分享歌单内容，地图定位，查询科大地图，本地音乐播放，在线听歌，下载歌曲，摇一摇搜索听歌的人等功能。
+# MusicLake
+- Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。
+- 音乐来源本地音乐、百度音乐，QQ音乐、虾米音乐、网易云音乐
 
+# 已完成功能
+
+- [x] 本地听歌。按专辑、歌手、文件夹分类
+- [x] 在线听歌。百度音乐，QQ音乐、虾米音乐、网易云音乐
+- [x] 本地歌单
+- [x] 播放历史
+- [x] 播放队列
+- [x] 网络歌曲下载
+- [x] 播放歌词、桌面歌词
+- [x] 通知栏控制，线控播放
+- [x] 音频焦点控制
+- [x] QQ登录、在线歌单同步
+
+# 计划
+- [ ] 优化项目架构，代码编码规范
+- [ ] 验证，修复bug
+- [ ] 完善百度音乐，QQ音乐、虾米音乐、网易云音乐的api
+- [ ] 合并榜单，作为一个音乐发现界面
+
+
+# release note
+[点这下载](https://github.com/caiyonglong/MusicLake/releases)
+
+# 音乐来源
+- 绝大部分来源于[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)和[LIU9293/musicAPI](https://github.com/LIU9293/musicAPI)等
+- [sunzongzheng/musicApi](https://github.com/sunzongzheng/musicApi)
+
+# 项目运行截图
+<p>
+<img src="screenshots/preview1.png" width="300px"/>
+<img src="screenshots/preview2.png" width="300px"/>
+<img src="screenshots/preview3.png" width="300px"/>
+<img src="screenshots/preview4.png" width="300px"/>
+<img src="screenshots/preview5.png" width="300px"/>
+<img src="screenshots/preview6.png" width="300px"/>
+<img src="screenshots/preview7.png" width="300px"/> 
+</p>

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cyl.music_hnust">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.cyl.musiclake">
 
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <!-- 手机震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -18,42 +22,114 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 允许获得电话状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 唤醒休眠 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 用于读取手机当前的状态 -->
-    <!--定位包、导航包需要的额外权限（注：基础权限也需要）-->
+    <!-- 定位包、导航包需要的额外权限（注：基础权限也需要） -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".MusicApp"
         android:allowBackup="true"
-        android:icon="@mipmap/icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyThemeBlue">
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="bb7a657dae711860f30d669c193e49d6" />
-
         <activity
-            android:name=".ui.activity.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Launcher">
+            android:name=".ui.main.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/MainActivityTheme" />
+        <activity
+            android:name=".ui.my.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue" />
+        <activity
+            android:name=".ui.my.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue" />
+        <activity
+            android:name=".ui.music.local.activity.PlaylistDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.music.online.activity.ArtistInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.NearPeopleAcivity"
+            android:label="@string/near_people"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.music.online.activity.BaiduMusicListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue" />
+        <activity
+            android:name=".ui.music.online.activity.NeteaseMusicListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue" />
+        <activity
+            android:name=".ui.map.ShakeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.music.online.activity.SearchActivity" />
+        <activity
+            android:name=".ui.zone.EditActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.my.UserCenterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
 
+        <service android:name=".service.MusicPlayerService" />
+
+        <activity
+            android:name=".ui.main.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.AboutActivity"
+            android:label="@string/title_about"
+            android:parentActivityName=".ui.main.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.WebActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.CommentActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+
+        <!-- 接入第三方QQ登录 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -64,7 +140,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1104846425" />
+                <data android:scheme="tencent101454823" />
             </intent-filter>
         </activity>
         <activity
@@ -72,87 +148,38 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-
-        <activity
-            android:name=".ui.activity.LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue" />
-        <activity
-            android:name=".ui.activity.RegisterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue" />
-        <activity
-            android:name=".ui.activity.PlaylistDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ArtistInfoActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.activity.map.BaseMapActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.map.RadarActivity"
-
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.map.CloudDetailActivity"
-            android:label="@string/detail_position"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.map.PreviewPhotoActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.NearPeopleAcivity"
-            android:label="@string/near_people"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.OnlineMusicActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue" />
-        <activity
-            android:name=".ui.activity.ShakeActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.SearchActivity" />
-        <activity
-            android:name=".ui.activity.EditActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserCenterAcivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-
-        <service
-            android:name=".service.MusicPlayService"
-             />
-
-        <service android:name="com.amap.api.location.APSService" />
-        <service android:name=".download.DownloadService" />
-
-        <activity
-            android:name=".ui.activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.clipheadphoto.ClipActivity"
-            android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"></activity>
-
-        <!--社区-->
+        <receiver android:name=".service.MediaButtonIntentReceiver">
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
 
-        <activity
-            android:name=".ui.activity.CommentActivity"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <receiver
+            android:name=".view.desktop.StandardWidget"
+            android:label="@string/widget_standard">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.cyl.music_lake.metachanged" />
+                <action android:name="com.cyl.music_lake.play_state" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_standard" />
+        </receiver>
 
-        <!--<meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" />-->
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        <!-- <meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" /> -->
+        <activity android:name=".ui.main.TestActivity"></activity>
     </application>
 
 </manifest>

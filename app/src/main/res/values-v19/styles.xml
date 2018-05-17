@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="MyThemeBlue"></style>
+
+    <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!--选中状态icon的颜色和字体颜色-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccentDarkTheme</item>
+        <!--正常状态下字体颜色和icon颜色-->
+
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="windowBackground">@color/window_background</item>
+        <item name="iconColor">@android:color/white</item>
+        <item name="cardColor">@android:color/white</item>
+        <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
+        <item name="progressDrawable">@drawable/progress_drawable</item>
+        <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
+        </item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="MainActivityTheme" parent="MyThemeBlue">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+</resources>

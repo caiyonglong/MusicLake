@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/colorSelectableItemWhite" android:state_pressed="true" />
+    <item android:drawable="@android:color/transparent" android:state_enabled="false" />
+    <item android:drawable="@android:color/transparent" />
+
+</selector>

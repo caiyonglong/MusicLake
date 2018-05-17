@@ -8,51 +8,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_header" />
+        android:src="@drawable/header_material" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:gravity="center">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/header_face"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/ic_account_circle" />
-        </FrameLayout>
-
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/header_face"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_account_circle" />
 
         <TextView
             android:id="@+id/header_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:lines="1"
+            android:layout_below="@+id/header_face"
+            android:layout_centerHorizontal="true"
             android:text="@string/header_author_name"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:id="@+id/header_nick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:lines="1"
             android:text="@string/header_author_url"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
+            android:textColor="@android:color/black"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
 

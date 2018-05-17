@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grean"
+    android:layout_gravity="top"
+    android:background="@drawable/bg_frag_player"
     android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="-24dp"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-24dp"
+        android:background="#44000000"
         android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 
@@ -20,7 +33,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="50dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -29,157 +42,234 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/play_page_back_selector"
+                android:contentDescription="TODO"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_down" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+
+            <TextView
+                android:id="@+id/song_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:text="@string/play_no_resource"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_common" />
 
-                <TextView
-                    android:id="@+id/song_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="无音乐"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_common" />
+            <ImageView
+                android:id="@+id/iv_love"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/play_page_back_selector"
+                android:backgroundTint="@color/white"
+                android:scaleType="centerInside"
+                android:src="@drawable/item_favorite"
+                tools:targetApi="lollipop" />
 
-                <TextView
-                    android:id="@+id/song_artist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text=""
-                    android:textColor="@color/grey"
-                    android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
 
-
-        <android.support.v4.view.ViewPager
+        <com.cyl.musiclake.view.MultiTouchViewPager
             android:id="@+id/viewpager_player"
             android:layout_width="match_parent"
-            android:layout_height="350dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/detailView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
             android:orientation="vertical">
 
-
-            <SeekBar
-                android:id="@+id/song_progress"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:maxHeight="2dp"
-                android:paddingTop="10dp"
-                android:progress="30"
-                android:tag="tint_accent_color" />
-
-
-            <TextView
-                android:id="@+id/song_album"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/song_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="20dp"
-                    android:text="00:00"
-                    android:textColor="@color/white" />
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/song_elapsed_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:text="@string/play_time"
+                    android:textColor="@color/translucent_white"
+                    tools:ignore="RtlSymmetry" />
 
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:paddingLeft="20dp"
-                    android:text="00:00"
-                    android:textColor="@color/white" />
-            </RelativeLayout>
+
+                <SeekBar
+                    android:id="@+id/song_progress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxHeight="2dp"
+                    android:progress="30"
+                    android:tag="tint_accent_color" />
+
+
+                <TextView
+                    android:id="@+id/song_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/play_time"
+                    android:textColor="@color/translucent_white"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/skip_lrc"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_mode"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
-                    android:scaleType="center"
-                    android:text="词"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    app:materialIcon="shuffle"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
 
 
-                <ImageView
+                <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/previous"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
-                    android:src="@drawable/ic_skip_previous" />
+                    android:src="@drawable/ic_skip_previous"
+                    app:materialIcon="skip_previous"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp" />
 
+                <FrameLayout
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/playpausefloating"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:scaleType="fitCenter"
-                    android:tag="bg_tint_accent_color" />
+                    <com.cyl.musiclake.view.PlayPauseView
+                        android:id="@+id/playOrPause"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:elevation="5dp"
+                        android:scaleType="fitXY"
+                        android:translationZ="5dp"
+                        app:anim_duration="300"
+                        app:bg_color="#55ffffff"
+                        app:btn_color="@color/white"
+                        app:gap_width="15"
+                        tools:targetApi="lollipop" />
 
+                    <ProgressBar
+                        android:id="@+id/pb_loading"
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center" />
 
-                <ImageView
+                </FrameLayout>
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_next"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
-                    android:src="@drawable/ic_skip_next" />
+                    app:materialIcon="skip_next"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp" />
 
-                <ImageView
-                    android:id="@+id/ic_detail"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_queue"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_detail" />
+                    android:src="@drawable/ic_detail"
+                    app:materialIcon="playlist_play"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="9dp">
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_download"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:materialIcon="arrow_collapse_down"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_share"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:materialIcon="share"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
+
+                <!--<ImageButton-->
+                    <!--android:id="@+id/skip_lyric"-->
+                    <!--android:layout_width="24dp"-->
+                    <!--android:layout_height="24dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                    <!--android:gravity="center"-->
+                    <!--android:src="@drawable/ic_lyric" />-->
+
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/skip_add"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:materialIcon="playlist_plus"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="48dp"
+                    tools:targetApi="lollipop" />
 
             </LinearLayout>
 
@@ -187,4 +277,4 @@
     </LinearLayout>
 
     <include layout="@layout/play_control_menu" />
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

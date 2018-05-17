@@ -1,51 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:orientation="vertical" android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
     android:fitsSystemWindows="true">
 
+    <include layout="@layout/item_toolbar" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        android:elevation="5dp"></android.support.v7.widget.Toolbar>
-
-    <ImageView
-        android:id="@+id/shake"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="25dp"
-        android:src="@mipmap/shake" />
-
-    <RelativeLayout
-        android:id="@+id/shake_result_show"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="50dp">
+        android:background="@color/colorPrimary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--<TextView-->
-            <!--android:text="说明：\n\t\t\t\t通过摇一摇可以知晓其他用户在使用该功能时正在听什么样的歌，摇一摇的同时，也会上传正在播放音乐的歌曲信息！"-->
-            <!--android:textSize="18sp"-->
-            <!--android:layout_margin="5dp"-->
-            <!--android:textColor="?attr/background"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent" />-->
+        <ImageView
+            android:id="@+id/shake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/shake" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shake_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp" />
+            android:layout_margin="10dp" />
 
-
-
-    </RelativeLayout>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
 

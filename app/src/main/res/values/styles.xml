@@ -1,19 +1,16 @@
 <resources>
 
 
-    <attr format="reference" name="windowBackground"/>
-    <attr format="reference" name="accentColor"/>
-    <attr format="reference" name="cardColor"/>
-    <attr format="reference" name="iconColor"/>
-    <attr format="reference" name="progressBackgroundColor"/>
-    <attr format="reference" name="progressDrawable"/>
-    <attr format="reference" name="progressDrawableWithBackground" />
+    <attr name="windowBackground" format="reference" />
+    <attr name="accentColor" format="reference" />
+    <attr name="cardColor" format="reference" />
+    <attr name="iconColor" format="reference" />
+    <attr name="progressBackgroundColor" format="reference" />
+    <attr name="progressDrawable" format="reference" />
+    <attr name="progressDrawableWithBackground" format="reference" />
 
 
-    <style name="AppTheme" parent="MyThemeBlue">
-        <item name="android:listDivider">@drawable/divider_bg</item>
-
-    </style>
+    <style name="AppTheme" parent="MyThemeBlue"></style>
 
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
@@ -30,10 +27,12 @@
         <item name="cardColor">@android:color/white</item>
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
-        <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground</item>
+        <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
+        </item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-
+    <!--夜间模式-->
     <style name="MyThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--选中状态icon的颜色和字体颜色-->
@@ -49,7 +48,8 @@
         <item name="cardColor">@color/window_background_dark</item>
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
-        <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground</item>
+        <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
+        </item>
     </style>
 
 
@@ -60,10 +60,6 @@
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="AppTheme.Launcher" parent="MyThemeBlue">
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AppTheme.Search" parent="MyThemeBlue">

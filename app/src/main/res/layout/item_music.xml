@@ -21,8 +21,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:elevation="1dp"
-        android:scaleType="fitXY"
-         />
+        android:scaleType="fitXY" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -74,10 +73,10 @@
         </LinearLayout>
 
         <!--<View-->
-            <!--android:id="@+id/v_divider"-->
-            <!--style="@style/AppTheme.Divider"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/divider_height"-->
-            <!--android:layout_gravity="bottom" />-->
+        <!--android:id="@+id/v_divider"-->
+        <!--style="@style/AppTheme.Divider"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/divider_height"-->
+        <!--android:layout_gravity="bottom" />-->
     </FrameLayout>
 </LinearLayout>

@@ -2,10 +2,18 @@
 
     <PreferenceCategory android:title="@string/info_common_settings">
 
+        <!--<CheckBoxPreference-->
+        <!--android:key="night_mode"-->
+        <!--android:summary="应用夜间模式到整个应用"-->
+        <!--android:title="夜间模式" />-->
         <CheckBoxPreference
-            android:key="night_mode"
-            android:summary="应用夜间模式到整个应用"
-            android:title="夜间模式" />
+            android:key="key_lyric"
+            android:summary="@string/setting_lyric_des"
+            android:title="@string/setting_lyric" />
+
+        <SwitchPreference
+            android:key="key_timing"
+            android:title="@string/setting_timing" />
 
         <SwitchPreference
             android:defaultValue="true"
@@ -19,15 +27,15 @@
 
         <PreferenceScreen
             android:key="key_cache"
-            android:title="@string/pref_title_clear"></PreferenceScreen>
+            android:title="@string/pref_title_clear" />
         <PreferenceScreen
             android:key="key_update"
-            android:title="@string/pref_title_update"></PreferenceScreen>
+            android:title="@string/pref_title_update" />
         <PreferenceScreen
             android:key="key_about"
-            android:title="@string/pref_title_about"></PreferenceScreen>
+            android:title="@string/title_about" />
+
 
     </PreferenceCategory>
-
 
 </PreferenceScreen>

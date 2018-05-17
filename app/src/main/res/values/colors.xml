@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <color name="backgroundColor">#E8E8E0</color>
     <color name="setting_blue">#4A90E2</color>
     <color name="logo_blue">#2f88f1</color>
@@ -19,7 +18,7 @@
     <color name="black">#000000</color>
 
     <color name="black_semi_transparent">#B2000000</color>
-    <color name="background">#e5e5e5</color>
+    <color name="background">#ffffff</color>
     <color name="half_black">#808080</color>
     <color name="white_pressed">#f1f1f1</color>
 
@@ -48,7 +47,6 @@
     <color name="colorAccentBlack">#ffffff</color>
 
 
-
     <color name="pink_transparent">#44700d39</color>
     <color name="green_transparent">#44375a1f</color>
     <color name="blue_transparent">#44293576</color>
@@ -56,8 +54,10 @@
     <color name="purple_transparent">#44432677</color>
 
     <color name="black_translucent">#66000000</color>
+    <color name="white_translucent">#c8ffffff</color>
 
 
+    <color name="dark">#000000</color>
 
 
     <!--material design 基础色-->
@@ -82,7 +82,7 @@
     <color name="blueGrey">#607d8b</color>
 
     <color name="translucent_white">#80FFFFFF</color>
-    <color name="translucent_black">#80000000</color>
+    <color name="translucent_black">#bb000000</color>
     <color name="translucent_grey">#809E9E9E</color>
     <color name="translucent_white_8p">#14FFFFFF</color>
     <color name="translucent_white_16p">#29FFFFFF</color>
@@ -94,9 +94,10 @@
     <color name="translucent_grey_700_96p">#F5616161</color>
 
 
-    <color name="window_background">#EEF5F5F5</color>
+    <color name="window_background">#f5f5f5</color>
     <color name="window_background_dark">#212121</color>
     <color name="progressBackgroundColorLight">#33000000</color>
     <color name="progressBackgroundColorDark">#ffffff</color>
+    <color name="colorSelectableItemWhite">#77ffffff</color>
 
 </resources>

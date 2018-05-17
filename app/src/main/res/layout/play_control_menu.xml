@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/top_container"
     android:layout_width="match_parent"
     android:layout_height="57dp"
     android:layout_gravity="top"
     android:background="@color/white"
-    android:elevation="10dp">
+    android:elevation="5dp"
+    tools:targetApi="lollipop">
 
     <ProgressBar
         android:id="@+id/song_progress_normal"
@@ -16,62 +19,30 @@
         android:progress="10"
         android:tag="tint_accent_color" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="5dp"
-        android:orientation="vertical">
+        android:layout_margin="2dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/album"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/default_cover"
-            android:scaleType="fitXY" />
-
-        <FrameLayout
-            android:id="@+id/play_status"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_toLeftOf="@+id/next_buttom">
-
-            <com.cyl.music_hnust.view.PlayPauseButton
-                android:id="@+id/play_pause"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center" />
-
-            <View
-                android:id="@+id/playpausewrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless" />
-
-        </FrameLayout>
-
-        <ImageButton
-            android:id="@+id/next_buttom"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_marginRight="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/album"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_skip_next_black_18dp" />
+            tools:ignore="RtlHardcoded" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/play_status"
-            android:layout_toRightOf="@id/album"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -82,7 +53,7 @@
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:text="@string/app_name"
                 android:textSize="15sp" />
 
@@ -92,12 +63,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:maxLength="20"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:text="@string/app_name"
                 android:textSize="13sp" />
         </LinearLayout>
 
-    </RelativeLayout>
+        <com.cyl.musiclake.view.PlayPauseView
+            android:id="@+id/play_pause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:anim_duration="300"
+            app:bg_color="#ffffff"
+            app:btn_color="@color/colorPrimary"
+            app:gap_width="10" />
+
+
+        <ImageButton
+            android:id="@+id/play_next"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/play_next"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_skip_next_black_18dp" />
+    </LinearLayout>
 
 </RelativeLayout>

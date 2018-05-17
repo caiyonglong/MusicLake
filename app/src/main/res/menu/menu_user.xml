@@ -1,5 +1,10 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MyActivity">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_update"
+        android:title="修改信息" />
+    <item
+        android:id="@+id/action_privacy"
+        android:title="隐私设置" />
 
 </menu>

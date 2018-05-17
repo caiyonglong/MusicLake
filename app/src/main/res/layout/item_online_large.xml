@@ -1,69 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:background="?attr/cardColor"
-    android:padding="10dp">
+    android:layout_margin="4dp"
+    android:elevation="@dimen/dp_4"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:cardCornerRadius="4dp">
 
-    <ImageView
-        android:id="@+id/iv_cover"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/default_cover" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="?attr/cardColor"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:text="榜单"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_cover" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_music_1"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="1.加载中…"
-                android:textColor="@color/red"
-                android:textSize="12sp" />
+                android:text="榜单"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/tv_music_2"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:lines="1"
-                android:text="2.加载中…"
-                android:textColor="@color/orange"
-                android:textSize="12sp" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_music_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:lines="1"
-                android:text="3.加载中…"
-                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tv_music_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:text="1.加载中…"
+                    android:textColor="@color/red"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_music_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:lines="1"
+                    android:text="2.加载中…"
+                    android:textColor="@color/orange"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_music_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:lines="1"
+                    android:text="3.加载中…"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
