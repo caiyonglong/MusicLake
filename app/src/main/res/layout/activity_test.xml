@@ -5,14 +5,10 @@
     android:layout_height="match_parent"
     tools:context="com.cyl.musiclake.ui.main.TestActivity">
 
-    <wendu.dsbridge.DWebView
-        android:id="@+id/webview"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
 
     <Button
         android:id="@+id/btn_test"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="@string/title_test" />
 </LinearLayout>

@@ -24,8 +24,8 @@ import com.cyl.musiclake.event.PlayQueueEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
-import com.cyl.musiclake.service.MusicPlayerService;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.MusicPlayerService;
+import com.cyl.musiclake.player.PlayManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.cyl.musiclake.service.PlayManager.mService;
+import static com.cyl.musiclake.player.PlayManager.mService;
 
 /**
  * 基类

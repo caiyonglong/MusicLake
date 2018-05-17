@@ -2,7 +2,6 @@ package com.cyl.musiclake.musicApi;
 
 import android.util.Base64;
 
-import com.cyl.musiclake.utils.LogUtil;
 
 import org.json.JSONObject;
 
@@ -72,8 +71,12 @@ public class AjaxHandler {
 
             // Create request body
             if (requestData.getString("method").equals("POST")) {
+                String data = "";
+                if (requestData.getString("body") != null) {
+                    data = requestData.getString("body");
+                }
                 RequestBody requestBody = RequestBody
-                        .create(MediaType.parse(contentType), requestData.getString("data"));
+                        .create(MediaType.parse(contentType), data);
                 rb.post(requestBody);
             }
             // Create and send HTTP requests

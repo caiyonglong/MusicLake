@@ -7,94 +7,53 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-    <!--require dsbridge init js-->
-    <script src="https://unpkg.com/dsbridge/dist/dsbridge.js"></script>
-    <!--require flyio-->
-    <script src="https://unpkg.com/flyio/dist/fly.min.js"></script>
-    <script src="https://unpkg.com/flyio/dist/engine-wrapper.min.js"></script>
-    <script src="https://unpkg.com/flyio/dist/adapter/dsbridge.min.js"></script>
+    <!-- require dsbridge init js -->
+    <script type="text/javascript" src="dist/app.native.js"></script>
+    <script type="text/javascript" src="dist/dsbridge.js"></script>
 </head>
-<style>
-    .btn {
-        text-align: center;
-        background: #eee;
-        color: #000;
-        padding: 10px;
-        margin: 20px;
-        font-size: 14px;
-        border-radius: 3px;
-        box-shadow: 4px 2px 10px #999;
-    }
-
-    .btn:active {
-        opacity: .7;
-        box-shadow: 4px 2px 10px #555;
-    }
-
-    #intro {
-        padding: 16px;
-    }
-</style>
 
 <body>
-    <div id="intro">
-        <a href="https://github.com/wendux/fly">Fly.js </a> supports forwarding the http request (ajax) to Native through any Javascript bridge, And fly.js has already
-        provide the dsBridge adapter. Because the Native side has no the same-origin policy restriction, fly.js can request
-        any resource from any domain.
-    </div>
-    <div class="btn" id="fly-ajax">Get home page source code of baidu.com</div>
-    <div class="btn" id="git-cat">Show the logo of github</div>
-    <div style="text-align:center">
-        <img id="img">
-    </div>
-    <div class="btn" onclick="window.close()">Close window</div>
     <script>
-        function addClick(id, onResult) {
-            document.getElementById(id).addEventListener("click", onResult);
-        }
-        // fly will forward the ajax request to native by WebviewJavascriptBridge,
-        // the http request will be performed actually by native (onAjaxRequest).
-        //use by dsbridge adapter, reference on https://wendux.github.io/dist/#/doc/flyio-en/files
-        var engine = EngineWrapper(dsbAdapter)
-        fly.engine = engine;
-
-        //      //添加请求拦截器
-        // fly.interceptors.request.use((request)=>{
-        //     //给所有请求添加自定义header
-        //     request.headers["referer"]="http://h.xiami.com/";
-        //   	//打印出请求体
-        //   	console.log(request.body)
-        //   	//终止请求
-        //   	//var err=new Error("xxx")
-        //   	//err.request=request
-        //   	//return Promise.reject(new Error(""))
-
-        //     //可以显式返回request, 也可以不返回，没有返回值时拦截器中默认返回request
-        //     return request;
-        // })
-
-        addClick("fly-ajax", function () {
-            fly.get("http://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=0&n=30&w=xue&ct=24&new_json=1&remoteplace=txt.yqq.song&aggr=1&cr=1&lossless=0&format=jsonp&inCharset=utf8&outCharset=utf-8&platform=yqq&needNewCode=0").then(function (d) {
-                alert(d.data)
-            })
-        })
-        addClick("git-cat", function () {
-            fly.get('https://player-node.zzsun.cc/user',null, {
-                headers: {
-                    accesstoken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.DFKhKLcSJG5qqtp17kNRC9S3Wb-HnhtlCXxPzt8ZmJ8',
-                    Accept: '*/*',
-                    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-                    Connection: 'keep-alive',
-                    'X-Real-IP': '223.74.158.213', // 此处加上可以解决海外请求的问题
-                    Referer: 'http://music.163.com',
-                    Host: 'music.163.com',
-                    'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)'
-                }
-            }).then(function (data) {
-                alert(data.data)
-            })
+        dsBridge.registerAsyn("asyn", {
+            tag:"asyn",
+            //搜索功能
+            searchSong: function (keyword, responseCallback) {
+                musicApi.searchSong(keyword).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 获取歌曲详情
+            getSongDetail: function (vendor,id, responseCallback) {
+                musicApi.getSongDetail(vendor,id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //获取歌曲url
+            getSongUrl: function (vendor,id, responseCallback) {
+                musicApi.getSongUrl(vendor,id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //获取歌词
+            getLyric: function (vendor,id, responseCallback) {
+                musicApi.getLyric(vendor,id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 获取排行榜（网易云）
+            getTopList: function (id, responseCallback) {
+                musicApi.getTopList(id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 获取歌曲评论
+            getComment: function (vendor, id, offset = 0, limit = 20, responseCallback) {
+                musicApi.getComment(vendor, id, offset, limit).then(function (data) {
+                    responseCallback(data)
+                })
+            }
         })
     </script>
-    <script type="text/javascript" src="dist/app.web.js"></script>
 </body>
+
 </html>

@@ -12,12 +12,9 @@ import com.cyl.musiclake.utils.LogUtil;
  * 版本：2.5
  */
 public abstract class BaseLazyFragment extends BaseFragment {
-    /**
-     * 懒加载过
-     */
-    private boolean isLazyLoaded;
-
+    private boolean isLazyLoaded;//懒加载过
     private boolean isPrepared;
+    private int count;//记录开启进度条的情况 只能开一个
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -51,4 +48,31 @@ public abstract class BaseLazyFragment extends BaseFragment {
 
     @UiThread
     public abstract void onLazyLoad();
+
+    /**
+     * 开启加载进度条
+     */
+    public void startProgressDialog() {
+        count++;
+        if (count == 1) {
+        }
+    }
+
+    /**
+     * 开启加载进度条
+     *
+     * @param msg
+     */
+    public void startProgressDialog(String msg) {
+    }
+
+    /**
+     * 停止加载进度条
+     */
+    public void stopProgressDialog() {
+        count--;
+        if (count == 0) {
+        }
+    }
+
 }

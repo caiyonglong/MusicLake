@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.ui.music.local.adapter.ViewPagerAdapter;
+import com.cyl.musiclake.ui.music.list.adapter.ViewPagerAdapter;
 
 import butterknife.BindView;
 

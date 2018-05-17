@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -41,12 +41,16 @@ public class MusicApp extends Application {
         LitePal.initialize(this);
         UpdateUtils.init(this);
         SPUtils.init(this);
-        FileDownloadLog.NEED_LOG = true;
         mTencent = Tencent.createInstance(Constants.APP_ID, this);
         initBugly();
-        /**
-         * 初始化文件下载
-         */
+        initFileDownload();
+    }
+
+    /**
+     * 初始化文件下载
+     */
+    private void initFileDownload() {
+        FileDownloadLog.NEED_LOG = true;
         FileDownloader.setupOnApplicationOnCreate(this)
                 .connectionCreator(new FileDownloadUrlConnection
                         .Creator(new FileDownloadUrlConnection.Configuration()
@@ -57,12 +61,11 @@ public class MusicApp extends Application {
                 .commit();
     }
 
+    /**
+     * 初始化bugly
+     */
     private void initBugly() {
         Bugly.init(getApplicationContext(), Constants.BUG_APP_ID, true);
         Beta.checkUpgrade(false, false);
-    }
-
-    public Tencent getTencent() {
-        return mTencent;
     }
 }

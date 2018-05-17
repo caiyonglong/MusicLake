@@ -19,15 +19,16 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.PlayQueueEvent;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment;
-import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
+import com.cyl.musiclake.ui.music.list.fragment.PlayControlFragment;
+import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.jaeger.library.StatusBarUtil;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -38,7 +39,7 @@ import com.tencent.tauth.Tencent;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment.topContainer;
+import static com.cyl.musiclake.ui.music.list.fragment.PlayControlFragment.topContainer;
 
 /**
  * 描述 主要的Activity
@@ -193,6 +194,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
                 break;
+            case R.id.nav_menu_test:
+                mTargetClass = TestActivity.class;
+                break;
             case R.id.nav_menu_exit:
                 mTargetClass = null;
                 finish();
@@ -309,6 +313,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText("音乐湖");
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("点我登录");
+            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNick.setText("未登录?去登录/注册吧!");
         }
     }

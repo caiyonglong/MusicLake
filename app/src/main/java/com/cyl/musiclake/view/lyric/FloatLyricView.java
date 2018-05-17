@@ -14,7 +14,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.SPUtils;
 import com.rtugeek.android.colorseekbar.ColorSeekBar;

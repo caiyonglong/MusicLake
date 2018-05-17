@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.musicApi.MusicApiServiceImpl;
+import com.cyl.musicapi.callback.musicApi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;

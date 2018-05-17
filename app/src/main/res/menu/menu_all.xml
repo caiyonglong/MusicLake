@@ -4,23 +4,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_login_status"
-            android:icon="@drawable/ic_exit" />
+            android:icon="@drawable/ic_exit"
+            android:title="@string/login" />
 
-        <!--<item-->
-        <!--android:id="@+id/nav_menu_near"-->
-        <!--android:icon="@mipmap/icon_near"-->
-        <!--android:title="附近" />-->
+        <item
+            android:id="@+id/nav_menu_test"
+            android:icon="@drawable/ic_test"
+            android:title="@string/title_test" />
 
-        <item android:title="通用">
+        <item android:title="@string/title_common">
             <menu>
                 <item
                     android:id="@+id/nav_menu_setting"
                     android:icon="@mipmap/icon_setting"
-                    android:title="设置" />
+                    android:title="@string/settings" />
                 <item
                     android:id="@+id/nav_menu_exit"
                     android:icon="@mipmap/icon_exit"
-                    android:title="退出程序" />
+                    android:title="@string/exit" />
             </menu>
         </item>
     </group>

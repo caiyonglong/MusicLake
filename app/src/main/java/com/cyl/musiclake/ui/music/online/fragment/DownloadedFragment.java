@@ -12,12 +12,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.common.NavigateUtil;
-import com.cyl.musiclake.data.source.SongLoader;
-import com.cyl.musiclake.service.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
+import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.SongLoader;
+import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.list.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.list.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.music.list.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.contract.DownloadContract;
 import com.cyl.musiclake.ui.music.online.presenter.DownloadPresenter;
 import com.cyl.musiclake.utils.FileUtils;
@@ -75,12 +75,12 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
                         break;
                     case R.id.popup_song_goto_album:
                         Log.e("album", music.toString() + "");
-                        NavigateUtil.navigateToAlbum(getActivity(),
+                        NavigationHelper.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);
                         break;
                     case R.id.popup_song_goto_artist:
-                        NavigateUtil.navigateToArtist(getActivity(),
+                        NavigationHelper.navigateToArtist(getActivity(),
                                 music.getArtistId(),
                                 music.getArtist(), null);
                         break;

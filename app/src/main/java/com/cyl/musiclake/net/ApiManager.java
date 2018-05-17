@@ -1,7 +1,6 @@
 package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.MusicApp;
-import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by yonglong on 2017/9/11.
@@ -141,7 +141,7 @@ public class ApiManager {
     public <T> T create(Class<T> clazz, String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .client(getOkHttpClient())
-                .addConverterFactory(MyGsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
         return retrofit.create(clazz);
     }

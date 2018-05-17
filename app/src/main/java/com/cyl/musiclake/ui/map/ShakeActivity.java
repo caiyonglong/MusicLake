@@ -10,7 +10,6 @@ import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.Animation;
@@ -19,7 +18,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.service.MusicPlayerService;
+import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.common.Constants;

@@ -7,8 +7,8 @@ import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.data.source.download.TasksManager;
-import com.cyl.musiclake.data.source.download.TasksManagerModel;
+import com.cyl.musiclake.data.download.TasksManager;
+import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.ui.music.online.adapter.FileDownloadListener;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.NetworkUtils;

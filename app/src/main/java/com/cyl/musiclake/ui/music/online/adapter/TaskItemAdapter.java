@@ -10,9 +10,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.common.NavigateUtil;
-import com.cyl.musiclake.data.source.download.TasksManager;
-import com.cyl.musiclake.data.source.download.TasksManagerModel;
+import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.download.TasksManager;
+import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -162,7 +162,7 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
             taskActionBtn.setText(R.string.delete);
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
-            NavigateUtil.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
+            NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
             RxBus.getInstance().post(new TasksManagerModel());
         }
 

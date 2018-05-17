@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.musicApi.AjaxHandler;
+import com.cyl.musicapi.callback.musicApi.AjaxHandler;
 import com.cyl.musiclake.utils.LogUtil;
 
 import org.json.JSONObject;
@@ -24,17 +24,15 @@ public class TestActivity extends BaseActivity {
     @BindView(R.id.btn_test)
     Button btnTest;
 
-    @BindView(R.id.webview)
     DWebView mWebView;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @OnClick(R.id.btn_test)
     void test() {
         Log.e("tt", "test");
-        mWebView.callHandler("asyn.getInfo", (OnReturnValue<JSONObject>) retValue -> {
-                    LogUtil.e(retValue.toString());
-                }
-        );
+        mWebView.callHandler("asyn.searchSong", new Object[]{"周杰伦"}, (OnReturnValue<JSONObject>) retValue -> {
+            btnTest.setText(retValue.toString());
+        });
     }
 
     @Override
@@ -44,7 +42,8 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mWebView.addJavascriptObject(new Object(){
+        mWebView = new DWebView(this);
+        mWebView.addJavascriptObject(new Object() {
 
             /**
              * Note: This method is for Fly.js
@@ -54,13 +53,13 @@ public class TestActivity extends BaseActivity {
              * @param handler
              */
             @JavascriptInterface
-            public void onAjaxRequest(Object requestData, CompletionHandler handler){
-                LogUtil.e("TAG","-----");
+            public void onAjaxRequest(Object requestData, CompletionHandler handler) {
+                LogUtil.e("TAG", "-----");
                 // Handle ajax request redirected by Fly
-                AjaxHandler.onAjaxRequest((JSONObject)requestData,handler);
+                AjaxHandler.onAjaxRequest((JSONObject) requestData, handler);
             }
 
-        },null);
+        }, null);
         // 格式规定为:file:///android_asset/文件名.html
         mWebView.loadUrl("file:///android_asset/app.html");
     }

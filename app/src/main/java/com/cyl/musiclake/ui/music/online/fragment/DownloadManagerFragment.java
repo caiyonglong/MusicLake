@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.data.source.download.TasksManager;
-import com.cyl.musiclake.data.source.download.TasksManagerModel;
+import com.cyl.musiclake.data.download.TasksManager;
+import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.ui.music.online.adapter.TaskItemAdapter;
 
 import java.lang.ref.WeakReference;

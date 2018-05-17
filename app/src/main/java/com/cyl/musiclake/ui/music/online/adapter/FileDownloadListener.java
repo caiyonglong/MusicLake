@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.online.adapter;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;

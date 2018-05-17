@@ -2,14 +2,9 @@ package com.cyl.musiclake.ui.music.online.presenter;
 
 import android.content.Context;
 
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.musicApi.MusicApiServiceImpl;
-import com.cyl.musiclake.ui.music.online.contract.SearchContract;
-import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.ui.music.search.SearchContract;
 
 import java.util.List;
 

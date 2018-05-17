@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
 
 public class LyricTextView extends View {

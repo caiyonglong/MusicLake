@@ -9,9 +9,9 @@ import android.widget.RemoteViews;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.common.NavigateUtil;
-import com.cyl.musiclake.service.MusicPlayerService;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.player.MusicPlayerService;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.CoverLoader;
 
 
@@ -48,7 +48,7 @@ public class StandardWidget extends BaseWidget {
                 context,
                 REQUEST_PLAYPAUSE,
                 new Intent(context, MusicPlayerService.class)
-                        .setAction(MusicPlayerService.ACTION_TOGGLE_PAUSE)
+                        .setAction(MusicPlayerService.ACTION_PLAY_PAUSE)
                         .setComponent(serviceName),
                 0
         ));
@@ -76,14 +76,14 @@ public class StandardWidget extends BaseWidget {
         remoteViews.setOnClickPendingIntent(R.id.iv_cover, PendingIntent.getActivity(
                 context,
                 0,
-                NavigateUtil.getNowPlayingIntent(context),
+                NavigationHelper.getNowPlayingIntent(context),
                 PendingIntent.FLAG_UPDATE_CURRENT
         ));
 
         remoteViews.setOnClickPendingIntent(R.id.iv_lyric, PendingIntent.getService(
                 context,
                 0,
-                NavigateUtil.getLyricIntent(context),
+                NavigationHelper.getLyricIntent(context),
                 PendingIntent.FLAG_UPDATE_CURRENT
         ));
     }

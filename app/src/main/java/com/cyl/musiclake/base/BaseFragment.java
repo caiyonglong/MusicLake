@@ -20,11 +20,6 @@ import butterknife.Unbinder;
 public abstract class BaseFragment extends RxFragment {
     public View rootView;
     private Unbinder mUnbinder;
-    private int count;//记录开启进度条的情况 只能开一个
-    //当前Fragment是否处于可见状态标志，防止因ViewPager的缓存机制而导致回调函数的触发
-    private boolean isFragmentVisible;
-    //是否是第一次开启网络加载
-    public boolean isViewCreated;
 
     @Nullable
     @Override
@@ -75,32 +70,6 @@ public abstract class BaseFragment extends RxFragment {
         super.onResume();
         if (getUserVisibleHint()) {
             setUserVisibleHint(true);
-        }
-    }
-
-    /**
-     * 开启加载进度条
-     */
-    public void startProgressDialog() {
-        count++;
-        if (count == 1) {
-        }
-    }
-
-    /**
-     * 开启加载进度条
-     *
-     * @param msg
-     */
-    public void startProgressDialog(String msg) {
-    }
-
-    /**
-     * 停止加载进度条
-     */
-    public void stopProgressDialog() {
-        count--;
-        if (count == 0) {
         }
     }
 

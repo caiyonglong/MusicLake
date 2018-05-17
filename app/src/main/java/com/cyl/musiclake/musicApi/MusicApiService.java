@@ -2,6 +2,8 @@ package com.cyl.musiclake.musicApi;
 
 import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musicapi.playlist.CollectionInfo;
+import com.cyl.musicapi.playlist.PlaylistInfo;
 import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.List;

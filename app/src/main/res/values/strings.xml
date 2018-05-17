@@ -191,6 +191,15 @@
     <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
     <string name="resource_error">歌曲资源异常</string>
     <string name="prompt_login">请先登录！</string>
+    <string name="title_common">通用</string>
+    <string name="settings">设置</string>
+    <string name="exit">退出程序</string>
+
+    <!--通知栏-->
+    <string name="notification_description">通知栏播放控制</string>
+    <string name="notification_channel_id">music_lake_01</string>
+    <string name="song_title">歌曲名</string>
+    <string name="song_artist">歌手名</string>
 
 
 </resources>
