@@ -1,5 +1,6 @@
 # MusicLake
-Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构了一次，还是发现还有很多不足的地方。
+- Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。
+- 音乐来源本地音乐、百度音乐，QQ音乐、虾米音乐、网易云音乐
 
 # 已完成功能
 
@@ -18,6 +19,8 @@ Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。代码重构�
 - [ ] 优化项目架构，代码编码规范
 - [ ] 验证，修复bug
 - [ ] 完善百度音乐，QQ音乐、虾米音乐、网易云音乐的api
+- [ ] 合并榜单，作为一个音乐发现界面
+
 
 # release note
 [点这下载](https://github.com/caiyonglong/MusicLake/releases)
