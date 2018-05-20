@@ -22,12 +22,12 @@ public class TopListAdapter extends BaseQuickAdapter<NeteaseList, BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, NeteaseList neteaseList) {
-        if (neteaseList.getName() == null || neteaseList.getCoverImgUrl() == null)
+        if (neteaseList.getName() == null)
+            return;
+        helper.setText(R.id.title, neteaseList.getName());
+        if (neteaseList.getCoverImgUrl() == null)
             return;
         CoverLoader.loadImageView(mContext, neteaseList.getCoverImgUrl(), helper.getView(R.id.iv_cover));
-
-
-        helper.setText(R.id.title, neteaseList.getName());
         List<NeteaseMusic> musicLists = neteaseList.getTracks();
         if (musicLists.size() >= 1 && musicLists.get(0).getName() != null
                 && musicLists.get(0).getArtists() != null) {

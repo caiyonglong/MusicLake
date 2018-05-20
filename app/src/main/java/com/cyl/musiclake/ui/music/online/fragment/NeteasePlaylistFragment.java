@@ -13,7 +13,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.ui.music.online.activity.NeteaseMusicListActivity;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
 import com.cyl.musiclake.ui.music.online.adapter.TopListAdapter;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -104,27 +105,29 @@ public class NeteasePlaylistFragment extends BaseFragment {
     }
 
     @Override
-    protected void loadData() {
+    protected void initInjector() {
 
+    }
+
+    @Override
+    protected void loadData() {
         for (int i = 0; i < neteaseLists.size(); i++) {
             try {
                 int finalI = i;
-                Observable<NeteaseList> observable
+                Observable<Playlist> observable
                         = MusicApi.getTopList(i);
                 observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<NeteaseList>() {
+                        .subscribe(new Observer<Playlist>() {
                             @Override
                             public void onSubscribe(Disposable d) {
 
                             }
 
                             @Override
-                            public void onNext(NeteaseList neteaseList) {
-                                neteaseLists.set(finalI, neteaseList);
-                                LogUtil.e(TAG, finalI + "---" + neteaseList.getName() + "--" + neteaseList.getTrackCount()
-                                        + "---"
-                                        + neteaseList.getTracks().size());
+                            public void onNext(Playlist playlist) {
+//                                neteaseLists.set(finalI, playlist);
+                                LogUtil.e(TAG, playlist.toString());
                                 mAdapter.notifyItemChanged(finalI);
                             }
 
@@ -151,7 +154,9 @@ public class NeteasePlaylistFragment extends BaseFragment {
             mSwipeRefreshLayout.setRefreshing(false);
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(getActivity(), NeteaseMusicListActivity.class);
+            Intent intent = new Intent(getActivity(), NeteasePlaylistActivity.class);
+            intent.putExtra("title", neteaseLists.get(position).getName());
+            intent.putExtra("id", position);
             intent.putExtra("netease", neteaseLists.get(position));
             startActivity(intent);
         });

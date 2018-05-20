@@ -1,12 +1,11 @@
 package com.cyl.musiclake.ui.music.list.adapter;
 
-import android.view.View;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.ConvertUtils;
+import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
 
@@ -17,7 +16,6 @@ import java.util.List;
  * 版本：2.5
  */
 public class SongAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
-    String url = null;
 
     public SongAdapter(List<Music> musicList) {
         super(R.layout.item_music, musicList);
@@ -25,14 +23,12 @@ public class SongAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder holder, Music item) {
-        url = item.getCoverUri();
 //        if (url == null) {
 //            url = item.getTitle() + "," + item.getArtist();
 //            CoverLoader.loadImageViewByDouban(mContext, url, holder.getView(R.id.iv_cover), null);
 //        } else {
-//            CoverLoader.loadImageView(mContext, url, holder.getView(R.id.iv_cover));
+        CoverLoader.loadImageView(mContext, item.getCoverUri(), holder.getView(R.id.iv_cover));
 //        }
-        holder.getView(R.id.iv_cover).setVisibility(View.GONE);
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
 //        if (PlayManager.getPlayingMusic() != null && PlayManager.getPlayingMusic().equals(localItem)) {

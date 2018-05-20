@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
+
+import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
@@ -14,13 +16,11 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musicapi.playlist.AddPlaylistUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.list.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.ui.music.online.presenter.SearchPresenter;
-import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchContract.View {
+public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchView.OnQueryTextListener, SearchContract.View {
 
     private static final String TAG = "SearchActivity";
     //搜索信息
@@ -45,7 +45,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     private List<Music> searchResults = new ArrayList<>();
 
-    SearchPresenter mPresenter = new SearchPresenter();
 
     private int mCurrentCounter = 0;
     private int TOTAL_COUNTER = 0;
@@ -60,7 +59,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void initView() {
-        mPresenter.attachView(this);
     }
 
     @Override
@@ -80,12 +78,17 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                 .build();
     }
 
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
     @SuppressWarnings({"unchecked", "varargs"})
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
-            Log.e(TAG, music.toString());
+            LogUtil.e(TAG, music.toString());
             mPresenter.getMusicInfo(0, music);
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -98,7 +101,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
                                 .show(getSupportFragmentManager(), TAG);
                         break;
                     case R.id.popup_song_goto_artist:
-                        Log.e(TAG, music.toString());
+                        LogUtil.e(TAG, music.toString());
                         Intent intent = new Intent(this, ArtistInfoActivity.class);
                         intent.putExtra(Extras.TING_UID, music);
                         startActivity(intent);

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musicapi.callback.musicApi.MusicApiServiceImpl;
+import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -21,6 +23,8 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -32,37 +36,27 @@ import static com.tencent.connect.common.Constants.REQUEST_LOGIN;
  * Created by D22434 on 2018/1/3.
  */
 
-public class LoginPresenter implements LoginContract.Presenter {
-    private LoginContract.View mView;
-    private Context mContext;
+public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
     private UserModel userModel;
 
     //QQ第三方登录
     private Tencent mTencent;
     private IUiListener loginListener;
 
+    @Inject
+    public LoginPresenter() {
+        this.userModel = new UserModel(MusicApp.getAppContext());
+    }
+
     @Override
     public void attachView(LoginContract.View view) {
-        mView = view;
-        mContext = (Context) view;
-        userModel = new UserModel(mContext);
-    }
-
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+        super.attachView(view);
+        userModel = new UserModel(mView.getContext());
     }
 
     @Override
     public void login(Map<String, String> params) {
         mView.showLoading();
-
     }
 
     private void getPrivateToken() {
@@ -112,7 +106,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void loginByQQ(Activity activity) {
         mView.showLoading();
         //QQ第三方登录
-        mTencent = Tencent.createInstance(Constants.APP_ID, mContext);
+        mTencent = Tencent.createInstance(Constants.APP_ID, mView.getContext());
         mTencent.login(activity, "all", loginListener);
         loginListener = new IUiListener() {
             @Override
@@ -152,7 +146,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             if (resultCode == -1) {
                 Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
                 Tencent.handleResultData(data, loginListener);
-                UserInfo info = new UserInfo(mContext, mTencent.getQQToken());
+                UserInfo info = new UserInfo(mView.getContext(), mTencent.getQQToken());
                 info.getUserInfo(new IUiListener() {
                     @Override
                     public void onComplete(Object o) {
@@ -177,7 +171,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                             userModel.savaInfo(userInfo);
                             getPrivateToken();
                         } catch (JSONException e) {
-                            ToastUtils.show(mContext, "网络异常，请稍后重试！");
+                            ToastUtils.show("网络异常，请稍后重试！");
                             e.printStackTrace();
                         }
                     }

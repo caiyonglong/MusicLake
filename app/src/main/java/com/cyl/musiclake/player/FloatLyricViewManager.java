@@ -10,7 +10,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.Gravity;
 import android.view.WindowManager;
 
@@ -201,7 +201,7 @@ public class FloatLyricViewManager {
 
                     @Override
                     public void onNext(String lyricInfo) {
-                        Log.e(TAG, lyricInfo);
+                        LogUtil.e(TAG, lyricInfo);
                         setLyric(LyricParseUtils.setLyricResource(lyricInfo));
                     }
 

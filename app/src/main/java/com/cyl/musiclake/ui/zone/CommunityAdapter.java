@@ -165,7 +165,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //
 //                    @Override
 //                    public void onResponse(StatusInfo response) {
-//                        Log.e("=========", response.toString() + "==" + response.getAgree() + "---" + response.getNum());
+//                        LogUtil.e("=========", response.toString() + "==" + response.getAgree() + "---" + response.getNum());
 //                        myDatas.get(position).setIsAgree(response.getAgree());
 //                        myDatas.get(position).setSecret_agreeNum(response.getNum() + "");
 //                        notifyDataSetChanged();

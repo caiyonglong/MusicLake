@@ -1,7 +1,7 @@
 package com.cyl.musiclake.api.qq;
 
 import android.util.Base64;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
@@ -88,7 +88,7 @@ public class QQApiServiceImpl {
                     String key = qqApiKey.getKey();
                     String url = Constants.BASE_URL_QQ_MUSIC_URL +
                             "M500" + music.getId() + ".mp3?vkey=" + key + "&guid=" + guid + "&fromtag=30";
-                    Log.e(TAG, url);
+                    LogUtil.e(TAG, url);
                     music.setUri(url);
                     return Observable.fromArray(music);
                 });

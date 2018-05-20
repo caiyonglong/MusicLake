@@ -2,11 +2,14 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.FolderInfo;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.list.contract.FoldersContract;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,36 +20,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by D22434 on 2018/1/8.
  */
 
-public class FoldersPresenter implements FoldersContract.Presenter {
+public class FoldersPresenter extends BasePresenter<FoldersContract.View> implements FoldersContract.Presenter {
 
-    private Context mContext;
-    private FoldersContract.View mView;
-
-    public FoldersPresenter(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Override
-    public void attachView(FoldersContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public FoldersPresenter() {
     }
 
     @Override
     public void loadFolders() {
         mView.showLoading();
-        AppRepository.getFolderInfosRepository(mContext)
+        AppRepository.getFolderInfosRepository(mView.getContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mView.bindToLife())
                 .subscribe(new Observer<List<FolderInfo>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

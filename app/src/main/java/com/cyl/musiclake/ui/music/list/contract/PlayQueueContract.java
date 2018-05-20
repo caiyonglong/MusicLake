@@ -4,13 +4,13 @@ import android.content.Context;
 
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;
 
 public interface PlayQueueContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
 
         Context getContext();
 
@@ -20,7 +20,7 @@ public interface PlayQueueContract {
 
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
 
         void loadSongs();
 

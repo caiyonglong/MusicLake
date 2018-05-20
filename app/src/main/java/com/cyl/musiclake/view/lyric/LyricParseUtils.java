@@ -1,6 +1,6 @@
 package com.cyl.musiclake.view.lyric;
 
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
 
@@ -76,7 +76,7 @@ public class LyricParseUtils {
                 mLyricInfo = lyricInfo;
             } catch (IOException e) {
                 resetLyricInfo();
-                Log.e("--", "IOException");
+                LogUtil.e("--", "IOException");
                 e.printStackTrace();
             }
         } else {

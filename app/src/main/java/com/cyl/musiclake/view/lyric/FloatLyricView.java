@@ -2,7 +2,7 @@ package com.cyl.musiclake.view.lyric;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -150,7 +150,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         mSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.e("TEST", progress + "---" + fromUser);
+                LogUtil.e("TEST", progress + "---" + fromUser);
                 mLyricText.setFontSizeScale(progress);
                 SPUtils.saveFontSize(progress);
             }

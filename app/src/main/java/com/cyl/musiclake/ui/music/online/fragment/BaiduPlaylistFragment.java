@@ -26,7 +26,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylistContract.View {
+public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter> implements OnlinePlaylistContract.View {
 
     private static final String TAG = "BaiduPlaylistFragment";
     @BindView(R.id.recyclerView)
@@ -37,8 +37,6 @@ public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylis
     SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
     private OnlineAdapter mAdapter;
-    //排行榜集合
-    private OnlinePlaylistPresenter mPresenter;
 
     public static BaiduPlaylistFragment newInstance() {
         Bundle args = new Bundle();
@@ -63,9 +61,11 @@ public class BaiduPlaylistFragment extends BaseFragment implements OnlinePlaylis
         mAdapter = new OnlineAdapter(null);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
 
-        mPresenter = new OnlinePlaylistPresenter(getContext());
-        mPresenter.attachView(this);
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

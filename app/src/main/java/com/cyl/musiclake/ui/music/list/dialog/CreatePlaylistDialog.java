@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.InputType;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
@@ -13,7 +13,7 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musicapi.callback.musicApi.MusicApiServiceImpl;
+import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 
 import io.reactivex.Observer;
@@ -55,7 +55,7 @@ public class CreatePlaylistDialog extends DialogFragment {
                 .negativeText("取消")
                 .inputRangeRes(2, 10, R.color.red)
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("输入歌单名", "", false, (dialog, input) -> Log.e(TAG, input.toString()))
+                .input("输入歌单名", "", false, (dialog, input) -> LogUtil.e(TAG, input.toString()))
                 .onPositive((dialog, which) -> {
                     String title = dialog.getInputEditText().getText().toString();
                     createPlaylist(title);
@@ -71,7 +71,7 @@ public class CreatePlaylistDialog extends DialogFragment {
 //                    } else {
 //                        ToastUtils.show(getActivity(), "创建失败" + title);
 //                    }
-                    Log.d(TAG, title);
+                    LogUtil.d(TAG, title);
                 }).build();
     }
 

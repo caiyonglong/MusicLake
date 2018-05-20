@@ -2,7 +2,9 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
@@ -10,13 +12,15 @@ import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musicapi.callback.musicApi.MusicApiServiceImpl;
+import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.music.list.contract.MyMusicContract;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -27,14 +31,14 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/6.
  */
 
-public class MyMusicPresenter implements MyMusicContract.Presenter {
-    private MyMusicContract.View mView;
+public class MyMusicPresenter extends BasePresenter<MyMusicContract.View> implements MyMusicContract.Presenter {
     private Context mContext;
     private List<Playlist> playlists = new ArrayList<>();
     private List<Music> musicList;
 
-    public MyMusicPresenter(Context mContext) {
-        this.mContext = mContext;
+    @Inject
+    public MyMusicPresenter() {
+        this.mContext = MusicApp.getAppContext();
         /**登陆成功重新设置用户新*/
         RxBus.getInstance().register(HistoryChangedEvent.class).subscribe(event -> updateHistory());
         RxBus.getInstance().register(PlaylistEvent.class).subscribe(event -> {
@@ -104,19 +108,6 @@ public class MyMusicPresenter implements MyMusicContract.Presenter {
                 });
     }
 
-    @Override
-    public void attachView(MyMusicContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
 
     @Override
     public void loadSongs() {

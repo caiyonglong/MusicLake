@@ -28,13 +28,18 @@
 -dontwarn javax.annotation.**
 -dontwarn javax.inject.**
 # OkHttp3
--dontwarn okhttp3.logging.**
--keep class okhttp3.internal.**{*;}
+-dontwarn okhttp3.**
 -dontwarn okio.**
+-dontwarn javax.annotation.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
 # Retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
 -keepattributes Signature-keepattributes
+
+
 # RxJava RxAndroid
 -dontwarn sun.misc.**
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {

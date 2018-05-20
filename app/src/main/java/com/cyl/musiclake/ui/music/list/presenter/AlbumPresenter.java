@@ -2,11 +2,15 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.list.contract.AlbumsContract;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -18,35 +22,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/7.
  */
 
-public class AlbumPresenter implements AlbumsContract.Presenter {
-    private AlbumsContract.View mView;
-    private Context mContext;
+public class AlbumPresenter extends BasePresenter<AlbumsContract.View> implements AlbumsContract.Presenter {
 
-    public AlbumPresenter(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Override
-    public void attachView(AlbumsContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public AlbumPresenter() {
     }
 
     @Override
     public void loadAlbums(String action) {
         mView.showLoading();
-        AppRepository.getAllAlbumsRepository(mContext)
+        AppRepository.getAllAlbumsRepository(MusicApp.getAppContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mView.bindToLife())
                 .subscribe(new Observer<List<Album>>() {
 
                     @Override

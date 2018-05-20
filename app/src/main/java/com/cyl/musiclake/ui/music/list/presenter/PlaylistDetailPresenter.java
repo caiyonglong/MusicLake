@@ -1,18 +1,19 @@
 package com.cyl.musiclake.ui.music.list.presenter;
 
-import android.content.Context;
-
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musicapi.callback.musicApi.MusicApiServiceImpl;
+import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
 import com.cyl.musiclake.ui.music.list.contract.PlaylistDetailContract;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -24,30 +25,12 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/7.
  */
 
-public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter {
+public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContract.View> implements PlaylistDetailContract.Presenter {
     private static final String TAG = "PlaylistDetailPresenter";
-    private PlaylistDetailContract.View mView;
-    private Context mContext;
 
-    public PlaylistDetailPresenter(Context mContext) {
-        this.mContext = mContext;
+    @Inject
+    public PlaylistDetailPresenter() {
     }
-
-    @Override
-    public void attachView(PlaylistDetailContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
-
     @Override
     public void loadPlaylistSongs(String playlistID) {
         MusicApiServiceImpl.getMusicList(playlistID)
@@ -107,7 +90,7 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
 
     @Override
     public void loadPlaylistArt(String playlistID) {
-        AppRepository.getPlaylistSongsRepository(mContext, playlistID)
+        AppRepository.getPlaylistSongsRepository(mView.getContext(), playlistID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
@@ -124,7 +107,7 @@ public class PlaylistDetailPresenter implements PlaylistDetailContract.Presenter
                             if (url != null)
                                 break;
                         }
-                        CoverLoader.loadBitmap(mContext, url, bitmap -> {
+                        CoverLoader.loadBitmap(mView.getContext(), url, bitmap -> {
                             mView.showPlaylistArt(bitmap);
                         });
                     }

@@ -10,7 +10,7 @@
 //import android.support.v4.widget.SwipeRefreshLayout;
 //import android.support.v7.widget.LinearLayoutManager;
 //import android.support.v7.widget.RecyclerView;
-//import android.util.Log;
+//import com.cyl.musiclake.utils.LogUtil;
 //import android.view.View;
 //import android.widget.TextView;
 //
@@ -108,7 +108,7 @@
 //
 //                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 //
-//                Log.e("-------",totalItemCount+":"+lastVisibleItem);
+//                LogUtil.e("-------",totalItemCount+":"+lastVisibleItem);
 //
 //                if (!loading && totalItemCount < (lastVisibleItem + VISIBLE_THRESHOLD)) {
 //                    new SecretTask(getContext()).execute(pagenum);

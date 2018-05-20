@@ -9,8 +9,9 @@ import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musicapi.playlist.CollectionInfo;
-import com.cyl.musicapi.callback.musicApi.SourceData;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.musicapi.SourceData;
+import com.cyl.musiclake.musicapi.playlist.CollectionInfo;
 import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class MusicApi {
         }
     }
 
-    public static Observable<NeteaseList> getTopList(int id) {
+    public static Observable<Playlist> getTopList(int id) {
         return NeteaseApiServiceImpl.getTopList(id);
     }
 

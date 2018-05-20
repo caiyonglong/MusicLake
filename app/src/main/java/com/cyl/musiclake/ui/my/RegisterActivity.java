@@ -22,7 +22,7 @@ import butterknife.OnClick;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class RegisterActivity extends BaseActivity implements RegisterContract.View {
+public class RegisterActivity extends BaseActivity<RegisterPresenter> implements RegisterContract.View {
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -54,8 +54,6 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
         onBackPressed();
     }
 
-    RegisterPresenter mPresenter;
-
 
     @Override
     protected int getLayoutResID() {
@@ -69,13 +67,14 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     @Override
     protected void initData() {
-
-        mPresenter = new RegisterPresenter();
-        mPresenter.attachView(this);
-
         if (SystemUtils.isLollipop()) {
             getWindow().getEnterTransition().addListener(new EnterTransitionListener());
         }
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
     @Override

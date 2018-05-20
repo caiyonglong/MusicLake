@@ -2,13 +2,13 @@ package com.cyl.musiclake.ui.music.list.contract;
 
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;
 
 public interface LoveContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
 
         void showSongs(List<Music> songs);
 
@@ -16,7 +16,7 @@ public interface LoveContract {
 
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
 
         void loadSongs();
 

@@ -2,13 +2,18 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.list.contract.FolderSongsContract;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -16,42 +21,39 @@ import io.reactivex.schedulers.Schedulers;
  * Created by D22434 on 2018/1/8.
  */
 
-public class FolderSongPresenter implements FolderSongsContract.Presenter {
+public class FolderSongPresenter extends BasePresenter<FolderSongsContract.View> implements FolderSongsContract.Presenter {
 
-    private Context mContext;
-    private FolderSongsContract.View mView;
-
-    public FolderSongPresenter(Context mContext) {
-        this.mContext = mContext;
+    @Inject
+    public FolderSongPresenter() {
     }
-
-    @Override
-    public void attachView(FolderSongsContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
-
 
     @Override
     public void loadSongs(String path) {
-        AppRepository.getFolderSongsRepository(mContext,path)
+        AppRepository.getFolderSongsRepository(mView.getContext(), path)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Music>>() {
+                .compose(mView.bindToLife())
+                .subscribe(new Observer<List<Music>>() {
                     @Override
-                    public void accept(List<Music> musicList) throws Exception {
-                        if (musicList.size()==0)
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Music> musicList) {
+                        if (musicList.size() == 0)
                             mView.showEmptyView();
                         mView.showSongs(musicList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

@@ -21,7 +21,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -306,7 +306,7 @@ public class LyricView extends View {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        Log.e("LyricView_dispatch", event.getAction() + "----");
+        LogUtil.e("LyricView_dispatch", event.getAction() + "----");
         final float x = event.getX();
         final float y = event.getY();
 
@@ -321,11 +321,11 @@ public class LyricView extends View {
                 final float deltaY = Math.abs(y - mDownY);
                 // 这里是够拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
                 if (deltaX < deltaY) {
-                    Log.e("MotionEvent", "down");
+                    LogUtil.e("MotionEvent", "down");
                     setUserTouch(true);
                     getParent().requestDisallowInterceptTouchEvent(true);
                 } else {
-                    Log.e("MotionEvent", "lefttoright");
+                    LogUtil.e("MotionEvent", "lefttoright");
                     getParent().requestDisallowInterceptTouchEvent(false);
                 }
 
@@ -342,7 +342,7 @@ public class LyricView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.e("LyricView_onTouchEvent", event.getAction() + "----");
+        LogUtil.e("LyricView_onTouchEvent", event.getAction() + "----");
 
         if (!mTouchable) {
             return super.onTouchEvent(event);
@@ -410,7 +410,7 @@ public class LyricView extends View {
      * @param event
      */
     private void actionMove(MotionEvent event) {
-        Log.e("actionMove", scrollable() + "----");
+        LogUtil.e("actionMove", scrollable() + "----");
         if (scrollable()) {
             final VelocityTracker tracker = mVelocityTracker;
             tracker.computeCurrentVelocity(1000, maximumFlingVelocity);

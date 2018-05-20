@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.di.component.ApplicationComponent;
+import com.cyl.musiclake.di.component.DaggerApplicationComponent;
+import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
@@ -24,6 +27,8 @@ public class MusicApp extends Application {
     public static Context mContext;
     private Tencent mTencent;
 
+    private ApplicationComponent mApplicationComponent;
+
     public static synchronized MusicApp getInstance() {
         return sInstance;
     }
@@ -38,6 +43,7 @@ public class MusicApp extends Application {
         super.onCreate();
         sInstance = this;
         mContext = this;
+        initApplicationComponent();
         LitePal.initialize(this);
         UpdateUtils.init(this);
         SPUtils.init(this);
@@ -68,4 +74,19 @@ public class MusicApp extends Application {
         Bugly.init(getApplicationContext(), Constants.BUG_APP_ID, true);
         Beta.checkUpgrade(false, false);
     }
+
+
+    /**
+     * 初始化ApplicationComponent
+     */
+    private void initApplicationComponent() {
+        mApplicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+    }
+
+    public ApplicationComponent getApplicationComponent() {
+        return mApplicationComponent;
+    }
+
 }

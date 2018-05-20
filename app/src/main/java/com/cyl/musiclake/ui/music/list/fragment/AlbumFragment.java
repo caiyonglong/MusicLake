@@ -29,7 +29,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.View {
+public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements AlbumsContract.View {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
@@ -40,8 +40,6 @@ public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.Vi
     LinearLayout loading;
     private AlbumAdapter mAdapter;
     private List<Album> albumList = new ArrayList<>();
-    private AlbumPresenter mPresenter;
-
 
     public static AlbumFragment newInstance() {
 
@@ -66,13 +64,15 @@ public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.Vi
      */
     @Override
     public void initViews() {
-        mPresenter = new AlbumPresenter(getContext());
-        mPresenter.attachView(this);
-
-        mAdapter = new AlbumAdapter(albumList);
+        mAdapter = new AlbumAdapter(null);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

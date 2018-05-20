@@ -2,12 +2,16 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.list.contract.AlbumDetailContract;
 import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,40 +23,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/7.
  */
 
-public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
-    private AlbumDetailContract.View mView;
-    private Context mContext;
+public class AlbumDetailPresenter extends BasePresenter<AlbumDetailContract.View> implements AlbumDetailContract.Presenter {
 
-    public AlbumDetailPresenter(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Override
-    public void attachView(AlbumDetailContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
-
-    @Override
-    public void subscribe(String albumID) {
-
+    @Inject
+    public AlbumDetailPresenter() {
     }
 
     @Override
     public void loadAlbumSongs(String albumName) {
         mView.showLoading();
-        AppRepository.getAlbumSongsRepository(mContext, albumName)
+        AppRepository.getAlbumSongsRepository(MusicApp.getAppContext(), albumName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mView.bindToLife())
                 .subscribe(new Observer<List<Music>>() {
 
                     @Override
@@ -79,13 +62,9 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
                         mView.hideLoading();
                     }
                 });
-        CoverLoader.loadImageViewByDouban(mContext, albumName, null, resource -> {
+        CoverLoader.loadImageViewByDouban(MusicApp.getAppContext(), albumName, null, resource -> {
             mView.showAlbumArt(resource);
         });
     }
 
-    @Override
-    public void loadAlbumArt(String albumID) {
-
-    }
 }

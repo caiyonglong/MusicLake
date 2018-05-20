@@ -12,8 +12,21 @@
             android:icon="@drawable/ic_test"
             android:title="@string/title_test" />
 
+        <item android:title="@string/title_function">
+            <menu>
+                <item
+                    android:id="@+id/nav_menu_playQueue"
+                    android:icon="@drawable/ic_playlist_play"
+                    android:title="@string/playlist_queue" />
+            </menu>
+        </item>
+
         <item android:title="@string/title_common">
             <menu>
+                <item
+                    android:id="@+id/nav_menu_about"
+                    android:icon="@drawable/ic_about"
+                    android:title="@string/pref_title_about" />
                 <item
                     android:id="@+id/nav_menu_setting"
                     android:icon="@mipmap/icon_setting"

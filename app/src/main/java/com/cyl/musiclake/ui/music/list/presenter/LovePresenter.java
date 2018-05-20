@@ -2,11 +2,14 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.list.contract.LoveContract;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,35 +20,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/7.
  */
 
-public class LovePresenter implements LoveContract.Presenter {
-    private LoveContract.View mView;
-    private Context mContext;
+public class LovePresenter extends BasePresenter<LoveContract.View> implements LoveContract.Presenter {
 
-    public LovePresenter(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Override
-    public void attachView(LoveContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public LovePresenter() {
     }
 
     @Override
     public void loadSongs() {
         mView.showLoading();
-        AppRepository.getFavoriteSong(mContext)
+        AppRepository.getFavoriteSong(mView.getContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mView.bindToLife())
                 .subscribe(new Observer<List<Music>>() {
 
                     @Override

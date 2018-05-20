@@ -87,6 +87,10 @@ public class NearPeopleAcivity extends BaseActivity {
     }
 
     @Override
+    protected void initInjector() {
+    }
+
+    @Override
     protected void listener() {
 
     }

@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.transition.Explode;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -133,7 +133,7 @@ public class CommentActivity extends BaseActivity {
         secret_id = getIntent().getStringExtra(Extras.SECRET_ID);
         user_id = getIntent().getStringExtra(Extras.USER_ID);
 
-        Log.e("rrr", secret_id + "====" + user_id);
+        LogUtil.e("rrr", secret_id + "====" + user_id);
         getComment(secret_id);
 
     }
@@ -190,6 +190,11 @@ public class CommentActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void initInjector() {
+
+    }
+
 
     private void getComment(String secret_id) {
 //        OkHttpUtils.post().url(Constants.DEFAULT_URL)
@@ -206,11 +211,11 @@ public class CommentActivity extends BaseActivity {
 //                    @Override
 //                    public void onResponse(CommentInfo response) {
 //                        if (response.getStatus() == 1) {
-//                            Log.e("aaaaaaaa", response.toString());
+//                            LogUtil.e("aaaaaaaa", response.toString());
 //                            secret = response.getData();
 //                            comments = response.getComment();
 //                            adapter.comments = comments;
-//                            Log.e("aaaaaaaa", response.toString());
+//                            LogUtil.e("aaaaaaaa", response.toString());
 //                            mHandler.post(update_thread);
 //                            adapter.notifyDataSetChanged();
 //                        }
@@ -258,7 +263,7 @@ public class CommentActivity extends BaseActivity {
 //                    @Override
 //                    public void onResponse(StatusInfo response) {
 //                        if (response.getStatus() == 1) {
-//                            Log.e("=========", response.toString() + "==" + response.getAgree() + "---" + response.getNum());
+//                            LogUtil.e("=========", response.toString() + "==" + response.getAgree() + "---" + response.getNum());
 //                            secret.setIsAgree(response.getAgree());
 //                            secret.setSecret_agreeNum(response.getNum() + "");
 //                            mHandler.post(update_thread);

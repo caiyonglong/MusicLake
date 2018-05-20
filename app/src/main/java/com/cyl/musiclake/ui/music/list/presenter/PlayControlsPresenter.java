@@ -1,18 +1,16 @@
 package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.event.MetaChangedEvent;
@@ -23,6 +21,8 @@ import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.LogUtil;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -35,42 +35,31 @@ import io.reactivex.schedulers.Schedulers;
  * Created by hefuyi on 2016/11/8.
  */
 
-public class PlayControlsPresenter implements PlayControlsContract.Presenter {
+public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.View> implements PlayControlsContract.Presenter {
 
     private static final String TAG = "PlayControlsPresenter";
-    private PlayControlsContract.View mView;
 
     private boolean isPlayPauseClick = false;
     private int mProgress;
-
     private Handler mHandler;
-    private Context mContext;
-    private Activity activity;
 
-    public PlayControlsPresenter(Context mContext) {
-        this.mContext = mContext;
-        this.activity = (Activity) mContext;
+    @Inject
+    public PlayControlsPresenter() {
     }
 
     @Override
     public void attachView(PlayControlsContract.View view) {
-        mView = view;
+        super.attachView(view);
         mHandler = new Handler();
-    }
-
-    @Override
-    public void subscribe() {
         RxBus.getInstance().register(MetaChangedEvent.class)
+                .compose(mView.bindToLife())
                 .subscribe(metaChangedEvent -> {
-                    if (!activity.isFinishing()) {
-                        updateNowPlayingCard();
-                    }
+                    updateNowPlayingCard();
                 });
         RxBus.getInstance().register(StatusChangedEvent.class)
+                .compose(mView.bindToLife())
                 .subscribe(metaChangedEvent -> {
-                    if (!activity.isFinishing()) {
-                        updatePlayStatus();
-                    }
+                    updatePlayStatus();
                     if (!metaChangedEvent.isPrepared()) {
                         mView.showLoading();
                     } else {
@@ -80,7 +69,8 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
     }
 
     @Override
-    public void unsubscribe() {
+    public void detachView() {
+        super.detachView();
         if (updateProgress != null) {
             mHandler.removeCallbacks(updateProgress);
         }
@@ -129,7 +119,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
                     @Override
                     public void onNext(String lyricInfo) {
-                        Log.e(TAG, lyricInfo);
+                        LogUtil.e(TAG, lyricInfo);
                         mView.showLyric(lyricInfo, false);
                     }
 
@@ -155,14 +145,14 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
 
     @Override
     public void updateNowPlayingCard() {
-        Log.d(TAG, "updateNowPlayingCard" + mProgress);
+        LogUtil.d(TAG, "updateNowPlayingCard" + mProgress);
         Music music = PlayManager.getPlayingMusic();
         if (music == null || PlayManager.getPlayList().size() == 0) {
-            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.header_material);
+            Bitmap bitmap = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.header_material);
             mView.setAlbumArt(bitmap);
-            mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+            mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mView.getContext(), 12));
             new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
-            mView.setTitle(mContext.getResources().getString(R.string.app_name));
+            mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
             mView.setArtist("");
             return;
         } else {
@@ -173,7 +163,7 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         final String title = PlayManager.getSongName();
         final String artist = PlayManager.getSongArtist();
         if (TextUtils.isEmpty(title) && TextUtils.isEmpty(artist)) {
-            mView.setTitle(mContext.getResources().getString(R.string.app_name));
+            mView.setTitle(mView.getContext().getResources().getString(R.string.app_name));
             mView.setArtist("");
         } else {
             mView.setTitle(title);
@@ -182,17 +172,17 @@ public class PlayControlsPresenter implements PlayControlsContract.Presenter {
         //设置音乐来源
         mView.setOtherInfo(music.getTypeName(false));
         //获取当前歌曲状态
-        AppRepository.getMusicInfo(mContext, music)
+        AppRepository.getMusicInfo(mView.getContext(), music)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(music1 -> mView.updateFavorite(music1.isLove()));
 
-        if (!isPlayPauseClick && !activity.isFinishing()) {
+        if (!isPlayPauseClick) {
             loadLyric();
-            CoverLoader.loadImageViewByMusic(mContext, music, bitmap -> {
+            CoverLoader.loadImageViewByMusic(mView.getContext(), music, bitmap -> {
                 mView.setAlbumArt(bitmap);
-                Log.d(TAG, "loadBitmap =");
-                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mContext, 12));
+                LogUtil.d(TAG, "loadBitmap =");
+                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mView.getContext(), 12));
                 new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
             });
         }

@@ -1,14 +1,15 @@
 package com.cyl.musiclake.ui.music.online.presenter;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,29 +20,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by D22434 on 2018/1/4.
  */
 
-public class BaiduListPresenter implements BaiduListContract.Presenter {
-
-    private BaiduListContract.View mView;
-    private Context mContext;
-
-    public BaiduListPresenter(Context mContext) {
-        this.mContext = mContext;
+public class BaiduListPresenter extends BasePresenter<BaiduListContract.View> implements BaiduListContract.Presenter {
+    @Inject
+    public BaiduListPresenter() {
     }
 
-    @Override
-    public void attachView(BaiduListContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
 
     @Override
     public void loadOnlineMusicList(String type, int limit, int mOffset) {
@@ -86,7 +69,7 @@ public class BaiduListPresenter implements BaiduListContract.Presenter {
 
                     @Override
                     public void onNext(Music result) {
-                        Log.e("baidu_play", result.toString());
+                        LogUtil.e("baidu_play", result.toString());
                         PlayManager.playOnline(result);
                     }
 

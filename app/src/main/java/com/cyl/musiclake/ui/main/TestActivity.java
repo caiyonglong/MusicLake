@@ -2,13 +2,13 @@ package com.cyl.musiclake.ui.main;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.webkit.JavascriptInterface;
 import android.widget.Button;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musicapi.callback.musicApi.AjaxHandler;
+import com.cyl.musiclake.musicapi.AjaxHandler;
 import com.cyl.musiclake.utils.LogUtil;
 
 import org.json.JSONObject;
@@ -29,7 +29,7 @@ public class TestActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @OnClick(R.id.btn_test)
     void test() {
-        Log.e("tt", "test");
+        LogUtil.e("tt", "test");
         mWebView.callHandler("asyn.searchSong", new Object[]{"周杰伦"}, (OnReturnValue<JSONObject>) retValue -> {
             btnTest.setText(retValue.toString());
         });
@@ -66,6 +66,11 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    protected void initInjector() {
 
     }
 

@@ -11,7 +11,7 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musicapi.callback.musicApi.MusicApiServiceImpl;
+import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 

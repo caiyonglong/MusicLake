@@ -3,6 +3,8 @@ package com.cyl.musiclake.bean;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 功能：本地歌单
@@ -19,8 +21,13 @@ public class Playlist extends DataSupport implements Serializable {
     private int count;
     //创建日期
     private long date;
+    //描述
+    private String des;
     private String order;
-    private String coverUri;
+    private String coverUrl;
+
+    //歌曲集合
+    private List<Music> musicList = new ArrayList<>();
 
     public Playlist() {
     }
@@ -65,6 +72,14 @@ public class Playlist extends DataSupport implements Serializable {
         this.date = date;
     }
 
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
+    }
+
     public String getOrder() {
         return order;
     }
@@ -73,16 +88,33 @@ public class Playlist extends DataSupport implements Serializable {
         this.order = order;
     }
 
-    public String getCoverUri() {
-        return coverUri;
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
-    public void setCoverUri(String coverUri) {
-        this.coverUri = coverUri;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public List<Music> getMusicList() {
+        return musicList;
+    }
+
+    public void setMusicList(List<Music> musicList) {
+        this.musicList = musicList;
     }
 
     @Override
     public String toString() {
-        return name;
+        return "Playlist{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", count=" + count +
+                ", date=" + date +
+                ", des='" + des + '\'' +
+                ", order='" + order + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", musicList=" + musicList +
+                '}';
     }
 }

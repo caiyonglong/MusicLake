@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.PageAdapter;
-import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.list.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
@@ -24,7 +23,6 @@ import butterknife.BindView;
  */
 @SuppressWarnings("ConstantConditions")
 public class MainFragment extends BaseFragment {
-
     @BindView(R.id.m_viewpager)
     ViewPager mViewPager;
     @BindView(R.id.tabs)
@@ -32,10 +30,7 @@ public class MainFragment extends BaseFragment {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    private PageAdapter mAdapter;
-
     public static MainFragment newInstance() {
-
         Bundle args = new Bundle();
         MainFragment fragment = new MainFragment();
         fragment.setArguments(args);
@@ -64,17 +59,21 @@ public class MainFragment extends BaseFragment {
                 toggle.setDisplayHomeAsUpEnabled(true);
             }
         }
-
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
         setupViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(3);
     }
 
+    @Override
+    protected void initInjector() {
+
+    }
+
     private void setupViewPager(ViewPager mViewPager) {
-        mAdapter = new PageAdapter(getChildFragmentManager());
+        PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.newInstance(), "我的");
-        mAdapter.addFragment(DiscoverFragment.newInstance(), "发现");
+//        mAdapter.addFragment(DiscoverFragment.newInstance(), "发现");
         mAdapter.addFragment(BaiduPlaylistFragment.newInstance(), "百度");
         mAdapter.addFragment(NeteasePlaylistFragment.newInstance(), "网易");
         mViewPager.setAdapter(mAdapter);

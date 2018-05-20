@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -31,7 +31,7 @@ import butterknife.BindView;
  * Created by yonglong on 2016/11/26.
  */
 
-public class DownloadedFragment extends BaseFragment implements DownloadContract.View {
+public class DownloadedFragment extends BaseFragment<DownloadPresenter> implements DownloadContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -39,7 +39,6 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     private SongAdapter mAdapter;
-    private DownloadPresenter mPresenter;
     private List<Music> musicList = new ArrayList<>();
 
     public static DownloadedFragment newInstance() {
@@ -74,7 +73,7 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_goto_album:
-                        Log.e("album", music.toString() + "");
+                        LogUtil.e("album", music.toString() + "");
                         NavigationHelper.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);
@@ -125,9 +124,11 @@ public class DownloadedFragment extends BaseFragment implements DownloadContract
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
 
-        mPresenter = new DownloadPresenter(getActivity());
-        mPresenter.attachView(this);
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

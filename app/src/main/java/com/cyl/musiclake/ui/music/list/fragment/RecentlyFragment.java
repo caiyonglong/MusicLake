@@ -33,7 +33,7 @@ import butterknife.BindView;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class RecentlyFragment extends BaseFragment implements RecentlyContract.View {
+public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements RecentlyContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -42,7 +42,6 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
 
     private SongAdapter2 mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private RecentlyPresenter mPresenter;
 
     @Override
     public int getLayoutId() {
@@ -73,8 +72,11 @@ public class RecentlyFragment extends BaseFragment implements RecentlyContract.V
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
 
-        mPresenter = new RecentlyPresenter(getContext());
-        mPresenter.attachView(this);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

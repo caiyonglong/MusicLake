@@ -1,6 +1,7 @@
 package com.cyl.musiclake.api.netease;
 
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.LogUtil;
@@ -54,11 +55,23 @@ public class NeteaseApiServiceImpl {
                 });
     }
 
-    public static Observable<NeteaseList> getTopList(int ids) {
+    public static Observable<Playlist> getTopList(int ids) {
         return getApiService().getTopList(ids)
-                .flatMap(topList -> Observable.create((ObservableOnSubscribe<NeteaseList>) e -> {
+                .flatMap(topList -> Observable.create((ObservableOnSubscribe<Playlist>) e -> {
                     try {
-                        e.onNext(topList.getResult());
+                        Playlist playlist = new Playlist();
+                        playlist.setId(topList.getResult().getId() + "");
+                        playlist.setName(topList.getResult().getName());
+                        playlist.setDate(topList.getResult().getTrackUpdateTime());
+                        playlist.setDes(topList.getResult().getDescription());
+                        List<Music> musicList = new ArrayList<>();
+                        for (NeteaseMusic neteaseMusic : topList.getResult().getTracks()) {
+                            Music music = new Music(neteaseMusic);
+                            musicList.add(music);
+                        }
+                        playlist.setCoverUrl(topList.getResult().getCoverImgUrl());
+                        playlist.setMusicList(musicList);
+                        e.onNext(playlist);
                         e.onComplete();
                     } catch (Exception ep) {
                         e.onError(ep);

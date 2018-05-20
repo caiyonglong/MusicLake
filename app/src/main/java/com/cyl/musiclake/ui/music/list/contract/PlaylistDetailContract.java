@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface PlaylistDetailContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
 
         Context getContext();
 
@@ -28,7 +28,7 @@ public interface PlaylistDetailContract {
         void success(int type);
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
 
         void loadPlaylistSongs(String playlistID);
 

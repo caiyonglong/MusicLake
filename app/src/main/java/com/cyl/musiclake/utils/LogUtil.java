@@ -1,5 +1,6 @@
 package com.cyl.musiclake.utils;
 
+
 import android.util.Log;
 
 /**
@@ -36,7 +37,7 @@ public class LogUtil {
 
     public static void i(String tag, String msg) {
         if (LEVEL <= INFO && IS_DEBUG) {
-            Log.i(tag, msg);
+            Log.d(tag, msg);
         }
     }
 
@@ -66,7 +67,7 @@ public class LogUtil {
 
     public static void i(String msg) {
         if (LEVEL <= INFO && IS_DEBUG) {
-            Log.i(defaultTag, msg);
+            Log.d(defaultTag, msg);
         }
     }
 
@@ -118,6 +119,6 @@ public class LogUtil {
     }
 
     public static void spec(int widthSpeMode) {
-        Log.d(defaultTag, "value = " + widthSpeMode);
+        LogUtil.d(defaultTag, "value = " + widthSpeMode);
     }
 }

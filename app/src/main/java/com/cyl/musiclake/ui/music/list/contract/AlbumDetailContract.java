@@ -1,21 +1,17 @@
 package com.cyl.musiclake.ui.music.list.contract;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
 
 import java.util.List;
 
 
 public interface AlbumDetailContract {
 
-    interface View extends BaseView {
-
-        Context getContext();
+    interface View extends BaseContract.BaseView {
 
         void showEmptyView();
 
@@ -26,13 +22,7 @@ public interface AlbumDetailContract {
         void showAlbumArt(Bitmap bitmap);
     }
 
-    interface Presenter extends BasePresenter<View> {
-
-        void subscribe(String albumID);
-
+    interface Presenter extends BaseContract.BasePresenter<View> {
         void loadAlbumSongs(String albumName);
-
-        void loadAlbumArt(String albumID);
-
     }
 }

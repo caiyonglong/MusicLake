@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.Map;
@@ -15,13 +15,13 @@ import java.util.Map;
 
 public interface LoginContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
         void showErrorInfo(String msg);
 
         void success(User user);
     }
 
-    interface Presenter extends BasePresenter<LoginContract.View> {
+    interface Presenter extends BaseContract.BasePresenter<LoginContract.View> {
         void login(Map<String, String> params);
 
         void loginByQQ(Activity activity);

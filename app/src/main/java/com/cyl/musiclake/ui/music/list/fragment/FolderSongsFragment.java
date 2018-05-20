@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -30,9 +30,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class FolderSongsFragment extends BaseFragment implements FolderSongsContract.View {
+public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> implements FolderSongsContract.View {
 
-    FolderSongPresenter mPresenter;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -60,13 +59,6 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
 
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mPresenter.unsubscribe();
-    }
-
-
-    @Override
     public void showEmptyView() {
         mAdapter.setEmptyView(R.layout.view_song_empty);
     }
@@ -75,7 +67,6 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
     @Override
     protected void loadData() {
         mPresenter.loadSongs(path);
-
     }
 
     @Override
@@ -93,8 +84,6 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mPresenter = new FolderSongPresenter(getActivity());
-        mPresenter.attachView(this);
         if (getArguments() != null) {
             path = getArguments().getString(Extras.FOLDER_PATH);
         }
@@ -103,6 +92,11 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override
@@ -127,7 +121,7 @@ public class FolderSongsFragment extends BaseFragment implements FolderSongsCont
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_goto_album:
-                        Log.e("album", music.toString() + "");
+                        LogUtil.e("album", music.toString() + "");
                         NavigationHelper.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);

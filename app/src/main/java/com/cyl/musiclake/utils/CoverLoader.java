@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -84,7 +83,7 @@ public class CoverLoader {
 
                     @Override
                     public void onNext(DoubanMusic doubanMusic) {
-                        Log.d(TAG, "picUrl =" + doubanMusic.getCount());
+                        LogUtil.d(TAG, "picUrl =" + doubanMusic.getCount());
                         String url = null;
                         if (doubanMusic.getCount() >= 1) {
                             url = doubanMusic.getMusics().get(0).getImage();
@@ -98,7 +97,7 @@ public class CoverLoader {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.d(TAG, "throwable =" + throwable.getMessage());
+                        LogUtil.d(TAG, "throwable =" + throwable.getMessage());
                         if (imageView != null) {
                             loadImageView(mContext, null, imageView);
                         } else if (bitmapCallBack != null) {
@@ -144,6 +143,7 @@ public class CoverLoader {
     public static void loadImageView(Context mContext, String url, ImageView imageView) {
         GlideApp.with(mContext)
                 .load(url)
+                .placeholder(R.drawable.default_cover_player)
                 .error(R.drawable.default_cover_player)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
@@ -152,6 +152,7 @@ public class CoverLoader {
     public static void loadImageView(Context mContext, String url, int defaultUrl, ImageView imageView) {
         GlideApp.with(mContext)
                 .load(url)
+                .placeholder(R.drawable.default_cover_player)
                 .error(defaultUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);

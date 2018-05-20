@@ -1,15 +1,29 @@
 <resources>
     <string name="app_name">音乐湖</string>
-    <string name="near_people">分享人资料</string>
-    <string name="detail_position">位置详情</string>
-
-    <string name="toolbar_title">音乐湖</string>
-    <string name="action_settings">设置</string>
+    <string name="sure">确定</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>
-    <string name="header_author_name">登录音乐湖</string>
+    <!--欢迎界面-->
+    <string name="permission_hint">软件必须获取相关权限</string>
+    <!--主界面-->
+    <string name="login_hint">点我登录</string>
+    <string name="logout_hint">注销登录</string>
+    <string name="action_settings">设置</string>
     <string name="header_author_url">个性标签</string>
+    <string name="widget_standard">音乐湖</string>
+    <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
+    <string name="resource_error">歌曲资源异常</string>
+    <string name="prompt_login">请先登录！</string>
+    <string name="title_common">通用</string>
+    <string name="title_function">功能</string>
+    <string name="playlist_queue">播放队列</string>
+    <string name="settings">设置</string>
+    <string name="exit">退出程序</string>
 
+    <!--本地音乐-->
+    <string name="local_music">本地歌曲</string>
+    <string name="near_people">分享人资料</string>
+    <string name="detail_position">位置详情</string>
     <string name="plusone">+1</string>
     <string name="item_clicked" translatable="false">item clicked！</string>
     <string name="item_longclicked" translatable="false">item long clicked！</string>
@@ -37,9 +51,7 @@
     <string name="gpsrotate">旋转</string>
 
     <!--设置-->
-
     <string name="no_result">对不起，没有搜索到相关数据！</string>
-
 
     <string name="title_activity_settings">设置</string>
     <string name="info_common_settings">通用设置</string>
@@ -133,7 +145,6 @@
 
     <string name="error_connection">网络连接异常，请稍后重试！</string>
     <string name="secret_num">~~ 动态 %1$d ~~</string>
-    <string name="sure">确定</string>
     <string name="error_playing_track">播放出错</string>
     <string name="folders">文件夹</string>
     <string name="play_time">00:00</string>
@@ -187,13 +198,6 @@
     <!-- 在线音乐-->
     <string name="playlist_num">%1$s("%2$d")</string>
 
-    <string name="widget_standard">音乐湖</string>
-    <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
-    <string name="resource_error">歌曲资源异常</string>
-    <string name="prompt_login">请先登录！</string>
-    <string name="title_common">通用</string>
-    <string name="settings">设置</string>
-    <string name="exit">退出程序</string>
 
     <!--通知栏-->
     <string name="notification_description">通知栏播放控制</string>

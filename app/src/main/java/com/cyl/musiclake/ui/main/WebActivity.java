@@ -50,6 +50,11 @@ public class WebActivity extends BaseActivity {
     }
 
     @Override
+    protected void initInjector() {
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_content, menu);
         return super.onCreateOptionsMenu(menu);

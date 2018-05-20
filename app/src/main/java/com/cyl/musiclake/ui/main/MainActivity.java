@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +27,10 @@ import com.cyl.musiclake.ui.music.list.fragment.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.LogUtil;
 import com.jaeger.library.StatusBarUtil;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -107,13 +108,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigatePlay.run();
     }
 
+    @Override
+    protected void initInjector() {
+    }
+
 
     @Override
     protected void listener() {
         mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                Log.i(TAG, "onPanelStateChanged " + newState);
+                LogUtil.d(TAG, "onPanelStateChanged " + newState);
                 if (newState == PanelState.EXPANDED) {
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 } else {
@@ -123,7 +128,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
                 topContainer.setAlpha(1 - slideOffset * 2);
                 if (topContainer.getAlpha() < 0) {
                     topContainer.setVisibility(View.GONE);
@@ -193,6 +198,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
+                break;
+            case R.id.nav_menu_about:
+                mTargetClass = AboutActivity.class;
                 break;
             case R.id.nav_menu_test:
                 mTargetClass = TestActivity.class;
@@ -307,14 +315,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             String url = UserStatus.getUserInfo(this).getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(UserStatus.getUserInfo(this).getNick());
-            mNick.setText("音乐湖");
-            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("注销登录").setIcon(R.drawable.ic_exit);
+            mNick.setText(getResources().getString(R.string.app_name));
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
+                    .setIcon(R.drawable.ic_exit);
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
-            mName.setText("音乐湖");
-            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("点我登录");
+            mName.setText(getResources().getString(R.string.app_name));
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
             mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
-            mNick.setText("未登录?去登录/注册吧!");
+            mNick.setText(getResources().getString(R.string.login_hint));
         }
     }
 

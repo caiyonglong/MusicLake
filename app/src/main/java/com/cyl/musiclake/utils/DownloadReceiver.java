@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 /**
  * 下载完成广播接收器
@@ -14,7 +14,7 @@ import android.util.Log;
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("=========",intent.getAction());
+        LogUtil.e("=========",intent.getAction());
         long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
         if (id == UpdateUtils.sDownloadId) {
             String serviceString = Context.DOWNLOAD_SERVICE;

@@ -26,7 +26,7 @@ import butterknife.BindView;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class LoveFragment extends BaseFragment implements LoveContract.View {
+public class LoveFragment extends BaseFragment<LovePresenter> implements LoveContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -35,7 +35,6 @@ public class LoveFragment extends BaseFragment implements LoveContract.View {
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private LovePresenter mPresenter;
 
     @Override
     public int getLayoutId() {
@@ -65,8 +64,11 @@ public class LoveFragment extends BaseFragment implements LoveContract.View {
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
 
-        mPresenter = new LovePresenter(getContext());
-        mPresenter.attachView(this);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override
@@ -74,15 +76,6 @@ public class LoveFragment extends BaseFragment implements LoveContract.View {
         mPresenter.loadSongs();
     }
 
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
 
     @Override
     public void showSongs(List<Music> songs) {
@@ -126,10 +119,6 @@ public class LoveFragment extends BaseFragment implements LoveContract.View {
     @Override
     public void showEmptyView() {
         mAdapter.setEmptyView(R.layout.view_song_empty);
-    }
-
-    private void onBackPress() {
-        getActivity().onBackPressed();
     }
 
 }

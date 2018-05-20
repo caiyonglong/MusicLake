@@ -62,6 +62,11 @@ public class DownloadManagerFragment extends BaseFragment {
         TasksManager.getImpl().onCreate(new WeakReference<>(this));
     }
 
+    @Override
+    protected void initInjector() {
+
+    }
+
     public void postNotifyDataChanged() {
         if (mAdapter != null) {
             getActivity().runOnUiThread(() -> {

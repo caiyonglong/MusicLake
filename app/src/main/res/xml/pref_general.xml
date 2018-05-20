@@ -31,10 +31,6 @@
         <PreferenceScreen
             android:key="key_update"
             android:title="@string/pref_title_update" />
-        <PreferenceScreen
-            android:key="key_about"
-            android:title="@string/title_about" />
-
 
     </PreferenceCategory>
 

@@ -36,7 +36,7 @@ import butterknife.OnClick;
  * 版本：2.5
  * 专辑
  */
-public class AlbumDetailFragment extends BaseFragment implements AlbumDetailContract.View {
+public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> implements AlbumDetailContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -47,14 +47,12 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     @BindView(R.id.album_art)
     ImageView album_art;
 
-
     String albumID;
     String transitionName;
     String title;
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private AlbumDetailPresenter mPresenter;
 
     @OnClick(R.id.fab)
     void onPlayAll() {
@@ -75,7 +73,6 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     @Override
     protected void loadData() {
         mPresenter.loadAlbumSongs(title);
-        mPresenter.loadAlbumArt(albumID);
     }
 
     @Override
@@ -88,7 +85,7 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         albumID = getArguments().getString(Extras.ALBUM_ID);
         transitionName = getArguments().getString(Extras.TRANSITIONNAME);
         title = getArguments().getString(Extras.PLAYLIST_NAME);
-        StatusBarUtil.setTranslucentForImageViewInFragment(getActivity(),0,album_art);
+        StatusBarUtil.setTranslucentForImageViewInFragment(getActivity(), 0, album_art);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (transitionName != null) {
@@ -100,8 +97,6 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         if (title != null)
             collapsing_toolbar.setTitle(title);
 
-        mPresenter = new AlbumDetailPresenter(getContext());
-        mPresenter.attachView(this);
         setHasOptionsMenu(true);
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -112,6 +107,11 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

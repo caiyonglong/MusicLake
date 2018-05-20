@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.list.contract;
 
 import com.cyl.musiclake.bean.FolderInfo;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
 
 public interface FoldersContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
 
         void showEmptyView();
 
         void showFolders(List<FolderInfo> folderInfos);
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
 
         void loadFolders();
     }

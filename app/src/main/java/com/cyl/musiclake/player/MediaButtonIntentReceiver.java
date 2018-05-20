@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.KeyEvent;
 
 import com.cyl.musiclake.ui.main.MainActivity;
@@ -52,7 +52,7 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
         public void handleMessage(final Message msg) {
             switch (msg.what) {
                 case MSG_LONGPRESS_TIMEOUT:
-                    if (DEBUG) Log.v(TAG, "Handling longpress timeout, launched " + mLaunched);
+                    if (DEBUG) LogUtil.v(TAG, "Handling longpress timeout, launched " + mLaunched);
                     if (!mLaunched) {
                         final Context context = (Context) msg.obj;
                         final Intent i = new Intent();
@@ -67,7 +67,7 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                     final int clickCount = msg.arg1;
                     final String command;
 
-                    if (DEBUG) Log.v(TAG, "Handling headset click, count = " + clickCount);
+                    if (DEBUG) LogUtil.v(TAG, "Handling headset click, count = " + clickCount);
                     switch (clickCount) {
                         case 1:
                             command = MusicPlayerService.CMD_TOGGLE_PAUSE;
@@ -113,7 +113,7 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Listener headset button");
             mWakeLock.setReferenceCounted(false); //设置无论请求多少次vakelock,都只需一次释放
         }
-        if (DEBUG) Log.v(TAG, "Acquiring wake lock and sending " + msg.what);
+        if (DEBUG) LogUtil.v(TAG, "Acquiring wake lock and sending " + msg.what);
         // Make sure we don't indefinitely hold the wake lock under any circumstances
         mWakeLock.acquire(10000); //防止无期限hold住wakelock
 
@@ -126,12 +126,12 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
     private static void releaseWakeLockIfHandlerIdle() {
         if (mHandler.hasMessages(MSG_LONGPRESS_TIMEOUT)
                 || mHandler.hasMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)) {
-            if (DEBUG) Log.v(TAG, "Handler still has messages pending, not releasing wake lock");
+            if (DEBUG) LogUtil.v(TAG, "Handler still has messages pending, not releasing wake lock");
             return;
         }
 
         if (mWakeLock != null) {
-            if (DEBUG) Log.v(TAG, "Releasing wake lock");
+            if (DEBUG) LogUtil.v(TAG, "Releasing wake lock");
             mWakeLock.release();
             mWakeLock = null;
         }
@@ -207,7 +207,7 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                             }
 
                             mClickCounter++;
-                            if (DEBUG) Log.v(TAG, "Got headset click, count = " + mClickCounter);
+                            if (DEBUG) LogUtil.v(TAG, "Got headset click, count = " + mClickCounter);
                             mHandler.removeMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT);
 
                             Message msg = mHandler.obtainMessage(

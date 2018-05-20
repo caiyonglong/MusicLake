@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.my;
 
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.Map;
@@ -12,14 +11,14 @@ import java.util.Map;
 
 public interface UserContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
         void showErrorInfo(String msg);
 
         void updateView(User user);
 
     }
 
-    interface Presenter extends BasePresenter<UserContract.View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
         void updateInfo(Map<String, String> params);
 
         void uploadHeader(String user_id, String path);

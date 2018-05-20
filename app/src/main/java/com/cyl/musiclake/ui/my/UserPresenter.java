@@ -3,13 +3,17 @@ package com.cyl.musiclake.ui.my;
 
 import android.content.Context;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,31 +24,24 @@ import io.reactivex.schedulers.Schedulers;
  * Created by D22434 on 2018/1/3.
  */
 
-public class UserPresenter implements UserContract.Presenter {
-    private UserContract.View mView;
+public class UserPresenter extends BasePresenter<UserContract.View> implements UserContract.Presenter {
     private UserModel userModel;
-    private Context mContext;
 
-    @Override
-    public void attachView(UserContract.View view) {
-        mView = view;
-        mContext = (Context) view;
-        userModel = new UserModel(mContext);
+    @Inject
+    public UserPresenter() {
+        this.userModel = new UserModel(MusicApp.getAppContext());
     }
 
     @Override
-    public void subscribe() {
+    public void attachView(UserContract.View view) {
+        super.attachView(view);
+        userModel = new UserModel(mView.getContext());
+
         RxBus.getInstance().register(User.class)
                 .subscribe(playlist -> {
                     mView.updateView(userModel.getUserInfo());
                 });
     }
-
-    @Override
-    public void unsubscribe() {
-
-    }
-
 
     @Override
     public void updateInfo(Map<String, String> params) {
@@ -96,13 +93,13 @@ public class UserPresenter implements UserContract.Presenter {
 //                .execute(new StatusCallback() {
 //                    @Override
 //                    public void onError(Call call, Exception e) {
-//                        Log.e("eee", "ccccc");
+//                        LogUtil.e("eee", "ccccc");
 //                        ToastUtils.show(UserCenterActivity.this, "上传失败，请检查网络");
 //                    }
 //
 //                    @Override
 //                    public void onResponse(StatusInfo response) {
-//                        Log.e("eee", "ddd");
+//                        LogUtil.e("eee", "ddd");
 //                        if (response.getStatus() == 1) {
 //                            user.setUser_img(response.getImgurl());
 //                            UserStatus.savaUserInfo(getApplicationContext(), user);

@@ -1,10 +1,7 @@
 package com.cyl.musiclake.ui.map;
 
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
-import com.cyl.musiclake.ui.map.location.Location;
+import com.cyl.musiclake.base.BaseContract;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,17 +10,14 @@ import java.util.Map;
 
 public interface NearContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
         void showErrorInfo(String msg);
-
-        void updateView();
 
         void showLoading(String msg);
 
-        void showLocations(List<Location> locationList);
     }
 
-    interface Presenter extends BasePresenter<NearContract.View> {
+    interface Presenter extends BaseContract.BasePresenter<NearContract.View> {
         void getNearPeopleInfo(Map<String, String> params);
     }
 

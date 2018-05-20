@@ -30,7 +30,7 @@ import butterknife.OnClick;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class MyMusicFragment extends BaseFragment implements MyMusicContract.View {
+public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements MyMusicContract.View {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.hor_recyclerView)
@@ -52,7 +52,6 @@ public class MyMusicFragment extends BaseFragment implements MyMusicContract.Vie
     private List<Playlist> mData;
     private PlaylistAdapter mAdapter;
     private LocalAdapter mLocalAdapter;
-    private MyMusicPresenter mPresenter;
 
     public static MyMusicFragment newInstance() {
         Bundle args = new Bundle();
@@ -68,9 +67,6 @@ public class MyMusicFragment extends BaseFragment implements MyMusicContract.Vie
 
     @Override
     public void initViews() {
-        mPresenter = new MyMusicPresenter(getActivity());
-        mPresenter.attachView(this);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setSmoothScrollbarEnabled(false);
 
@@ -88,6 +84,11 @@ public class MyMusicFragment extends BaseFragment implements MyMusicContract.Vie
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
 
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -118,21 +119,6 @@ public class MyMusicFragment extends BaseFragment implements MyMusicContract.Vie
         mPresenter.loadPlaylist();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.subscribe();
-    }
-
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
 
     @Override
     public void showSongs(List<Music> songList) {
@@ -164,9 +150,4 @@ public class MyMusicFragment extends BaseFragment implements MyMusicContract.Vie
         mLocalAdapter.setSongsNum(3, musicList.size());
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mPresenter.unsubscribe();
-    }
 }

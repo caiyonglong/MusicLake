@@ -1,7 +1,7 @@
 package com.cyl.musiclake.utils;
 
 import android.text.TextUtils;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
@@ -140,7 +140,7 @@ public class ConvertUtils {
         try {
             return new ByteArrayInputStream(string.getBytes());
         } catch (Exception e) {
-            Log.e("--", "UnsupportedEncodingException");
+            LogUtil.e("--", "UnsupportedEncodingException");
             e.printStackTrace();
             return null;
         }

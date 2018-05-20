@@ -8,7 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -239,7 +239,7 @@ public class LrcView extends View {
             switch (event.getAction()) {
                 //手指按下
                 case MotionEvent.ACTION_DOWN:
-                    Log.d(TAG, "down,mLastMotionY:" + mLastMotionY);
+                    LogUtil.d(TAG, "down,mLastMotionY:" + mLastMotionY);
                     mLastMotionY = event.getY();
                     invalidate();
                     break;
@@ -247,7 +247,7 @@ public class LrcView extends View {
                 case MotionEvent.ACTION_MOVE:
                     //如果一个手指按下，在屏幕上移动的话，拖动歌词上下
                     mDisplayMode = DISPLAY_MODE_SEEK;
-                    Log.d(TAG, "one move");
+                    LogUtil.d(TAG, "one move");
                     doSeek(event);
                     break;
                 case MotionEvent.ACTION_CANCEL:
@@ -301,7 +301,7 @@ public class LrcView extends View {
         mDisplayMode = DISPLAY_MODE_SEEK;
         int rowOffset = (int) Math.abs((int) offsetY / mTextSize); //歌词要滚动的行数
 
-        Log.d(TAG, "move to new hightlightrow : " + mCurrentLine + " offsetY: " + offsetY + " rowOffset:" + rowOffset);
+        LogUtil.d(TAG, "move to new hightlightrow : " + mCurrentLine + " offsetY: " + offsetY + " rowOffset:" + rowOffset);
 
         if (offsetY < 0) {
             //手指向上移动，歌词向下滚动

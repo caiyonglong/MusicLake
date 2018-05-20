@@ -24,7 +24,6 @@ public class LocalMusicFragment extends BaseLazyFragment {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-
     public static LocalMusicFragment newInstance(String flag) {
         Bundle args = new Bundle();
         args.putString(Extras.SONG_DB, flag);
@@ -40,12 +39,17 @@ public class LocalMusicFragment extends BaseLazyFragment {
 
     @Override
     public void initViews() {
-        mToolbar.setTitle("本地歌曲");
+        mToolbar.setTitle(getResources().getString(R.string.local_music));
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
             appCompatActivity.setSupportActionBar(mToolbar);
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    protected void initInjector() {
+
     }
 
     private void setupViewPager(ViewPager viewPager) {

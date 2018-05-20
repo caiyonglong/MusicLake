@@ -30,7 +30,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.MusicApi;
@@ -231,13 +231,13 @@ public class MusicPlayerService extends Service {
                         break;
                     case PREPARE_ASYNC_UPDATE:
                         int percent = (int) msg.obj;
-                        Log.e(TAG, "Loading ... " + percent);
+                        LogUtil.e(TAG, "Loading ... " + percent);
                         break;
                     case PREPARE_QQ_MUSIC:
                         Music music = mPlayingMusic;
                         MusicApi.getMusicInfo(music)
                                 .subscribe(music1 -> {
-                                    Log.e(TAG, mPlayingMusic.toString());
+                                    LogUtil.e(TAG, mPlayingMusic.toString());
                                     String url = music1.getUri();
                                     mPlayer.setDataSource(url);
                                 });
@@ -347,7 +347,7 @@ public class MusicPlayerService extends Service {
             return;
         }
 
-        if (DEBUG) Log.d(TAG, "Nothing is playing anymore, releasing notification");
+        if (DEBUG) LogUtil.d(TAG, "Nothing is playing anymore, releasing notification");
         cancelNotification();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -421,7 +421,7 @@ public class MusicPlayerService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Got new intent " + intent + ", startId = " + startId);
+        LogUtil.d(TAG, "Got new intent " + intent + ", startId = " + startId);
         mServiceStartId = startId;
         mServiceInUse = true;
         if (intent != null) {
@@ -493,7 +493,7 @@ public class MusicPlayerService extends Service {
     public void next() {
         synchronized (this) {
             mPlayingPos = getNextPosition();
-            Log.e(TAG, "next: " + mPlayingPos);
+            LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
             notifyChange(META_CHANGED);
@@ -707,7 +707,7 @@ public class MusicPlayerService extends Service {
         } else {
             mPlaylist.add(mPlayingPos, music);
         }
-        Log.e(TAG, music.toString());
+        LogUtil.e(TAG, music.toString());
         mPlayingMusic = music;
         playCurrentAndNext();
         notifyChange(META_CHANGED);
@@ -729,7 +729,7 @@ public class MusicPlayerService extends Service {
      * 暂停播放
      */
     public void pause() {
-        if (DEBUG) Log.d(TAG, "Pausing playback");
+        if (DEBUG) LogUtil.d(TAG, "Pausing playback");
         synchronized (this) {
             mHandler.removeMessages(VOLUME_FADE_UP);
             mHandler.sendEmptyMessage(VOLUME_FADE_DOWN);
@@ -832,7 +832,7 @@ public class MusicPlayerService extends Service {
      * 获取正在播放的歌曲[本地|网络]
      */
     public void removeFromQueue(int position) {
-        Log.e(TAG, position + "---" + mPlayingPos + "---" + mPlaylist.size());
+        LogUtil.e(TAG, position + "---" + mPlayingPos + "---" + mPlaylist.size());
         if (position == mPlayingPos) {
             mPlaylist.remove(position);
             if (mPlaylist.size() == 0) {
@@ -892,7 +892,7 @@ public class MusicPlayerService extends Service {
      * @param what
      */
     private void notifyChange(final String what) {
-        if (DEBUG) Log.d(TAG, "notifyChange: what = " + what);
+        if (DEBUG) LogUtil.d(TAG, "notifyChange: what = " + what);
 
         final Intent intent = new Intent(what);
         intent.putExtra("artist", getArtistName());
@@ -1149,7 +1149,7 @@ public class MusicPlayerService extends Service {
     private class ServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, intent.getAction().toString());
+            LogUtil.d(TAG, intent.getAction().toString());
             handleCommandIntent(intent);
         }
     }
@@ -1163,7 +1163,7 @@ public class MusicPlayerService extends Service {
     private void handleCommandIntent(Intent intent) {
         final String action = intent.getAction();
         final String command = SERVICE_CMD.equals(action) ? intent.getStringExtra(CMD_NAME) : null;
-        if (DEBUG) Log.d(TAG, "handleCommandIntent: action = " + action + ", command = " + command);
+        if (DEBUG) LogUtil.d(TAG, "handleCommandIntent: action = " + action + ", command = " + command);
 
         if (CMD_NEXT.equals(command) || ACTION_NEXT.equals(action)) {
             next();
@@ -1224,7 +1224,7 @@ public class MusicPlayerService extends Service {
             if (intent != null && intent.hasExtra("state")) {
                 //通过判断 "state" 来知道状态
                 final boolean isPlugIn = intent.getExtras().getInt("state") == 1;
-                Log.e(TAG, "耳机插入状态 ：" + isPlugIn);
+                LogUtil.e(TAG, "耳机插入状态 ：" + isPlugIn);
             }
         }
     }

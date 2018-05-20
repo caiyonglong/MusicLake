@@ -103,7 +103,7 @@ public class NotifyManager {
      * @param drawableId if != -1, sets the drawable with that id on the play/pause button
      */
     private synchronized void updateNotification(int drawableId) {
-        //if (DEBUG) Log.d(TAG, "updateNotification() called with: drawableId = [" + drawableId + "]");
+        //if (DEBUG) LogUtil.d(TAG, "updateNotification() called with: drawableId = [" + drawableId + "]");
         if (mNotificationBuilder == null) return;
         if (drawableId != -1) {
             if (notRemoteView != null)

@@ -3,7 +3,9 @@ package com.cyl.musiclake.ui.music.online.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +23,6 @@ import com.cyl.musiclake.api.netease.NeteaseMusic;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musicapi.playlist.AddPlaylistUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.adapter.NeteaseAdapter;
@@ -45,7 +46,7 @@ import butterknife.BindView;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class NeteaseMusicListActivity extends BaseActivity implements NeteaseListContract.View {
+public class NeteaseMusicListActivity extends BaseActivity<NeteaseListPresenter> implements NeteaseListContract.View {
 
     private static final String TAG = "BaiduMusicListActivity";
     private List<NeteaseMusic> toplist = new ArrayList<>();
@@ -68,7 +69,6 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
     private String desc;
     private long time;
     private String pic;
-    private NeteaseListPresenter mPresenter;
 
     @Override
     protected int getLayoutResID() {
@@ -92,9 +92,6 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
 
     @Override
     protected void initData() {
-        mPresenter = new NeteaseListPresenter(this);
-        mPresenter.attachView(this);
-
         mAdapter = new NeteaseAdapter(neteaseList.getTracks());
         mAdapter.setEnableLoadMore(true);
 
@@ -105,6 +102,11 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
         mAdapter.bindToRecyclerView(mRecyclerView);
         showHeaderInfo();
 
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
     @Override
@@ -142,7 +144,7 @@ public class NeteaseMusicListActivity extends BaseActivity implements NeteaseLis
                                 .build().show();
                         break;
                     case R.id.popup_song_goto_artist:
-                        Log.e(TAG, music.toString());
+                        LogUtil.e(TAG, music.toString());
                         Music music1 = new Music();
                         music1.setTitle(music.getName());
                         music1.setArtist(music.getArtists().get(0).getName());

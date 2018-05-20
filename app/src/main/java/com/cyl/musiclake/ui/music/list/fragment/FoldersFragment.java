@@ -22,13 +22,12 @@ import butterknife.BindView;
  * Created by D22434 on 2018/1/8.
  */
 
-public class FoldersFragment extends BaseLazyFragment implements FoldersContract.View {
+public class FoldersFragment extends BaseLazyFragment<FoldersPresenter> implements FoldersContract.View {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private FolderAdapter mAdapter;
-    private FoldersPresenter mPresenter;
 
     public static FoldersFragment newInstance() {
 
@@ -51,9 +50,11 @@ public class FoldersFragment extends BaseLazyFragment implements FoldersContract
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         mAdapter.bindToRecyclerView(recyclerView);
+    }
 
-        mPresenter = new FoldersPresenter(getActivity());
-        mPresenter.attachView(this);
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

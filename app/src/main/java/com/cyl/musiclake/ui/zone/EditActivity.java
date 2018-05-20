@@ -42,6 +42,11 @@ public class EditActivity extends BaseActivity {
     }
 
     @Override
+    protected void initInjector() {
+
+    }
+
+    @Override
     protected void listener() {
 
     }
@@ -91,7 +96,7 @@ public class EditActivity extends BaseActivity {
 //                    @Override
 //                    public void onResponse(StatusInfo response) {
 //                        ToastUtils.show(EditActivity.this,response.getMessage());
-//                        Log.e("re",response.getStatus()+response.getMessage());
+//                        LogUtil.e("re",response.getStatus()+response.getMessage());
 //                        finish();
 //                    }
 //                });

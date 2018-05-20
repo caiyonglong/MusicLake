@@ -29,9 +29,12 @@ import com.cyl.musiclake.ui.music.list.presenter.PlayQueuePresenter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,10 +43,6 @@ import butterknife.OnClick;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_LOOP;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_RANDOM;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_REPEAT;
-
-/**
- * Created by hefuyi on 2016/12/27.
- */
 
 public class PlayQueueDialog extends DialogFragment implements PlayQueueContract.View {
 
@@ -58,10 +57,9 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     @BindView(R.id.sheet)
     LinearLayout root;
 
+    private PlayQueuePresenter mPresenter;
     private List<Music> musicList = new ArrayList<>();
     private PlayQueueAdapter mAdapter;
-    //播放模式：0顺序播放、1随机播放、2单曲循环
-    private PlayQueuePresenter mPresenter;
     private Palette.Swatch mSwatch;
     private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
     private int playModeId = 0;
@@ -96,6 +94,8 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new PlayQueuePresenter();
+        mPresenter.attachView(this);
         mAdapter = new PlayQueueAdapter(null);
     }
 
@@ -107,6 +107,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         ButterKnife.bind(this, view);
         return view;
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -120,10 +121,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
             ivPlayMode.setColorFilter(blackWhiteColor);
             clearAll.setColorFilter(blackWhiteColor);
         }
-
-        mPresenter = new PlayQueuePresenter(getContext());
-        mPresenter.attachView(this);
-
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
@@ -225,6 +222,11 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     @Override
     public void hideLoading() {
 
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindToLife() {
+        return null;
     }
 
     @Override

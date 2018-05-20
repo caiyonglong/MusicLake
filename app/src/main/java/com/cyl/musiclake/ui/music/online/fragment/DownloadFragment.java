@@ -65,6 +65,11 @@ public class DownloadFragment extends BaseFragment {
 
     }
 
+    @Override
+    protected void initInjector() {
+
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(DownloadedFragment.newInstance(), "已下载");

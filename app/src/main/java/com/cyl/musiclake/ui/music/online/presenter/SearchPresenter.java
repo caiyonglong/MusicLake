@@ -1,12 +1,13 @@
 package com.cyl.musiclake.ui.music.online.presenter;
 
-import android.content.Context;
-
 import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.ui.music.search.SearchContract;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,24 +18,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/6.
  */
 
-public class SearchPresenter implements SearchContract.Presenter {
-    SearchContract.View mView;
-    Context mContext;
+public class SearchPresenter extends BasePresenter<SearchContract.View> implements SearchContract.Presenter {
 
-    @Override
-    public void attachView(SearchContract.View view) {
-        mView = view;
-        mContext = (Context) view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public SearchPresenter() {
     }
 
     @Override

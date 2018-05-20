@@ -25,7 +25,7 @@ import butterknife.OnClick;
  * Created by yonglong on 2016/11/30.
  */
 
-public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContract.View {
+public class ArtistInfoActivity extends BaseActivity<ArtistInfoPresenter> implements ArtistInfoContract.View {
 
     private static final String TAG = "ArtistInfoActivity";
     @BindView(R.id.tv_desc)
@@ -40,7 +40,6 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
     @BindView(R.id.progress)
     ProgressBar progress;
 
-    ArtistInfoPresenter mPresenter;
     private String url;
     private String name;
 
@@ -65,9 +64,12 @@ public class ArtistInfoActivity extends BaseActivity implements ArtistInfoContra
     @Override
     protected void initData() {
         Music music = getIntent().getParcelableExtra(Extras.TING_UID);
-        mPresenter = new ArtistInfoPresenter();
-        mPresenter.attachView(this);
         mPresenter.loadArtistInfo(music);
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
     @Override

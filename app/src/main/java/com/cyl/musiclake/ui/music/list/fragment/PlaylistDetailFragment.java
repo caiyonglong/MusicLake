@@ -12,7 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
+
+import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +27,6 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musicapi.playlist.AddPlaylistUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.list.adapter.SongAdapter2;
 import com.cyl.musiclake.ui.music.list.contract.PlaylistDetailContract;
@@ -45,7 +46,7 @@ import butterknife.OnClick;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistDetailFragment extends BaseFragment implements PlaylistDetailContract.View {
+public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter> implements PlaylistDetailContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -65,7 +66,6 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
     private SongAdapter2 mAdapter;
     private List<Music> musicList = new ArrayList<>();
     private Playlist mPlaylist;
-    private PlaylistDetailPresenter mPresenter;
 
     public static PlaylistDetailFragment newInstance(Playlist playlist, boolean useTransition, String transitionName) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
@@ -100,13 +100,15 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
             }
         }
 
-        mPresenter = new PlaylistDetailPresenter(getContext());
-        mPresenter.attachView(this);
-
         mAdapter = new SongAdapter2(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override
@@ -183,7 +185,7 @@ public class PlaylistDetailFragment extends BaseFragment implements PlaylistDeta
                         .negativeText("取消")
                         .inputRangeRes(2, 10, R.color.red)
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input("输入歌单名", mPlaylist.getName(), false, (dialog, input) -> Log.e("=====", input.toString()))
+                        .input("输入歌单名", mPlaylist.getName(), false, (dialog, input) -> LogUtil.e("=====", input.toString()))
                         .onPositive((dialog, which) -> {
                             String title = dialog.getInputEditText().getText().toString();
                             mPresenter.renamePlaylist(mPlaylist, title);

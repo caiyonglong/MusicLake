@@ -72,6 +72,11 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
+    protected void initInjector() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.logout:

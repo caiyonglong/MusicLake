@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.list.presenter;
 
-import android.content.Context;
-
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.list.contract.PlayQueueContract;
@@ -13,27 +12,17 @@ import java.util.List;
  * Created by yonglong on 2018/1/7.
  */
 
-public class PlayQueuePresenter implements PlayQueueContract.Presenter {
-    private PlayQueueContract.View mView;
-    private Context mContext;
+public class PlayQueuePresenter extends BasePresenter<PlayQueueContract.View> implements PlayQueueContract.Presenter {
 
-    public PlayQueuePresenter(Context mContext) {
-        this.mContext = mContext;
-    }
 
     @Override
     public void attachView(PlayQueueContract.View view) {
-        mView = view;
+        super.attachView(view);
     }
 
     @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    public void detachView() {
+        super.detachView();
     }
 
     @Override

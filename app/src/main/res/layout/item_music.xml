@@ -11,7 +11,7 @@
         android:layout_width="3dp"
         android:layout_height="35dp"
         android:layout_marginRight="3dp"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:contentDescription="@null"
         android:visibility="invisible" />
 

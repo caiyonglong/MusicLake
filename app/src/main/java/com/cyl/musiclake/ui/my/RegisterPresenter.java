@@ -1,16 +1,17 @@
 package com.cyl.musiclake.ui.my;
 
 
-import android.content.Context;
-
-import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.net.ApiManager;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -21,25 +22,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by D22434 on 2018/1/3.
  */
 
-public class RegisterPresenter implements RegisterContract.Presenter {
-    private RegisterContract.View mView;
-    private Context mContext;
+public class RegisterPresenter extends BasePresenter<RegisterContract.View> implements RegisterContract.Presenter {
 
-    @Override
-    public void attachView(RegisterContract.View view) {
-        mView = view;
-        mContext = (Context) view;
-    }
-
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public RegisterPresenter() {
     }
 
     @Override
@@ -61,7 +47,6 @@ public class RegisterPresenter implements RegisterContract.Presenter {
             params.put(Constants.USER_EMAIL, email);
             params.put(Constants.NICK, username);
             params.put(Constants.PASSWORD, password);
-
             register(params);
         }
     }

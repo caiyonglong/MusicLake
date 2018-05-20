@@ -11,7 +11,7 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.util.Property;
 import android.view.animation.DecelerateInterpolator;
 
@@ -120,7 +120,7 @@ public class PlayPauseDrawable extends Drawable {
 
         long timeElapsed = System.currentTimeMillis() - startDraw;
         if (timeElapsed > 16) {
-            Log.e(TAG, "Drawing took too long=" + timeElapsed);
+            LogUtil.e(TAG, "Drawing took too long=" + timeElapsed);
         }
     }
 
@@ -137,7 +137,7 @@ public class PlayPauseDrawable extends Drawable {
 
     @Override
     public void jumpToCurrentState() {
-        Log.v(TAG, "jumpToCurrentState()");
+        LogUtil.v(TAG, "jumpToCurrentState()");
         if (animator != null) {
             animator.cancel();
         }

@@ -29,7 +29,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class ArtistFragment extends BaseLazyFragment implements ArtistContract.View {
+public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements ArtistContract.View {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
@@ -41,7 +41,6 @@ public class ArtistFragment extends BaseLazyFragment implements ArtistContract.V
 
     private ArtistAdapter mAdapter;
     private List<Artist> artists = new ArrayList<>();
-    private ArtistPresenter mPresenter;
 
     public static ArtistFragment newInstance() {
         Bundle args = new Bundle();
@@ -66,14 +65,16 @@ public class ArtistFragment extends BaseLazyFragment implements ArtistContract.V
      */
     @Override
     public void initViews() {
-        mPresenter = new ArtistPresenter(getContext());
-        mPresenter.attachView(this);
-
         mAdapter = new ArtistAdapter(artists);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
 
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override

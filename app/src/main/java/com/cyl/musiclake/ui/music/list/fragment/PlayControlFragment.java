@@ -12,7 +12,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
+
+import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.utils.LogUtil;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -27,8 +30,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
-import com.cyl.musicapi.playlist.AddPlaylistUtils;
-import com.cyl.musicapi.callback.musicApi.MusicUtils;
+import com.cyl.musiclake.musicapi.MusicUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.list.adapter.MyPagerAdapter;
@@ -43,6 +45,7 @@ import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
 import com.cyl.musiclake.view.lyric.LyricView;
+import com.jaeger.library.StatusBarUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
@@ -60,7 +63,7 @@ import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_LOOP;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_RANDOM;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_REPEAT;
 
-public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
+public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
     private static final String TAG = "PlayControlFragment";
     public static View topContainer;
@@ -125,7 +128,6 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
     private Palette.Swatch mSwatch;
     private List<View> mViewPagerContent;
     private SlidingUpPanelLayout mSlidingUpPaneLayout;
-    private PlayControlsPresenter mPresenter;
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
     public ObjectAnimator operatingAnim;
     public long currentPlayTime = 0;
@@ -141,8 +143,8 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
 
     @OnClick(R.id.iv_back)
     void back() {
-        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
-            onBackPressed();
+//        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+        onBackPressed();
     }
 
     @OnClick(R.id.skip_next)
@@ -246,7 +248,7 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
-        mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
+//        mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
 
         //初始化viewpager
         if (mViewPager != null) {
@@ -259,20 +261,22 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
     }
 
     @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
+    }
+
+    @Override
     protected void listener() {
         mSeekBar.setOnSeekBarChangeListener(this);
         topContainer.setOnClickListener(v -> {
-            if (mSlidingUpPaneLayout.isTouchEnabled()) {
-                mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            }
+//            if (mSlidingUpPaneLayout.isTouchEnabled()) {
+//                mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+//            }
         });
     }
 
     @Override
     protected void loadData() {
-        mPresenter = new PlayControlsPresenter(getActivity());
-        mPresenter.attachView(this);
-        mPresenter.subscribe();
     }
 
     private void setupViewPager(MultiTouchViewPager viewPager) {
@@ -296,12 +300,12 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("PlayControlFragment", "--" + position);
-                if (position == 1 && mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    mSlidingUpPaneLayout.setTouchEnabled(false);
-                } else {
-                    mSlidingUpPaneLayout.setTouchEnabled(true);
-                }
+                LogUtil.d("PlayControlFragment", "--" + position);
+//                if (position == 1 && mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+//                    mSlidingUpPaneLayout.setTouchEnabled(false);
+//                } else {
+//                    mSlidingUpPaneLayout.setTouchEnabled(true);
+//                }
             }
 
             @Override
@@ -427,6 +431,7 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
         //set icon color
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
         int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
+//        StatusBarUtil.setColor(getActivity(), statusBarColor);
 //        mLrcView.setHighLightTextColor(statusBarColor);
 //        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
 //        tv_time.setTextColor(blackWhiteColor);
@@ -525,10 +530,10 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
 
     @Override
     public void updatePanelLayout(boolean scroll) {
-        if (!scroll) {
-            mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
-        mSlidingUpPaneLayout.setTouchEnabled(scroll);
+//        if (!scroll) {
+//            mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+//        }
+//        mSlidingUpPaneLayout.setTouchEnabled(scroll);
     }
 
     @Override
@@ -558,14 +563,6 @@ public class PlayControlFragment extends BaseFragment implements SeekBar.OnSeekB
             if (operatingAnim != null) {
                 operatingAnim.pause();
             }
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mPresenter != null) {
-            mPresenter.unsubscribe();
         }
     }
 

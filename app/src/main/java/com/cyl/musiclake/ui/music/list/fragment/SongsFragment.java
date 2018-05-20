@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,15 +34,13 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SongsFragment extends BaseLazyFragment implements SongsContract.View {
+public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements SongsContract.View {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
-
-    private SongsPresenter mPresenter;
 
     public static SongsFragment newInstance() {
         Bundle args = new Bundle();
@@ -58,14 +56,18 @@ public class SongsFragment extends BaseLazyFragment implements SongsContract.Vie
 
     @Override
     public void initViews() {
-        mPresenter = new SongsPresenter(getActivity());
-        mPresenter.attachView(this);
+
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN);
         mAdapter = new SongAdapter(musicList);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @Override
@@ -87,10 +89,10 @@ public class SongsFragment extends BaseLazyFragment implements SongsContract.Vie
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
-                                .show(getChildFragmentManager(), getTag());
+                                .show(getChildFragmentManager(),getTag());
                         break;
                     case R.id.popup_song_goto_album:
-                        Log.e("album", music.toString() + "");
+                        LogUtil.e("album", music.toString() + "");
                         NavigationHelper.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);

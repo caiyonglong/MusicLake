@@ -37,7 +37,7 @@ import butterknife.BindView;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class BaiduMusicListActivity extends BaseActivity implements BaiduListContract.View {
+public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> implements BaiduListContract.View {
 
     private static final String TAG = "BaiduMusicListActivity";
     private List<Music> musicList = new ArrayList<>();
@@ -58,7 +58,6 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
     private String type;
     private String desc;
     private String pic;
-    private BaiduListPresenter mPresenter;
     private int mCurrentCounter = 0;
     private int TOTAL_COUNTER = 0;
     private int limit = 10;
@@ -81,9 +80,6 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
 
     @Override
     protected void initData() {
-        mPresenter = new BaiduListPresenter(this);
-        mPresenter.attachView(this);
-
         mAdapter = new SongAdapter2(musicList);
         mAdapter.setEnableLoadMore(true);
 
@@ -95,6 +91,11 @@ public class BaiduMusicListActivity extends BaseActivity implements BaiduListCon
         showHeaderInfo();
 
         mPresenter.loadOnlineMusicList(type, 10, mOffset);
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
     @Override

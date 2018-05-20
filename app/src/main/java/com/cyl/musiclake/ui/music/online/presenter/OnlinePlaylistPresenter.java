@@ -1,15 +1,16 @@
 package com.cyl.musiclake.ui.music.online.presenter;
 
-import android.content.Context;
-
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.api.baidu.BaiduMusicList;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,39 +21,21 @@ import io.reactivex.schedulers.Schedulers;
  * Created by D22434 on 2018/1/4.
  */
 
-public class OnlinePlaylistPresenter implements OnlinePlaylistContract.Presenter {
+public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContract.View> implements OnlinePlaylistContract.Presenter {
 
-    private OnlinePlaylistContract.View mView;
-    private Context mContext;
-
-    public OnlinePlaylistPresenter(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Override
-    public void attachView(OnlinePlaylistContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public OnlinePlaylistPresenter() {
     }
 
     @Override
     public void loadOnlinePlaylist() {
         mView.showLoading();
-
         Map<String, String> params = new HashMap<>();
         params.put(Constants.PARAM_METHOD, Constants.METHOD_CATEGORY);
         BaiduApiServiceImpl.getOnlinePlaylist()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mView.bindToLife())
                 .subscribe(new Observer<BaiduMusicList>() {
                     @Override
                     public void onSubscribe(Disposable d) {

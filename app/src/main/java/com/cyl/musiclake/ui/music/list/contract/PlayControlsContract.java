@@ -5,12 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
 
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 
 public interface PlayControlsContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
 
         void setAlbumArt(Bitmap albumArt);
 
@@ -42,7 +42,7 @@ public interface PlayControlsContract {
         void updatePanelLayout(boolean scroll);
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
 
         void onPlayPauseClick();
 

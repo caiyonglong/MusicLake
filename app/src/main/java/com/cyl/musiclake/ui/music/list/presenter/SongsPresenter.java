@@ -2,12 +2,15 @@ package com.cyl.musiclake.ui.music.list.presenter;
 
 import android.content.Context;
 
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.list.contract.SongsContract;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,35 +22,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yonglong on 2018/1/7.
  */
 
-public class SongsPresenter implements SongsContract.Presenter {
-    private SongsContract.View mView;
-    private Context mContext;
+public class SongsPresenter extends BasePresenter<SongsContract.View> implements SongsContract.Presenter {
 
-    public SongsPresenter(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Override
-    public void attachView(SongsContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
+    @Inject
+    public SongsPresenter() {
     }
 
     @Override
     public void loadSongs(String action) {
         mView.showLoading();
-        AppRepository.getAllSongsRepository(mContext, action)
+        AppRepository.getAllSongsRepository(mView.getContext(), action)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mView.bindToLife())
                 .subscribe(new Observer<List<Music>>() {
 
                     @Override

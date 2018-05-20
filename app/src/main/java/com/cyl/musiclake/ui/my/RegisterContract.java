@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.my;
 
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 /**
  * Created by D22434 on 2018/1/3.
@@ -9,7 +9,7 @@ import com.cyl.musiclake.base.BaseView;
 
 public interface RegisterContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
         void showErrorInfo(int flag, String msg);
 
         void showSuccessInfo(String msg);
@@ -17,7 +17,7 @@ public interface RegisterContract {
         void updateView();
     }
 
-    interface Presenter extends BasePresenter<RegisterContract.View> {
+    interface Presenter extends BaseContract.BasePresenter<RegisterContract.View> {
         void register(String email, String username, String password);
     }
 

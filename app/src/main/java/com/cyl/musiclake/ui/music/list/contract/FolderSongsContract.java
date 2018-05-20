@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.list.contract;
 
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface FolderSongsContract {
 
-     interface View extends BaseView {
+     interface View extends BaseContract.BaseView {
 
         void showEmptyView();
 
@@ -20,7 +20,7 @@ public interface FolderSongsContract {
 
     }
 
-     interface Presenter extends BasePresenter<View> {
+     interface Presenter extends BaseContract.BasePresenter<View> {
 
         void loadSongs(String path);
 

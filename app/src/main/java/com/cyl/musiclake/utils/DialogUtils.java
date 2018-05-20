@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.widget.ProgressBar;
 
 /**
@@ -19,7 +19,7 @@ public class DialogUtils {
                                               String title) {
         if (msg == null) return;
         String rmsg = msg.replace(",", "\n");
-        Log.d("Util", rmsg);
+        LogUtil.d("Util", rmsg);
         new AlertDialog.Builder(context).setTitle(title).setMessage(rmsg)
                 .setNegativeButton("知道了", null).create().show();
     }

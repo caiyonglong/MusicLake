@@ -11,7 +11,7 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.text.InputType;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -39,7 +39,7 @@ import static com.cyl.musiclake.player.MusicPlayerService.totalTime;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
-    private PreferenceScreen mPreferenceAbout, mPreferenceCache, mPreferenceUpdate;
+    private PreferenceScreen  mPreferenceCache, mPreferenceUpdate;
     public SwitchPreference mWifiSwitch, mTimingSwitch;
     public CheckBoxPreference mLyricCheckBox;
     private int time = 0;
@@ -73,7 +73,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         mWifiSwitch.setChecked(SPUtils.getWifiMode());
         mWifiSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
-            Log.e("sss", newValue.toString());
+            LogUtil.e("sss", newValue.toString());
             boolean wifiMode = (boolean) newValue;
             mWifiSwitch.setChecked(wifiMode);
             SPUtils.saveWifiMode(wifiMode);
@@ -97,14 +97,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * 初始化控件
      */
     private void initView() {
-        mPreferenceAbout = (PreferenceScreen) findPreference("key_about");
         mPreferenceUpdate = (PreferenceScreen) findPreference("key_update");
         mPreferenceCache = (PreferenceScreen) findPreference("key_cache");
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
         mTimingSwitch = (SwitchPreference) findPreference("key_timing");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
 
-        mPreferenceAbout.setOnPreferenceClickListener(this);
         mPreferenceUpdate.setOnPreferenceClickListener(this);
         mPreferenceCache.setOnPreferenceClickListener(this);
         mTimingSwitch.setOnPreferenceClickListener(this);
@@ -130,7 +128,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         new MaterialDialog.Builder(getActivity())
                                 .title("自定义时间")
                                 .inputType(InputType.TYPE_CLASS_NUMBER)//可以输入的类型-电话号码
-                                .input("分钟（不能大于24小时）", "", (dialog1, input) -> Log.i("yqy", "输入的是：" + input))
+                                .input("分钟（不能大于24小时）", "", (dialog1, input) -> LogUtil.d("yqy", "输入的是：" + input))
                                 .inputRange(1, 3)
                                 .onPositive((dialog12, which1) -> {
                                     if (dialog12.getInputEditText().length() > 4) {

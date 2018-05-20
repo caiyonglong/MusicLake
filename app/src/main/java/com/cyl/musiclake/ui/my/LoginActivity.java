@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +31,7 @@ import butterknife.OnClick;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class LoginActivity extends BaseActivity implements LoginContract.View {
+public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View {
 
     @BindView(R.id.cv)
     CardView cv;
@@ -51,8 +50,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    LoginPresenter mPresenter;
-
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_login;
@@ -69,6 +66,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         passwordWrapper.setHint("密码");
         mPresenter = new LoginPresenter();
         mPresenter.attachView(this);
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
 

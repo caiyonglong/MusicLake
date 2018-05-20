@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * 版本：2.5
  * 专辑
  */
-public class ArtistSongsFragment extends BaseFragment implements ArtistSongContract.View {
+public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> implements ArtistSongContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -51,8 +51,6 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private ArtistSongsPresenter mPresenter;
-
 
     @OnClick(R.id.fab)
     void onPlayAll() {
@@ -95,9 +93,6 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
         if (title != null)
             collapsing_toolbar.setTitle(title);
-
-        mPresenter = new ArtistSongsPresenter(getContext());
-        mPresenter.attachView(this);
         setHasOptionsMenu(true);
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -108,6 +103,11 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
     }
 
     @SuppressWarnings({"unchecked", "varargs"})

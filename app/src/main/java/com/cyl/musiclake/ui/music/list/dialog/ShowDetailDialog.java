@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.list.dialog;
 
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -46,4 +47,5 @@ public class ShowDetailDialog extends DialogFragment {
                 .positiveText("确定")
                 .build();
     }
+
 }

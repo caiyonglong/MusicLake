@@ -11,13 +11,16 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cyl.musiclake.IMusicService;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.di.component.ActivityComponent;
+import com.cyl.musiclake.di.component.DaggerActivityComponent;
+import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlayQueueEvent;
@@ -26,12 +29,17 @@ import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.utils.LogUtil;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.cyl.musiclake.player.PlayManager.mService;
 
@@ -41,13 +49,18 @@ import static com.cyl.musiclake.player.PlayManager.mService;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity extends RxAppCompatActivity implements ServiceConnection {
+public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends RxAppCompatActivity implements ServiceConnection, BaseContract.BaseView {
+
+    @Nullable
+    @Inject
+    protected T mPresenter;
+    protected ActivityComponent mActivityComponent;
 
     @Nullable
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
     protected Handler mHandler;
+    private Unbinder unbinder;
     private PlayManager.ServiceToken mToken;
     private PlaybackStatus mPlaybackStatus;
 
@@ -58,20 +71,32 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         setContentView(getLayoutResID());
         mPlaybackStatus = new PlaybackStatus(this);
         mHandler = new Handler();
-        init();
+        initActivityComponent();
+        initInjector();
+        //初始化黄油刀控件绑定框架
+        unbinder = ButterKnife.bind(this);
+        initToolBar();
+        attachView();
+        initView();
+        initData();
+        listener();
     }
 
-    private void init() {
-        //初始化黄油刀控件绑定框架
-        ButterKnife.bind(this);
-        initView();
+    /**
+     * 初始化Dagger
+     */
+    private void initActivityComponent() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .applicationComponent(((MusicApp) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
+    }
 
+    private void initToolBar() {
         if (hasToolbar() && mToolbar != null) {
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        initData();
-        listener();
     }
 
 
@@ -81,8 +106,9 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
 
     protected abstract void initData();
 
-    protected void listener() {
+    protected abstract void initInjector();
 
+    protected void listener() {
     }
 
     protected boolean hasToolbar() {
@@ -100,27 +126,22 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
     protected void onStart() {
         super.onStart();
         final IntentFilter filter = new IntentFilter();
-        // Play and pause changes
         filter.addAction(MusicPlayerService.PLAY_STATE_CHANGED);
-        // Track changes
         filter.addAction(MusicPlayerService.META_CHANGED);
-        // Update a list, probably the playlist fragment's
         filter.addAction(MusicPlayerService.PLAY_QUEUE_CHANGE);
-        // If a queue has cleared, notify us
         filter.addAction(MusicPlayerService.PLAY_QUEUE_CLEAR);
         filter.addAction(MusicPlayerService.PLAYLIST_CHANGED);
         filter.addAction(MusicPlayerService.SCHEDULE_CHANGED);
-        // If there is an error playing a track
         filter.addAction(MusicPlayerService.TRACK_ERROR);
-
         registerReceiver(mPlaybackStatus, filter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.bind(this).unbind();
-        // Unbind from the service
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
         if (mToken != null) {
             PlayManager.unbindFromService(mToken);
             mToken = null;
@@ -130,6 +151,46 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         } catch (final Throwable e) {
             e.printStackTrace();
         }
+        detachView();
+    }
+
+
+    /**
+     * 贴上view
+     */
+    private void attachView() {
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
+        }
+    }
+
+    /**
+     * 分离view
+     */
+    private void detachView() {
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindToLife() {
+        return this.bindToLifecycle();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     private final static class PlaybackStatus extends BroadcastReceiver {
@@ -144,7 +205,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Servic
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
-            Log.e("PlaybackStatus", "接收到广播-------------" + action);
+            LogUtil.e("PlaybackStatus", "接收到广播-------------" + action);
             BaseActivity baseActivity = (BaseActivity) mReferences.get();
             if (baseActivity != null && action != null) {
                 switch (action) {
