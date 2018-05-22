@@ -18,12 +18,13 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.PlayQueueEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.music.list.fragment.PlayControlFragment;
+import com.cyl.musiclake.ui.music.player.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -40,7 +41,7 @@ import com.tencent.tauth.Tencent;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.ui.music.list.fragment.PlayControlFragment.topContainer;
+import static com.cyl.musiclake.ui.music.player.PlayControlFragment.topContainer;
 
 /**
  * 描述 主要的Activity
@@ -195,6 +196,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 } else {
                     mTargetClass = ShakeActivity.class;
                 }
+                break;
+            case R.id.nav_menu_playQueue:
+                NavigationHelper.navigatePlayQueue(this);
                 break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;

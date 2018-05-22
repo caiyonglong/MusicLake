@@ -1,38 +1,56 @@
 package com.cyl.musiclake.ui.main;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import com.cyl.musiclake.utils.LogUtil;
-import android.webkit.JavascriptInterface;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.musicapi.AjaxHandler;
-import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.musicapi.SearchResult;
+import com.cyl.musiclake.musicapi.callback.BaseApiListener;
+import com.cyl.musiclake.musicapi.impl.BaseApiImpl;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-import wendu.dsbridge.CompletionHandler;
-import wendu.dsbridge.DWebView;
-import wendu.dsbridge.OnReturnValue;
 
-public class TestActivity extends BaseActivity {
+public class TestActivity extends BaseActivity implements BaseApiListener {
+    BaseApiImpl searchApi;
+    @BindView(R.id.tv_show)
+    TextView resultTv;
+    @BindView(R.id.tv_status)
+    TextView statusTv;
 
-    @BindView(R.id.btn_test)
-    Button btnTest;
-
-    DWebView mWebView;
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @OnClick(R.id.btn_test)
+    @OnClick(R.id.btn_test1)
     void test() {
-        LogUtil.e("tt", "test");
-        mWebView.callHandler("asyn.searchSong", new Object[]{"周杰伦"}, (OnReturnValue<JSONObject>) retValue -> {
-            btnTest.setText(retValue.toString());
-        });
+        searchApi.getTopList("1");
+    }
+
+    @OnClick(R.id.btn_test2)
+    void test2() {
+        searchApi.searchSong("薛之谦");
+    }
+
+    @OnClick(R.id.btn_test3)
+    void test3() {
+        searchApi.getSongDetail("netease", "557581284");
+    }
+
+    @OnClick(R.id.btn_test4)
+    void test4() {
+        searchApi.getLyricInfo("netease", "557581284");
+    }
+
+    @OnClick(R.id.btn_test5)
+    void test5() {
+        searchApi.getComment("netease", "557581284");
+    }
+
+    @OnClick(R.id.btn_test6)
+    void test6() {
+        searchApi.getSongUrl("netease", "557581284");
     }
 
     @Override
@@ -42,31 +60,12 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mWebView = new DWebView(this);
-        mWebView.addJavascriptObject(new Object() {
 
-            /**
-             * Note: This method is for Fly.js
-             * In browser, Ajax requests are sent by browser, but Fly can
-             * redirect requests to native, more about Fly see  https://github.com/wendux/fly
-             * @param requestData passed by fly.js, more detail reference https://wendux.github.io/dist/#/doc/flyio-en/native
-             * @param handler
-             */
-            @JavascriptInterface
-            public void onAjaxRequest(Object requestData, CompletionHandler handler) {
-                LogUtil.e("TAG", "-----");
-                // Handle ajax request redirected by Fly
-                AjaxHandler.onAjaxRequest((JSONObject) requestData, handler);
-            }
-
-        }, null);
-        // 格式规定为:file:///android_asset/文件名.html
-        mWebView.loadUrl("file:///android_asset/app.html");
     }
 
     @Override
     protected void initData() {
-
+        searchApi = new BaseApiImpl(this);
     }
 
     @Override
@@ -75,4 +74,45 @@ public class TestActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void searchResult(SearchResult searchResult) {
+        statusTv.setText("searchResult");
+        resultTv.setText(searchResult.toString());
+    }
+
+    @Override
+    public void songDetail(JSONObject jsonObject) {
+        statusTv.setText("songDetail");
+        resultTv.setText(jsonObject.toString());
+    }
+
+    @Override
+    public void songUrl(JSONObject jsonObject) {
+        statusTv.setText("songUrl");
+        resultTv.setText(jsonObject.toString());
+    }
+
+    @Override
+    public void getTopList(List<Music> musicList) {
+        statusTv.setText("getTopList");
+        resultTv.setText(musicList.toString());
+    }
+
+    @Override
+    public void getComment(JSONObject jsonObject) {
+        statusTv.setText("getComment");
+        resultTv.setText(jsonObject.toString());
+    }
+
+    @Override
+    public void getLyric(JSONObject jsonObject) {
+        statusTv.setText("getLyric");
+        resultTv.setText(jsonObject.toString());
+    }
+
+    @Override
+    public void getOthor(JSONObject jsonObject) {
+        statusTv.setText("getOthor");
+        resultTv.setText(jsonObject.toString());
+    }
 }

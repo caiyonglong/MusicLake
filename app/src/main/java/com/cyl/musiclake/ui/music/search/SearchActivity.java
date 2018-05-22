@@ -17,7 +17,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.list.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.ui.music.online.presenter.SearchPresenter;

@@ -20,14 +20,15 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.ui.main.MainActivity;
-import com.cyl.musiclake.ui.music.list.fragment.AlbumDetailFragment;
-import com.cyl.musiclake.ui.music.list.fragment.ArtistSongsFragment;
-import com.cyl.musiclake.ui.music.list.fragment.FolderSongsFragment;
-import com.cyl.musiclake.ui.music.list.fragment.LocalMusicFragment;
-import com.cyl.musiclake.ui.music.list.fragment.LoveFragment;
-import com.cyl.musiclake.ui.music.list.fragment.PlaylistDetailFragment;
-import com.cyl.musiclake.ui.music.list.fragment.RecentlyFragment;
+import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
+import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
+import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
+import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.DownloadFragment;
+import com.cyl.musiclake.ui.music.playlist.LoveFragment;
+import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
+import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
+import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
 
 import java.io.File;
 
@@ -114,6 +115,14 @@ public class NavigationHelper {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         Fragment fragment;
         fragment = RecentlyFragment.newInstance();
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.addToBackStack(fragment.getTag()).commit();
+    }
+
+    public static void navigatePlayQueue(Activity context) {
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        Fragment fragment = PlayQueueFragment.newInstance();
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
         transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(fragment.getTag()).commit();

@@ -106,15 +106,6 @@ public class Playlist extends DataSupport implements Serializable {
 
     @Override
     public String toString() {
-        return "Playlist{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", count=" + count +
-                ", date=" + date +
-                ", des='" + des + '\'' +
-                ", order='" + order + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", musicList=" + musicList +
-                '}';
+        return name;
     }
 }

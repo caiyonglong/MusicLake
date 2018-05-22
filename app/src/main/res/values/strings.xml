@@ -192,11 +192,20 @@
     <string name="share_article_url"><![CDATA[<string name=\"share_article_url\">%1$s分享【%2$s】：%3$s</string>]]></string>
     <string name="artist_detail">查看详情</string>
     <string name="title_test">测试</string>
+
+    <!--歌单-->
     <string name="playlist_name">歌单名</string>
+    <string name="playlist_online">在线歌单</string>
     <string name="playlist_creator">创建者</string>
+
 
     <!-- 在线音乐-->
     <string name="playlist_num">%1$s("%2$d")</string>
+    <string name="charts_baidu">百度排行榜</string>
+    <string name="charts_netease">网易排行榜</string>
+    <string name="hot_artist">热门歌手</string>
+    <string name="genes">流派</string>
+    <string name="radio_list">电台</string>
 
 
     <!--通知栏-->

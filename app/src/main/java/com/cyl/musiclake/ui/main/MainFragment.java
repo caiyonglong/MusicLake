@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.PageAdapter;
-import com.cyl.musiclake.ui.music.list.fragment.MyMusicFragment;
+import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
 
@@ -55,7 +55,7 @@ public class MainFragment extends BaseFragment {
             appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
             final ActionBar toggle = appCompatActivity.getSupportActionBar();
             if (toggle != null) {
-                toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
+                toggle.setHomeAsUpIndicator(R.drawable.ic_menu_white);
                 toggle.setDisplayHomeAsUpEnabled(true);
             }
         }

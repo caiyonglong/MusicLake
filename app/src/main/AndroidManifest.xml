@@ -69,7 +69,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".ui.music.list.activity.PlaylistManagerActivity"
+            android:name=".ui.music.playlist.PlaylistManagerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.online.activity.ArtistInfoActivity"

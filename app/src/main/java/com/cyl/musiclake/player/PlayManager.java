@@ -210,6 +210,16 @@ public class PlayManager {
         return null;
     }
 
+    public static String getPlayingId() {
+        try {
+            if (mService != null && mService.getPlayingMusic() != null)
+                return mService.getPlayingMusic().getId();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return "-1";
+    }
+
     public static List<Music> getPlayList() {
         try {
             if (mService != null)

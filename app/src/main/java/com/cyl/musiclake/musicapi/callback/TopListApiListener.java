@@ -8,6 +8,6 @@ import java.util.List;
  * Created by master on 2018/5/15.
  */
 
-public interface TopListApiListener {
+public interface TopListApiListener extends BaseApiListener {
     void getTopList(List<Music> musicList);
 }

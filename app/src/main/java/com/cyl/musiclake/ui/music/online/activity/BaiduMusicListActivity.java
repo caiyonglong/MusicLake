@@ -16,8 +16,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.ui.music.list.adapter.SongAdapter2;
-import com.cyl.musiclake.ui.music.list.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.playlist.RecentlyAdapter;
+import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
 import com.cyl.musiclake.ui.music.online.presenter.BaiduListPresenter;
@@ -41,7 +41,7 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
 
     private static final String TAG = "BaiduMusicListActivity";
     private List<Music> musicList = new ArrayList<>();
-    private SongAdapter2 mAdapter;
+    private RecentlyAdapter mAdapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -80,7 +80,7 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
 
     @Override
     protected void initData() {
-        mAdapter = new SongAdapter2(musicList);
+        mAdapter = new RecentlyAdapter(musicList);
         mAdapter.setEnableLoadMore(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

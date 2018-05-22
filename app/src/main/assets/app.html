@@ -17,8 +17,8 @@
         dsBridge.registerAsyn("asyn", {
             tag:"asyn",
             //搜索功能
-            searchSong: function (keyword, responseCallback) {
-                musicApi.searchSong(keyword).then(function (data) {
+            searchSong: function (keyword,limit,offset, responseCallback) {
+                musicApi.searchSong(keyword,limit,offset).then(function (data) {
                     responseCallback(data)
                 })
             },
@@ -47,7 +47,7 @@
                 })
             },
             // 获取歌曲评论
-            getComment: function (vendor, id, offset = 0, limit = 20, responseCallback) {
+            getComment: function (vendor, id, offset, limit, responseCallback) {
                 musicApi.getComment(vendor, id, offset, limit).then(function (data) {
                     responseCallback(data)
                 })
