@@ -19,6 +19,8 @@ public class Playlist extends DataSupport implements Serializable {
     private String name;
     //歌单名
     private int count;
+    //更新日期
+    private long updateDate;
     //创建日期
     private long date;
     //描述

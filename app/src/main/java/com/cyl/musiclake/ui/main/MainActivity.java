@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
-            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
+//            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNick.setText(getResources().getString(R.string.login_hint));
         }
     }

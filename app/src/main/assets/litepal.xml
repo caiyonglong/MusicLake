@@ -5,9 +5,7 @@
     <list>
         <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
         <!--<mapping class="com.cyl.musiclake.bean.Artist" />-->
-        <!--<mapping class="com.cyl.musiclake.bean.Music" />-->
-        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
-        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
-        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
+        <mapping class="com.cyl.musiclake.bean.Music" />
+        <mapping class="com.cyl.musiclake.bean.Playlist" />
     </list>
 </litepal>
