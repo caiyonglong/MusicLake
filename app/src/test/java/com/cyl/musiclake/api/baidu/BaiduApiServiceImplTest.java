@@ -10,24 +10,18 @@ import java.util.List;
 public class BaiduApiServiceImplTest extends TestCase {
 
     public void testPlaylist() {
-        BaiduApiServiceImpl.getOnlinePlaylist()
+        BaiduApiServiceImpl.INSTANCE.getOnlinePlaylist()
                 .subscribe(result -> {
-                    List<BaiduMusicList.Billboard> mBillboards = result.getContent();
-                    //移除T榜
-                    mBillboards.remove(3);
-                    System.out.println(mBillboards.get(0).getComment());
-                    System.out.println(mBillboards.get(0).getName());
-                    System.out.println(mBillboards.get(0).getType());
                 });
 
         System.out.println("------------------------------------");
-        BaiduApiServiceImpl.getOnlineSongs("1", 10, 0)
+        BaiduApiServiceImpl.INSTANCE.getOnlineSongs("1", 10, 0)
                 .subscribe(musicList -> {
                     System.out.println(musicList.get(0).toString());
                 });
 
         System.out.println("------------------------------------");
-        BaiduApiServiceImpl.getTingSongInfo("569080829")
+        BaiduApiServiceImpl.INSTANCE.getTingSongInfo("569080829")
                 .subscribe(music -> {
                     System.out.println(music.getTitle());
                     System.out.println(music.getArtist());

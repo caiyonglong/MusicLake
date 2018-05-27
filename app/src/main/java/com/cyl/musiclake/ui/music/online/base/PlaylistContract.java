@@ -1,6 +1,8 @@
 package com.cyl.musiclake.ui.music.online.base;
 
 
+import android.content.Context;
+
 import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
@@ -16,7 +18,7 @@ public interface PlaylistContract {
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
-        void getPlaylist(int idx, String type);
+        void getPlaylist(String idx, Context context);
 
         void getMusicInfo(Music music);
     }

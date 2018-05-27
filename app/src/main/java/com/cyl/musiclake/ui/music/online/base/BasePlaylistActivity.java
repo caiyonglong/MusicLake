@@ -16,7 +16,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;

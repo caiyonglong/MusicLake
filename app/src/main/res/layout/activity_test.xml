@@ -47,6 +47,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="歌曲播放地址" />
+
+
+        <Button
+            android:id="@+id/btn_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取用户信息" />
+
+        <Button
+            android:id="@+id/btn_playlist1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取歌单列表" />
+
+        <Button
+            android:id="@+id/btn_playlist2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取歌单歌曲信息" />
+        <Button
+            android:id="@+id/btn_playlist3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取" />
+
     </LinearLayout>
 
     <LinearLayout

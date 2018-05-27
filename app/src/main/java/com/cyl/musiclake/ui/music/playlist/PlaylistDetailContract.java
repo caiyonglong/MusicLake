@@ -19,10 +19,6 @@ public interface PlaylistDetailContract {
 
         void showPlaylistSongs(List<Music> songList);
 
-        void showPlaylistArt(Drawable playlistArt);
-
-        void showPlaylistArt(Bitmap bitmap);
-
         void removeMusic(int position);
 
         void success(int type);
@@ -32,12 +28,11 @@ public interface PlaylistDetailContract {
 
         void loadPlaylistSongs(String playlistID);
 
-        void loadPlaylistArt(String playlistID);
 
         void deletePlaylist(Playlist playlist);
 
         void renamePlaylist(Playlist playlist, String title);
 
-        void uncollectMusic(String pid, int position, Music music);
+        void disCollectMusic(String pid, int position, Music music);
     }
 }

@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 
-import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,6 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.online.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
-import com.cyl.musiclake.ui.music.online.presenter.SearchPresenter;
 
 import java.util.ArrayList;
 import java.util.List;

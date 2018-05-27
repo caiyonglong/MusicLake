@@ -131,7 +131,7 @@ public class MusicPlayerService extends Service {
 
 
     public Music mPlayingMusic = null;
-    private List<Music> mPlaylist = new ArrayList<>();
+    private List<Music> mPlayQueue = new ArrayList<>();
     private List<Integer> mHistoryPos = new ArrayList<>();
     private int mPlayingPos = -1;
     private int mNextPlayPos = -1;
@@ -211,7 +211,7 @@ public class MusicPlayerService extends Service {
                     case TRACK_WENT_TO_NEXT: //mplayer播放完毕切换到下一首
                         service.setAndRecordPlayPos(service.mNextPlayPos);
                         mMainHandler.post(service::next);
-//                        service.updateCursor(service.mPlaylist.get(service.mPlayPos).mId);
+//                        service.updateCursor(service.mPlayQueue.get(service.mPlayPos).mId);
 //                        service.bumpSongCount(); //更新歌曲的播放次数
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完毕且暂时没有下一首
@@ -335,7 +335,6 @@ public class MusicPlayerService extends Service {
         //初始化和设置MediaSessionCompat
         mediaSessionManager = new MediaSessionManager(mBindStub, this, mMainHandler);
         audioAndFocusManager = new AudioAndFocusManager(this, mHandler);
-//        audioAndFocusManager.requestAudioFocus();
     }
 
 
@@ -363,9 +362,9 @@ public class MusicPlayerService extends Service {
      * 重新加载当前进度
      */
     public void reloadPlayQueue() {
-        mPlaylist.clear();
+        mPlayQueue.clear();
         mHistoryPos.clear();
-        mPlaylist = PlayQueueLoader.getPlayQueue(this);
+        mPlayQueue = PlayQueueLoader.getPlayQueue(this);
         mPlayingPos = SPUtils.getPlayPosition();
         mPlayer.seek(SPUtils.getPosition());
         notifyChange(PLAY_QUEUE_CHANGE);
@@ -518,10 +517,10 @@ public class MusicPlayerService extends Service {
      */
     private void playCurrentAndNext() {
         synchronized (this) {
-            if (mPlayingPos > mPlaylist.size() || mPlayingPos < 0) {
+            if (mPlayingPos > mPlayQueue.size() || mPlayingPos < 0) {
                 return;
             }
-            mPlayingMusic = mPlaylist.get(mPlayingPos);
+            mPlayingMusic = mPlayQueue.get(mPlayingPos);
             Observable<Music> observable = null;
             LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("")) {
@@ -605,10 +604,10 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getNextPosition() {
-        if (mPlaylist == null || mPlaylist.isEmpty()) {
+        if (mPlayQueue == null || mPlayQueue.isEmpty()) {
             return -1;
         }
-        if (mPlaylist.size() == 1) {
+        if (mPlayQueue.size() == 1) {
             return 0;
         }
         if (mRepeatMode == PLAY_MODE_REPEAT) {
@@ -616,13 +615,13 @@ public class MusicPlayerService extends Service {
                 return 0;
             }
         } else if (mRepeatMode == PLAY_MODE_LOOP) {
-            if (mPlayingPos == mPlaylist.size() - 1) {
+            if (mPlayingPos == mPlayQueue.size() - 1) {
                 return 0;
-            } else if (mPlayingPos < mPlaylist.size() - 1) {
+            } else if (mPlayingPos < mPlayQueue.size() - 1) {
                 return mPlayingPos + 1;
             }
         } else if (mRepeatMode == PLAY_MODE_RANDOM) {
-            return new Random().nextInt(mPlaylist.size());
+            return new Random().nextInt(mPlayQueue.size());
         }
         return mPlayingPos;
     }
@@ -633,10 +632,10 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getPreviousPosition() {
-        if (mPlaylist == null || mPlaylist.isEmpty()) {
+        if (mPlayQueue == null || mPlayQueue.isEmpty()) {
             return -1;
         }
-        if (mPlaylist.size() == 1) {
+        if (mPlayQueue.size() == 1) {
             return 0;
         }
         if (mRepeatMode == PLAY_MODE_REPEAT) {
@@ -645,13 +644,13 @@ public class MusicPlayerService extends Service {
             }
         } else if (mRepeatMode == PLAY_MODE_LOOP) {
             if (mPlayingPos == 0) {
-                return mPlaylist.size() - 1;
+                return mPlayQueue.size() - 1;
             } else if (mPlayingPos > 0) {
                 return mPlayingPos - 1;
             }
         } else if (mRepeatMode == PLAY_MODE_RANDOM) {
-            mPlayingPos = new Random().nextInt(mPlaylist.size());
-            return new Random().nextInt(mPlaylist.size());
+            mPlayingPos = new Random().nextInt(mPlayQueue.size());
+            return new Random().nextInt(mPlayQueue.size());
         }
         return mPlayingPos;
     }
@@ -662,7 +661,7 @@ public class MusicPlayerService extends Service {
      * @param position
      */
     public void playMusic(int position) {
-        if (position >= mPlaylist.size() || position == -1) {
+        if (position >= mPlayQueue.size() || position == -1) {
             mPlayingPos = getNextPosition();
         } else {
             mPlayingPos = position;
@@ -701,11 +700,11 @@ public class MusicPlayerService extends Service {
      * @param music
      */
     public void play(Music music) {
-        if (mPlayingPos == -1 || mPlaylist.size() == 0) {
-            mPlaylist.add(music);
+        if (mPlayingPos == -1 || mPlayQueue.size() == 0) {
+            mPlayQueue.add(music);
             mPlayingPos = 0;
         } else {
-            mPlaylist.add(mPlayingPos, music);
+            mPlayQueue.add(mPlayingPos, music);
         }
         LogUtil.e(TAG, music.toString());
         mPlayingMusic = music;
@@ -803,7 +802,7 @@ public class MusicPlayerService extends Service {
      */
     private void savePlayQueue(boolean full) {
         if (full) {
-            PlayQueueLoader.updateQueue(this, mPlaylist);
+            PlayQueueLoader.updateQueue(this, mPlayQueue);
         }
         if (mPlayingMusic != null) {
             //保存歌曲id
@@ -832,18 +831,18 @@ public class MusicPlayerService extends Service {
      * 获取正在播放的歌曲[本地|网络]
      */
     public void removeFromQueue(int position) {
-        LogUtil.e(TAG, position + "---" + mPlayingPos + "---" + mPlaylist.size());
+        LogUtil.e(TAG, position + "---" + mPlayingPos + "---" + mPlayQueue.size());
         if (position == mPlayingPos) {
-            mPlaylist.remove(position);
-            if (mPlaylist.size() == 0) {
+            mPlayQueue.remove(position);
+            if (mPlayQueue.size() == 0) {
                 clearQueue();
             } else {
                 playMusic(position);
             }
         } else if (position > mPlayingPos) {
-            mPlaylist.remove(position);
+            mPlayQueue.remove(position);
         } else if (position < mPlayingPos) {
-            mPlaylist.remove(position);
+            mPlayQueue.remove(position);
             mPlayingPos = mPlayingPos - 1;
         }
         notifyChange(PLAY_QUEUE_CLEAR);
@@ -856,7 +855,7 @@ public class MusicPlayerService extends Service {
         mPlayingMusic = null;
         isMusicPlaying = false;
         mPlayingPos = -1;
-        mPlaylist.clear();
+        mPlayQueue.clear();
         mHistoryPos.clear();
         stop(true);
         notifyChange(META_CHANGED);
@@ -967,9 +966,9 @@ public class MusicPlayerService extends Service {
      * @param playQueue
      */
     public void setPlayQueue(List<Music> playQueue) {
-        mPlaylist.clear();
+        mPlayQueue.clear();
         mHistoryPos.clear();
-        mPlaylist.addAll(playQueue);
+        mPlayQueue.addAll(playQueue);
     }
 
 
@@ -979,10 +978,10 @@ public class MusicPlayerService extends Service {
      * @return
      */
     public List<Music> getPlayQueue() {
-        if (mPlaylist.size() > 0) {
-            return mPlaylist;
+        if (mPlayQueue.size() > 0) {
+            return mPlayQueue;
         }
-        return mPlaylist;
+        return mPlayQueue;
     }
 
 

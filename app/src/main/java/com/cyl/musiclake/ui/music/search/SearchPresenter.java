@@ -1,5 +1,8 @@
-package com.cyl.musiclake.ui.music.online.presenter;
+package com.cyl.musiclake.ui.music.search;
 
+import com.cyl.musicapi.BaseApiImpl;
+import com.cyl.musicapi.bean.SearchData;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
@@ -13,6 +16,8 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by yonglong on 2018/1/6.

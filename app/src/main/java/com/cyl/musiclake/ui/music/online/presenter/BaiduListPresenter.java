@@ -29,7 +29,7 @@ public class BaiduListPresenter extends BasePresenter<BaiduListContract.View> im
     @Override
     public void loadOnlineMusicList(String type, int limit, int mOffset) {
         mView.showLoading();
-        BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset)
+        BaiduApiServiceImpl.INSTANCE.getOnlineSongs(type, limit, mOffset)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Music>>() {
@@ -59,7 +59,7 @@ public class BaiduListPresenter extends BasePresenter<BaiduListContract.View> im
     @Override
     public void playCurrentMusic(Music music) {
         mView.showLoading();
-        BaiduApiServiceImpl.getTingSongInfo(music.getId())
+        BaiduApiServiceImpl.INSTANCE.getTingSongInfo(music.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Music>() {

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'kotlin-android'
 android {
     signingConfigs {
         release {
@@ -53,7 +53,7 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
     //RxJava and RxAndroid
     api 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    api 'io.reactivex.rxjava2:rxjava:2.1.11'
+    api 'io.reactivex.rxjava2:rxjava:2.1.14'
     api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
     // Retrofit适配RxJava
     api "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
@@ -62,7 +62,7 @@ dependencies {
     api 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
     //rxpermissions 6.0权限管理
     api 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
-    api 'net.steamcrafted:materialiconlib:1.1.4'
+    api 'net.steamcrafted:materialiconlib:1.1.5'
     //黄油刀
     api 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

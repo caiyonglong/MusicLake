@@ -1,4 +1,4 @@
-package com.cyl.musiclake.musicapi.bean
+package com.cyl.musicapi.bean
 
 
 import com.google.gson.annotations.SerializedName

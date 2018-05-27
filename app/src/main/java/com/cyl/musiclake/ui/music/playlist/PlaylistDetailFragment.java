@@ -12,10 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-
-import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
-import com.cyl.musiclake.utils.LogUtil;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +20,7 @@ import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
@@ -31,6 +28,8 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.zone.EditActivity;
+import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +110,6 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     @Override
     protected void loadData() {
         mPresenter.loadPlaylistSongs(mPlaylist.getId());
-        mPresenter.loadPlaylistArt(mPlaylist.getId());
     }
 
     @Override
@@ -143,7 +141,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                                 .title("提示")
                                 .content("是否移除这首歌曲？")
                                 .onPositive((dialog, which) -> {
-                                    mPresenter.uncollectMusic(mPlaylist.getId(), position, musicList.get(position));
+                                    mPresenter.disCollectMusic(mPlaylist.getId(), position, musicList.get(position));
                                 })
                                 .positiveText("确定")
                                 .negativeText("取消")
@@ -272,19 +270,12 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public void showPlaylistSongs(List<Music> songList) {
         musicList = songList;
         mAdapter.setNewData(musicList);
+        if (songList.size() >= 1) {
+            CoverLoader.loadImageView(getContext(), songList.get(0).getCoverUri(), album_art);
+        }
         if (musicList.size() == 0) {
             mAdapter.setEmptyView(R.layout.view_song_empty);
         }
-    }
-
-    @Override
-    public void showPlaylistArt(Drawable playlistArt) {
-        album_art.setImageDrawable(playlistArt);
-    }
-
-    @Override
-    public void showPlaylistArt(Bitmap bitmap) {
-        album_art.setImageBitmap(bitmap);
     }
 
     @Override
@@ -295,8 +286,6 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @Override
     public void success(int type) {
-        if (type == 1) {
-            onBackPress();
-        }
+        onBackPress();
     }
 }

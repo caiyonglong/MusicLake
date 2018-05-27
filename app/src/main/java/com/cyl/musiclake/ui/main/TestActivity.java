@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.main;
 import android.widget.TextView;
 
 import com.cyl.musicapi.BaseApiImpl;
-import com.cyl.musicapi.BaseApiListener;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 
@@ -28,7 +27,7 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test2)
     void test2() {
-        searchApi.searchSong("薛之谦", result -> {
+        searchApi.searchSong("薛之谦", 10, 0, result -> {
             statusTv.setText("searchSong");
             resultTv.setText(result.toString());
             return null;
@@ -83,7 +82,7 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        searchApi = new BaseApiImpl(this);
+        searchApi = BaseApiImpl.Companion.getInstance(this);
     }
 
     @Override

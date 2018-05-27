@@ -1,21 +1,14 @@
 package com.cyl.musiclake.ui.music.discover;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.musicapi.callback.TopListApiListener;
-import com.cyl.musiclake.ui.music.online.adapter.TopPlaylistAdapter;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.OnClick;
+
 
 /**
  * 功能：在线排行榜
@@ -23,7 +16,7 @@ import butterknife.OnClick;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter>  {
+public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> {
 
     private static final String TAG = "FoundFragment";
 

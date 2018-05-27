@@ -2,14 +2,15 @@ package com.cyl.musiclake.ui.my;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.api.MusicApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -24,11 +25,6 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.tencent.connect.common.Constants.REQUEST_LOGIN;
 
@@ -60,20 +56,14 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     }
 
     private void getPrivateToken() {
-        MusicApiServiceImpl.login(mTencent.getAccessToken(), mTencent.getOpenId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
+        ApiManager.request(
+                MusicApiServiceImpl.INSTANCE.login(mTencent.getAccessToken(), mTencent.getOpenId()),
+                new RequestCallBack<User>() {
                     @Override
-                    public void onSubscribe(Disposable disposable) {
-
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        if (user != null) {
+                    public void success(User result) {
+                        if (result != null) {
                             User newUserInfo = userModel.getUserInfo();
-                            newUserInfo.setToken(user.getToken());
+                            newUserInfo.setToken(result.getToken());
                             userModel.savaInfo(newUserInfo);
                         }
                         //登录成功
@@ -83,19 +73,15 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                     }
 
                     @Override
-                    public void onError(Throwable throwable) {
+                    public void error(String msg) {
+
                         //登录失败
                         mView.hideLoading();
 
-                        mView.showErrorInfo(throwable.getMessage());
-                        //登录成功
+                        mView.showErrorInfo(msg);
                     }
-
-                    @Override
-                    public void onComplete() {
-                        mView.hideLoading();
-                    }
-                });
+                }
+        );
     }
 
 

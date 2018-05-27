@@ -5,21 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.InputType;
-import com.cyl.musiclake.utils.LogUtil;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.api.MusicApiServiceImpl;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.ui.my.user.UserStatus;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 
 /**
  * 作者：yonglong on 2016/9/14 15:56
@@ -78,28 +76,21 @@ public class CreatePlaylistDialog extends DialogFragment {
     private void createPlaylist(String name) {
         boolean mIsLogin = UserStatus.getstatus(getContext());
         if (mIsLogin) {
-            MusicApiServiceImpl.createPlaylist(name).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<Playlist>() {
+            ApiManager.request(
+                    MusicApiServiceImpl.INSTANCE.createPlaylist(name),
+                    new RequestCallBack<Playlist>() {
                         @Override
-                        public void onSubscribe(Disposable disposable) {
-
-                        }
-
-                        @Override
-                        public void onNext(Playlist playlist) {
+                        public void success(Playlist result) {
+                            ToastUtils.show("歌单新建成功");
                             RxBus.getInstance().post(new PlaylistEvent());
                         }
 
                         @Override
-                        public void onError(Throwable throwable) {
+                        public void error(String msg) {
+                            ToastUtils.show(msg);
                         }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+                    }
+            );
         }
     }
 }

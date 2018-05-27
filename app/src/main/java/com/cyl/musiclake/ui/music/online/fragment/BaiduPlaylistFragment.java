@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.baidu.BaiduMusicList.Billboard;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
@@ -58,7 +59,7 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         //适配器
-        mAdapter = new OnlineAdapter(null);
+        mAdapter = new OnlineAdapter();
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
@@ -71,22 +72,22 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
     @Override
     protected void loadData() {
 //        初始化列表,当无数据时显示提示
-        mPresenter.loadOnlinePlaylist();
+        mPresenter.loadBaiDuPlaylist();
     }
 
     @Override
     protected void listener() {
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadOnlinePlaylist();
+            mPresenter.loadBaiDuPlaylist();
         });
 
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Billboard billboard = (Billboard) adapter.getItem(position);
+            Playlist playlist = (Playlist) adapter.getItem(position);
             Intent intent = new Intent(getActivity(), BaiduMusicListActivity.class);
-            intent.putExtra(Extras.BILLBOARD_TITLE, billboard.getName());
-            intent.putExtra(Extras.BILLBOARD_DESC, billboard.getComment());
-            intent.putExtra(Extras.BILLBOARD_ALBUM, billboard.getPic_s260());
-            intent.putExtra(Extras.BILLBOARD_TYPE, billboard.getType());
+            intent.putExtra(Extras.BILLBOARD_TITLE, playlist.getName());
+            intent.putExtra(Extras.BILLBOARD_DESC, playlist.getDes());
+            intent.putExtra(Extras.BILLBOARD_ALBUM, playlist.getCoverUrl());
+            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getId());
             startActivity(intent);
         });
     }
@@ -109,7 +110,8 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
     }
 
     @Override
-    public void showOnlineSongs(List<Billboard> mBillboards) {
-        mAdapter.setNewData(mBillboards);
+    public void showCharts(List<Playlist> charts) {
+        mAdapter.setNewData(charts);
     }
+
 }

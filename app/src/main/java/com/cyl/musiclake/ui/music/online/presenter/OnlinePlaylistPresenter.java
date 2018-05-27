@@ -1,14 +1,19 @@
 package com.cyl.musiclake.ui.music.online.presenter;
 
+import android.content.Context;
+
+import com.cyl.musicapi.BaseApiImpl;
+import com.cyl.musicapi.bean.ListItem;
+import com.cyl.musicapi.playlist.MusicInfo;
+import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
-import com.cyl.musiclake.api.baidu.BaiduMusicList;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -28,27 +33,20 @@ public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContrac
     }
 
     @Override
-    public void loadOnlinePlaylist() {
+    public void loadBaiDuPlaylist() {
         mView.showLoading();
-        Map<String, String> params = new HashMap<>();
-        params.put(Constants.PARAM_METHOD, Constants.METHOD_CATEGORY);
-        BaiduApiServiceImpl.getOnlinePlaylist()
+        BaiduApiServiceImpl.INSTANCE.getOnlinePlaylist()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mView.bindToLife())
-                .subscribe(new Observer<BaiduMusicList>() {
+                .subscribe(new Observer<List<Playlist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
 
                     @Override
-                    public void onNext(BaiduMusicList result) {
-                        List<BaiduMusicList.Billboard> mBillboards = result.getContent();
-                        if (mBillboards != null && mBillboards.size() > 3) {
-                            //移除T榜
-                            mBillboards.remove(3);
-                        }
-                        mView.showOnlineSongs(mBillboards);
+                    public void onNext(List<Playlist> result) {
+                        mView.showCharts(result);
                     }
 
                     @Override
@@ -63,5 +61,28 @@ public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContrac
                         mView.hideLoading();
                     }
                 });
+    }
+
+    @Override
+    public void loadTopList(Context context) {
+        for (int i = 0; i < 21; i++) {
+            BaseApiImpl.Companion.getInstance(context).getTopList(String.valueOf(i), topList -> {
+                Playlist playlist = new Playlist();
+                playlist.setId(String.valueOf(System.currentTimeMillis()));
+                playlist.setName(topList.getData().getName());
+                playlist.setCount(topList.getData().getPlayCount());
+                playlist.setCoverUrl(topList.getData().getCover());
+                playlist.setDes(topList.getData().getDescription());
+                List<Music> musicList = new ArrayList<>();
+                if (topList.getData().getList().size() > 0) {
+                    for (ListItem item : topList.getData().getList()) {
+                        Music music = MusicUtils.INSTANCE.getMusic(item);
+                        musicList.add(music);
+                    }
+                }
+                playlist.setMusicList(musicList);
+                return null;
+            });
+        }
     }
 }

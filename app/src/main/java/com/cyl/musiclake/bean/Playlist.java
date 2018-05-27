@@ -27,11 +27,18 @@ public class Playlist extends DataSupport implements Serializable {
     private String des;
     private String order;
     private String coverUrl;
+    //类型 0：本地歌单 1：在线歌单
+    private int type;
 
     //歌曲集合
     private List<Music> musicList = new ArrayList<>();
 
     public Playlist() {
+    }
+
+    public Playlist(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Playlist(String id, String name, int count, long date, String order) {
@@ -40,6 +47,22 @@ public class Playlist extends DataSupport implements Serializable {
         this.count = count;
         this.date = date;
         this.order = order;
+    }
+
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getId() {

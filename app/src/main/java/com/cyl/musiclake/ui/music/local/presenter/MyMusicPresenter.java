@@ -12,10 +12,13 @@ import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
+import com.cyl.musiclake.api.MusicApiServiceImpl;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,33 +172,21 @@ public class MyMusicPresenter extends BasePresenter<MyMusicContract.View> implem
     public void loadPlaylist() {
         boolean mIsLogin = UserStatus.getstatus(mContext);
         if (mIsLogin) {
-            MusicApiServiceImpl.getPlaylist()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Playlist>>() {
-                        @Override
-                        public void onSubscribe(Disposable disposable) {
+            ApiManager.request(MusicApiServiceImpl.INSTANCE.getPlaylist(), new RequestCallBack<List<Playlist>>() {
+                @Override
+                public void success(List<Playlist> result) {
+                    mView.showPlaylist(result);
+                    if (result.size() == 0) {
+                        mView.showEmptyView();
+                    }
+                }
 
-                        }
-
-                        @Override
-                        public void onNext(List<Playlist> playlists) {
-                            mView.showPlaylist(playlists);
-                            if (playlists.size() == 0) {
-                                mView.showEmptyView();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            mView.showEmptyView();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+                @Override
+                public void error(String msg) {
+                    ToastUtils.show(msg);
+                    mView.showEmptyView();
+                }
+            });
         } else {
             playlists.clear();
             mView.showPlaylist(playlists);
@@ -203,10 +194,5 @@ public class MyMusicPresenter extends BasePresenter<MyMusicContract.View> implem
                 mView.showEmptyView();
             }
         }
-//        playlists = PlaylistLoader.getPlaylist(mContext);
-//        mView.showPlaylist(playlists);
-//        if (playlists.size() == 0) {
-//            mView.showEmptyView();
-//        }
     }
 }

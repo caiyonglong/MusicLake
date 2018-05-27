@@ -1,27 +1,13 @@
-package com.cyl.musiclake.musicapi.bean
+package com.cyl.musicapi.bean
 
 
+import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.annotations.SerializedName
 
 data class NeteaseBean(@SerializedName("data")
                        val data: TopData,
                        @SerializedName("status")
                        val status: Boolean = false)
-
-
-data class ArtistsItem(@SerializedName("name")
-                       val name: String = "",
-                       @SerializedName("id")
-                       val id: Int = 0)
-
-
-data class Album(@SerializedName("cover")
-                 val cover: String = "",
-                 @SerializedName("name")
-                 val name: String = "",
-                 @SerializedName("id")
-                 val id: Int = 0)
-
 
 data class TopData(@SerializedName("cover")
                      val cover: String = "",

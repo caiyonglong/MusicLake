@@ -5,6 +5,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.utils.CoverLoader;
 
 import java.util.List;
@@ -14,39 +16,39 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class TopListAdapter extends BaseQuickAdapter<NeteaseList, BaseViewHolder> {
+public class TopListAdapter extends BaseQuickAdapter<Playlist, BaseViewHolder> {
 
-    public TopListAdapter(List<NeteaseList> list) {
+    public TopListAdapter(List<Playlist> list) {
         super(R.layout.item_top_list, list);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, NeteaseList neteaseList) {
+    protected void convert(BaseViewHolder helper, Playlist neteaseList) {
         if (neteaseList.getName() == null)
             return;
         helper.setText(R.id.title, neteaseList.getName());
-        if (neteaseList.getCoverImgUrl() == null)
+        if (neteaseList.getCoverUrl() == null)
             return;
-        CoverLoader.loadImageView(mContext, neteaseList.getCoverImgUrl(), helper.getView(R.id.iv_cover));
-        List<NeteaseMusic> musicLists = neteaseList.getTracks();
-        if (musicLists.size() >= 1 && musicLists.get(0).getName() != null
-                && musicLists.get(0).getArtists() != null) {
+        CoverLoader.loadImageView(mContext, neteaseList.getCoverUrl(), helper.getView(R.id.iv_cover));
+        List<Music> musicLists = neteaseList.getMusicList().subList(0, 3);
+        if (musicLists.size() >= 1 && musicLists.get(0).getTitle() != null
+                && musicLists.get(0).getArtist() != null) {
             helper.setText(R.id.tv_music_1, (mContext.getString(R.string.song_list_item_title_1,
-                    musicLists.get(0).getName(), getAuthor(musicLists.get(0).getArtists()))));
+                    musicLists.get(0).getTitle(), musicLists.get(0).getAlbum())));
         } else {
             helper.setText(R.id.tv_music_1, "");
         }
-        if (musicLists.size() >= 2 && musicLists.get(1).getName() != null
-                && getAuthor(musicLists.get(1).getArtists()) != null) {
+        if (musicLists.size() >= 2 && musicLists.get(1).getTitle() != null
+                && musicLists.get(1).getArtist() != null) {
             helper.setText(R.id.tv_music_2, mContext.getString(R.string.song_list_item_title_2,
-                    musicLists.get(1).getName(), getAuthor(musicLists.get(1).getArtists())));
+                    musicLists.get(1).getTitle(), musicLists.get(1).getAlbum()));
         } else {
             helper.setText(R.id.tv_music_2, "");
         }
-        if (musicLists.size() >= 3 && musicLists.get(2).getName() != null
-                && getAuthor(musicLists.get(2).getArtists()) != null) {
+        if (musicLists.size() >= 3 && musicLists.get(2).getTitle() != null
+                && musicLists.get(2).getArtist() != null) {
             helper.setText(R.id.tv_music_3, mContext.getString(R.string.song_list_item_title_3,
-                    musicLists.get(2).getName(), getAuthor(musicLists.get(2).getArtists())));
+                    musicLists.get(2).getTitle(), musicLists.get(2).getAlbum()));
         } else {
             helper.setText(R.id.tv_music_3, "");
         }

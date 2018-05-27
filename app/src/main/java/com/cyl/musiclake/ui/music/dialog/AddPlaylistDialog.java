@@ -7,20 +7,7 @@ import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.musicapi.MusicApiServiceImpl;
-import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.ToastUtils;
-
-import java.util.List;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 作者：yonglong on 2016/9/14 15:24
@@ -51,15 +38,6 @@ public class AddPlaylistDialog extends DialogFragment {
         return null;
     }
 
-    public void showSelectDialog(List<Playlist> playlists) {
-        final Music music = getArguments().getParcelable("music");
-        new MaterialDialog.Builder(getActivity())
-                .title("增加到歌单")
-                .items(playlists)
-                .itemsCallback((dialog, itemView, which, text) -> {
-                    collectMusic(playlists.get(which).getId(), music);
-                }).build().show();
-    }
 
     public MaterialDialog showInfoDialog(String title, String msg) {
         if (title.isEmpty()) {
@@ -74,39 +52,6 @@ public class AddPlaylistDialog extends DialogFragment {
                 .positiveText(R.string.sure)
                 .onPositive(null)
                 .build();
-    }
-
-    public void collectMusic(String pid, Music music) {
-        MusicApiServiceImpl.collectMusic(pid, music)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable disposable) {
-
-                    }
-
-                    @Override
-                    public void onNext(String status) {
-                        LogUtil.e("add", status);
-                        if (status.equals("true")) {
-                            ToastUtils.show("收藏成功");
-                            RxBus.getInstance().post(new PlaylistEvent());
-                        } else if (status.equals("false")) {
-                            ToastUtils.show("歌曲已存在");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        ToastUtils.show("网络异常");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
 }

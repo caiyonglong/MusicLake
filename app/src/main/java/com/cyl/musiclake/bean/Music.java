@@ -3,11 +3,10 @@ package com.cyl.musiclake.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cyl.musicapi.bean.ListItem;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 /**
  * 作者：yonglong on 2016/8/9 10:50
@@ -55,9 +54,18 @@ public class Music extends DataSupport implements Parcelable {
     private String year;
     //音乐质量/前缀
     private String prefix;
+    //更新日期
+    private long date;
+    //在线歌曲是否限制播放，false 可以播放
+    private boolean cp;
+    //歌曲评论Id
+    private String commentId;
+    //收藏id
+    private String collectId;
 
-    private Album albumBean;
-    private List<Artist> artists;
+
+//    private Album albumBean;
+//    private List<Artist> artists;
 
     public Music(NeteaseMusic neteaseMusic) {
         this.id = String.valueOf(neteaseMusic.getId());
@@ -70,6 +78,22 @@ public class Music extends DataSupport implements Parcelable {
         this.coverUri = neteaseMusic.getAlbum().getPicUrl();
         this.coverSmall = neteaseMusic.getAlbum().getPicUrl();
         this.coverBig = neteaseMusic.getAlbum().getPicUrl();
+        this.type = Type.NETEASE;
+        this.online = true;
+    }
+
+    public Music(ListItem neteaseMusic) {
+        this.id = String.valueOf(neteaseMusic.getId());
+        this.title = neteaseMusic.getName();
+        this.album = neteaseMusic.getAlbum().getName();
+        this.albumId = String.valueOf(neteaseMusic.getAlbum().getId());
+//        for (ArtistsItem item : Objects.requireNonNull(neteaseMusic.getArtists())) {
+//        }
+        this.artist = neteaseMusic.getArtists().get(0).getName();
+        this.artistId = neteaseMusic.getArtists().get(0).getId();
+        this.coverUri = neteaseMusic.getAlbum().getCover();
+        this.coverSmall = neteaseMusic.getAlbum().getCover();
+        this.coverBig = neteaseMusic.getAlbum().getCover();
         this.type = Type.NETEASE;
         this.online = true;
     }
@@ -294,8 +318,40 @@ public class Music extends DataSupport implements Parcelable {
         }
     }
 
+    public String getCollectId() {
+        return collectId;
+    }
+
+    public void setCollectId(String collectId) {
+        this.collectId = collectId;
+    }
+
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public boolean isCp() {
+        return cp;
+    }
+
+    public void setCp(boolean cp) {
+        this.cp = cp;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
     public String getUri() {
@@ -325,22 +381,6 @@ public class Music extends DataSupport implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public Album getAlbumBean() {
-        return albumBean;
-    }
-
-    public void setAlbumBean(Album albumBean) {
-        this.albumBean = albumBean;
-    }
-
-    public List<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(List<Artist> artists) {
-        this.artists = artists;
     }
 
     @Override

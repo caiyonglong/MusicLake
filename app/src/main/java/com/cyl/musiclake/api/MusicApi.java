@@ -10,11 +10,7 @@ import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.musicapi.SourceData;
-import com.cyl.musiclake.musicapi.playlist.CollectionInfo;
-import com.cyl.musiclake.utils.LogUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -42,7 +38,7 @@ public class MusicApi {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
         } else if (music.getType() == Music.Type.BAIDU) {
-            return BaiduApiServiceImpl.getBaiduLyric(music)
+            return BaiduApiServiceImpl.INSTANCE.getBaiduLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
         } else if (music.getType() == Music.Type.XIAMI) {
@@ -110,29 +106,4 @@ public class MusicApi {
         return DoubanApiServiceImpl.getMusicInfo(info);
     }
 
-    public static CollectionInfo getCollectInfo(Music music) {
-        CollectionInfo collectionInfo = new CollectionInfo(music.getId(), music.getTypeName(true));
-        SourceData sourceData = new SourceData();
-        sourceData.setCp(false);
-        sourceData.setId(music.getId());
-        sourceData.setSource(music.getTypeName(true));
-        sourceData.setName(music.getTitle());
-        sourceData.setAlbum(new SourceData.AlbumBean(music.getAlbumId() + "", music.getAlbum(), music.getCoverUri()));
-        try {
-            String[] artistIds = music.getArtistId().split(",");
-            String[] artists = music.getArtist().split(",");
-            List<SourceData.ArtistsBean> artistsBeans = new ArrayList<>();
-            for (int i = 0; i < artists.length; i++) {
-                SourceData.ArtistsBean artistsBean = new SourceData.ArtistsBean(artistIds[i],
-                        artists[i]);
-                artistsBeans.add(artistsBean);
-            }
-            sourceData.setArtists(artistsBeans);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        collectionInfo.setSourceData(sourceData);
-        LogUtil.e(TAG, collectionInfo.toString());
-        return collectionInfo;
-    }
 }

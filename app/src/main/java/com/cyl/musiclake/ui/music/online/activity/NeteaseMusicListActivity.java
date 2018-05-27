@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,7 +31,6 @@ import com.cyl.musiclake.ui.music.online.presenter.NeteaseListPresenter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.DialogUtils;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 

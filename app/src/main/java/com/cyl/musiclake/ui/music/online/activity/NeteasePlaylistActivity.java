@@ -18,7 +18,7 @@ public class NeteasePlaylistActivity extends BasePlaylistActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.getPlaylist(getIntent().getIntExtra("id", 1), "");
+        mPresenter.getPlaylist(getIntent().getStringExtra("id"), this);
     }
 
     @Override

@@ -113,10 +113,6 @@ public class CoverLoader {
 
     }
 
-    public static void loadImageViewByMusic(Context mContext, Music music, ImageView imageView) {
-        String url = getCoverUriByMusic(music);
-        loadImageView(mContext, url, imageView);
-    }
 
     public static void loadImageViewByMusic(Context mContext, Music music, BitmapCallBack callBack) {
         if (music == null) return;

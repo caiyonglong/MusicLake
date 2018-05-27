@@ -13,7 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 
-import com.cyl.musiclake.musicapi.playlist.AddPlaylistUtils;
+import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.utils.LogUtil;
 
 import android.view.LayoutInflater;
@@ -30,7 +30,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
-import com.cyl.musiclake.musicapi.MusicUtils;
+import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
@@ -156,7 +156,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @OnClick(R.id.skip_share)
     void share() {
-        MusicUtils.qqShare(getActivity(), PlayManager.getPlayingMusic());
+        MusicUtils.INSTANCE.qqShare(getActivity(), PlayManager.getPlayingMusic());
     }
 
 
@@ -215,7 +215,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @OnClick(R.id.skip_download)
     void download() {
         Music music = PlayManager.getPlayingMusic();
-        MusicUtils.checkDownload((AppCompatActivity) getActivity(), music);
+        MusicUtils.INSTANCE.checkDownload((AppCompatActivity) getActivity(), music);
     }
 
     @OnClick(R.id.skip_queue)
