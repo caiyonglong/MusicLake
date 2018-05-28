@@ -150,6 +150,7 @@ public class Constants {
     public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/v1/restserver/ting?";
     public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
     public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
+    public static final String METHOD_SEARCH_SUGGESTION = "baidu.ting.search.suggestion";
     public static final String METHOD_MUSIC_INFO = "baidu.ting.song.getInfos";
     public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";

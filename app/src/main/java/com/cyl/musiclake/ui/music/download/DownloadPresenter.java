@@ -1,11 +1,10 @@
-package com.cyl.musiclake.ui.music.online.presenter;
+package com.cyl.musiclake.ui.music.download;
 
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.data.download.TasksManagerModel;
-import com.cyl.musiclake.ui.music.online.contract.DownloadContract;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 

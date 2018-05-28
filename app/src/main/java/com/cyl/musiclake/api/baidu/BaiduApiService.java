@@ -30,6 +30,10 @@ public interface BaiduApiService {
     @GET("v1/restserver/ting?")
     Observable<BaiduSongList> getOnlineSongs(@QueryMap Map<String, String> params);
 
+    //    http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.search.suggestion&query=&format=json&from=ios&version=2.1.1
+    @GET("v1/restserver/ting?")
+    Observable<Suggestion> getSearchSuggestion(@QueryMap Map<String, String> params);
+
     @GET()
     Observable<BaiduSongInfo> getTingSongInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 

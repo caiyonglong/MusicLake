@@ -12,7 +12,7 @@ import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.event.HistoryChangedEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.api.MusicApiServiceImpl;
+import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;
@@ -172,7 +172,7 @@ public class MyMusicPresenter extends BasePresenter<MyMusicContract.View> implem
     public void loadPlaylist() {
         boolean mIsLogin = UserStatus.getstatus(mContext);
         if (mIsLogin) {
-            ApiManager.request(MusicApiServiceImpl.INSTANCE.getPlaylist(), new RequestCallBack<List<Playlist>>() {
+            ApiManager.request(PlaylistApiServiceImpl.INSTANCE.getPlaylist(), new RequestCallBack<List<Playlist>>() {
                 @Override
                 public void success(List<Playlist> result) {
                     mView.showPlaylist(result);

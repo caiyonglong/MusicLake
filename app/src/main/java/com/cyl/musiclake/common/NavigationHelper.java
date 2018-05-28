@@ -24,7 +24,7 @@ import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment;
-import com.cyl.musiclake.ui.music.online.fragment.DownloadFragment;
+import com.cyl.musiclake.ui.music.download.DownloadFragment;
 import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;

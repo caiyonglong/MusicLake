@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.playlist;
 
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.MusicApiServiceImpl;
+import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
@@ -29,7 +29,7 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
 
     @Override
     public void loadPlaylistSongs(String playlistID) {
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.getMusicList(playlistID), new RequestCallBack<List<Music>>() {
+        ApiManager.request(PlaylistApiServiceImpl.INSTANCE.getMusicList(playlistID), new RequestCallBack<List<Music>>() {
             @Override
             public void success(List<Music> result) {
                 mView.showPlaylistSongs(result);
@@ -45,7 +45,7 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
 
     @Override
     public void deletePlaylist(Playlist playlist) {
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.deletePlaylist(playlist.getId()), new RequestCallBack<String>() {
+        ApiManager.request(PlaylistApiServiceImpl.INSTANCE.deletePlaylist(playlist.getId()), new RequestCallBack<String>() {
             @Override
             public void success(String result) {
                 mView.success(1);
@@ -62,7 +62,7 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
 
     @Override
     public void renamePlaylist(Playlist playlist, String title) {
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.renamePlaylist(playlist.getId(), title), new RequestCallBack<String>() {
+        ApiManager.request(PlaylistApiServiceImpl.INSTANCE.renamePlaylist(playlist.getId(), title), new RequestCallBack<String>() {
             @Override
             public void success(String result) {
                 mView.success(1);
@@ -79,7 +79,7 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
 
     @Override
     public void disCollectMusic(String pid, int position, Music music) {
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.disCollectMusic(pid, music), new RequestCallBack<String>() {
+        ApiManager.request(PlaylistApiServiceImpl.INSTANCE.disCollectMusic(pid, music), new RequestCallBack<String>() {
             @Override
             public void success(String result) {
                 mView.removeMusic(position);

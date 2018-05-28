@@ -38,7 +38,7 @@ public class AddPlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().getResources().getString(R.string.prompt_login));
             return;
         }
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.getPlaylist(), new RequestCallBack<List<Playlist>>() {
+        ApiManager.request(PlaylistApiServiceImpl.INSTANCE.getPlaylist(), new RequestCallBack<List<Playlist>>() {
             @Override
             public void success(List<Playlist> result) {
                 showSelectDialog(activity, result, music);
@@ -61,7 +61,7 @@ public class AddPlaylistUtils {
     }
 
     private static void collectMusic(String pid, Music music) {
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.collectMusic(pid, music), new RequestCallBack<String>() {
+        ApiManager.request(PlaylistApiServiceImpl.INSTANCE.collectMusic(pid, music), new RequestCallBack<String>() {
             @Override
             public void success(String result) {
                 ToastUtils.show("收藏成功");

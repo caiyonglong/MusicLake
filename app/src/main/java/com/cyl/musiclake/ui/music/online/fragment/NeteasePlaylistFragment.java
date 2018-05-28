@@ -17,7 +17,7 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
-import com.cyl.musiclake.ui.music.online.adapter.TopListAdapter;
+import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
-    private TopListAdapter mAdapter;
+    private OnlineAdapter mAdapter;
     List<Playlist> neteaseLists = new ArrayList<>();
 
     private BaseApiImpl baseApi;
@@ -99,7 +99,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         //适配器
-        mAdapter = new TopListAdapter(neteaseLists);
+        mAdapter = new OnlineAdapter(neteaseLists);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }

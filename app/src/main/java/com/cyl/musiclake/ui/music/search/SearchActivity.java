@@ -18,7 +18,7 @@ import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.online.DownloadDialog;
+import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 
 import java.util.ArrayList;

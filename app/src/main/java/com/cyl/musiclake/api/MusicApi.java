@@ -70,6 +70,7 @@ public class MusicApi {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+
     /**
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
      */

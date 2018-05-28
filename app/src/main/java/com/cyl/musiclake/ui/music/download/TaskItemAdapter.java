@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.adapter;
+package com.cyl.musiclake.ui.music.download;
 
 import android.view.View;
 import android.widget.Button;

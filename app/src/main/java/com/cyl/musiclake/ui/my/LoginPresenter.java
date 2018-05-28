@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.cyl.musiclake.MusicApp;
-import com.cyl.musiclake.api.MusicApiServiceImpl;
+import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.net.ApiManager;
@@ -57,7 +57,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
     private void getPrivateToken() {
         ApiManager.request(
-                MusicApiServiceImpl.INSTANCE.login(mTencent.getAccessToken(), mTencent.getOpenId()),
+                PlaylistApiServiceImpl.INSTANCE.login(mTencent.getAccessToken(), mTencent.getOpenId()),
                 new RequestCallBack<User>() {
                     @Override
                     public void success(User result) {

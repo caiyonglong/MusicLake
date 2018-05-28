@@ -2,18 +2,16 @@ package com.cyl.musiclake.api
 
 import org.junit.Test
 
-import org.junit.Assert.*
-
 /**
  * Des    :
  * Author : master.
  * Date   : 2018/5/26 .
  */
-class MusicApiServiceImplTest {
+class PlaylistApiServiceImplTest {
 
     @Test
     fun getPlaylist() {
-        MusicApiServiceImpl.getPlaylist()
+        PlaylistApiServiceImpl.getPlaylist()
                 .subscribe {
                     print(it.toString())
                 }
@@ -45,7 +43,7 @@ class MusicApiServiceImplTest {
 
     @Test
     fun login() {
-        MusicApiServiceImpl.login("9D6F0084618AACDE881FDCA267F5CFDD", "35300E15E9E245DF0B04031EF6032CD6")
+        PlaylistApiServiceImpl.login("9D6F0084618AACDE881FDCA267F5CFDD", "35300E15E9E245DF0B04031EF6032CD6")
                 .subscribe {
                     print(it.toString())
                 }

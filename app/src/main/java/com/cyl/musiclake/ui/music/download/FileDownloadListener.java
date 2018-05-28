@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.adapter;
+package com.cyl.musiclake.ui.music.download;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.download.TasksManager;

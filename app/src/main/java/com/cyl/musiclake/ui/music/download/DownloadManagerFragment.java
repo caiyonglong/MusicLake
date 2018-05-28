@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.fragment;
+package com.cyl.musiclake.ui.music.download;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,7 +9,6 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
-import com.cyl.musiclake.ui.music.online.adapter.TaskItemAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

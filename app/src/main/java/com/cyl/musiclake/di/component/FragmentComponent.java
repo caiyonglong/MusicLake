@@ -20,7 +20,7 @@ import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
-import com.cyl.musiclake.ui.music.online.fragment.DownloadedFragment;
+import com.cyl.musiclake.ui.music.download.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
 
 import dagger.Component;

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.contract;
+package com.cyl.musiclake.ui.music.download;
 
 
 import com.cyl.musiclake.bean.Music;

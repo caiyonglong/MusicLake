@@ -4,13 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import com.cyl.musicapi.bean.ListItem
+import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
 
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.ui.music.online.DownloadDialog
+import com.cyl.musiclake.ui.music.download.DownloadDialog
 import com.cyl.musiclake.utils.ToastUtils
 
 /**
@@ -80,7 +81,7 @@ object MusicUtils {
     }
 
     /**
-     * 在线歌曲实体类转化成本地歌曲实体
+     * 在线歌单歌曲歌曲实体类转化成本地歌曲实体
      */
     fun getMusic(musicInfo: MusicInfo): Music {
         val music = Music()
@@ -110,7 +111,37 @@ object MusicUtils {
     }
 
     /**
-     * 本地歌曲实体转化成在线歌曲实体
+     * 搜索歌曲实体类转化成本地歌曲实体
+     */
+    fun getSearchMusic(song: SongsItem, type: Music.Type): Music {
+        val music = Music()
+        music.id = song.id
+        music.title = song.name
+        music.type = type
+        music.album = song.album.name
+        music.albumId = song.album.id
+        music.commentId = song.commentId
+        music.isCp = song.cp
+
+        if (song.artists != null) {
+            var artistIds = song.artists?.get(0)?.id
+            var artistNames = song.artists?.get(0)?.name
+            for (j in 1 until song.artists?.size!! - 1) {
+                artistIds += ",${song.artists?.get(j)?.id}"
+                artistNames += ",${song.artists?.get(j)?.name}"
+            }
+            music.artist = artistNames
+            music.artistId = artistIds
+        }
+        music.coverUri = song.album.cover
+        music.coverBig = song.album.cover
+        music.coverSmall = song.album.cover
+        return music
+    }
+
+
+    /**
+     * 本地歌曲实体转化成在线歌单歌曲实体
      */
     fun getMusicInfo(music: Music): MusicInfo {
         val artistIds = music.artistId.split(",").dropLastWhile { it.isEmpty() }.toTypedArray()

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.fragment;
+package com.cyl.musiclake.ui.music.download;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

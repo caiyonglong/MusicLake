@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.fragment;
+package com.cyl.musiclake.ui.music.download;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,8 +18,6 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.online.contract.DownloadContract;
-import com.cyl.musiclake.ui.music.online.presenter.DownloadPresenter;
 import com.cyl.musiclake.utils.FileUtils;
 
 import java.util.ArrayList;

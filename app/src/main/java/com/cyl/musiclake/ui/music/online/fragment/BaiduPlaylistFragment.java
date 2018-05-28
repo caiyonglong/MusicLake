@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.baidu.BaiduMusicList.Billboard;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
@@ -17,6 +16,7 @@ import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;
 import com.cyl.musiclake.ui.music.online.presenter.OnlinePlaylistPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,10 +38,10 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
     SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
     private OnlineAdapter mAdapter;
+    private List<Playlist> playlist = new ArrayList<>();
 
     public static BaiduPlaylistFragment newInstance() {
         Bundle args = new Bundle();
-
         BaiduPlaylistFragment fragment = new BaiduPlaylistFragment();
         fragment.setArguments(args);
         return fragment;
@@ -59,7 +59,7 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         //适配器
-        mAdapter = new OnlineAdapter();
+        mAdapter = new OnlineAdapter(playlist);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }

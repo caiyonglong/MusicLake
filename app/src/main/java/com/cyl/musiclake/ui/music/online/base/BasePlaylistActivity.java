@@ -20,7 +20,7 @@ import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.online.DownloadDialog;
+import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.DialogUtils;
 import com.cyl.musiclake.utils.FormatUtil;

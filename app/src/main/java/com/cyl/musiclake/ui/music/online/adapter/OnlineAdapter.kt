@@ -11,15 +11,17 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class OnlineAdapter : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_online_large) {
+class OnlineAdapter(playlist: List<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_online_large, playlist) {
 
     private val viewIds = arrayListOf(R.id.tv_music_1, R.id.tv_music_2, R.id.tv_music_3)
     private val stringIds = arrayListOf(R.string.song_list_item_title_1, R.string.song_list_item_title_2, R.string.song_list_item_title_3)
 
+
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
         helper.setText(R.id.title, playlist.name)
-        for (i in 0 until playlist.musicList.size - 1) {
+        for (i in 0 until viewIds.size) {
+            if (playlist.musicList.size <= i) continue
             val music = playlist.musicList[i]
             helper.setText(viewIds[i], mContext.getString(stringIds[i],
                     music.title, music.artist))
