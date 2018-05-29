@@ -1,4 +1,4 @@
-package com.cyl.musiclake.api.baidu
+package com.cyl.musicapi.baidu
 
 
 import com.google.gson.annotations.SerializedName

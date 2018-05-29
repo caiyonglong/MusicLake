@@ -10,7 +10,6 @@ import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.base.BasePlaylistActivity;
-import com.cyl.musiclake.ui.music.online.activity.NeteaseMusicListActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.RegisterActivity;
@@ -38,9 +37,6 @@ public interface ActivityComponent {
     void inject(ArtistInfoActivity artistInfoActivity);
 
     void inject(BaiduMusicListActivity baiduMusicListActivity);
-
-    void inject(NeteaseMusicListActivity neteaseMusicListActivity);
-
 
     void inject(UserCenterActivity userCenterActivity);
 

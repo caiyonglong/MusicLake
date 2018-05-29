@@ -16,7 +16,6 @@ import java.util.List;
  * 版本：2.5
  */
 public class SearchAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
-    //        RecyclerView.Adapter<SearchAdapter.ItemHolder> {
     public SearchAdapter(List<Music> musicList) {
         super(R.layout.item_music_search, musicList);
     }

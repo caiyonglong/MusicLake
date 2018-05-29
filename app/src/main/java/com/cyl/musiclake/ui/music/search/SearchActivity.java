@@ -3,16 +3,13 @@ package com.cyl.musiclake.ui.music.search;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-
-import com.cyl.musiclake.api.AddPlaylistUtils;
-import com.cyl.musiclake.utils.LogUtil;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
@@ -20,6 +17,8 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
+import com.cyl.musiclake.utils.LogUtil;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchView.OnQueryTextListener, SearchContract.View {
+public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchContract.View {
 
     private static final String TAG = "SearchActivity";
     //搜索信息
@@ -41,6 +40,8 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.search_view)
+    MaterialSearchView searchView;
 
     private List<Music> searchResults = new ArrayList<>();
 
@@ -58,6 +59,9 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     protected void initView() {
+        searchView.showVoice(false);
+        searchView.setEllipsize(true);
+        searchView.showSearch(false);
     }
 
     @Override
@@ -90,6 +94,37 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             LogUtil.e(TAG, music.toString());
             mPresenter.getMusicInfo(0, music);
         });
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.length() > 0) {
+                    mOffset = 1;
+                    searchResults.clear();
+                    queryString = query;
+                    mPresenter.search(query, limit, mOffset);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mPresenter.getSuggestions(newText);
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+            }
+        });
+
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
             PopupMenu popupMenu = new PopupMenu(this, view);
@@ -133,11 +168,25 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.onActionViewExpanded();
-        searchView.setQueryHint(getString(R.string.search_tips));
-        searchView.setOnQueryTextListener(this);
+        MenuItem item = menu.findItem(R.id.menu_search);
+        searchView.setMenuItem(item);
+
+//        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+//        searchView.setMaxWidth(Integer.MAX_VALUE);
+//        searchView.onActionViewExpanded();
+//        searchView.setQueryHint(getString(R.string.search_tips));
+//        searchView.setOnQueryTextListener(this);
+//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//            @Override
+//            public boolean onSuggestionSelect(int position) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onSuggestionClick(int position) {
+//                return false;
+//            }
+//        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -151,28 +200,25 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     }
 
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (query.length() > 0) {
-            mOffset = 1;
-            searchResults.clear();
-            queryString = query;
-            mPresenter.search(query, limit, mOffset);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.length() > 0) {
-            mOffset = 1;
-            searchResults.clear();
-            queryString = newText;
-            mPresenter.search(newText, limit, mOffset);
-        }
-        LogUtil.e(TAG, "time = start2");
-        return true;
-    }
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        if (query.length() > 0) {
+//            mOffset = 1;
+//            searchResults.clear();
+//            queryString = query;
+//            mPresenter.search(query, limit, mOffset);
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        if (newText.length() > 0) {
+//            mPresenter.getSuggestions(newText);
+//        }
+//        LogUtil.e(TAG, "time = start2");
+//        return true;
+//    }
 
     @Override
     protected void onDestroy() {
@@ -198,6 +244,12 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         mAdapter.loadMoreComplete();
         mCurrentCounter = mAdapter.getData().size();
         LogUtil.e("search", mCurrentCounter + "--" + TOTAL_COUNTER + "--" + mOffset);
+    }
+
+    @Override
+    public void showSearchSuggestion(List<String> result) {
+        searchView.setSuggestions(result.toArray(new String[result.size()]));
+        searchView.showSuggestions();
     }
 
     @Override

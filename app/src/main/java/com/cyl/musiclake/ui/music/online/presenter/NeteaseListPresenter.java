@@ -2,7 +2,11 @@ package com.cyl.musiclake.ui.music.online.presenter;
 
 import android.content.Context;
 
+import com.cyl.musicapi.BaseApiImpl;
+import com.cyl.musiclake.api.MusicApiServiceImpl;
+import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.LogUtil;
 
 import com.cyl.musiclake.api.MusicApi;
@@ -61,36 +65,7 @@ public class NeteaseListPresenter extends BasePresenter<NeteaseListContract.View
 
     @Override
     public void getMusicInfo(NeteaseMusic neteaseMusic) {
-        mView.showLoading();
-        MusicApi.getMusicInfo(new Music(neteaseMusic))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Music>() {
 
-                    @Override
-                    public void onSubscribe(Disposable disposable) {
-
-                    }
-
-                    @Override
-                    public void onNext(Music music) {
-                        if (music.getUri() != null) {
-                            mView.showMusicInfo(music);
-                        } else {
-                            ToastUtils.show("播放地址异常");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        mView.hideLoading();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mView.hideLoading();
-                    }
-                });
     }
 
 }

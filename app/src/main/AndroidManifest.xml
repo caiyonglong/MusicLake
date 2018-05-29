@@ -85,11 +85,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <activity
-            android:name=".ui.music.online.activity.NeteaseMusicListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue" />
-        <activity
             android:name=".ui.music.online.activity.NeteasePlaylistActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

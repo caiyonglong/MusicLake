@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.music.online.contract;
 
 import android.content.Context;
 
-import com.cyl.musiclake.api.baidu.BaiduMusicList;
 import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.bean.Playlist;
 

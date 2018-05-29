@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musicapi.bean.ListItem;
-import com.cyl.musicapi.playlist.MusicInfo;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;

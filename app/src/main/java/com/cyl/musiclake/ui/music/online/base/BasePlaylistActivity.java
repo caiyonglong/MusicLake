@@ -27,6 +27,9 @@ import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -51,6 +54,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
     private int action = 0; //0 播放，1 下载
     private Playlist mPlaylist;
     private SongAdapter mAdapter;
+    private List<Music> musicList = new ArrayList<>();
 
     @Override
     protected int getLayoutResID() {
@@ -68,7 +72,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
 
     @Override
     protected void initData() {
-        mAdapter = new SongAdapter(null);
+        mAdapter = new SongAdapter(musicList);
         mAdapter.setEnableLoadMore(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -86,7 +90,8 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                action = 0;
+                PlayManager.setPlayList(musicList);
+                PlayManager.play(position);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -166,6 +171,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
     @Override
     public void showPlayList(Playlist playlist) {
         mPlaylist = playlist;
+        musicList = playlist.getMusicList();
         mAdapter.setNewData(playlist.getMusicList());
         showHeaderInfo();
     }

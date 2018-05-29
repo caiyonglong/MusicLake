@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.search;
 
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.MusicApiServiceImpl;
+import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.net.ApiManager;
@@ -43,6 +44,21 @@ public class SearchPresenter extends BasePresenter<SearchContract.View> implemen
                         mView.hideLoading();
                     }
                 });
+    }
+
+    @Override
+    public void getSuggestions(String query) {
+        ApiManager.request(BaiduApiServiceImpl.INSTANCE.getSearchSuggestion(query), new RequestCallBack<List<String>>() {
+            @Override
+            public void success(List<String> result) {
+                mView.showSearchSuggestion(result);
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+        });
     }
 
     @Override

@@ -147,7 +147,7 @@ public class Constants {
     /**
      * 百度音乐Api*************************************************
      */
-    public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/v1/restserver/ting?";
+    public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/";
     public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
     public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
     public static final String METHOD_SEARCH_SUGGESTION = "baidu.ting.search.suggestion";
@@ -163,6 +163,8 @@ public class Constants {
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
     public static final String PARAM_QUERY = "query";
+
+    public static final String URL_GET_SONG_INFO = "http://music.baidu.com/data/music/links?songIds=";
 
 
     /**

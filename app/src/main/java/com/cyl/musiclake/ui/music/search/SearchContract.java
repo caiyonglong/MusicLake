@@ -13,6 +13,8 @@ public interface SearchContract {
 
         void showSearchResult(List<Music> list);
 
+        void showSearchSuggestion(List<String> list);
+
         void showEmptyView();
 
         void showMusicInfo(int type, Music music);
@@ -21,6 +23,8 @@ public interface SearchContract {
     interface Presenter extends BaseContract.BasePresenter<View> {
 
         void search(String key, int limit, int page);
+
+        void getSuggestions(String query);
 
 
         void getMusicInfo(int type, Music music);
