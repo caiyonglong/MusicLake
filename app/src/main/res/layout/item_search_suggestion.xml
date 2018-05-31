@@ -6,15 +6,11 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/suggestion_search"
+        android:id="@+id/history_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/suggestion_insert"
-        android:layout_toStartOf="@id/suggestion_insert"
-        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:paddingBottom="8dp"
@@ -27,8 +23,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            tools:ignore="ContentDescription,RtlHardcoded"
-            tools:src="@drawable/ic_info_outline" />
+            tools:src="@drawable/ic_history_black" />
 
         <TextView
             android:id="@+id/item_suggestion_query"
@@ -44,7 +39,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/suggestion_insert"
+        android:id="@+id/deleteView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

@@ -25,7 +25,6 @@ public class ArtistInfoPresenter extends BasePresenter<ArtistInfoContract.View> 
 
     @Override
     public void loadArtistInfo(Music music) {
-        mView.showLoading();
         String info = music.getTitle() + "-" + music.getArtist();
         MusicApi.getMusicAlbumInfo(info)
                 .subscribeOn(Schedulers.io())

@@ -31,7 +31,6 @@ public class AlbumDetailPresenter extends BasePresenter<AlbumDetailContract.View
 
     @Override
     public void loadAlbumSongs(String albumName) {
-        mView.showLoading();
         AppRepository.getAlbumSongsRepository(MusicApp.getAppContext(), albumName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

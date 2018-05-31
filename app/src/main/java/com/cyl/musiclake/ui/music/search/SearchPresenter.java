@@ -2,11 +2,15 @@ package com.cyl.musiclake.ui.music.search;
 
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.MusicApiServiceImpl;
-import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.SearchHistoryBean;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
+import com.cyl.musiclake.utils.LogUtil;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.crud.callback.FindMultiCallback;
 
 import java.util.List;
 
@@ -29,8 +33,9 @@ public class SearchPresenter extends BasePresenter<SearchContract.View> implemen
 
     @Override
     public void search(String key, SearchEngine.Filter type, int limit, int page) {
-        mView.showLoading();
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.searchMusic(key, type, limit, page),
+        ApiManager.request(MusicApiServiceImpl.INSTANCE
+                        .searchMusic(key, type, limit, page)
+                        .compose(mView.bindToLife()),
                 new RequestCallBack<List<Music>>() {
                     @Override
                     public void success(List<Music> result) {
@@ -48,17 +53,26 @@ public class SearchPresenter extends BasePresenter<SearchContract.View> implemen
 
     @Override
     public void getSuggestions(String query) {
-        ApiManager.request(BaiduApiServiceImpl.INSTANCE.getSearchSuggestion(query), new RequestCallBack<List<String>>() {
+        DataSupport.select("title").where("title like ?", "%" + query + "%")
+                .order("id desc").findAsync(SearchHistoryBean.class).listen(new FindMultiCallback() {
             @Override
-            public void success(List<String> result) {
-                mView.showSearchSuggestion(result);
-            }
-
-            @Override
-            public void error(String msg) {
-
+            public <T> void onFinish(List<T> t) {
+                mView.showSearchSuggestion((List<SearchHistoryBean>) t);
             }
         });
+    }
+
+    @Override
+    public void saveQueryInfo(String query) {
+        List<SearchHistoryBean> data = DataSupport.where("title = ?", query).find(SearchHistoryBean.class);
+        if (data.size() == 0) {
+            SearchHistoryBean historyBean = new SearchHistoryBean(System.currentTimeMillis(), query);
+            if (historyBean.save()) {
+                LogUtil.d("存储成功");
+            } else {
+                LogUtil.d("失败");
+            }
+        }
     }
 
     @Override

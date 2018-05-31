@@ -16,16 +16,20 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.SearchHistoryBean;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.utils.LogUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     //搜索信息
     private String queryString;
     private SearchAdapter mAdapter;
+    private SearchSuggestionAdapter suggestionAdapter;
 
     @BindView(R.id.items_list)
     RecyclerView resultListRcv;
@@ -65,6 +70,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     }
 
     private List<Music> searchResults = new ArrayList<>();
+    private List<SearchHistoryBean> suggestions = new ArrayList<>();
 
     private int mCurrentCounter = 10;
     private int limit = 10;
@@ -104,9 +110,14 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        resultListRcv.setLayoutManager(new LinearLayoutManager(this));
+        resultListRcv.setLayoutManager(layoutManager);
         resultListRcv.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(resultListRcv);
+
+        suggestionAdapter = new SearchSuggestionAdapter(suggestions);
+        suggestionsRcv.setLayoutManager(new LinearLayoutManager(this));
+        suggestionsRcv.setAdapter(suggestionAdapter);
+        suggestionAdapter.bindToRecyclerView(suggestionsRcv);
 
     }
 
@@ -136,7 +147,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             @Override
             public void afterTextChanged(Editable s) {
                 String newText = searchEditText.getText().toString();
-//                mPresenter.getSuggestions(newText);
+                mPresenter.getSuggestions(newText);
             }
         });
 
@@ -187,6 +198,20 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 mPresenter.search(queryString, filter, limit, mOffset);
             }
         }, 1000), resultListRcv);
+
+        suggestionAdapter.setOnItemClickListener((adapter, view, position) -> {
+        });
+        suggestionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId()==R.id.history_search){
+                    searchEditText.setText(suggestions.get(position).getTitle());
+                }else if (view.getId()==R.id.deleteView){
+                    DataSupport.delete(SearchHistoryBean.class, suggestions.get(position).getId());
+                    suggestionAdapter.remove(position);
+                }
+            }
+        });
     }
 
     @Override
@@ -257,6 +282,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             mOffset = 0;
             searchResults.clear();
             queryString = query;
+            mPresenter.saveQueryInfo(query);
             mPresenter.search(query, filter, limit, mOffset);
         }
     }
@@ -280,6 +306,11 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void showSearchResult(List<Music> list) {
+        if (list.size() > 0) {
+            suggestionsPanel.setVisibility(View.GONE);
+        } else {
+            suggestionsPanel.setVisibility(View.VISIBLE);
+        }
         searchResults.addAll(list);
         mAdapter.setNewData(searchResults);
         mAdapter.loadMoreComplete();
@@ -288,7 +319,16 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     }
 
     @Override
-    public void showSearchSuggestion(List<String> result) {
+    public void showSearchSuggestion(List<SearchHistoryBean> result) {
+        if (result.size() > 0) {
+            searchResults.clear();
+            mAdapter.setNewData(searchResults);
+            suggestions = result;
+            suggestionsPanel.setVisibility(View.VISIBLE);
+            suggestionAdapter.setNewData(result);
+        } else {
+            suggestionsPanel.setVisibility(View.GONE);
+        }
     }
 
     @Override

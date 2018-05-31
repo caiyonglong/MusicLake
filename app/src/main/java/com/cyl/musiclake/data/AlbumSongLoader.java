@@ -34,7 +34,7 @@ public class AlbumSongLoader {
      */
     public static Observable<List<Music>> getSongsForAlbum(Context context, String albumName) {
         DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        String sql = "SELECT * FROM music where music.is_online=0 and album = '" + albumName + "'";
+        String sql = "SELECT * FROM music where music.is_online=0 and album = \"" + albumName + "\"";
         Cursor cursor = dbDaoImpl.makeCursor(sql);
         return getSongsForAlbumDB(context, cursor);
     }

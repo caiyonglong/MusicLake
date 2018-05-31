@@ -33,7 +33,6 @@ public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContrac
 
     @Override
     public void loadBaiDuPlaylist() {
-        mView.showLoading();
         BaiduApiServiceImpl.INSTANCE.getOnlinePlaylist()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -41,6 +40,7 @@ public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContrac
                 .subscribe(new Observer<List<Playlist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        mView.showLoading();
                     }
 
                     @Override

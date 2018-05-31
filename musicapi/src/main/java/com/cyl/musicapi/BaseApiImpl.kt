@@ -53,12 +53,39 @@ class BaseApiImpl private constructor(val context: Context) {
      *
      * @param query
      */
-    fun searchSong(query: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit) {
+    fun searchSong(query: String, type: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit) {
         mWebView?.callHandler("asyn.searchSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
             val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
             success.invoke(result)
         })
+//        when (type) {
+//            "ANY" -> {
+//                mWebView?.callHandler("asyn.searchSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
+//                    success.invoke(result)
+//                })
+//            }
+//            "QQ" -> {
+//                mWebView?.callHandler("asyn.searchQQSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
+//                    success.invoke(result)
+//                })
+//            }
+//            "XIAMI" -> {
+//                mWebView?.callHandler("asyn.searchXiamiSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
+//                    success.invoke(result)
+//                })
+//            }
+//            "NETEASE" -> {
+//                mWebView?.callHandler("asyn.searchNeteaseSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
+//                    success.invoke(result)
+//                })
+//            }
+//        }
     }
+
 
     /**
      * 获取歌曲详情
