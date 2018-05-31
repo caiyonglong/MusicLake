@@ -16,6 +16,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.playlist.RecentlyAdapter;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.download.DownloadDialog;
@@ -102,8 +103,9 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                Music music = (Music) adapter.getItem(position);
-                mPresenter.playCurrentMusic(music);
+//                Music music = (Music) adapter.getItem(position);
+                PlayManager.setPlayList(musicList);
+                PlayManager.play(position);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

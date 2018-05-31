@@ -116,6 +116,11 @@ public class IMusicServiceStub extends IMusicService.Stub {
     }
 
     @Override
+    public int AudioSessionId() throws RemoteException {
+        return mService.get().getAudioSessionId();
+    }
+
+    @Override
     public int position() throws RemoteException {
         return mService.get().getPlayPosition();
     }

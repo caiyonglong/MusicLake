@@ -29,4 +29,5 @@ interface IMusicService {
     void removeFromQueue(int position);
     void clearQueue();
     void showDesktopLyric(boolean show);
+    int AudioSessionId();
 }

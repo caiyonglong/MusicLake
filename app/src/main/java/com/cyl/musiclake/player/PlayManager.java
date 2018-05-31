@@ -85,6 +85,16 @@ public class PlayManager {
         }
     }
 
+    public static int getAudioSessionId() {
+        try {
+            if (mService != null)
+                return mService.AudioSessionId();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public static void playPause() {
         try {
             if (mService != null)

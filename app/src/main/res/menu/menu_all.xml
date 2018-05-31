@@ -18,6 +18,10 @@
                     android:id="@+id/nav_menu_playQueue"
                     android:icon="@drawable/ic_playlist_play"
                     android:title="@string/playlist_queue" />
+                <item
+                    android:id="@+id/nav_menu_equalizer"
+                    android:icon="@drawable/ic_equalizer"
+                    android:title="@string/equalizer" />
             </menu>
         </item>
 

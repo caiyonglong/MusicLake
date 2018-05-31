@@ -30,6 +30,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
 import com.cyl.musiclake.utils.LogUtil;
 
 import com.cyl.musiclake.R;
@@ -688,7 +689,7 @@ public class MusicPlayerService extends Service {
         }
     }
 
-    private int getAudioSessionId() {
+    public int getAudioSessionId() {
         synchronized (this) {
             return mPlayer.getAudioSessionId();
         }
@@ -1162,7 +1163,8 @@ public class MusicPlayerService extends Service {
     private void handleCommandIntent(Intent intent) {
         final String action = intent.getAction();
         final String command = SERVICE_CMD.equals(action) ? intent.getStringExtra(CMD_NAME) : null;
-        if (DEBUG) LogUtil.d(TAG, "handleCommandIntent: action = " + action + ", command = " + command);
+        if (DEBUG)
+            LogUtil.d(TAG, "handleCommandIntent: action = " + action + ", command = " + command);
 
         if (CMD_NEXT.equals(command) || ACTION_NEXT.equals(action)) {
             next();

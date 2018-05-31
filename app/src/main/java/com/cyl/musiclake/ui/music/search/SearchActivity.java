@@ -3,11 +3,19 @@ package com.cyl.musiclake.ui.music.search;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
@@ -18,12 +26,12 @@ import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.utils.LogUtil;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 作者：yonglong on 2016/9/15 12:32
@@ -36,20 +44,31 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     //搜索信息
     private String queryString;
     private SearchAdapter mAdapter;
-    private MaterialDialog mProgressDialog;
 
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.search_view)
-    MaterialSearchView searchView;
+    @BindView(R.id.items_list)
+    RecyclerView resultListRcv;
+    @BindView(R.id.suggestions_list)
+    RecyclerView suggestionsRcv;
+    @BindView(R.id.loading_progress_bar)
+    ProgressBar loadingProgress;
+    @BindView(R.id.suggestions_panel)
+    View suggestionsPanel;
+    @BindView(R.id.toolbar_search_edit_text)
+    EditText searchEditText;
+    @BindView(R.id.toolbar_search_container)
+    View searchToolbarContainer;
+
+    @OnClick(R.id.toolbar_search_clear)
+    void clearQuery() {
+        queryString = "";
+        searchEditText.setText("");
+    }
 
     private List<Music> searchResults = new ArrayList<>();
 
-
-    private int mCurrentCounter = 0;
-    private int TOTAL_COUNTER = 0;
+    private int mCurrentCounter = 10;
     private int limit = 10;
-    private int mOffset = 1;
+    private int mOffset = 0;
 
 
     @Override
@@ -59,9 +78,23 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     protected void initView() {
-        searchView.showVoice(false);
-        searchView.setEllipsize(true);
-        searchView.showSearch(false);
+        suggestionsPanel.setVisibility(View.GONE);
+        showSearchOnStart();
+    }
+
+    private void showSearchOnStart() {
+        searchEditText.setText(queryString);
+
+        if (TextUtils.isEmpty(queryString) || TextUtils.isEmpty(searchEditText.getText())) {
+            searchToolbarContainer.setTranslationX(100);
+            searchToolbarContainer.setAlpha(0f);
+            searchToolbarContainer.setVisibility(View.VISIBLE);
+            searchToolbarContainer.animate().translationX(0).alpha(1f).setDuration(200).setInterpolator(new DecelerateInterpolator()).start();
+        } else {
+            searchToolbarContainer.setTranslationX(0);
+            searchToolbarContainer.setAlpha(1f);
+            searchToolbarContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -71,14 +104,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerView);
+        resultListRcv.setLayoutManager(new LinearLayoutManager(this));
+        resultListRcv.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(resultListRcv);
 
-        mProgressDialog = new MaterialDialog.Builder(this)
-                .content(R.string.loading)
-                .progress(true, 0)
-                .build();
     }
 
     @Override
@@ -94,36 +123,32 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             LogUtil.e(TAG, music.toString());
             mPresenter.getMusicInfo(0, music);
         });
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query.length() > 0) {
-                    mOffset = 1;
-                    searchResults.clear();
-                    queryString = query;
-                    mPresenter.search(query, limit, mOffset);
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                mPresenter.getSuggestions(newText);
-                return false;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String newText = searchEditText.getText().toString();
+//                mPresenter.getSuggestions(newText);
             }
         });
 
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                //Do some magic
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            LogUtil.d(TAG, "onEditorAction() called with: v = [" + v + "], actionId = [" + actionId + "], event = [" + event + "]");
+            if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getAction() == EditorInfo.IME_ACTION_SEARCH)) {
+                search(searchEditText.getText().toString());
+                return true;
             }
-
-            @Override
-            public void onSearchViewClosed() {
-                //Do some magic
-            }
+            return false;
         });
+
 
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
@@ -152,41 +177,22 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             popupMenu.inflate(R.menu.popup_song_online);
             popupMenu.show();
         });
-        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            TOTAL_COUNTER = limit * mOffset * 2;
-            if (mCurrentCounter < TOTAL_COUNTER) {
+        mAdapter.setOnLoadMoreListener(() -> resultListRcv.postDelayed(() -> {
+            if (mCurrentCounter == 0) {
                 //数据全部加载完毕
                 mAdapter.loadMoreEnd();
             } else {
                 mOffset++;
                 //成功获取更多数据
-                mPresenter.search(queryString, limit, mOffset);
+                mPresenter.search(queryString, filter, limit, mOffset);
             }
-        }, 1000), mRecyclerView);
+        }, 1000), resultListRcv);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        MenuItem item = menu.findItem(R.id.menu_search);
-        searchView.setMenuItem(item);
-
-//        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-//        searchView.setMaxWidth(Integer.MAX_VALUE);
-//        searchView.onActionViewExpanded();
-//        searchView.setQueryHint(getString(R.string.search_tips));
-//        searchView.setOnQueryTextListener(this);
-//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-//            @Override
-//            public boolean onSuggestionSelect(int position) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onSuggestionClick(int position) {
-//                return false;
-//            }
-//        });
+        restoreFilterChecked(menu, filterItemCheckedId);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -195,30 +201,66 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.menu_filter_all:
+            case R.id.menu_filter_qq:
+            case R.id.menu_filter_xiami:
+            case R.id.menu_filter_netease:
+                changeFilter(item, getFilterFromMenuId(item.getItemId()));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    SearchEngine.Filter filter = SearchEngine.Filter.ANY;
 
-//    @Override
-//    public boolean onQueryTextSubmit(String query) {
-//        if (query.length() > 0) {
-//            mOffset = 1;
-//            searchResults.clear();
-//            queryString = query;
-//            mPresenter.search(query, limit, mOffset);
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onQueryTextChange(String newText) {
-//        if (newText.length() > 0) {
-//            mPresenter.getSuggestions(newText);
-//        }
-//        LogUtil.e(TAG, "time = start2");
-//        return true;
-//    }
+    private void changeFilter(MenuItem item, SearchEngine.Filter filter) {
+        this.filter = filter;
+        this.filterItemCheckedId = item.getItemId();
+        item.setChecked(true);
+
+        if (!TextUtils.isEmpty(queryString)) {
+            search(queryString);
+        }
+    }
+
+
+    private void restoreFilterChecked(Menu menu, int itemId) {
+        if (itemId != -1) {
+            MenuItem item = menu.findItem(itemId);
+            if (item == null) return;
+
+            item.setChecked(true);
+            filter = getFilterFromMenuId(itemId);
+        }
+    }
+
+
+    int filterItemCheckedId = -1;
+
+    private SearchEngine.Filter getFilterFromMenuId(int itemId) {
+        switch (itemId) {
+            case R.id.menu_filter_qq:
+                return SearchEngine.Filter.QQ;
+            case R.id.menu_filter_xiami:
+                return SearchEngine.Filter.XIAMI;
+            case R.id.menu_filter_netease:
+                return SearchEngine.Filter.NETEASE;
+            case R.id.menu_filter_all:
+            default:
+                return SearchEngine.Filter.ANY;
+        }
+    }
+
+    private void search(String query) {
+        if (query.length() > 0) {
+            mOffset = 0;
+            searchResults.clear();
+            queryString = query;
+            mPresenter.search(query, filter, limit, mOffset);
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -228,13 +270,12 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void showLoading() {
+        loadingProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-        }
+        loadingProgress.setVisibility(View.GONE);
     }
 
     @Override
@@ -243,13 +284,11 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         mAdapter.setNewData(searchResults);
         mAdapter.loadMoreComplete();
         mCurrentCounter = mAdapter.getData().size();
-        LogUtil.e("search", mCurrentCounter + "--" + TOTAL_COUNTER + "--" + mOffset);
+        LogUtil.e("search", mCurrentCounter + "--" + mCurrentCounter + "--" + mOffset);
     }
 
     @Override
     public void showSearchSuggestion(List<String> result) {
-        searchView.setSuggestions(result.toArray(new String[result.size()]));
-        searchView.showSuggestions();
     }
 
     @Override

@@ -22,7 +22,7 @@ public interface SearchContract {
 
     interface Presenter extends BaseContract.BasePresenter<View> {
 
-        void search(String key, int limit, int page);
+        void search(String key, SearchEngine.Filter filter, int limit, int page);
 
         void getSuggestions(String query);
 

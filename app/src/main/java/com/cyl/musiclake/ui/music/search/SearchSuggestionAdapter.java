@@ -19,6 +19,6 @@ public class SearchSuggestionAdapter extends BaseQuickAdapter<String, BaseViewHo
 
     @Override
     protected void convert(BaseViewHolder holder, String item) {
-        holder.setText(R.id.tv_title, item);
+        holder.setText(R.id.item_suggestion_query, item);
     }
 }

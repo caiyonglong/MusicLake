@@ -18,6 +18,5 @@ public interface BaiduListContract {
     interface Presenter extends BaseContract.BasePresenter<View> {
         void loadOnlineMusicList(String type, int limit, int mOffset);
 
-        void playCurrentMusic(Music mid);
     }
 }

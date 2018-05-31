@@ -81,6 +81,8 @@ public class MusicApi {
             return NeteaseApiServiceImpl.getMusicUrl(music);
         } else if (music.getType() == Music.Type.XIAMI) {
             return XiamiServiceImpl.getMusicInfo(music);
+        } else if (music.getType() == Music.Type.BAIDU) {
+            return BaiduApiServiceImpl.INSTANCE.getTingSongInfo(music.getId());
         } else {
             return null;
         }

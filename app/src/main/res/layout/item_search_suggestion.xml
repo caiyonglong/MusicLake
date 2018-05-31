@@ -1,31 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="?attr/selectableItemBackground"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:orientation="horizontal">
 
-
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:contentDescription="@null"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_info_outline" />
-
-    <TextView
-        android:id="@+id/tv_title"
-        style="@style/AppTheme.Text"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/suggestion_search"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="歌曲"
-        android:textSize="@dimen/text_size_common" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/suggestion_insert"
+        android:layout_toStartOf="@id/suggestion_insert"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/item_suggestion_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            tools:ignore="ContentDescription,RtlHardcoded"
+            tools:src="@drawable/ic_info_outline" />
+
+        <TextView
+            android:id="@+id/item_suggestion_query"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="14sp"
+            tools:ignore="RtlHardcoded"
+            tools:text="Search query" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/suggestion_insert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_clear_black"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+    </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

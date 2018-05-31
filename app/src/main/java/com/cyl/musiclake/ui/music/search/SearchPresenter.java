@@ -28,9 +28,9 @@ public class SearchPresenter extends BasePresenter<SearchContract.View> implemen
     }
 
     @Override
-    public void search(String key, int limit, int page) {
+    public void search(String key, SearchEngine.Filter type, int limit, int page) {
         mView.showLoading();
-        ApiManager.request(MusicApiServiceImpl.INSTANCE.searchMusic(key, limit, page),
+        ApiManager.request(MusicApiServiceImpl.INSTANCE.searchMusic(key, type, limit, page),
                 new RequestCallBack<List<Music>>() {
                     @Override
                     public void success(List<Music> result) {

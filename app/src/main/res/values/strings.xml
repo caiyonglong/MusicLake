@@ -213,6 +213,12 @@
     <string name="notification_channel_id">music_lake_01</string>
     <string name="song_title">歌曲名</string>
     <string name="song_artist">歌手名</string>
+    <string name="search_no_results">没有结果</string>
+    <string name="all">所有</string>
+    <string name="qq">qq音乐</string>
+    <string name="xiami">虾米音乐</string>
+    <string name="netease">网易云音乐</string>
+    <string name="equalizer">均衡器</string>
 
 
 </resources>

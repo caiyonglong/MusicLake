@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.main;
 
 import android.content.Intent;
+import android.media.audiofx.AudioEffect;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -206,8 +207,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_about:
                 mTargetClass = AboutActivity.class;
                 break;
-            case R.id.nav_menu_test:
-                mTargetClass = TestActivity.class;
+            case R.id.nav_menu_equalizer:
+                Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
+                startActivityForResult(effects, 666);
                 break;
             case R.id.nav_menu_exit:
                 mTargetClass = null;
@@ -320,13 +323,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(UserStatus.getUserInfo(this).getNick());
             mNick.setText(getResources().getString(R.string.app_name));
+            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
-//            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
+            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNick.setText(getResources().getString(R.string.login_hint));
         }
     }

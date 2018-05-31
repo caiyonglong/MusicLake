@@ -35,9 +35,9 @@ public class DownloadPresenter extends BasePresenter<DownloadContract.View> impl
 
         RxBus.getInstance().register(TasksManagerModel.class)
                 .subscribe(taskChangedEvent -> {
-//                    if (!activity.isFinishing()) {
-                    loadDownloadMusic();
-//                    }
+                    if (mView != null && mView.getContext() != null) {
+                        loadDownloadMusic();
+                    }
                 });
     }
 

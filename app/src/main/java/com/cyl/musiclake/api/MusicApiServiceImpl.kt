@@ -12,7 +12,10 @@ import com.cyl.musiclake.api.qq.QQApiServiceImpl
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.ui.music.search.SearchEngine
+import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import io.reactivex.Observable
+import io.reactivex.Observable.create
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -70,21 +73,24 @@ object MusicApiServiceImpl {
      * @param page
      * @return
      */
-    fun searchMusic(key: String, limit: Int, page: Int): Observable<List<Music>> {
-        return Observable.create({ result ->
+    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<List<Music>> {
+        return create({ result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .searchSong(key, limit, page, {
                         val musicList = mutableListOf<Music>()
                         if (it.status) {
-                            it.data.netease.songs?.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, Music.Type.NETEASE))
-                            }
-                            it.data.qq.songs?.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, Music.Type.QQ))
-                            }
-                            it.data.xiami.songs?.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, Music.Type.XIAMI))
-                            }
+                            if (type == ANY || type == NETEASE)
+                                it.data.netease.songs?.forEach {
+                                    musicList.add(MusicUtils.getSearchMusic(it, Music.Type.NETEASE))
+                                }
+                            if (type == ANY || type == QQ)
+                                it.data.qq.songs?.forEach {
+                                    musicList.add(MusicUtils.getSearchMusic(it, Music.Type.QQ))
+                                }
+                            if (type == ANY || type == XIAMI)
+                                it.data.xiami.songs?.forEach {
+                                    musicList.add(MusicUtils.getSearchMusic(it, Music.Type.XIAMI))
+                                }
                             result.onNext(musicList)
                             result.onComplete()
                         } else {
