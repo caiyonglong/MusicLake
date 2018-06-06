@@ -105,14 +105,11 @@ object MusicApiServiceImpl {
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
      */
     fun getMusicInfo(music: Music): Observable<Music>? {
-        return if (music.type == Music.Type.QQ) {
-            QQApiServiceImpl.getMusicInfo(music)
-        } else if (music.type == Music.Type.NETEASE) {
-            NeteaseApiServiceImpl.getMusicUrl(music)
-        } else if (music.type == Music.Type.XIAMI) {
-            XiamiServiceImpl.getMusicInfo(music)
-        } else {
-            null
+        return when {
+            music.type == Music.Type.QQ -> QQApiServiceImpl.getMusicInfo(music)
+            music.type == Music.Type.NETEASE -> NeteaseApiServiceImpl.getMusicUrl(music)
+            music.type == Music.Type.XIAMI -> XiamiServiceImpl.getMusicInfo(music)
+            else -> null
         }
     }
 
@@ -125,6 +122,30 @@ object MusicApiServiceImpl {
      */
     fun getMusicAlbumInfo(info: String): Observable<DoubanMusic> {
         return DoubanApiServiceImpl.getMusicInfo(info)
+    }
+
+
+    /**
+     * 批量獲取歌曲信息
+     *
+     */
+    fun getBatchMusic(vendor: String, ids: String): Observable<List<Music>> {
+        return create({ result ->
+            BaseApiImpl.getInstance(MusicApp.mContext)
+                    .getBatchSongDetail(vendor, ids, {
+                        val musicList = mutableListOf<Music>()
+                        if (it.status) {
+                            val songList = it.data
+                            songList.forEach {
+                                musicList.add(MusicUtils.getSearchMusic(it, MusicUtils.getMusicType(vendor)))
+                            }
+                            result.onNext(musicList)
+                            result.onComplete()
+                        } else {
+                            result.onError(Throwable(it.msg))
+                        }
+                    })
+        })
     }
 
 }

@@ -155,4 +155,17 @@ object MusicUtils {
         return MusicInfo(music.id, music.id, music.title, artistsBeans, album, music.getTypeName(true), music.commentId, music.isCp)
     }
 
+    fun getMusicType(type: String): Music.Type {
+        return if (type == "QQ" || type == "qq") {
+            Music.Type.QQ
+        } else if (type == "XIAMI" || type == "xiami") {
+            Music.Type.XIAMI
+        } else if (type == "BAIDU" || type == "baidu") {
+            Music.Type.BAIDU
+        } else if (type == "NETEASE" || type == "netease") {
+            Music.Type.NETEASE
+        } else {
+            Music.Type.LOCAL
+        }
+    }
 }

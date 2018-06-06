@@ -46,6 +46,12 @@
                     responseCallback(data)
                 })
             },
+            // 批量获取歌曲详情
+            getBatchSongDetail: function (vendor,ids, responseCallback) {
+                musicApi.getBatchSongDetail(vendor,ids).then(function (data) {
+                    responseCallback(data)
+                })
+            },
             //获取歌曲url
             getSongUrl: function (vendor,id, responseCallback) {
                 musicApi.getSongUrl(vendor,id).then(function (data) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:background="?attr/selectableItemBackground"
@@ -10,7 +11,7 @@
         android:id="@+id/v_playing"
         android:layout_width="3dp"
         android:layout_height="35dp"
-        android:layout_marginRight="3dp"
+        android:layout_marginEnd="3dp"
         android:background="@color/colorPrimary"
         android:contentDescription="@null"
         android:visibility="invisible" />
@@ -19,7 +20,8 @@
         android:id="@+id/iv_cover"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:layout_marginStart="@dimen/dp_10"
         android:elevation="1dp"
         android:scaleType="fitXY" />
 
@@ -30,7 +32,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -47,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="歌曲"
+                    android:text="@string/song"
                     android:textSize="@dimen/text_size_common" />
 
                 <TextView
@@ -57,7 +58,7 @@
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="歌手 - 专辑"
+                    android:text="@string/artist_tips"
                     android:textColor="@color/grey"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -72,11 +73,5 @@
 
         </LinearLayout>
 
-        <!--<View-->
-        <!--android:id="@+id/v_divider"-->
-        <!--style="@style/AppTheme.Divider"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/divider_height"-->
-        <!--android:layout_gravity="bottom" />-->
     </FrameLayout>
 </LinearLayout>

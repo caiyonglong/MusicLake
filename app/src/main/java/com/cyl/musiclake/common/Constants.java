@@ -171,7 +171,7 @@ public class Constants {
      * 在线歌单接口Api*************************************************
      */
 
-    public static final String BASE_PLAYER_URL = "https://player-node.zzsun.cc/";
+    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc";
     public static final String BASE_TEST_PLAYER_URL = "https://player-test.zzsun.cc/";
     //    public static final String BASE_NETEASE_URL = "http://192.168.123.44:3000";
     public static final String BASE_NETEASE_URL = "https://netease.api.zzsun.cc/";

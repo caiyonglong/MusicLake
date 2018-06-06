@@ -34,12 +34,16 @@ import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 
 import static com.cyl.musiclake.player.PlayManager.mService;
 
@@ -63,6 +67,8 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     private Unbinder unbinder;
     private PlayManager.ServiceToken mToken;
     private PlaybackStatus mPlaybackStatus;
+
+    private List<Disposable> disposables = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,6 +156,9 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
             unregisterReceiver(mPlaybackStatus);
         } catch (final Throwable e) {
             e.printStackTrace();
+        }
+        for (Disposable disposable : disposables) {
+            disposable.dispose();
         }
         detachView();
     }

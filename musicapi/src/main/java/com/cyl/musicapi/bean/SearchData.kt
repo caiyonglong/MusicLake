@@ -65,22 +65,19 @@ data class SongsItem(@SerializedName("artists")
                      val cp: Boolean = false)
 
 
-data class SongData(@SerializedName("artists")
-                    val artists: List<ArtistsItem>?,
-                    @SerializedName("album")
-                    val album: Album,
-                    @SerializedName("name")
-                    val name: String = "",
-                    @SerializedName("commentId")
-                    val commentId: String = "",
-                    @SerializedName("id")
-                    val id: String = "",
-                    @SerializedName("cp")
-                    val cp: Boolean = false)
-
-
 data class SongDetail(@SerializedName("data")
-                      val data: SongData,
+                      val data: SongsItem,
                       @SerializedName("status")
                       val status: Boolean = false)
 
+data class BatchSongDetail(@SerializedName("data")
+                           val data: List<SongsItem>,
+                           @SerializedName("status")
+                           val status: Boolean = false,
+                           @SerializedName("msg")
+                           val msg: String = "",
+                           @SerializedName("log")
+                           val log: LogDetail?)
+
+data class LogDetail(@SerializedName("msg")
+                     val msg: String)

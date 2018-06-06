@@ -219,6 +219,8 @@
     <string name="xiami">虾米音乐</string>
     <string name="netease">网易云音乐</string>
     <string name="equalizer">均衡器</string>
+    <string name="artist_tips">歌手 - 专辑</string>
+    <string name="song">歌曲</string>
 
 
 </resources>

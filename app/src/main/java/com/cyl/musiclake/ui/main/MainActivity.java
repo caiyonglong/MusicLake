@@ -41,6 +41,7 @@ import com.tencent.tauth.Tencent;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.disposables.Disposable;
 
 import static com.cyl.musiclake.ui.music.player.PlayControlFragment.topContainer;
 
@@ -71,6 +72,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     Class<?> mTargetClass = null;
 
+    private Disposable flowable;
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_main;
@@ -87,8 +90,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         setUserStatusInfo();
         /**登陆成功重新设置用户新*/
-        RxBus.getInstance().register(LoginEvent.class).subscribe(event -> setUserStatusInfo());
-        RxBus.getInstance().register(PlayQueueEvent.class).subscribe(event -> setPlaylistQueueChange());
+        flowable = RxBus.getInstance().register(LoginEvent.class).subscribe(event -> setUserStatusInfo());
+        flowable = RxBus.getInstance().register(PlayQueueEvent.class).subscribe(event -> setPlaylistQueueChange());
     }
 
     private void initNavView() {

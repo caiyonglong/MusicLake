@@ -43,6 +43,12 @@ public class RecentlyAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
             holder.getView(R.id.v_playing).setVisibility(View.GONE);
         }
         holder.addOnClickListener(R.id.iv_more);
+
+        if (item.isCp()) {
+            holder.itemView.setEnabled(false);
+        } else {
+            holder.itemView.setEnabled(true);
+        }
     }
 
 

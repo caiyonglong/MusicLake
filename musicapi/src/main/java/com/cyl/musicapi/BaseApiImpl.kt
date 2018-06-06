@@ -94,7 +94,17 @@ class BaseApiImpl private constructor(val context: Context) {
         mWebView?.callHandler("asyn.getSongDetail", arrayOf<Any>(query, id), { retValue: JSONObject ->
             val result = gson.fromJson<SongDetail>(retValue.toString(), SongDetail::class.java)
             success.invoke(result)
+        })
+    }
 
+    /**
+     * 批量获取歌曲详情
+     * [101126,16435051,139808]
+     */
+    fun getBatchSongDetail(query: String, ids: String, success: (result: BatchSongDetail) -> Unit) {
+        mWebView?.callHandler("asyn.getBatchSongDetail", arrayOf<Any>(query, ids), { retValue: JSONObject ->
+            val result = gson.fromJson<BatchSongDetail>(retValue.toString(), BatchSongDetail::class.java)
+            success.invoke(result)
         })
     }
 

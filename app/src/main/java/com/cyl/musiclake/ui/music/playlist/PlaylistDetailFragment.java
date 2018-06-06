@@ -2,8 +2,6 @@ package com.cyl.musiclake.ui.music.playlist;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -268,10 +266,10 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @Override
     public void showPlaylistSongs(List<Music> songList) {
-        musicList = songList;
+        musicList.addAll(songList);
         mAdapter.setNewData(musicList);
-        if (songList.size() >= 1) {
-            CoverLoader.loadImageView(getContext(), songList.get(0).getCoverUri(), album_art);
+        if (musicList.size() >= 1) {
+            CoverLoader.loadImageView(getContext(), musicList.get(0).getCoverUri(), album_art);
         }
         if (musicList.size() == 0) {
             mAdapter.setEmptyView(R.layout.view_song_empty);

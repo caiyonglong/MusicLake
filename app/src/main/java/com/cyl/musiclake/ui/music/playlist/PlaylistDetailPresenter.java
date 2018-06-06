@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.playlist;
 
 import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.api.MusicApiServiceImpl;
 import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.bean.Music;
@@ -11,6 +12,8 @@ import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,6 +25,9 @@ import javax.inject.Inject;
 
 public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContract.View> implements PlaylistDetailContract.Presenter {
     private static final String TAG = "PlaylistDetailPresenter";
+    private List<String> netease = new ArrayList<>();
+    private List<String> qq = new ArrayList<>();
+    private List<String> xiami = new ArrayList<>();
 
     @Inject
     public PlaylistDetailPresenter() {
@@ -33,6 +39,21 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
             @Override
             public void success(List<Music> result) {
                 mView.showPlaylistSongs(result);
+//                netease.clear();
+//                qq.clear();
+//                xiami.clear();
+//                for (Music music : result) {
+//                    if (music.getType() == Music.Type.NETEASE) {
+//                        netease.add(music.getId());
+//                    } else if (music.getType() == Music.Type.QQ) {
+//                        qq.add(music.getId());
+//                    } else if (music.getType() == Music.Type.XIAMI) {
+//                        xiami.add(music.getId());
+//                    }
+//                }
+//                getBatchSongDetail("netease", Arrays.toString(netease.toArray()));
+//                getBatchSongDetail("qq", Arrays.toString(qq.toArray()));
+//                getBatchSongDetail("xiami", Arrays.toString(xiami.toArray()));
             }
 
             @Override
@@ -83,6 +104,20 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
             @Override
             public void success(String result) {
                 mView.removeMusic(position);
+            }
+
+            @Override
+            public void error(String msg) {
+                ToastUtils.show(msg);
+            }
+        });
+    }
+
+    public void getBatchSongDetail(String vendor, String ids) {
+        ApiManager.request(MusicApiServiceImpl.INSTANCE.getBatchMusic(vendor, ids), new RequestCallBack<List<Music>>() {
+            @Override
+            public void success(List<Music> result) {
+                mView.showPlaylistSongs(result);
             }
 
             @Override
