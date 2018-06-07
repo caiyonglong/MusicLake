@@ -48,6 +48,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     }
 
     private boolean setDataSourceImpl(final MediaPlayer player, final String path) {
+        if (path == null) return false;
         try {
             if (player.isPlaying()) player.stop();
             mIsPrepared = false;

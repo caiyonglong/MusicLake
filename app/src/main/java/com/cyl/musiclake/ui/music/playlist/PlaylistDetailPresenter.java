@@ -38,22 +38,22 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
         ApiManager.request(PlaylistApiServiceImpl.INSTANCE.getMusicList(playlistID), new RequestCallBack<List<Music>>() {
             @Override
             public void success(List<Music> result) {
-                mView.showPlaylistSongs(result);
-//                netease.clear();
-//                qq.clear();
-//                xiami.clear();
-//                for (Music music : result) {
-//                    if (music.getType() == Music.Type.NETEASE) {
-//                        netease.add(music.getId());
-//                    } else if (music.getType() == Music.Type.QQ) {
-//                        qq.add(music.getId());
-//                    } else if (music.getType() == Music.Type.XIAMI) {
-//                        xiami.add(music.getId());
-//                    }
-//                }
-//                getBatchSongDetail("netease", Arrays.toString(netease.toArray()));
-//                getBatchSongDetail("qq", Arrays.toString(qq.toArray()));
-//                getBatchSongDetail("xiami", Arrays.toString(xiami.toArray()));
+//                mView.showPlaylistSongs(result);
+                netease.clear();
+                qq.clear();
+                xiami.clear();
+                for (Music music : result) {
+                    if (music.getType() == Music.Type.NETEASE) {
+                        netease.add(music.getId());
+                    } else if (music.getType() == Music.Type.QQ) {
+                        qq.add(music.getId());
+                    } else if (music.getType() == Music.Type.XIAMI) {
+                        xiami.add(music.getId());
+                    }
+                }
+                getBatchSongDetail("netease", netease.toArray(new String[netease.size()]));
+                getBatchSongDetail("qq", qq.toArray(new String[qq.size()]));
+                getBatchSongDetail("xiami", xiami.toArray(new String[xiami.size()]));
             }
 
             @Override
@@ -113,7 +113,7 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
         });
     }
 
-    public void getBatchSongDetail(String vendor, String ids) {
+    public void getBatchSongDetail(String vendor, String[] ids) {
         ApiManager.request(MusicApiServiceImpl.INSTANCE.getBatchMusic(vendor, ids), new RequestCallBack<List<Music>>() {
             @Override
             public void success(List<Music> result) {

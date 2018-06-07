@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     sothree:umanoDragView="@+id/controls_container"
-    sothree:umanoOverlay="true"
+    sothree:umanoOverlay="false"
     sothree:umanoPanelHeight="55dp"
     sothree:umanoShadowHeight="5dp">
 

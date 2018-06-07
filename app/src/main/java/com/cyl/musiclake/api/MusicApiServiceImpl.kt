@@ -129,7 +129,7 @@ object MusicApiServiceImpl {
      * 批量獲取歌曲信息
      *
      */
-    fun getBatchMusic(vendor: String, ids: String): Observable<List<Music>> {
+    fun getBatchMusic(vendor: String, ids: Array<String>): Observable<List<Music>> {
         return create({ result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .getBatchSongDetail(vendor, ids, {

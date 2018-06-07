@@ -221,6 +221,7 @@
     <string name="equalizer">均衡器</string>
     <string name="artist_tips">歌手 - 专辑</string>
     <string name="song">歌曲</string>
+    <string name="lyric_default_hint">暂无歌词</string>
 
 
 </resources>

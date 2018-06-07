@@ -27,7 +27,7 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test2)
     void test2() {
-        searchApi.searchSong("薛之谦","QQ", 10, 0, result -> {
+        searchApi.searchSong("薛之谦", "QQ", 10, 0, result -> {
             statusTv.setText("searchSong");
             resultTv.setText(result.toString());
             return null;
@@ -65,6 +65,24 @@ public class TestActivity extends BaseActivity {
     void test6() {
         searchApi.getSongUrl("qq", "001Qu4I30eVFYb", result -> {
             statusTv.setText("getSongUrl");
+            resultTv.setText(result.toString());
+            return null;
+        });
+    }
+
+    @OnClick(R.id.btn_playlist2)
+    void get() {
+        searchApi.getBatchSongDetail("qq", new String[]{"001Qu4I30eVFYb"}, result -> {
+            statusTv.setText("qq");
+            resultTv.setText(result.toString());
+            return null;
+        });
+    }
+
+    @OnClick(R.id.btn_playlist3)
+    void get1() {
+        searchApi.getBatchSongDetail("netease", new String[]{"559647510", "437608504"}, result -> {
+            statusTv.setText("netease[559647510,437608504]");
             resultTv.setText(result.toString());
             return null;
         });

@@ -12,10 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-
-import com.cyl.musiclake.api.AddPlaylistUtils;
-import com.cyl.musiclake.utils.LogUtil;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -27,22 +23,24 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.AddPlaylistUtils;
+import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
-import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
+import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
-import com.cyl.musiclake.view.lyric.LyricView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
@@ -451,10 +449,10 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @Override
     public void showLyric(String lyricInfo, boolean isFilePath) {
         //初始化歌词配置
-        mLrcView.setLineSpace(15.0f);
-        mLrcView.setTextSize(17.0f);
-        mLrcView.setTouchable(true);
-        mLrcView.setPlayable(true);
+//        mLrcView.set(15.0f);
+//        mLrcView.setTextSize(17.0f);
+//        mLrcView.setTouchable(true);
+//        mLrcView.setPlayable(true);
         mLrcView.setOnPlayerClickListener((progress, content) -> {
             PlayManager.seekTo((int) progress);
             if (!PlayManager.isPlaying()) {
@@ -465,10 +463,10 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             if (isFilePath) {
                 mLrcView.setLyricFile(new File(lyricInfo), "utf-8");
             } else {
-                mLrcView.setLyricContent(lyricInfo, "utf-8");
+                mLrcView.setLyricContent(lyricInfo);
             }
         } else {
-            mLrcView.reset("暂无歌词");
+            mLrcView.reset();
         }
     }
 

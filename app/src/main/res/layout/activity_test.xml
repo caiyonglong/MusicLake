@@ -59,18 +59,19 @@
             android:id="@+id/btn_playlist1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="获取歌单列表" />
+            android:text="获取qq批量" />
 
         <Button
             android:id="@+id/btn_playlist2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="获取歌单歌曲信息" />
+            android:text="获取qq批量" />
+
         <Button
             android:id="@+id/btn_playlist3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="获取" />
+            android:text="获取netease批量" />
 
     </LinearLayout>
 

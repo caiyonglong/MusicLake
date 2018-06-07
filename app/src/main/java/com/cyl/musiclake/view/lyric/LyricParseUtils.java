@@ -61,7 +61,7 @@ public class LyricParseUtils {
         if (inputStream != null) {
             try {
                 LyricInfo lyricInfo = new LyricInfo();
-                lyricInfo.song_lines = new ArrayList<>();
+                lyricInfo.songLines = new ArrayList<>();
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charsetName);
                 BufferedReader reader = new BufferedReader(inputStreamReader);
                 String line = null;
@@ -69,7 +69,7 @@ public class LyricParseUtils {
                     analyzeLyric(lyricInfo, line);
                 }
                 //歌词排序
-                Collections.sort(lyricInfo.song_lines, new sort());
+                Collections.sort(lyricInfo.songLines, new sort());
                 reader.close();
                 inputStream.close();
                 inputStreamReader.close();
@@ -141,7 +141,7 @@ public class LyricParseUtils {
                 LineInfo lineInfo = new LineInfo();
                 lineInfo.content = content.trim();
                 lineInfo.start = measureStartTimeMillis(temp);
-                lyricInfo.song_lines.add(lineInfo);
+                lyricInfo.songLines.add(lineInfo);
             }
         }
     }
@@ -166,9 +166,9 @@ public class LyricParseUtils {
      */
     private static void resetLyricInfo() {
         if (mLyricInfo != null) {
-            if (mLyricInfo.song_lines != null) {
-                mLyricInfo.song_lines.clear();
-                mLyricInfo.song_lines = null;
+            if (mLyricInfo.songLines != null) {
+                mLyricInfo.songLines.clear();
+                mLyricInfo.songLines = null;
             }
             mLyricInfo = null;
         }
