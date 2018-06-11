@@ -5,7 +5,7 @@ android {
         release {
             keyAlias 'musiclake'
             keyPassword '123123'
-            storeFile file('D:/AndroidCode/MusicLake/app/musiclake.jks')
+            storeFile file('../app/musiclake.jks')
             storePassword '123123'
         }
     }

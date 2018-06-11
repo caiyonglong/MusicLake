@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         //加载主fragment
         navigateLibrary.run();
-        navigatePlay.run();
+//        navigatePlay.run();
     }
 
     @Override

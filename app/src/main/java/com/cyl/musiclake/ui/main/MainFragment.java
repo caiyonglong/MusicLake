@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.PageAdapter;
+import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
@@ -73,9 +74,9 @@ public class MainFragment extends BaseFragment {
     private void setupViewPager(ViewPager mViewPager) {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.newInstance(), "我的");
-//        mAdapter.addFragment(DiscoverFragment.newInstance(), "发现");
-        mAdapter.addFragment(BaiduPlaylistFragment.newInstance(), "百度");
-        mAdapter.addFragment(NeteasePlaylistFragment.newInstance(), "网易");
+        mAdapter.addFragment(DiscoverFragment.newInstance(), "排行");
+//        mAdapter.addFragment(BaiduPlaylistFragment.newInstance(), "百度");
+//        mAdapter.addFragment(NeteasePlaylistFragment.newInstance(), "网易");
         mViewPager.setAdapter(mAdapter);
     }
 

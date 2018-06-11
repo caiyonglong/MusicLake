@@ -20,7 +20,7 @@
                     android:title="@string/playlist_queue" />
                 <item
                     android:id="@+id/nav_menu_equalizer"
-                    android:icon="@drawable/ic_equalizer"
+                    android:icon="@drawable/ic_equalizer_black"
                     android:title="@string/equalizer" />
             </menu>
         </item>

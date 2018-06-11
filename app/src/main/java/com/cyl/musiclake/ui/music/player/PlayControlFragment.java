@@ -1,9 +1,11 @@
 package com.cyl.musiclake.ui.music.player;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -216,6 +218,13 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         MusicUtils.INSTANCE.checkDownload((AppCompatActivity) getActivity(), music);
     }
 
+    @OnClick(R.id.skip_equalizer)
+    void skipEqualizer() {
+        Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+        effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
+        startActivityForResult(effects, 666);
+    }
+
     @OnClick(R.id.skip_queue)
     void openPlayQueue() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -244,7 +253,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
 //        mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
-
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);

@@ -1,10 +1,7 @@
 package com.cyl.musiclake.ui.music.discover;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 
 import java.util.List;
 
@@ -12,12 +9,16 @@ import java.util.List;
 public interface DiscoverContract {
 
     interface View extends BaseContract.BaseView {
-
         void showEmptyView();
 
+        void showBaiduCharts(List<Playlist> charts);
+
+        void showNeteaseCharts(List<Playlist> charts);
     }
 
-    interface Presenter extends BaseContract.BasePresenter<View>,BaseContract.BaseView {
-        void loadAlbumSongs(String albumName);
+    interface Presenter extends BaseContract.BasePresenter<View> {
+        void loadBaidu();
+
+        void loadNetease();
     }
 }

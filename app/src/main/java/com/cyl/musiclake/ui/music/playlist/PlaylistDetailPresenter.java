@@ -39,6 +39,11 @@ public class PlaylistDetailPresenter extends BasePresenter<PlaylistDetailContrac
             @Override
             public void success(List<Music> result) {
 //                mView.showPlaylistSongs(result);
+                if (result.size() == 0) {
+                    mView.showPlaylistSongs(result);
+                    return;
+                }
+
                 netease.clear();
                 qq.clear();
                 xiami.clear();

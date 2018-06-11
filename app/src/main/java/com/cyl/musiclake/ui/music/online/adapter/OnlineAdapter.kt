@@ -16,7 +16,6 @@ class OnlineAdapter(playlist: List<Playlist>) : BaseQuickAdapter<Playlist, BaseV
     private val viewIds = arrayListOf(R.id.tv_music_1, R.id.tv_music_2, R.id.tv_music_3)
     private val stringIds = arrayListOf(R.string.song_list_item_title_1, R.string.song_list_item_title_2, R.string.song_list_item_title_3)
 
-
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
         helper.setText(R.id.title, playlist.name)

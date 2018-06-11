@@ -76,7 +76,7 @@ object MusicApiServiceImpl {
     fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<List<Music>> {
         return create({ result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
-                    .searchSong(key, type.toString(), limit, page, {
+                    .searchSong(key,  limit, page, {
                         val musicList = mutableListOf<Music>()
                         if (it.status) {
                             if (type == ANY || type == NETEASE)

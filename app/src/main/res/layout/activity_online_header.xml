@@ -9,8 +9,8 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:paddingLeft="@dimen/dp_16"
+        android:paddingRight="@dimen/dp_16">
 
         <ImageView
             android:id="@+id/iv_cover"
