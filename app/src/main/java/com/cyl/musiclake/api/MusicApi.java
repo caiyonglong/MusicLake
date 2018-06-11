@@ -1,6 +1,8 @@
 package com.cyl.musiclake.api;
 
 
+import com.cyl.musicapi.BaseApiImpl;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl;
 import com.cyl.musiclake.api.doupan.DoubanMusic;
@@ -11,11 +13,15 @@ import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Author   : D22434

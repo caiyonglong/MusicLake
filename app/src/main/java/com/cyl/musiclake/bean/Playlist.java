@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Playlist extends DataSupport implements Serializable {
     //歌单id
-    private String id;
+    private String pid;
     //歌单名
     private String name;
     //歌单名
@@ -37,12 +37,12 @@ public class Playlist extends DataSupport implements Serializable {
     }
 
     public Playlist(String id, String name) {
-        this.id = id;
+        this.pid = id;
         this.name = name;
     }
 
     public Playlist(String id, String name, int count, long date, String order) {
-        this.id = id;
+        this.pid = id;
         this.name = name;
         this.count = count;
         this.date = date;
@@ -66,11 +66,11 @@ public class Playlist extends DataSupport implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return pid;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.pid = id;
     }
 
     public String getName() {

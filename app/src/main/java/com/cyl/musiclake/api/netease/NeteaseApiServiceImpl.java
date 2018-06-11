@@ -66,8 +66,6 @@ public class NeteaseApiServiceImpl {
                         playlist.setDes(topList.getResult().getDescription());
                         List<Music> musicList = new ArrayList<>();
                         for (NeteaseMusic neteaseMusic : topList.getResult().getTracks()) {
-                            Music music = new Music(neteaseMusic);
-                            musicList.add(music);
                         }
                         playlist.setCoverUrl(topList.getResult().getCoverImgUrl());
                         playlist.setMusicList(musicList);
@@ -116,9 +114,6 @@ public class NeteaseApiServiceImpl {
                     List<Music> musicList = new ArrayList<>();
                     List<NeteaseMusic> songList = netease.getResult().getSongs();
                     for (int i = 0; i < songList.size(); i++) {
-                        NeteaseMusic song = songList.get(i);
-                        Music music = new Music(song);
-                        musicList.add(music);
                     }
                     LogUtil.e("search", page + "--" + limit + "qq :" + musicList.size());
                     return Observable.fromArray(musicList);

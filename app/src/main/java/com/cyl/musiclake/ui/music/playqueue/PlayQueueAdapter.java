@@ -52,7 +52,7 @@ public class PlayQueueAdapter extends BaseItemDraggableAdapter<Music, BaseViewHo
         if (isDialog) {
             holder.setImageResource(R.id.iv_clear, R.drawable.ic_clear);
         } else {
-            holder.setImageResource(R.id.iv_clear, R.drawable.ic_menu_black);
+            holder.setImageResource(R.id.iv_clear, R.drawable.ic_more);
         }
 
         holder.addOnClickListener(R.id.iv_clear);

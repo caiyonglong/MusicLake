@@ -31,8 +31,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.cyl.musiclake.utils.LogUtil;
-
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
@@ -524,7 +522,7 @@ public class MusicPlayerService extends Service {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
             Observable<Music> observable = null;
             LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
-            if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("")) {
+            if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
                 observable = MusicApi.getMusicInfo(mPlayingMusic);
             }
             if (observable != null) {
@@ -970,6 +968,7 @@ public class MusicPlayerService extends Service {
         mPlayQueue.clear();
         mHistoryPos.clear();
         mPlayQueue.addAll(playQueue);
+        savePlayQueue(true);
     }
 
 

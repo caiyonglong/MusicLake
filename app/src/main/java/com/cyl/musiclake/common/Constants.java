@@ -78,6 +78,10 @@ public class Constants {
     //歌单
     public static final String PLAYLIST_ID = "playlist";
 
+    //数据库表API
+    public static final String PLAYLIST_QUEUE_ID = "queue";
+    public static final int PLAYLIST_HISTORY_ID = 1;
+    public static final int PLAYLIST_LOVE_ID = 2;
 
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";

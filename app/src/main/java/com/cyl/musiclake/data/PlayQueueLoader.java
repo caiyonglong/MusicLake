@@ -4,9 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.db.DBDaoImpl;
 import com.cyl.musiclake.data.db.DBData;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,14 +49,16 @@ public class PlayQueueLoader {
      * 获取播放队列
      */
     public static List<Music> getPlayQueue(Context context) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        String sql = "select * from music inner join music_playlist " +
-                "where music.mid = music_playlist.mid " +
-                "and music_playlist.pid=0 ORDER BY music_playlist.date_added DESC";
-        Cursor cursor = dbDaoImpl.makeCursor(sql);
-        List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
-        dbDaoImpl.closeDB();
-        return results;
+//        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+//        String sql = "select * from music inner join music_playlist " +
+//                "where music.mid = music_playlist.mid " +
+//                "and music_playlist.pid=0 ORDER BY music_playlist.date_added DESC";
+//        Cursor cursor = dbDaoImpl.makeCursor(sql);
+//        List<Music> results = dbDaoImpl.getSongsForCursor(cursor);
+//        dbDaoImpl.closeDB();
+        List<Playlist> playlists = DataSupport.where("pid = ?", String.valueOf(Constants.PLAYLIST_QUEUE_ID)).find(Playlist.class, true);
+        if (playlists.size() >= 1) return playlists.get(0).getMusicList();
+        return new ArrayList<>();
     }
 
 
@@ -59,13 +66,18 @@ public class PlayQueueLoader {
      * 添加歌曲到歌单
      */
     public static void updateQueue(Context context, List<Music> musics) {
-        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
-        dbDaoImpl.insertSongs(musics);
-        dbDaoImpl.clearPlayQueue();
-        for (int i = 0; i < musics.size(); i++) {
-            dbDaoImpl.insertSongToPlaylist(DBData.PLAY_QUEUE, musics.get(i).getId());
-        }
-        dbDaoImpl.closeDB();
+        DataSupport.saveAll(musics);
+        Playlist playlist = DataSupport.where("pid = ?", String.valueOf(Constants.PLAYLIST_QUEUE_ID)).findFirst(Playlist.class);
+        playlist.setMusicList(musics);
+        playlist.save();
+
+//        DBDaoImpl dbDaoImpl = new DBDaoImpl(context);
+//        dbDaoImpl.insertSongs(musics);
+//        dbDaoImpl.clearPlayQueue();
+//        for (int i = 0; i < musics.size(); i++) {
+//            dbDaoImpl.insertSongToPlaylist(DBData.PLAY_QUEUE, musics.get(i).getId());
+//        }
+//        dbDaoImpl.closeDB();
     }
 
     /**

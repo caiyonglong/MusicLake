@@ -15,6 +15,13 @@
         android:contentDescription="@null"
         android:visibility="gone" />
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_menu_black" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="45dp"

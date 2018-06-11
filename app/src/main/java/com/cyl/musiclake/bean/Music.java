@@ -17,7 +17,7 @@ public class Music extends DataSupport implements Parcelable {
     // 歌曲类型 本地/网络
     private Type type;
     // 歌曲id
-    private String id;
+    private String mid;
     // 音乐标题
     private String title;
     // 艺术家
@@ -67,40 +67,9 @@ public class Music extends DataSupport implements Parcelable {
 //    private Album albumBean;
 //    private List<Artist> artists;
 
-    public Music(NeteaseMusic neteaseMusic) {
-        this.id = String.valueOf(neteaseMusic.getId());
-        this.title = neteaseMusic.getName();
-        this.album = neteaseMusic.getAlbum().getName();
-        this.albumId = String.valueOf(neteaseMusic.getAlbum().getId());
-        this.artist = neteaseMusic.getAuthors();
-        this.artistId = neteaseMusic.getAuthorIds();
-        this.artist = neteaseMusic.getAuthors();
-        this.coverUri = neteaseMusic.getAlbum().getPicUrl();
-        this.coverSmall = neteaseMusic.getAlbum().getPicUrl();
-        this.coverBig = neteaseMusic.getAlbum().getPicUrl();
-        this.type = Type.NETEASE;
-        this.online = true;
-    }
-
-    public Music(ListItem neteaseMusic) {
-        this.id = String.valueOf(neteaseMusic.getId());
-        this.title = neteaseMusic.getName();
-        this.album = neteaseMusic.getAlbum().getName();
-        this.albumId = String.valueOf(neteaseMusic.getAlbum().getId());
-//        for (ArtistsItem item : Objects.requireNonNull(neteaseMusic.getArtists())) {
-//        }
-        this.artist = neteaseMusic.getArtists().get(0).getName();
-        this.artistId = neteaseMusic.getArtists().get(0).getId();
-        this.coverUri = neteaseMusic.getAlbum().getCover();
-        this.coverSmall = neteaseMusic.getAlbum().getCover();
-        this.coverBig = neteaseMusic.getAlbum().getCover();
-        this.type = Type.NETEASE;
-        this.online = true;
-    }
-
 
     public Music(long id, String albumId, String artistId, String title, String artist, String album, long duration, int trackNumber, String uri) {
-        this.id = String.valueOf(id);
+        this.mid = String.valueOf(id);
         this.title = title;
         this.artist = artist;
         this.album = album;
@@ -115,7 +84,7 @@ public class Music extends DataSupport implements Parcelable {
 
 
     public Music() {
-        this.id = "";
+        this.mid = "";
         this.albumId = "";
         this.artistId = "";
 
@@ -134,7 +103,7 @@ public class Music extends DataSupport implements Parcelable {
     }
 
     protected Music(Parcel in) {
-        id = in.readString();
+        mid = in.readString();
         title = in.readString();
         artist = in.readString();
         album = in.readString();
@@ -176,11 +145,11 @@ public class Music extends DataSupport implements Parcelable {
     }
 
     public String getId() {
-        return id;
+        return mid;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.mid = id;
     }
 
     public int getTrackNumber() {
@@ -385,7 +354,7 @@ public class Music extends DataSupport implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeString(mid);
         dest.writeString(title);
         dest.writeString(artist);
         dest.writeString(album);
@@ -433,7 +402,7 @@ public class Music extends DataSupport implements Parcelable {
     public String toString() {
         return "Music{" +
                 "type=" + type +
-                ", id='" + id + '\'' +
+                ", id='" + mid + '\'' +
                 ", title='" + title + '\'' +
                 ", artist='" + artist + '\'' +
                 ", album='" + album + '\'' +

@@ -116,7 +116,7 @@ class BaseApiImpl private constructor(val context: Context) {
 
     fun getLyricInfo(vendor: String, id: String, success: (result: JSONObject) -> Unit) {
         mWebView?.callHandler("asyn.getLyric", arrayOf<Any>(vendor, id), { retValue: JSONObject ->
-            //            Log.e("TAG", retValue.toString())
+            val result = gson.fromJson<LyricInfo>(retValue.toString(), LyricInfo::class.java)
             success.invoke(retValue)
         })
     }

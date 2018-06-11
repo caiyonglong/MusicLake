@@ -6,7 +6,4 @@ package com.cyl.musiclake.player.playqueue;
 
 public class PlayQueueManager {
 
-    public PlayQueueManager() {
-    }
-
 }

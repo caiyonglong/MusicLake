@@ -3,11 +3,14 @@ package com.cyl.musiclake;
 import android.app.Application;
 import android.content.Context;
 
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.bean.SearchHistoryBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -20,6 +23,8 @@ import com.tencent.tauth.Tencent;
 import org.litepal.LitePal;
 
 import java.net.Proxy;
+
+import static com.cyl.musiclake.common.Constants.PLAYLIST_QUEUE_ID;
 
 public class MusicApp extends Application {
     private static MusicApp sInstance;
@@ -49,6 +54,7 @@ public class MusicApp extends Application {
         SPUtils.init(this);
         mTencent = Tencent.createInstance(Constants.APP_ID, this);
         initBugly();
+        initDB();
         initFileDownload();
     }
 
@@ -83,6 +89,15 @@ public class MusicApp extends Application {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+    }
+
+    private void initDB() {
+        Playlist playlist = new Playlist(String.valueOf(PLAYLIST_QUEUE_ID), getString(R.string.playlist_queue));
+        if (playlist.save()) {
+            LogUtil.d("存储成功");
+        } else {
+            LogUtil.d("失败");
+        }
     }
 
     public ApplicationComponent getApplicationComponent() {
