@@ -13,14 +13,14 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.api.AddPlaylistUtils;
+import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.download.DownloadDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.DialogUtils;
 import com.cyl.musiclake.utils.FormatUtil;
@@ -90,8 +90,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position, musicList, mPlaylist.getName() + mPlaylist.getPid());
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -104,7 +103,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
                                 .show(getSupportFragmentManager(), "");
                         break;
                     case R.id.popup_add_playlist:
-                        AddPlaylistUtils.getPlaylist(this, music);
+                        AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
                         break;
                     case R.id.popup_song_download:
                         action = 1;

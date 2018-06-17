@@ -389,7 +389,7 @@ public class ImageUtils {
         final Allocation input = Allocation.createFromBitmap(rs, blurTemplate);
         final Allocation output = Allocation.createTyped(rs, input.getType());
         final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        script.setRadius(25f);
+        script.setRadius(10f);
         script.setInput(input);
         script.forEach(output);
         output.copyTo(blurTemplate);

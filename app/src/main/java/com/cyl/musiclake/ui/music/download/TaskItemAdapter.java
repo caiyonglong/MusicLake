@@ -30,7 +30,7 @@ import java.util.List;
 
 public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
-    private List<TasksManagerModel> models = new ArrayList<>();
+    private List<TasksManagerModel> models;
 
     public TaskItemAdapter(List<TasksManagerModel> models) {
         super(R.layout.item_download_music, models);
@@ -53,35 +53,27 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
         } else if (action.equals(v.getResources().getString(R.string.start))) {
             // to start
             // to start
-            final TasksManagerModel model = TasksManager.getImpl().get(holder.position);
+            final TasksManagerModel model = TasksManager.INSTANCE.get(holder.position);
             final BaseDownloadTask task = FileDownloader.getImpl().create(model.getUrl())
                     .setPath(model.getPath())
                     .setCallbackProgressTimes(100)
                     .setListener(taskDownloadListener);
 
-            TasksManager.getImpl()
+            TasksManager.INSTANCE
                     .addTaskForViewHolder(task);
 
-            TasksManager.getImpl()
+            TasksManager.INSTANCE
                     .updateViewHolder(holder.id, holder);
 
             task.start();
         } else if (action.equals(v.getResources().getString(R.string.delete))) {
             // to delete
-            new File(TasksManager.getImpl().get(holder.position).getPath()).delete();
+            new File(TasksManager.INSTANCE.get(holder.position).getPath()).delete();
             holder.taskActionBtn.setEnabled(true);
             holder.updateNotDownloaded(FileDownloadStatus.INVALID_STATUS, 0, 0);
         }
     };
 
-//    @Override
-//    protected TaskItemViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
-//        TaskItemViewHolder holder = new TaskItemViewHolder(
-//                LayoutInflater.from(
-//                        parent.getContext())
-//                        .inflate(R.layout.item_download_music, parent, false));
-//        return holder;
-//    }
 
     @Override
     protected void convert(TaskItemViewHolder holder, TasksManagerModel model) {
@@ -90,35 +82,35 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
         holder.taskActionBtn.setTag(holder);
         holder.taskNameTv.setText(model.getName());
 
-        TasksManager.getImpl()
+        TasksManager.INSTANCE
                 .updateViewHolder(holder.id, holder);
 
         holder.taskActionBtn.setEnabled(true);
 
-        if (TasksManager.getImpl().isReady()) {
-            final int status = TasksManager.getImpl().getStatus(model.getId(), model.getPath());
+        if (TasksManager.INSTANCE.isReady()) {
+            final int status = TasksManager.INSTANCE.getStatus(model.getId(), model.getPath());
             if (status == FileDownloadStatus.pending || status == FileDownloadStatus.started ||
                     status == FileDownloadStatus.connected) {
                 // start task, but file not created yet
-                holder.updateDownloading(status, TasksManager.getImpl().getSoFar(model.getId())
-                        , TasksManager.getImpl().getTotal(model.getId()));
+                holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getId())
+                        , TasksManager.INSTANCE.getTotal(model.getId()));
             } else if (!new File(model.getPath()).exists() &&
                     !new File(FileDownloadUtils.getTempPath(model.getPath())).exists()) {
                 // not exist file
                 holder.updateNotDownloaded(status, 0, 0);
-            } else if (TasksManager.getImpl().isDownloaded(status)) {
+            } else if (TasksManager.INSTANCE.isDownloaded(status)) {
                 // already downloaded and exist
                 LogUtil.e(TAG, "already downloaded and exist");
                 holder.updateDownloaded();
-                TasksManager.getImpl().finishTask(model.getId());
+                TasksManager.INSTANCE.finishTask(model.getId());
             } else if (status == FileDownloadStatus.progress) {
                 // downloading
-                holder.updateDownloading(status, TasksManager.getImpl().getSoFar(model.getId())
-                        , TasksManager.getImpl().getTotal(model.getId()));
+                holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getId())
+                        , TasksManager.INSTANCE.getTotal(model.getId()));
             } else {
                 // not start
-                holder.updateNotDownloaded(status, TasksManager.getImpl().getSoFar(model.getId())
-                        , TasksManager.getImpl().getTotal(model.getId()));
+                holder.updateNotDownloaded(status, TasksManager.INSTANCE.getSoFar(model.getId())
+                        , TasksManager.INSTANCE.getTotal(model.getId()));
             }
         } else {
             holder.taskStatusTv.setText(R.string.tasks_manager_demo_status_loading);
@@ -162,7 +154,7 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
             taskActionBtn.setText(R.string.delete);
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
-            NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
+            NavigationHelper.INSTANCE.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
             RxBus.getInstance().post(new TasksManagerModel());
         }
 

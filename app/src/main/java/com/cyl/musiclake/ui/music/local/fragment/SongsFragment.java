@@ -5,28 +5,33 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import com.cyl.musiclake.utils.LogUtil;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.SongLoader;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.music.local.contract.SongsContract;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.local.contract.SongsContract;
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter;
 import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 
@@ -41,6 +46,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    View mViewHeader;
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
 
@@ -58,13 +64,14 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
 
     @Override
     public void initViews() {
-
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN);
         mAdapter = new SongAdapter(musicList);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+        initHeaderView();
+        mAdapter.addHeaderView(mViewHeader);
     }
 
     @Override
@@ -74,11 +81,12 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
 
     @Override
     protected void listener() {
-        initPullRefresh();
-
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadSongs(Extras.SONG_LOCAL);
+        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                mPresenter.playMusic(musicList, position);
+                PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -88,7 +96,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        mPresenter.playMusic(musicList, position);
+                        PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -96,12 +104,12 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
                         break;
                     case R.id.popup_song_goto_album:
                         LogUtil.e("album", music.toString() + "");
-                        NavigationHelper.navigateToAlbum(getActivity(),
+                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);
                         break;
                     case R.id.popup_song_goto_artist:
-                        NavigationHelper.navigateToArtist(getActivity(),
+                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
                                 music.getArtistId(),
                                 music.getArtist(), null);
                         break;
@@ -114,7 +122,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
                                 .content("是否删除这首歌曲？")
                                 .onPositive((dialog, which) -> {
                                     FileUtils.delFile(musicList.get(position).getUri());
-                                    SongLoader.removeSong(getActivity(), musicList.get(position));
+                                    SongLoader.INSTANCE.removeSong(musicList.get(position));
                                     musicList.remove(position);
                                     mAdapter.setNewData(musicList);
                                 })
@@ -130,33 +138,22 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         });
     }
 
-    private void initPullRefresh() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadSongs(Extras.SONG_LOCAL);
-        });
-    }
-
-    @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Override
     public void onLazyLoad() {
         mPresenter.loadSongs(Extras.SONG_LOCAL);
     }
 
-    @Override
-    public void showLoading() {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(true);
-    }
 
-    @Override
-    public void hideLoading() {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
+    private void initHeaderView() {
+        mViewHeader = LayoutInflater.from(mFragmentComponent.getActivity()).inflate(R.layout.header_local_list, null);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        mViewHeader.setLayoutParams(params);
+        mViewHeader.setOnClickListener(v -> {
+            if (musicList.size() > 0) return;
+            int id = new Random().nextInt(musicList.size());
+            PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID);
+        });
     }
 
     @Override
@@ -164,6 +161,18 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         musicList.clear();
         musicList.addAll(songList);
         mAdapter.setNewData(songList);
+        hideLoading();
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading();
+    }
+
+    @Override
+    public void hideLoading() {
+        super.hideLoading();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

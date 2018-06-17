@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.online.presenter;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;
 
 import javax.inject.Inject;
@@ -26,7 +26,7 @@ public class ArtistInfoPresenter extends BasePresenter<ArtistInfoContract.View> 
     @Override
     public void loadArtistInfo(Music music) {
         String info = music.getTitle() + "-" + music.getArtist();
-        MusicApi.getMusicAlbumInfo(info)
+        MusicApi.INSTANCE.getMusicAlbumInfo(info)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mView.bindToLife())

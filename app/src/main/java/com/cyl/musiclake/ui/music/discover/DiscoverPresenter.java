@@ -1,17 +1,14 @@
 package com.cyl.musiclake.ui.music.discover;
 
-import android.content.Context;
-
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musicapi.bean.ListItem;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
-import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +72,7 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
             int finalI = i;
             BaseApiImpl.Companion.getInstance(mView.getContext()).getTopList(String.valueOf(i), topList -> {
                 Playlist playlist = new Playlist();
-                playlist.setId(String.valueOf(finalI));
+                playlist.setPid(String.valueOf(finalI));
                 playlist.setName(topList.getData().getName());
                 playlist.setCount(topList.getData().getPlayCount());
                 playlist.setCoverUrl(topList.getData().getCover());

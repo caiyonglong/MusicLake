@@ -78,7 +78,7 @@ public class NotifyManager {
                 PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_CLOSE), PendingIntent.FLAG_UPDATE_CURRENT));
 
         // Starts background player activity -- attempts to unlock lockscreen
-        final Intent intent = NavigationHelper.getNowPlayingIntent(mContext);
+        final Intent intent = NavigationHelper.INSTANCE.getNowPlayingIntent(mContext);
         remoteViews.setOnClickPendingIntent(R.id.notificationContent,
                 PendingIntent.getActivity(mContext, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 

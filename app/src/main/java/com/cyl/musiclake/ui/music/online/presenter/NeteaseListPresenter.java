@@ -1,27 +1,11 @@
 package com.cyl.musiclake.ui.music.online.presenter;
 
-import android.content.Context;
-
-import com.cyl.musicapi.BaseApiImpl;
-import com.cyl.musiclake.api.MusicApiServiceImpl;
-import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.net.ApiManager;
-import com.cyl.musiclake.utils.LogUtil;
 
-import com.cyl.musiclake.api.MusicApi;
-import com.cyl.musiclake.api.netease.NeteaseList;
 import com.cyl.musiclake.api.netease.NeteaseMusic;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.ui.music.online.contract.NeteaseListContract;
-import com.cyl.musiclake.utils.ToastUtils;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by D22434 on 2018/1/4.

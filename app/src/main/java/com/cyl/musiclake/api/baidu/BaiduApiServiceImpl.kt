@@ -1,8 +1,8 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
@@ -34,7 +34,7 @@ object BaiduApiServiceImpl {
             for (item in it.content!!) {
                 val playlist = Playlist()
                 playlist.name = item.name
-                playlist.id = item.type.toString()
+                playlist.pid = item.type.toString()
                 playlist.coverUrl = item.picS192
                 val musicList = mutableListOf<Music>()
                 for (itemMusic in item.content!!) {
@@ -43,7 +43,7 @@ object BaiduApiServiceImpl {
                     music.album = itemMusic.albumTitle
                     music.artist = itemMusic.author
                     music.albumId = itemMusic.albumId
-                    music.id = itemMusic.songId
+                    music.mid = itemMusic.songId
                     musicList.add(music)
                 }
                 playlist.musicList = musicList
@@ -72,9 +72,9 @@ object BaiduApiServiceImpl {
                     val musicList = ArrayList<Music>()
                     for (songInfo in baiduSongList.songList!!) {
                         val music = Music()
-                        music.type = Music.Type.BAIDU
+                        music.type = Constants.BAIDU
                         music.isOnline = true
-                        music.id = songInfo.songId
+                        music.mid = songInfo.songId
                         music.album = songInfo.albumTitle
                         music.albumId = songInfo.albumId
                         music.artist = songInfo.artistName
@@ -127,9 +127,9 @@ object BaiduApiServiceImpl {
                     val music = Music()
                     val songInfo = data.data.songList?.get(0)
                     songInfo?.let {
-                        music.type = Music.Type.BAIDU
+                        music.type = Constants.BAIDU
                         music.isOnline = true
-                        music.id = songInfo.songId.toString()
+                        music.mid = songInfo.songId.toString()
                         music.album = songInfo.albumName
                         music.albumId = songInfo.albumId.toString()
                         music.artistId = songInfo.artistId
@@ -137,7 +137,7 @@ object BaiduApiServiceImpl {
                         music.title = songInfo.songName
                         music.uri = songInfo.songLink
                         music.fileSize = songInfo.size.toLong()
-                        music.lrcPath = songInfo.lrcLink
+                        music.lyric = songInfo.lrcLink
                         music.coverSmall = songInfo.songPicSmall
                         music.coverUri = songInfo.songPicBig
                         music.coverBig = songInfo.songPicRadio
@@ -160,7 +160,7 @@ object BaiduApiServiceImpl {
         //本地歌词路径
         val mLyricPath = FileUtils.getLrcDir() + music.title + "-" + music.artist + ".lrc"
         //网络歌词
-        val mLyricUrl = music.lrcPath
+        val mLyricUrl = music.lyric
         return if (FileUtils.exists(mLyricPath)) {
             Observable.create { emitter ->
                 try {

@@ -20,8 +20,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.SearchHistoryBean;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.db.SearchHistoryBean;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
@@ -177,7 +177,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                         startActivity(intent);
                         break;
                     case R.id.popup_add_playlist:
-                        AddPlaylistUtils.getPlaylist(this, music);
+                        AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
                         break;
                     case R.id.popup_song_download:
                         mPresenter.getMusicInfo(1, music);

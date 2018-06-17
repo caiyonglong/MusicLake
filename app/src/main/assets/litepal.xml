@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="musiclake1" />
-    <version value="1" />
+    <version value="2" />
     <list>
-        <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
+        <!--<mapping class="com.cyl.musiclake.data.db.Playlist" />-->
         <!--<mapping class="com.cyl.musiclake.bean.Artist" />-->
-        <mapping class="com.cyl.musiclake.bean.Music" />
-        <mapping class="com.cyl.musiclake.bean.Playlist" />
-        <mapping class="com.cyl.musiclake.bean.SearchHistoryBean" />
+        <mapping class="com.cyl.musiclake.data.db.Music" />
+        <mapping class="com.cyl.musiclake.data.db.Playlist" />
+        <mapping class="com.cyl.musiclake.data.db.MusicToPlaylist" />
+        <mapping class="com.cyl.musiclake.db.SearchHistoryBean" />
+        <mapping class="com.cyl.musiclake.data.download.TasksManagerModel" />
     </list>
 </litepal>

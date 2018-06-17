@@ -76,14 +76,14 @@ public class StandardWidget extends BaseWidget {
         remoteViews.setOnClickPendingIntent(R.id.iv_cover, PendingIntent.getActivity(
                 context,
                 0,
-                NavigationHelper.getNowPlayingIntent(context),
+                NavigationHelper.INSTANCE.getNowPlayingIntent(context),
                 PendingIntent.FLAG_UPDATE_CURRENT
         ));
 
         remoteViews.setOnClickPendingIntent(R.id.iv_lyric, PendingIntent.getService(
                 context,
                 0,
-                NavigationHelper.getLyricIntent(context),
+                NavigationHelper.INSTANCE.getLyricIntent(context),
                 PendingIntent.FLAG_UPDATE_CURRENT
         ));
     }

@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.LogUtil;
+
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -14,7 +17,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Extras;
@@ -103,8 +106,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID + path);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -114,8 +116,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicList);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID + path);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance(musicList.get(position))
@@ -123,12 +124,12 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
                         break;
                     case R.id.popup_song_goto_album:
                         LogUtil.e("album", music.toString() + "");
-                        NavigationHelper.navigateToAlbum(getActivity(),
+                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);
                         break;
                     case R.id.popup_song_goto_artist:
-                        NavigationHelper.navigateToArtist(getActivity(),
+                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
                                 music.getArtistId(),
                                 music.getArtist(), null);
                         break;

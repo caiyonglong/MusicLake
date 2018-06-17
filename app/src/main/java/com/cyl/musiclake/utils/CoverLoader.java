@@ -3,7 +3,14 @@ package com.cyl.musiclake.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -13,7 +20,10 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.doupan.DoubanMusic;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -72,7 +82,7 @@ public class CoverLoader {
     }
 
     public static void loadImageViewByDouban(Context mContext, String info, ImageView imageView, BitmapCallBack bitmapCallBack) {
-        MusicApi.getMusicAlbumInfo(info)
+        MusicApi.INSTANCE.getMusicAlbumInfo(info)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<DoubanMusic>() {
@@ -220,5 +230,27 @@ public class CoverLoader {
                 });
     }
 
+    public static Drawable createBlurredImageFromBitmap(Bitmap bitmap, Context context, int inSampleSize) {
+
+        RenderScript rs = RenderScript.create(context);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = inSampleSize;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] imageInByte = stream.toByteArray();
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
+        Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);
+
+        final Allocation input = Allocation.createFromBitmap(rs, blurTemplate);
+        final Allocation output = Allocation.createTyped(rs, input.getType());
+        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        script.setRadius(10f);
+        script.setInput(input);
+        script.forEach(output);
+        output.copyTo(blurTemplate);
+
+        return new BitmapDrawable(context.getResources(), blurTemplate);
+    }
 
 }

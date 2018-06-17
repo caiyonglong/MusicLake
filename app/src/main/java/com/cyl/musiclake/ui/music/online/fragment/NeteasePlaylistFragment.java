@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,8 +14,8 @@ import com.cyl.musicapi.bean.ListItem;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
 import com.cyl.musiclake.utils.LogUtil;
@@ -118,7 +117,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
             BaseApiImpl.Companion.getInstance(getActivity()).getTopList(String.valueOf(i), topList -> {
                 LogUtil.e(charts[finalI] + "," + topList.getData().getCover());
                 Playlist playlist = new Playlist();
-                playlist.setId(String.valueOf(finalI));
+                playlist.setPid(String.valueOf(finalI));
                 playlist.setName(topList.getData().getName());
                 playlist.setCount(topList.getData().getPlayCount());
                 playlist.setCoverUrl(topList.getData().getCover());

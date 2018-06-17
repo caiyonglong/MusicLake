@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.local.contract;
 
-import com.cyl.musiclake.bean.FolderInfo;
-import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.db.FolderInfo;
 import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;

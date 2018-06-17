@@ -13,7 +13,7 @@ import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -54,8 +54,7 @@ public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> impl
 
     @OnClick(R.id.fab)
     void onPlayAll() {
-        PlayManager.setPlayList(musicInfos);
-        PlayManager.play(0);
+        PlayManager.play(0, musicInfos, String.valueOf(artistID));
     }
 
     public static ArtistSongsFragment newInstance(String id, String title, String transitionName) {
@@ -76,7 +75,7 @@ public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> impl
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview_collapsingtoolbar;
+        return R.layout.frag_playlist_detail;
     }
 
     @Override
@@ -116,8 +115,7 @@ public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> impl
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 List<Music> musicList = adapter.getData();
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position,musicList, String.valueOf(artistID));
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -125,8 +123,8 @@ public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> impl
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList((List<Music>) adapter.getData());
-                        PlayManager.play(position);
+                        List<Music> musicList = adapter.getData();
+                        PlayManager.play(position,musicList, String.valueOf(artistID));
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -147,12 +145,12 @@ public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> impl
 
     @Override
     public void showLoading() {
-
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-
+        super.hideLoading();
     }
 
     @Override
@@ -164,6 +162,7 @@ public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> impl
     public void showSongs(List<Music> songList) {
         musicInfos = songList;
         mAdapter.setNewData(songList);
+        hideLoading();
     }
 
     @Override

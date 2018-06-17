@@ -137,7 +137,7 @@
                     android:gravity="center"
                     app:materialIcon="shuffle"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp"
+                    app:materialIconSize="24dp"
                     tools:targetApi="lollipop" />
 
 
@@ -152,13 +152,20 @@
                     android:src="@drawable/ic_skip_previous"
                     app:materialIcon="skip_previous"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp" />
+                    app:materialIconSize="32dp" />
 
                 <FrameLayout
                     android:layout_width="@dimen/dp_64"
                     android:layout_height="@dimen/dp_64"
                     android:layout_weight="1"
                     android:gravity="center">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp" />
+
 
                     <com.cyl.musiclake.view.PlayPauseView
                         android:id="@+id/playOrPause"
@@ -171,9 +178,8 @@
                         android:scaleType="fitXY"
                         android:translationZ="5dp"
                         app:anim_duration="300"
-                        app:bg_color="#55ffffff"
+                        app:bg_color="@color/translucent"
                         app:btn_color="@color/white"
-                        app:gap_width="15"
                         tools:targetApi="lollipop" />
 
                     <ProgressBar
@@ -195,7 +201,7 @@
                     android:scaleType="center"
                     app:materialIcon="skip_next"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp" />
+                    app:materialIconSize="32dp" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_queue"
@@ -207,7 +213,7 @@
                     android:src="@drawable/ic_detail"
                     app:materialIcon="playlist_play"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp" />
+                    app:materialIconSize="24dp"/>
 
 
             </LinearLayout>
@@ -230,7 +236,7 @@
                     android:gravity="center"
                     app:materialIcon="arrow_collapse_down"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp"
+                    app:materialIconSize="24dp"
                     tools:targetApi="lollipop" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
@@ -243,7 +249,7 @@
                     android:gravity="center"
                     app:materialIcon="share"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp"
+                    app:materialIconSize="24dp"
                     tools:targetApi="lollipop" />
 
                 <ImageView
@@ -266,7 +272,7 @@
                     android:gravity="center"
                     app:materialIcon="playlist_plus"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="48dp"
+                    app:materialIconSize="24dp"
                     tools:targetApi="lollipop" />
 
             </LinearLayout>

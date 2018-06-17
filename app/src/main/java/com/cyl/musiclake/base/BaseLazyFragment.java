@@ -5,11 +5,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.di.component.DaggerFragmentComponent;
 import com.cyl.musiclake.di.component.FragmentComponent;
 import com.cyl.musiclake.di.module.FragmentModule;
@@ -19,8 +24,12 @@ import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.cyl.musiclake.utils.AnimationUtils.animateView;
 
 /**
  * 作者：YongLong on 2016/8/8 16:58
@@ -37,8 +46,24 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     protected FragmentComponent mFragmentComponent;
     public View rootView;
     private Unbinder unbinder;
-
-
+    @Nullable
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @Nullable
+    @BindView(R.id.empty_state_view)
+    public View emptyStateView;
+    @Nullable
+    @BindView(R.id.error_panel)
+    public View errorPanelRoot;
+    @Nullable
+    @BindView(R.id.error_button_retry)
+    public Button errorButtonRetry;
+    @Nullable
+    @BindView(R.id.error_message_view)
+    public TextView errorTextView;
+    @Nullable
+    @BindView(R.id.loading_progress_bar)
+    public ProgressBar loadingProgressBar;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +85,10 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
         return rootView;
     }
 
-
     protected void listener() {
+    }
 
+    protected void retryLoading() {
     }
 
     @Override
@@ -131,13 +157,37 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
 
     @Override
     public void showLoading() {
-
+        if (emptyStateView != null) animateView(emptyStateView, false, 150);
+        if (loadingProgressBar != null) animateView(loadingProgressBar, true, 400);
+        animateView(errorPanelRoot, false, 150);
     }
 
     @Override
     public void hideLoading() {
-
+        if (emptyStateView != null) animateView(emptyStateView, false, 150);
+        if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
+        animateView(errorPanelRoot, false, 150);
     }
+
+    @Override
+    public void showEmptyState() {
+        if (emptyStateView != null) animateView(emptyStateView, true, 200);
+//        if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
+        animateView(errorPanelRoot, false, 150);
+    }
+
+    @Override
+    public void showError(String message, boolean showRetryButton) {
+        hideLoading();
+        if (errorTextView != null)
+            errorTextView.setText(message);
+        if (errorButtonRetry != null)
+            errorButtonRetry.setOnClickListener(v -> retryLoading());
+        if (showRetryButton) animateView(errorButtonRetry, true, 600);
+        else animateView(errorButtonRetry, false, 0);
+        animateView(errorPanelRoot, true, 300);
+    }
+
 
     @Override
     public <T> LifecycleTransformer<T> bindToLife() {
@@ -153,6 +203,7 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         isPrepared = true;
         //只有Fragment onCreateView好了，
         //另外这里调用一次lazyLoad(）

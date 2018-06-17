@@ -7,6 +7,21 @@ import android.os.Environment;
  */
 public class Constants {
 
+    //歌曲类型
+    public static final String LOCAL = "local";
+    public static final String QQ = "qq";
+    public static final String XIAMI = "xiami";
+    public static final String BAIDU = "baidu";
+    public static final String NETEASE = "netease";
+
+    //特殊歌单类型
+    public static final String PLAYLIST_LOVE_ID = "love";
+    public static final String PLAYLIST_HISTORY_ID = "history";
+    public static final String PLAYLIST_LOCAL_ID = "local";
+    public static final String PLAYLIST_QUEUE_ID = "queue";
+    public static final String PLAYLIST_DOWNLOAD_ID = "download";
+
+
     //QQ APP_ID
     public static final String APP_ID = "101454823";
 
@@ -78,10 +93,6 @@ public class Constants {
     //歌单
     public static final String PLAYLIST_ID = "playlist";
 
-    //数据库表API
-    public static final String PLAYLIST_QUEUE_ID = "queue";
-    public static final int PLAYLIST_HISTORY_ID = 1;
-    public static final int PLAYLIST_LOVE_ID = 2;
 
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";

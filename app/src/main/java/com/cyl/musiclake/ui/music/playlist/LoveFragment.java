@@ -10,7 +10,8 @@ import android.support.v7.widget.Toolbar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
@@ -85,8 +86,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicInfos);
-                PlayManager.play(position);
+                PlayManager.play(position, musicInfos, Constants.PLAYLIST_LOVE_ID);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -95,8 +95,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicInfos);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicInfos, Constants.PLAYLIST_LOVE_ID);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))

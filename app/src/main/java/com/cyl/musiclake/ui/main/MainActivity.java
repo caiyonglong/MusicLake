@@ -20,7 +20,6 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.PlayQueueEvent;
 import com.cyl.musiclake.player.PlayManager;
@@ -34,7 +33,6 @@ import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.jaeger.library.StatusBarUtil;
-import com.liulishuo.filedownloader.FileDownloader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.tencent.tauth.Tencent;
@@ -54,7 +52,7 @@ import static com.cyl.musiclake.ui.music.player.PlayControlFragment.topContainer
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout mSlidingUpPaneLayout;
+    public SlidingUpPanelLayout mSlidingUpPaneLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
@@ -90,8 +88,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         setUserStatusInfo();
         /**登陆成功重新设置用户新*/
-        flowable = RxBus.getInstance().register(LoginEvent.class).subscribe(event -> setUserStatusInfo());
-        flowable = RxBus.getInstance().register(PlayQueueEvent.class).subscribe(event -> setPlaylistQueueChange());
+        flowable = RxBus.getInstance().register(LoginEvent.class)
+                .subscribe(event -> setUserStatusInfo());
+        flowable = RxBus.getInstance().register(PlayQueueEvent.class)
+                .subscribe(event -> setPlaylistQueueChange());
     }
 
     private void initNavView() {
@@ -202,7 +202,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 break;
             case R.id.nav_menu_playQueue:
-                NavigationHelper.navigatePlayQueue(this);
+                NavigationHelper.INSTANCE.navigatePlayQueue(this);
                 break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
@@ -305,9 +305,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void onDestroy() {
-        //结束下载任务
-        TasksManager.getImpl().onDestroy();
-        FileDownloader.getImpl().pauseAll();
         super.onDestroy();
     }
 

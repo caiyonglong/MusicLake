@@ -90,7 +90,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
 
         tag.updateNotDownloaded(FileDownloadStatus.error, task.getLargeFileSoFarBytes()
                 , task.getLargeFileTotalBytes());
-        TasksManager.getImpl().removeTaskForViewHolder(task.getId());
+        TasksManager.INSTANCE.removeTaskForViewHolder(task.getId());
     }
 
     @Override
@@ -104,7 +104,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
 
         tag.updateNotDownloaded(FileDownloadStatus.paused, soFarBytes, totalBytes);
         tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_paused);
-        TasksManager.getImpl().removeTaskForViewHolder(task.getId());
+        TasksManager.INSTANCE.removeTaskForViewHolder(task.getId());
     }
 
     @Override
@@ -112,13 +112,13 @@ public class FileDownloadListener extends FileDownloadSampleListener {
         super.completed(task);
         LogUtil.d(TAG, "completed:" +task.getId() + "-" + task.getStatus());
         ToastUtils.show(task.getFilename() + " 下载完成");
-        TasksManager.getImpl().finishTask(task.getId());
+        TasksManager.INSTANCE.finishTask(task.getId());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
         }
         tag.updateDownloaded();
-        TasksManager.getImpl().removeTaskForViewHolder(task.getId());
+        TasksManager.INSTANCE.removeTaskForViewHolder(task.getId());
     }
 
 }

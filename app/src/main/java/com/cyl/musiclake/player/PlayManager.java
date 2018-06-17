@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.cyl.musiclake.IMusicService;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class PlayManager {
     public static void playOnline(Music music) {
         try {
             if (mService != null)
-                mService.playOnline(music);
+                mService.playMusic(music);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -80,6 +80,16 @@ public class PlayManager {
         try {
             if (mService != null)
                 mService.play(id);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void play(int id, List<Music> musicList, String pid) {
+        try {
+            if (mService != null) {
+                mService.playPlaylist(musicList, id, pid);
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -223,7 +233,7 @@ public class PlayManager {
     public static String getPlayingId() {
         try {
             if (mService != null && mService.getPlayingMusic() != null)
-                return mService.getPlayingMusic().getId();
+                return mService.getPlayingMusic().getMid();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -241,13 +251,7 @@ public class PlayManager {
     }
 
     public static void setPlayList(List<Music> playlist) {
-        try {
-            if (mService != null) {
-                mService.setPlayList(playlist);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static void clearQueue() {
@@ -264,15 +268,6 @@ public class PlayManager {
         try {
             if (mService != null)
                 mService.refresh();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void updateFavorite(Music music) {
-        try {
-            if (mService != null)
-                mService.update(music);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

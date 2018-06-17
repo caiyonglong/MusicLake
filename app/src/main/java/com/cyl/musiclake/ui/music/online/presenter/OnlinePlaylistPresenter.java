@@ -7,8 +7,8 @@ import com.cyl.musicapi.bean.ListItem;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContrac
         for (int i = 0; i < 21; i++) {
             BaseApiImpl.Companion.getInstance(context).getTopList(String.valueOf(i), topList -> {
                 Playlist playlist = new Playlist();
-                playlist.setId(String.valueOf(System.currentTimeMillis()));
+                playlist.setPid(String.valueOf(System.currentTimeMillis()));
                 playlist.setName(topList.getData().getName());
                 playlist.setCount(topList.getData().getPlayCount());
                 playlist.setCoverUrl(topList.getData().getCover());

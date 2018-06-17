@@ -2,7 +2,7 @@ package com.cyl.musiclake.api;
 
 import com.cyl.musiclake.api.qq.QQApiServiceImpl;
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.google.gson.Gson;
 
 import junit.framework.TestCase;

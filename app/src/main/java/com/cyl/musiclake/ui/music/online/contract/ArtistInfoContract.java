@@ -2,9 +2,8 @@ package com.cyl.musiclake.ui.music.online.contract;
 
 
 import com.cyl.musiclake.api.doupan.DoubanMusic;
-import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 
 public interface ArtistInfoContract {
 

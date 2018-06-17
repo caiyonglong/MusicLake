@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.ConvertUtils;
@@ -35,7 +35,7 @@ public class PlayQueueAdapter extends BaseItemDraggableAdapter<Music, BaseViewHo
     @Override
     protected void convert(BaseViewHolder holder, Music item) {
 
-        holder.setText(R.id.tv_source, item.getTypeName(false));
+        holder.setText(R.id.tv_source, item.getType());
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
 

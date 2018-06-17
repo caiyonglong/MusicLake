@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -19,14 +18,10 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.PlayHistoryLoader;
-import com.cyl.musiclake.event.HistoryChangedEvent;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,8 +138,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
                         .title("提示")
                         .content("是否清空播放历史？")
                         .onPositive((dialog, which) -> {
-                            PlayHistoryLoader.clearPlayHistory(getActivity());
-                            RxBus.getInstance().post(new HistoryChangedEvent());
+                            PlayHistoryLoader.INSTANCE.clearPlayHistory();
                             musicInfos.clear();
                             mAdapter.notifyDataSetChanged();
                             showEmptyView();

@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <net.steamcrafted.materialiconlib.MaterialIconView
+    <ImageView
         android:id="@+id/iv_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="false"
-        android:scaleType="center"
-        app:materialIconColor="@color/colorPrimary"
-        app:materialIconSize="28dp" />
-
+        android:src="@drawable/item_music" />
 
     <TextView
         android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:layout_toEndOf="@+id/iv_icon"
-        android:layout_toRightOf="@+id/iv_icon"
+        android:layout_weight="1"
         android:text="本地音乐"
         android:textColor="@color/dark" />
 
@@ -33,24 +27,17 @@
         android:id="@+id/tv_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-
         android:layout_margin="10dp"
-        android:layout_toLeftOf="@+id/iv_play"
-        android:layout_toStartOf="@+id/iv_play"
         android:text="n 首歌曲" />
 
-    <net.steamcrafted.materialiconlib.MaterialIconView
+    <ImageView
         android:id="@+id/iv_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="10dp"
         android:scaleType="center"
-        app:materialIcon="play_circle_outline"
-        app:materialIconColor="@color/colorPrimary"
-        app:materialIconSize="24dp" />
+        android:layout_margin="@dimen/dp_16"
+        android:src="@drawable/ic_play_circle"
+        android:tint="@color/colorPrimary" />
 
-</RelativeLayout>
+</LinearLayout>

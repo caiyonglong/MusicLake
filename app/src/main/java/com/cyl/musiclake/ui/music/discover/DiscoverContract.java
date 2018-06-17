@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.discover;
 
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Playlist;
 
 import java.util.List;
 

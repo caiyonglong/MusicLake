@@ -1,5 +1,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/playlist_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,11 +19,12 @@
         <ImageView
             android:id="@+id/album"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="@dimen/dp_120"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/default_cover"
-            android:scaleType="fitXY"
-            android:transitionName="transition_album_art" />
+            android:scaleType="centerCrop"
+            android:transitionName="transition_album_art"
+            tools:targetApi="lollipop" />
 
         <LinearLayout
             android:layout_width="match_parent"

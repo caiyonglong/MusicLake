@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.search;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 
@@ -24,7 +24,7 @@ public class SearchAdapter extends BaseQuickAdapter<Music, BaseViewHolder> {
     protected void convert(BaseViewHolder holder, Music item) {
         String url = item.getCoverUri();
         CoverLoader.loadImageView(mContext, url, holder.getView(R.id.iv_cover));
-        holder.setText(R.id.tv_from, item.getTypeName(false));
+        holder.setText(R.id.tv_from, item.getType());
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.getTitle()));
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.getArtist(), item.getAlbum()));
         holder.addOnClickListener(R.id.iv_more);

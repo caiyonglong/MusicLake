@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.SPUtils;
@@ -216,6 +216,16 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
 
     @Override
     public void hideLoading() {
+
+    }
+
+    @Override
+    public void showError(String message, boolean showRetryButton) {
+
+    }
+
+    @Override
+    public void showEmptyState() {
 
     }
 

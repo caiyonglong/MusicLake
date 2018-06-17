@@ -5,8 +5,23 @@ package com.cyl.musiclake.event;
  */
 
 public class StatusChangedEvent {
-    private String name;
+    private String mid;
     private boolean isPrepared;
+    private boolean isPlaying;
+
+    public StatusChangedEvent(String mid, boolean isPrepared, boolean isPlaying) {
+        this.mid = mid;
+        this.isPrepared = isPrepared;
+        this.isPlaying = isPlaying;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
 
     public boolean isPrepared() {
         return isPrepared;
@@ -16,25 +31,11 @@ public class StatusChangedEvent {
         isPrepared = prepared;
     }
 
-    public StatusChangedEvent() {
+    public boolean isPlaying() {
+        return isPlaying;
     }
 
-    public String getName() {
-        return name;
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StatusChangedEvent that = (StatusChangedEvent) o;
-
-        return name != null ? !name.equals(that.name) : that.name != null;
-    }
-
 }

@@ -1,9 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter;
 
-import android.content.Context;
-
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract;
 
@@ -14,7 +12,6 @@ import javax.inject.Inject;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -29,7 +26,7 @@ public class FolderSongPresenter extends BasePresenter<FolderSongsContract.View>
 
     @Override
     public void loadSongs(String path) {
-        AppRepository.getFolderSongsRepository(mView.getContext(), path)
+        AppRepository.INSTANCE.getFolderSongsRepository(mView.getContext(), path)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mView.bindToLife())

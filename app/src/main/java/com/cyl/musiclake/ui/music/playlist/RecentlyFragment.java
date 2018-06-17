@@ -13,11 +13,10 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlayHistoryLoader;
-import com.cyl.musiclake.event.HistoryChangedEvent;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
@@ -101,8 +100,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicInfos);
-                PlayManager.play(position);
+                PlayManager.play(position, musicInfos, Constants.PLAYLIST_HISTORY_ID);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -111,8 +109,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicInfos);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicInfos, Constants.PLAYLIST_HISTORY_ID);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -147,8 +144,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
                         .title("提示")
                         .content("是否清空播放历史？")
                         .onPositive((dialog, which) -> {
-                            PlayHistoryLoader.clearPlayHistory(getActivity());
-                            RxBus.getInstance().post(new HistoryChangedEvent());
+                            PlayHistoryLoader.INSTANCE.clearPlayHistory();
                             musicInfos.clear();
                             mAdapter.notifyDataSetChanged();
                             showEmptyView();

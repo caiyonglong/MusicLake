@@ -1,7 +1,7 @@
 package com.cyl.musiclake.api.netease;
 
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.LogUtil;
@@ -25,42 +25,12 @@ public class NeteaseApiServiceImpl {
         return ApiManager.getInstance().create(NeteaseApiService.class, Constants.BASE_NETEASE_URL);
     }
 
-    public static Observable<List<Music>> getTopMusicList(int ids) {
-        return getApiService().getTopList(ids)
-                .flatMap(topList -> {
-                    List<Music> musicList = new ArrayList<>();
-                    for (NeteaseMusic songInfo : topList.getResult().getTracks()) {
-                        Music music = new Music();
-                        music.setType(Music.Type.NETEASE);
-                        music.setOnline(true);
-                        music.setId(String.valueOf(songInfo.getId()));
-                        music.setAlbum(songInfo.getAlbum().getName());
-                        music.setAlbumId(String.valueOf(songInfo.getAlbum().getId()));
-                        music.setArtist(songInfo.getArtists().get(0).getName());
-//                        music.setArtistId(songInfo.getArtists().get(0).getId());
-                        music.setTitle(songInfo.getName());
-                        music.setCoverSmall(songInfo.getAlbum().getPicUrl());
-                        music.setCoverUri(songInfo.getAlbum().getBlurPicUrl());
-                        music.setCoverBig(songInfo.getAlbum().getPicUrl());
-                        musicList.add(music);
-                    }
-                    return Observable.create((ObservableOnSubscribe<List<Music>>) e -> {
-                        try {
-                            e.onNext(musicList);
-                            e.onComplete();
-                        } catch (Exception ep) {
-                            e.onError(ep);
-                        }
-                    });
-                });
-    }
-
     public static Observable<Playlist> getTopList(int ids) {
         return getApiService().getTopList(ids)
                 .flatMap(topList -> Observable.create((ObservableOnSubscribe<Playlist>) e -> {
                     try {
                         Playlist playlist = new Playlist();
-                        playlist.setId(topList.getResult().getId() + "");
+                        playlist.setPid(String.valueOf(topList.getResult().getId()));
                         playlist.setName(topList.getResult().getName());
                         playlist.setDate(topList.getResult().getTrackUpdateTime());
                         playlist.setDes(topList.getResult().getDescription());
@@ -90,7 +60,7 @@ public class NeteaseApiServiceImpl {
     }
 
     public static Observable<Music> getMusicUrl(Music music) {
-        return getApiService().getMusicUrl(music.getId())
+        return getApiService().getMusicUrl(music.getMid())
                 .flatMap(neteaseMusicUrl -> Observable.create((ObservableOnSubscribe<Music>) e -> {
                     try {
                         if (neteaseMusicUrl.getCode() == 200) {
@@ -121,7 +91,7 @@ public class NeteaseApiServiceImpl {
     }
 
     public static Observable<String> getNeteaseLyric(Music music) {
-        return getApiService().getMusicLyric(music.getId())
+        return getApiService().getMusicLyric(music.getMid())
                 .flatMap(netease -> {
                     String lyric = netease.getLrc().getLyric();
                     LogUtil.e("lyric =", lyric);

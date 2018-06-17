@@ -5,13 +5,12 @@ import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musicapi.playlist.PlaylistApiService
 import com.cyl.musicapi.playlist.PlaylistInfo
 import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
-import com.cyl.musiclake.utils.LogUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Observable
@@ -185,7 +184,7 @@ object PlaylistApiServiceImpl {
      * 调用接口失败返回{"msg":""}
      */
     fun disCollectMusic(pid: String, music: Music): Observable<String> {
-        return playlistApiService.disCollectMusic(token, pid, music.collectId)
+        return playlistApiService.disCollectMusic(token, pid, music.collectId!!)
                 .flatMap { it ->
                     val json = it.string()
                     val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)

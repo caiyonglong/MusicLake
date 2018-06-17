@@ -4,8 +4,8 @@ package com.cyl.musiclake.ui.music.online.base;
 import android.content.Context;
 
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 
 public interface PlaylistContract {
 

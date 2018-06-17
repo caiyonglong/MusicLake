@@ -5,7 +5,7 @@ import android.os.Build;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.db.Album;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.CoverLoader;
 

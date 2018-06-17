@@ -14,25 +14,25 @@ data class ArtistsItem(@SerializedName("id")
                        val name: String = "")
 
 data class Album(@SerializedName("id")
-                 val id: String = "",
+                 val id: String? = "",
                  @SerializedName("name")
-                 val name: String = "",
+                 val name: String? = "",
                  @SerializedName("cover")
-                 val cover: String = "")
+                 val cover: String? = "")
 
 
 data class MusicInfo(@SerializedName("id")
-                     val id: String = "",
+                     val id: String? = "",
                      @SerializedName("songId")
-                     val songId: String = "",
+                     val songId: String? = "",
                      @SerializedName("name")
-                     val name: String = "",
+                     val name: String? = "",
                      @SerializedName("artists")
                      val artists: List<ArtistsItem>?,
                      @SerializedName("album")
                      val album: Album,
                      @SerializedName("vendor")
-                     val vendor: String = "",
+                     val vendor: String? = "",
                      @SerializedName("commentId")
                      val commentId: String? = "",
                      @SerializedName("cp")

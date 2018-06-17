@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.ui.music.local.adapter.ViewPagerAdapter;
+import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.common.PageAdapter;
 
 import butterknife.BindView;
 
@@ -16,53 +16,34 @@ import butterknife.BindView;
  * Created by yonglong on 2016/11/26.
  */
 
-public class DownloadFragment extends BaseFragment {
-    //Toolbar
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+public class DownloadFragment extends BaseLazyFragment {
     @BindView(R.id.m_viewpager)
-    ViewPager mViewPager;
+    ViewPager viewPager;
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     public static DownloadFragment newInstance() {
-
         Bundle args = new Bundle();
-
         DownloadFragment fragment = new DownloadFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    protected void loadData() {
-
-    }
-
-    @Override
     public int getLayoutId() {
-        return R.layout.frag_main;
+        return R.layout.frag_music;
     }
 
     @Override
     public void initViews() {
-
-        setHasOptionsMenu(true);
+        mToolbar.setTitle(getResources().getString(R.string.item_download));
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
             appCompatActivity.setSupportActionBar(mToolbar);
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
-        mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(0);
-
-        if (mViewPager != null) {
-            setupViewPager(mViewPager);
-            mViewPager.setOffscreenPageLimit(3);
-        }
-
     }
 
     @Override
@@ -71,10 +52,22 @@ public class DownloadFragment extends BaseFragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        PageAdapter adapter = new PageAdapter(getChildFragmentManager());
         adapter.addFragment(DownloadedFragment.newInstance(), "已下载");
         adapter.addFragment(DownloadManagerFragment.newInstance(), "正在下载");
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    protected void loadData() {
+
+    }
+
+    @Override
+    public void onLazyLoad() {
+        setupViewPager(viewPager);
+        mTabLayout.setupWithViewPager(viewPager);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setCurrentItem(0);
+    }
 }

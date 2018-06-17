@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
@@ -20,8 +21,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
@@ -53,8 +55,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @OnClick(R.id.fab)
     void onPlayAll() {
-        PlayManager.setPlayList(musicList);
-        PlayManager.play(0);
+        PlayManager.play(0, musicList, mPlaylist.getPid());
     }
 
     private RecentlyAdapter mAdapter;
@@ -107,15 +108,15 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @Override
     protected void loadData() {
-        mPresenter.loadPlaylistSongs(mPlaylist.getId());
+        showLoading();
+        mPresenter.loadPlaylistSongs(mPlaylist);
     }
 
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position, musicList, mPlaylist.getPid());
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -124,22 +125,23 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicList);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicList, mPlaylist.getPid());
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_addto_queue:
-                        AddPlaylistUtils.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
+                        AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
                         break;
                     case R.id.popup_song_delete:
                         new MaterialDialog.Builder(getContext())
                                 .title("提示")
                                 .content("是否移除这首歌曲？")
                                 .onPositive((dialog, which) -> {
-                                    mPresenter.disCollectMusic(mPlaylist.getId(), position, musicList.get(position));
+                                    if (mPresenter != null) {
+                                        mPresenter.disCollectMusic(mPlaylist.getPid(), position, musicList.get(position));
+                                    }
                                 })
                                 .positiveText("确定")
                                 .negativeText("取消")
@@ -256,16 +258,17 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @Override
     public void showLoading() {
-
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-
+        super.hideLoading();
     }
 
     @Override
     public void showPlaylistSongs(List<Music> songList) {
+        hideLoading();
         musicList.addAll(songList);
         mAdapter.setNewData(musicList);
         if (musicList.size() >= 1) {
@@ -274,6 +277,11 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         if (musicList.size() == 0) {
             mAdapter.setEmptyView(R.layout.view_song_empty);
         }
+    }
+
+    @Override
+    public void changePlayStatus(Boolean isPlaying) {
+
     }
 
     @Override

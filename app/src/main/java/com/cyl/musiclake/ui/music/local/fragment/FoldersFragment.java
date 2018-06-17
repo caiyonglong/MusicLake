@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.bean.FolderInfo;
+import com.cyl.musiclake.db.FolderInfo;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
@@ -64,7 +64,7 @@ public class FoldersFragment extends BaseLazyFragment<FoldersPresenter> implemen
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
-            NavigationHelper.navigateToFolderSongs(getActivity(), folderInfo.folderPath);
+            NavigationHelper.INSTANCE.navigateToFolderSongs(getActivity(), folderInfo.folderPath);
         });
     }
 

@@ -6,14 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.ui.music.local.adapter.ArtistAdapter;
 import com.cyl.musiclake.ui.music.local.contract.ArtistContract;
 import com.cyl.musiclake.ui.music.local.presenter.ArtistPresenter;
@@ -34,10 +32,6 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
-    @BindView(R.id.loading)
-    LinearLayout loading;
 
     private ArtistAdapter mAdapter;
     private List<Artist> artists = new ArrayList<>();
@@ -84,8 +78,8 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Artist artist = (Artist) adapter.getItem(position);
-            NavigationHelper.navigateToArtist(getActivity(),
-                    artist.getId() + "",
+            NavigationHelper.INSTANCE.navigateToArtist(mFragmentComponent.getActivity(),
+                    String.valueOf(artist.getId()),
                     artist.getName(),
                     new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
         });
@@ -97,32 +91,28 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
     }
 
     @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public void onLazyLoad() {
         mPresenter.loadArtists("all");
     }
 
     @Override
     public void showLoading() {
+        super.showLoading();
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
+        super.hideLoading();
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
-        loading.setVisibility(View.GONE);
     }
 
     @Override
     public void showArtists(List<Artist> artists) {
         mAdapter.setNewData(artists);
+        hideLoading();
     }
 
     @Override

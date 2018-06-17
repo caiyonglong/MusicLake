@@ -11,8 +11,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.data.AppRepository;
+import com.cyl.musiclake.data.SongLoader;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
@@ -25,9 +25,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -50,21 +48,21 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
     public void attachView(PlayControlsContract.View view) {
         super.attachView(view);
         mHandler = new Handler();
-        RxBus.getInstance().register(MetaChangedEvent.class)
+        Disposable disposable = RxBus.getInstance().register(MetaChangedEvent.class)
                 .compose(mView.bindToLife())
-                .subscribe(metaChangedEvent -> {
-                    updateNowPlayingCard();
-                });
-        RxBus.getInstance().register(StatusChangedEvent.class)
+                .subscribe(event -> updateNowPlayingCard(event.getMusic()));
+        disposables.add(disposable);
+        disposable = RxBus.getInstance().register(StatusChangedEvent.class)
                 .compose(mView.bindToLife())
-                .subscribe(metaChangedEvent -> {
-                    updatePlayStatus();
-                    if (!metaChangedEvent.isPrepared()) {
+                .subscribe(statusChangedEvent -> {
+                    updatePlayStatus(statusChangedEvent.isPlaying());
+                    if (!statusChangedEvent.isPrepared()) {
                         mView.showLoading();
                     } else {
                         mView.hideLoading();
                     }
                 });
+        disposables.add(disposable);
     }
 
     @Override
@@ -105,7 +103,7 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         if (FileUtils.exists(lrcPath)) {
             mView.showLyric(lrcPath, true);
         } else {
-            Observable<String> observable = MusicApi.getLyricInfo(music);
+            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(music);
             if (observable == null) {
                 LogUtil.e(TAG, "本地文件为空");
                 mView.showLyric(null, false);
@@ -143,9 +141,8 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
 
 
     @Override
-    public void updateNowPlayingCard() {
+    public void updateNowPlayingCard(Music music) {
         LogUtil.d(TAG, "updateNowPlayingCard" + mProgress);
-        Music music = PlayManager.getPlayingMusic();
         if (music == null || PlayManager.getPlayList().size() == 0) {
             Bitmap bitmap = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.header_material);
             mView.setAlbumArt(bitmap);
@@ -169,12 +166,10 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
             mView.setArtist(artist);
         }
         //设置音乐来源
-        mView.setOtherInfo(music.getTypeName(false));
+        mView.setOtherInfo(music.getType());
+
         //获取当前歌曲状态
-        AppRepository.getMusicInfo(mView.getContext(), music)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(music1 -> mView.updateFavorite(music1.isLove()));
+        mView.updateFavorite(music.isLove());
 
         if (!isPlayPauseClick) {
             loadLyric();
@@ -189,8 +184,7 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         mHandler.post(updateProgress);
     }
 
-    @Override
-    public void updatePlayStatus() {
+    public void updatePlayStatus(boolean isPlaying) {
         if (PlayManager.isPlaying()) {
             if (!mView.getPlayPauseStatus()) {//true表示按钮为待暂停状态
                 mView.setPlayPauseButton(true);
@@ -216,7 +210,7 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         Music music = PlayManager.getPlayingMusic();
         if (music == null)
             return;
-        PlayManager.updateFavorite(music);
-        mView.updateFavorite(!PlayManager.getPlayingMusic().isLove());
+        Boolean newStatus = SongLoader.INSTANCE.updateFavoriteSong(music);
+        mView.updateFavorite(newStatus);
     }
 }

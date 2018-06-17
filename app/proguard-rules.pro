@@ -63,3 +63,15 @@
 }
 -dontwarn com.just.agentweb.**
 -keepclassmembers class com.just.agentweb.sample.common.AndroidInterface{ *; }
+#litepal
+-keep class org.litepal.** {
+    *;
+}
+
+-keep class * extends org.litepal.crud.DataSupport {
+    *;
+}
+
+-keep class * extends org.litepal.crud.LitePalSupport {
+    *;
+}

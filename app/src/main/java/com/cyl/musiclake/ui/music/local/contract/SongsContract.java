@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.local.contract;
 
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;
@@ -17,6 +16,5 @@ public interface SongsContract {
     interface Presenter extends BaseContract.BasePresenter<View> {
         void loadSongs(String action);
 
-        void playMusic(List<Music> playlist, int position);
     }
 }

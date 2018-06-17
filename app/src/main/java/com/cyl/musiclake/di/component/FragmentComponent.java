@@ -7,6 +7,7 @@ import com.cyl.musiclake.di.module.FragmentModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
+import com.cyl.musiclake.ui.music.download.DownloadManagerFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistFragment;
@@ -70,4 +71,6 @@ public interface FragmentComponent {
     void inject(DiscoverFragment discoverFragment);
 
     void inject(PlayQueueFragment playQueueFragment);
+
+    void inject(DownloadManagerFragment downloadManagerFragment);
 }

@@ -5,20 +5,22 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import com.cyl.musiclake.utils.LogUtil;
 import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.SongLoader;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.FileUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +55,7 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -63,8 +64,7 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicList);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -72,12 +72,12 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
                         break;
                     case R.id.popup_song_goto_album:
                         LogUtil.e("album", music.toString() + "");
-                        NavigationHelper.navigateToAlbum(getActivity(),
+                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
                                 music.getAlbumId(),
                                 music.getAlbum(), null);
                         break;
                     case R.id.popup_song_goto_artist:
-                        NavigationHelper.navigateToArtist(getActivity(),
+                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
                                 music.getArtistId(),
                                 music.getArtist(), null);
                         break;
@@ -90,7 +90,7 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
                                 .content("是否删除这首歌曲？")
                                 .onPositive((dialog, which) -> {
                                     FileUtils.delFile(musicList.get(position).getUri());
-                                    SongLoader.removeSong(getActivity(), musicList.get(position));
+                                    SongLoader.INSTANCE.removeSong(musicList.get(position));
                                     mAdapter.notifyItemChanged(position);
                                 })
                                 .positiveText("确定")
@@ -136,12 +136,14 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
 
     @Override
     public void showLoading() {
+        super.showLoading();
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
+        super.hideLoading();
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
     }
@@ -155,8 +157,14 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     public void showSongs(List<Music> musicList) {
         this.musicList = musicList;
         mAdapter.setNewData(musicList);
+        hideLoading();
         if (musicList.size() == 0) {
             mAdapter.setEmptyView(R.layout.view_song_empty);
         }
+    }
+
+    @Override
+    public void showDownloadList(List<TasksManagerModel> modelList) {
+
     }
 }

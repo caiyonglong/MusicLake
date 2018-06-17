@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import com.cyl.musiclake.bean.FolderInfo;
+import com.cyl.musiclake.db.FolderInfo;
 
 import java.io.File;
 import java.util.ArrayList;

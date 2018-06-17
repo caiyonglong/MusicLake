@@ -21,7 +21,17 @@
     <string name="exit">退出程序</string>
 
     <!--本地音乐-->
+    <string name="item_local">本地歌曲</string>
+    <string name="item_history">播放历史</string>
+    <string name="item_favorite">我的收藏</string>
+    <string name="item_download">我的下载</string>
     <string name="local_music">本地歌曲</string>
+
+    <string name="song_num">%1$d 首</string>
+    <string name="default_num">0 首</string>
+    <string name="random_play">随机播放</string>
+
+
     <string name="near_people">分享人资料</string>
     <string name="detail_position">位置详情</string>
     <string name="plusone">+1</string>
@@ -130,7 +140,7 @@
     <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="unable_to_play_exception">播放异常</string>
     <string name="loading">努力加载中...</string>
-    <string name="tip_empty_song">暂无音乐</string>
+    <string name="tip_empty_song">空空如也</string>
     <string name="tip_empty_queue">播放队列为空</string>
     <string name="tip_empty_playlist">暂无歌单，点击右上角新建</string>
     <string name="recent_update">最近更新：%s</string>
@@ -222,6 +232,10 @@
     <string name="artist_tips">歌手 - 专辑</string>
     <string name="song">歌曲</string>
     <string name="lyric_default_hint">暂无歌词</string>
+    <string name="add_to_playlist">增加到歌单</string>
+    <string name="share_content">\"我正在使用 音乐湖 听音乐，我觉得很不错，推荐给你用下，链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
+    <string name="retry">重试</string>
+    <string name="general_error">网络错误</string>
 
 
 </resources>

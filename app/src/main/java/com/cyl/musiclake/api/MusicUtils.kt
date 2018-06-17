@@ -10,7 +10,9 @@ import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
 
 import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.R
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.ui.music.download.DownloadDialog
 import com.cyl.musiclake.utils.ToastUtils
 
@@ -24,7 +26,7 @@ object MusicUtils {
             ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
             return
         }
-        if (music.type == Music.Type.LOCAL) {
+        if (music.type == Constants.LOCAL) {
             ToastUtils.show(MusicApp.getAppContext(), "已经本地音乐!")
             return
         }
@@ -39,11 +41,8 @@ object MusicUtils {
             ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
             return
         }
-        if (music.type == Music.Type.LOCAL) {
-            ToastUtils.show(MusicApp.getAppContext(), "本地音乐不能分享!")
-            return
-        }
-        val stringBuilder = "我正在使用 音乐湖 听音乐，我觉得很不错，推荐给你用下，链接：https://github.com/caiyonglong/MusicLake/releases"
+
+        val stringBuilder = activity.getString(R.string.share_content)
 
         val textIntent = Intent(Intent.ACTION_SEND)
         textIntent.type = "text/plain"
@@ -56,9 +55,9 @@ object MusicUtils {
      */
     fun getMusic(item: ListItem): Music {
         val music = Music()
-        music.id = item.id.toString()
+        music.mid = item.id.toString()
         music.title = item.name
-        music.type = Music.Type.NETEASE
+        music.type = Constants.NETEASE
         music.album = item.album.name
         music.albumId = item.album.id
         music.commentId = item.commentId.toString()
@@ -85,10 +84,10 @@ object MusicUtils {
      */
     fun getMusic(musicInfo: MusicInfo): Music {
         val music = Music()
-        music.id = musicInfo.songId
+        music.mid = musicInfo.songId
         music.collectId = musicInfo.id
         music.title = musicInfo.name
-        music.setType(musicInfo.vendor)
+        music.type = musicInfo.vendor
         music.album = musicInfo.album.name
         music.albumId = musicInfo.album.id
         music.commentId = musicInfo.commentId
@@ -113,9 +112,9 @@ object MusicUtils {
     /**
      * 搜索歌曲实体类转化成本地歌曲实体
      */
-    fun getSearchMusic(song: SongsItem, type: Music.Type): Music {
+    fun getSearchMusic(song: SongsItem, type: String): Music {
         val music = Music()
-        music.id = song.id
+        music.mid = song.id
         music.title = song.name
         music.type = type
         music.album = song.album.name
@@ -144,28 +143,18 @@ object MusicUtils {
      * 本地歌曲实体转化成在线歌单歌曲实体
      */
     fun getMusicInfo(music: Music): MusicInfo {
-        val artistIds = music.artistId.split(",").dropLastWhile { it.isEmpty() }.toTypedArray()
-        val artists = music.artist.split(",").dropLastWhile { it.isEmpty() }.toTypedArray()
+        val artistIds = music.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+        val artists = music.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artistsBeans = mutableListOf<ArtistsItem>()
-        for (i in artists.indices) {
-            val artistsBean = ArtistsItem(artistIds[i], artists[i])
-            artistsBeans.add(artistsBean)
+        if (artists != null) {
+            for (i in artists.indices) {
+                val artistsBean = artistIds?.get(i)?.let { ArtistsItem(it, artists[i]) }
+                artistsBean?.let { artistsBeans.add(it) }
+            }
         }
         val album = Album(music.albumId, music.album, music.coverUri)
-        return MusicInfo(music.id, music.id, music.title, artistsBeans, album, music.getTypeName(true), music.commentId, music.isCp)
+        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.commentId, music.isCp)
     }
 
-    fun getMusicType(type: String): Music.Type {
-        return if (type == "QQ" || type == "qq") {
-            Music.Type.QQ
-        } else if (type == "XIAMI" || type == "xiami") {
-            Music.Type.XIAMI
-        } else if (type == "BAIDU" || type == "baidu") {
-            Music.Type.BAIDU
-        } else if (type == "NETEASE" || type == "netease") {
-            Music.Type.NETEASE
-        } else {
-            Music.Type.LOCAL
-        }
-    }
+
 }

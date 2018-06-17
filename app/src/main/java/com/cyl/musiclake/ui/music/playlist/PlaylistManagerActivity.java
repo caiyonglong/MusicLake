@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -82,7 +82,6 @@ public class PlaylistManagerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         pid = getIntent().getStringExtra(Extras.PLAYLIST_ID);
         isAlbum = getIntent().getIntExtra(Extras.ALBUM, -1);
@@ -114,7 +113,7 @@ public class PlaylistManagerActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.action_delete_playlist:
-                PlaylistLoader.deletePlaylist(this, pid);
+//                PlaylistLoader.INSTANCE.deletePlaylist(pid);
                 finish();
                 break;
             case R.id.action_share:

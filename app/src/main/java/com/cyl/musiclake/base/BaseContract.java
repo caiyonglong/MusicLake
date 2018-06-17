@@ -26,6 +26,12 @@ public class BaseContract {
         //隐藏进度
         void hideLoading();
 
+        //隐藏进度
+        void showError(String message, boolean showRetryButton);
+
+        //显示空状态
+        void showEmptyState();
+
         /**
          * 绑定生命周期
          *

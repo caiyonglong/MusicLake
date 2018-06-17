@@ -28,7 +28,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
@@ -124,19 +124,11 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     private Palette mPalette;
     private Palette.Swatch mSwatch;
     private List<View> mViewPagerContent;
-    private SlidingUpPanelLayout mSlidingUpPaneLayout;
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
     public ObjectAnimator operatingAnim;
     public long currentPlayTime = 0;
     private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
     private int playModeId = 0;
-
-//
-//    @OnClick(R.id.container)
-//    void show() {
-//        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED)
-//            mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-//    }
 
     @OnClick(R.id.iv_back)
     void back() {
@@ -162,7 +154,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @OnClick(R.id.skip_add)
     void addPlaylist() {
-        AddPlaylistUtils.getPlaylist((AppCompatActivity) getActivity(), PlayManager.getPlayingMusic());
+        AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), PlayManager.getPlayingMusic());
     }
 
     @OnClick(R.id.skip_mode)
@@ -247,12 +239,11 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         return R.layout.frag_player;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
-//        mSlidingUpPaneLayout = (SlidingUpPanelLayout) rootView.getParent().getParent();
+
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -272,9 +263,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     protected void listener() {
         mSeekBar.setOnSeekBarChangeListener(this);
         topContainer.setOnClickListener(v -> {
-//            if (mSlidingUpPaneLayout.isTouchEnabled()) {
-//                mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-//            }
+            ((MainActivity) mFragmentComponent.getActivity()).mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         });
     }
 

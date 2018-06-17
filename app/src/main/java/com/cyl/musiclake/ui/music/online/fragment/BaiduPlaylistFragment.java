@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;

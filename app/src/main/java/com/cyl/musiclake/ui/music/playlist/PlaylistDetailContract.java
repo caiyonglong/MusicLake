@@ -1,13 +1,10 @@
 package com.cyl.musiclake.ui.music.playlist;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
-import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.data.db.Playlist;
 
 import java.util.List;
 
@@ -19,6 +16,8 @@ public interface PlaylistDetailContract {
 
         void showPlaylistSongs(List<Music> songList);
 
+        void changePlayStatus(Boolean isPlaying);
+
         void removeMusic(int position);
 
         void success(int type);
@@ -26,8 +25,7 @@ public interface PlaylistDetailContract {
 
     interface Presenter extends BaseContract.BasePresenter<View> {
 
-        void loadPlaylistSongs(String playlistID);
-
+        void loadPlaylistSongs(Playlist playlist);
 
         void deletePlaylist(Playlist playlist);
 

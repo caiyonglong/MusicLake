@@ -2,10 +2,11 @@
 package com.cyl.musiclake;
 
 // Declare any non-default types here with import statements
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 
 interface IMusicService {
-    void playOnline(in Music music);
+    void playMusic(in Music music);
+    void playPlaylist(in List<Music> playlist,int id,String pid);
     void play(int id);
     void playPause();
     void pause();
@@ -13,7 +14,6 @@ interface IMusicService {
     void prev();
     void next();
     void refresh();
-    void update(in Music music);
     void setLoopMode(int loopmode);
     void seekTo(int ms);
     int position();
@@ -24,7 +24,6 @@ interface IMusicService {
     String getSongName();
     String getSongArtist();
     Music getPlayingMusic();
-    void setPlayList(in List<Music> playlist);
     List<Music> getPlayList();
     void removeFromQueue(int position);
     void clearQueue();

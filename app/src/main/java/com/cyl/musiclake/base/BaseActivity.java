@@ -1,10 +1,7 @@
 package com.cyl.musiclake.base;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,28 +9,21 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.di.component.ActivityComponent;
 import com.cyl.musiclake.di.component.DaggerActivityComponent;
 import com.cyl.musiclake.di.module.ActivityModule;
-import com.cyl.musiclake.event.HistoryChangedEvent;
-import com.cyl.musiclake.event.MetaChangedEvent;
-import com.cyl.musiclake.event.PlayQueueEvent;
-import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.event.ScheduleTaskEvent;
-import com.cyl.musiclake.event.StatusChangedEvent;
-import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.utils.LogUtil;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +31,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 
 import static com.cyl.musiclake.player.PlayManager.mService;
+import static com.cyl.musiclake.utils.AnimationUtils.animateView;
 
 /**
  * 基类
@@ -61,12 +52,27 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     protected ActivityComponent mActivityComponent;
 
     @Nullable
+    @BindView(R.id.empty_state_view)
+    public View emptyStateView;
+    @Nullable
+    @BindView(R.id.error_panel)
+    public View errorPanelRoot;
+    @Nullable
+    @BindView(R.id.error_button_retry)
+    public Button errorButtonRetry;
+    @Nullable
+    @BindView(R.id.error_message_view)
+    public TextView errorTextView;
+    @Nullable
+    @BindView(R.id.loading_progress_bar)
+    public ProgressBar loadingProgressBar;
+
+    @Nullable
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     protected Handler mHandler;
     private Unbinder unbinder;
     private PlayManager.ServiceToken mToken;
-    private PlaybackStatus mPlaybackStatus;
 
     private List<Disposable> disposables = new ArrayList<>();
 
@@ -75,7 +81,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         super.onCreate(savedInstanceState);
         mToken = PlayManager.bindToService(this, this);
         setContentView(getLayoutResID());
-        mPlaybackStatus = new PlaybackStatus(this);
         mHandler = new Handler();
         initActivityComponent();
         initInjector();
@@ -117,6 +122,10 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     protected void listener() {
     }
 
+
+    protected void retryLoading() {
+    }
+
     protected boolean hasToolbar() {
         return true;
     }
@@ -125,21 +134,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         if (hasToolbar() && mToolbar != null) {
             mToolbar.setTitle(name);
         }
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicPlayerService.PLAY_STATE_CHANGED);
-        filter.addAction(MusicPlayerService.META_CHANGED);
-        filter.addAction(MusicPlayerService.PLAY_QUEUE_CHANGE);
-        filter.addAction(MusicPlayerService.PLAY_QUEUE_CLEAR);
-        filter.addAction(MusicPlayerService.PLAYLIST_CHANGED);
-        filter.addAction(MusicPlayerService.SCHEDULE_CHANGED);
-        filter.addAction(MusicPlayerService.TRACK_ERROR);
-        registerReceiver(mPlaybackStatus, filter);
     }
 
     @Override
@@ -151,11 +145,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         if (mToken != null) {
             PlayManager.unbindFromService(mToken);
             mToken = null;
-        }
-        try {
-            unregisterReceiver(mPlaybackStatus);
-        } catch (final Throwable e) {
-            e.printStackTrace();
         }
         for (Disposable disposable : disposables) {
             disposable.dispose();
@@ -184,13 +173,37 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     @Override
     public void showLoading() {
-
+        if (emptyStateView != null) animateView(emptyStateView, false, 150);
+        if (loadingProgressBar != null) animateView(loadingProgressBar, true, 400);
+        animateView(errorPanelRoot, false, 150);
     }
 
     @Override
     public void hideLoading() {
-
+        if (emptyStateView != null) animateView(emptyStateView, false, 150);
+        if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
+        animateView(errorPanelRoot, false, 150);
     }
+
+    @Override
+    public void showEmptyState() {
+        if (emptyStateView != null) animateView(emptyStateView, true, 200);
+        if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
+        animateView(errorPanelRoot, false, 150);
+    }
+
+    @Override
+    public void showError(String message, boolean showRetryButton) {
+        hideLoading();
+        if (errorTextView != null)
+            errorTextView.setText(message);
+        if (errorButtonRetry != null)
+            errorButtonRetry.setOnClickListener(v -> retryLoading());
+        if (showRetryButton) animateView(errorButtonRetry, true, 600);
+        else animateView(errorButtonRetry, false, 0);
+        animateView(errorPanelRoot, true, 300);
+    }
+
 
     @Override
     public <T> LifecycleTransformer<T> bindToLife() {
@@ -200,52 +213,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     public Context getContext() {
         return this;
-    }
-
-    private final static class PlaybackStatus extends BroadcastReceiver {
-
-        private final WeakReference<BaseActivity> mReferences;
-
-
-        public PlaybackStatus(final BaseActivity activity) {
-            mReferences = new WeakReference<BaseActivity>(activity);
-        }
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            final String action = intent.getAction();
-            LogUtil.e("PlaybackStatus", "接收到广播-------------" + action);
-            BaseActivity baseActivity = (BaseActivity) mReferences.get();
-            if (baseActivity != null && action != null) {
-                switch (action) {
-                    case MusicPlayerService.META_CHANGED:
-                        RxBus.getInstance().post(new MetaChangedEvent());
-                        RxBus.getInstance().post(new HistoryChangedEvent());
-                        break;
-                    case MusicPlayerService.PLAY_QUEUE_CHANGE:
-                        RxBus.getInstance().post(new HistoryChangedEvent());
-                        break;
-                    case MusicPlayerService.PLAY_STATE_CHANGED:
-                        StatusChangedEvent event = new StatusChangedEvent();
-                        event.setPrepared(intent.getBooleanExtra("prepare", false));
-                        RxBus.getInstance().post(event);
-                        break;
-                    case MusicPlayerService.PLAY_QUEUE_CLEAR:
-                        RxBus.getInstance().post(new PlayQueueEvent());
-                        break;
-                    case MusicPlayerService.PLAYLIST_CHANGED:
-                        RxBus.getInstance().post(new PlaylistEvent());
-                        break;
-                    case MusicPlayerService.SCHEDULE_CHANGED:
-                        RxBus.getInstance().post(new ScheduleTaskEvent());
-                        break;
-                    case MusicPlayerService.TRACK_ERROR:
-                        final String errorMsg = context.getString(R.string.error_playing_track);
-                        Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }
     }
 
     @Override
@@ -266,7 +233,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         mService = IMusicService.Stub.asInterface(iBinder);
-        RxBus.getInstance().post(new MetaChangedEvent());
     }
 
     @Override

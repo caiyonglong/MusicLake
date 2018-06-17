@@ -3,7 +3,7 @@ package com.cyl.musiclake.player;
 import android.os.RemoteException;
 
 import com.cyl.musiclake.IMusicService;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -22,8 +22,14 @@ public class IMusicServiceStub extends IMusicService.Stub {
     }
 
     @Override
-    public void playOnline(Music music) throws RemoteException {
+    public void playMusic(Music music) throws RemoteException {
         mService.get().play(music);
+    }
+
+    //
+    @Override
+    public void playPlaylist(List<Music> songs, int id, String pid) throws RemoteException {
+        mService.get().play(songs, id, pid);
     }
 
     @Override
@@ -62,11 +68,6 @@ public class IMusicServiceStub extends IMusicService.Stub {
     }
 
     @Override
-    public void update(Music music) throws RemoteException {
-        mService.get().updateFavorite(music);
-    }
-
-    @Override
     public void setLoopMode(int loopmode) throws RemoteException {
     }
 
@@ -88,11 +89,6 @@ public class IMusicServiceStub extends IMusicService.Stub {
     @Override
     public Music getPlayingMusic() throws RemoteException {
         return mService.get().getPlayingMusic();
-    }
-
-    @Override
-    public void setPlayList(List<Music> playlist) throws RemoteException {
-        mService.get().setPlayQueue(playlist);
     }
 
     @Override

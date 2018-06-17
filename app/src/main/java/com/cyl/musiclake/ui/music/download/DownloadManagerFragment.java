@@ -1,14 +1,19 @@
 package com.cyl.musiclake.ui.music.download;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.data.DownloadLoader;
+import com.cyl.musiclake.data.SongLoader;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
+import com.cyl.musiclake.player.PlayManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -20,7 +25,7 @@ import butterknife.BindView;
  * Created by yonglong on 2016/11/26.
  */
 
-public class DownloadManagerFragment extends BaseFragment {
+public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter> implements DownloadContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -39,9 +44,7 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        if (models.size() == 0) {
-            mAdapter.setEmptyView(R.layout.view_song_empty);
-        }
+        mPresenter.loadDownloading();
     }
 
     @Override
@@ -51,35 +54,82 @@ public class DownloadManagerFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        mSwipeRefreshLayout.setEnabled(false);
-
-        models = TasksManager.getImpl().getModelList();
+        mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN);
         mAdapter = new TaskItemAdapter(models);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
-        TasksManager.getImpl().onCreate(new WeakReference<>(this));
     }
 
     @Override
     protected void initInjector() {
-
+        mFragmentComponent.inject(this);
     }
 
     public void postNotifyDataChanged() {
         if (mAdapter != null) {
-            getActivity().runOnUiThread(() -> {
-                if (mAdapter != null) {
+            mFragmentComponent.getActivity().runOnUiThread(() -> {
+                if (mAdapter != null)
                     mAdapter.notifyDataSetChanged();
-                }
             });
         }
     }
 
     @Override
-    public void onDestroy() {
-        TasksManager.getImpl().onDestroy();
+    public void showLoading() {
+        super.showLoading();
+    }
+
+    @Override
+    protected void listener() {
+        super.listener();
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mPresenter.loadDownloading();
+        });
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (view.getId() != R.id.iv_more) {
+                Music music = SongLoader.INSTANCE.getMusicInfo(models.get(position).getMid());
+                PlayManager.playOnline(music);
+            }
+        });
+    }
+
+    @Override
+    public void hideLoading() {
+        super.hideLoading();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onLazyLoad() {
+        models = TasksManager.INSTANCE.getModelList();
+        mAdapter.setNewData(models);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        TasksManager.INSTANCE.onDestroy();
         mAdapter = null;
-        super.onDestroy();
+    }
+
+    @Override
+    public void showErrorInfo(String msg) {
+
+    }
+
+    @Override
+    public void showSongs(List<Music> musicList) {
+
+    }
+
+    @Override
+    public void showDownloadList(List<TasksManagerModel> modelList) {
+        TasksManager.INSTANCE.onCreate(new WeakReference<>(this));
+        mAdapter.setNewData(models);
+        hideLoading();
+        if (models.size() == 0) {
+            showEmptyState();
+        }
     }
 }

@@ -7,7 +7,8 @@ import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.data.db.Music;
 
 /**
  * 作者：yonglong on 2016/9/14 15:24
@@ -32,7 +33,7 @@ public class AddPlaylistDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Music music = getArguments().getParcelable("music");
-        if (music.getType() == Music.Type.LOCAL) {
+        if (music.getType() == Constants.LOCAL) {
             return showInfoDialog("增加到歌单", "暂不支持添加本地歌曲到在线歌单");
         }
         return null;

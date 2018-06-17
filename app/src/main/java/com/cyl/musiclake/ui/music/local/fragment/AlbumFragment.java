@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.db.Album;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter;
@@ -34,10 +34,6 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
-    @BindView(R.id.loading)
-    LinearLayout loading;
     private AlbumAdapter mAdapter;
     private List<Album> albumList = new ArrayList<>();
 
@@ -82,7 +78,7 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Album album = (Album) adapter.getItem(position);
-            NavigationHelper.navigateToAlbum(getActivity(),
+            NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
                     album.getId(),
                     album.getName(),
                     new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
@@ -103,16 +99,17 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
 
     @Override
     public void showLoading() {
+        super.showLoading();
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
+        super.hideLoading();
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
     }
-
     @Override
     public void showAlbums(List<Album> albumList) {
         mAdapter.setNewData(albumList);

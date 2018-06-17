@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,13 +15,13 @@ import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumDetailPresenter;
 import com.jaeger.library.StatusBarUtil;
 
@@ -38,6 +39,7 @@ import butterknife.OnClick;
  */
 public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> implements AlbumDetailContract.View {
 
+
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
@@ -46,6 +48,13 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
     CollapsingToolbarLayout collapsing_toolbar;
     @BindView(R.id.album_art)
     ImageView album_art;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
+
+    @OnClick(R.id.fab)
+    void onPlayAll() {
+        PlayManager.play(0, musicInfos, albumID);
+    }
 
     String albumID;
     String transitionName;
@@ -53,12 +62,6 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-
-    @OnClick(R.id.fab)
-    void onPlayAll() {
-        PlayManager.setPlayList(musicInfos);
-        PlayManager.play(0);
-    }
 
     public static AlbumDetailFragment newInstance(String id, String title, String transitionName) {
         Bundle args = new Bundle();
@@ -72,12 +75,13 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
 
     @Override
     protected void loadData() {
+        showLoading();
         mPresenter.loadAlbumSongs(title);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview_collapsingtoolbar;
+        return R.layout.frag_playlist_detail;
     }
 
     @Override
@@ -85,7 +89,6 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
         albumID = getArguments().getString(Extras.ALBUM_ID);
         transitionName = getArguments().getString(Extras.TRANSITIONNAME);
         title = getArguments().getString(Extras.PLAYLIST_NAME);
-        StatusBarUtil.setTranslucentForImageViewInFragment(getActivity(), 0, album_art);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (transitionName != null) {
@@ -118,8 +121,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicInfos);
-                PlayManager.play(position);
+                PlayManager.play(position, musicInfos, albumID);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -127,8 +129,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicInfos);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicInfos, albumID);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -149,12 +150,12 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
 
     @Override
     public void showLoading() {
-
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-
+        super.hideLoading();
     }
 
     @Override
@@ -166,6 +167,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
     public void showAlbumSongs(List<Music> songList) {
         musicInfos = songList;
         mAdapter.setNewData(musicInfos);
+        hideLoading();
     }
 
 

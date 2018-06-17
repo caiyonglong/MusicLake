@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 
 /**
  * 作者：yonglong on 2016/9/14 15:24
@@ -46,5 +46,6 @@ public class ShowDetailDialog extends DialogFragment {
                 .positiveText("确定")
                 .build();
     }
+
 
 }

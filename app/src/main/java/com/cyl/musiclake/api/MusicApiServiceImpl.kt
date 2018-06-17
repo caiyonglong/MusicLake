@@ -10,8 +10,9 @@ import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseList
 import com.cyl.musiclake.api.qq.QQApiServiceImpl
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import io.reactivex.Observable
@@ -44,24 +45,20 @@ object MusicApiServiceImpl {
      * @return
      */
     fun getLyricInfo(music: Music): Observable<String>? {
-        return if (music.type == Music.Type.QQ) {
-            QQApiServiceImpl.getQQLyric(music)
+        return when (music.type) {
+            Constants.QQ -> QQApiServiceImpl.getQQLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-        } else if (music.type == Music.Type.BAIDU) {
-            BaiduApiServiceImpl.getBaiduLyric(music)
+            Constants.BAIDU -> BaiduApiServiceImpl.getBaiduLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-        } else if (music.type == Music.Type.XIAMI) {
-            XiamiServiceImpl.getXimaiLyric(music)
+            Constants.XIAMI -> XiamiServiceImpl.getXimaiLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-        } else if (music.type == Music.Type.NETEASE) {
-            NeteaseApiServiceImpl.getNeteaseLyric(music)
+            Constants.NETEASE -> NeteaseApiServiceImpl.getNeteaseLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-        } else {
-            null
+            else -> null
         }
     }
 
@@ -76,20 +73,20 @@ object MusicApiServiceImpl {
     fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<List<Music>> {
         return create({ result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
-                    .searchSong(key,  limit, page, {
+                    .searchSong(key, limit, page, {
                         val musicList = mutableListOf<Music>()
                         if (it.status) {
                             if (type == ANY || type == NETEASE)
                                 it.data.netease.songs?.forEach {
-                                    musicList.add(MusicUtils.getSearchMusic(it, Music.Type.NETEASE))
+                                    musicList.add(MusicUtils.getSearchMusic(it, Constants.NETEASE))
                                 }
                             if (type == ANY || type == QQ)
                                 it.data.qq.songs?.forEach {
-                                    musicList.add(MusicUtils.getSearchMusic(it, Music.Type.QQ))
+                                    musicList.add(MusicUtils.getSearchMusic(it, Constants.QQ))
                                 }
                             if (type == ANY || type == XIAMI)
                                 it.data.xiami.songs?.forEach {
-                                    musicList.add(MusicUtils.getSearchMusic(it, Music.Type.XIAMI))
+                                    musicList.add(MusicUtils.getSearchMusic(it, Constants.XIAMI))
                                 }
                             result.onNext(musicList)
                             result.onComplete()
@@ -105,10 +102,10 @@ object MusicApiServiceImpl {
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
      */
     fun getMusicInfo(music: Music): Observable<Music>? {
-        return when {
-            music.type == Music.Type.QQ -> QQApiServiceImpl.getMusicInfo(music)
-            music.type == Music.Type.NETEASE -> NeteaseApiServiceImpl.getMusicUrl(music)
-            music.type == Music.Type.XIAMI -> XiamiServiceImpl.getMusicInfo(music)
+        return when (music.type) {
+            Constants.QQ -> QQApiServiceImpl.getMusicInfo(music)
+            Constants.NETEASE -> NeteaseApiServiceImpl.getMusicUrl(music)
+            Constants.XIAMI -> XiamiServiceImpl.getMusicInfo(music)
             else -> null
         }
     }
@@ -137,7 +134,7 @@ object MusicApiServiceImpl {
                         if (it.status) {
                             val songList = it.data
                             songList.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, MusicUtils.getMusicType(vendor)))
+                                musicList.add(MusicUtils.getSearchMusic(it, vendor))
                             }
                             result.onNext(musicList)
                             result.onComplete()

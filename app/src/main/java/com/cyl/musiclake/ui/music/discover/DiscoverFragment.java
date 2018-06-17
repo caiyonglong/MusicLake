@@ -1,26 +1,20 @@
 package com.cyl.musiclake.ui.music.discover;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
-import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
-import com.cyl.musiclake.ui.music.online.presenter.OnlinePlaylistPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +46,12 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
 
     @OnClick(R.id.baiChartsTv)
     void toBaidu() {
-        NavigationHelper.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
+        NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
     }
 
     @OnClick(R.id.wanChartsTv)
     void toNetease() {
-        NavigationHelper.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
+        NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
     }
 
     public static DiscoverFragment newInstance() {
@@ -112,7 +106,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
             intent.putExtra(Extras.BILLBOARD_TITLE, playlist.getName());
             intent.putExtra(Extras.BILLBOARD_DESC, playlist.getDes());
             intent.putExtra(Extras.BILLBOARD_ALBUM, playlist.getCoverUrl());
-            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getId());
+            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getPid());
             startActivity(intent);
         });
 
@@ -120,7 +114,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
             Playlist playlist = (Playlist) adapter.getData().get(position);
             Intent intent = new Intent(getActivity(), NeteasePlaylistActivity.class);
             intent.putExtra("title", playlist.getName());
-            intent.putExtra("id", playlist.getId());
+            intent.putExtra("id", playlist.getPid());
             startActivity(intent);
         });
     }

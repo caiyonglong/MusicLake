@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
 
-import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.data.db.Music;
 
 
 public interface PlayControlsContract {
@@ -52,9 +52,9 @@ public interface PlayControlsContract {
 
         void onNextClick();
 
-        void updateNowPlayingCard();
+        void updateNowPlayingCard(Music music);
 
-        void updatePlayStatus();
+        void updatePlayStatus(boolean isPlaying);
 
     }
 }

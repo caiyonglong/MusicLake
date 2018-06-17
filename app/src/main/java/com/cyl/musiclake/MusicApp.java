@@ -3,9 +3,9 @@ package com.cyl.musiclake;
 import android.app.Application;
 import android.content.Context;
 
-import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.bean.SearchHistoryBean;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.data.PlaylistLoader;
+import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
@@ -23,8 +23,6 @@ import com.tencent.tauth.Tencent;
 import org.litepal.LitePal;
 
 import java.net.Proxy;
-
-import static com.cyl.musiclake.common.Constants.PLAYLIST_QUEUE_ID;
 
 public class MusicApp extends Application {
     private static MusicApp sInstance;
@@ -92,16 +90,25 @@ public class MusicApp extends Application {
     }
 
     private void initDB() {
-        Playlist playlist = new Playlist(String.valueOf(PLAYLIST_QUEUE_ID), getString(R.string.playlist_queue));
-        if (playlist.save()) {
-            LogUtil.d("存储成功");
-        } else {
-            LogUtil.d("失败");
-        }
+        PlaylistLoader.INSTANCE.createDefaultPlaylist(Constants.PLAYLIST_QUEUE_ID, "播放队列");
+        PlaylistLoader.INSTANCE.createDefaultPlaylist(Constants.PLAYLIST_HISTORY_ID, "播放历史");
+        PlaylistLoader.INSTANCE.createDefaultPlaylist(Constants.PLAYLIST_LOVE_ID, "我的收藏");
     }
 
     public ApplicationComponent getApplicationComponent() {
         return mApplicationComponent;
     }
+
+
+    @Override
+    public void onTerminate() {
+        // 程序终止的时候执行
+        LogUtil.d("onTerminate");
+        super.onTerminate();
+        //结束下载任务
+        TasksManager.INSTANCE.onDestroy();
+        FileDownloader.getImpl().pauseAll();
+    }
+
 
 }

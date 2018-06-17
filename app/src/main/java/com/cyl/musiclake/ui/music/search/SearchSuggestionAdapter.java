@@ -1,13 +1,9 @@
 package com.cyl.musiclake.ui.music.search;
 
-import android.view.View;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.SearchHistoryBean;
-
-import org.litepal.crud.DataSupport;
+import com.cyl.musiclake.db.SearchHistoryBean;
 
 import java.util.List;
 

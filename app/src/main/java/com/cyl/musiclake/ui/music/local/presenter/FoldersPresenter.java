@@ -1,9 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter;
 
-import android.content.Context;
-
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.bean.FolderInfo;
+import com.cyl.musiclake.db.FolderInfo;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
 
@@ -29,7 +27,7 @@ public class FoldersPresenter extends BasePresenter<FoldersContract.View> implem
     @Override
     public void loadFolders() {
         mView.showLoading();
-        AppRepository.getFolderInfosRepository(mView.getContext())
+        AppRepository.INSTANCE.getFolderInfosRepository(mView.getContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mView.bindToLife())

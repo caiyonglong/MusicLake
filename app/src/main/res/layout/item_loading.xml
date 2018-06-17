@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    android:visibility="gone">
+    android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/progress"
@@ -17,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="努力加载中..."
+        android:text="@string/loading"
         android:textColor="@color/black"
         android:textSize="16sp" />
 </LinearLayout>

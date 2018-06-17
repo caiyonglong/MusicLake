@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.utils.FileUtils;
@@ -58,10 +58,10 @@ public class DownloadDialog extends DialogFragment {
                                 .setPath(path)
                                 .setCallbackProgressTimes(100)
                                 .setListener(new FileDownloadListener());
-                        TasksManager.getImpl()
+                        TasksManager.INSTANCE
                                 .addTaskForViewHolder(task);
                         TasksManagerModel model =
-                                TasksManager.getImpl().addTask(task.getId(), music.getId(), music.getTitle(), music.getUri(), path);
+                                TasksManager.INSTANCE.addTask(task.getId(), music.getMid(), music.getTitle(), music.getUri(), path);
                         task.start();
                     }
                 }).build();

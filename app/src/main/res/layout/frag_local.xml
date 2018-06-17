@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,51 +11,161 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#f0f0f0"
+        android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/hor_recyclerView"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:padding="10dp" />
+            app:cardCornerRadius="@dimen/dp_4"
+            app:cardUseCompatPadding="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="@string/playlist_online" />
-
-                <ImageView
-                    android:id="@+id/iv_playlist_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center_vertical"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_playlist_add" />
-            </RelativeLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <com.cyl.musiclake.view.LocalItemView
+                    android:id="@+id/localView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:gravity="center_vertical"
+                    app:iv_icon="@drawable/item_music"
+                    app:iv_icon_color="@color/colorPrimary"
+                    app:tv_desc="@string/default_num"
+                    app:tv_name="@string/item_local" />
+
+
+                <com.cyl.musiclake.view.LocalItemView
+                    android:id="@+id/historyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:gravity="center_vertical"
+                    app:iv_icon="@drawable/ic_history_black"
+                    app:iv_icon_color="@color/amber"
+                    app:tv_desc="@string/default_num"
+                    app:tv_name="@string/item_history" />
+
+
+                <com.cyl.musiclake.view.LocalItemView
+                    android:id="@+id/favoriteView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:gravity="center_vertical"
+                    app:iv_icon="@drawable/item_favorite"
+                    app:iv_icon_color="@color/pink_pressed"
+                    app:tv_desc="@string/default_num"
+                    app:tv_name="@string/item_favorite" />
+
+
+                <com.cyl.musiclake.view.LocalItemView
+                    android:id="@+id/downloadView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:gravity="center_vertical"
+                    app:iv_icon="@drawable/item_download"
+                    app:tv_desc="@string/default_num"
+                    app:tv_name="@string/item_download" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:cardCornerRadius="@dimen/dp_4"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="@dimen/dp_200"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text="@string/playlist_online" />
+
+                    <ImageView
+                        android:id="@+id/playlistAddIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_playlist_add" />
+
+                    <ImageView
+                        android:id="@+id/playlistManagerIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_more" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/playlistRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="@dimen/dp_8" />
+
+                    <ProgressBar
+                        android:id="@+id/loading_progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <!--ERROR PANEL-->
+                    <include
+                        android:id="@+id/error_panel"
+                        layout="@layout/error_retry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <include
+                        android:id="@+id/empty_state_view"
+                        layout="@layout/view_song_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="50dp"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/toolbar_shadow_drawable" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
 
     </LinearLayout>
 

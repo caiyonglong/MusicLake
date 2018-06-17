@@ -16,9 +16,8 @@ import android.view.WindowManager;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.MusicApi;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.utils.FileUtils;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
 import com.cyl.musiclake.view.lyric.LyricParseUtils;
@@ -189,7 +188,7 @@ public class FloatLyricViewManager {
             LogUtil.e("lrcPath");
             setLyric(LyricParseUtils.setLyricResource(new File(lrcPath)));
         } else {
-            Observable<String> observable = MusicApi.getLyricInfo(music);
+            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(music);
             if (observable == null) {
                 setLyric(null);
             } else {

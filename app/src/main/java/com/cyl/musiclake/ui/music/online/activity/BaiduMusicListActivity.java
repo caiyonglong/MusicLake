@@ -14,14 +14,15 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.playlist.RecentlyAdapter;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
 import com.cyl.musiclake.ui.music.online.presenter.BaiduListPresenter;
+import com.cyl.musiclake.ui.music.playlist.RecentlyAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
@@ -103,9 +104,7 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-//                Music music = (Music) adapter.getItem(position);
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position, musicList, Constants.BAIDU + type);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

@@ -32,12 +32,15 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.ScheduleTaskEvent;
+import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -80,7 +83,6 @@ public class MusicPlayerService extends Service {
     public static final String PLAY_STATE_CHANGED = "com.cyl.music_lake.play_state";// 播放暂停广播
     public static final String DURATION_CHANGED = "com.cyl.music_lake.duration";// 播放时长
 
-    public static final String PLAYLIST_CHANGED = "com.cyl.music_lake.playlist_change";
     public static final String TRACK_ERROR = "com.cyl.music_lake.error";
     public static final String SHUTDOWN = "com.cyl.music_lake.shutdown";
     public static final String REFRESH = "com.cyl.music_lake.refresh";
@@ -134,6 +136,7 @@ public class MusicPlayerService extends Service {
     private List<Integer> mHistoryPos = new ArrayList<>();
     private int mPlayingPos = -1;
     private int mNextPlayPos = -1;
+    private String mPlaylistId = Constants.PLAYLIST_QUEUE_ID;
 
     //播放模式：0顺序播放、1随机播放、2单曲循环
     private int mRepeatMode = 0;
@@ -234,7 +237,7 @@ public class MusicPlayerService extends Service {
                         break;
                     case PREPARE_QQ_MUSIC:
                         Music music = mPlayingMusic;
-                        MusicApi.getMusicInfo(music)
+                        MusicApi.INSTANCE.getMusicInfo(music)
                                 .subscribe(music1 -> {
                                     LogUtil.e(TAG, mPlayingMusic.toString());
                                     String url = music1.getUri();
@@ -286,7 +289,7 @@ public class MusicPlayerService extends Service {
                             ToastUtils.show("10秒后将自动关闭应用");
                         } else {
                             time = time - 1000;
-                            notifyChange(SCHEDULE_CHANGED);
+                            RxBus.getInstance().post(new ScheduleTaskEvent());
                         }
                         break;
                 }
@@ -352,7 +355,7 @@ public class MusicPlayerService extends Service {
             mediaSessionManager.release();
 
         if (!mServiceInUse) {
-            savePlayQueue(true);
+            savePlayQueue(false);
             stopSelf(mServiceStartId);
         }
     }
@@ -363,7 +366,7 @@ public class MusicPlayerService extends Service {
     public void reloadPlayQueue() {
         mPlayQueue.clear();
         mHistoryPos.clear();
-        mPlayQueue = PlayQueueLoader.getPlayQueue(this);
+        mPlayQueue = PlayQueueLoader.INSTANCE.getPlayQueue();
         mPlayingPos = SPUtils.getPlayPosition();
         mPlayer.seek(SPUtils.getPosition());
         notifyChange(PLAY_QUEUE_CHANGE);
@@ -523,7 +526,7 @@ public class MusicPlayerService extends Service {
             Observable<Music> observable = null;
             LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                observable = MusicApi.getMusicInfo(mPlayingMusic);
+                observable = MusicApi.INSTANCE.getMusicInfo(mPlayingMusic);
             }
             if (observable != null) {
                 observable.subscribeOn(Schedulers.io())
@@ -711,6 +714,20 @@ public class MusicPlayerService extends Service {
         notifyChange(META_CHANGED);
     }
 
+    /**
+     * 切换歌单播放
+     */
+    public void play(List<Music> musicList, int id, String pid) {
+        if (musicList.size() <= id) return;
+        if (!mPlaylistId.equals(pid)) {
+            setPlayQueue(musicList);
+            mPlaylistId = pid;
+        }
+        mPlayingPos = id;
+        playCurrentAndNext();
+        notifyChange(META_CHANGED);
+    }
+
 
     /**
      * 播放暂停
@@ -763,19 +780,6 @@ public class MusicPlayerService extends Service {
     }
 
     /**
-     * 更新歌曲收藏状态
-     *
-     * @param music
-     */
-    public void updateFavorite(Music music) {
-        AppRepository.updateFavoriteSongRepository(this, music)
-                .subscribeOn(Schedulers.io())
-                .subscribe(music1 -> {
-                    notifyChange(PLAYLIST_CHANGED);
-                });
-    }
-
-    /**
      * 跳到输入的进度
      */
     public void seekTo(int pos) {
@@ -787,7 +791,7 @@ public class MusicPlayerService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         mServiceInUse = false;
-        savePlayQueue(true);
+        savePlayQueue(false);
 
         releaseServiceUiAndStop();
         stopSelf(mServiceStartId);
@@ -801,11 +805,11 @@ public class MusicPlayerService extends Service {
      */
     private void savePlayQueue(boolean full) {
         if (full) {
-            PlayQueueLoader.updateQueue(this, mPlayQueue);
+            PlayQueueLoader.INSTANCE.updateQueue(mPlayQueue);
         }
         if (mPlayingMusic != null) {
             //保存歌曲id
-            SPUtils.saveCurrentSongId(mPlayingMusic.getId());
+            SPUtils.saveCurrentSongId(mPlayingMusic.getMid());
         }
         //保存歌曲id
         SPUtils.setPlayPosition(mPlayingPos);
@@ -816,10 +820,8 @@ public class MusicPlayerService extends Service {
     }
 
     private void saveHistory() {
-        PlayHistoryLoader.addSongToHistory(this, mPlayingMusic);
-        notifyChange(PLAYLIST_CHANGED);
+        PlayHistoryLoader.INSTANCE.addSongToHistory(mPlayingMusic);
     }
-
 
     public void refresh() {
         SPUtils.savePlayMode(SPUtils.getPlayMode());
@@ -856,6 +858,7 @@ public class MusicPlayerService extends Service {
         mPlayingPos = -1;
         mPlayQueue.clear();
         mHistoryPos.clear();
+        savePlayQueue(true);
         stop(true);
         notifyChange(META_CHANGED);
         notifyChange(PLAY_STATE_CHANGED);
@@ -891,21 +894,16 @@ public class MusicPlayerService extends Service {
      */
     private void notifyChange(final String what) {
         if (DEBUG) LogUtil.d(TAG, "notifyChange: what = " + what);
-
-        final Intent intent = new Intent(what);
-        intent.putExtra("artist", getArtistName());
-        intent.putExtra("album", getAlbumName());
-        intent.putExtra("track", getTitle());
-        intent.putExtra("playing", isPlaying());
-
-        if (PLAY_STATE_CHANGED.equals(what)) {
-            intent.putExtra("prepare", mPlayer.isPrepared());
+        switch (what) {
+            case META_CHANGED:
+                mFloatLyricViewManager.loadLyric();
+                mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
+                break;
+            case PLAY_STATE_CHANGED:
+                mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(getPlayingMusic().getMid(), mPlayer.isPrepared(), isPlaying())));
+                break;
         }
-        sendBroadcast(intent);
 
-        if (META_CHANGED.equals(what)) {
-            mFloatLyricViewManager.loadLyric();
-        }
     }
 
 
@@ -1090,7 +1088,7 @@ public class MusicPlayerService extends Service {
 
     public String getAudioId() {
         if (mPlayingMusic != null) {
-            return mPlayingMusic.getId();
+            return mPlayingMusic.getMid();
         } else {
             return null;
         }
@@ -1283,7 +1281,7 @@ public class MusicPlayerService extends Service {
         audioEffectsIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
         audioEffectsIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
         sendBroadcast(audioEffectsIntent);
-        savePlayQueue(true);
+        savePlayQueue(false);
 
         //释放mPlayer
         if (mPlayer != null) {
