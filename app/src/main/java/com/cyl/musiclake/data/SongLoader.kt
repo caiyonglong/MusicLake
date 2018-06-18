@@ -11,6 +11,7 @@ import com.cyl.musiclake.data.db.MusicCursorWrapper
 import com.cyl.musiclake.db.Album
 import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.utils.CoverLoader
+import org.jetbrains.anko.doAsync
 import org.litepal.LitePal
 
 
@@ -110,7 +111,7 @@ object SongLoader {
                     music.artist = artist
                     music.artistId = artistId
                     music.uri = path
-                    music.coverUri = coverUri
+                    coverUri?.let { music.coverUri = it }
                     music.trackNumber = trackNumber
                     music.duration = duration.toLong()
                     music.title = title
@@ -135,6 +136,19 @@ object SongLoader {
      */
     fun getFavoriteSong(): List<Music> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOVE_ID)
+    }
+
+    fun getSongsForDB(): MutableList<Music> {
+        return DaoLitepal.getMusicList(Constants.PLAYLIST_LOCAL_ID)
+    }
+
+    fun getLocalMusic(context: Context): MutableList<Music> {
+        val data = getSongsForDB()
+        if (data.size == 0) {
+            val musicLists = getAllLocalSongs(context)
+            data.addAll(musicLists)
+        }
+        return data
     }
 
     fun getMusicInfo(mid: String): Music? {
@@ -165,7 +179,7 @@ object SongLoader {
      * 添加歌曲
      */
     fun updateMusic(music: Music) {
-        DaoLitepal.saveOrUpdateMusic(music)
+        DaoLitepal.saveOrUpdateMusic(music, true)
     }
 
     /**

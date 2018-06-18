@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.cyl.musiclake.utils.AnimationUtils.animateView;
@@ -40,6 +41,9 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     protected FragmentComponent mFragmentComponent;
     public View rootView;
     private Unbinder unbinder;
+    @Nullable
+    @BindView(R.id.toolbar)
+    public Toolbar mToolbar;
     @Nullable
     @BindView(R.id.empty_state_view)
     public View emptyStateView;
@@ -70,10 +74,20 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         if (rootView == null)
             rootView = inflater.inflate(getLayoutId(), container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        initToolBar();
         initViews();
         listener();
         loadData();
         return rootView;
+    }
+
+    private void initToolBar() {
+        if (getActivity() != null && mToolbar != null) {
+            mToolbar.setTitle(getToolBarTitle());
+            AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+            appCompatActivity.setSupportActionBar(mToolbar);
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
 
@@ -112,12 +126,22 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
 
     }
 
+    protected String getToolBarTitle() {
+        return "";
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (getUserVisibleHint()) {
             setUserVisibleHint(true);
         }
+    }
+
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
 

@@ -150,7 +150,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mViewHeader.setLayoutParams(params);
         mViewHeader.setOnClickListener(v -> {
-            if (musicList.size() > 0) return;
+            if (musicList.size() == 0) return;
             int id = new Random().nextInt(musicList.size());
             PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID);
         });

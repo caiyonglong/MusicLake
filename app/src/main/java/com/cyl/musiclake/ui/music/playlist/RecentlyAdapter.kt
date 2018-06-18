@@ -30,12 +30,15 @@ class RecentlyAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             val info = item.title + "," + item.artist
             ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
                 override fun success(result: DoubanMusic?) {
-                    url = result?.musics?.first()?.image
-                    url?.let {
-                        item.coverUri = url
-                        SongLoader.updateMusic(item)
+                   val data = result?.musics
+                    data?.let {
+                        if (it.size > 0) {
+                            url = result?.musics?.first()?.image
+                            item.coverUri = url
+                            SongLoader.updateMusic(item)
+                            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
+                        }
                     }
-                    CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
                 }
 
                 override fun error(msg: String?) {

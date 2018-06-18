@@ -39,8 +39,12 @@ object DaoLitepal {
      * 播放歌单操作
      **********************************
      */
-    fun saveOrUpdateMusic(music: Music) {
-        music.saveOrUpdate("mid = ?", music.mid)
+    fun saveOrUpdateMusic(music: Music, isAsync: Boolean = false) {
+        if (isAsync) {
+            music.saveOrUpdateAsync("mid = ?", music.mid)
+        } else {
+            music.saveOrUpdate("mid = ?", music.mid)
+        }
     }
 
     fun addToPlaylist(music: Music, pid: String): Boolean {
@@ -112,7 +116,6 @@ object DaoLitepal {
     fun getPlaylist(pid: String): Playlist {
         return LitePal.where("pid = ?", pid).find(Playlist::class.java).first()
     }
-
 
     fun getMusicInfo(mid: String): MutableList<Music>? {
         return LitePal.where("mid =? ", mid).find(Music::class.java)

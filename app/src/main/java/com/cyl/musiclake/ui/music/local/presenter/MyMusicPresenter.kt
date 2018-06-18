@@ -54,7 +54,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
      */
     private fun updateLocal() {
         doAsync {
-            val data = SongLoader.getAllLocalSongs(mView.context)
+            val data = SongLoader.getLocalMusic(mView.context)
             uiThread {
                 mView?.showSongs(data)
             }
