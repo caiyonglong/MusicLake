@@ -13,7 +13,7 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.ui.music.download.DownloadDialog
+import com.cyl.musiclake.ui.music.dialog.DownloadDialog
 import com.cyl.musiclake.utils.ToastUtils
 
 /**
@@ -117,6 +117,7 @@ object MusicUtils {
         music.mid = song.id
         music.title = song.name
         music.type = type
+        music.isOnline = true
         music.album = song.album.name
         music.albumId = song.album.id
         music.commentId = song.commentId

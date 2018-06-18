@@ -40,7 +40,7 @@ public class TestActivity extends BaseActivity {
             statusTv.setText("songDetail");
             resultTv.setText(result.toString());
             return null;
-        });
+        }, null);
     }
 
     @OnClick(R.id.btn_test4)
@@ -67,7 +67,7 @@ public class TestActivity extends BaseActivity {
             statusTv.setText("getSongUrl");
             resultTv.setText(result.toString());
             return null;
-        });
+        }, null);
     }
 
     @OnClick(R.id.btn_playlist2)

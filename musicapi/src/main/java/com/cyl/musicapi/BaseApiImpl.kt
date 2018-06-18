@@ -89,10 +89,14 @@ class BaseApiImpl private constructor(val context: Context) {
     /**
      * 获取歌曲详情
      */
-    fun getSongDetail(query: String, id: String, success: (result: SongDetail) -> Unit) {
-        mWebView?.callHandler("asyn.getSongDetail", arrayOf<Any>(query, id), { retValue: JSONObject ->
-            val result = gson.fromJson<SongDetail>(retValue.toString(), SongDetail::class.java)
-            success.invoke(result)
+    fun getSongDetail(vendor: String, id: String, success: (result: SongDetail) -> Unit, fail: (() -> Unit)? = null) {
+        mWebView?.callHandler("asyn.getSongDetail", arrayOf<Any>(vendor, id), { retValue: JSONObject ->
+            try {
+                val result = gson.fromJson<SongDetail>(retValue.toString(), SongDetail::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                fail?.invoke()
+            }
         })
     }
 
@@ -128,10 +132,14 @@ class BaseApiImpl private constructor(val context: Context) {
         })
     }
 
-    fun getSongUrl(vendor: String, id: String, success: (result: SongBean) -> Unit) {
+    fun getSongUrl(vendor: String, id: String, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
         mWebView?.callHandler("asyn.getSongUrl", arrayOf<Any>(vendor, id), { retValue: JSONObject ->
-            val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)
-            success.invoke(result)
+            try {
+                val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                fail?.invoke()
+            }
         })
     }
 }

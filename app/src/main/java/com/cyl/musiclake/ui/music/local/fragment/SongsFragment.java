@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -16,7 +17,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
@@ -47,6 +47,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     View mViewHeader;
+    ImageView mReloadLocal;
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
 
@@ -82,7 +83,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
     @Override
     protected void listener() {
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadSongs(Extras.SONG_LOCAL);
+            mPresenter.loadSongs(false);
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
@@ -140,7 +141,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
 
     @Override
     public void onLazyLoad() {
-        mPresenter.loadSongs(Extras.SONG_LOCAL);
+        mPresenter.loadSongs(false);
     }
 
 
@@ -148,7 +149,12 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         mViewHeader = LayoutInflater.from(mFragmentComponent.getActivity()).inflate(R.layout.header_local_list, null);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+        mReloadLocal = mViewHeader.findViewById(R.id.reloadIv);
         mViewHeader.setLayoutParams(params);
+        mReloadLocal.setOnClickListener(v -> {
+            showLoading();
+            mPresenter.loadSongs(true);
+        });
         mViewHeader.setOnClickListener(v -> {
             if (musicList.size() == 0) return;
             int id = new Random().nextInt(musicList.size());

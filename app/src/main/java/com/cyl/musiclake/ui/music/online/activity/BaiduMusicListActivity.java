@@ -19,7 +19,7 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.download.DownloadDialog;
+import com.cyl.musiclake.ui.music.dialog.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
 import com.cyl.musiclake.ui.music.online.presenter.BaiduListPresenter;
 import com.cyl.musiclake.ui.music.playlist.RecentlyAdapter;

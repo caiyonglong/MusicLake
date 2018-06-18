@@ -142,10 +142,11 @@ object SongLoader {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOCAL_ID)
     }
 
-    fun getLocalMusic(context: Context): MutableList<Music> {
+    fun getLocalMusic(context: Context, isLocal: Boolean = false): MutableList<Music> {
         val data = getSongsForDB()
-        if (data.size == 0) {
+        if (data.size == 0 || isLocal) {
             val musicLists = getAllLocalSongs(context)
+            data.clear()
             data.addAll(musicLists)
         }
         return data

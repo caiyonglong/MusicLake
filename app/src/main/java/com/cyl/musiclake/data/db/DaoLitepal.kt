@@ -19,8 +19,8 @@ object DaoLitepal {
     /**
      * 获取搜索历史
      */
-    fun getAllSearchInfo(): List<SearchHistoryBean> {
-        return LitePal.findAll(SearchHistoryBean::class.java)
+    fun getAllSearchInfo(title: String): List<SearchHistoryBean> {
+        return LitePal.where("title like ?", "%$title%").find(SearchHistoryBean::class.java)
     }
 
 
@@ -33,6 +33,13 @@ object DaoLitepal {
         queryInfo.saveOrUpdate("title = ?", info)
     }
 
+
+    /**
+     * 删除搜索历史
+     */
+    fun deleteSearchInfo(info: String) {
+        LitePal.deleteAll(info, "title = ? ", info)
+    }
 
     /*
      **********************************

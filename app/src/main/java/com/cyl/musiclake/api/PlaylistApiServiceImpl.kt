@@ -184,7 +184,7 @@ object PlaylistApiServiceImpl {
      * 调用接口失败返回{"msg":""}
      */
     fun disCollectMusic(pid: String, music: Music): Observable<String> {
-        return playlistApiService.disCollectMusic(token, pid, music.collectId!!)
+        return playlistApiService.disCollectMusic(token, pid, music.collectId.toString())
                 .flatMap { it ->
                     val json = it.string()
                     val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)

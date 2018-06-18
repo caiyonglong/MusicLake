@@ -9,6 +9,7 @@ import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.event.SongCollectEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
@@ -35,6 +36,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
             updateFavorite()
         }
         RxBus.getInstance().register(LoginEvent::class.java).subscribe { event -> loadPlaylist() }
+        RxBus.getInstance().register(PlaylistEvent::class.java).subscribe { event -> loadPlaylist() }
     }
 
     /**

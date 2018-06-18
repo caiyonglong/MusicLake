@@ -33,7 +33,7 @@ class Music() : LitePalSupport(), Parcelable {
     // 收藏
     var isLove: Boolean = false
     // [本地|网络]
-    var isOnline: Boolean = false
+    var isOnline: Boolean = true
     // 音乐路径
     var uri: String? = null
     // [本地|网络] 音乐歌词地址

@@ -14,22 +14,19 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.data.db.DaoLitepal;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.db.SearchHistoryBean;
-import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.DownloadDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.download.DownloadDialog;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.utils.LogUtil;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +47,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private SearchAdapter mAdapter;
     private SearchSuggestionAdapter suggestionAdapter;
 
-    @BindView(R.id.items_list)
+    @BindView(R.id.recyclerView)
     RecyclerView resultListRcv;
     @BindView(R.id.suggestions_list)
     RecyclerView suggestionsRcv;
-    @BindView(R.id.loading_progress_bar)
-    ProgressBar loadingProgress;
     @BindView(R.id.suggestions_panel)
     View suggestionsPanel;
     @BindView(R.id.toolbar_search_edit_text)
@@ -132,7 +127,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
             LogUtil.e(TAG, music.toString());
-            mPresenter.getMusicInfo(0, music);
+            PlayManager.playOnline(music);
         });
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -160,7 +155,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             return false;
         });
 
-
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
             PopupMenu popupMenu = new PopupMenu(this, view);
@@ -180,7 +174,8 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                         AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
                         break;
                     case R.id.popup_song_download:
-                        mPresenter.getMusicInfo(1, music);
+                        DownloadDialog.newInstance(music)
+                                .show(getSupportFragmentManager(), getLocalClassName());
                         break;
                 }
                 return true;
@@ -201,15 +196,12 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
         suggestionAdapter.setOnItemClickListener((adapter, view, position) -> {
         });
-        suggestionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (view.getId()==R.id.history_search){
-                    searchEditText.setText(suggestions.get(position).getTitle());
-                }else if (view.getId()==R.id.deleteView){
-                    DataSupport.delete(SearchHistoryBean.class, suggestions.get(position).getId());
-                    suggestionAdapter.remove(position);
-                }
+        suggestionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            if (view.getId() == R.id.history_search) {
+                searchEditText.setText(suggestions.get(position).getTitle());
+            } else if (view.getId() == R.id.deleteView) {
+                DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
+                suggestionAdapter.remove(position);
             }
         });
     }
@@ -289,19 +281,13 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
-    @Override
     public void showLoading() {
-        loadingProgress.setVisibility(View.VISIBLE);
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-        loadingProgress.setVisibility(View.GONE);
+        super.hideLoading();
     }
 
     @Override
@@ -336,13 +322,4 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 
-    @Override
-    public void showMusicInfo(int type, Music music) {
-        if (type == 0) {
-            PlayManager.playOnline(music);
-        } else if (type == 1) {
-            DownloadDialog.newInstance(music)
-                    .show(getSupportFragmentManager(), getLocalClassName());
-        }
-    }
 }

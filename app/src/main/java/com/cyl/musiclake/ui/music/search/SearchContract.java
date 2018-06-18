@@ -16,8 +16,6 @@ public interface SearchContract {
         void showSearchSuggestion(List<SearchHistoryBean> list);
 
         void showEmptyView();
-
-        void showMusicInfo(int type, Music music);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
@@ -28,7 +26,5 @@ public interface SearchContract {
 
         void saveQueryInfo(String query);
 
-        void getMusicInfo(int type, Music music);
     }
-
 }

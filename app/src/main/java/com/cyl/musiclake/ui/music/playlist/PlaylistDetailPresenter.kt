@@ -4,7 +4,6 @@ import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
@@ -52,23 +51,23 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<List<Music>> {
             override fun success(result: List<Music>) {
                 //                mView.showPlaylistSongs(result);
-                if (result.isEmpty()) {
-                    mView.showPlaylistSongs(result)
-                    return
-                }
-                netease.clear()
-                qq.clear()
-                xiami.clear()
-                for (music in result) {
-                    when {
-                        music.type == Constants.NETEASE -> music.mid?.let { netease.add(it) }
-                        music.type == Constants.QQ -> music.mid?.let { qq.add(it) }
-                        music.type == Constants.XIAMI -> music.mid?.let { xiami.add(it) }
-                    }
-                }
-                getBatchSongDetail("netease", netease.toTypedArray())
-                getBatchSongDetail("qq", qq.toTypedArray())
-                getBatchSongDetail("xiami", xiami.toTypedArray())
+//                if (result.isEmpty()) {
+                mView?.showPlaylistSongs(result)
+//                    return
+//                }
+//                netease.clear()
+//                qq.clear()
+//                xiami.clear()
+//                for (music in result) {
+//                    when {
+//                        music.type == Constants.NETEASE -> music.mid?.let { netease.add(it) }
+//                        music.type == Constants.QQ -> music.mid?.let { qq.add(it) }
+//                        music.type == Constants.XIAMI -> music.mid?.let { xiami.add(it) }
+//                    }
+//                }
+//                getBatchSongDetail("netease", netease.toTypedArray())
+//                getBatchSongDetail("qq", qq.toTypedArray())
+//                getBatchSongDetail("xiami", xiami.toTypedArray())
             }
 
             override fun error(msg: String) {
@@ -110,7 +109,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     override fun disCollectMusic(pid: String, position: Int, music: Music) {
         ApiManager.request(PlaylistApiServiceImpl.disCollectMusic(pid, music), object : RequestCallBack<String> {
             override fun success(result: String) {
-                mView.removeMusic(position)
+                mView?.removeMusic(position)
             }
 
             override fun error(msg: String) {

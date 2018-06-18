@@ -31,6 +31,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
@@ -563,7 +564,7 @@ public class MusicPlayerService extends Service {
             isMusicPlaying = true;
             mPlayer.setDataSource(mPlayingMusic.getUri());
             audioAndFocusManager.requestAudioFocus();
-            updateNotification();
+            updateNotification(false);
             mediaSessionManager.updateMetaData(mPlayingMusic.getUri());
 
             final Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
@@ -680,13 +681,13 @@ public class MusicPlayerService extends Service {
     public void play() {
         if (mPlayer.isInitialized()) {
             mPlayer.start();
+            notifyChange(PLAY_STATE_CHANGED);
             audioAndFocusManager.requestAudioFocus();
             mHandler.removeMessages(VOLUME_FADE_DOWN);
             mHandler.sendEmptyMessage(VOLUME_FADE_UP); //组件调到正常音量
 
             isMusicPlaying = true;
-            updateNotification();
-            notifyChange(PLAY_STATE_CHANGED);
+            updateNotification(true);
         }
     }
 
@@ -752,7 +753,7 @@ public class MusicPlayerService extends Service {
             if (isPlaying()) {
                 isMusicPlaying = false;
                 notifyChange(PLAY_STATE_CHANGED);
-                updateNotification();
+                updateNotification(true);
                 TimerTask task = new TimerTask() {
                     public void run() {
                         final Intent intent = new Intent(
@@ -1027,6 +1028,9 @@ public class MusicPlayerService extends Service {
                 .addAction(R.drawable.ic_lyric,
                         "",
                         retrievePlaybackAction(ACTION_LYRIC))
+                .addAction(R.drawable.ic_clear,
+                        "",
+                        retrievePlaybackAction(ACTION_CLOSE))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP));
 
@@ -1123,13 +1127,34 @@ public class MusicPlayerService extends Service {
     /**
      * 更新状态栏通知
      */
-    private void updateNotification() {
-        initNotify();
+    private void updateNotification(boolean changePlayStatus) {
+        if (!changePlayStatus) {
+            if (mPlayingMusic != null) {
+                CoverLoader.loadImageViewByMusic(this, mPlayingMusic, bitmap -> {
+                    mNotificationBuilder.setLargeIcon(bitmap);
+                    mNotification = mNotificationBuilder.build();
+                    mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+                });
+            }
+            mNotificationBuilder.setContentTitle(getTitle());
+            mNotificationBuilder.setContentText(getArtistName());
+            mNotificationBuilder.setTicker(getTitle() + "-" + getArtistName());
+            updateNotificationStatus();
+        } else {
+            updateNotificationStatus();
+        }
+        mNotification = mNotificationBuilder.build();
         mFloatLyricViewManager.updatePlayStatus(isMusicPlaying);
         startForeground(NOTIFICATION_ID, mNotification);
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
     }
 
+    private void updateNotificationStatus() {
+        if (isPlaying())
+            mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_pause;
+        else
+            mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_play;
+    }
 
     /**
      * 取消通知
@@ -1193,6 +1218,11 @@ public class MusicPlayerService extends Service {
                 //启动Activity让用户授权
                 ToastUtils.show(this, "请前往设置中打开悬浮窗权限");
             }
+        } else if (ACTION_CLOSE.equals(action)) {
+            releaseServiceUiAndStop();
+            System.exit(0);
+            stop(true);
+            stopSelf();
         } else if (SCHEDULE_CHANGED.equals(action)) {
             totalTime = intent.getIntExtra("time", 0);
             LogUtil.e(TAG, SCHEDULE_CHANGED + "----" + totalTime);

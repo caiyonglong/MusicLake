@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.download;
+package com.cyl.musiclake.ui.music.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
+import com.cyl.musiclake.ui.music.download.FileDownloadListener;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.SPUtils;

@@ -48,9 +48,13 @@ object AddPlaylistUtils {
     }
 
     private fun showSelectDialog(activity: AppCompatActivity?, playlists: List<Playlist>, music: Music?) {
+        val items = mutableListOf<String>()
+        playlists.forEach {
+            it.name?.let { it1 -> items.add(it1) }
+        }
         MaterialDialog.Builder(activity!!)
                 .title(R.string.add_to_playlist)
-                .items(playlists)
+                .items(items)
                 .itemsCallback { _, _, which, _ -> playlists[which].pid?.let { collectMusic(it, music) } }
                 .build().show()
     }

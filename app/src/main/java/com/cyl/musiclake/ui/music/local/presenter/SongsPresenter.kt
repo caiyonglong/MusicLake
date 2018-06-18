@@ -15,10 +15,10 @@ import javax.inject.Inject
 class SongsPresenter @Inject
 constructor() : BasePresenter<SongsContract.View>(), SongsContract.Presenter {
 
-    override fun loadSongs(action: String) {
+    override fun loadSongs(isReload: Boolean) {
         mView?.showLoading()
         doAsync {
-            val data = SongLoader.getLocalMusic(mView.context)
+            val data = SongLoader.getLocalMusic(mView.context, isReload)
             uiThread {
                 mView?.showSongs(data)
             }
