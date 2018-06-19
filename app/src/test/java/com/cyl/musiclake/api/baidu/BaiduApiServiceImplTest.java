@@ -27,7 +27,7 @@ public class BaiduApiServiceImplTest extends TestCase {
                     System.out.println(music.getArtist());
                     System.out.println(music.getArtistId());
                     System.out.println(music.getUri());
-                    System.out.println(music.getLrcPath());
+//                    System.out.println(music.getLrcPath());
                     System.out.println(music.getCoverUri());
                     System.out.println(music.getUri());
                 });

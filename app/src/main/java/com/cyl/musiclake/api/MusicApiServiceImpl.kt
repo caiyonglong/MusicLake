@@ -12,7 +12,6 @@ import com.cyl.musiclake.api.qq.QQApiServiceImpl
 import com.cyl.musiclake.api.xiami.XiamiServiceImpl
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import io.reactivex.Observable
@@ -28,39 +27,6 @@ import io.reactivex.schedulers.Schedulers
 
 object MusicApiServiceImpl {
     private val TAG = "MusicApi"
-
-    /**
-     * 获取精品歌单
-     *
-     * @param
-     * @return
-     */
-    val topPlaylist: Observable<List<NeteaseList>>
-        get() = NeteaseApiServiceImpl.getTopPlaylist()
-
-    /**
-     * 获取歌词
-     *
-     * @param music
-     * @return
-     */
-    fun getLyricInfo(music: Music): Observable<String>? {
-        return when (music.type) {
-            Constants.QQ -> QQApiServiceImpl.getQQLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            Constants.BAIDU -> BaiduApiServiceImpl.getBaiduLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            Constants.XIAMI -> XiamiServiceImpl.getXimaiLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            Constants.NETEASE -> NeteaseApiServiceImpl.getNeteaseLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            else -> null
-        }
-    }
 
     /**
      * 搜索音乐
@@ -101,18 +67,12 @@ object MusicApiServiceImpl {
     /**
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
      */
-    fun getMusicInfo(music: Music): Observable<Music>? {
-        return when (music.type) {
-            Constants.QQ -> QQApiServiceImpl.getMusicInfo(music)
-            Constants.NETEASE -> NeteaseApiServiceImpl.getMusicUrl(music)
-            Constants.XIAMI -> XiamiServiceImpl.getMusicInfo(music)
-            else -> null
-        }
+    fun getMusicInfo(music: Music, url: String): Observable<Music>? {
+        return create({ result ->
+
+        })
     }
 
-    fun getTopList(id: Int): Observable<Playlist> {
-        return NeteaseApiServiceImpl.getTopList(id)
-    }
 
     /**
      * 加载图片
@@ -145,4 +105,22 @@ object MusicApiServiceImpl {
         })
     }
 
+    /**
+     * 批量獲取歌曲信息
+     *
+     */
+    fun getMusicUrl(vendor: String, mid: String): Observable<String> {
+        return create({ result ->
+            BaseApiImpl.getInstance(MusicApp.mContext)
+                    .getSongUrl(vendor, mid, {
+                        if (it.status) {
+                            val url = it.data.url
+                            result.onNext(url)
+                            result.onComplete()
+                        } else {
+                            result.onError(Throwable(""))
+                        }
+                    })
+        })
+    }
 }

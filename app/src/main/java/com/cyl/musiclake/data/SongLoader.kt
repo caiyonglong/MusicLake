@@ -9,9 +9,8 @@ import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.MusicCursorWrapper
 import com.cyl.musiclake.db.Album
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.db.ArtistBean
 import com.cyl.musiclake.utils.CoverLoader
-import org.jetbrains.anko.doAsync
 import org.litepal.LitePal
 
 
@@ -22,10 +21,10 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getAllArtists(): MutableList<Artist> {
+    fun getAllArtists(): MutableList<ArtistBean> {
         val sql = "SELECT music.artistid,music.artist,count(music.title) as num FROM music where music.isonline=0 and music.type=\"local\" GROUP BY music.artist"
         val cursor = LitePal.findBySQL(sql)
-        val results = mutableListOf<Artist>()
+        val results = mutableListOf<ArtistBean>()
         if (cursor != null && cursor.count > 0) {
             while (cursor.moveToNext()) {
                 val artist = MusicCursorWrapper(cursor).artists

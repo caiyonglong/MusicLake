@@ -30,6 +30,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.widget.Toolbar;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
@@ -38,10 +39,13 @@ import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
+import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -113,7 +117,6 @@ public class MusicPlayerService extends Service {
 
     public static final int PREPARE_ASYNC_UPDATE = 7; //PrepareAsync装载进程
     public static final int PLAYER_PREPARED = 8; //mediaplayer准备完成
-    public static final int PREPARE_QQ_MUSIC = 9; //获取QQ音乐播放状态
 
     public static final int AUDIO_FOCUS_CHANGE = 12; //音频焦点改变
     public static final int VOLUME_FADE_DOWN = 13; //音频焦点改变
@@ -235,15 +238,6 @@ public class MusicPlayerService extends Service {
                     case PREPARE_ASYNC_UPDATE:
                         int percent = (int) msg.obj;
                         LogUtil.e(TAG, "Loading ... " + percent);
-                        break;
-                    case PREPARE_QQ_MUSIC:
-                        Music music = mPlayingMusic;
-                        MusicApi.INSTANCE.getMusicInfo(music)
-                                .subscribe(music1 -> {
-                                    LogUtil.e(TAG, mPlayingMusic.toString());
-                                    String url = music1.getUri();
-                                    mPlayer.setDataSource(url);
-                                });
                         break;
                     case PLAYER_PREPARED:
                         //执行prepared之后 准备完成，更新总时长
@@ -524,40 +518,23 @@ public class MusicPlayerService extends Service {
                 return;
             }
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
-            Observable<Music> observable = null;
             LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                observable = MusicApi.INSTANCE.getMusicInfo(mPlayingMusic);
-            }
-            if (observable != null) {
-                observable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Music>() {
+                ApiManager.request(MusicApi.INSTANCE.getLyricInfo(mPlayingMusic), new RequestCallBack<String>() {
+                    @Override
+                    public void success(String result) {
+                        LogUtil.e(TAG, "-----" + result);
+                        mPlayingMusic.setUri(result);
+                        saveHistory();
+                        isMusicPlaying = true;
+                        mPlayer.setDataSource(mPlayingMusic.getUri());
+                    }
 
-                            @Override
-                            public void onSubscribe(Disposable disposable) {
-
-                            }
-
-                            @Override
-                            public void onNext(Music music) {
-                                LogUtil.e(TAG, "-----" + music.toString());
-                                mPlayingMusic = music;
-                                saveHistory();
-                                isMusicPlaying = true;
-                                mPlayer.setDataSource(mPlayingMusic.getUri());
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
+                    @Override
+                    public void error(String msg) {
+                        ToastUtils.show(msg);
+                    }
+                });
             }
             saveHistory();
             mHistoryPos.add(mPlayingPos);

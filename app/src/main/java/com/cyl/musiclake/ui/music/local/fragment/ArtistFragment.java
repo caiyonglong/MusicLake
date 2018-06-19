@@ -11,7 +11,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.db.Artist;
+import com.cyl.musiclake.db.ArtistBean;
 import com.cyl.musiclake.ui.music.local.adapter.ArtistAdapter;
 import com.cyl.musiclake.ui.music.local.contract.ArtistContract;
 import com.cyl.musiclake.ui.music.local.presenter.ArtistPresenter;
@@ -34,7 +34,7 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
     RecyclerView mRecyclerView;
 
     private ArtistAdapter mAdapter;
-    private List<Artist> artists = new ArrayList<>();
+    private List<ArtistBean> artistBeans = new ArrayList<>();
 
     public static ArtistFragment newInstance() {
         Bundle args = new Bundle();
@@ -59,7 +59,7 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
      */
     @Override
     public void initViews() {
-        mAdapter = new ArtistAdapter(artists);
+        mAdapter = new ArtistAdapter(artistBeans);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -77,10 +77,10 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
             mPresenter.loadArtists("all");
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Artist artist = (Artist) adapter.getItem(position);
+            ArtistBean artistBean = (ArtistBean) adapter.getItem(position);
             NavigationHelper.INSTANCE.navigateToArtist(mFragmentComponent.getActivity(),
-                    String.valueOf(artist.getId()),
-                    artist.getName(),
+                    String.valueOf(artistBean.getId()),
+                    artistBean.getName(),
                     new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
         });
     }
@@ -110,8 +110,8 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
     }
 
     @Override
-    public void showArtists(List<Artist> artists) {
-        mAdapter.setNewData(artists);
+    public void showArtists(List<ArtistBean> artistBeans) {
+        mAdapter.setNewData(artistBeans);
         hideLoading();
     }
 
