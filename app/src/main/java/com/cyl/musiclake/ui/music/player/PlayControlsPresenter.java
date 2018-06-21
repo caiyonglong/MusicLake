@@ -13,6 +13,7 @@ import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
@@ -51,6 +52,10 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         Disposable disposable = RxBus.getInstance().register(MetaChangedEvent.class)
                 .compose(mView.bindToLife())
                 .subscribe(event -> updateNowPlayingCard(event.getMusic()));
+        disposables.add(disposable);
+        disposable = RxBus.getInstance().register(LyricChangedEvent.class)
+                .compose(mView.bindToLife())
+                .subscribe(event -> loadLyric(event.getLyric(), event.isStatus()));
         disposables.add(disposable);
         disposable = RxBus.getInstance().register(StatusChangedEvent.class)
                 .compose(mView.bindToLife())
@@ -92,46 +97,47 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
     }
 
     @Override
-    public void loadLyric() {
-        Music music = PlayManager.getPlayingMusic();
-        if (music == null) {
-            return;
-        }
-        if (isPlayPauseClick)
-            return;
-        String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
-        if (FileUtils.exists(lrcPath)) {
-            mView.showLyric(lrcPath, true);
-        } else {
-            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(music);
-            if (observable == null) {
-                LogUtil.e(TAG, "本地文件为空");
-                mView.showLyric(null, false);
-            } else {
-                observable.subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(String lyricInfo) {
-                        LogUtil.e(TAG, lyricInfo);
-                        mView.showLyric(lyricInfo, false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.showLyric(null, false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-            }
-        }
+    public void loadLyric(String result, boolean status) {
+        mView.showLyric(result, false);
+//        Music music = PlayManager.getPlayingMusic();
+//        if (music == null) {
+//            return;
+//        }
+//        if (isPlayPauseClick)
+//            return;
+//        String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
+//        if (FileUtils.exists(lrcPath)) {
+//            mView.showLyric(lrcPath, true);
+//        } else {
+//            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(music);
+//            if (observable == null) {
+//                LogUtil.e(TAG, "本地文件为空");
+//                mView.showLyric(null, false);
+//            } else {
+//                observable.subscribe(new Observer<String>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(String lyricInfo) {
+//                        LogUtil.e(TAG, lyricInfo);
+//                        mView.showLyric(lyricInfo, false);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.showLyric(null, false);
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+//            }
+//        }
     }
 
     @Override
@@ -172,7 +178,6 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         mView.updateFavorite(music.isLove());
 
         if (!isPlayPauseClick) {
-            loadLyric();
             CoverLoader.loadImageViewByMusic(mView.getContext(), music, bitmap -> {
                 mView.setAlbumArt(bitmap);
                 LogUtil.d(TAG, "loadBitmap =");

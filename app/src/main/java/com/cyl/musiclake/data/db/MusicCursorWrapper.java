@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.cyl.musiclake.db.Album;
-import com.cyl.musiclake.db.ArtistBean;
+import com.cyl.musiclake.db.Artist;
 
 public class MusicCursorWrapper extends CursorWrapper {
 
@@ -58,11 +58,11 @@ public class MusicCursorWrapper extends CursorWrapper {
         return new Album(id, name, artist, artistId, num);
     }
 
-    public ArtistBean getArtists() {
+    public Artist getArtists() {
         long id = getLong(getColumnIndex("artistid"));
         String name = getString(getColumnIndex("artist"));
         int num = getInt(getColumnIndex("num"));
-        return new ArtistBean(id, name, num);
+        return new Artist(id, name, num);
     }
 
 }

@@ -30,17 +30,15 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.widget.Toolbar;
 
-import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
-import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
@@ -61,10 +59,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static android.support.v4.app.NotificationCompat.Builder;
 
@@ -520,7 +514,7 @@ public class MusicPlayerService extends Service {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
             LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                ApiManager.request(MusicApi.INSTANCE.getLyricInfo(mPlayingMusic), new RequestCallBack<String>() {
+                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<String>() {
                     @Override
                     public void success(String result) {
                         LogUtil.e(TAG, "-----" + result);
@@ -797,6 +791,29 @@ public class MusicPlayerService extends Service {
         SPUtils.savePlayMode(mRepeatMode);
     }
 
+    private LyricChangedEvent lyricChangedEvent;
+
+    private void loadLyric() {
+        if (mPlayingMusic != null) {
+            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
+            if (observable != null) {
+                ApiManager.request(observable, new RequestCallBack<String>() {
+                    @Override
+                    public void success(String result) {
+                        lyricChangedEvent = new LyricChangedEvent(result, true);
+                        mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
+                    }
+
+                    @Override
+                    public void error(String msg) {
+                        lyricChangedEvent = new LyricChangedEvent(msg, true);
+                        mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
+                    }
+                });
+            }
+        }
+    }
+
     private void saveHistory() {
         PlayHistoryLoader.INSTANCE.addSongToHistory(mPlayingMusic);
     }
@@ -874,7 +891,8 @@ public class MusicPlayerService extends Service {
         if (DEBUG) LogUtil.d(TAG, "notifyChange: what = " + what);
         switch (what) {
             case META_CHANGED:
-                mFloatLyricViewManager.loadLyric();
+//                mFloatLyricViewManager.loadLyric();
+                loadLyric();
                 mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
                 break;
             case PLAY_STATE_CHANGED:

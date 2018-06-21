@@ -6,7 +6,7 @@
 //import android.database.sqlite.SQLiteDatabase;
 //
 //import com.cyl.musiclake.bean.Album;
-//import com.cyl.musiclake.bean.ArtistBean;
+//import com.cyl.musiclake.bean.Artist;
 //import com.cyl.musiclake.data.db.Playlist;
 //import com.cyl.musiclake.utils.LogUtil;
 //
@@ -294,11 +294,11 @@
 //     * @param cursor
 //     * @return
 //     */
-//    public List<ArtistBean> getArtistsForCursor(Cursor cursor) {
-//        List<ArtistBean> results = new ArrayList<>();
+//    public List<Artist> getArtistsForCursor(Cursor cursor) {
+//        List<Artist> results = new ArrayList<>();
 //        if (cursor != null && cursor.getCount() > 0) {
 //            while (cursor.moveToNext()) {
-//                ArtistBean artist = new MusicCursorWrapper(cursor).getArtist();
+//                Artist artist = new MusicCursorWrapper(cursor).getArtist();
 //                LogUtil.d(TAG, "getArtist:" + artist.toString());
 //                results.add(artist);
 //            }

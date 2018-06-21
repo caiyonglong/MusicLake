@@ -53,10 +53,10 @@ class BaseApiImpl private constructor(val context: Context) {
      * @param query
      */
     fun searchSong(query: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit) {
-        mWebView?.callHandler("asyn.searchSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+        mWebView?.callHandler("asyn.searchSong", arrayOf(query, limit, offset)) { retValue: JSONObject ->
             val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
             success.invoke(result)
-        })
+        }
 //        when (type) {
 //            "ANY" -> {
 //                mWebView?.callHandler("asyn.searchSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
@@ -90,14 +90,14 @@ class BaseApiImpl private constructor(val context: Context) {
      * 获取歌曲详情
      */
     fun getSongDetail(vendor: String, id: String, success: (result: SongDetail) -> Unit, fail: (() -> Unit)? = null) {
-        mWebView?.callHandler("asyn.getSongDetail", arrayOf<Any>(vendor, id), { retValue: JSONObject ->
+        mWebView?.callHandler("asyn.getSongDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongDetail>(retValue.toString(), SongDetail::class.java)
                 success.invoke(result)
             } catch (e: Throwable) {
                 fail?.invoke()
             }
-        })
+        }
     }
 
     /**
@@ -105,41 +105,41 @@ class BaseApiImpl private constructor(val context: Context) {
      * [101126,16435051,139808]
      */
     fun getBatchSongDetail(query: String, ids: Array<String>, success: (result: BatchSongDetail) -> Unit) {
-        mWebView?.callHandler("asyn.getBatchSongDetail", arrayOf<Any>(query, ids), { retValue: JSONObject ->
+        mWebView?.callHandler("asyn.getBatchSongDetail", arrayOf<Any>(query, ids)) { retValue: JSONObject ->
             val result = gson.fromJson<BatchSongDetail>(retValue.toString(), BatchSongDetail::class.java)
             success.invoke(result)
-        })
+        }
     }
 
     fun getTopList(id: String, success: (result: NeteaseBean) -> Unit) {
-        mWebView?.callHandler("asyn.getTopList", arrayOf<Any>(id), { retValue: JSONObject ->
+        mWebView?.callHandler("asyn.getTopList", arrayOf<Any>(id)) { retValue: JSONObject ->
             val result = gson.fromJson<NeteaseBean>(retValue.toString(), NeteaseBean::class.java)
             success.invoke(result)
-        })
+        }
     }
 
-    fun getLyricInfo(vendor: String, id: String, success: (result: JSONObject) -> Unit) {
-        mWebView?.callHandler("asyn.getLyric", arrayOf<Any>(vendor, id), { retValue: JSONObject ->
+    fun getLyricInfo(vendor: String, id: String, success: (result: LyricInfo) -> Unit) {
+        mWebView?.callHandler("asyn.getLyric", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             val result = gson.fromJson<LyricInfo>(retValue.toString(), LyricInfo::class.java)
-            success.invoke(retValue)
-        })
+            success.invoke(result)
+        }
     }
 
     fun getComment(vendor: String, id: String, success: (result: SongComment) -> Unit) {
-        mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 10), { retValue: JSONObject ->
+        mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 10)) { retValue: JSONObject ->
             val result = gson.fromJson<SongComment>(retValue.toString(), SongComment::class.java)
             success.invoke(result)
-        })
+        }
     }
 
     fun getSongUrl(vendor: String, id: String, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
-        mWebView?.callHandler("asyn.getSongUrl", arrayOf<Any>(vendor, id), { retValue: JSONObject ->
+        mWebView?.callHandler("asyn.getSongUrl", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)
                 success.invoke(result)
             } catch (e: Throwable) {
                 fail?.invoke()
             }
-        })
+        }
     }
 }

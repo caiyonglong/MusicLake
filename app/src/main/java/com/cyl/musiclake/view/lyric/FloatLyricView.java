@@ -2,7 +2,11 @@ package com.cyl.musiclake.view.lyric;
 
 import android.content.Context;
 import android.content.Intent;
+
+import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.utils.LogUtil;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +27,8 @@ import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.lang.reflect.Field;
+
+import io.reactivex.disposables.Disposable;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -169,6 +175,11 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
             mLyricText.setFontColorScale(color);
             SPUtils.saveFontColor(color);
         });
+
+        Disposable disposable = RxBus.getInstance().register(LyricChangedEvent.class)
+                .subscribe(event -> {
+                    String text = event.getLyric();
+                });
     }
 
 

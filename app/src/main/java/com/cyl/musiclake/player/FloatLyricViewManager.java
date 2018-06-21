@@ -143,7 +143,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-            loadLyric();
+//            loadLyric();
         }
     }
 

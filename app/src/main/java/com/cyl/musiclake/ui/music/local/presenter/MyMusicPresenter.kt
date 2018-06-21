@@ -104,9 +104,9 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
                         it.pid = it.id.toString()
                         it.type = 1
                     }
-                    mView.showPlaylist(result)
+                    mView?.showPlaylist(result)
                     if (result.isEmpty()) {
-                        mView.showEmptyView()
+                        mView?.showEmptyView()
                     }
                 }
 
@@ -117,9 +117,9 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
             })
         } else {
             playlists.clear()
-            mView.showPlaylist(playlists)
+            mView?.showPlaylist(playlists)
             if (playlists.size == 0) {
-                mView.showEmptyView()
+                mView?.showEmptyView()
             }
         }
     }

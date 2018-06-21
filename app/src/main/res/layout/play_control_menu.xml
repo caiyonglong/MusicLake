@@ -58,7 +58,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/artistBean"
+                android:id="@+id/artist"
                 style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -4,7 +4,7 @@
     <version value="2" />
     <list>
         <!--<mapping class="com.cyl.musiclake.data.db.Playlist" />-->
-        <!--<mapping class="com.cyl.musiclake.bean.ArtistBean" />-->
+        <!--<mapping class="com.cyl.musiclake.bean.Artist" />-->
         <mapping class="com.cyl.musiclake.data.db.Music" />
         <mapping class="com.cyl.musiclake.data.db.Playlist" />
         <mapping class="com.cyl.musiclake.data.db.MusicToPlaylist" />

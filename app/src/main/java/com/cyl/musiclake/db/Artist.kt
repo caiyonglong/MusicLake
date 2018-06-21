@@ -8,7 +8,7 @@ import java.util.*
  * Created by yonglong on 2016/11/23.
  */
 
-class ArtistBean : LitePalSupport {
+class Artist : LitePalSupport {
     var name: String? = null
     var id: Long = 0
     var count: Int = 0

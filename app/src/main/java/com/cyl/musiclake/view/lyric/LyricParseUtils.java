@@ -1,7 +1,6 @@
 package com.cyl.musiclake.view.lyric;
 
 import com.cyl.musiclake.utils.LogUtil;
-
 import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
 
 import java.io.BufferedReader;
@@ -120,7 +119,13 @@ public class LyricParseUtils {
         if (line.startsWith("[total:")) {
             return;
         }
-        if (line.startsWith("[0")) {
+        if (line.startsWith("[0") && line.endsWith("]")) {
+            String test = line.replace("]", "").replace(", ", "]");
+            if (test.contains("]")) {
+                line = test;
+            }
+        }
+        if (line.startsWith("[0") && !line.endsWith("]")) {
             // 歌词内容,需要考虑一行歌词有多个时间戳的情况
             int lastIndexOfRightBracket = line.lastIndexOf("]");
             String content = line.substring(lastIndexOfRightBracket + 1, line.length());

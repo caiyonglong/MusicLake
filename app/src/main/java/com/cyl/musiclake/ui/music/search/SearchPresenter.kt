@@ -6,6 +6,8 @@ import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
@@ -32,10 +34,12 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
     }
 
     override fun getSuggestions(query: String) {
-        Thread {
+        doAsync {
             val data = DaoLitepal.getAllSearchInfo(query)
-            mView?.showSearchSuggestion(data)
-        }.start()
+            uiThread {
+                mView?.showSearchSuggestion(data)
+            }
+        }
     }
 
     override fun saveQueryInfo(query: String) {

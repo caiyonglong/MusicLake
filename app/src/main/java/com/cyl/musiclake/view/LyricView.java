@@ -7,8 +7,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -343,8 +341,7 @@ public class LyricView extends View {
      * @param lyricInfo 歌词字符串
      */
     public void setLyricContent(String lyricInfo) {
-        ;
-        if (lyricInfo != null) {
+        if (lyricInfo != null && lyricInfo.length() >= 1) {
             mLyricInfo = LyricParseUtils.setLyricResource(lyricInfo);
             if (mLyricInfo != null && mLyricInfo.getSongLines() != null)
                 mLineCount = mLyricInfo.getSongLines().size();

@@ -11,6 +11,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.utils.FileUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,19 +35,13 @@ object MusicApi {
      */
     fun getLyricInfo(music: Music): Observable<String>? {
         return when (music.type) {
-            Constants.QQ -> QQApiServiceImpl.getQQLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
             Constants.BAIDU -> BaiduApiServiceImpl.getBaiduLyric(music)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-            Constants.XIAMI -> XiamiServiceImpl.getXimaiLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-//            Constants.NETEASE -> NeteaseApiServiceImpl.getNeteaseLyric(music)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-            else -> null
+            Constants.LOCAL ->{null}
+            else -> {
+                MusicApiServiceImpl.getLyricInfo(music)
+            }
         }
     }
 
@@ -73,9 +68,6 @@ object MusicApi {
         }
     }
 
-    fun getMusicUrl(music: Music, success: ((result: String?) -> Unit)) {
-
-    }
 
     /**
      * 加载图片

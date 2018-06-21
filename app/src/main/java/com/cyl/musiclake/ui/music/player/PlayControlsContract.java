@@ -48,7 +48,7 @@ public interface PlayControlsContract {
 
         void onPreviousClick();
 
-        void loadLyric();
+        void loadLyric(String result, boolean status);
 
         void onNextClick();
 
