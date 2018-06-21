@@ -294,12 +294,12 @@ public class MusicPlayerService extends Service {
         initReceiver();
         //初始化参数
         initConfig();
-        //初始化音乐播放服务
-        initMediaPlayer();
         //初始化电话监听服务
         initTelephony();
         //初始化通知
         initNotify();
+        //初始化音乐播放服务
+        initMediaPlayer();
     }
 
     /**
@@ -357,7 +357,10 @@ public class MusicPlayerService extends Service {
         mHistoryPos.clear();
         mPlayQueue = PlayQueueLoader.INSTANCE.getPlayQueue();
         mPlayingPos = SPUtils.getPlayPosition();
-        mPlayer.seek(SPUtils.getPosition());
+        if (mPlayingPos < mPlayQueue.size()) {
+            playCurrentAndNext();
+            mPlayer.seek(SPUtils.getPosition());
+        }
         notifyChange(PLAY_QUEUE_CHANGE);
     }
 
@@ -375,10 +378,8 @@ public class MusicPlayerService extends Service {
      * 初始化音乐播放服务
      */
     private void initMediaPlayer() {
-
         mPlayer = new MusicPlayerEngine(this);
         mPlayer.setHandler(mHandler);
-
         reloadPlayQueue();
     }
 
@@ -810,6 +811,8 @@ public class MusicPlayerService extends Service {
                         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
                     }
                 });
+            } else {
+                lyricChangedEvent = new LyricChangedEvent("", true);
             }
         }
     }

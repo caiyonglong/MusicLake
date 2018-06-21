@@ -177,47 +177,6 @@ public class FloatLyricViewManager {
         }
     }
 
-    public void loadLyric() {
-        Music music = PlayManager.getPlayingMusic();
-        if (music == null) {
-            return;
-        }
-        //先判断本地是否存在歌词
-        String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
-        if (FileUtils.exists(lrcPath)) {
-            LogUtil.e("lrcPath");
-            setLyric(LyricParseUtils.setLyricResource(new File(lrcPath)));
-        } else {
-            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(music);
-            if (observable == null) {
-                setLyric(null);
-            } else {
-                observable.subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(String lyricInfo) {
-                        LogUtil.e(TAG, lyricInfo);
-                        setLyric(LyricParseUtils.setLyricResource(lyricInfo));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        setLyric(null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-            }
-        }
-    }
-
     /**
      * 是否有悬浮窗(包括小悬浮窗和大悬浮窗)显示在屏幕上。
      *

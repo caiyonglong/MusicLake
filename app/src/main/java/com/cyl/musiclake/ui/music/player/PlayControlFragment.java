@@ -28,8 +28,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
@@ -269,6 +269,8 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @Override
     protected void loadData() {
+        Music music = PlayManager.getPlayingMusic();
+        mPresenter.updateNowPlayingCard(music);
     }
 
     private void setupViewPager(MultiTouchViewPager viewPager) {
@@ -298,6 +300,9 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 //                } else {
 //                    mSlidingUpPaneLayout.setTouchEnabled(true);
 //                }
+                if (position == 0) {
+                    mLrcView.updateView(false);
+                }
             }
 
             @Override
@@ -308,6 +313,11 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         initAlbumPic(mCivImage);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mViewPager.setCurrentItem(0);
+    }
 
     /**
      * 退出播放页
@@ -448,7 +458,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         //初始化歌词配置
 //        mLrcView.set(15.0f);
 //        mLrcView.setTextSize(17.0f);
-//        mLrcView.setTouchable(true);
+        mLrcView.setTouchable(true);
 //        mLrcView.setPlayable(true);
         mLrcView.setOnPlayerClickListener((progress, content) -> {
             PlayManager.seekTo((int) progress);

@@ -100,21 +100,21 @@ public class MediaSessionManager {
 //        if (!StringUtils.isReal(path)) {
 //            mMediaSession.setMetadata(null);
 //            return;
+////        }
+//        Music songInfo = PlayManager.getPlayingMusic();
+//
+//        MediaMetadataCompat.Builder metaDta = new MediaMetadataCompat.Builder()
+//                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, songInfo.getTitle())
+//                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songInfo.getArtist())
+//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, songInfo.getAlbum())
+//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, songInfo.getArtist())
+//                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, songInfo.getDuration());
+////                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, getCoverBitmap(songInfo));
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            metaDta.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, getCount());
 //        }
-        Music songInfo = PlayManager.getPlayingMusic();
-
-        MediaMetadataCompat.Builder metaDta = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, songInfo.getTitle())
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songInfo.getArtist())
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, songInfo.getAlbum())
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, songInfo.getArtist())
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, songInfo.getDuration());
-//                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, getCoverBitmap(songInfo));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            metaDta.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, getCount());
-        }
-        mMediaSession.setMetadata(metaDta.build());
+//        mMediaSession.setMetadata(metaDta.build());
 
     }
 

@@ -118,6 +118,10 @@ public class LyricView extends View {
 
     private int mTextHeight;
 
+    private boolean mPlayable = false;
+    private boolean mSliding = false;
+    private boolean mTouchable = true;
+
 
     private OnPlayerClickListener mClickListener;
 
@@ -160,13 +164,11 @@ public class LyricView extends View {
                 // 这里是够拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
                 if (deltaX < deltaY) {
                     LogUtil.e("MotionEvent", "down");
-                    setUserTouch(true);
                     getParent().requestDisallowInterceptTouchEvent(true);
                 } else {
                     LogUtil.e("MotionEvent", "lefttoright");
                     getParent().requestDisallowInterceptTouchEvent(false);
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
                 break;
@@ -177,9 +179,10 @@ public class LyricView extends View {
         return super.dispatchTouchEvent(event);
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        if (!mTouchable) return super.onTouchEvent(event);
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -411,7 +414,7 @@ public class LyricView extends View {
 
     private void actionUp(MotionEvent event) {
 
-        postDelayed(hideIndicator, 3 * UNITS_SECOND);
+        postDelayed(hideIndicator, 2 * UNITS_SECOND);
 
         releaseVelocityTracker();
 
@@ -529,6 +532,11 @@ public class LyricView extends View {
         mFlingAnimator.start();
     }
 
+    /**
+     * 设置用户是否触摸的标记
+     *
+     * @param isUserTouch 标记用户是否触摸屏幕
+     */
     private void setUserTouch(boolean isUserTouch) {
         if (isUserTouch) {
             mUserTouch = true;
@@ -769,5 +777,14 @@ public class LyricView extends View {
 
     public interface OnPlayerClickListener {
         void onPlayerClicked(long progress, String content);
+    }
+
+    public void setTouchable(boolean touchable) {
+        mTouchable = touchable;
+    }
+
+    public void updateView(boolean touchable) {
+        setTouchable(true);
+        invalidateView();
     }
 }
