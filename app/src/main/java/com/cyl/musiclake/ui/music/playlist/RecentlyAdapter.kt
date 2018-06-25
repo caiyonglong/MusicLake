@@ -30,7 +30,7 @@ class RecentlyAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             val info = item.title + "," + item.artist
             ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
                 override fun success(result: DoubanMusic?) {
-                   val data = result?.musics
+                    val data = result?.musics
                     data?.let {
                         if (it.size > 0) {
                             url = result?.musics?.first()?.image
@@ -59,9 +59,10 @@ class RecentlyAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
 
         if (item.isCp) {
             holder.itemView.isEnabled = false
-            holder.itemView.background = ContextCompat.getDrawable(mContext, R.color.translucent_grey)
+            holder.getView<View>(R.id.isCpView).visibility = View.VISIBLE
         } else {
             holder.itemView.isEnabled = true
+            holder.getView<View>(R.id.isCpView).visibility = View.GONE
         }
     }
 }

@@ -228,6 +228,12 @@
     <string name="qq">qq音乐</string>
     <string name="xiami">虾米音乐</string>
     <string name="netease">网易云音乐</string>
+
+    <string name="res_baidu">百度</string>
+    <string name="res_qq">QQ</string>
+    <string name="res_wangyi">网易</string>
+    <string name="res_xiami">虾米</string>
+
     <string name="equalizer">均衡器</string>
     <string name="artist_tips">歌手 - 专辑</string>
     <string name="song">歌曲</string>
@@ -236,6 +242,7 @@
     <string name="share_content">\"我正在使用 音乐湖 听音乐，我觉得很不错，推荐给你用下，链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
     <string name="retry">重试</string>
     <string name="general_error">网络错误</string>
+    <string name="qq_login_tips">QQ登录</string>
 
 
 </resources>

@@ -28,6 +28,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
@@ -119,6 +120,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     private LyricView mLrcView;
     private CircleImageView mCivImage;
     private TextView mTvTip, mTvRecourse;
+    private ImageView mIvResource;
 
     private PlayQueueDialog playQueueDialog = null;
     private Palette mPalette;
@@ -282,6 +284,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         mCivImage = coverView.findViewById(R.id.civ_cover);
         mTvTip = coverView.findViewById(R.id.tv_tip);
         mTvRecourse = coverView.findViewById(R.id.tv_source);
+        mIvResource = coverView.findViewById(R.id.iv_source);
 
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
@@ -367,10 +370,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
         mCivImage.setImageBitmap(albumArt);
-
-        if (getActivity() != null) {
-            ((MainActivity) getActivity()).mImageView.setImageBitmap(albumArt);
-        }
 
         if (operatingAnim != null) {
             if (PlayManager.isPlaying()) {

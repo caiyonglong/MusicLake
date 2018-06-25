@@ -27,6 +27,7 @@ import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -58,7 +59,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         PlayManager.play(0, musicList, mPlaylist.getPid());
     }
 
-    private RecentlyAdapter mAdapter;
+    private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
     private Playlist mPlaylist;
 
@@ -95,7 +96,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             }
         }
 
-        mAdapter = new RecentlyAdapter(musicList);
+        mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);

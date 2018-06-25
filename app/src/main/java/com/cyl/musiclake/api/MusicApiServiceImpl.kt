@@ -130,15 +130,7 @@ object MusicApiServiceImpl {
         val mid = music.mid!!
         //网络歌词
         return if (FileUtils.exists(mLyricPath)) {
-            Observable.create { emitter ->
-                try {
-                    val lyric = FileUtils.readFile(mLyricPath)
-                    emitter.onNext(lyric)
-                    emitter.onComplete()
-                } catch (e: Exception) {
-                    emitter.onError(e)
-                }
-            }
+            MusicApi.getLocalLyricInfo(mLyricPath)
         } else create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .getLyricInfo(vendor, mid) {

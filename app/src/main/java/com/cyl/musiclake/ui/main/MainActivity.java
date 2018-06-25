@@ -20,7 +20,9 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.LoginEvent;
+import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlayQueueEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
@@ -92,6 +94,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .subscribe(event -> setUserStatusInfo());
         flowable = RxBus.getInstance().register(PlayQueueEvent.class)
                 .subscribe(event -> setPlaylistQueueChange());
+        flowable = RxBus.getInstance().register(MetaChangedEvent.class)
+                .subscribe(event -> updatePlaySongInfo(event.getMusic()));
+    }
+
+    private void updatePlaySongInfo(Music music) {
+        if (music.getCoverUri() != null) {
+            CoverLoader.loadImageView(this, music.getCoverUri(), mImageView);
+        }
     }
 
     private void initNavView() {
@@ -110,7 +120,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         //加载主fragment
         navigateLibrary.run();
-//        navigatePlay.run();
     }
 
     @Override

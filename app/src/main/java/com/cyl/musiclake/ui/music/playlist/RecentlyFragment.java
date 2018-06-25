@@ -20,6 +20,7 @@ import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    private RecentlyAdapter mAdapter;
+    private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
 
     @Override
@@ -62,7 +63,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mAdapter = new RecentlyAdapter(musicInfos);
+        mAdapter = new SongAdapter(musicInfos);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);

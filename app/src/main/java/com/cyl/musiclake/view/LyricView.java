@@ -223,7 +223,6 @@ public class LyricView extends View {
             if (mShowIndicator) {
                 drawIndicator(canvas);
             }
-
             for (int i = 0; i < mLineCount; i++) {
                 float x = 0;
                 switch (mTextAlign) {
@@ -346,25 +345,30 @@ public class LyricView extends View {
     public void setLyricContent(String lyricInfo) {
         if (lyricInfo != null && lyricInfo.length() >= 1) {
             mLyricInfo = LyricParseUtils.setLyricResource(lyricInfo);
-            if (mLyricInfo != null && mLyricInfo.getSongLines() != null)
+            if (mLyricInfo != null && mLyricInfo.getSongLines() != null && mLyricInfo.getSongLines().size() > 0) {
                 mLineCount = mLyricInfo.getSongLines().size();
 
-            for (int i = 0; i < mLyricInfo.songLines.size(); i++) {
+                for (int i = 0; i < mLyricInfo.songLines.size(); i++) {
 
-                StaticLayout staticLayout = new StaticLayout(mLyricInfo.songLines.get(i).content, mTextPaint,
-                        (int) getRawSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MAX_LENGTH),
-                        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                    StaticLayout staticLayout = new StaticLayout(mLyricInfo.songLines.get(i).content, mTextPaint,
+                            (int) getRawSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MAX_LENGTH),
+                            Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
-                if (staticLayout.getLineCount() > 1) {
-                    mEnableLineFeed = true;
-                    mExtraHeight = mExtraHeight + (staticLayout.getLineCount() - 1) * mTextHeight;
+                    if (staticLayout.getLineCount() > 1) {
+                        mEnableLineFeed = true;
+                        mExtraHeight = mExtraHeight + (staticLayout.getLineCount() - 1) * mTextHeight;
+                    }
+                    mLineFeedRecord.add(i, mExtraHeight);
                 }
-                mLineFeedRecord.add(i, mExtraHeight);
+            } else {
+                mDefaultHint = lyricInfo;
+                invalidateView();
             }
         } else {
+            mLyricInfo = null;
+            mDefaultHint = lyricInfo;
             invalidateView();
         }
-
     }
 
     private void setLineSpace(float lineSpace) {
@@ -377,6 +381,7 @@ public class LyricView extends View {
     }
 
     public void reset() {
+        mDefaultHint = getResources().getString(R.string.lyric_default_hint);
         resetView();
     }
 
@@ -397,7 +402,6 @@ public class LyricView extends View {
     }
 
     private boolean overScrolled() {
-
         return scrollable() && (mScrollY > mLineHeight * (mLineCount - 1) + mLineFeedRecord.get(mLineCount - 1) + (mEnableLineFeed ? mTextHeight : 0) || mScrollY < 0);
     }
 
@@ -644,7 +648,7 @@ public class LyricView extends View {
     private void measureCurrentLine() {
         float baseScrollY = mScrollY + mLineHeight * 0.5f;
 
-        if (mEnableLineFeed) {
+        if (mEnableLineFeed && mLyricInfo != null && mLyricInfo.songLines != null) {
             for (int i = mLyricInfo.songLines.size(); i >= 0; i--) {
                 if (baseScrollY > measureCurrentScrollY(i) + mLineSpace * 0.2) {
                     mLineNumberUnderIndicator = i - 1;
@@ -654,8 +658,6 @@ public class LyricView extends View {
         } else {
             mLineNumberUnderIndicator = (int) (baseScrollY / mLineHeight);
         }
-
-
     }
 
     private void smoothScrollTo(float toY) {

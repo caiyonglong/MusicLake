@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/dp_56"
     android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:orientation="horizontal">
 
     <View
         android:id="@+id/v_playing"
@@ -51,22 +50,22 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_source"
+    <ImageView
+        android:id="@+id/iv_resource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_tv_source"
-        android:contentDescription="@null"
-        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
         android:padding="2dp"
-        android:scaleType="centerInside"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:src="@drawable/netease"
+        android:textColor="@color/white" />
 
     <ImageView
         android:id="@+id/iv_clear"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
         android:contentDescription="@null"
         android:scaleType="centerInside"
         android:src="@drawable/ic_clear" />

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.local.adapter
+package com.cyl.musiclake.ui.music.playqueue
 
 import android.view.View
 import android.widget.ImageView
@@ -22,7 +22,7 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList) {
+class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList) {
     override fun convert(holder: BaseViewHolder, item: Music) {
         var url = item.coverUri
         if (url == null) {
@@ -46,6 +46,8 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
         } else {
             CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
         }
+
+        holder.setImageResource(R.id.iv_more, R.drawable.ic_clear)
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
         if (PlayManager.getPlayingId() == item.mid) {
@@ -54,7 +56,6 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
         }
         holder.addOnClickListener(R.id.iv_more)
-
         if (item.isCp) {
             holder.itemView.isEnabled = false
             holder.getView<View>(R.id.isCpView).visibility = View.VISIBLE

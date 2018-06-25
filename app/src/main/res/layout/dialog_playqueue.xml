@@ -51,6 +51,12 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_4"
+        android:background="@drawable/toolbar_shadow_drawable" />
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_songs"
         android:layout_width="match_parent"

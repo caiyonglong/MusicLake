@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -54,7 +55,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
 
     private PlayQueuePresenter mPresenter;
     private List<Music> musicList = new ArrayList<>();
-    private PlayQueueAdapter mAdapter;
+    private QueueAdapter mAdapter;
     private Palette.Swatch mSwatch;
     private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
     private int playModeId = 0;
@@ -91,7 +92,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         super.onCreate(savedInstanceState);
         mPresenter = new PlayQueuePresenter();
         mPresenter.attachView(this);
-        mAdapter = new PlayQueueAdapter(null);
+        mAdapter = new QueueAdapter(musicList);
     }
 
 
@@ -109,8 +110,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (mSwatch != null) {
-            root.setBackgroundColor(mSwatch.getRgb());
-            mAdapter.setPaletteSwatch(mSwatch);
+//            root.setBackgroundColor(mSwatch.getRgb());
             int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
             tvPlayMode.setTextColor(blackWhiteColor);
             ivPlayMode.setColorFilter(blackWhiteColor);
@@ -129,14 +129,14 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
 
     private void initListener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (view.getId() != R.id.iv_love && view.getId() != R.id.iv_clear) {
+            if (view.getId() != R.id.iv_love && view.getId() != R.id.iv_more) {
                 PlayManager.play(position);
                 mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()) {
-                case R.id.iv_clear:
+                case R.id.iv_more:
                     PlayManager.removeFromQueue(position);
                     musicList = PlayManager.getPlayList();
                     if (musicList.size() == 0)
@@ -154,12 +154,11 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         }
         mSwatch = swatch;
         if (root != null) {
-            root.setBackgroundColor(mSwatch.getRgb());
+//            root.setBackgroundColor(mSwatch.getRgb());
             int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
             tvPlayMode.setTextColor(blackWhiteColor);
             ivPlayMode.setColorFilter(blackWhiteColor);
             clearAll.setColorFilter(blackWhiteColor);
-            mAdapter.setPaletteSwatch(mSwatch);
         }
     }
 

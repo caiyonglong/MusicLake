@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
@@ -25,6 +26,7 @@ import com.cyl.musiclake.db.SearchHistoryBean;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.DownloadDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -44,7 +46,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private static final String TAG = "SearchActivity";
     //搜索信息
     private String queryString;
-    private SearchAdapter mAdapter;
+    private SongAdapter mAdapter;
     private SearchSuggestionAdapter suggestionAdapter;
 
     @BindView(R.id.recyclerView)
@@ -100,7 +102,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     protected void initData() {
-        mAdapter = new SearchAdapter(searchResults);
+        mAdapter = new SongAdapter(searchResults);
         mAdapter.setEnableLoadMore(true);
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -108,12 +110,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         resultListRcv.setLayoutManager(layoutManager);
         resultListRcv.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(resultListRcv);
-
-        suggestionAdapter = new SearchSuggestionAdapter(suggestions);
-        suggestionsRcv.setLayoutManager(new LinearLayoutManager(this));
-        suggestionsRcv.setAdapter(suggestionAdapter);
-        suggestionAdapter.bindToRecyclerView(suggestionsRcv);
-
     }
 
     @Override
@@ -194,16 +190,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             }
         }, 1000), resultListRcv);
 
-        suggestionAdapter.setOnItemClickListener((adapter, view, position) -> {
-        });
-        suggestionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            if (view.getId() == R.id.history_search) {
-                searchEditText.setText(suggestions.get(position).getTitle());
-            } else if (view.getId() == R.id.deleteView) {
-                DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
-                suggestionAdapter.remove(position);
-            }
-        });
+
     }
 
     @Override
@@ -274,6 +261,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             mOffset = 0;
             searchResults.clear();
             queryString = query;
+            suggestionsPanel.setVisibility(View.GONE);
             mPresenter.saveQueryInfo(query);
             mPresenter.search(query, filter, limit, mOffset);
         }
@@ -306,13 +294,29 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void showSearchSuggestion(List<SearchHistoryBean> result) {
-        if (result.size() > 0) {
-            searchResults.clear();
-            mAdapter.setNewData(searchResults);
+        suggestionsPanel.setVisibility(View.VISIBLE);
+        if (suggestionAdapter == null) {
+            suggestionAdapter = new SearchSuggestionAdapter(suggestions);
+            suggestionsRcv.setLayoutManager(new LinearLayoutManager(this));
+            suggestionsRcv.setAdapter(suggestionAdapter);
+            suggestionAdapter.bindToRecyclerView(suggestionsRcv);
+            suggestionAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+                return false;
+            });
+            suggestionAdapter.setOnItemClickListener((adapter, view, position) -> {
+            });
+            suggestionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+                if (view.getId() == R.id.history_search) {
+                    searchEditText.setText(suggestions.get(position).getTitle());
+                } else if (view.getId() == R.id.deleteView) {
+                    DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
+                    suggestionAdapter.remove(position);
+                }
+            });
+        } else {
             suggestions = result;
             suggestionsPanel.setVisibility(View.VISIBLE);
             suggestionAdapter.setNewData(result);
-        } else {
             suggestionsPanel.setVisibility(View.GONE);
         }
     }

@@ -43,7 +43,6 @@ public class LyricParseUtils {
      */
     public static LyricInfo setLyricResource(String lyricInfo) {
         if (lyricInfo != null && lyricInfo.length() > 0) {
-//            LogUtil.e("LyricView ", lyricInfo);
             InputStream inputStream = new ByteArrayInputStream(lyricInfo.getBytes());
             return setupLyricResource(inputStream, "utf-8");
         } else {

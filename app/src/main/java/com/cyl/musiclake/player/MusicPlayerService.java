@@ -515,11 +515,11 @@ public class MusicPlayerService extends Service {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
             LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<String>() {
+                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
                     @Override
-                    public void success(String result) {
+                    public void success(Music result) {
                         LogUtil.e(TAG, "-----" + result);
-                        mPlayingMusic.setUri(result);
+                        mPlayingMusic = result;
                         saveHistory();
                         isMusicPlaying = true;
                         mPlayer.setDataSource(mPlayingMusic.getUri());
@@ -678,8 +678,10 @@ public class MusicPlayerService extends Service {
         if (mPlayingPos == -1 || mPlayQueue.size() == 0) {
             mPlayQueue.add(music);
             mPlayingPos = 0;
-        } else {
+        } else if (mPlayingPos < mPlayQueue.size()) {
             mPlayQueue.add(mPlayingPos, music);
+        } else {
+            mPlayQueue.add(mPlayQueue.size(), music);
         }
         LogUtil.e(TAG, music.toString());
         mPlayingMusic = music;
@@ -795,26 +797,30 @@ public class MusicPlayerService extends Service {
     private LyricChangedEvent lyricChangedEvent;
 
     private void loadLyric() {
+        lyricChangedEvent = new LyricChangedEvent("歌词加载中...", true);
         if (mPlayingMusic != null) {
             Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
             if (observable != null) {
                 ApiManager.request(observable, new RequestCallBack<String>() {
                     @Override
                     public void success(String result) {
-                        lyricChangedEvent = new LyricChangedEvent(result, true);
+                        lyricChangedEvent.setLyric(result);
                         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
                     }
 
                     @Override
                     public void error(String msg) {
-                        lyricChangedEvent = new LyricChangedEvent(msg, true);
+                        lyricChangedEvent.setLyric(msg);
                         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
                     }
                 });
             } else {
-                lyricChangedEvent = new LyricChangedEvent("", true);
+                lyricChangedEvent.setLyric("");
             }
+        } else {
+            lyricChangedEvent.setLyric("");
         }
+        mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
     }
 
     private void saveHistory() {

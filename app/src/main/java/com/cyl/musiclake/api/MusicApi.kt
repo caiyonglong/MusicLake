@@ -4,18 +4,12 @@ package com.cyl.musiclake.api
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.api.doupan.DoubanMusic
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.api.qq.QQApiServiceImpl
-import com.cyl.musiclake.api.xiami.XiamiServiceImpl
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.utils.FileUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.internal.operators.maybe.MaybeDoAfterSuccess
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -35,10 +29,22 @@ object MusicApi {
      */
     fun getLyricInfo(music: Music): Observable<String>? {
         return when (music.type) {
-            Constants.BAIDU -> BaiduApiServiceImpl.getBaiduLyric(music)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            Constants.LOCAL ->{null}
+            Constants.BAIDU -> {
+                if (music.lyric != null) {
+                    BaiduApiServiceImpl.getBaiduLyric(music)
+                } else {
+                    BaiduApiServiceImpl.getTingSongInfo(music).flatMap { result ->
+                        music.lyric = result.lyric
+                        BaiduApiServiceImpl.getBaiduLyric(music)
+                    }
+                }
+            }
+            Constants.LOCAL -> {
+                getLocalLyricInfo(music.lyric).flatMap { result ->
+                    music.lyric = result
+                    BaiduApiServiceImpl.getBaiduLyric(music)
+                }
+            }
             else -> {
                 MusicApiServiceImpl.getLyricInfo(music)
             }
@@ -49,13 +55,14 @@ object MusicApi {
     /**
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
      */
-    fun getMusicInfo(music: Music): Observable<String>? {
+    fun getMusicInfo(music: Music): Observable<Music>? {
         return when (music.type) {
-            Constants.BAIDU -> BaiduApiServiceImpl.getTingSongInfo(music.mid!!).flatMap { result ->
-                Observable.create(ObservableOnSubscribe<String> {
-                    val url = result.uri
-                    if (url != null && url.isNotEmpty()) {
-                        it.onNext(url)
+            Constants.BAIDU -> BaiduApiServiceImpl.getTingSongInfo(music).flatMap { result ->
+                Observable.create(ObservableOnSubscribe<Music> {
+                    music.lyric = result.lyric
+                    music.uri = result.uri
+                    if (music.uri != null) {
+                        it.onNext(music)
                         it.onComplete()
                     } else {
                         it.onError(Throwable(""))
@@ -63,11 +70,20 @@ object MusicApi {
                 })
             }
             else -> {
-                MusicApiServiceImpl.getMusicUrl(music.type!!, music.mid!!)
+                MusicApiServiceImpl.getMusicUrl(music.type!!, music.mid!!).flatMap { result ->
+                    Observable.create(ObservableOnSubscribe<Music> {
+                        music.uri = result
+                        if (music.uri != null) {
+                            it.onNext(music)
+                            it.onComplete()
+                        } else {
+                            it.onError(Throwable(""))
+                        }
+                    })
+                }
             }
         }
     }
-
 
     /**
      * 加载图片
@@ -76,4 +92,15 @@ object MusicApi {
         return DoubanApiServiceImpl.getMusicInfo(info)
     }
 
+    fun getLocalLyricInfo(path: String?): Observable<String> {
+        return Observable.create { emitter ->
+            try {
+                val lyric = FileUtils.readFile(path)
+                emitter.onNext(lyric)
+                emitter.onComplete()
+            } catch (e: Exception) {
+                emitter.onError(e)
+            }
+        }
+    }
 }
