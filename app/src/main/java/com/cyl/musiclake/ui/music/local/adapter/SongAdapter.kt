@@ -56,10 +56,10 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
         holder.addOnClickListener(R.id.iv_more)
 
         if (item.isCp) {
-            holder.itemView.isEnabled = false
+//            holder.itemView.isEnabled = false
             holder.getView<View>(R.id.isCpView).visibility = View.VISIBLE
         } else {
-            holder.itemView.isEnabled = true
+//            holder.itemView.isEnabled = true
             holder.getView<View>(R.id.isCpView).visibility = View.GONE
         }
 
