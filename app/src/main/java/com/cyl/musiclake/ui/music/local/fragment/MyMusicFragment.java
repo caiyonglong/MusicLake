@@ -21,6 +21,7 @@ import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter;
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.ToastUtils;
+import com.cyl.musiclake.view.ItemDecoration;
 import com.cyl.musiclake.view.LocalItemView;
 
 import java.util.List;
@@ -79,6 +80,7 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
         linearLayoutManager.setSmoothScrollbarEnabled(false);
 
         mPlaylistRcv.setLayoutManager(new LinearLayoutManager(getContext()));
+        mPlaylistRcv.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mPlaylistRcv.setNestedScrollingEnabled(false);
 
         mAdapter = new PlaylistAdapter(playlists);

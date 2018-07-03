@@ -120,8 +120,8 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
                         ToastUtils.show("暂不支持添加百度音乐");
                         break;
                     case R.id.popup_song_download:
-                        DownloadDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), getLocalClassName());
+                        DownloadDialog.Companion.newInstance(music)
+                                .show(this);
                         break;
                 }
                 return false;

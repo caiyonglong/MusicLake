@@ -357,9 +357,10 @@ public class MusicPlayerService extends Service {
         mHistoryPos.clear();
         mPlayQueue = PlayQueueLoader.INSTANCE.getPlayQueue();
         mPlayingPos = SPUtils.getPlayPosition();
-        if (mPlayingPos < mPlayQueue.size()) {
-            playCurrentAndNext();
-            mPlayer.seek(SPUtils.getPosition());
+        if (mPlayingPos >= 0 && mPlayingPos < mPlayQueue.size()) {
+            mPlayingMusic = mPlayQueue.get(mPlayingPos);
+            updateNotification(false);
+            notifyChange(META_CHANGED);
         }
         notifyChange(PLAY_QUEUE_CHANGE);
     }
@@ -711,7 +712,11 @@ public class MusicPlayerService extends Service {
         if (isPlaying()) {
             pause();
         } else {
-            play();
+            if (mPlayer.isInitialized()) {
+                play();
+            } else {
+                playCurrentAndNext();
+            }
         }
     }
 
@@ -825,6 +830,7 @@ public class MusicPlayerService extends Service {
 
     private void saveHistory() {
         PlayHistoryLoader.INSTANCE.addSongToHistory(mPlayingMusic);
+        savePlayQueue(false);
     }
 
     public void refresh() {
@@ -901,7 +907,7 @@ public class MusicPlayerService extends Service {
         switch (what) {
             case META_CHANGED:
 //                mFloatLyricViewManager.loadLyric();
-                loadLyric();
+//                loadLyric();
                 mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
                 break;
             case PLAY_STATE_CHANGED:

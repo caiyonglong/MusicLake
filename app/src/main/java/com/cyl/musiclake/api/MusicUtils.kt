@@ -30,7 +30,7 @@ object MusicUtils {
             ToastUtils.show(MusicApp.getAppContext(), "已经本地音乐!")
             return
         }
-        DownloadDialog.newInstance(music).show(activity.supportFragmentManager, activity.packageName)
+        DownloadDialog.newInstance(music).show(activity)
     }
 
     /**

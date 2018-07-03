@@ -1,7 +1,10 @@
 package com.cyl.musiclake;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Point;
+import android.view.WindowManager;
 
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlaylistLoader;
@@ -25,12 +28,15 @@ import org.litepal.LitePal;
 import java.net.Proxy;
 
 public class MusicApp extends Application {
+    @SuppressLint("StaticFieldLeak")
     private static MusicApp sInstance;
     private PlayManager.ServiceToken mToken;
+    @SuppressLint("StaticFieldLeak")
     public static Context mContext;
     private Tencent mTencent;
 
     private ApplicationComponent mApplicationComponent;
+    public Point screenSize = new Point();
 
     public static synchronized MusicApp getInstance() {
         return sInstance;
@@ -54,6 +60,11 @@ public class MusicApp extends Application {
         initBugly();
         initDB();
         initFileDownload();
+
+        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        if (manager != null) {
+            manager.getDefaultDisplay().getSize(screenSize);
+        }
     }
 
     /**

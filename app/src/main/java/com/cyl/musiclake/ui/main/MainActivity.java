@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void updatePlaySongInfo(Music music) {
-        if (music.getCoverUri() != null) {
+        if (music != null && music.getCoverUri() != null) {
             CoverLoader.loadImageView(this, music.getCoverUri(), mImageView);
         }
     }

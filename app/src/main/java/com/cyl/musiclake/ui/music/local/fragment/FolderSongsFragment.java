@@ -25,6 +25,7 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.music.local.presenter.FolderSongPresenter;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.view.ItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,9 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
     @Override
     protected void loadData() {
         showLoading();
-        mPresenter.loadSongs(path);
+        if (mPresenter != null) {
+            mPresenter.loadSongs(path);
+        }
     }
 
     @Override
@@ -73,6 +76,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
         mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mAdapter.bindToRecyclerView(mRecyclerView);
         setHasOptionsMenu(true);
     }

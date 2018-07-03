@@ -146,6 +146,7 @@
     <string name="recent_update">最近更新：%s</string>
 
     <string name="search">搜索</string>
+    <string name="search_history">搜索历史</string>
     <string name="search_tips">歌手、歌名</string>
 
     <string name="create_playlist">新建歌单</string>
@@ -244,5 +245,12 @@
     <string name="general_error">网络错误</string>
     <string name="qq_login_tips">QQ登录</string>
 
+
+    <string name="popup_play_next">下一首播放</string>
+    <string name="popup_detail">查看歌曲信息</string>
+    <string name="popup_download">下载歌曲</string>
+    <string name="popup_detail_edit">编辑歌曲信息</string>
+    <string name="popup_artist">歌手：%1$s</string>
+    <string name="popup_album">专辑：%1$s</string>
 
 </resources>

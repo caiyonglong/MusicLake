@@ -13,8 +13,8 @@ import java.util.List;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class SearchSuggestionAdapter extends BaseQuickAdapter<SearchHistoryBean, BaseViewHolder> {
-    public SearchSuggestionAdapter(List<SearchHistoryBean> suggestions) {
+public class SearchHistoryAdapter extends BaseQuickAdapter<SearchHistoryBean, BaseViewHolder> {
+    public SearchHistoryAdapter(List<SearchHistoryBean> suggestions) {
         super(R.layout.item_search_suggestion, suggestions);
     }
 

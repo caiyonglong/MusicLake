@@ -12,7 +12,7 @@ import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
 import com.cyl.musiclake.ui.music.local.presenter.FoldersPresenter;
-import com.cyl.musiclake.view.DividerItemDecoration;
+import com.cyl.musiclake.view.ItemDecoration;
 
 import java.util.List;
 
@@ -23,8 +23,6 @@ import butterknife.BindView;
  */
 
 public class FoldersFragment extends BaseLazyFragment<FoldersPresenter> implements FoldersContract.View {
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private FolderAdapter mAdapter;
@@ -48,7 +46,7 @@ public class FoldersFragment extends BaseLazyFragment<FoldersPresenter> implemen
         mAdapter = new FolderAdapter(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mAdapter.bindToRecyclerView(recyclerView);
     }
 
@@ -59,9 +57,13 @@ public class FoldersFragment extends BaseLazyFragment<FoldersPresenter> implemen
 
     @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadFolders();
-        });
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                if (mPresenter != null) {
+                    mPresenter.loadFolders();
+                }
+            });
+        }
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
             NavigationHelper.INSTANCE.navigateToFolderSongs(getActivity(), folderInfo.folderPath);

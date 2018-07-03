@@ -1,20 +1,15 @@
 package com.cyl.musiclake.ui.music.playqueue
 
+import android.graphics.Color
+import android.support.v7.graphics.Palette
 import android.view.View
-import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.api.doupan.DoubanMusic
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ConvertUtils
-import com.cyl.musiclake.utils.CoverLoader
 
 /**
  * 功能：本地歌曲item
@@ -22,48 +17,21 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList) {
+class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_queue, musicList) {
+
+    private var mSwatch: Palette.Swatch? = null
+
     override fun convert(holder: BaseViewHolder, item: Music) {
-        var url = item.coverUri
-        if (url == null) {
-            val info = item.title + "," + item.artist
-            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
-                override fun success(result: DoubanMusic?) {
-                    val data = result?.musics
-                    data?.let {
-                        if (it.size > 0) {
-                            url = result.musics?.first()?.image
-                            item.coverUri = url
-                            SongLoader.updateMusic(item)
-                            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
-                        }
-                    }
-                }
-
-                override fun error(msg: String?) {
-                }
-            })
-        } else {
-            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
-        }
-
-        holder.setImageResource(R.id.iv_more, R.drawable.ic_clear)
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
         if (PlayManager.getPlayingId() == item.mid) {
-            holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
+            holder.setTextColor(R.id.tv_title, Color.parseColor("#0091EA"))
+            holder.setTextColor(R.id.tv_artist, Color.parseColor("#01579B"))
         } else {
-            holder.getView<View>(R.id.v_playing).visibility = View.GONE
+            holder.setTextColor(R.id.tv_title, Color.parseColor("#000000"))
+            holder.setTextColor(R.id.tv_artist, Color.parseColor("#9e9e9e"))
         }
         holder.addOnClickListener(R.id.iv_more)
-        if (item.isCp) {
-            holder.itemView.isEnabled = false
-            holder.getView<View>(R.id.isCpView).visibility = View.VISIBLE
-        } else {
-            holder.itemView.isEnabled = true
-            holder.getView<View>(R.id.isCpView).visibility = View.GONE
-        }
-
         if (item.type == Constants.LOCAL) {
             holder.getView<View>(R.id.iv_resource).visibility = View.GONE
         } else {
@@ -84,4 +52,5 @@ class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHol
             }
         }
     }
+
 }

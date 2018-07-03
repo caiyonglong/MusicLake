@@ -30,8 +30,6 @@ import butterknife.BindView;
  * 版本：2.5
  */
 public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements AlbumsContract.View {
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private AlbumAdapter mAdapter;
@@ -61,7 +59,7 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
     @Override
     public void initViews() {
         mAdapter = new AlbumAdapter(null);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
@@ -73,9 +71,13 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
 
     @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadAlbums("all");
-        });
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                if (mPresenter != null) {
+                    mPresenter.loadAlbums("all");
+                }
+            });
+        }
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Album album = (Album) adapter.getItem(position);
             NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
@@ -110,6 +112,7 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
     }
+
     @Override
     public void showAlbums(List<Album> albumList) {
         mAdapter.setNewData(albumList);

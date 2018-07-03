@@ -28,8 +28,7 @@ import butterknife.BindView;
  * 版本：2.5
  */
 public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements ArtistContract.View {
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
@@ -73,9 +72,13 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
 
     @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadArtists("all");
-        });
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                if (mPresenter != null) {
+                    mPresenter.loadArtists("all");
+                }
+            });
+        }
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Artist artist = (Artist) adapter.getItem(position);
             NavigationHelper.INSTANCE.navigateToArtist(mFragmentComponent.getActivity(),

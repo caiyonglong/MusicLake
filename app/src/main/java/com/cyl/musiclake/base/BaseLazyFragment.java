@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,10 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     @Nullable
     @BindView(R.id.loading_progress_bar)
     public ProgressBar loadingProgressBar;
+    @Nullable
+    @BindView(R.id.swipe_refresh)
+    public SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,10 +84,17 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
         if (rootView == null)
             rootView = inflater.inflate(getLayoutId(), container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        initSwipeLayout();
         initViews();
         listener();
         loadData();
         return rootView;
+    }
+
+    private void initSwipeLayout() {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     protected void listener() {
@@ -115,7 +127,6 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     protected abstract void initInjector();
 
     protected void loadData() {
-
     }
 
     @Override

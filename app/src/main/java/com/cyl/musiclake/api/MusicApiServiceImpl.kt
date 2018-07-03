@@ -31,7 +31,7 @@ object MusicApiServiceImpl {
      * @param page
      * @return
      */
-    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<List<Music>> {
+    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .searchSong(key, limit, page) {
@@ -39,15 +39,21 @@ object MusicApiServiceImpl {
                         if (it.status) {
                             if (type == ANY || type == NETEASE)
                                 it.data.netease.songs?.forEach {
-                                    musicList.add(MusicUtils.getSearchMusic(it, Constants.NETEASE))
+                                    if (!it.cp) {
+                                        musicList.add(MusicUtils.getSearchMusic(it, Constants.NETEASE))
+                                    }
                                 }
                             if (type == ANY || type == QQ)
                                 it.data.qq.songs?.forEach {
-                                    musicList.add(MusicUtils.getSearchMusic(it, Constants.QQ))
+                                    if (!it.cp) {
+                                        musicList.add(MusicUtils.getSearchMusic(it, Constants.QQ))
+                                    }
                                 }
                             if (type == ANY || type == XIAMI)
                                 it.data.xiami.songs?.forEach {
-                                    musicList.add(MusicUtils.getSearchMusic(it, Constants.XIAMI))
+                                    if (!it.cp) {
+                                        musicList.add(MusicUtils.getSearchMusic(it, Constants.XIAMI))
+                                    }
                                 }
                             result.onNext(musicList)
                             result.onComplete()
@@ -81,7 +87,7 @@ object MusicApiServiceImpl {
      * 批量獲取歌曲信息
      *
      */
-    fun getBatchMusic(vendor: String, ids: Array<String>): Observable<List<Music>> {
+    fun getBatchMusic(vendor: String, ids: Array<String>): Observable<MutableList<Music>> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .getBatchSongDetail(vendor, ids) {

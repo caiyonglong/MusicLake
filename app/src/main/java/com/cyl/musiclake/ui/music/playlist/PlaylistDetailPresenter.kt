@@ -119,8 +119,8 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     }
 
     fun getBatchSongDetail(vendor: String, ids: Array<String>) {
-        ApiManager.request(MusicApiServiceImpl.getBatchMusic(vendor, ids), object : RequestCallBack<List<Music>> {
-            override fun success(result: List<Music>) {
+        ApiManager.request(MusicApiServiceImpl.getBatchMusic(vendor, ids), object : RequestCallBack<MutableList<Music>> {
+            override fun success(result: MutableList<Music>) {
                 mView.showPlaylistSongs(result)
             }
 

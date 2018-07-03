@@ -57,13 +57,5 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:clipToPadding="false"
-        android:paddingTop="10dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
+    <include layout="@layout/fragment_recyclerview_notoolbar" />
 </android.support.design.widget.CoordinatorLayout>

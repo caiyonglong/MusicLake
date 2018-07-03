@@ -17,7 +17,7 @@ import com.cyl.musiclake.R;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+public class ItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
@@ -28,18 +28,18 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
-    public DividerItemDecoration(Context context, int orientation) {
+    public ItemDecoration(Context context, int orientation) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
 //        if (PreferencesUtility.getInstance(context).getTheme().equals("light"))
 //            mDivider = ContextCompat.getDrawable(context, R.drawable.item_divider_black);
 //        else
         mDivider = ContextCompat.getDrawable(context, R.drawable.item_divider_white);
-//        mDivider = a.getDrawable(0);
+        mDivider = a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
     }
 
-    public DividerItemDecoration(Context context, int orientation, int resId) {
+    public ItemDecoration(Context context, int orientation, int resId) {
         mDivider = ContextCompat.getDrawable(context, resId);
         setOrientation(orientation);
     }

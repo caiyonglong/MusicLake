@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -11,13 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="@dimen/dp_8" />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_4"
+            android:background="@color/white"
+            android:clipToPadding="true"
+            android:paddingTop="@dimen/dp_8"
+            app:cardCornerRadius="@dimen/dp_4"
+            app:cardUseCompatPadding="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.CardView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

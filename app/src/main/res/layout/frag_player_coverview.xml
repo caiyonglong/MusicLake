@@ -14,13 +14,6 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,16 +25,8 @@
             android:paddingTop="2dp"
             android:text="本地音乐"
             android:textColor="@color/white"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
 
-        <ImageView
-            android:id="@+id/iv_source"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="2dp"
-            android:src="@drawable/qq" />
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView

@@ -20,9 +20,9 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
     override fun search(key: String, type: SearchEngine.Filter, limit: Int, page: Int) {
         ApiManager.request(MusicApiServiceImpl
                 .searchMusic(key, type, limit, page)
-                .compose(mView.bindToLife()),
-                object : RequestCallBack<List<Music>> {
-                    override fun success(result: List<Music>) {
+                .compose(mView?.bindToLife()),
+                object : RequestCallBack<MutableList<Music>> {
+                    override fun success(result: MutableList<Music>) {
                         mView?.showSearchResult(result)
                         mView?.hideLoading()
                     }
@@ -38,6 +38,15 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
             val data = DaoLitepal.getAllSearchInfo(query)
             uiThread {
                 mView?.showSearchSuggestion(data)
+            }
+        }
+    }
+
+    override fun getSearchHistory() {
+        doAsync {
+            val data = DaoLitepal.getAllSearchInfo()
+            uiThread {
+                mView?.showSearchHistory(data)
             }
         }
     }

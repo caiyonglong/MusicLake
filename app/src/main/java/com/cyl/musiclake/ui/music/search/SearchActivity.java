@@ -15,7 +15,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
@@ -47,18 +46,25 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     //搜索信息
     private String queryString;
     private SongAdapter mAdapter;
-    private SearchSuggestionAdapter suggestionAdapter;
+    private SearchHistoryAdapter historyAdapter;
+
 
     @BindView(R.id.recyclerView)
     RecyclerView resultListRcv;
     @BindView(R.id.suggestions_list)
-    RecyclerView suggestionsRcv;
-    @BindView(R.id.suggestions_panel)
-    View suggestionsPanel;
+    RecyclerView historyRcv;
+    @BindView(R.id.history_panel)
+    View historyPanel;
     @BindView(R.id.toolbar_search_edit_text)
     EditText searchEditText;
     @BindView(R.id.toolbar_search_container)
     View searchToolbarContainer;
+
+    @OnClick(R.id.clearAllIv)
+    void clearAll() {
+        DaoLitepal.INSTANCE.clearAllSearch();
+        historyAdapter.setNewData(null);
+    }
 
     @OnClick(R.id.toolbar_search_clear)
     void clearQuery() {
@@ -81,7 +87,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     protected void initView() {
-        suggestionsPanel.setVisibility(View.GONE);
         showSearchOnStart();
     }
 
@@ -110,6 +115,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         resultListRcv.setLayoutManager(layoutManager);
         resultListRcv.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(resultListRcv);
+        mPresenter.getSearchHistory();
     }
 
     @Override
@@ -138,7 +144,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             @Override
             public void afterTextChanged(Editable s) {
                 String newText = searchEditText.getText().toString();
-                mPresenter.getSuggestions(newText);
+                if (newText.length() == 0) {
+                    mPresenter.getSearchHistory();
+                    updateHistoryPanel(true);
+                }
             }
         });
 
@@ -170,8 +179,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                         AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
                         break;
                     case R.id.popup_song_download:
-                        DownloadDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), getLocalClassName());
+                        DownloadDialog.Companion.newInstance(music).show(this);
                         break;
                 }
                 return true;
@@ -193,10 +201,11 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     }
 
+    //
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        restoreFilterChecked(menu, filterItemCheckedId);
+//        restoreFilterChecked(menu, filterItemCheckedId);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -206,11 +215,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.menu_filter_all:
-            case R.id.menu_filter_qq:
-            case R.id.menu_filter_xiami:
-            case R.id.menu_filter_netease:
-                changeFilter(item, getFilterFromMenuId(item.getItemId()));
+//            case R.id.menu_filter_all:
+//            case R.id.menu_filter_qq:
+//            case R.id.menu_filter_xiami:
+//            case R.id.menu_filter_netease:
+//                changeFilter(item, getFilterFromMenuId(item.getItemId()));
+//                break;
+            case R.id.menu_search:
+                queryString = searchEditText.getText().toString().trim();
+                search(queryString);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -229,39 +242,39 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     }
 
 
-    private void restoreFilterChecked(Menu menu, int itemId) {
-        if (itemId != -1) {
-            MenuItem item = menu.findItem(itemId);
-            if (item == null) return;
-
-            item.setChecked(true);
-            filter = getFilterFromMenuId(itemId);
-        }
-    }
+//    private void restoreFilterChecked(Menu menu, int itemId) {
+//        if (itemId != -1) {
+//            MenuItem item = menu.findItem(itemId);
+//            if (item == null) return;
+//
+//            item.setChecked(true);
+//            filter = getFilterFromMenuId(itemId);
+//        }
+//    }
 
 
     int filterItemCheckedId = -1;
 
-    private SearchEngine.Filter getFilterFromMenuId(int itemId) {
-        switch (itemId) {
-            case R.id.menu_filter_qq:
-                return SearchEngine.Filter.QQ;
-            case R.id.menu_filter_xiami:
-                return SearchEngine.Filter.XIAMI;
-            case R.id.menu_filter_netease:
-                return SearchEngine.Filter.NETEASE;
-            case R.id.menu_filter_all:
-            default:
-                return SearchEngine.Filter.ANY;
-        }
-    }
+//    private SearchEngine.Filter getFilterFromMenuId(int itemId) {
+//        switch (itemId) {
+//            case R.id.menu_filter_qq:
+//                return SearchEngine.Filter.QQ;
+//            case R.id.menu_filter_xiami:
+//                return SearchEngine.Filter.XIAMI;
+//            case R.id.menu_filter_netease:
+//                return SearchEngine.Filter.NETEASE;
+//            case R.id.menu_filter_all:
+//            default:
+//                return SearchEngine.Filter.ANY;
+//        }
+//    }
 
     private void search(String query) {
-        if (query.length() > 0) {
+        if (query != null && query.length() > 0) {
             mOffset = 0;
             searchResults.clear();
             queryString = query;
-            suggestionsPanel.setVisibility(View.GONE);
+            updateHistoryPanel(false);
             mPresenter.saveQueryInfo(query);
             mPresenter.search(query, filter, limit, mOffset);
         }
@@ -280,11 +293,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void showSearchResult(List<Music> list) {
-        if (list.size() > 0) {
-            suggestionsPanel.setVisibility(View.GONE);
-        } else {
-            suggestionsPanel.setVisibility(View.VISIBLE);
-        }
         searchResults.addAll(list);
         mAdapter.setNewData(searchResults);
         mAdapter.loadMoreComplete();
@@ -294,30 +302,56 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void showSearchSuggestion(List<SearchHistoryBean> result) {
-        suggestionsPanel.setVisibility(View.VISIBLE);
-        if (suggestionAdapter == null) {
-            suggestionAdapter = new SearchSuggestionAdapter(suggestions);
-            suggestionsRcv.setLayoutManager(new LinearLayoutManager(this));
-            suggestionsRcv.setAdapter(suggestionAdapter);
-            suggestionAdapter.bindToRecyclerView(suggestionsRcv);
-            suggestionAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+        suggestions = result;
+        if (historyAdapter == null) {
+            historyAdapter = new SearchHistoryAdapter(suggestions);
+            historyRcv.setLayoutManager(new LinearLayoutManager(this));
+            historyRcv.setAdapter(historyAdapter);
+            historyAdapter.bindToRecyclerView(historyRcv);
+            historyAdapter.setOnItemLongClickListener((adapter, view, position) -> {
                 return false;
             });
-            suggestionAdapter.setOnItemClickListener((adapter, view, position) -> {
+            historyAdapter.setOnItemClickListener((adapter, view, position) -> {
             });
-            suggestionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
                 if (view.getId() == R.id.history_search) {
                     searchEditText.setText(suggestions.get(position).getTitle());
                 } else if (view.getId() == R.id.deleteView) {
                     DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
-                    suggestionAdapter.remove(position);
+                    historyAdapter.remove(position);
                 }
             });
         } else {
             suggestions = result;
-            suggestionsPanel.setVisibility(View.VISIBLE);
-            suggestionAdapter.setNewData(result);
-            suggestionsPanel.setVisibility(View.GONE);
+            historyAdapter.setNewData(result);
+        }
+    }
+
+    @Override
+    public void showSearchHistory(List<SearchHistoryBean> result) {
+        suggestions = result;
+        if (historyAdapter == null) {
+            historyAdapter = new SearchHistoryAdapter(suggestions);
+            historyRcv.setLayoutManager(new LinearLayoutManager(this));
+            historyRcv.setAdapter(historyAdapter);
+            historyAdapter.bindToRecyclerView(historyRcv);
+            historyAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+                return false;
+            });
+            historyAdapter.setOnItemClickListener((adapter, view, position) -> {
+            });
+            historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+                if (view.getId() == R.id.history_search) {
+                    searchEditText.setText(suggestions.get(position).getTitle());
+                    search(suggestions.get(position).getTitle());
+                } else if (view.getId() == R.id.deleteView) {
+                    DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
+                    historyAdapter.remove(position);
+                }
+            });
+        } else {
+            suggestions = result;
+            historyAdapter.setNewData(result);
         }
     }
 
@@ -326,4 +360,13 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         mAdapter.setEmptyView(R.layout.view_song_empty);
     }
 
+    private void updateHistoryPanel(boolean isShow) {
+        if (isShow) {
+            resultListRcv.setVisibility(View.GONE);
+            historyPanel.setVisibility(View.VISIBLE);
+        } else {
+            resultListRcv.setVisibility(View.VISIBLE);
+            historyPanel.setVisibility(View.GONE);
+        }
+    }
 }

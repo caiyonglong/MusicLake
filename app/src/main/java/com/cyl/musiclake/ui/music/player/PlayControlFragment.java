@@ -101,6 +101,9 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     //textView
     @BindView(R.id.song_title)
     TextView mTvName;
+    @BindView(R.id.song_artist)
+    TextView mTvArtistAlbum;
+
     @BindView(R.id.song_elapsed_time)
     TextView tv_time;
     @BindView(R.id.song_duration)
@@ -119,8 +122,8 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     //ViewPager中界面专辑和歌词
     private LyricView mLrcView;
     private CircleImageView mCivImage;
-    private TextView mTvTip, mTvRecourse;
-    private ImageView mIvResource;
+    private TextView mTvRecourse;
+    private Drawable mDrawable;
 
     private PlayQueueDialog playQueueDialog = null;
     private Palette mPalette;
@@ -224,9 +227,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         FragmentManager fm = getActivity().getSupportFragmentManager();
         playQueueDialog = PlayQueueDialog.newInstance();
         playQueueDialog.show(fm, "fragment_bottom_dialog");
-        if (mSwatch != null) {
-            playQueueDialog.setPaletteSwatch(mSwatch);
-        }
     }
 
     public static PlayControlFragment newInstance() {
@@ -282,9 +282,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
         mLrcView = lrcView.findViewById(R.id.lyricShow);
         mCivImage = coverView.findViewById(R.id.civ_cover);
-        mTvTip = coverView.findViewById(R.id.tv_tip);
         mTvRecourse = coverView.findViewById(R.id.tv_source);
-        mIvResource = coverView.findViewById(R.id.iv_source);
 
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
@@ -397,12 +395,38 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @Override
     public void setArtist(String artist) {
         mTvArtist.setText(artist);
-        mTvTip.setText(artist);
+        mTvArtistAlbum.setText(artist);
     }
 
     @Override
     public void setOtherInfo(String source) {
-        mTvRecourse.setText(source);
+        if (source.equals(Constants.LOCAL)) {
+            mTvRecourse.setVisibility(View.GONE);
+        } else {
+            switch (source) {
+                case Constants.QQ:
+                    mTvRecourse.setText(R.string.res_qq);
+                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.qq);
+                    break;
+                case Constants.BAIDU:
+                    mTvRecourse.setText(R.string.res_baidu);
+                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.baidu);
+                    break;
+                case Constants.NETEASE:
+                    mTvRecourse.setText(R.string.res_wangyi);
+                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.netease);
+                    break;
+                case Constants.XIAMI:
+                    mTvRecourse.setText(R.string.res_xiami);
+                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.xiami);
+                    break;
+            }
+            if (mDrawable != null) {
+                mTvRecourse.setVisibility(View.VISIBLE);
+                mDrawable.setBounds(10, 10, 10,10);
+                mTvRecourse.setCompoundDrawables(null, null, mDrawable, null);
+            }
+        }
     }
 
     @Override
@@ -415,18 +439,18 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             paletteColor = mSwatch.getRgb();
             int artistColor = mSwatch.getTitleTextColor();
             mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-            mTvTip.setTextColor(artistColor);
+            mTvArtistAlbum.setTextColor(artistColor);
         } else {
             mSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
             if (mSwatch != null) {
                 paletteColor = mSwatch.getRgb();
                 int artistColor = mSwatch.getTitleTextColor();
                 mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-                mTvTip.setTextColor(artistColor);
+                mTvArtistAlbum.setTextColor(artistColor);
             } else {
                 paletteColor = Color.WHITE;
                 mTvName.setTextColor(ContextCompat.getColor(getContext(), android.R.color.primary_text_light));
-                mTvTip.setTextColor(ContextCompat.getColor(getContext(), android.R.color.secondary_text_light));
+                mTvArtistAlbum.setTextColor(ContextCompat.getColor(getContext(), android.R.color.secondary_text_light));
             }
         }
         //set icon color
@@ -436,12 +460,9 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 //        mLrcView.setHighLightTextColor(statusBarColor);
 //        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
 //        tv_time.setTextColor(blackWhiteColor);
-//        mTvTip.setTextColor(blackWhiteColor);
+//        mTvArtistAlbum.setTextColor(blackWhiteColor);
 //        tv_duration.setTextColor(blackWhiteColor);
 //        mLrcView.setHintColor(blackWhiteColor);
-        if (playQueueDialog != null && mSwatch != null) {
-            playQueueDialog.setPaletteSwatch(mSwatch);
-        }
 //        mBtnNext.setEnabled(true);
 //        mBtnNext.setcolo(blackWhiteColor);
         skip_prev.setColor(blackWhiteColor);

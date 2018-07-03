@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -16,15 +15,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
@@ -50,13 +47,10 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     ImageView clearAll;
     @BindView(R.id.recycler_view_songs)
     RecyclerView recyclerView;
-    @BindView(R.id.sheet)
-    LinearLayout root;
 
     private PlayQueuePresenter mPresenter;
     private List<Music> musicList = new ArrayList<>();
     private QueueAdapter mAdapter;
-    private Palette.Swatch mSwatch;
     private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
     private int playModeId = 0;
 
@@ -80,9 +74,12 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         Dialog dialog = getDialog();
         dialog.setCanceledOnTouchOutside(true);
         Window window = dialog.getWindow();
+
+
         WindowManager.LayoutParams params = window.getAttributes();
         params.gravity = Gravity.BOTTOM;
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = MusicApp.getInstance().screenSize.y / 7 * 4;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
@@ -109,14 +106,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        if (mSwatch != null) {
-//            root.setBackgroundColor(mSwatch.getRgb());
-            int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
-            tvPlayMode.setTextColor(blackWhiteColor);
-            ivPlayMode.setColorFilter(blackWhiteColor);
-            clearAll.setColorFilter(blackWhiteColor);
-        }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerView);
@@ -148,19 +137,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         });
     }
 
-    public void setPaletteSwatch(Palette.Swatch swatch) {
-        if (swatch == null) {
-            return;
-        }
-        mSwatch = swatch;
-        if (root != null) {
-//            root.setBackgroundColor(mSwatch.getRgb());
-            int blackWhiteColor = ColorUtil.getBlackWhiteColor(mSwatch.getRgb());
-            tvPlayMode.setTextColor(blackWhiteColor);
-            ivPlayMode.setColorFilter(blackWhiteColor);
-            clearAll.setColorFilter(blackWhiteColor);
-        }
-    }
 
     @Override
     public void onDestroyView() {

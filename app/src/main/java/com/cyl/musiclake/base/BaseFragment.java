@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -60,6 +61,10 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     @BindView(R.id.loading_progress_bar)
     public ProgressBar loadingProgressBar;
 
+    @Nullable
+    @BindView(R.id.swipe_refresh)
+    public SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +92,9 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
             appCompatActivity.setSupportActionBar(mToolbar);
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setEnabled(false);
         }
     }
 

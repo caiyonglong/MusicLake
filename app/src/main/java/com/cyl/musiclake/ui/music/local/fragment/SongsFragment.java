@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,24 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
+import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.SongsContract;
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter;
-import com.cyl.musiclake.utils.FileUtils;
-import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.view.ItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +37,11 @@ import butterknife.BindView;
  * 版本：2.5
  */
 public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements SongsContract.View {
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     View mViewHeader;
     ImageView mReloadLocal;
+    TextView mSongNum;
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
 
@@ -70,6 +64,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mAdapter.bindToRecyclerView(mRecyclerView);
         initHeaderView();
         mAdapter.addHeaderView(mViewHeader);
@@ -93,49 +88,51 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            PopupMenu popupMenu = new PopupMenu(getContext(), view);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_play:
-                        PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID);
-                        break;
-                    case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
-                                .show(getChildFragmentManager(), getTag());
-                        break;
-                    case R.id.popup_song_goto_album:
-                        LogUtil.e("album", music.toString() + "");
-                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
-                                music.getAlbumId(),
-                                music.getAlbum(), null);
-                        break;
-                    case R.id.popup_song_goto_artist:
-                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
-                                music.getArtistId(),
-                                music.getArtist(), null);
-                        break;
-                    case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
-                        break;
-                    case R.id.popup_song_delete:
-                        new MaterialDialog.Builder(getContext())
-                                .title("警告")
-                                .content("是否删除这首歌曲？")
-                                .onPositive((dialog, which) -> {
-                                    FileUtils.delFile(musicList.get(position).getUri());
-                                    SongLoader.INSTANCE.removeSong(musicList.get(position));
-                                    musicList.remove(position);
-                                    mAdapter.setNewData(musicList);
-                                })
-                                .positiveText("确定")
-                                .negativeText("取消")
-                                .show();
-                        break;
-                }
-                return false;
-            });
-            popupMenu.inflate(R.menu.popup_song);
-            popupMenu.show();
+            PopupDialogFragment.Companion.newInstance(music)
+                    .show((AppCompatActivity) mFragmentComponent.getActivity());
+//            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+//            popupMenu.setOnMenuItemClickListener(item -> {
+//                switch (item.getItemId()) {
+//                    case R.id.popup_song_play:
+//                        PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID);
+//                        break;
+//                    case R.id.popup_song_detail:
+//                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+//                                .show(getChildFragmentManager(), getTag());
+//                        break;
+//                    case R.id.popup_song_goto_album:
+//                        LogUtil.e("album", music.toString() + "");
+//                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
+//                                music.getAlbumId(),
+//                                music.getAlbum(), null);
+//                        break;
+//                    case R.id.popup_song_goto_artist:
+//                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
+//                                music.getArtistId(),
+//                                music.getArtist(), null);
+//                        break;
+//                    case R.id.popup_song_addto_queue:
+//                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
+//                        break;
+//                    case R.id.popup_song_delete:
+//                        new MaterialDialog.Builder(getContext())
+//                                .title("警告")
+//                                .content("是否删除这首歌曲？")
+//                                .onPositive((dialog, which) -> {
+//                                    FileUtils.delFile(musicList.get(position).getUri());
+//                                    SongLoader.INSTANCE.removeSong(musicList.get(position));
+//                                    musicList.remove(position);
+//                                    mAdapter.setNewData(musicList);
+//                                })
+//                                .positiveText("确定")
+//                                .negativeText("取消")
+//                                .show();
+//                        break;
+//                }
+//                return false;
+//            });
+//            popupMenu.inflate(R.menu.popup_song);
+//            popupMenu.show();
         });
     }
 
@@ -167,6 +164,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         musicList.clear();
         musicList.addAll(songList);
         mAdapter.setNewData(songList);
+
         hideLoading();
     }
 

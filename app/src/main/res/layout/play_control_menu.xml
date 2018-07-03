@@ -7,8 +7,7 @@
     android:layout_height="57dp"
     android:layout_gravity="top"
     android:background="@color/white"
-    android:elevation="5dp"
-    tools:targetApi="lollipop">
+    android:elevation="5dp">
 
     <ProgressBar
         android:id="@+id/song_progress_normal"

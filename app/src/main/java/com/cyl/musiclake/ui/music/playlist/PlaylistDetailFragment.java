@@ -13,7 +13,6 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
@@ -22,15 +21,17 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
-import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.view.ItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,9 +96,9 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                 album_art.setTransitionName(getArguments().getString("transition_name"));
             }
         }
-
         mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
@@ -164,15 +165,16 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         switch (id) {
             case R.id.action_delete_playlist:
                 LogUtil.e("action_delete_playlist");
-                new MaterialDialog.Builder(getActivity())
-                        .title("提示")
-                        .content("是否删除这个歌单？")
-                        .onPositive((dialog, which) -> {
-                            mPresenter.deletePlaylist(mPlaylist);
-                        })
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .show();
+                PopupUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, isHistory -> {
+                    if (isHistory) {
+                        musicList.clear();
+                        mAdapter.notifyDataSetChanged();
+                        showEmptyState();
+                    } else if (mPresenter != null) {
+                        mPresenter.deletePlaylist(mPlaylist);
+                    }
+                    return null;
+                }, () -> null);
                 break;
             case R.id.action_rename_playlist:
                 LogUtil.e("action_rename_playlist");
@@ -234,7 +236,10 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 //                        }).show();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return super.
+
+                onOptionsItemSelected(item);
+
     }
 
     private void onBackPress() {
@@ -245,6 +250,12 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_playlist_detail, menu);
+        if (mPlaylist.getPid() != null && mPlaylist.getPid().equals(Constants.PLAYLIST_HISTORY_ID)) {
+            menu.removeItem(R.id.action_rename_playlist);
+        } else if (mPlaylist.getPid() != null && mPlaylist.getPid().equals(Constants.PLAYLIST_LOVE_ID)) {
+            menu.removeItem(R.id.action_rename_playlist);
+            menu.removeItem(R.id.action_delete_playlist);
+        }
     }
 
     @Override

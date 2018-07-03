@@ -34,7 +34,7 @@ class Playlist : LitePalSupport, Serializable {
     //歌曲集合
     var musicList: List<Music> = ArrayList()
 
-    constructor() {}
+    constructor()
 
     constructor(pid: String?, name: String?) {
         this.pid = pid

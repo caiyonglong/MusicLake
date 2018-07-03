@@ -179,8 +179,8 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         if (action == 0) {
             PlayManager.playOnline(music);
         } else if (action == 1) {
-            DownloadDialog.newInstance(music)
-                    .show(getSupportFragmentManager(), getLocalClassName());
+            DownloadDialog.Companion.newInstance(music)
+                    .show(this);
         }
     }
 }
