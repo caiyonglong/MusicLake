@@ -25,7 +25,7 @@ object PlayHistoryLoader {
     /**
      * 获取播放历史
      */
-    fun getPlayHistory(): List<Music> {
+    fun getPlayHistory(): MutableList<Music> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_HISTORY_ID, "updateDate desc")
     }
 
@@ -34,7 +34,7 @@ object PlayHistoryLoader {
      */
     fun clearPlayHistory() {
         try {
-            DaoLitepal.clearPlaylist(Constants.PLAYLIST_QUEUE_ID)
+            DaoLitepal.clearPlaylist(Constants.PLAYLIST_HISTORY_ID)
         } catch (e: Throwable) {
             e.printStackTrace()
         }

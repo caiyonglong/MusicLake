@@ -5,9 +5,9 @@ import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musicapi.playlist.PlaylistApiService
 import com.cyl.musicapi.playlist.PlaylistInfo
 import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -31,7 +31,7 @@ object PlaylistApiServiceImpl {
     /**
      * 获取全部歌单
      */
-    fun getPlaylist(): Observable<List<Playlist>> {
+    fun getPlaylist(): Observable<MutableList<Playlist>> {
         return playlistApiService.getOnlinePlaylist(token)
                 .flatMap { it ->
                     val json = it.string()
@@ -60,19 +60,19 @@ object PlaylistApiServiceImpl {
     /**
      * 获取歌单歌曲列表
      */
-    fun getMusicList(pid: String): Observable<List<Music>> {
+    fun getMusicList(pid: String): Observable<MutableList<Music>> {
         return playlistApiService.getMusicList(token, pid)
                 .flatMap { it ->
                     val json = it.string()
 
-                    val data = Gson().fromJson<List<MusicInfo>>(json, object : TypeToken<List<MusicInfo>>() {
+                    val data = Gson().fromJson<MutableList<MusicInfo>>(json, object : TypeToken<MutableList<MusicInfo>>() {
                     }.type)
                     val musicList = mutableListOf<Music>()
                     for (musicInfo in data) {
                         val music = MusicUtils.getMusic(musicInfo)
                         musicList.add(music)
                     }
-                    Observable.create(ObservableOnSubscribe<List<Music>> {
+                    Observable.create(ObservableOnSubscribe<MutableList<Music>> {
                         if (data.isEmpty() && json.contains("msg")) {
                             val msg = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
                             it.onError(Throwable(msg.msg))

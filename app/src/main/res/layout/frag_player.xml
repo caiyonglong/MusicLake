@@ -142,7 +142,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
                     app:materialIcon="shuffle"
                     app:materialIconColor="@color/white"
@@ -245,8 +245,7 @@
                     android:layout_margin="@dimen/dp_8"
                     android:layout_weight="1"
                     android:scaleType="centerInside"
-                    android:src="@drawable/item_favorite"
-                    android:tint="@color/white" />
+                    android:src="@drawable/item_favorite" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/skip_download"

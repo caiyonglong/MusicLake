@@ -10,15 +10,14 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            android:layout_gravity="center">
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"

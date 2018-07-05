@@ -18,12 +18,16 @@ import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
@@ -168,8 +172,10 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                 PopupUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, isHistory -> {
                     if (isHistory) {
                         musicList.clear();
+                        PlayHistoryLoader.INSTANCE.clearPlayHistory();
                         mAdapter.notifyDataSetChanged();
                         showEmptyState();
+                        RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID));
                     } else if (mPresenter != null) {
                         mPresenter.deletePlaylist(mPlaylist);
                     }
@@ -287,7 +293,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             CoverLoader.loadImageView(getContext(), musicList.get(0).getCoverUri(), album_art);
         }
         if (musicList.size() == 0) {
-            mAdapter.setEmptyView(R.layout.view_song_empty);
+            showEmptyState();
         }
     }
 

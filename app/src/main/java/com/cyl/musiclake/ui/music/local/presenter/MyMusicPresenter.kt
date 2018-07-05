@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.local.presenter
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.DownloadLoader
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
@@ -10,7 +11,6 @@ import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.event.SongCollectEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract
@@ -32,11 +32,15 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     init {
         /**登陆成功重新设置用户新 */
         RxBus.getInstance().register(MetaChangedEvent::class.java).subscribe { event -> updateHistory() }
-        RxBus.getInstance().register(SongCollectEvent::class.java).subscribe { event ->
-            updateFavorite()
-        }
         RxBus.getInstance().register(LoginEvent::class.java).subscribe { event -> loadPlaylist() }
-        RxBus.getInstance().register(PlaylistEvent::class.java).subscribe { event -> loadPlaylist() }
+        RxBus.getInstance().register(PlaylistEvent::class.java).subscribe {
+            when (it.type) {
+                Constants.PLAYLIST_CUSTOM_ID -> loadPlaylist()
+                Constants.PLAYLIST_LOVE_ID -> updateFavorite()
+                Constants.PLAYLIST_HISTORY_ID -> updateHistory()
+                Constants.PLAYLIST_DOWNLOAD_ID -> updateDownload()
+            }
+        }
     }
 
     /**
@@ -98,8 +102,8 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     override fun loadPlaylist() {
         val mIsLogin = UserStatus.getstatus(mView.context)
         if (mIsLogin) {
-            ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<List<Playlist>> {
-                override fun success(result: List<Playlist>) {
+            ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
+                override fun success(result: MutableList<Playlist>) {
                     result.forEach {
                         it.pid = it.id.toString()
                         it.type = 1

@@ -40,24 +40,25 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
     override fun loadNetease() {
         for (i in charts.indices) {
             neteaseLists.add(Playlist(i.toString(), charts[i]))
-            BaseApiImpl.getInstance(mView.context).getTopList(i.toString()) { (data) ->
-                val playlist = Playlist()
-                playlist.pid = i.toString()
-                playlist.name = data.name
-                playlist.count = data.playCount
-                playlist.coverUrl = data.cover
-                playlist.des = data.description
-                val musicList = ArrayList<Music>()
-                if (data.list!!.isNotEmpty()) {
-                    for (item in data.list!!) {
-                        val music = MusicUtils.getMusic(item)
-                        musicList.add(music)
+            BaseApiImpl.getInstance(mView.context).getTopList(i.toString()) {
+                it.data.let {
+                    val playlist = Playlist()
+                    playlist.pid = i.toString()
+                    playlist.name = it.name
+                    playlist.count = it.playCount
+                    playlist.coverUrl = it.cover
+                    playlist.des = it.description
+                    val musicList = ArrayList<Music>()
+                    if (it.list!!.isNotEmpty()) {
+                        for (item in it.list!!) {
+                            val music = MusicUtils.getMusic(item)
+                            musicList.add(music)
+                        }
                     }
+                    playlist.musicList = musicList
+                    neteaseLists[i] = playlist
+                    mView?.showNeteaseCharts(neteaseLists)
                 }
-                playlist.musicList = musicList
-                neteaseLists[i] = playlist
-                mView?.showNeteaseCharts(neteaseLists)
-                null
             }
         }
     }

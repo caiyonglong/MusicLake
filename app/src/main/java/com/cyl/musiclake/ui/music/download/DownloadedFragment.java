@@ -159,7 +159,7 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
         mAdapter.setNewData(musicList);
         hideLoading();
         if (musicList.size() == 0) {
-            mAdapter.setEmptyView(R.layout.view_song_empty);
+            showEmptyState();
         }
     }
 

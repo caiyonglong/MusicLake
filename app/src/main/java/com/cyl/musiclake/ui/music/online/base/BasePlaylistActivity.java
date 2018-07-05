@@ -18,8 +18,8 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
-import com.cyl.musiclake.ui.music.dialog.DownloadDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.DialogUtils;
@@ -179,8 +179,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         if (action == 0) {
             PlayManager.playOnline(music);
         } else if (action == 1) {
-            DownloadDialog.Companion.newInstance(music)
-                    .show(this);
+            PopupUtilsKt.downloadMusic(this, music);
         }
     }
 }

@@ -15,7 +15,6 @@ import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog;
-import com.cyl.musiclake.ui.music.local.adapter.LocalAdapter;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;
 import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter;
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter;
@@ -128,7 +127,7 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
 
     @Override
     public void showEmptyView() {
-        mAdapter.setEmptyView(R.layout.view_playlist_empty);
+        showEmptyState();
     }
 
     @Override
@@ -136,9 +135,6 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
         this.playlists = playlists;
         hideLoading();
         mAdapter.setNewData(playlists);
-        if (playlists.size() == 0) {
-            showEmptyState();
-        }
     }
 
     @Override

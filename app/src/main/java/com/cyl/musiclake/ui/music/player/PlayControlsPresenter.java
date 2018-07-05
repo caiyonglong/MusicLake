@@ -211,11 +211,4 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         }
     };
 
-    public void updateFavoriteSong() {
-        Music music = PlayManager.getPlayingMusic();
-        if (music == null)
-            return;
-        Boolean newStatus = SongLoader.INSTANCE.updateFavoriteSong(music);
-        mView.updateFavorite(newStatus);
-    }
 }

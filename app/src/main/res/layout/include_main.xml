@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <fragment
-        android:name="com.cyl.musiclake.ui.music.player.PlayControlFragment"
+    <FrameLayout
+        android:id="@+id/controls_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -25,14 +25,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
+import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
@@ -206,13 +210,18 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @OnClick(R.id.iv_love)
     void love() {
-        mPresenter.updateFavoriteSong();
+        Music music = PlayManager.getPlayingMusic();
+        if (music == null)
+            return;
+        Boolean newStatus = SongLoader.INSTANCE.updateFavoriteSong(music);
+        updateFavorite(newStatus);
+        RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_LOVE_ID));
     }
 
     @OnClick(R.id.skip_download)
     void download() {
         Music music = PlayManager.getPlayingMusic();
-        MusicUtils.INSTANCE.checkDownload((AppCompatActivity) getActivity(), music);
+        PopupUtilsKt.downloadMusic(mFragmentComponent.getActivity(), music);
     }
 
     @OnClick(R.id.skip_equalizer)
@@ -423,7 +432,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             }
             if (mDrawable != null) {
                 mTvRecourse.setVisibility(View.VISIBLE);
-                mDrawable.setBounds(10, 10, 10,10);
+                mDrawable.setBounds(10, 10, 10, 10);
                 mTvRecourse.setCompoundDrawables(null, null, mDrawable, null);
             }
         }
@@ -587,6 +596,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             }
         }
     }
+
 
     @Override
     public void onDestroy() {

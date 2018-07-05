@@ -18,7 +18,7 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.DownloadDialog;
+import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.online.contract.BaiduListContract;
@@ -120,8 +120,7 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
                         ToastUtils.show("暂不支持添加百度音乐");
                         break;
                     case R.id.popup_song_download:
-                        DownloadDialog.Companion.newInstance(music)
-                                .show(this);
+                        PopupUtilsKt.downloadMusic(this, music);
                         break;
                 }
                 return false;

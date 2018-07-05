@@ -8,12 +8,10 @@ import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
-
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.ui.music.dialog.DownloadDialog
 import com.cyl.musiclake.utils.ToastUtils
 
 /**
@@ -30,7 +28,6 @@ object MusicUtils {
             ToastUtils.show(MusicApp.getAppContext(), "已经本地音乐!")
             return
         }
-        DownloadDialog.newInstance(music).show(activity)
     }
 
     /**

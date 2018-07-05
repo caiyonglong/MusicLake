@@ -13,7 +13,7 @@ object DownloadLoader {
     /**
      * 获取已下载列表
      */
-    fun getDownloadList(): List<Music> {
+    fun getDownloadList(): MutableList<Music> {
         val musicList = mutableListOf<Music>()
         val data = LitePal.where("finish = 1").find(TasksManagerModel::class.java)
         data.forEach {

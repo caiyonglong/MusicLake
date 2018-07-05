@@ -4,6 +4,7 @@ import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
@@ -48,8 +49,8 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
             return
         }
-        ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<List<Music>> {
-            override fun success(result: List<Music>) {
+        ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
+            override fun success(result: MutableList<Music>) {
                 //                mView.showPlaylistSongs(result);
 //                if (result.isEmpty()) {
                 mView?.showPlaylistSongs(result)
@@ -82,7 +83,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.deletePlaylist(it) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView.success(1)
-                RxBus.getInstance().post(PlaylistEvent())
+                RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
                 ToastUtils.show(result)
             }
 
@@ -96,7 +97,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView.success(1)
-                RxBus.getInstance().post(PlaylistEvent())
+                RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
                 ToastUtils.show(result)
             }
 

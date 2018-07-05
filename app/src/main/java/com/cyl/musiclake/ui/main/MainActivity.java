@@ -23,7 +23,7 @@ import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
-import com.cyl.musiclake.event.PlayQueueEvent;
+import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
@@ -92,8 +92,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         /**登陆成功重新设置用户新*/
         flowable = RxBus.getInstance().register(LoginEvent.class)
                 .subscribe(event -> setUserStatusInfo());
-        flowable = RxBus.getInstance().register(PlayQueueEvent.class)
-                .subscribe(event -> setPlaylistQueueChange());
+        flowable = RxBus.getInstance().register(PlaylistEvent.class)
+                .subscribe(event -> {
+                    if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID))
+                        setPlaylistQueueChange();
+                });
         flowable = RxBus.getInstance().register(MetaChangedEvent.class)
                 .subscribe(event -> updatePlaySongInfo(event.getMusic()));
     }
@@ -120,6 +123,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         //加载主fragment
         navigateLibrary.run();
+        navigatePlay.run();
     }
 
     @Override
@@ -318,11 +322,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void setPlaylistQueueChange() {
-        if (PlayManager.getPlayList().size() == 0) {
-            mSlidingUpPaneLayout.setTouchEnabled(false);
-        } else {
-            mSlidingUpPaneLayout.setTouchEnabled(true);
-        }
+//        if (PlayManager.getPlayList().size() == 0) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.HIDDEN);
+//        } else if (PlayManager.getPlayList().size() >= 0 && mSlidingUpPaneLayout.getPanelState() == PanelState.HIDDEN) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
+//        }
     }
 
     /**

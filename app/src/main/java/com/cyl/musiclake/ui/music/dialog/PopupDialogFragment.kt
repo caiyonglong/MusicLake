@@ -76,7 +76,6 @@ class PopupDialogFragment : DialogFragment(), View.OnClickListener {
             R.id.detailView -> {
             }
             R.id.downloadView -> {
-                music?.let { it1 -> DownloadDialog.newInstance(it1).show(appCompatActivity) }
             }
         }
         dismiss()

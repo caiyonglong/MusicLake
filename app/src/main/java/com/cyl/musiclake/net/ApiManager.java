@@ -160,12 +160,16 @@ public class ApiManager {
 
                     @Override
                     public void onNext(T t) {
-                        result.success(t);
+                        if (result != null) {
+                            result.success(t);
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        result.error(e.getMessage());
+                        if (result != null) {
+                            result.error(e.getMessage());
+                        }
                     }
 
                     @Override

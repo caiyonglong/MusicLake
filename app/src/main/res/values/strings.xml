@@ -253,4 +253,7 @@
     <string name="popup_artist">歌手：%1$s</string>
     <string name="popup_album">专辑：%1$s</string>
 
+    <string name="download_add_success">下载任务添加成功</string>
+    <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
+    <string name="download_error">下载地址异常</string>
 </resources>

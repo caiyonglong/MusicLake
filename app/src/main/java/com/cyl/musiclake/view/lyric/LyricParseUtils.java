@@ -119,35 +119,40 @@ public class LyricParseUtils {
             return;
         }
         if (line.startsWith("[0") && line.endsWith("]")) {
-            String test = line.replace("]", "").replace(", ", "]");
+            String test = line.replace("]", "").replaceFirst(", ", "]");
             if (test.contains("]")) {
                 line = test;
             }
         }
-        if (line.startsWith("[0") && !line.endsWith("]")) {
-            // 歌词内容,需要考虑一行歌词有多个时间戳的情况
-            int lastIndexOfRightBracket = line.lastIndexOf("]");
-            String content = line.substring(lastIndexOfRightBracket + 1, line.length());
-            //去除trc歌词中每个字的时间长
-            content = content.replaceAll("<[0-9]{1,5}>", "");
-            String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
-            String arrTimes[] = times.split("-");
-            for (String temp : arrTimes) {
-                if (temp.trim().length() == 0) {
-                    continue;
+        try {
+            if (line.startsWith("[0") && !line.endsWith("]")) {
+                // 歌词内容,需要考虑一行歌词有多个时间戳的情况
+                int lastIndexOfRightBracket = line.lastIndexOf("]");
+                String content = line.substring(lastIndexOfRightBracket + 1, line.length());
+                //去除trc歌词中每个字的时间长
+                content = content.replaceAll("<[0-9]{1,5}>", "");
+                String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
+                String arrTimes[] = times.split("-");
+                for (String temp : arrTimes) {
+                    if (temp.trim().length() == 0) {
+                        continue;
+                    }
+                    /** [02:34.14][01:07.00]当你我不小心又想起她
+                     *
+                     上面的歌词的就可以拆分为下面两句歌词了
+                     [02:34.14]当你我不小心又想起她
+                     [01:07.00]当你我不小心又想起她
+                     */
+                    LineInfo lineInfo = new LineInfo();
+                    lineInfo.content = content.trim();
+                    lineInfo.start = measureStartTimeMillis(temp);
+                    lyricInfo.songLines.add(lineInfo);
                 }
-                /** [02:34.14][01:07.00]当你我不小心又想起她
-                 *
-                 上面的歌词的就可以拆分为下面两句歌词了
-                 [02:34.14]当你我不小心又想起她
-                 [01:07.00]当你我不小心又想起她
-                 */
-                LineInfo lineInfo = new LineInfo();
-                lineInfo.content = content.trim();
-                lineInfo.start = measureStartTimeMillis(temp);
-                lyricInfo.songLines.add(lineInfo);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     /**

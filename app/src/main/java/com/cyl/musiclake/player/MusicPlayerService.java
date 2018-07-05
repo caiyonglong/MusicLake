@@ -40,6 +40,7 @@ import com.cyl.musiclake.data.PlayQueueLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.net.ApiManager;
@@ -510,7 +511,7 @@ public class MusicPlayerService extends Service {
      */
     private void playCurrentAndNext() {
         synchronized (this) {
-            if (mPlayingPos > mPlayQueue.size() || mPlayingPos < 0) {
+            if (mPlayingPos >= mPlayQueue.size() || mPlayingPos < 0) {
                 return;
             }
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
@@ -797,13 +798,18 @@ public class MusicPlayerService extends Service {
         SPUtils.savePosition(mPlayer.position());
         //保存歌曲状态
         SPUtils.savePlayMode(mRepeatMode);
+        notifyChange(PLAY_QUEUE_CHANGE);
     }
 
     private LyricChangedEvent lyricChangedEvent;
 
     private void loadLyric() {
-        lyricChangedEvent = new LyricChangedEvent("歌词加载中...", true);
         if (mPlayingMusic != null) {
+            if (lyricChangedEvent == null) {
+                lyricChangedEvent = new LyricChangedEvent("歌词加载中...",  true);
+            } else {
+                lyricChangedEvent.setLyric("歌词加载中...");
+            }
             Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
             if (observable != null) {
                 ApiManager.request(observable, new RequestCallBack<String>() {
@@ -823,7 +829,7 @@ public class MusicPlayerService extends Service {
                 lyricChangedEvent.setLyric("");
             }
         } else {
-            lyricChangedEvent.setLyric("");
+            lyricChangedEvent = new LyricChangedEvent("", true);
         }
         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
     }
@@ -906,12 +912,15 @@ public class MusicPlayerService extends Service {
         if (DEBUG) LogUtil.d(TAG, "notifyChange: what = " + what);
         switch (what) {
             case META_CHANGED:
-//                mFloatLyricViewManager.loadLyric();
-//                loadLyric();
+                loadLyric();
                 mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
                 break;
             case PLAY_STATE_CHANGED:
-                mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(getPlayingMusic().getMid(), mPlayer.isPrepared(), isPlaying())));
+                mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying())));
+                break;
+            case PLAY_QUEUE_CLEAR:
+            case PLAY_QUEUE_CHANGE:
+                mMainHandler.post(() -> RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID)));
                 break;
         }
 

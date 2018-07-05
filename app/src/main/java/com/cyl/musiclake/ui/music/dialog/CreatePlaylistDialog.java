@@ -10,6 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.PlaylistApiServiceImpl;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
@@ -82,7 +83,7 @@ public class CreatePlaylistDialog extends DialogFragment {
                         @Override
                         public void success(Playlist result) {
                             ToastUtils.show("歌单新建成功");
-                            RxBus.getInstance().post(new PlaylistEvent());
+                            RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
                         }
 
                         @Override

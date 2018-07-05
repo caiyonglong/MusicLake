@@ -133,7 +133,7 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getFavoriteSong(): List<Music> {
+    fun getFavoriteSong(): MutableList<Music> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOVE_ID)
     }
 

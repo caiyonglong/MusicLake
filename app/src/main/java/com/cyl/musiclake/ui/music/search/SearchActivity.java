@@ -23,7 +23,7 @@ import com.cyl.musiclake.data.db.DaoLitepal;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.db.SearchHistoryBean;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.DownloadDialog;
+import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
@@ -179,7 +179,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                         AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
                         break;
                     case R.id.popup_song_download:
-                        DownloadDialog.Companion.newInstance(music).show(this);
+                        PopupUtilsKt.downloadMusic(this, music);
                         break;
                 }
                 return true;

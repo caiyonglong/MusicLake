@@ -64,7 +64,7 @@ object PlaylistLoader {
     /**
      * 扫描歌单歌曲
      */
-    fun getMusicForPlaylist(pid: String, order: String?): List<Music> {
+    fun getMusicForPlaylist(pid: String, order: String?): MutableList<Music> {
         return if (order == null) {
             DaoLitepal.getMusicList(pid)
         } else {

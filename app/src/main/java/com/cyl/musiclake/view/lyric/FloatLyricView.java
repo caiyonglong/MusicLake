@@ -176,10 +176,6 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
             SPUtils.saveFontColor(color);
         });
 
-        Disposable disposable = RxBus.getInstance().register(LyricChangedEvent.class)
-                .subscribe(event -> {
-                    String text = event.getLyric();
-                });
     }
 
 

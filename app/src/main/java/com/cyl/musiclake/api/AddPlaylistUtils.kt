@@ -36,8 +36,8 @@ object AddPlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
-        ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<List<Playlist>> {
-            override fun success(result: List<Playlist>) {
+        ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
                 showSelectDialog(activity, result, music)
             }
 
@@ -47,7 +47,7 @@ object AddPlaylistUtils {
         })
     }
 
-    private fun showSelectDialog(activity: AppCompatActivity?, playlists: List<Playlist>, music: Music?) {
+    private fun showSelectDialog(activity: AppCompatActivity?, playlists: MutableList<Playlist>, music: Music?) {
         val items = mutableListOf<String>()
         playlists.forEach {
             it.name?.let { it1 -> items.add(it1) }
@@ -63,7 +63,7 @@ object AddPlaylistUtils {
         ApiManager.request(PlaylistApiServiceImpl.collectMusic(pid, music!!), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show("收藏成功")
-                RxBus.getInstance().post(PlaylistEvent())
+                RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
             }
 
             override fun error(msg: String) {
