@@ -65,8 +65,12 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
 
     @Override
     protected void initView() {
-        setToolbarTitle(getToolBarTitle());
         initHeaderView();
+    }
+
+    @Override
+    protected String setToolbarTitle() {
+        return getToolBarTitle();
     }
 
 

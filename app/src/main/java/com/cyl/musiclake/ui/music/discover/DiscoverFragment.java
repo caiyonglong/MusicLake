@@ -8,9 +8,10 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
@@ -35,13 +36,18 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
 
     private OnlineAdapter mBaiduAdapter;
     private TopListAdapter mNeteaseAdapter;
+    private TopArtistListAdapter mArtistListAdapter;
     private List<Playlist> playlist = new ArrayList<>();
+    private List<Artist> artists = new ArrayList<>();
 
     @BindView(R.id.baiChartsRv)
     RecyclerView mBaiChartsRv;
 
     @BindView(R.id.wangChartsRv)
     RecyclerView mWangChartsRv;
+
+    @BindView(R.id.chartsArtistRcv)
+    RecyclerView mChartsArtistRcv;
 
 
     @OnClick(R.id.baiChartsTv)
@@ -85,6 +91,14 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mWangChartsRv.setFocusable(false);
         mWangChartsRv.setNestedScrollingEnabled(false);
         mNeteaseAdapter.bindToRecyclerView(mWangChartsRv);
+
+        mChartsArtistRcv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
+        //适配器
+        mArtistListAdapter = new TopArtistListAdapter(artists);
+        mChartsArtistRcv.setAdapter(mNeteaseAdapter);
+        mChartsArtistRcv.setFocusable(false);
+        mChartsArtistRcv.setNestedScrollingEnabled(false);
+        mArtistListAdapter.bindToRecyclerView(mChartsArtistRcv);
     }
 
     @Override
@@ -96,6 +110,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     protected void loadData() {
         mPresenter.loadBaidu();
         mPresenter.loadNetease();
+        mPresenter.loadArtists();
     }
 
     @Override
@@ -117,6 +132,10 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
             intent.putExtra("id", playlist.getPid());
             startActivity(intent);
         });
+
+        mArtistListAdapter.setOnItemClickListener((adapter, view, position) -> {
+
+        });
     }
 
     @Override
@@ -137,5 +156,10 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     @Override
     public void showNeteaseCharts(List<Playlist> charts) {
         mNeteaseAdapter.setNewData(charts);
+    }
+
+    @Override
+    public void showArtistCharts(List<Artist> charts) {
+        mArtistListAdapter.setNewData(charts);
     }
 }

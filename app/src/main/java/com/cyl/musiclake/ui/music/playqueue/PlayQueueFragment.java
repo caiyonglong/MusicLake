@@ -135,25 +135,22 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
         int id = item.getItemId();
         switch (id) {
             case R.id.action_delete_playlist:
-                new MaterialDialog.Builder(getContext())
-                        .title("提示")
-                        .content("是否清空播放历史？")
+                new MaterialDialog.Builder(getActivity())
+                        .title("清空播放队列?")
+                        .positiveText(R.string.sure)
+                        .negativeText(R.string.cancel)
                         .onPositive((dialog, which) -> {
-                            PlayHistoryLoader.INSTANCE.clearPlayHistory();
-                            musicInfos.clear();
-                            mAdapter.notifyDataSetChanged();
-                            showEmptyView();
+                            mPresenter.clearQueue();
+                            mPresenter.loadSongs();
+                            dialog.dismiss();
                         })
                         .positiveText("确定")
                         .negativeText("取消")
+                        .onNegative((dialog, which) -> dialog.dismiss())
                         .show();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void onBackPress() {
-        getActivity().onBackPressed();
     }
 
     @Override

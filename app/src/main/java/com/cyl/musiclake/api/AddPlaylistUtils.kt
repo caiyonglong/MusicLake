@@ -55,7 +55,13 @@ object AddPlaylistUtils {
         MaterialDialog.Builder(activity!!)
                 .title(R.string.add_to_playlist)
                 .items(items)
-                .itemsCallback { _, _, which, _ -> playlists[which].pid?.let { collectMusic(it, music) } }
+                .itemsCallback { _, _, which, _ ->
+                    if (playlists[which].pid == null) {
+                        playlists[which].id.let { collectMusic(it.toString(), music) }
+                    } else {
+                        playlists[which].pid?.let { collectMusic(it, music) }
+                    }
+                }
                 .build().show()
     }
 

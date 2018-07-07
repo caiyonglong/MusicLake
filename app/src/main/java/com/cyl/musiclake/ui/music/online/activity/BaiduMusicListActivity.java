@@ -75,10 +75,14 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
         type = getIntent().getStringExtra(Extras.BILLBOARD_TYPE);
         desc = getIntent().getStringExtra(Extras.BILLBOARD_DESC);
         pic = getIntent().getStringExtra(Extras.BILLBOARD_ALBUM);
-        setToolbarTitle(title);
         initHeaderView();
     }
 
+    @Override
+    protected String setToolbarTitle() {
+        title = getIntent().getStringExtra(Extras.BILLBOARD_TITLE);
+        return title;
+    }
 
     @Override
     protected void initData() {

@@ -7,6 +7,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.DownloadLoader
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent

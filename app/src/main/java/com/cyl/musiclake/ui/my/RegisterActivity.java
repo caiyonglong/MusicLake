@@ -62,9 +62,12 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
     @Override
     protected void initView() {
-        setToolbarTitle("用户注册");
     }
 
+    @Override
+    protected String setToolbarTitle() {
+        return "用户注册";
+    }
     @Override
     protected void initData() {
         if (SystemUtils.isLollipop()) {

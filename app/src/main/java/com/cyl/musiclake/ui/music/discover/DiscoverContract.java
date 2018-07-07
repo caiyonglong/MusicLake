@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.discover;
 
 import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.db.Artist;
 
 import java.util.List;
 
@@ -14,11 +15,15 @@ public interface DiscoverContract {
         void showBaiduCharts(List<Playlist> charts);
 
         void showNeteaseCharts(List<Playlist> charts);
+
+        void showArtistCharts(List<Artist> charts);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
         void loadBaidu();
 
         void loadNetease();
+
+        void loadArtists();
     }
 }

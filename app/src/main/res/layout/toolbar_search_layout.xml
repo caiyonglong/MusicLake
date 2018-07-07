@@ -23,6 +23,13 @@
         android:maxLines="1"
         tools:ignore="RtlHardcoded" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:background="@color/translucent_white" />
+
     <FrameLayout
         android:id="@+id/toolbar_search_clear"
         android:layout_width="48dp"

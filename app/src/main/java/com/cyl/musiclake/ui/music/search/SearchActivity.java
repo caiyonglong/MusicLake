@@ -316,6 +316,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
                 if (view.getId() == R.id.history_search) {
                     searchEditText.setText(suggestions.get(position).getTitle());
+                    searchEditText.setSelection(suggestions.get(position).getTitle().length());
                 } else if (view.getId() == R.id.deleteView) {
                     DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
                     historyAdapter.remove(position);
@@ -343,6 +344,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
                 if (view.getId() == R.id.history_search) {
                     searchEditText.setText(suggestions.get(position).getTitle());
+                    searchEditText.setSelection(suggestions.get(position).getTitle().length());
                     search(suggestions.get(position).getTitle());
                 } else if (view.getId() == R.id.deleteView) {
                     DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());

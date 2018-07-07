@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,8 +69,12 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     public ProgressBar loadingProgressBar;
 
     @Nullable
+    @BindView(R.id.swipe_refresh)
+    public SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @Nullable
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    public Toolbar mToolbar;
     protected Handler mHandler;
     private Unbinder unbinder;
     private PlayManager.ServiceToken mToken;
@@ -105,8 +110,14 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     private void initToolBar() {
         if (hasToolbar() && mToolbar != null) {
+            if (setToolbarTitle() != null)
+                mToolbar.setTitle(setToolbarTitle());
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setEnabled(false);
         }
     }
 
@@ -130,10 +141,8 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         return true;
     }
 
-    protected void setToolbarTitle(String name) {
-        if (hasToolbar() && mToolbar != null) {
-            mToolbar.setTitle(name);
-        }
+    protected String setToolbarTitle() {
+        return null;
     }
 
     @Override

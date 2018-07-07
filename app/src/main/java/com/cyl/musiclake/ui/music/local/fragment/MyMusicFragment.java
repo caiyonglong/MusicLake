@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -18,11 +19,12 @@ import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog;
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract;
 import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter;
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter;
+import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.cyl.musiclake.view.ItemDecoration;
 import com.cyl.musiclake.view.LocalItemView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,8 +59,14 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
         }
     }
 
+    @OnClick(R.id.playlistManagerIv)
+    void playlistManager() {
+        Intent intent = new Intent(getActivity(), PlaylistManagerActivity.class);
+        startActivity(intent);
+    }
+
     private static final String TAG_CREATE = "create_playlist";
-    private List<Playlist> playlists;
+    private List<Playlist> playlists =new ArrayList<>();
     private PlaylistAdapter mAdapter;
 
     public static MyMusicFragment newInstance() {
@@ -79,7 +87,6 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
         linearLayoutManager.setSmoothScrollbarEnabled(false);
 
         mPlaylistRcv.setLayoutManager(new LinearLayoutManager(getContext()));
-        mPlaylistRcv.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mPlaylistRcv.setNestedScrollingEnabled(false);
 
         mAdapter = new PlaylistAdapter(playlists);

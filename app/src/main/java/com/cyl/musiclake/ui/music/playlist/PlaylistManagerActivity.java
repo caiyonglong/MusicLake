@@ -1,31 +1,26 @@
 package com.cyl.musiclake.ui.music.playlist;
 
-import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Transition;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.CheckBox;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.data.PlaylistLoader;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.music.search.SearchActivity;
-import com.cyl.musiclake.ui.zone.EditActivity;
-import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.ImageUtils;
-import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.SystemUtils;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -37,57 +32,88 @@ import butterknife.BindView;
 public class PlaylistManagerActivity extends BaseActivity {
 
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.album_art)
-    ImageView album_art;
-    @BindView(R.id.foreground)
-    View foreground;
+    RecyclerView mPlaylistRcv;
 
-    private SongAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
-    private String pid;
-    private long album_id;
-    //0代表专辑，1代表艺术家
-    private int isAlbum;
+    private PlaylistEditAdapter mAdapter;
+    private List<Playlist> playlists = new ArrayList<>();
 
-    /**
-     * 设置监听事件
-     */
-    @Override
-    protected void listener() {
-
-
-    }
+    public Map<String, Playlist> checkedMap = new HashMap<>();
 
     @Override
     protected int getLayoutResID() {
-        return R.layout.frag_playlist_detail;
+        return R.layout.activity_playlist_edit;
     }
 
-    private void setAlbumart() {
-        setToolbarTitle(getIntent().getExtras().getString(Extras.PLAYLIST_NAME));
-        if (isAlbum == -1) {
-            LogUtil.e("====", getIntent().getExtras().getString(Extras.PLAYLIST_FOREGROUND_COLOR) + "==\n");
-            foreground.setBackgroundColor(getIntent().getExtras().getInt(Extras.PLAYLIST_FOREGROUND_COLOR));
-            album_art.setBackgroundResource(getIntent().getExtras().getInt(Extras.PLAYLIST_BACKGROUND_IMAGE));
-        } else {
-            loadBitmap(ImageUtils.getAlbumArtUri(album_id).toString());
-        }
+
+    @Override
+    protected String setToolbarTitle() {
+        return getString(R.string.playlist_manager);
     }
 
-    private void loadBitmap(String uri) {
-        LogUtil.e("EEEE", uri);
-        CoverLoader.loadImageView(this, uri, album_art);
+    @Override
+    protected void initView() {
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setSmoothScrollbarEnabled(false);
+
+        mPlaylistRcv.setLayoutManager(new LinearLayoutManager(getContext()));
+        mPlaylistRcv.setNestedScrollingEnabled(false);
+
+        mAdapter = new PlaylistEditAdapter(playlists);
+        mPlaylistRcv.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mPlaylistRcv);
+
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(mPlaylistRcv);
+
+        // 开启拖拽
+        mAdapter.enableDragItem(itemTouchHelper);
+        mAdapter.setOnItemDragListener(new OnItemDragListener() {
+            @Override
+            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+
+            }
+
+            @Override
+            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+
+            }
+
+            @Override
+            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+
+            }
+        });
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            CheckBox cb = view.findViewById(R.id.cb_playlist);
+            cb.setChecked(!cb.isChecked());
+            Playlist item = playlists.get(position);
+            if (cb.isChecked()) {
+                checkedMap.put(String.valueOf(item.getId()), item);
+            } else {
+                checkedMap.remove(String.valueOf(item.getId()));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mToolbar != null)
+            mToolbar.setTitle(R.string.playlist_manager);
     }
 
     @Override
     protected void initData() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        pid = getIntent().getStringExtra(Extras.PLAYLIST_ID);
-        isAlbum = getIntent().getIntExtra(Extras.ALBUM, -1);
-        album_id = getIntent().getLongExtra(Extras.ALBUM_ID, -1);
-        LogUtil.e("pid", pid + "===" + isAlbum + "+++" + album_id + "00");
-        setAlbumart();
+        PlaylistModel.INSTANCE.loadAllPlaylist(playlists -> {
+            this.playlists = playlists;
+            mAdapter.setNewData(playlists);
+            return null;
+        }, error -> {
+            ToastUtils.show(error);
+            return null;
+        });
     }
 
     @Override
@@ -95,81 +121,25 @@ public class PlaylistManagerActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void initView() {
-        if (SystemUtils.isLollipop()) {
-            getWindow().getEnterTransition().addListener(new EnterTransition());
-        }
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_search:
-                final Intent intent = new Intent(this, SearchActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                break;
-            case R.id.action_delete_playlist:
-//                PlaylistLoader.INSTANCE.deletePlaylist(pid);
-                finish();
-                break;
-            case R.id.action_share:
-                Intent intent3 = new Intent(PlaylistManagerActivity.this, EditActivity.class);
-                String content = "";
-                if (musicInfos.size() > 0) {
-                    content = "分享歌单\n";
-                }
-                for (int i = 0; i < musicInfos.size(); i++) {
-                    content += musicInfos.get(i).getTitle() + "---" + musicInfos.get(i).getArtist();
-                    content += "\n";
-                }
-                intent3.putExtra("content", content);
-                startActivity(intent3);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (isAlbum != -1) {
-            getMenuInflater().inflate(R.menu.menu_playlist, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.menu_playlist_detail, menu);
-        }
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private class EnterTransition implements Transition.TransitionListener {
-        @Override
-        public void onTransitionStart(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
+    public void delete(View view) {
+        new MaterialDialog.Builder(this)
+                .title("提示")
+                .content("是否删除这个歌单？")
+                .onPositive((dialog, which) -> {
+                    boolean success = false;
+                    for (String key : checkedMap.keySet()) {
+                        PlaylistModel.INSTANCE.deletePlaylist(checkedMap.get(key));
+                        playlists.remove(checkedMap.get(key));
+                        success = true;
+                    }
+                    if (success) {
+                        mAdapter.notifyDataSetChanged();
+                        RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
+                        ToastUtils.show(getString(R.string.playlist_delete_success));
+                    }
+                })
+                .positiveText("确定")
+                .negativeText("取消")
+                .show();
     }
 }

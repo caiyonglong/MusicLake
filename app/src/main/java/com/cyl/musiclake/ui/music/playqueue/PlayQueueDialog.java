@@ -172,7 +172,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
     @OnClick(R.id.clear_all)
     public void onClearAllClick() {
         new MaterialDialog.Builder(getActivity())
-                .title("清除所有?")
+                .title("清空播放队列?")
                 .positiveText(R.string.sure)
                 .negativeText(R.string.cancel)
                 .onPositive((dialog, which) -> {

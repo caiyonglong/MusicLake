@@ -17,6 +17,7 @@
     <string name="title_common">通用</string>
     <string name="title_function">功能</string>
     <string name="playlist_queue">播放队列</string>
+    <string name="playlist_manager">歌单管理</string>
     <string name="settings">设置</string>
     <string name="exit">退出程序</string>
 
@@ -256,4 +257,5 @@
     <string name="download_add_success">下载任务添加成功</string>
     <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
     <string name="download_error">下载地址异常</string>
+    <string name="playlist_delete_success">歌单已删除</string>
 </resources>

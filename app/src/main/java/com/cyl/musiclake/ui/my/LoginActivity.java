@@ -61,11 +61,15 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     protected void initData() {
-        setToolbarTitle("用户登录");
         usernameWrapper.setHint("用户名");
         passwordWrapper.setHint("密码");
         mPresenter = new LoginPresenter();
         mPresenter.attachView(this);
+    }
+
+    @Override
+    protected String setToolbarTitle() {
+        return "用户登录";
     }
 
     @Override

@@ -36,7 +36,12 @@ public class WebActivity extends BaseActivity {
     protected void initView() {
         url = getIntent().getStringExtra("url");
         title = getIntent().getStringExtra("title");
-        setToolbarTitle(title);
+    }
+
+    @Override
+    protected String setToolbarTitle() {
+        title = getIntent().getStringExtra("title");
+        return title;
     }
 
     @Override

@@ -1,19 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="@dimen/dp_4">
+    android:orientation="horizontal">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_8"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <ImageView
         android:id="@+id/iv_album"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/default_cover"
-        android:transitionName="transition_album_art" />
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/default_cover" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -28,7 +32,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:text="歌单名"
+            android:text="@string/playlist_name"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -48,6 +52,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:src="@drawable/ic_navigate_next" />
+        android:src="@drawable/ic_menu_black" />
 </LinearLayout>
 
