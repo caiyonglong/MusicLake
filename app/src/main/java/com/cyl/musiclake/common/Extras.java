@@ -32,6 +32,10 @@ public class Extras {
     public static final String ARTIST_ID = "artist_id";
     public static final String PLAYLIST_ID = "playlist_id";
     public static final String PLAYLIST = "playlist";
+    public static final String ARTIST = "artist";
+
+    public static final String MV_TITLE = "mv_title";
+    public static final String MV_ID = "mv_mid";
 
 
     //返回值 playlistDetail

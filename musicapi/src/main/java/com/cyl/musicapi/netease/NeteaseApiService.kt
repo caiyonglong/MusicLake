@@ -17,6 +17,21 @@ interface NeteaseApiService {
     //    @Headers({"referer: http://music.163.com"})
     @GET("/toplist/artist")
     fun getTopArtists(@Query("offset") offset: Int, @Query("limit") limit: Int): Observable<ArtistsInfo>
+
+
+    @GET("/top/mv")
+    fun getTopMv(@Query("offset") offset: Int, @Query("limit") limit: Int): Observable<MvInfo>
+
+    @GET("/mv")
+    fun getMvDetailInfo(@Query("mvid") mvid: String): Observable<MvDetailInfo>
+
+
+    @GET("simi/mv")
+    fun getSimilarMv(@Query("mvid") mvid: String): Observable<SimilarMvInfo>
+
+    @GET("comment/mv")
+    fun getMvComment(@Query("id") id: String): Observable<MvComment>
+
     //    @Headers({"referer: http://music.163.com"})
 
     //

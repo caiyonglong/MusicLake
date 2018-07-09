@@ -258,4 +258,12 @@
     <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
     <string name="download_error">下载地址异常</string>
     <string name="playlist_delete_success">歌单已删除</string>
+    <string name="play_count">播放：%1$d</string>
+    <string name="publish_time">发布时间：%1$s</string>
+    <string name="play_count_tint">播放</string>
+    <string name="like_count">收藏次数：%1$d</string>
+    <string name="like_count_tint">收藏次数</string>
+    <string name="mv_detail">描述</string>
+    <string name="mv_hot_comment">推荐评论</string>
+    <string name="mv_comment">最新评论</string>
 </resources>

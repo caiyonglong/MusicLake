@@ -88,7 +88,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         RxBus.getInstance().register(ScheduleTaskEvent.class)
                 .subscribe(metaChangedEvent -> {
                     if (mTimingSwitch != null) {
-                        mTimingSwitch.setSummary(FormatUtil.formatTime(MusicPlayerService.time));
+                        mTimingSwitch.setSummary(FormatUtil.INSTANCE.formatTime(MusicPlayerService.time));
                     }
                 });
     }

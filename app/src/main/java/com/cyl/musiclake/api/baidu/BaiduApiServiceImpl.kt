@@ -59,7 +59,7 @@ object BaiduApiServiceImpl {
     /**
      * 获取歌单歌曲
      */
-    fun getOnlineSongs(type: String, limit: Int, mOffset: Int): Observable<List<Music>> {
+    fun getOnlineSongs(type: String, limit: Int, mOffset: Int): Observable<MutableList<Music>> {
         val params = HashMap<String, String>()
 
         params[Constants.PARAM_METHOD] = Constants.METHOD_GET_MUSIC_LIST
@@ -69,7 +69,7 @@ object BaiduApiServiceImpl {
 
         return apiService.getOnlineSongs(params)
                 .flatMap { baiduSongList ->
-                    val musicList = ArrayList<Music>()
+                    val musicList = mutableListOf<Music>()
                     for (songInfo in baiduSongList.songList!!) {
                         val music = Music()
                         music.type = Constants.BAIDU
@@ -85,7 +85,7 @@ object BaiduApiServiceImpl {
                         music.coverBig = songInfo.picRadio
                         musicList.add(music)
                     }
-                    Observable.create(ObservableOnSubscribe<List<Music>> { e ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
                         try {
                             e.onNext(musicList)
                             e.onComplete()

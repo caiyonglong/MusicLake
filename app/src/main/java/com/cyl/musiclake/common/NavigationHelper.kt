@@ -7,29 +7,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
-import android.transition.Transition
 import android.transition.TransitionInflater
 import android.util.Pair
 import android.view.View
-
 import com.cyl.musiclake.R
 import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.ui.main.MainActivity
+import com.cyl.musiclake.ui.music.download.DownloadFragment
 import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment
 import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
-import com.cyl.musiclake.ui.music.download.DownloadFragment
 import com.cyl.musiclake.ui.music.playlist.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
-
 import java.io.File
 
 /**
@@ -174,6 +170,16 @@ object NavigationHelper {
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
+
+    fun navigateToPlaylist(context: Activity, artist: Artist) {
+        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+        val fragment: Fragment
+        fragment = PlaylistDetailFragment.newInstance(artist)
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.add(R.id.fragment_container, fragment)
+        transaction.addToBackStack(fragment.getTag()).commit()
+    }
+
 
     fun navigateFragment(context: Activity, fragment: Fragment) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()

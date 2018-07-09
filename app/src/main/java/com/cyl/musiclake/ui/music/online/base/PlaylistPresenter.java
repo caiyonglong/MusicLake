@@ -37,6 +37,7 @@ public class PlaylistPresenter extends BasePresenter<PlaylistContract.View> impl
             if (topList.getData().getList().size() > 0) {
                 for (ListItem item : topList.getData().getList()) {
                     Music music = MusicUtils.INSTANCE.getMusic(item);
+                    if (music.isCp()) continue;
                     musicList.add(music);
                 }
             }

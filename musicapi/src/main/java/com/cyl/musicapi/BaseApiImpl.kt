@@ -142,4 +142,19 @@ class BaseApiImpl private constructor(val context: Context) {
             }
         }
     }
+
+    /**
+     * 获取歌手单曲
+     * id，歌手ID
+     */
+    fun getArtistSongs(vendor: String, id: String, offset: Int, limit: Int, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("asyn.getArtistSongs", arrayOf<Any>(vendor, id, offset, limit)) { retValue: JSONObject ->
+            try {
+                val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                e.message?.let { fail?.invoke(it) }
+            }
+        }
+    }
 }

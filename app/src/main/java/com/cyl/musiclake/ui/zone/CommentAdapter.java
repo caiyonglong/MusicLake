@@ -5,10 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.utils.FormatUtil;
 
 import java.util.List;
 
@@ -52,10 +50,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentR
     @Override
     public void onBindViewHolder(final CommentRecyclerViewHolder holder, final int position) {
 
-        holder.user_comment.setText(comments.get(position).getUser().getName().toString() + "");
-        holder.content_comment.setText(comments.get(position).getComment().toString() + "");
-        String time = comments.get(position).getComment_time().toString() + "";
-        holder.time_comment.setText(FormatUtil.getTimeDifference(time));
 
     }
 
@@ -67,15 +61,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentR
 
     public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView user_comment;
-        private TextView content_comment;
-        private TextView time_comment;
 
         private CommentRecyclerViewHolder(View mView) {
             super(mView);
-            user_comment = (TextView) mView.findViewById(R.id.user_comment);
-            content_comment = (TextView) mView.findViewById(R.id.content_comment);
-            time_comment = (TextView) mView.findViewById(R.id.time_comment);
         }
     }
 }

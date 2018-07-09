@@ -28,7 +28,7 @@ public class LocationAdapter extends BaseQuickAdapter<Location, BaseViewHolder> 
     @Override
     protected void convert(BaseViewHolder holder, Location location) {
         User user = location.getUser();
-        String time = FormatUtil.getTimeDifference(location.getLocation_time());
+        String time = FormatUtil.INSTANCE.getTimeDifference(location.getLocation_time());
         holder.setText(R.id.user_name, user.getName());
         holder.setText(R.id.user_signature, location.getUser_song());
         holder.setText(R.id.location_time, String.format("%s在听：", time));

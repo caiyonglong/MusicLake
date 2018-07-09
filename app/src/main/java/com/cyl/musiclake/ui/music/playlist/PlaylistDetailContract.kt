@@ -5,6 +5,7 @@ import android.content.Context
 import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.db.Artist
 
 interface PlaylistDetailContract {
 
@@ -24,6 +25,8 @@ interface PlaylistDetailContract {
     interface Presenter : BaseContract.BasePresenter<View> {
 
         fun loadPlaylistSongs(playlist: Playlist)
+
+        fun loadArtistSongs(artist: Artist)
 
         fun deletePlaylist(playlist: Playlist)
 

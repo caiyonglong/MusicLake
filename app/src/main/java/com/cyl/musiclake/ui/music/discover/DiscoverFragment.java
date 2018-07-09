@@ -84,7 +84,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mBaiChartsRv.setNestedScrollingEnabled(false);
         mBaiduAdapter.bindToRecyclerView(mBaiChartsRv);
 
-        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
         //适配器
         mNeteaseAdapter = new TopListAdapter(playlist);
         mWangChartsRv.setAdapter(mNeteaseAdapter);
@@ -134,7 +134,8 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         });
 
         mArtistListAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            Artist artist = (Artist) adapter.getData().get(position);
+            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist);
         });
     }
 

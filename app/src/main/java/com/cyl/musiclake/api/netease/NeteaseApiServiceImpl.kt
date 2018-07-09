@@ -1,6 +1,6 @@
 package com.cyl.musiclake.api.netease
 
-import com.cyl.musicapi.netease.NeteaseApiService
+import com.cyl.musicapi.netease.*
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.net.ApiManager
@@ -49,4 +49,31 @@ object NeteaseApiServiceImpl {
                 }
     }
 
+    /**
+     * 获取推荐mv
+     */
+    fun getTopMv(limit: Int, offset: Int): Observable<MvInfo> {
+        return apiService.getTopMv(offset, limit)
+    }
+
+    /**
+     * 获取mv信息
+     */
+    fun getMvDetailInfo(mvid: String): Observable<MvDetailInfo> {
+        return apiService.getMvDetailInfo(mvid)
+    }
+
+    /**
+     * 获取相似mv
+     */
+    fun getSimilarMv(mvid: String): Observable<SimilarMvInfo> {
+        return apiService.getSimilarMv(mvid)
+    }
+
+    /**
+     * 获取mv评论
+     */
+    fun getMvComment(mvid: String): Observable<MvComment> {
+        return apiService.getMvComment(mvid)
+    }
 }

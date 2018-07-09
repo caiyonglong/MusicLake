@@ -166,7 +166,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
     public void showHeaderInfo() {
         CoverLoader.loadImageView(this, mPlaylist.getCoverUrl(), mIvCover);
         mTvTitle.setText(mPlaylist.getName());
-        mTvDate.setText(getString(R.string.recent_update, FormatUtil.distime(mPlaylist.getDate())));
+        mTvDate.setText(getString(R.string.recent_update, FormatUtil.INSTANCE.distime(mPlaylist.getDate())));
         mTvDesc.setText(mPlaylist.getDes());
         mAdapter.setHeaderView(mViewHeader, 0);
     }

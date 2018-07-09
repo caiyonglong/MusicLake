@@ -353,7 +353,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         if (PlayManager.isPlaying() || PlayManager.isPause()) {
             int progress = seekBar.getProgress();
             PlayManager.seekTo(progress);
-            tv_time.setText(FormatUtil.formatTime(progress));
+            tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
             mLrcView.setCurrentTimeMillis(progress);
         } else {
             seekBar.setProgress(0);
@@ -534,7 +534,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     public void updateProgress(int progress) {
         mSeekBar.setProgress(progress);
         mProgressBar.setProgress(progress);
-        tv_time.setText(FormatUtil.formatTime(progress));
+        tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
         mLrcView.setCurrentTimeMillis(progress);
     }
 
@@ -551,7 +551,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     public void setProgressMax(int max) {
         mSeekBar.setMax(max);
         mProgressBar.setMax(max);
-        tv_duration.setText(FormatUtil.formatTime(max));
+        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
     }
 
     @Override

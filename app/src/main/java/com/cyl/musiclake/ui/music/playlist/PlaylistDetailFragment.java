@@ -26,7 +26,7 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
-import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
@@ -67,6 +67,8 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
     private Playlist mPlaylist;
+    private Artist mArtist;
+    private String title;
 
     public static PlaylistDetailFragment newInstance(Playlist playlist, boolean useTransition, String transitionName) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
@@ -80,6 +82,15 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         return fragment;
     }
 
+
+    public static PlaylistDetailFragment newInstance(Artist artist) {
+        PlaylistDetailFragment fragment = new PlaylistDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Extras.ARTIST, artist);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.frag_playlist_detail;
@@ -88,7 +99,11 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     @Override
     public void initViews() {
         mPlaylist = (Playlist) getArguments().getSerializable(Extras.PLAYLIST);
-        mToolbar.setTitle(mPlaylist != null ? mPlaylist.getName() : "");
+        mArtist = (Artist) getArguments().getSerializable(Extras.ARTIST);
+
+        if (mPlaylist != null) title = mPlaylist.getName();
+        if (mArtist != null) title = mArtist.getName();
+        mToolbar.setTitle(title);
         setHasOptionsMenu(true);
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -115,14 +130,21 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     @Override
     protected void loadData() {
         showLoading();
-        mPresenter.loadPlaylistSongs(mPlaylist);
+        if (mPlaylist != null && mPresenter != null)
+            mPresenter.loadPlaylistSongs(mPlaylist);
+        if (mArtist != null && mPresenter != null)
+            mPresenter.loadArtistSongs(mArtist);
     }
 
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.play(position, musicList, mPlaylist.getPid());
+                if (mPlaylist != null) {
+                    PlayManager.play(position, musicList, mPlaylist.getPid());
+                } else if (mArtist != null) {
+                    PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
+                }
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -131,7 +153,11 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.play(position, musicList, mPlaylist.getPid());
+                        if (mPlaylist != null) {
+                            PlayManager.play(position, musicList, mPlaylist.getPid());
+                        } else if (mArtist != null) {
+                            PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
+                        }
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -160,7 +186,6 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             popupMenu.show();
         });
     }
-
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -256,7 +281,10 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_playlist_detail, menu);
-        if (mPlaylist.getPid() != null && mPlaylist.getPid().equals(Constants.PLAYLIST_HISTORY_ID)) {
+        if (mPlaylist == null) {
+            menu.removeItem(R.id.action_rename_playlist);
+            menu.removeItem(R.id.action_delete_playlist);
+        } else if (mPlaylist.getPid() != null && mPlaylist.getPid().equals(Constants.PLAYLIST_HISTORY_ID)) {
             menu.removeItem(R.id.action_rename_playlist);
         } else if (mPlaylist.getPid() != null && mPlaylist.getPid().equals(Constants.PLAYLIST_LOVE_ID)) {
             menu.removeItem(R.id.action_rename_playlist);

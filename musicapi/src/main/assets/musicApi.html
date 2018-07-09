@@ -75,8 +75,20 @@
                 musicApi.getComment(vendor, id, offset, limit).then(function (data) {
                     responseCallback(data)
                 })
+            },
+            getArtistSongs:function( vendor, id, offset, limit,responseCallback) {
+                musicApi.getArtistSongs(vendor, id, offset, limit).then(function (data) {
+                    responseCallback(data)
+                })
             }
         })
+
+
+
+
+
+
+
 
 
 

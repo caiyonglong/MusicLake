@@ -8,6 +8,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.net.ApiManager
@@ -26,6 +27,8 @@ import javax.inject.Inject
 
 class PlaylistDetailPresenter @Inject
 constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailContract.Presenter {
+
+
     private val netease = ArrayList<String>()
     private val qq = ArrayList<String>()
     private val xiami = ArrayList<String>()
@@ -37,6 +40,26 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 .compose(mView.bindToLife())
                 .subscribe { mView.changePlayStatus(it.isPrepared) }
         disposables.add(tt)
+    }
+
+    override fun loadArtistSongs(artist: Artist) {
+        val observable = MusicApiServiceImpl.getArtistSongs(Constants.NETEASE, artist.id.toString(), 30, 0)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
+            override fun success(result: MutableList<Music>) {
+                result.forEach {
+                    if (it.isCp) {
+                        result.remove(it)
+                    }
+                }
+                mView?.showPlaylistSongs(result)
+            }
+
+            override fun error(msg: String) {
+                LogUtil.e(TAG, msg)
+                mView?.showError(msg, true)
+                ToastUtils.show(msg)
+            }
+        })
     }
 
     override fun loadPlaylistSongs(playlist: Playlist) {
@@ -53,6 +76,11 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             override fun success(result: MutableList<Music>) {
                 //                mView.showPlaylistSongs(result);
 //                if (result.isEmpty()) {
+                result.forEach {
+                    if (it.isCp) {
+                        result.remove(it)
+                    }
+                }
                 mView?.showPlaylistSongs(result)
 //                    return
 //                }

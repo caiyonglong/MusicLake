@@ -159,7 +159,7 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
         mTvDate = (TextView) mViewHeader.findViewById(R.id.tv_update_date);
         mTvDesc = (TextView) mViewHeader.findViewById(R.id.tv_comment);
 
-        mTvDate.setText("最近更新：" + FormatUtil.distime(System.currentTimeMillis()));
+        mTvDate.setText("最近更新：" + FormatUtil.INSTANCE.distime(System.currentTimeMillis()));
     }
 
     @Override

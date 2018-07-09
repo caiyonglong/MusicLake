@@ -21,16 +21,16 @@ public class BaiduApiServiceImplTest extends TestCase {
                 });
 
         System.out.println("------------------------------------");
-        BaiduApiServiceImpl.INSTANCE.getTingSongInfo("569080829")
-                .subscribe(music -> {
-                    System.out.println(music.getTitle());
-                    System.out.println(music.getArtist());
-                    System.out.println(music.getArtistId());
-                    System.out.println(music.getUri());
-//                    System.out.println(music.getLrcPath());
-                    System.out.println(music.getCoverUri());
-                    System.out.println(music.getUri());
-                });
+//        BaiduApiServiceImpl.INSTANCE.getTingSongInfo("569080829")
+//                .subscribe(music -> {
+//                    System.out.println(music.getTitle());
+//                    System.out.println(music.getArtist());
+//                    System.out.println(music.getArtistId());
+//                    System.out.println(music.getUri());
+////                    System.out.println(music.getLrcPath());
+//                    System.out.println(music.getCoverUri());
+//                    System.out.println(music.getUri());
+//                });
 
     }
 

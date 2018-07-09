@@ -2,13 +2,14 @@ package com.cyl.musiclake.db
 
 import com.cyl.musiclake.data.db.Music
 import org.litepal.crud.LitePalSupport
+import java.io.Serializable
 import java.util.*
 
 /**
  * Created by yonglong on 2016/11/23.
  */
 
-class Artist : LitePalSupport {
+class Artist : LitePalSupport, Serializable {
     var name: String? = null
     var id: Long = 0
     var count: Int = 0
