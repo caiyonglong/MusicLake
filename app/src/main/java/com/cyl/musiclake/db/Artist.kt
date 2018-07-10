@@ -1,5 +1,6 @@
 package com.cyl.musiclake.db
 
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
@@ -13,6 +14,7 @@ class Artist : LitePalSupport, Serializable {
     var name: String? = null
     var id: Long = 0
     var count: Int = 0
+    var type: String? = null
     var picUrl: String? = null
     var musicSize: Int = 0
     var score: Int = 0

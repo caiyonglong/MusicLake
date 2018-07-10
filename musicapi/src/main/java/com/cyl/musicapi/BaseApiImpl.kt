@@ -2,6 +2,7 @@ package com.cyl.musicapi
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.webkit.JavascriptInterface
 import com.cyl.musicapi.bean.*
 import com.google.gson.Gson
@@ -113,15 +114,23 @@ class BaseApiImpl private constructor(val context: Context) {
 
     fun getTopList(id: String, success: (result: NeteaseBean) -> Unit) {
         mWebView?.callHandler("asyn.getTopList", arrayOf<Any>(id)) { retValue: JSONObject ->
-            val result = gson.fromJson<NeteaseBean>(retValue.toString(), NeteaseBean::class.java)
-            success.invoke(result)
+            try {
+                val result = gson.fromJson<NeteaseBean>(retValue.toString(), NeteaseBean::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                Log.e("getTopList", e.message)
+            }
         }
     }
 
     fun getLyricInfo(vendor: String, id: String, success: (result: LyricInfo) -> Unit) {
         mWebView?.callHandler("asyn.getLyric", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
-            val result = gson.fromJson<LyricInfo>(retValue.toString(), LyricInfo::class.java)
-            success.invoke(result)
+            try {
+                val result = gson.fromJson<LyricInfo>(retValue.toString(), LyricInfo::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                Log.e("getTopList", e.message)
+            }
         }
     }
 
@@ -149,6 +158,21 @@ class BaseApiImpl private constructor(val context: Context) {
      */
     fun getArtistSongs(vendor: String, id: String, offset: Int, limit: Int, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
         mWebView?.callHandler("asyn.getArtistSongs", arrayOf<Any>(vendor, id, offset, limit)) { retValue: JSONObject ->
+            try {
+                val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                e.message?.let { fail?.invoke(it) }
+            }
+        }
+    }
+
+    /**
+     * 获取专辑单曲
+     * id，专辑ID
+     */
+    fun getAlbumSongs(vendor: String, id: String, offset: Int, limit: Int, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("asyn.getAlbumSongs", arrayOf<Any>(vendor, id, offset, limit)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
                 success.invoke(result)

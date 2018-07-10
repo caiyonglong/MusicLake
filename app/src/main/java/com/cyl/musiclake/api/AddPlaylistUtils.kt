@@ -68,7 +68,7 @@ object AddPlaylistUtils {
     private fun collectMusic(pid: String, music: Music?) {
         ApiManager.request(PlaylistApiServiceImpl.collectMusic(pid, music!!), object : RequestCallBack<String> {
             override fun success(result: String) {
-                ToastUtils.show("收藏成功")
+                ToastUtils.show(result)
                 RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
             }
 

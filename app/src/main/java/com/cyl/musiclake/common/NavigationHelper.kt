@@ -14,6 +14,7 @@ import android.util.Pair
 import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.db.Album
 import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.ui.main.MainActivity
@@ -175,6 +176,15 @@ object NavigationHelper {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment: Fragment
         fragment = PlaylistDetailFragment.newInstance(artist)
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.add(R.id.fragment_container, fragment)
+        transaction.addToBackStack(fragment.getTag()).commit()
+    }
+
+    fun navigateToPlaylist(context: Activity, album: Album) {
+        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+        val fragment: Fragment
+        fragment = PlaylistDetailFragment.newInstance(album)
         transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()

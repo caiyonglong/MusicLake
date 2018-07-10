@@ -8,6 +8,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.db.Album
 import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.event.StatusChangedEvent
@@ -43,12 +44,19 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     }
 
     override fun loadArtistSongs(artist: Artist) {
-        val observable = MusicApiServiceImpl.getArtistSongs(Constants.NETEASE, artist.id.toString(), 30, 0)
+        if (artist.type == null || artist.type == Constants.LOCAL || artist.type == Constants.BAIDU) {
+            mView?.showEmptyState()
+            return
+        }
+        val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.id.toString(), 30, 0)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
             override fun success(result: MutableList<Music>) {
-                result.forEach {
-                    if (it.isCp) {
-                        result.remove(it)
+                val iterator = result.iterator()
+                while (iterator.hasNext()) {
+                    val temp = iterator.next()
+                    if (temp.isCp) {
+                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
+                        iterator.remove()// 推荐使用
                     }
                 }
                 mView?.showPlaylistSongs(result)
@@ -61,6 +69,30 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
         })
     }
+
+    override fun loadAlbumSongs(album: Album) {
+        val observable = MusicApiServiceImpl.getAlbumSongs(Constants.NETEASE, album.id.toString(), 30, 0)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
+            override fun success(result: MutableList<Music>) {
+                val iterator = result.iterator()
+                while (iterator.hasNext()) {
+                    val temp = iterator.next()
+                    if (temp.isCp) {
+                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
+                        iterator.remove()// 推荐使用
+                    }
+                }
+                mView?.showPlaylistSongs(result)
+            }
+
+            override fun error(msg: String) {
+                LogUtil.e(TAG, msg)
+                mView?.showError(msg, true)
+                ToastUtils.show(msg)
+            }
+        })
+    }
+
 
     override fun loadPlaylistSongs(playlist: Playlist) {
         if (playlist.type == 0) {
@@ -76,9 +108,12 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             override fun success(result: MutableList<Music>) {
                 //                mView.showPlaylistSongs(result);
 //                if (result.isEmpty()) {
-                result.forEach {
-                    if (it.isCp) {
-                        result.remove(it)
+                val iterator = result.iterator()
+                while (iterator.hasNext()) {
+                    val temp = iterator.next()
+                    if (temp.isCp) {
+                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
+                        iterator.remove()// 推荐使用
                     }
                 }
                 mView?.showPlaylistSongs(result)

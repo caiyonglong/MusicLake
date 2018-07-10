@@ -35,6 +35,7 @@ object NeteaseApiServiceImpl {
                                     artistsBean.picUrl = it.picUrl
                                     artistsBean.score = it.score
                                     artistsBean.albumSize = it.albumSize
+                                    artistsBean.type = Constants.NETEASE
                                     list.add(artistsBean)
                                 }
                                 e.onNext(list)

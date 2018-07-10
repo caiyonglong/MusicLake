@@ -12,6 +12,7 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.utils.ToastUtils
 
 /**
@@ -151,8 +152,31 @@ object MusicUtils {
             }
         }
         val album = Album(music.albumId, music.album, music.coverUri)
-        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.commentId, music.isCp)
+        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.mid, music.isCp)
     }
 
+    /**
+     * 获取歌手名
+     */
+    fun getArtistInfo(music: Music): Artist? {
+        val artistIds = music.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+        val artistNames = music.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+        val artists = mutableListOf<Artist>()
+        if (artistNames != null) {
+            for (i in artistNames.indices) {
+                val artist = Artist()
+                artistIds?.get(i)?.let {
+                    artist.id = it.toLong()
+                    artist.name = artistNames[i]
+                    artist.type = music.type
+                    artists.add(artist)
+                }
+            }
+        }
+        if (artists.size > 0) {
+            return artists[0]
+        }
+        return null
+    }
 
 }

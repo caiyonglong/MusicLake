@@ -20,12 +20,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.AddPlaylistUtils;
+import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.db.Album;
 import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
@@ -68,6 +71,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     private List<Music> musicList = new ArrayList<>();
     private Playlist mPlaylist;
     private Artist mArtist;
+    private Album mAlbum;
     private String title;
 
     public static PlaylistDetailFragment newInstance(Playlist playlist, boolean useTransition, String transitionName) {
@@ -82,11 +86,18 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         return fragment;
     }
 
-
     public static PlaylistDetailFragment newInstance(Artist artist) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(Extras.ARTIST, artist);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static PlaylistDetailFragment newInstance(Album album) {
+        PlaylistDetailFragment fragment = new PlaylistDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Extras.ALBUM, album);
         fragment.setArguments(args);
         return fragment;
     }
@@ -100,9 +111,11 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public void initViews() {
         mPlaylist = (Playlist) getArguments().getSerializable(Extras.PLAYLIST);
         mArtist = (Artist) getArguments().getSerializable(Extras.ARTIST);
+        mAlbum = (Album) getArguments().getSerializable(Extras.ALBUM);
 
         if (mPlaylist != null) title = mPlaylist.getName();
         if (mArtist != null) title = mArtist.getName();
+        if (mAlbum != null) title = mAlbum.getName();
         mToolbar.setTitle(title);
         setHasOptionsMenu(true);
         if (getActivity() != null) {
@@ -134,6 +147,8 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             mPresenter.loadPlaylistSongs(mPlaylist);
         if (mArtist != null && mPresenter != null)
             mPresenter.loadArtistSongs(mArtist);
+        if (mAlbum != null && mPresenter != null)
+            mPresenter.loadAlbumSongs(mAlbum);
     }
 
     @Override
@@ -144,11 +159,14 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                     PlayManager.play(position, musicList, mPlaylist.getPid());
                 } else if (mArtist != null) {
                     PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
+                } else if (mAlbum != null) {
+                    PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
                 }
                 mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Music music = musicList.get(position);
             PopupMenu popupMenu = new PopupMenu(getContext(), view);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
@@ -157,6 +175,8 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                             PlayManager.play(position, musicList, mPlaylist.getPid());
                         } else if (mArtist != null) {
                             PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
+                        } else if (mAlbum != null) {
+                            PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
                         }
                         break;
                     case R.id.popup_song_detail:
@@ -165,6 +185,12 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                         break;
                     case R.id.popup_song_addto_queue:
                         AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
+                        break;
+                    case R.id.popup_to_artist:
+                        Artist artist = MusicUtils.INSTANCE.getArtistInfo(music);
+                        if (artist != null) {
+                            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist);
+                        }
                         break;
                     case R.id.popup_song_delete:
                         new MaterialDialog.Builder(getContext())

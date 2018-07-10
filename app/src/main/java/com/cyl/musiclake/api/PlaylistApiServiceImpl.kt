@@ -160,19 +160,24 @@ object PlaylistApiServiceImpl {
      * 调用接口成功返回{}
      * 调用接口失败返回{"msg":""}
      */
-    fun collectMusic(pid: String, music: Music): Observable<String> {
+    fun collectMusic(pid: String, music: Music): Observable<String>? {
         val musicInfo = MusicUtils.getMusicInfo(music)
 //        LogUtil.e(Gson().toJson(musicInfo).toString())
         return playlistApiService.collectMusic(token, pid, musicInfo)
                 .flatMap { it ->
                     val json = it.string()
-                    val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
                     Observable.create(ObservableOnSubscribe<String> {
-                        if (errorInfo.msg.isEmpty()) {
+                        if (json == "{}") {
                             it.onNext("收藏成功")
                             it.onComplete()
                         } else {
-                            it.onError(Throwable(errorInfo.msg))
+                            try {
+                                val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
+                                it.onNext(errorInfo.msg)
+                                it.onComplete()
+                            } catch (e: Throwable) {
+                                it.onError(Throwable(e.message))
+                            }
                         }
                     })
                 }

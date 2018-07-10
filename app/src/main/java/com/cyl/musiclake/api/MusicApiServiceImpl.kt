@@ -150,6 +150,29 @@ object MusicApiServiceImpl {
 
 
     /**
+     * 获取专辑单曲
+     *
+     */
+    fun getAlbumSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 20): Observable<MutableList<Music>> {
+        return create { result ->
+            BaseApiImpl.getInstance(MusicApp.mContext)
+                    .getAlbumSongs(vendor, id, offset, limit, {
+                        if (it.status) {
+                            val musicList = arrayListOf<Music>()
+                            it.data.songs.forEach {
+                                musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                            }
+                            result.onNext(musicList)
+                            result.onComplete()
+                        } else {
+                            result.onError(Throwable(""))
+                        }
+                    }, {})
+        }
+    }
+
+
+    /**
      * 获取歌词
      *
      */

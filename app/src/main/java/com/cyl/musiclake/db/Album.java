@@ -4,6 +4,7 @@ import com.cyl.musiclake.data.db.Music;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by yonglong on 2016/11/23.
  */
 
-public class Album extends LitePalSupport {
+public class Album extends LitePalSupport implements Serializable {
 
     private String id;
     private String name;
