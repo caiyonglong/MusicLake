@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.discover;
 
+import com.cyl.musicapi.baidu.RadioChannel;
 import com.cyl.musiclake.base.BaseContract;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.db.Artist;
@@ -17,6 +18,8 @@ public interface DiscoverContract {
         void showNeteaseCharts(List<Playlist> charts);
 
         void showArtistCharts(List<Artist> charts);
+
+        void showRaioChannels(List<RadioChannel> channels);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
@@ -25,5 +28,7 @@ public interface DiscoverContract {
         void loadNetease();
 
         void loadArtists();
+
+        void loadRaios();
     }
 }

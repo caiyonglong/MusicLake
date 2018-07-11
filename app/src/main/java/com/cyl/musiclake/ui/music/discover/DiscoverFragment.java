@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.cyl.musicapi.baidu.RadioChannel;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
@@ -37,8 +38,10 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     private OnlineAdapter mBaiduAdapter;
     private TopListAdapter mNeteaseAdapter;
     private TopArtistListAdapter mArtistListAdapter;
+    private BaiduRadioAdapter mRadioAdapter;
     private List<Playlist> playlist = new ArrayList<>();
     private List<Artist> artists = new ArrayList<>();
+    private List<RadioChannel> channels = new ArrayList<>();
 
     @BindView(R.id.baiChartsRv)
     RecyclerView mBaiChartsRv;
@@ -48,6 +51,9 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
 
     @BindView(R.id.chartsArtistRcv)
     RecyclerView mChartsArtistRcv;
+
+    @BindView(R.id.radioRsv)
+    RecyclerView mRadioRsv;
 
 
     @OnClick(R.id.baiChartsTv)
@@ -99,6 +105,15 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mChartsArtistRcv.setFocusable(false);
         mChartsArtistRcv.setNestedScrollingEnabled(false);
         mArtistListAdapter.bindToRecyclerView(mChartsArtistRcv);
+
+        //电台列表
+        mRadioRsv.setLayoutManager(new GridLayoutManager(getActivity(), 1, LinearLayoutManager.HORIZONTAL, false));
+        //适配器
+        mRadioAdapter = new BaiduRadioAdapter(channels);
+        mRadioRsv.setAdapter(mRadioAdapter);
+        mRadioRsv.setFocusable(false);
+        mRadioRsv.setNestedScrollingEnabled(false);
+        mRadioAdapter.bindToRecyclerView(mRadioRsv);
     }
 
     @Override
@@ -111,6 +126,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mPresenter.loadBaidu();
         mPresenter.loadNetease();
         mPresenter.loadArtists();
+        mPresenter.loadRaios();
     }
 
     @Override
@@ -137,6 +153,9 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
             Artist artist = (Artist) adapter.getData().get(position);
             NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist);
         });
+
+        mRadioAdapter.setOnItemClickListener((adapter, view, position) -> {
+        });
     }
 
     @Override
@@ -162,5 +181,10 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     @Override
     public void showArtistCharts(List<Artist> charts) {
         mArtistListAdapter.setNewData(charts);
+    }
+
+    @Override
+    public void showRaioChannels(List<RadioChannel> channels) {
+        mRadioAdapter.setNewData(channels);
     }
 }

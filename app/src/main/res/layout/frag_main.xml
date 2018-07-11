@@ -28,7 +28,9 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"
-                app:tabMode="fixed" />
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/colorAccentDarkTheme"
+                app:tabTextColor="@color/white" />
 
         </android.support.v7.widget.Toolbar>
 

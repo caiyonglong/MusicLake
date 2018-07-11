@@ -1,9 +1,10 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
+import com.cyl.musicapi.baidu.RadioChannel
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
@@ -178,6 +179,56 @@ object BaiduApiServiceImpl {
                     val save = FileUtils.writeText(mLyricPath, lyric)
                     LogUtil.e("保存网络歌词：$save")
                     Observable.fromArray(lyric)
+                }
+    }
+
+    /**
+     * 获取电台列表
+     */
+    /**
+     * 搜索建议
+     */
+    fun getRadioChannel(): Observable<MutableList<RadioChannel>> {
+        return apiService.radioChannels
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<MutableList<RadioChannel>> { e ->
+                        try {
+                            var result = mutableListOf<RadioChannel>()
+                            if (it.errorCode == 22000) {
+                                it.result?.let {
+                                    it[0].channellist?.let {
+                                        result = it
+                                    }
+                                }
+                            }
+                            e.onNext(result)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
+                }
+    }
+
+    fun getRadioChannel(name: String): Observable<MutableList<RadioChannel>> {
+        return apiService.getRadioChannelSongs(name)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<MutableList<RadioChannel>> { e ->
+                        try {
+                            var result = mutableListOf<RadioChannel>()
+                            if (it.errorCode == 22000) {
+                                it.result?.let {
+                                    it[0].channellist?.let {
+                                        result = it
+                                    }
+                                }
+                            }
+                            e.onNext(result)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
                 }
     }
 
