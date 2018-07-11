@@ -11,8 +11,6 @@ public interface PlaylistContract {
 
     interface View extends BaseContract.BaseView {
 
-        void showErrorInfo(String msg);
-
         void showPlayList(Playlist playlist);
 
     }

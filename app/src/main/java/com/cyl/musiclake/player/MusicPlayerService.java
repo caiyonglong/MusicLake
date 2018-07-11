@@ -515,7 +515,7 @@ public class MusicPlayerService extends Service {
                 return;
             }
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
-            LogUtil.e(TAG, "-----" + mPlayingMusic.toString());
+            LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
                 ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
                     @Override
@@ -806,7 +806,7 @@ public class MusicPlayerService extends Service {
     private void loadLyric() {
         if (mPlayingMusic != null) {
             if (lyricChangedEvent == null) {
-                lyricChangedEvent = new LyricChangedEvent("歌词加载中...",  true);
+                lyricChangedEvent = new LyricChangedEvent("歌词加载中...", true);
             } else {
                 lyricChangedEvent.setLyric("歌词加载中...");
             }

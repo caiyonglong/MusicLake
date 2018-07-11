@@ -48,10 +48,11 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             mView?.showEmptyState()
             return
         }
-        val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.id.toString(), 30, 0)
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
-                val iterator = result.iterator()
+        val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.id.toString(), 50, 0)
+        ApiManager.request(observable, object : RequestCallBack<Artist> {
+            override fun success(result: Artist) {
+                val musicLists = result.songs
+                val iterator = musicLists.iterator()
                 while (iterator.hasNext()) {
                     val temp = iterator.next()
                     if (temp.isCp) {
@@ -59,7 +60,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                         iterator.remove()// 推荐使用
                     }
                 }
-                mView?.showPlaylistSongs(result)
+                mView?.showPlaylistSongs(musicLists)
             }
 
             override fun error(msg: String) {

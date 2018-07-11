@@ -16,8 +16,8 @@ class Playlist : LitePalSupport, Serializable {
     var pid: String? = null
     //歌单名
     var name: String? = null
-    //歌单名
-    var count: Int = 0
+    //歌曲数量
+    var count: Long = 0
     //更新日期
     var updateDate: Long = 0
     //创建日期

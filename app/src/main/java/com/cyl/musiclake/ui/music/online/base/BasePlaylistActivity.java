@@ -85,6 +85,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
 
+
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
@@ -140,19 +141,14 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
 
     @Override
     public void showLoading() {
-        DialogUtils.showProgressDialog(this, null, null);
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-        DialogUtils.dismissDialog();
+        super.hideLoading();
     }
 
-    @Override
-    public void showErrorInfo(String msg) {
-        ToastUtils.show(this, msg);
-        mAdapter.loadMoreFail();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -166,7 +162,9 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
     public void showHeaderInfo() {
         CoverLoader.loadImageView(this, mPlaylist.getCoverUrl(), mIvCover);
         mTvTitle.setText(mPlaylist.getName());
-        mTvDate.setText(getString(R.string.recent_update, FormatUtil.INSTANCE.distime(mPlaylist.getDate())));
+        if (mPlaylist.getDate() != 0) {
+            mTvDate.setText(getString(R.string.recent_update, FormatUtil.INSTANCE.distime(mPlaylist.getDate())));
+        }
         mTvDesc.setText(mPlaylist.getDes());
         mAdapter.setHeaderView(mViewHeader, 0);
     }

@@ -10,15 +10,15 @@ data class NeteaseBean(@SerializedName("data")
                        val status: Boolean = false)
 
 data class TopData(@SerializedName("cover")
-                     val cover: String = "",
-                     @SerializedName("playCount")
-                     val playCount: Int = 0,
-                     @SerializedName("name")
-                     val name: String = "",
-                     @SerializedName("description")
-                     val description: String = "",
-                     @SerializedName("list")
-                     val list: List<ListItem>?)
+                   val cover: String = "",
+                   @SerializedName("playCount")
+                   val playCount: Long = 0,
+                   @SerializedName("name")
+                   val name: String? = null,
+                   @SerializedName("description")
+                   val description: String = "",
+                   @SerializedName("list")
+                   val list: List<ListItem>?)
 
 
 data class ListItem(@SerializedName("artists")

@@ -22,6 +22,12 @@ public class NeteasePlaylistActivity extends BasePlaylistActivity {
     }
 
     @Override
+    protected void retryLoading() {
+        super.retryLoading();
+        mPresenter.getPlaylist(getIntent().getStringExtra("id"), this);
+    }
+
+    @Override
     public String getToolBarTitle() {
         return getIntent().getStringExtra("title");
     }

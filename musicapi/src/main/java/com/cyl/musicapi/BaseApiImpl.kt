@@ -134,9 +134,10 @@ class BaseApiImpl private constructor(val context: Context) {
         }
     }
 
-    fun getComment(vendor: String, id: String, success: (result: SongComment) -> Unit) {
+    fun getComment(vendor: String, id: String, success: (result: SongCommentData<NeteaseComment>) -> Unit,fail: ((String) -> Unit)? = null) {
         mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 10)) { retValue: JSONObject ->
-            val result = gson.fromJson<SongComment>(retValue.toString(), SongComment::class.java)
+            val result =
+                    gson.fromJson<SongCommentData<NeteaseComment>>(retValue.toString(), SongCommentData::class.java)
             success.invoke(result)
         }
     }

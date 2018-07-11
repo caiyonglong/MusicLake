@@ -5,6 +5,8 @@ import android.widget.TextView;
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.player.PlayManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -54,20 +56,30 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test5)
     void test5() {
-        searchApi.getComment("qq", "001Qu4I30eVFYb", songComment -> {
-            statusTv.setText("getComment");
-            resultTv.setText(songComment.toString());
-            return null;
-        });
+        Music music = PlayManager.getPlayingMusic();
+        if (music != null) {
+            String type = music.getType();
+            String mid = music.getMid();
+//            searchApi.getComment(type, mid, songComment -> {
+//                statusTv.setText("getComment");
+//                resultTv.setText(songComment.toString());
+//                return null;
+//            });
+        }
     }
 
     @OnClick(R.id.btn_test6)
     void test6() {
-        searchApi.getSongUrl("qq", "001Qu4I30eVFYb", result -> {
-            statusTv.setText("getSongUrl");
-            resultTv.setText(result.toString());
-            return null;
-        }, null);
+        Music music = PlayManager.getPlayingMusic();
+        if (music != null) {
+            String type = music.getType();
+            String mid = music.getMid();
+            searchApi.getSongUrl(type, mid, result -> {
+                statusTv.setText("getSongUrl");
+                resultTv.setText(result.toString());
+                return null;
+            }, null);
+        }
     }
 
     @OnClick(R.id.btn_playlist2)

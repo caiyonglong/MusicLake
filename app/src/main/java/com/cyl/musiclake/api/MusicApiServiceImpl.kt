@@ -2,11 +2,14 @@ package com.cyl.musiclake.api
 
 
 import com.cyl.musicapi.BaseApiImpl
+import com.cyl.musicapi.bean.NeteaseComment
+import com.cyl.musicapi.bean.SongCommentData
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.api.doupan.DoubanMusic
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import com.cyl.musiclake.utils.FileUtils
@@ -115,8 +118,30 @@ object MusicApiServiceImpl {
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .getSongUrl(vendor, mid, {
                         if (it.status) {
-                            val url = it.data.url
+                            val url =
+                                    if (vendor == Constants.XIAMI) {
+                                        if (it.data.url.startsWith("http")) it.data.url
+                                        else "http:${it.data.url}"
+                                    } else it.data.url
                             result.onNext(url)
+                            result.onComplete()
+                        } else {
+                            result.onError(Throwable(""))
+                        }
+                    }, {})
+        }
+    }
+
+    /**
+     * 获取歌曲url信息
+     *
+     */
+    fun getMusicComment(vendor: String, mid: String): Observable<SongCommentData<NeteaseComment>> {
+        return create { result ->
+            BaseApiImpl.getInstance(MusicApp.mContext)
+                    .getComment(vendor, mid, {
+                        if (it.status) {
+                            result.onNext(it)
                             result.onComplete()
                         } else {
                             result.onError(Throwable(""))
@@ -130,16 +155,23 @@ object MusicApiServiceImpl {
      * 获取歌手单曲
      *
      */
-    fun getArtistSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 20): Observable<MutableList<Music>> {
+    fun getArtistSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 20): Observable<Artist> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
                     .getArtistSongs(vendor, id, offset, limit, {
                         if (it.status) {
                             val musicList = arrayListOf<Music>()
                             it.data.songs.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                                if (!it.cp)
+                                    musicList.add(MusicUtils.getSearchMusic(it, vendor))
                             }
-                            result.onNext(musicList)
+                            val artist = Artist()
+                            artist.songs = musicList
+                            artist.name = it.data.detail.name
+                            artist.picUrl = it.data.detail.cover
+                            artist.desc = it.data.detail.desc
+                            artist.id = it.data.detail.id.toLong()
+                            result.onNext(artist)
                             result.onComplete()
                         } else {
                             result.onError(Throwable(""))

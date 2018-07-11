@@ -31,14 +31,8 @@ public class ArtistInfoActivity extends BaseActivity<ArtistInfoPresenter> implem
     @BindView(R.id.tv_desc)
     TextView mTvDesc;
 
-    @BindView(R.id.loading)
-    LinearLayout loading;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
     @BindView(R.id.album_art)
     ImageView mAlbum;
-    @BindView(R.id.progress)
-    ProgressBar progress;
 
     private String url;
     private String name;
@@ -84,12 +78,12 @@ public class ArtistInfoActivity extends BaseActivity<ArtistInfoPresenter> implem
 
     @Override
     public void showLoading() {
-        progress.setVisibility(View.VISIBLE);
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-        progress.setVisibility(View.GONE);
+        super.hideLoading();
     }
 
     @Override

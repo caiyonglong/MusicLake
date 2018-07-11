@@ -16,11 +16,12 @@ class Artist : LitePalSupport, Serializable {
     var count: Int = 0
     var type: String? = null
     var picUrl: String? = null
+    var desc: String? = null
     var musicSize: Int = 0
     var score: Int = 0
     var albumSize: Int = 0
 
-    var songs: List<Music> = ArrayList()
+    var songs = mutableListOf<Music>()
 
     constructor() {}
 

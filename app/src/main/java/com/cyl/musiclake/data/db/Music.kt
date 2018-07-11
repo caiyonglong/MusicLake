@@ -117,6 +117,10 @@ class Music() : LitePalSupport(), Parcelable {
         return 0
     }
 
+    override fun toString(): String {
+        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp, commentId=$commentId, collectId=$collectId)"
+    }
+
     companion object CREATOR : Parcelable.Creator<Music> {
         override fun createFromParcel(parcel: Parcel): Music {
             return Music(parcel)

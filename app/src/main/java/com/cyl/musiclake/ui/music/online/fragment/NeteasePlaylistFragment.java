@@ -36,12 +36,6 @@ public class NeteasePlaylistFragment extends BaseFragment {
     private static final String TAG = "NeteasePlaylistFragment";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
-    @BindView(R.id.progress)
-    ProgressBar progress;
-    @BindView(R.id.loading)
-    LinearLayout loading;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
