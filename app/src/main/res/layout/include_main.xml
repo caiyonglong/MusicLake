@@ -18,7 +18,7 @@
     <FrameLayout
         android:id="@+id/controls_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="400dp" />
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

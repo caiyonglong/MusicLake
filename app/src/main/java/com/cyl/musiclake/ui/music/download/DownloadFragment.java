@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.common.PageAdapter;
+import com.cyl.musiclake.ui.main.PageAdapter;
 
 import butterknife.BindView;
 

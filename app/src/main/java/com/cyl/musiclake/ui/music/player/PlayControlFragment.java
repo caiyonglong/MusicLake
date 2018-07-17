@@ -35,7 +35,6 @@ import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
@@ -48,7 +47,6 @@ import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
@@ -83,7 +81,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @BindView(R.id.artist)
     TextView mTvArtist;
     @BindView(R.id.album)
-    ImageView mIvAlbum;
+    CircleImageView mIvAlbum;
 
     @BindView(R.id.skip_queue)
     MaterialIconView skip_queue;
@@ -254,7 +252,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
-
         //初始化viewpager
         if (mViewPager != null) {
             setupViewPager(mViewPager);
@@ -274,7 +271,8 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     protected void listener() {
         mSeekBar.setOnSeekBarChangeListener(this);
         topContainer.setOnClickListener(v -> {
-            ((MainActivity) mFragmentComponent.getActivity()).mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            Intent intent = new Intent(mFragmentComponent.getActivity(), PlayerActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -320,7 +318,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
             }
         });
-        initAlbumPic(mCivImage);
+        initAlbumPic(mIvAlbum);
     }
 
     @Override
@@ -552,11 +550,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         mSeekBar.setMax(max);
         mProgressBar.setMax(max);
         tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
-    }
-
-    @Override
-    public void setErrorInfo(String message) {
-        ToastUtils.show(getContext(), message);
     }
 
     @Override

@@ -22,6 +22,10 @@ public class IMusicServiceStub extends IMusicService.Stub {
     }
 
     @Override
+    public void nextPlay(Music music) throws RemoteException {
+        mService.get().nextPlay(music);
+    }
+    @Override
     public void playMusic(Music music) throws RemoteException {
         mService.get().play(music);
     }

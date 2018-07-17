@@ -8,7 +8,7 @@
     <attr name="progressDrawable" format="reference" />
     <attr name="progressDrawableWithBackground" format="reference" />
 
-    <style name="AppTheme" parent="MyThemeBlue"></style>
+    <style name="AppTheme" parent="MyThemeBlue"/>
 
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
@@ -105,4 +105,11 @@
         <item name="colorControlHighlight">#48ffffff</item>
     </style>
 
+    <style name="MyThemeBlue.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyThemeBlue.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MainActivityTheme" parent="MyThemeBlue">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>

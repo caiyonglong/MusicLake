@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,12 +9,13 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="250dp"
             android:background="@android:color/white"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
@@ -27,21 +27,21 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:transitionName="transition_album_art"
                 app:layout_collapseMode="parallax" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#22000000" />
+                android:background="#22000000"
+                android:fitsSystemWindows="true" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="56dp"
                 android:elevation="5dp"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -56,6 +56,18 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end" />
 
-    <include layout="@layout/fragment_recyclerview_notoolbar" />
+    <include
+        layout="@layout/fragment_recyclerview_notoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_56"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
+    <fragment
+        android:id="@+id/bottomControlFg"
+        android:name="com.cyl.musiclake.ui.music.player.PlayControlFragment"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom" />
 </android.support.design.widget.CoordinatorLayout>

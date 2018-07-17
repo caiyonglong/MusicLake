@@ -67,6 +67,15 @@ public class PlayManager {
     }
 
 
+    public static void nextPlay(Music music) {
+        try {
+            if (mService != null)
+                mService.nextPlay(music);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void playOnline(Music music) {
         try {
             if (mService != null)

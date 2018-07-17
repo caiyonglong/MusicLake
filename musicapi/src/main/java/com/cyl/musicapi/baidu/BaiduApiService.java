@@ -37,7 +37,7 @@ public interface BaiduApiService {
     Observable<RadioData> getRadioChannels();
 
     @GET("/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.radio.getChannelSong&format=json&pn=0&rn=10")
-    Observable<RadioData> getRadioChannelSongs(@Query("channelname") String channelName);
+    Observable<RadioChannelData> getRadioChannelSongs(@Query("channelname") String channelName);
 
     @GET()
     Observable<BaiduSongInfo> getTingSongInfo(@Url String baseUrl);

@@ -1,10 +1,11 @@
 package com.cyl.musiclake.data.db
 
+import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
-
 import org.litepal.crud.LitePalSupport
 
+@SuppressLint("ParcelCreator")
 /**
  * 作者：yonglong on 2016/8/9 10:50
  * 邮箱：643872807@qq.com
@@ -86,9 +87,13 @@ class Music() : LitePalSupport(), Parcelable {
         collectId = parcel.readString()
     }
 
+    override fun toString(): String {
+        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp, commentId=$commentId, collectId=$collectId)"
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(type)
-        parcel.writeValue(id)
+        parcel.writeLong(id)
         parcel.writeString(mid)
         parcel.writeString(title)
         parcel.writeString(artist)
@@ -117,10 +122,6 @@ class Music() : LitePalSupport(), Parcelable {
         return 0
     }
 
-    override fun toString(): String {
-        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp, commentId=$commentId, collectId=$collectId)"
-    }
-
     companion object CREATOR : Parcelable.Creator<Music> {
         override fun createFromParcel(parcel: Parcel): Music {
             return Music(parcel)
@@ -131,4 +132,6 @@ class Music() : LitePalSupport(), Parcelable {
         }
     }
 
+
 }
+

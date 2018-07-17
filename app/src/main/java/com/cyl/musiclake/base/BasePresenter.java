@@ -30,8 +30,8 @@ public class BasePresenter<T extends BaseContract.BaseView> implements BaseContr
         }
         for (Disposable dis : disposables) {
             dis.dispose();
-            disposables.remove(dis);
         }
+        disposables.clear();
     }
 
 }

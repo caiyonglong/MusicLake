@@ -8,7 +8,7 @@
     <com.devbrackets.android.exomedia.ui.widget.VideoView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_200"
+        android:layout_height="200dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/nestedScrollView"
         app:layout_constraintTop_toTopOf="parent"

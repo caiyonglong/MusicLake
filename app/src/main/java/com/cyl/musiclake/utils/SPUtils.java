@@ -12,6 +12,7 @@ import com.cyl.musiclake.R;
  * 作者：yonglong on 2016/8/12 16:03
  * 邮箱：643872807@qq.com
  * 版本：2.5
+ * 内部存儲工具類
  */
 public class SPUtils {
     private static final String MUSIC_ID = "music_id";
@@ -56,13 +57,12 @@ public class SPUtils {
         saveLong(POSITION, id);
     }
 
-
     public static int getPlayMode() {
         return getInt(PLAY_MODE, 0);
     }
 
     public static void savePlayMode(int mode) {
-        saveInt(PLAY_MODE, (mode + 1) % 3);
+        saveInt(PLAY_MODE, mode);
     }
 
     public static String getSplashUrl() {

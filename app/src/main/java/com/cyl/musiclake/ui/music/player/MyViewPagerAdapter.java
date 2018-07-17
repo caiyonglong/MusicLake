@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.local.adapter;
+package com.cyl.musiclake.ui.music.player;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

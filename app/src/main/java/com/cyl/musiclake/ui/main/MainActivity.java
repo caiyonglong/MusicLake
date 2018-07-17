@@ -27,6 +27,7 @@ import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
+import com.cyl.musiclake.ui.music.player.PlayerActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -53,8 +54,8 @@ import static com.cyl.musiclake.ui.music.player.PlayControlFragment.topContainer
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.sliding_layout)
-    public SlidingUpPanelLayout mSlidingUpPaneLayout;
+    //    @BindView(R.id.sliding_layout)
+//    public SlidingUpPanelLayout mSlidingUpPaneLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
@@ -118,12 +119,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void initData() {
         String from = getIntent().getAction();
-        if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
-        }
+//        mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_200));
+//        mSlidingUpPaneLayout.setAnchorPoint(0.4F);
+//        if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
+//        }
         //加载主fragment
         navigateLibrary.run();
-        navigatePlay.run();
+//        navigatePlay.run();
     }
 
     @Override
@@ -133,29 +136,38 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void listener() {
-        mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                LogUtil.d(TAG, "onPanelStateChanged " + newState);
-                if (newState == PanelState.EXPANDED) {
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                } else {
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                }
-            }
+//        mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+//            @Override
+//            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+//                LogUtil.d(TAG, "onPanelStateChanged " + newState);
+//                if (newState == PanelState.EXPANDED) {
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                } else {
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                }
+//            }
+//
+//            @Override
+//            public void onPanelSlide(View panel, float slideOffset) {
+//                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
+//                topContainer.setAlpha(1 - slideOffset * 2);
+//                if (topContainer.getAlpha() < 0) {
+//                    topContainer.setVisibility(View.GONE);
+//                } else {
+//                    topContainer.setVisibility(View.VISIBLE);
+//                    mSlidingUpPaneLayout.setTouchEnabled(true);
+//                }
+//                topContainer.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+//                        startActivity(intent);
+//                    }
+//                });
+//
+//            }
+//        });
 
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
-                topContainer.setAlpha(1 - slideOffset * 2);
-                if (topContainer.getAlpha() < 0) {
-                    topContainer.setVisibility(View.GONE);
-                } else {
-                    topContainer.setVisibility(View.VISIBLE);
-                    mSlidingUpPaneLayout.setTouchEnabled(true);
-                }
-            }
-        });
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -221,7 +233,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mTargetClass = SettingsActivity.class;
                 break;
             case R.id.nav_menu_test:
-                mTargetClass = TestActivity.class;
+                mTargetClass = PlayerActivity.class;
                 break;
             case R.id.nav_menu_about:
                 mTargetClass = AboutActivity.class;
@@ -258,20 +270,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
 
     };
-    private Runnable navigatePlay = () -> {
-        Fragment fragment = PlayControlFragment.newInstance();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.controls_container, fragment).commit();
-    };
+//    private Runnable navigatePlay = () -> {
+//        Fragment fragment = PlayControlFragment.newInstance();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.controls_container, fragment).commit();
+//    };
 
 
     //返回键
     @Override
     public void onBackPressed() {
-        if (mSlidingUpPaneLayout != null &&
-                (mSlidingUpPaneLayout.getPanelState() == PanelState.EXPANDED || mSlidingUpPaneLayout.getPanelState() == PanelState.ANCHORED)) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+//        if (mSlidingUpPaneLayout != null &&
+//                (mSlidingUpPaneLayout.getPanelState() == PanelState.EXPANDED || mSlidingUpPaneLayout.getPanelState() == PanelState.ANCHORED)) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+//        } else
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         } else if (isNavigatingMain()) {
             Intent home = new Intent(Intent.ACTION_MAIN);
@@ -346,7 +359,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
-            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
+//            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNick.setText(getResources().getString(R.string.login_hint));
         }
     }

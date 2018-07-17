@@ -25,4 +25,5 @@
     <style name="MainActivityTheme" parent="MyThemeBlue">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
 </resources>

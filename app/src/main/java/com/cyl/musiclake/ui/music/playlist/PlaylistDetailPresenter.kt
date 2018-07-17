@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.playlist
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
@@ -96,51 +97,55 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
 
     override fun loadPlaylistSongs(playlist: Playlist) {
-        if (playlist.type == 0) {
-            doAsync {
+        when {
+            playlist.type == 0 -> doAsync {
                 val data = playlist.pid?.let { PlaylistLoader.getMusicForPlaylist(it, playlist.order) }
                 uiThread {
-                    mView.showPlaylistSongs(data)
-                }
-            }
-            return
-        }
-        ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
-                //                mView.showPlaylistSongs(result);
-//                if (result.isEmpty()) {
-                val iterator = result.iterator()
-                while (iterator.hasNext()) {
-                    val temp = iterator.next()
-                    if (temp.isCp) {
-                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
-                        iterator.remove()// 推荐使用
+                    if (data != null && data.isNotEmpty()) {
+                        mView?.showPlaylistSongs(data)
+                    } else {
+                        mView?.showEmptyState()
                     }
                 }
-                mView?.showPlaylistSongs(result)
-//                    return
-//                }
-//                netease.clear()
-//                qq.clear()
-//                xiami.clear()
-//                for (music in result) {
-//                    when {
-//                        music.type == Constants.NETEASE -> music.mid?.let { netease.add(it) }
-//                        music.type == Constants.QQ -> music.mid?.let { qq.add(it) }
-//                        music.type == Constants.XIAMI -> music.mid?.let { xiami.add(it) }
-//                    }
-//                }
-//                getBatchSongDetail("netease", netease.toTypedArray())
-//                getBatchSongDetail("qq", qq.toTypedArray())
-//                getBatchSongDetail("xiami", xiami.toTypedArray())
             }
+            playlist.type == 2 -> {
+                ApiManager.request(BaiduApiServiceImpl.getRadioChannelInfo(playlist), object : RequestCallBack<Playlist> {
+                    override fun error(msg: String?) {
+                        mView?.showError(msg, true)
+                    }
 
-            override fun error(msg: String) {
-                LogUtil.e(TAG, msg)
-                mView?.showError(msg, true)
-                ToastUtils.show(msg)
+                    override fun success(result: Playlist?) {
+                        result?.let {
+                            if (it.musicList.isNotEmpty()) {
+                                mView?.showPlaylistSongs(it.musicList)
+                            } else {
+                                mView?.showEmptyState()
+                            }
+                        }
+                    }
+
+                })
+
             }
-        })
+            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
+                override fun success(result: MutableList<Music>) {
+                    val iterator = result.iterator()
+                    while (iterator.hasNext()) {
+                        val temp = iterator.next()
+                        if (temp.isCp) {
+                            iterator.remove()// 推荐使用
+                        }
+                    }
+                    mView?.showPlaylistSongs(result)
+                }
+
+                override fun error(msg: String) {
+                    LogUtil.e(TAG, msg)
+                    mView?.showError(msg, true)
+                    ToastUtils.show(msg)
+                }
+            })
+        }
     }
 
     override fun deletePlaylist(playlist: Playlist) {

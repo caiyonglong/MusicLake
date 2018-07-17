@@ -99,7 +99,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
         if (mOrientation == VERTICAL_LIST) {
             outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
         } else {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
+            outRect.set(20, 0, mDivider.getIntrinsicWidth(), 0);
         }
     }
 }

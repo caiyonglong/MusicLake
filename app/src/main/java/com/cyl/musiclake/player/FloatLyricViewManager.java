@@ -10,7 +10,9 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+
 import com.cyl.musiclake.utils.LogUtil;
+
 import android.view.Gravity;
 import android.view.WindowManager;
 
@@ -143,7 +145,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-//            loadLyric();
+            setLyric(LyricParseUtils.setLyricResource(MusicPlayerService.lyric));
         }
     }
 

@@ -39,7 +39,10 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
     override fun loadNetease() {
         for (i in charts.indices) {
-            neteaseLists.add(Playlist(i.toString(), charts[i]))
+            val playlist = Playlist()
+            playlist.pid = i.toString()
+            playlist.name = charts[i]
+            neteaseLists.add(playlist)
             BaseApiImpl.getInstance(mView.context).getTopList(i.toString()) {
                 it.data.let {
                     val playlist = Playlist()

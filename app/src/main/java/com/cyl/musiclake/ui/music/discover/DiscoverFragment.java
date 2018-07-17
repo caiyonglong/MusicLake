@@ -82,7 +82,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     @Override
     public void initViews() {
         //初始化列表
-        mBaiChartsRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mBaiChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 1, LinearLayoutManager.VERTICAL, false));
         //适配器
         mBaiduAdapter = new OnlineAdapter(playlist);
         mBaiChartsRv.setAdapter(mBaiduAdapter);
@@ -90,7 +90,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mBaiChartsRv.setNestedScrollingEnabled(false);
         mBaiduAdapter.bindToRecyclerView(mBaiChartsRv);
 
-        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
+        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
         //适配器
         mNeteaseAdapter = new TopListAdapter(playlist);
         mWangChartsRv.setAdapter(mNeteaseAdapter);
@@ -98,7 +98,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mWangChartsRv.setNestedScrollingEnabled(false);
         mNeteaseAdapter.bindToRecyclerView(mWangChartsRv);
 
-        mChartsArtistRcv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
+        mChartsArtistRcv.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false));
         //适配器
         mArtistListAdapter = new TopArtistListAdapter(artists);
         mChartsArtistRcv.setAdapter(mNeteaseAdapter);
@@ -107,7 +107,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mArtistListAdapter.bindToRecyclerView(mChartsArtistRcv);
 
         //电台列表
-        mRadioRsv.setLayoutManager(new GridLayoutManager(getActivity(), 1, LinearLayoutManager.HORIZONTAL, false));
+        mRadioRsv.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false));
         //适配器
         mRadioAdapter = new BaiduRadioAdapter(channels);
         mRadioRsv.setAdapter(mRadioAdapter);
@@ -155,6 +155,14 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         });
 
         mRadioAdapter.setOnItemClickListener((adapter, view, position) -> {
+            RadioChannel channel = channels.get(position);
+            Playlist playlist = new Playlist();
+            playlist.setName(channel.getName());
+            playlist.setPid(channel.getChName());
+            playlist.setCoverUrl(channel.getThumb());
+            playlist.setDes(channel.getCateSname());
+            playlist.setType(2);
+            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), playlist, null);
         });
     }
 
@@ -185,6 +193,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
 
     @Override
     public void showRaioChannels(List<RadioChannel> channels) {
+        this.channels = channels;
         mRadioAdapter.setNewData(channels);
     }
 }

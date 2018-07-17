@@ -32,6 +32,7 @@ import com.cyl.musiclake.db.Album;
 import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -77,7 +78,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public static PlaylistDetailFragment newInstance(Playlist playlist, boolean useTransition, String transitionName) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable(Extras.PLAYLIST, playlist);
+        args.putParcelable(Extras.PLAYLIST, playlist);
         args.putBoolean(Extras.TRANSITION, useTransition);
         if (useTransition) {
             args.putString(Extras.TRANSITIONNAME, transitionName);
@@ -109,7 +110,8 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @Override
     public void initViews() {
-        mPlaylist = (Playlist) getArguments().getSerializable(Extras.PLAYLIST);
+        rootView.setFitsSystemWindows(true);
+        mPlaylist = (Playlist) getArguments().getParcelable(Extras.PLAYLIST);
         mArtist = (Artist) getArguments().getSerializable(Extras.ARTIST);
         mAlbum = (Album) getArguments().getSerializable(Extras.ALBUM);
 
@@ -167,49 +169,51 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = musicList.get(position);
-            PopupMenu popupMenu = new PopupMenu(getContext(), view);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_play:
-                        if (mPlaylist != null) {
-                            PlayManager.play(position, musicList, mPlaylist.getPid());
-                        } else if (mArtist != null) {
-                            PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
-                        } else if (mAlbum != null) {
-                            PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
-                        }
-                        break;
-                    case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
-                                .show(getChildFragmentManager(), getTag());
-                        break;
-                    case R.id.popup_song_addto_queue:
-                        AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
-                        break;
-                    case R.id.popup_to_artist:
-                        Artist artist = MusicUtils.INSTANCE.getArtistInfo(music);
-                        if (artist != null) {
-                            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist);
-                        }
-                        break;
-                    case R.id.popup_song_delete:
-                        new MaterialDialog.Builder(getContext())
-                                .title("提示")
-                                .content("是否移除这首歌曲？")
-                                .onPositive((dialog, which) -> {
-                                    if (mPresenter != null) {
-                                        mPresenter.disCollectMusic(mPlaylist.getPid(), position, musicList.get(position));
-                                    }
-                                })
-                                .positiveText("确定")
-                                .negativeText("取消")
-                                .show();
-                        break;
-                }
-                return false;
-            });
-            popupMenu.inflate(R.menu.popup_playlist);
-            popupMenu.show();
+            PopupDialogFragment.Companion.newInstance(music)
+                    .show((AppCompatActivity) mFragmentComponent.getActivity());
+//            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+//            popupMenu.setOnMenuItemClickListener(item -> {
+//                switch (item.getItemId()) {
+//                    case R.id.popup_song_play:
+//                        if (mPlaylist != null) {
+//                            PlayManager.play(position, musicList, mPlaylist.getPid());
+//                        } else if (mArtist != null) {
+//                            PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
+//                        } else if (mAlbum != null) {
+//                            PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
+//                        }
+//                        break;
+//                    case R.id.popup_song_detail:
+//                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+//                                .show(getChildFragmentManager(), getTag());
+//                        break;
+//                    case R.id.popup_song_addto_queue:
+//                        AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
+//                        break;
+//                    case R.id.popup_to_artist:
+//                        Artist artist = MusicUtils.INSTANCE.getArtistInfo(music);
+//                        if (artist != null) {
+//                            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist);
+//                        }
+//                        break;
+//                    case R.id.popup_song_delete:
+//                        new MaterialDialog.Builder(getContext())
+//                                .title("提示")
+//                                .content("是否移除这首歌曲？")
+//                                .onPositive((dialog, which) -> {
+//                                    if (mPresenter != null) {
+//                                        mPresenter.disCollectMusic(mPlaylist.getPid(), position, musicList.get(position));
+//                                    }
+//                                })
+//                                .positiveText("确定")
+//                                .negativeText("取消")
+//                                .show();
+//                        break;
+//                }
+//                return false;
+//            });
+//            popupMenu.inflate(R.menu.popup_playlist);
+//            popupMenu.show();
         });
     }
 
@@ -343,7 +347,9 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         hideLoading();
         musicList.addAll(songList);
         mAdapter.setNewData(musicList);
-        if (musicList.size() >= 1) {
+        if (mPlaylist != null && mPlaylist.getCoverUrl() != null) {
+            CoverLoader.loadImageView(getContext(), mPlaylist.getCoverUrl(), album_art);
+        } else if (musicList.size() >= 1) {
             CoverLoader.loadImageView(getContext(), musicList.get(0).getCoverUri(), album_art);
         }
         if (musicList.size() == 0) {

@@ -15,6 +15,7 @@ import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
+import com.cyl.musiclake.ui.music.player.CoverFragment;
 import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
@@ -24,6 +25,8 @@ import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.download.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
+
+import org.jetbrains.annotations.NotNull;
 
 import dagger.Component;
 
@@ -76,4 +79,6 @@ public interface FragmentComponent {
     void inject(DownloadManagerFragment downloadManagerFragment);
 
     void inject(MvListFragment mvListFragment);
+
+    void inject(@NotNull CoverFragment coverFragment);
 }

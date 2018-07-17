@@ -1,16 +1,20 @@
 package com.cyl.musiclake.data.db
 
+import android.annotation.SuppressLint
+import android.os.Parcel
+import android.os.Parcelable
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
 import java.util.*
 
+@SuppressLint("ParcelCreator")
 /**
  * 功能：本地歌单
  * 作者：yonglong on 2016/9/13 21:59
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class Playlist : LitePalSupport, Serializable {
+class Playlist() : LitePalSupport(), Parcelable {
     var id: Long = 0
     //歌单id
     var pid: String? = null
@@ -28,20 +32,32 @@ class Playlist : LitePalSupport, Serializable {
     var order: String? = null
     //封面
     var coverUrl: String? = null
-    //类型 0：本地歌单 1：在线歌单
+    //类型 0：本地歌单 1：在线同步歌单 2：百度音乐电台
     var type: Int = 0
 
     //歌曲集合
-    var musicList: List<Music> = ArrayList()
+    var musicList: MutableList<Music> = ArrayList()
 
-    constructor()
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readLong()
+        pid = parcel.readString()
+        name = parcel.readString()
+        count = parcel.readLong()
+        updateDate = parcel.readLong()
+        date = parcel.readLong()
+        des = parcel.readString()
+        order = parcel.readString()
+        coverUrl = parcel.readString()
+        type = parcel.readInt()
+    }
 
-    constructor(pid: String?, name: String?) {
+
+    constructor(pid: String?, name: String?) : this() {
         this.pid = pid
         this.name = name
     }
 
-    constructor(pid: String?, name: String?, order: String ="updateDate desc") {
+    constructor(pid: String?, name: String?, order: String = "updateDate desc") : this() {
         this.pid = pid
         this.name = name
     }
@@ -49,6 +65,34 @@ class Playlist : LitePalSupport, Serializable {
     override fun toString(): String {
         return "Playlist(id=$id, name=$name, count=$count, updateDate=$updateDate, date=$date, des=$des, order=$order, coverUrl=$coverUrl, type=$type, musicList=$musicList)"
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeString(pid)
+        parcel.writeString(name)
+        parcel.writeLong(count)
+        parcel.writeLong(updateDate)
+        parcel.writeLong(date)
+        parcel.writeString(des)
+        parcel.writeString(order)
+        parcel.writeString(coverUrl)
+        parcel.writeInt(type)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Playlist> {
+        override fun createFromParcel(parcel: Parcel): Playlist {
+            return Playlist(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Playlist?> {
+            return arrayOfNulls(size)
+        }
+    }
+
 
 }
 

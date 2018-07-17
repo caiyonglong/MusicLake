@@ -87,8 +87,7 @@
         <activity
             android:name=".ui.music.mv.MvDetailActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullScreen" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.online.activity.NeteasePlaylistActivity"
             android:label="@string/app_name"
@@ -107,6 +106,11 @@
             android:name=".ui.my.UserCenterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.music.playlist.PlaylistDetailActivity"
+            android:label="@string/playlist_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainActivityTheme" />
 
         <service android:name=".player.MusicPlayerService" />
 
@@ -158,8 +162,6 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-
-
         <receiver
             android:name=".view.desktop.StandardWidget"
             android:label="@string/widget_standard">
@@ -168,11 +170,11 @@
                 <action android:name="com.cyl.music_lake.metachanged" />
                 <action android:name="com.cyl.music_lake.play_state" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_standard" />
         </receiver>
-
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -187,6 +189,10 @@
         <activity
             android:name=".ui.main.TestActivity"
             android:label="调试" />
+        <activity
+            android:name=".ui.music.player.PlayerActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/MainActivityTheme" />
     </application>
 
 </manifest>

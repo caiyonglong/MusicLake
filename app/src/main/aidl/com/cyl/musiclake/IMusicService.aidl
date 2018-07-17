@@ -5,6 +5,7 @@ package com.cyl.musiclake;
 import com.cyl.musiclake.data.db.Music;
 
 interface IMusicService {
+    void nextPlay(in Music music);
     void playMusic(in Music music);
     void playPlaylist(in List<Music> playlist,int id,String pid);
     void play(int id);

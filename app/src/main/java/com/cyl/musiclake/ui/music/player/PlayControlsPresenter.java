@@ -7,25 +7,22 @@ import android.os.Handler;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 
@@ -84,7 +81,7 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
         isPlayPauseClick = true;
         PlayManager.playPause();
         if (PlayManager.getPlayingMusic() == null) {
-            mView.setErrorInfo("请选择需要播放的音乐");
+            ToastUtils.show(MusicApp.getAppContext(), "请选择需要播放的音乐");
         } else {
             boolean isPlaying = PlayManager.isPlaying();
             mView.setPlayPauseButton(isPlaying);
@@ -99,45 +96,6 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
     @Override
     public void loadLyric(String result, boolean status) {
         mView.showLyric(result, false);
-//        Music music = PlayManager.getPlayingMusic();
-//        if (music == null) {
-//            return;
-//        }
-//        if (isPlayPauseClick)
-//            return;
-//        String lrcPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
-//        if (FileUtils.exists(lrcPath)) {
-//            mView.showLyric(lrcPath, true);
-//        } else {
-//            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(music);
-//            if (observable == null) {
-//                LogUtil.e(TAG, "本地文件为空");
-//                mView.showLyric(null, false);
-//            } else {
-//                observable.subscribe(new Observer<String>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(String lyricInfo) {
-//                        LogUtil.e(TAG, lyricInfo);
-//                        mView.showLyric(lyricInfo, false);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        mView.showLyric(null, false);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//            }
-//        }
     }
 
     @Override

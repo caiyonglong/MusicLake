@@ -141,7 +141,7 @@ object BaiduApiServiceImpl {
                         music.lyric = songInfo.lrcLink
                         music.coverSmall = songInfo.songPicSmall
                         music.coverUri = songInfo.songPicBig
-                        music.coverBig = songInfo.songPicRadio
+                        music.coverBig = songInfo.songPicRadio.split("@")[0]
                     }
                     Observable.create(ObservableOnSubscribe<Music> { e ->
                         if (music.uri != null) {
@@ -210,20 +210,28 @@ object BaiduApiServiceImpl {
                 }
     }
 
-    fun getRadioChannel(name: String): Observable<MutableList<RadioChannel>> {
-        return apiService.getRadioChannelSongs(name)
+    fun getRadioChannelInfo(playlist: Playlist): Observable<Playlist> {
+        return apiService.getRadioChannelSongs(playlist.pid)
                 .flatMap {
-                    Observable.create(ObservableOnSubscribe<MutableList<RadioChannel>> { e ->
-                        try {
-                            var result = mutableListOf<RadioChannel>()
-                            if (it.errorCode == 22000) {
-                                it.result?.let {
-                                    it[0].channellist?.let {
-                                        result = it
-                                    }
-                                }
+                    val songs = mutableListOf<Music>()
+                    if (it.errorCode == 22000) {
+                        it.result.songlist?.forEach {
+                            if (it.songid != null) {
+                                val music = Music()
+                                music.type = Constants.BAIDU
+                                music.title = it.title
+                                music.artist = it.artist
+                                music.artistId = it.artistId
+                                music.mid = it.songid
+                                music.coverUri = it.thumb.split("@")[0]
+                                songs.add(music)
                             }
-                            e.onNext(result)
+                        }
+                        playlist.musicList = songs
+                    }
+                    Observable.create(ObservableOnSubscribe<Playlist> { e ->
+                        try {
+                            e.onNext(playlist)
                             e.onComplete()
                         } catch (error: Exception) {
                             e.onError(Throwable(error.message))

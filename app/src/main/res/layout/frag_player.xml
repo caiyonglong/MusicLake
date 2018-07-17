@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="400dp"
     android:layout_gravity="top"
     android:background="@drawable/bg_frag_player">
 
@@ -12,7 +12,6 @@
         android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:scaleType="centerCrop" />
 
     <!--<View-->
@@ -24,6 +23,7 @@
 
     <LinearLayout
         android:id="@+id/container"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -167,6 +167,7 @@
                     android:layout_width="@dimen/dp_64"
                     android:layout_height="@dimen/dp_64"
                     android:layout_weight="1"
+                    android:padding="@dimen/dp_4"
                     android:gravity="center">
 
                     <android.support.design.widget.FloatingActionButton

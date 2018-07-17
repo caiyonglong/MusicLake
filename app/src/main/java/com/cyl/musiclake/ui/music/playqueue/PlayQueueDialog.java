@@ -5,13 +5,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.player.playqueue.PlayQueueManager;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
@@ -29,30 +31,24 @@ import com.trello.rxlifecycle2.LifecycleTransformer;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_LOOP;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_RANDOM;
 import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_REPEAT;
 
-public class PlayQueueDialog extends DialogFragment implements PlayQueueContract.View {
+public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQueueContract.View {
 
-    @BindView(R.id.tv_play_mode)
     TextView tvPlayMode;
-    @BindView(R.id.iv_play_mode)
     ImageView ivPlayMode;
-    @BindView(R.id.clear_all)
     ImageView clearAll;
-    @BindView(R.id.recycler_view_songs)
     RecyclerView recyclerView;
-
     private PlayQueuePresenter mPresenter;
     private List<Music> musicList = new ArrayList<>();
     private QueueAdapter mAdapter;
     private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
     private int playModeId = 0;
+
 
     @OnClick(R.id.iv_play_mode)
     public void onPlayModeClick() {
@@ -82,7 +78,12 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         params.height = MusicApp.getInstance().screenSize.y / 7 * 4;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        mBehavior.setPeekHeight(params.height);
+        //默认全屏展开
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,29 +93,35 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         mAdapter = new QueueAdapter(musicList);
     }
 
+    private BottomSheetBehavior mBehavior;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_playqueue, container, false);
-        ButterKnife.bind(this, view);
-        return view;
-    }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_playqueue, null);
+        recyclerView = view.findViewById(R.id.recycler_view_songs);
+        tvPlayMode = view.findViewById(R.id.tv_play_mode);
+        ivPlayMode = view.findViewById(R.id.iv_play_mode);
+        clearAll = view.findViewById(R.id.clear_all);
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(recyclerView);
+        recyclerView.scrollToPosition(PlayManager.getCurrentPosition());
+        initListener();
+        dialog.setContentView(view);
+        mPresenter.loadSongs();
+        mBehavior = BottomSheetBehavior.from((View) view.getParent());
+        return dialog;
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(recyclerView);
 
-        recyclerView.scrollToPosition(PlayManager.getCurrentPosition());
-
-        initListener();
-        mPresenter.loadSongs();
     }
+
 
     private void initListener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -135,6 +142,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
                     break;
             }
         });
+
     }
 
 
@@ -149,7 +157,7 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
 
 
     public void updatePlayMode() {
-        playModeId = SPUtils.getPlayMode();
+        playModeId = PlayQueueManager.INSTANCE.updatePlayMode();
         switch (playModeId) {
             case PLAY_MODE_LOOP:
                 ivPlayMode.setImageResource(R.drawable.ic_repeat);
@@ -221,4 +229,6 @@ public class PlayQueueDialog extends DialogFragment implements PlayQueueContract
         mAdapter.setNewData(null);
         mAdapter.setEmptyView(R.layout.view_queue_empty);
     }
+
+
 }

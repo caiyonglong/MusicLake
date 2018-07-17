@@ -159,7 +159,7 @@
     <string name="secret_num">~~ 动态 %1$d ~~</string>
     <string name="error_playing_track">播放出错</string>
     <string name="folders">文件夹</string>
-    <string name="play_time">00:00</string>
+    <string name="play_time">--:--</string>
     <string name="play_no_resource">无音乐</string>
     <string name="play_mode">%1$s("%2$d")</string>
     <string name="play_mode_random">随机播放</string>
@@ -248,6 +248,7 @@
     <string name="qq_login_tips">QQ登录</string>
 
 
+    <string name="popup_song_detail">歌曲详情</string>
     <string name="popup_play_next">下一首播放</string>
     <string name="popup_detail">查看歌曲信息</string>
     <string name="popup_download">下载歌曲</string>
@@ -267,4 +268,5 @@
     <string name="mv_detail">描述</string>
     <string name="mv_hot_comment">推荐评论</string>
     <string name="mv_comment">最新评论</string>
+    <string name="title_activity_player">PlayerActivity</string>
 </resources>

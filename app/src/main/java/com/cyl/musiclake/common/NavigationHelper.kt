@@ -24,6 +24,7 @@ import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
 import com.cyl.musiclake.ui.music.playlist.LoveFragment
+import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
@@ -78,6 +79,7 @@ object NavigationHelper {
         transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(title).commit()
+
     }
 
 
@@ -147,38 +149,40 @@ object NavigationHelper {
             //                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
             fragment = DownloadFragment.newInstance()
         }
-        //        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+        transaction.hide((context.supportFragmentManager.findFragmentById(R.id.fragment_container)))
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
 
     fun navigateToPlaylist(context: Activity, playlist: Playlist, transitionViews: Pair<View, String>?) {
-        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
-
-//        if (transitionViews != null) {
-//            val changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform)
-//            transaction.addSharedElement(transitionViews.first, transitionViews.second)
-//            fragment = PlaylistDetailFragment.newInstance(playlist, true, transitionViews.second)
-//            fragment.setSharedElementEnterTransition(changeImage)
+        PlaylistDetailActivity.newInstance(context, playlist)
+//        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+//        val fragment: Fragment
 //
-//        } else {
-//            transaction.setCustomAnimations(R.anim.activity_fade_in,
-//                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out)
-        fragment = PlaylistDetailFragment.newInstance(playlist, false, null)
-//        }
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
-        transaction.add(R.id.fragment_container, fragment)
-        transaction.addToBackStack(fragment.getTag()).commit()
+////        if (transitionViews != null) {
+////            val changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform)
+////            transaction.addSharedElement(transitionViews.first, transitionViews.second)
+////            fragment = PlaylistDetailFragment.newInstance(playlist, true, transitionViews.second)
+////            fragment.setSharedElementEnterTransition(changeImage)
+////
+////        } else {
+////            transaction.setCustomAnimations(R.anim.activity_fade_in,
+////                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out)
+//        fragment = PlaylistDetailFragment.newInstance(playlist, false, null)
+////        }
+//        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+//        transaction.add(R.id.fragment_container, fragment)
+//        transaction.addToBackStack(fragment.getTag()).commit()
     }
 
     fun navigateToPlaylist(context: Activity, artist: Artist) {
-        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
-        fragment = PlaylistDetailFragment.newInstance(artist)
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
-        transaction.add(R.id.fragment_container, fragment)
-        transaction.addToBackStack(fragment.getTag()).commit()
+        PlaylistDetailActivity.newInstance(context, artist)
+//        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+//        val fragment: Fragment
+//        fragment = PlaylistDetailFragment.newInstance(artist)
+//        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+//        transaction.add(R.id.fragment_container, fragment)
+//        transaction.addToBackStack(fragment.getTag()).commit()
     }
 
     fun navigateToPlaylist(context: Activity, album: Album) {

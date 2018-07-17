@@ -1,4 +1,4 @@
-package com.cyl.musiclake.common;
+package com.cyl.musiclake.ui.main;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;

@@ -11,10 +11,14 @@ import com.cyl.musiclake.ui.music.mv.MvDetailActivity;
 import com.cyl.musiclake.ui.music.online.activity.ArtistInfoActivity;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.base.BasePlaylistActivity;
+import com.cyl.musiclake.ui.music.player.PlayerActivity;
+import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.RegisterActivity;
 import com.cyl.musiclake.ui.my.UserCenterActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import dagger.Component;
 
@@ -50,4 +54,8 @@ public interface ActivityComponent {
     void inject(BasePlaylistActivity basePlaylistActivity);
 
     void inject(MvDetailActivity mvDetailActivity);
+
+    void inject(@NotNull PlayerActivity playerActivity);
+
+    void inject(PlaylistDetailActivity playlistDetailActivity);
 }

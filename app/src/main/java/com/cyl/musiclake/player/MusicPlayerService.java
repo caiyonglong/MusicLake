@@ -692,6 +692,19 @@ public class MusicPlayerService extends Service {
     }
 
     /**
+     * 下一首播放
+     *
+     * @param music
+     */
+    public void nextPlay(Music music) {
+        if (mPlayQueue.size() == 0) {
+            play(music);
+        } else if (mPlayingPos < mPlayQueue.size()) {
+            mPlayQueue.add(mPlayingPos + 1, music);
+        }
+    }
+
+    /**
      * 切换歌单播放
      */
     public void play(List<Music> musicList, int id, String pid) {
@@ -802,6 +815,8 @@ public class MusicPlayerService extends Service {
     }
 
     private LyricChangedEvent lyricChangedEvent;
+    public static String lyric = null;
+
 
     private void loadLyric() {
         if (mPlayingMusic != null) {
@@ -816,20 +831,24 @@ public class MusicPlayerService extends Service {
                     @Override
                     public void success(String result) {
                         lyricChangedEvent.setLyric(result);
+                        lyric = result;
                         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
                     }
 
                     @Override
                     public void error(String msg) {
                         lyricChangedEvent.setLyric(msg);
+                        lyric = msg;
                         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
                     }
                 });
             } else {
+                lyric = "";
                 lyricChangedEvent.setLyric("");
             }
         } else {
             lyricChangedEvent = new LyricChangedEvent("", true);
+            lyric = "";
         }
         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
     }
