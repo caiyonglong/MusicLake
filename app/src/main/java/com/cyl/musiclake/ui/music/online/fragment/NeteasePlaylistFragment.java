@@ -108,7 +108,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
     protected void loadData() {
         for (int i = 0; i < charts.length; i++) {
             int finalI = i;
-            BaseApiImpl.Companion.getInstance(getActivity()).getTopList(String.valueOf(i), topList -> {
+            BaseApiImpl.INSTANCE.getInstance(getActivity()).getTopList(String.valueOf(i), topList -> {
                 LogUtil.e(charts[finalI] + "," + topList.getData().getCover());
                 Playlist playlist = new Playlist();
                 playlist.setPid(String.valueOf(finalI));

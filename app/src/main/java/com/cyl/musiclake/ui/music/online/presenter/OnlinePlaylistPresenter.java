@@ -65,7 +65,7 @@ public class OnlinePlaylistPresenter extends BasePresenter<OnlinePlaylistContrac
     @Override
     public void loadTopList(Context context) {
         for (int i = 0; i < 21; i++) {
-            BaseApiImpl.Companion.getInstance(context).getTopList(String.valueOf(i), topList -> {
+            BaseApiImpl.INSTANCE.getInstance(context).getTopList(String.valueOf(i), topList -> {
                 Playlist playlist = new Playlist();
                 playlist.setPid(String.valueOf(System.currentTimeMillis()));
                 playlist.setName(topList.getData().getName());

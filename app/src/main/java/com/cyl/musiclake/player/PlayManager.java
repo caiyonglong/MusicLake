@@ -273,15 +273,6 @@ public class PlayManager {
         }
     }
 
-    public static void refresh() {
-        try {
-            if (mService != null)
-                mService.refresh();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void removeFromQueue(int adapterPosition) {
         try {
             if (mService != null)

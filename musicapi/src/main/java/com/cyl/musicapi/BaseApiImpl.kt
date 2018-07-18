@@ -15,35 +15,28 @@ import wendu.dsbridge.DWebView
  * 调用js方法请求数据
  * 原理js拼接url,接收返回参数，然后数据处理再返回到java中。
  */
-class BaseApiImpl private constructor(val context: Context) {
+object BaseApiImpl {
 
     private val gson = Gson()
+    var mWebView: DWebView? = null
 
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        var instance: BaseApiImpl? = null
-        var mWebView: DWebView? = null
+    fun getInstance(context: Context): BaseApiImpl {
+        return this
+    }
 
-        fun getInstance(context: Context): BaseApiImpl {
-            if (instance == null) {
-                synchronized(BaseApiImpl::class) {
-                    if (instance == null) {
-                        instance = BaseApiImpl(context)
-                    }
-                    if (mWebView == null) {
-                        mWebView = DWebView(context)
-                        mWebView?.addJavascriptObject(object : Any() {
-                            @JavascriptInterface
-                            fun onAjaxRequest(requestData: Any, handler: CompletionHandler<*>) {
-                                AjaxHandler.onAjaxRequest(requestData as JSONObject, handler)
-                            }
-                        }, null)
-                        mWebView?.loadUrl("file:///android_asset/musicApi.html")
-                    }
+    fun initWebView(context: Context) {
+        try {
+
+            mWebView = DWebView(context)
+            mWebView?.addJavascriptObject(object : Any() {
+                @JavascriptInterface
+                fun onAjaxRequest(requestData: Any, handler: CompletionHandler<*>) {
+                    AjaxHandler.onAjaxRequest(requestData as JSONObject, handler)
                 }
-            }
-            return instance!!
+            }, null)
+            mWebView?.loadUrl("file:///android_asset/musicApi.html")
+        } catch (e: Throwable) {
+
         }
     }
 
@@ -134,7 +127,7 @@ class BaseApiImpl private constructor(val context: Context) {
         }
     }
 
-    fun getComment(vendor: String, id: String, success: (result: SongCommentData<NeteaseComment>) -> Unit,fail: ((String) -> Unit)? = null) {
+    fun getComment(vendor: String, id: String, success: (result: SongCommentData<NeteaseComment>) -> Unit, fail: ((String) -> Unit)? = null) {
         mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 10)) { retValue: JSONObject ->
             val result =
                     gson.fromJson<SongCommentData<NeteaseComment>>(retValue.toString(), SongCommentData::class.java)

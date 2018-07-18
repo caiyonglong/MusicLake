@@ -149,7 +149,6 @@ public class CoverLoader {
     public static void loadImageView(Context mContext, String url, ImageView imageView) {
         GlideApp.with(mContext)
                 .load(url)
-                .placeholder(R.drawable.default_cover_player)
                 .error(R.drawable.default_cover_player)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
@@ -158,7 +157,6 @@ public class CoverLoader {
     public static void loadImageView(Context mContext, String url, int defaultUrl, ImageView imageView) {
         GlideApp.with(mContext)
                 .load(url)
-                .placeholder(R.drawable.default_cover_player)
                 .error(defaultUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);

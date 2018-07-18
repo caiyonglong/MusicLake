@@ -6,11 +6,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musicapi.netease.MvInfoDetail;
-import com.cyl.musicapi.netease.MvInfoDetailInfo;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.ui.music.discover.MvListPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +71,16 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
 
     @Override
     protected void loadData() {
+        showLoading();
         mvList.clear();
 //        初始化列表,当无数据时显示提示
+        mPresenter.loadMv(0);
+    }
+
+    @Override
+    protected void retryLoading() {
+        super.retryLoading();
+        mvList.clear();
         mPresenter.loadMv(0);
     }
 

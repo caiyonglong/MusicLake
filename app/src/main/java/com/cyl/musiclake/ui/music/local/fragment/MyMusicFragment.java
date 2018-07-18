@@ -182,7 +182,7 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
 
     private void toFragment(int position) {
         if (position == 0) {
-            LocalMusicActivity.newInstance(mFragmentComponent.getActivity());
+            NavigationHelper.INSTANCE.navigateToLocalMusic(mFragmentComponent.getActivity(), null);
         } else if (position == 1) {
             NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), PlaylistLoader.INSTANCE.getHistoryPlaylist(), null);
         } else if (position == 2) {

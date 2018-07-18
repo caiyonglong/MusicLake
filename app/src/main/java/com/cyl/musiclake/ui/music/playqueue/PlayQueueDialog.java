@@ -41,7 +41,6 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
     private List<Music> musicList = new ArrayList<>();
     private QueueAdapter mAdapter;
 
-
     public static PlayQueueDialog newInstance() {
         Bundle args = new Bundle();
         PlayQueueDialog fragment = new PlayQueueDialog();

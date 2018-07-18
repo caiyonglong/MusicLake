@@ -7,10 +7,12 @@ import android.support.v4.view.ViewPager
 import android.support.v7.graphics.Palette
 import android.view.Menu
 import android.view.View
+import android.widget.ImageView
 import android.widget.SeekBar
 import com.cyl.musiclake.R
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.AddPlaylistUtils
+import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.TransitionAnimationUtils
@@ -18,9 +20,11 @@ import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.dialog.downloadMusic
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
+import com.cyl.musiclake.ui.music.playqueue.UIUtils
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.view.DepthPageTransformer
@@ -28,6 +32,8 @@ import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
+
+
     var playingMusic: Music? = null
     val coverFragment by lazy { CoverFragment.newInstance() }
     val lyricFragment by lazy { LyricFragment.newInstance() }
@@ -59,11 +65,17 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         PlayManager.isPlaying().let {
             if (it) playPauseIv.play() else playPauseIv.pause()
         }
+        updatePlayMode()
+    }
+
+    override fun updatePlayMode() {
+        UIUtils.updatePlayMode(playModeIv, false)
     }
 
     override fun initData() {
         setupViewPager(viewPager)
-        mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic())
+        val music = PlayManager.getPlayingMusic()
+        mPresenter?.updateNowPlaying(music)
     }
 
     override fun listener() {
@@ -103,23 +115,36 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     fun changePlayMode(view: View?) {
+        UIUtils.updatePlayMode(view as ImageView, true)
     }
 
+    /**
+     * 打开播放队列
+     */
     fun openPlayQueue(view: View?) {
         val fm = supportFragmentManager
         PlayQueueDialog.newInstance().show(fm, "fragment_bottom_dialog")
     }
 
+    /**
+     * 歌曲收藏
+     */
     fun collectMusic(view: View?) {
-        playingMusic?.let {
-            collectIv.setImageResource(if (!it.isLove) R.drawable.item_favorite_love else R.drawable.item_favorite)
-            it.isLove = SongLoader.updateFavoriteSong(it)
-            RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
-        }
+        UIUtils.collectMusic(view as ImageView, playingMusic)
     }
 
+    /**
+     * 添加到歌單
+     */
     fun addToPlaylist(view: View?) {
         AddPlaylistUtils.getPlaylist(this, playingMusic)
+    }
+
+    /**
+     * 分享歌曲
+     */
+    fun shareMusic(view: View?) {
+        MusicUtils.qqShare(this, PlayManager.getPlayingMusic())
     }
 
     fun downloadMusic(view: View?) {

@@ -22,6 +22,8 @@ interface PlayContract {
 
         fun updatePlayStatus(isPlaying: Boolean)
 
+        fun updatePlayMode()
+
         fun updateProgress(progress: Int, max: Int)
 
         fun showNowPlaying(music: Music?)

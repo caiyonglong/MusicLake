@@ -4,27 +4,10 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <!--<include layout="@layout/include_main" />-->
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_56" />
-
-        <fragment
-            android:id="@+id/bottomControlFg"
-            android:name="com.cyl.musiclake.ui.music.player.PlayControlFragment"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentBottom="true" />
-    </RelativeLayout>
+    <include layout="@layout/include_main" />
 
 
     <android.support.design.widget.NavigationView

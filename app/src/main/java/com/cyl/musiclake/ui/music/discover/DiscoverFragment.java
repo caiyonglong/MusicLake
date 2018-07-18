@@ -98,7 +98,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mWangChartsRv.setNestedScrollingEnabled(false);
         mNeteaseAdapter.bindToRecyclerView(mWangChartsRv);
 
-        mChartsArtistRcv.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false));
+        mChartsArtistRcv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
         //适配器
         mArtistListAdapter = new TopArtistListAdapter(artists);
         mChartsArtistRcv.setAdapter(mNeteaseAdapter);

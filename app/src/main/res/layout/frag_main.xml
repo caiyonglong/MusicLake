@@ -9,36 +9,25 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/app_name">
-
-        </android.support.v7.widget.Toolbar>
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:fitsSystemWindows="true"
+            android:layout_height="wrap_content"
             android:tag="tab_indicator_accent_color,bg_primary_color"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:tabGravity="fill"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/colorAccentDarkTheme"
-            app:tabTextColor="@color/white" />
-
+            app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
-
 
     <android.support.v4.view.ViewPager
         android:id="@+id/m_viewpager"

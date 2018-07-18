@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +23,6 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.AddPlaylistUtils;
-import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
@@ -35,20 +30,16 @@ import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.SPUtils;
-import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
 
-import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.io.File;
@@ -58,10 +49,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_LOOP;
-import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_RANDOM;
-import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_REPEAT;
 
 public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
 
@@ -89,8 +76,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     MaterialIconView skip_prev;
     @BindView(R.id.skip_next)
     MaterialIconView skip_next;
-    @BindView(R.id.iv_back)
-    ImageView iv_back;
     @BindView(R.id.iv_love)
     ImageView mIvLove;
     @BindView(R.id.iv_play_page_bg)
@@ -110,11 +95,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     TextView tv_time;
     @BindView(R.id.song_duration)
     TextView tv_duration;
-    @BindView(R.id.skip_download)
-    MaterialIconView skip_download;
-
-    @BindView(R.id.skip_mode)
-    MaterialIconView skip_mode;
 
     @BindView(R.id.song_progress)
     SeekBar mSeekBar;
@@ -123,8 +103,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     //ViewPager中界面专辑和歌词
     private LyricView mLrcView;
-    private CircleImageView mCivImage;
-    private TextView mTvRecourse;
     private Drawable mDrawable;
 
     private PlayQueueDialog playQueueDialog = null;
@@ -134,55 +112,10 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
     public ObjectAnimator operatingAnim;
     public long currentPlayTime = 0;
-    private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
-    private int playModeId = 0;
-
-    @OnClick(R.id.iv_back)
-    void back() {
-//        if (mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
-        onBackPressed();
-    }
 
     @OnClick(R.id.skip_next)
     void next() {
         mPresenter.onNextClick();
-    }
-
-//    @OnClick(R.id.skip_lyric)
-//    void show_lyric() {
-////        PlayManager.showDesktopLyric(true);
-//    }
-
-    @OnClick(R.id.skip_share)
-    void share() {
-        MusicUtils.INSTANCE.qqShare(getActivity(), PlayManager.getPlayingMusic());
-    }
-
-
-    @OnClick(R.id.skip_add)
-    void addPlaylist() {
-        AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), PlayManager.getPlayingMusic());
-    }
-
-    @OnClick(R.id.skip_mode)
-    void changePlayMode() {
-        updatePlayMode();
-        ToastUtils.show(mPlayMode[playModeId]);
-    }
-
-    private void updatePlayMode() {
-        playModeId = SPUtils.getPlayMode();
-        switch (playModeId) {
-            case PLAY_MODE_LOOP:
-                skip_mode.setIcon(MaterialDrawableBuilder.IconValue.REPEAT);
-                break;
-            case PLAY_MODE_RANDOM:
-                skip_mode.setIcon(MaterialDrawableBuilder.IconValue.SHUFFLE);
-                break;
-            case PLAY_MODE_REPEAT:
-                skip_mode.setIcon(MaterialDrawableBuilder.IconValue.REPEAT_ONCE);
-                break;
-        }
     }
 
     @OnClick(R.id.play_next)
@@ -215,18 +148,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_LOVE_ID));
     }
 
-    @OnClick(R.id.skip_download)
-    void download() {
-        Music music = PlayManager.getPlayingMusic();
-        PopupUtilsKt.downloadMusic(mFragmentComponent.getActivity(), music);
-    }
-
-    @OnClick(R.id.skip_equalizer)
-    void skipEqualizer() {
-        Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-        effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
-        startActivityForResult(effects, 666);
-    }
 
     @OnClick(R.id.skip_queue)
     void openPlayQueue() {
@@ -258,7 +179,8 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             mViewPager.setOffscreenPageLimit(1);
             mViewPager.setCurrentItem(0);
         }
-        updatePlayMode();
+
+        setPlayPauseButton(PlayManager.isPlaying());
     }
 
     @Override
@@ -284,14 +206,8 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     private void setupViewPager(MultiTouchViewPager viewPager) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View lrcView = inflater.inflate(R.layout.frag_player_lrcview, null);
-        View coverView = inflater.inflate(R.layout.frag_player_coverview, null);
-
         mLrcView = lrcView.findViewById(R.id.lyricShow);
-        mCivImage = coverView.findViewById(R.id.civ_cover);
-        mTvRecourse = coverView.findViewById(R.id.tv_source);
-
-        mViewPagerContent = new ArrayList<>(2);
-        mViewPagerContent.add(coverView);
+        mViewPagerContent = new ArrayList<>(1);
         mViewPagerContent.add(lrcView);
         viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -373,7 +289,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     public void setAlbumArt(Bitmap albumArt) {
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
-        mCivImage.setImageBitmap(albumArt);
 
         if (operatingAnim != null) {
             if (PlayManager.isPlaying()) {
@@ -406,33 +321,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @Override
     public void setOtherInfo(String source) {
-        if (source.equals(Constants.LOCAL)) {
-            mTvRecourse.setVisibility(View.GONE);
-        } else {
-            switch (source) {
-                case Constants.QQ:
-                    mTvRecourse.setText(R.string.res_qq);
-                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.qq);
-                    break;
-                case Constants.BAIDU:
-                    mTvRecourse.setText(R.string.res_baidu);
-                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.baidu);
-                    break;
-                case Constants.NETEASE:
-                    mTvRecourse.setText(R.string.res_wangyi);
-                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.netease);
-                    break;
-                case Constants.XIAMI:
-                    mTvRecourse.setText(R.string.res_xiami);
-                    mDrawable = ContextCompat.getDrawable(mFragmentComponent.getActivity(), R.drawable.xiami);
-                    break;
-            }
-            if (mDrawable != null) {
-                mTvRecourse.setVisibility(View.VISIBLE);
-                mDrawable.setBounds(10, 10, 10, 10);
-                mTvRecourse.setCompoundDrawables(null, null, mDrawable, null);
-            }
-        }
+
     }
 
     @Override
@@ -484,7 +373,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         //初始化歌词配置
 //        mLrcView.set(15.0f);
 //        mLrcView.setTextSize(17.0f);
-        mLrcView.setTouchable(true);
+        mLrcView.setTouchable(false);
 //        mLrcView.setPlayable(true);
         mLrcView.setOnPlayerClickListener((progress, content) -> {
             PlayManager.seekTo((int) progress);
@@ -503,7 +392,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void setPlayPauseButton(boolean isPlaying) {
         if (isPlaying) {
@@ -514,10 +402,12 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             mPlayOrPause.pause();
         }
         if (operatingAnim != null) {
-            if (isPlaying) {
-                operatingAnim.resume();
-            } else {
-                operatingAnim.pause();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (isPlaying) {
+                    operatingAnim.resume();
+                } else {
+                    operatingAnim.pause();
+                }
             }
         }
     }

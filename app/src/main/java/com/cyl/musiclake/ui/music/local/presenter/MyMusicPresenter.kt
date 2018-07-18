@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
@@ -101,7 +102,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     }
 
     override fun loadPlaylist() {
-        val mIsLogin = UserStatus.getstatus(mView.context)
+        val mIsLogin = UserStatus.getstatus(MusicApp.getAppContext())
         if (mIsLogin) {
             ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
                 override fun success(result: MutableList<Playlist>) {
@@ -117,7 +118,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
 
                 override fun error(msg: String) {
                     ToastUtils.show(msg)
-                    mView.showEmptyView()
+                    mView?.showEmptyView()
                 }
             })
         } else {

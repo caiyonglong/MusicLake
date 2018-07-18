@@ -65,12 +65,6 @@ public class IMusicServiceStub extends IMusicService.Stub {
     public void next() throws RemoteException {
         mService.get().next();
     }
-
-    @Override
-    public void refresh() throws RemoteException {
-        mService.get().refresh();
-    }
-
     @Override
     public void setLoopMode(int loopmode) throws RemoteException {
     }

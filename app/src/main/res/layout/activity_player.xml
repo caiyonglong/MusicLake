@@ -128,19 +128,15 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <net.steamcrafted.materialiconlib.MaterialIconView
+                    <ImageView
                         android:id="@+id/playModeIv"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:gravity="center"
                         android:onClick="changePlayMode"
-                        app:materialIcon="shuffle"
-                        app:materialIconColor="@color/white"
-                        app:materialIconSize="24dp"
-                        tools:targetApi="lollipop" />
+                        android:src="@drawable/ic_repeat" />
 
 
                     <net.steamcrafted.materialiconlib.MaterialIconView
@@ -149,7 +145,6 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackground"
                         android:onClick="prevPlay"
                         android:scaleType="center"
                         android:src="@drawable/ic_skip_previous"
@@ -177,7 +172,6 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:layout_margin="8dp"
-                            android:background="?android:attr/selectableItemBackground"
                             android:elevation="10dp"
                             android:scaleType="fitXY"
                             app:anim_duration="300"
@@ -201,7 +195,6 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackground"
                         android:onClick="nextPlay"
                         android:scaleType="center"
                         app:materialIcon="skip_next"
@@ -214,7 +207,6 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackground"
                         android:onClick="openPlayQueue"
                         android:src="@drawable/ic_detail"
                         app:materialIcon="playlist_play"
@@ -264,10 +256,10 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:gravity="center"
+                        android:onClick="shareMusic"
                         app:materialIcon="share"
                         app:materialIconColor="@color/white"
-                        app:materialIconSize="24dp"
-                        tools:targetApi="lollipop" />
+                        app:materialIconSize="24dp" />
 
                     <ImageView
                         android:id="@+id/equalizerIv"

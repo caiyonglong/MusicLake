@@ -1,14 +1,8 @@
-package com.cyl.musiclake.ui.music.discover
+package com.cyl.musiclake.ui.music.mv
 
-import com.cyl.musicapi.netease.MvDetailInfo
 import com.cyl.musicapi.netease.MvInfo
-import com.cyl.musicapi.netease.SimilarMvInfo
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
-import com.cyl.musiclake.ui.music.mv.MvListContract
-import com.cyl.musiclake.ui.music.mv.MvModel
 import javax.inject.Inject
 
 /**
@@ -23,11 +17,13 @@ constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
         mvModel.loadMv(offset, object : RequestCallBack<MvInfo> {
             override fun success(result: MvInfo?) {
                 result?.data?.let {
+                    mView?.hideLoading()
                     mView?.showMvList(it)
                 }
             }
 
             override fun error(msg: String?) {
+                mView?.showError(msg, true)
             }
 
         })

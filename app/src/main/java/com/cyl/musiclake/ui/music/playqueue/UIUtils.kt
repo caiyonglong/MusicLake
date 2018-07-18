@@ -4,8 +4,14 @@ import android.content.Context
 import android.widget.ImageView
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
+import com.cyl.musiclake.RxBus
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.utils.ToastUtils
+import kotlinx.android.synthetic.main.activity_player.*
 
 object UIUtils {
     /**
@@ -31,6 +37,17 @@ object UIUtils {
             }
         } catch (e: Throwable) {
 
+        }
+    }
+
+    /**
+     * 收藏歌曲
+     */
+    fun collectMusic(imageView: ImageView, music: Music?) {
+        music?.let {
+            imageView.setImageResource(if (!it.isLove) R.drawable.item_favorite_love else R.drawable.item_favorite)
+            it.isLove = SongLoader.updateFavoriteSong(it)
+            RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
         }
     }
 }

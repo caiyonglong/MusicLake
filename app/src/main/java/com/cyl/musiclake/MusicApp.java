@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.WindowManager;
 
+import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.data.download.TasksManager;
@@ -60,7 +61,7 @@ public class MusicApp extends Application {
         initBugly();
         initDB();
         initFileDownload();
-
+        BaseApiImpl.INSTANCE.initWebView(this);
         WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         if (manager != null) {
             manager.getDefaultDisplay().getSize(screenSize);

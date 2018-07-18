@@ -7,6 +7,7 @@ import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.event.LyricChangedEvent
 import com.cyl.musiclake.event.MetaChangedEvent
+import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.CoverLoader
@@ -40,36 +41,32 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter {
     override fun attachView(view: PlayContract.View) {
         super.attachView(view)
         mHandler = Handler()
-        var disposable = RxBus.getInstance().register(MetaChangedEvent::class.java)
+        val disposable = RxBus.getInstance().register(MetaChangedEvent::class.java)
                 .compose(mView.bindToLife())
                 .subscribe { event -> updateNowPlaying(event.music) }
-        disposables.add(disposable)
-        disposable = RxBus.getInstance().register(LyricChangedEvent::class.java)
+        val disposable2 = RxBus.getInstance().register(LyricChangedEvent::class.java)
                 .compose(mView.bindToLife())
                 .subscribe { event -> loadLyric(event.lyric, event.isStatus) }
-        disposables.add(disposable)
-        disposable = RxBus.getInstance().register(StatusChangedEvent::class.java)
+        val disposable1 = RxBus.getInstance().register(PlayModeEvent::class.java)
+                .subscribe { event -> mView?.updatePlayMode() }
+        val disposable3 = RxBus.getInstance().register(StatusChangedEvent::class.java)
                 .compose(mView.bindToLife())
                 .subscribe { statusChangedEvent ->
                     mView?.updatePlayStatus(statusChangedEvent.isPlaying)
-//                    if (!statusChangedEvent.isPrepared) {
-//                        mView?.showLoading()
-//                    } else {
-//                        mView?.hideLoading()
-//                    }
                 }
         disposables.add(disposable)
+        disposables.add(disposable1)
+        disposables.add(disposable2)
+        disposables.add(disposable3)
     }
 
     override fun detachView() {
         super.detachView()
-        disposables.clear()
         mHandler!!.removeCallbacks(updateProgress)
     }
 
     override fun loadLyric(result: String?, status: Boolean) {
         mView.showLyric(result, false)
-
     }
 
     override fun updateNowPlaying(music: Music?) {

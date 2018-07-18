@@ -99,7 +99,9 @@ object NavigationHelper {
             //                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
             fragment = LocalMusicFragment.newInstance("local")
         }
-        transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss()
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.add(R.id.fragment_container, fragment)
+        transaction.addToBackStack(fragment.getTag()).commit()
     }
 
     fun navigateToFolderSongs(context: Activity, path: String) {

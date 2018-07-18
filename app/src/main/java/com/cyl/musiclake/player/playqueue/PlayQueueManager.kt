@@ -1,5 +1,7 @@
 package com.cyl.musiclake.player.playqueue
 
+import com.cyl.musiclake.RxBus
+import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.utils.SPUtils
 
 /**
@@ -24,6 +26,7 @@ object PlayQueueManager {
     fun updatePlayMode(): Int {
         playingModeId = (playingModeId + 1) % 3
         SPUtils.savePlayMode(playingModeId)
+        RxBus.getInstance().post(PlayModeEvent())
         return playingModeId
     }
 

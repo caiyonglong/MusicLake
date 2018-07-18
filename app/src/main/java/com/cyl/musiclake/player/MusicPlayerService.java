@@ -210,7 +210,7 @@ public class MusicPlayerService extends Service {
                         service.mPlayer.setVolume(mCurrentVolume);
                         break;
                     case TRACK_WENT_TO_NEXT: //mplayer播放完毕切换到下一首
-                        service.setAndRecordPlayPos(service.mNextPlayPos);
+//                        service.setAndRecordPlayPos(service.mNextPlayPos);
                         mMainHandler.post(service::next);
 //                        service.updateCursor(service.mPlayQueue.get(service.mPlayPos).mId);
 //                        service.bumpSongCount(); //更新歌曲的播放次数
@@ -856,11 +856,6 @@ public class MusicPlayerService extends Service {
     private void saveHistory() {
         PlayHistoryLoader.INSTANCE.addSongToHistory(mPlayingMusic);
         savePlayQueue(false);
-    }
-
-    public void refresh() {
-        SPUtils.savePlayMode(SPUtils.getPlayMode());
-        mRepeatMode = SPUtils.getPlayMode();
     }
 
     /**
