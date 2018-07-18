@@ -66,7 +66,8 @@ public class FoldersFragment extends BaseLazyFragment<FoldersPresenter> implemen
         }
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             FolderInfo folderInfo = (FolderInfo) adapter.getItem(position);
-            NavigationHelper.INSTANCE.navigateToFolderSongs(getActivity(), folderInfo.folderPath);
+            NavigationHelper.INSTANCE.navigateToFolderSongs(mFragmentComponent.getActivity(), folderInfo.folderPath);
+//            CommonActivity.newInstance(getContext(), folderInfo.folderPath);
         });
     }
 

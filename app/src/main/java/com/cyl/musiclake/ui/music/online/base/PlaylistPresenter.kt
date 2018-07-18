@@ -41,7 +41,4 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
         }
     }
 
-    override fun getMusicInfo(music: Music) {
-
-    }
 }

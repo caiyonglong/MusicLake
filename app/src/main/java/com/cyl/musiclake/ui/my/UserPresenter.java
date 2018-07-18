@@ -29,14 +29,13 @@ public class UserPresenter extends BasePresenter<UserContract.View> implements U
 
     @Inject
     public UserPresenter() {
-        this.userModel = new UserModel(MusicApp.getAppContext());
+        this.userModel = new UserModel();
     }
 
     @Override
     public void attachView(UserContract.View view) {
         super.attachView(view);
-        userModel = new UserModel(mView.getContext());
-
+        userModel = new UserModel();
         RxBus.getInstance().register(User.class)
                 .subscribe(playlist -> {
                     mView.updateView(userModel.getUserInfo());

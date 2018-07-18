@@ -112,7 +112,6 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
                         break;
                     case R.id.popup_song_download:
                         action = 1;
-                        mPresenter.getMusicInfo(music);
                         break;
                 }
                 return false;

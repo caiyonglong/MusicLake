@@ -10,7 +10,7 @@ import com.cyl.musiclake.common.Constants;
  */
 public class UserStatus {
     //保存个人信息到user.xml文件中
-    public static boolean savaUserInfo(Context context, User userInfo) {
+    public static void saveUserInfo(Context context, User userInfo) {
         SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(Constants.USER_ID, userInfo.getId());
@@ -27,12 +27,13 @@ public class UserStatus {
         editor.putString(Constants.NICK, userInfo.getNick());
         editor.putInt(Constants.SECRET, userInfo.getSecret());
 
-        editor.commit();
-        return true;
+        editor.apply();
+        saveuserstatus(context, true);
     }
 
     //从data.xml文件中取出个人信息
     public static User getUserInfo(Context context) {
+        if (!getstatus(context)) return null;
         SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         User user = new User();
         user.setId(sp.getString(Constants.USER_ID, null));
@@ -56,6 +57,7 @@ public class UserStatus {
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
+        saveuserstatus(context, false);
     }
 
     //登录状态、

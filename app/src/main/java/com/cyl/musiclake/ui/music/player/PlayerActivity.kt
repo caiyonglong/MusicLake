@@ -63,7 +63,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun initData() {
         setupViewPager(viewPager)
-
         mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic())
     }
 
@@ -155,6 +154,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun showLyric(lyric: String?, isFilePath: Boolean) {
         lyricFragment.lyricInfo = lyric
+        lyricFragment.showLyric(lyric, isFilePath)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

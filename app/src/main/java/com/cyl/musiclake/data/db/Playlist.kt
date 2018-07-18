@@ -57,11 +57,6 @@ class Playlist() : LitePalSupport(), Parcelable {
         this.name = name
     }
 
-    constructor(pid: String?, name: String?, order: String = "updateDate desc") : this() {
-        this.pid = pid
-        this.name = name
-    }
-
     override fun toString(): String {
         return "Playlist(id=$id, name=$name, count=$count, updateDate=$updateDate, date=$date, des=$des, order=$order, coverUrl=$coverUrl, type=$type, musicList=$musicList)"
     }

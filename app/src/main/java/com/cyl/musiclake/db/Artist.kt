@@ -14,7 +14,7 @@ class Artist : LitePalSupport, Serializable {
     var name: String? = null
     var id: Long = 0
     var count: Int = 0
-    var type: String? = null
+    var type: String? = Constants.LOCAL
     var picUrl: String? = null
     var desc: String? = null
     var musicSize: Int = 0

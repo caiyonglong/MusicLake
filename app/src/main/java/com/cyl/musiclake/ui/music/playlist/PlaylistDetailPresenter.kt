@@ -7,6 +7,7 @@ import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
 import com.cyl.musiclake.db.Album
@@ -30,11 +31,9 @@ import javax.inject.Inject
 class PlaylistDetailPresenter @Inject
 constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailContract.Presenter {
 
-
     private val netease = ArrayList<String>()
     private val qq = ArrayList<String>()
     private val xiami = ArrayList<String>()
-
 
     override fun attachView(view: PlaylistDetailContract.View?) {
         super.attachView(view)
@@ -45,8 +44,13 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     }
 
     override fun loadArtistSongs(artist: Artist) {
-        if (artist.type == null || artist.type == Constants.LOCAL || artist.type == Constants.BAIDU) {
-            mView?.showEmptyState()
+        if (artist.type == null || artist.type == Constants.LOCAL) {
+            doAsync {
+                val data = SongLoader.getSongsForArtist(artist.name)
+                uiThread {
+                    mView.showPlaylistSongs(data)
+                }
+            }
             return
         }
         val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.id.toString(), 50, 0)
@@ -73,6 +77,15 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     }
 
     override fun loadAlbumSongs(album: Album) {
+        if (album.type == null || album.type == Constants.LOCAL) {
+            doAsync {
+                val data = SongLoader.getSongsForAlbum(album.name)
+                uiThread {
+                    mView.showPlaylistSongs(data)
+                }
+            }
+            return
+        }
         val observable = MusicApiServiceImpl.getAlbumSongs(Constants.NETEASE, album.id.toString(), 30, 0)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
             override fun success(result: MutableList<Music>) {

@@ -112,6 +112,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
 
+        <activity
+            android:name=".ui.music.local.fragment.LocalMusicActivity"
+            android:label="@string/local_music"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.music.local.fragment.CommonActivity"
+            android:label="@string/local_music"
+            android:screenOrientation="portrait" />
+
         <service android:name=".player.MusicPlayerService" />
 
         <activity

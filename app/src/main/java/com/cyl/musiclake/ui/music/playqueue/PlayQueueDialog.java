@@ -24,18 +24,12 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.player.playqueue.PlayQueueManager;
-import com.cyl.musiclake.utils.SPUtils;
-import com.cyl.musiclake.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
-
-import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_LOOP;
-import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_RANDOM;
-import static com.cyl.musiclake.player.MusicPlayerService.PLAY_MODE_REPEAT;
 
 public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQueueContract.View {
 
@@ -46,16 +40,7 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
     private PlayQueuePresenter mPresenter;
     private List<Music> musicList = new ArrayList<>();
     private QueueAdapter mAdapter;
-    private String[] mPlayMode = new String[]{"顺序播放", "随机播放", "单曲循环"};
-    private int playModeId = 0;
 
-
-    @OnClick(R.id.iv_play_mode)
-    public void onPlayModeClick() {
-        PlayManager.refresh();
-        updatePlayMode();
-        ToastUtils.show(mPlayMode[playModeId]);
-    }
 
     public static PlayQueueDialog newInstance() {
         Bundle args = new Bundle();
@@ -70,7 +55,6 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
         Dialog dialog = getDialog();
         dialog.setCanceledOnTouchOutside(true);
         Window window = dialog.getWindow();
-
 
         WindowManager.LayoutParams params = window.getAttributes();
         params.gravity = Gravity.BOTTOM;
@@ -124,6 +108,17 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
 
 
     private void initListener() {
+        tvPlayMode.setOnClickListener(view -> {
+            UIUtils.INSTANCE.updatePlayMode(ivPlayMode, true);
+            tvPlayMode.setText(PlayQueueManager.INSTANCE.getPlayMode());
+        });
+        ivPlayMode.setOnClickListener(view -> {
+            UIUtils.INSTANCE.updatePlayMode((ImageView) view, true);
+            tvPlayMode.setText(PlayQueueManager.INSTANCE.getPlayMode());
+        });
+        clearAll.setOnClickListener(v -> {
+            mPresenter.clearQueue();
+        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_love && view.getId() != R.id.iv_more) {
                 PlayManager.play(position);
@@ -157,24 +152,8 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
 
 
     public void updatePlayMode() {
-        playModeId = PlayQueueManager.INSTANCE.updatePlayMode();
-        switch (playModeId) {
-            case PLAY_MODE_LOOP:
-                ivPlayMode.setImageResource(R.drawable.ic_repeat);
-                tvPlayMode.setText(getResources().getString(R.string.play_mode,
-                        mPlayMode[playModeId], musicList.size()));
-                break;
-            case PLAY_MODE_RANDOM:
-                ivPlayMode.setImageResource(R.drawable.ic_shuffle);
-                tvPlayMode.setText(getResources().getString(R.string.play_mode,
-                        mPlayMode[playModeId], musicList.size()));
-                break;
-            case PLAY_MODE_REPEAT:
-                ivPlayMode.setImageResource(R.drawable.ic_repeat_one);
-                tvPlayMode.setText(getResources().getString(R.string.play_mode,
-                        mPlayMode[playModeId], musicList.size()));
-                break;
-        }
+        UIUtils.INSTANCE.updatePlayMode(ivPlayMode, false);
+        tvPlayMode.setText(PlayQueueManager.INSTANCE.getPlayMode());
     }
 
     @OnClick(R.id.clear_all)
@@ -210,6 +189,12 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
     @Override
     public void showEmptyState() {
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mPresenter.detachView();
     }
 
     @Override

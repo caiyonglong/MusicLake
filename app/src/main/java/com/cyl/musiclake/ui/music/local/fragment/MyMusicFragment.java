@@ -66,7 +66,7 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
     }
 
     private static final String TAG_CREATE = "create_playlist";
-    private List<Playlist> playlists =new ArrayList<>();
+    private List<Playlist> playlists = new ArrayList<>();
     private PlaylistAdapter mAdapter;
 
     public static MyMusicFragment newInstance() {
@@ -182,7 +182,7 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
 
     private void toFragment(int position) {
         if (position == 0) {
-            NavigationHelper.INSTANCE.navigateToLocalMusic(mFragmentComponent.getActivity(), null);
+            LocalMusicActivity.newInstance(mFragmentComponent.getActivity());
         } else if (position == 1) {
             NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), PlaylistLoader.INSTANCE.getHistoryPlaylist(), null);
         } else if (position == 2) {

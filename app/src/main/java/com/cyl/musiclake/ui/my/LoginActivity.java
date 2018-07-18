@@ -63,8 +63,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     protected void initData() {
         usernameWrapper.setHint("用户名");
         passwordWrapper.setHint("密码");
-        mPresenter = new LoginPresenter();
-        mPresenter.attachView(this);
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/orange"
     tools:context=".ui.music.player.PlayerActivity">
 
     <ImageView
@@ -17,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="">
 
         <LinearLayout
@@ -249,6 +250,7 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:gravity="center"
+                        android:onClick="downloadMusic"
                         app:materialIcon="arrow_collapse_down"
                         app:materialIconColor="@color/white"
                         app:materialIconSize="24dp"
@@ -262,7 +264,6 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:gravity="center"
-                        android:onClick="downloadMusic"
                         app:materialIcon="share"
                         app:materialIconColor="@color/white"
                         app:materialIconSize="24dp"

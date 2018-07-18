@@ -139,7 +139,7 @@ public class PlayControlsPresenter extends BasePresenter<PlayControlsContract.Vi
             CoverLoader.loadImageViewByMusic(mView.getContext(), music, bitmap -> {
                 mView.setAlbumArt(bitmap);
                 LogUtil.d(TAG, "loadBitmap =");
-                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mView.getContext(), 12));
+//                mView.setAlbumArt(ImageUtils.createBlurredImageFromBitmap(bitmap, mView.getContext(), 12));
                 new Palette.Builder(bitmap).generate(palette -> mView.setPalette(palette));
             });
         }

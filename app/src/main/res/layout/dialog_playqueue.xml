@@ -5,7 +5,6 @@
     android:id="@+id/sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background"
     android:fitsSystemWindows="true">
 
 
@@ -20,7 +19,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -54,12 +52,15 @@
                 android:tint="@color/black" />
         </LinearLayout>
 
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_0.5"
+            android:background="@color/translucent_white" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_songs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:behavior_hideable="false"
+            android:layout_height="250dp"
             app:layout_behavior="@string/bottom_sheet_behavior" />
     </LinearLayout>
 

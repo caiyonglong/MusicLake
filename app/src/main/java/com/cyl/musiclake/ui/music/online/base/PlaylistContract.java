@@ -17,7 +17,5 @@ public interface PlaylistContract {
 
     interface Presenter extends BaseContract.BasePresenter<View> {
         void getPlaylist(String idx, Context context);
-
-        void getMusicInfo(Music music);
     }
 }

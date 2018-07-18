@@ -166,7 +166,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @OnClick(R.id.skip_mode)
     void changePlayMode() {
-        PlayManager.refresh();
         updatePlayMode();
         ToastUtils.show(mPlayMode[playModeId]);
     }

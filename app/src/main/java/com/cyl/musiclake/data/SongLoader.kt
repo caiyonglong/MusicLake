@@ -43,7 +43,7 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getSongsForArtist(artistName: String): List<Music> {
+    fun getSongsForArtist(artistName: String?): MutableList<Music> {
         return LitePal.where("isonline =0 and artist like ?", "%$artistName%").find(Music::class.java)
     }
 
@@ -53,7 +53,7 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getSongsForAlbum(albumName: String): List<Music> {
+    fun getSongsForAlbum(albumName: String?): MutableList<Music> {
         return LitePal.where("isonline =0 and album like ?", "%$albumName%").find(Music::class.java)
     }
 
