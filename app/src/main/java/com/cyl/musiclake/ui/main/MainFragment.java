@@ -73,7 +73,8 @@ public class MainFragment extends BaseFragment {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.newInstance(), "我的");
         mAdapter.addFragment(DiscoverFragment.newInstance(), "发现");
-        mAdapter.addFragment(MvListFragment.newInstance(), "MV");
+        mAdapter.addFragment(MvListFragment.newInstance("rank"), "MV");
+        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);
     }
 

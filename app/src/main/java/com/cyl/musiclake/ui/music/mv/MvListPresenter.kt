@@ -29,4 +29,18 @@ constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
         })
     }
 
+    override fun loadRecentMv(limit: Int) {
+        mvModel.loadRecentMv(limit, object : RequestCallBack<MvInfo> {
+            override fun success(result: MvInfo?) {
+                result?.data?.let {
+                    mView?.showMvList(it)
+                }
+            }
+
+            override fun error(msg: String?) {
+            }
+
+        })
+    }
+
 }

@@ -20,6 +20,16 @@ class MvModel {
         ApiManager.request(observable, result)
     }
 
+
+    /**
+     *
+     * 加载最新mv
+     */
+    fun loadRecentMv(limit: Int = 30, result: RequestCallBack<MvInfo>?) {
+        val observable = NeteaseApiServiceImpl.getNewestMv(limit)
+        ApiManager.request(observable, result)
+    }
+
     /**
      *
      * 加载推荐mv

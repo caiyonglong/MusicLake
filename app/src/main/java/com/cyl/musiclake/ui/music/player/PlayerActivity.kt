@@ -7,6 +7,8 @@ import android.support.v4.view.ViewPager
 import android.support.v7.graphics.Palette
 import android.view.Menu
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
 import com.cyl.musiclake.R
@@ -30,6 +32,7 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
+import java.text.ParsePosition
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
@@ -65,6 +68,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         PlayManager.isPlaying().let {
             if (it) playPauseIv.play() else playPauseIv.pause()
         }
+        detailView.animation = moveToViewLocation()
         updatePlayMode()
     }
 
@@ -217,5 +221,14 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             }
         })
     }
+
+    private fun moveToViewLocation(): TranslateAnimation {
+        val mHiddenAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_SELF,
+                1.0f, Animation.RELATIVE_TO_SELF, 0.0f)
+        mHiddenAction.duration = 300
+        return mHiddenAction
+    }
+
 
 }
