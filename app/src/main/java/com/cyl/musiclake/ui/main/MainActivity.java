@@ -44,8 +44,6 @@ import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.Disposable;
 
-import static com.cyl.musiclake.ui.music.player.PlayControlFragment.topContainer;
-
 /**
  * 描述 主要的Activity
  *
@@ -67,6 +65,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     TextView mNick;
 
     private View headerView;
+    private PlayControlFragment controlFragment;
     private static final String TAG = "MainActivity";
 
     private boolean mIsLogin = false;
@@ -95,8 +94,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .subscribe(event -> setUserStatusInfo());
         flowable = RxBus.getInstance().register(PlaylistEvent.class)
                 .subscribe(event -> {
-                    if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID))
+                    if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID)) {
                         setPlaylistQueueChange();
+                    } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
+                        Music music = PlayManager.getPlayingMusic();
+                        if (music != null && music.isLove()) {
+                            controlFragment.mIvLove.setImageResource(R.drawable.item_favorite_love);
+                        } else if (music != null && !music.isLove()) {
+                            controlFragment.mIvLove.setImageResource(R.drawable.item_favorite);
+                        }
+                    }
                 });
         flowable = RxBus.getInstance().register(MetaChangedEvent.class)
                 .subscribe(event -> updatePlaySongInfo(event.getMusic()));
@@ -104,7 +111,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void updatePlaySongInfo(Music music) {
         if (music != null && music.getCoverUri() != null) {
+            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
             CoverLoader.loadImageView(this, music.getCoverUri(), mImageView);
+        } else if (music == null) {
+            mSlidingUpPaneLayout.setPanelHeight(0);
+            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
     }
 
@@ -122,6 +133,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
             mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
         }
+        updatePlaySongInfo(PlayManager.getPlayingMusic());
         //加载主fragment
         navigateLibrary.run();
         navigatePlay.run();
@@ -148,12 +160,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
-                topContainer.setAlpha(1 - slideOffset * 2);
-                if (topContainer.getAlpha() < 0) {
-                    topContainer.setVisibility(View.GONE);
-                } else {
-                    topContainer.setVisibility(View.VISIBLE);
-                    mSlidingUpPaneLayout.setTouchEnabled(true);
+                if (controlFragment.topContainer != null) {
+                    controlFragment.topContainer.setAlpha(1 - slideOffset * 2);
+                    if (controlFragment.topContainer.getAlpha() < 0) {
+                        controlFragment.topContainer.setVisibility(View.GONE);
+                    } else {
+                        controlFragment.topContainer.setVisibility(View.VISIBLE);
+                        mSlidingUpPaneLayout.setTouchEnabled(true);
+                    }
                 }
             }
         });
@@ -262,9 +276,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     };
 
     private Runnable navigatePlay = () -> {
-        Fragment fragment = PlayControlFragment.newInstance();
+        controlFragment = PlayControlFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.controls_container, fragment).commit();
+        transaction.replace(R.id.controls_container, controlFragment).commit();
     };
 
 

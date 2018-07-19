@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.player
 
+import android.animation.Animator
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -12,17 +13,12 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
 import com.cyl.musiclake.R
-import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.AddPlaylistUtils
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.TransitionAnimationUtils
-import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.dialog.downloadMusic
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
@@ -32,7 +28,6 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
-import java.text.ParsePosition
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
@@ -42,12 +37,14 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     val lyricFragment by lazy { LyricFragment.newInstance() }
 
     override fun showNowPlaying(music: Music?) {
+        if (music == null) finish()
+
         playingMusic = music
         //更新标题
         titleIv.text = music?.title
         subTitleTv.text = music?.artist
 
-        coverFragment?.updateMusicType(music)
+        coverFragment.updateMusicType(music)
         //更新收藏状态
         music?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
@@ -166,7 +163,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun updatePlayStatus(isPlaying: Boolean) {
         if (isPlaying) playPauseIv.play() else playPauseIv.pause()
-
         if (coverFragment?.operatingAnim != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (isPlaying) {
@@ -182,7 +178,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun showLyric(lyric: String?, isFilePath: Boolean) {
-        lyricFragment.lyricInfo = lyric
         lyricFragment.showLyric(lyric, isFilePath)
     }
 

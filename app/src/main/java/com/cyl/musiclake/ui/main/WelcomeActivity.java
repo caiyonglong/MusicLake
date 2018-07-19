@@ -80,8 +80,7 @@ public class WelcomeActivity extends BaseActivity {
      * 检查服务是否运行
      */
     private void initPlayQueue() {
-        startMainActivity();
-        mHandler.postDelayed(() -> finish(), 1000);
+        mHandler.postDelayed(this::startMainActivity, 2000);
     }
 
     /**
@@ -90,6 +89,8 @@ public class WelcomeActivity extends BaseActivity {
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0);
+        finish();
     }
 
 }

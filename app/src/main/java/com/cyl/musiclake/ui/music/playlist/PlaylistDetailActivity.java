@@ -66,6 +66,7 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
     private Artist mArtist;
     private Album mAlbum;
     private String title;
+    private String coverUrl;
 
     public static void newInstance(Context context, Playlist playlist) {
         Intent intent = new Intent(context, PlaylistDetailActivity.class);
@@ -226,25 +227,6 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void showLoading() {
-        super.showLoading();
-    }
-
-    @Override
-    public void hideLoading() {
-        super.hideLoading();
-    }
 
     @Override
     public void showPlaylistSongs(List<Music> songList) {
@@ -252,10 +234,13 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
         musicList.addAll(songList);
         mAdapter.setNewData(musicList);
         if (mPlaylist != null && mPlaylist.getCoverUrl() != null) {
-            CoverLoader.loadImageView(getContext(), mPlaylist.getCoverUrl(), album_art);
+            coverUrl = mPlaylist.getCoverUrl();
+        } else if (mArtist != null && mArtist.getPicUrl() != null) {
+            coverUrl = mArtist.getPicUrl();
         } else if (musicList.size() >= 1) {
-            CoverLoader.loadImageView(getContext(), musicList.get(0).getCoverUri(), album_art);
+            coverUrl = musicList.get(0).getCoverUri();
         }
+        CoverLoader.loadImageView(getContext(), coverUrl, album_art);
         if (musicList.size() == 0) {
             showEmptyState();
         }

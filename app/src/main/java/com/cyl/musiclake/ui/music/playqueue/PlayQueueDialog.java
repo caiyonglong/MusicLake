@@ -116,7 +116,16 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
             tvPlayMode.setText(PlayQueueManager.INSTANCE.getPlayMode());
         });
         clearAll.setOnClickListener(v -> {
-            mPresenter.clearQueue();
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.playlist_queue_clear)
+                    .positiveText(R.string.sure)
+                    .negativeText(R.string.cancel)
+                    .onPositive((dialog, which) -> {
+                        mPresenter.clearQueue();
+                        dismiss();
+                    })
+                    .onNegative((dialog, which) -> dialog.dismiss())
+                    .show();
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_love && view.getId() != R.id.iv_more) {
@@ -153,21 +162,6 @@ public class PlayQueueDialog extends BottomSheetDialogFragment implements PlayQu
     public void updatePlayMode() {
         UIUtils.INSTANCE.updatePlayMode(ivPlayMode, false);
         tvPlayMode.setText(PlayQueueManager.INSTANCE.getPlayMode());
-    }
-
-    @OnClick(R.id.clear_all)
-    public void onClearAllClick() {
-        new MaterialDialog.Builder(getActivity())
-                .title("清空播放队列?")
-                .positiveText(R.string.sure)
-                .negativeText(R.string.cancel)
-                .onPositive((dialog, which) -> {
-                    mPresenter.clearQueue();
-                    mPresenter.loadSongs();
-                    dismiss();
-                })
-                .onNegative((dialog, which) -> dialog.dismiss())
-                .show();
     }
 
     @Override

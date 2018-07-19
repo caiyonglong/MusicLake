@@ -176,8 +176,7 @@
                             android:scaleType="fitXY"
                             app:anim_duration="300"
                             app:bg_color="@color/translucent"
-                            app:btn_color="@color/white"
-                            tools:targetApi="lollipop" />
+                            app:btn_color="@color/white" />
 
                         <ProgressBar
                             android:id="@+id/loadingPb"

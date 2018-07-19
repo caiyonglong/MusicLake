@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     sothree:umanoFadeColor="@android:color/transparent"
-    sothree:umanoPanelHeight="55dp"
+    sothree:umanoPanelHeight="56dp"
     sothree:umanoShadowHeight="5dp">
 
     <FrameLayout

@@ -8,4 +8,4 @@ import com.cyl.musiclake.common.Constants
  * function :
  */
 
-class PlaylistEvent(var type: String?= Constants.PLAYLIST_CUSTOM_ID)
+class PlaylistEvent(var type: String? = Constants.PLAYLIST_CUSTOM_ID)

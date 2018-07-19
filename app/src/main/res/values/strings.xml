@@ -269,4 +269,5 @@
     <string name="mv_hot_comment">推荐评论</string>
     <string name="mv_comment">最新评论</string>
     <string name="title_activity_player">PlayerActivity</string>
+    <string name="playlist_queue_clear">清空播放队列?</string>
 </resources>

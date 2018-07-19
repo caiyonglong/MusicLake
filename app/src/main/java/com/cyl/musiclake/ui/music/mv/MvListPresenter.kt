@@ -33,11 +33,13 @@ constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
         mvModel.loadRecentMv(limit, object : RequestCallBack<MvInfo> {
             override fun success(result: MvInfo?) {
                 result?.data?.let {
+                    mView?.hideLoading()
                     mView?.showMvList(it)
                 }
             }
 
             override fun error(msg: String?) {
+                mView?.showError(msg, true)
             }
 
         })

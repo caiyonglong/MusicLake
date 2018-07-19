@@ -24,15 +24,11 @@ object PlayQueueLoader {
      * 添加歌曲到歌单
      */
     fun updateQueue(musics: List<Music>) {
-        try {
-            Thread {
-                clearQueue()
-                musics.forEach {
-                    DaoLitepal.addToPlaylist(it, Constants.PLAYLIST_QUEUE_ID)
-                }
-            }.start()
-        } catch (e: Throwable) {
-            e.printStackTrace()
+        doAsync {
+            clearQueue()
+            musics.forEach {
+                DaoLitepal.addToPlaylist(it, Constants.PLAYLIST_QUEUE_ID)
+            }
         }
     }
 

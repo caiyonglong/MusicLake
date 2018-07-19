@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.cyl.musiclake.R
+import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import kotlinx.android.synthetic.main.frag_player_lrcview.*
+import org.jetbrains.anko.support.v4.intentFor
 import java.io.File
 
 /**
@@ -53,7 +55,9 @@ class LyricFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        showLyric(lyricInfo, false)
+        if (lyricInfo == null) {
+            showLyric(MusicPlayerService.lyric, false)
+        }
     }
 
     fun setCurrentTimeMillis(toLong: Long) {

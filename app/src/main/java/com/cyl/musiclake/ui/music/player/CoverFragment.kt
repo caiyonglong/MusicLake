@@ -10,6 +10,7 @@ import android.view.animation.LinearInterpolator
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.player.PlayManager
 import com.trello.rxlifecycle2.components.support.RxFragment
 import kotlinx.android.synthetic.main.frag_player_coverview.*
 
@@ -57,7 +58,10 @@ class CoverFragment : RxFragment() {
     var bitmap: Bitmap? = null
     override fun onResume() {
         super.onResume()
-        bitmap?.let { civ_cover?.setImageBitmap(bitmap) }
+        bitmap?.let {
+            civ_cover?.setImageBitmap(bitmap)
+            updateMusicType(PlayManager.getPlayingMusic())
+        }
     }
 
     /**

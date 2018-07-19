@@ -22,16 +22,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
-import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
+import com.cyl.musiclake.ui.music.playqueue.UIUtils;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
@@ -42,6 +39,8 @@ import com.cyl.musiclake.view.PlayPauseView;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +49,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> implements SeekBar.OnSeekBarChangeListener, PlayControlsContract.View {
+public class PlayControlFragment extends BaseFragment<PlayPresenter> implements SeekBar.OnSeekBarChangeListener, PlayContract.View {
 
     private static final String TAG = "PlayControlFragment";
-    public static View topContainer;
+    public View topContainer;
     //整个容器
     @BindView(R.id.container)
     LinearLayout mContainer;
@@ -77,7 +76,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @BindView(R.id.skip_next)
     MaterialIconView skip_next;
     @BindView(R.id.iv_love)
-    ImageView mIvLove;
+    public ImageView mIvLove;
     @BindView(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
     @BindView(R.id.playOrPause)
@@ -115,27 +114,27 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
 
     @OnClick(R.id.skip_next)
     void next() {
-        mPresenter.onNextClick();
+        PlayManager.next();
     }
 
     @OnClick(R.id.play_next)
-    void nextButtom() {
-        mPresenter.onNextClick();
+    void nextBottom() {
+        PlayManager.next();
     }
 
     @OnClick(R.id.play_pause)
     void playOrPause() {
-        mPresenter.onPlayPauseClick();
+        PlayManager.playPause();
     }
 
     @OnClick(R.id.playOrPause)
     void playOrPauseF() {
-        mPresenter.onPlayPauseClick();
+        PlayManager.playPause();
     }
 
     @OnClick(R.id.previous)
     void prev() {
-        mPresenter.onPreviousClick();
+        PlayManager.prev();
     }
 
     @OnClick(R.id.iv_love)
@@ -143,9 +142,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         Music music = PlayManager.getPlayingMusic();
         if (music == null)
             return;
-        Boolean newStatus = SongLoader.INSTANCE.updateFavoriteSong(music);
-        updateFavorite(newStatus);
-        RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_LOVE_ID));
+        UIUtils.INSTANCE.collectMusic(mIvLove, music);
     }
 
 
@@ -180,7 +177,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
             mViewPager.setCurrentItem(0);
         }
 
-        setPlayPauseButton(PlayManager.isPlaying());
+        updatePlayStatus(PlayManager.isPlaying());
     }
 
     @Override
@@ -200,7 +197,7 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @Override
     protected void loadData() {
         Music music = PlayManager.getPlayingMusic();
-        mPresenter.updateNowPlayingCard(music);
+        mPresenter.updateNowPlaying(music);
     }
 
     private void setupViewPager(MultiTouchViewPager viewPager) {
@@ -285,44 +282,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         operatingAnim.setInterpolator(mLinearInterpolator);
     }
 
-    @Override
-    public void setAlbumArt(Bitmap albumArt) {
-        //设置图片资源
-        mIvAlbum.setImageBitmap(albumArt);
-
-        if (operatingAnim != null) {
-            if (PlayManager.isPlaying()) {
-                operatingAnim.setCurrentPlayTime(currentPlayTime);
-                operatingAnim.start();
-            } else {
-                operatingAnim.cancel();
-                currentPlayTime = operatingAnim.getCurrentPlayTime();
-            }
-        }
-    }
-
-    @Override
-    public void setAlbumArt(Drawable albumArt) {
-        //加载背景图过度
-        TransitionAnimationUtils.startChangeAnimation(ivPlayingBg, albumArt);
-    }
-
-    @Override
-    public void setTitle(String title) {
-        mTvName.setText(title);
-        mTvTitle.setText(title);
-    }
-
-    @Override
-    public void setArtist(String artist) {
-        mTvArtist.setText(artist);
-        mTvArtistAlbum.setText(artist);
-    }
-
-    @Override
-    public void setOtherInfo(String source) {
-
-    }
 
     @Override
     public void setPalette(Palette palette) {
@@ -392,62 +351,6 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
         }
     }
 
-    @Override
-    public void setPlayPauseButton(boolean isPlaying) {
-        if (isPlaying) {
-            mPlayPause.play();
-            mPlayOrPause.play();
-        } else {
-            mPlayPause.pause();
-            mPlayOrPause.pause();
-        }
-        if (operatingAnim != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (isPlaying) {
-                    operatingAnim.resume();
-                } else {
-                    operatingAnim.pause();
-                }
-            }
-        }
-    }
-
-    @Override
-    public boolean getPlayPauseStatus() {
-        return mPlayPause.isPlaying();
-    }
-
-    @Override
-    public void updateProgress(int progress) {
-        mSeekBar.setProgress(progress);
-        mProgressBar.setProgress(progress);
-        tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
-        mLrcView.setCurrentTimeMillis(progress);
-    }
-
-    @Override
-    public void updateFavorite(boolean love) {
-        if (love) {
-            mIvLove.setImageResource(R.drawable.item_favorite_love);
-        } else {
-            mIvLove.setImageResource(R.drawable.item_favorite);
-        }
-    }
-
-    @Override
-    public void setProgressMax(int max) {
-        mSeekBar.setMax(max);
-        mProgressBar.setMax(max);
-        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
-    }
-
-    @Override
-    public void updatePanelLayout(boolean scroll) {
-//        if (!scroll) {
-//            mSlidingUpPaneLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-//        }
-//        mSlidingUpPaneLayout.setTouchEnabled(scroll);
-    }
 
     @Override
     public void showLoading() {
@@ -483,5 +386,88 @@ public class PlayControlFragment extends BaseFragment<PlayControlsPresenter> imp
     @Override
     public void onDestroy() {
         super.onDestroy();
+        topContainer = null;
+    }
+
+    @Override
+    public void setPlayingBitmap(@Nullable Bitmap albumArt) {
+        //设置图片资源
+        mIvAlbum.setImageBitmap(albumArt);
+
+        if (operatingAnim != null) {
+            if (PlayManager.isPlaying()) {
+                operatingAnim.setCurrentPlayTime(currentPlayTime);
+                operatingAnim.start();
+            } else {
+                operatingAnim.cancel();
+                currentPlayTime = operatingAnim.getCurrentPlayTime();
+            }
+        }
+    }
+
+    @Override
+    public void setPlayingBg(@Nullable Drawable albumArt) {
+        //加载背景图过度
+        TransitionAnimationUtils.startChangeAnimation(ivPlayingBg, albumArt);
+    }
+
+    @Override
+    public void updatePlayStatus(boolean isPlaying) {
+        if (isPlaying) {
+            mPlayPause.play();
+            mPlayOrPause.play();
+        } else {
+            mPlayPause.pause();
+            mPlayOrPause.pause();
+        }
+        if (operatingAnim != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (isPlaying) {
+                    operatingAnim.resume();
+                } else {
+                    operatingAnim.pause();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void updatePlayMode() {
+
+    }
+
+    @Override
+    public void updateProgress(int progress, int max) {
+        mSeekBar.setProgress(progress);
+        mProgressBar.setProgress(progress);
+        tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
+        mLrcView.setCurrentTimeMillis(progress);
+
+
+        mSeekBar.setMax(max);
+        mProgressBar.setMax(max);
+        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
+    }
+
+    @Override
+    public void showNowPlaying(@Nullable Music music) {
+        if (music != null) {
+            rootView.setVisibility(View.VISIBLE);
+            mTvName.setText(music.getTitle());
+            mTvTitle.setText(music.getTitle());
+
+            mTvArtist.setText(music.getArtist());
+            mTvArtistAlbum.setText(music.getArtist());
+
+            //更新收藏状态
+            if (music.isLove()) {
+                mIvLove.setImageResource(R.drawable.item_favorite_love);
+            } else {
+                mIvLove.setImageResource(R.drawable.item_favorite);
+            }
+        } else {
+            rootView.setVisibility(View.GONE);
+        }
+
     }
 }

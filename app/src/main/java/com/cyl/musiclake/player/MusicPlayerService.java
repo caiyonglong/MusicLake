@@ -489,7 +489,6 @@ public class MusicPlayerService extends Service {
             LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
-            notifyChange(META_CHANGED);
         }
     }
 
@@ -502,7 +501,6 @@ public class MusicPlayerService extends Service {
             LogUtil.e(TAG, "prev: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
-            notifyChange(META_CHANGED);
         }
     }
 
@@ -511,10 +509,11 @@ public class MusicPlayerService extends Service {
      */
     private void playCurrentAndNext() {
         synchronized (this) {
-            if (mPlayingPos >= mPlayQueue.size() || mPlayingPos < 0) {
+            if (mPlayingPos > mPlayQueue.size() || mPlayingPos < 0) {
                 return;
             }
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
+            notifyChange(META_CHANGED);
             LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
                 ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
@@ -646,7 +645,6 @@ public class MusicPlayerService extends Service {
         if (mPlayingPos == -1)
             return;
         playCurrentAndNext();
-        notifyChange(META_CHANGED);
     }
 
     /**
@@ -688,7 +686,6 @@ public class MusicPlayerService extends Service {
         LogUtil.e(TAG, music.toString());
         mPlayingMusic = music;
         playCurrentAndNext();
-        notifyChange(META_CHANGED);
     }
 
     /**
@@ -709,13 +706,12 @@ public class MusicPlayerService extends Service {
      */
     public void play(List<Music> musicList, int id, String pid) {
         if (musicList.size() <= id) return;
-        if (!mPlaylistId.equals(pid)) {
+        if (!mPlaylistId.equals(pid) || mPlayQueue.size() == 0) {
             setPlayQueue(musicList);
             mPlaylistId = pid;
         }
         mPlayingPos = id;
         playCurrentAndNext();
-        notifyChange(META_CHANGED);
     }
 
 

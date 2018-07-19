@@ -48,7 +48,8 @@
         android:theme="@style/MyThemeBlue">
         <activity
             android:name=".ui.main.WelcomeActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -114,7 +115,7 @@
         <activity
             android:name=".ui.music.local.fragment.LocalMusicActivity"
             android:label="@string/local_music"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.local.fragment.CommonActivity"
             android:label="@string/local_music"
