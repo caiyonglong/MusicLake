@@ -18,13 +18,20 @@ interface NeteaseApiService {
     @GET("/toplist/artist")
     fun getTopArtists(@Query("offset") offset: Int, @Query("limit") limit: Int): Observable<ArtistsInfo>
 
+    /**
+     * 获取最新mv
+     */
+    @GET("/mv/first")
+    fun getNewestMv(@Query("limit") limit: Int): Observable<MvInfo>
 
+    /**
+     * 获取mv排行榜
+     */
     @GET("/top/mv")
     fun getTopMv(@Query("offset") offset: Int, @Query("limit") limit: Int): Observable<MvInfo>
 
     @GET("/mv")
     fun getMvDetailInfo(@Query("mvid") mvid: String): Observable<MvDetailInfo>
-
 
     @GET("simi/mv")
     fun getSimilarMv(@Query("mvid") mvid: String): Observable<SimilarMvInfo>

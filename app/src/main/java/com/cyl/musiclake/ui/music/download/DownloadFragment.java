@@ -33,7 +33,7 @@ public class DownloadFragment extends BaseLazyFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_music;
+        return R.layout.frag_main;
     }
 
     @Override

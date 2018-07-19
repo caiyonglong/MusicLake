@@ -15,5 +15,7 @@ public interface MvListContract {
 
     interface Presenter extends BaseContract.BasePresenter<View> {
         void loadMv(int offset);
+
+        void loadRecentMv(int limit);
     }
 }

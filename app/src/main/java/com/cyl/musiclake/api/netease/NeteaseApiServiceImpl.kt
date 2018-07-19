@@ -53,6 +53,13 @@ object NeteaseApiServiceImpl {
     /**
      * 获取推荐mv
      */
+    fun getNewestMv(limit: Int): Observable<MvInfo> {
+        return apiService.getNewestMv(limit)
+    }
+
+    /**
+     * 获取推荐mv
+     */
     fun getTopMv(limit: Int, offset: Int): Observable<MvInfo> {
         return apiService.getTopMv(offset, limit)
     }

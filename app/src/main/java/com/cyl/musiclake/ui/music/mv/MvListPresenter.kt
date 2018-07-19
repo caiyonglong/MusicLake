@@ -1,11 +1,7 @@
 package com.cyl.musiclake.ui.music.discover
 
-import com.cyl.musicapi.netease.MvDetailInfo
 import com.cyl.musicapi.netease.MvInfo
-import com.cyl.musicapi.netease.SimilarMvInfo
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.music.mv.MvListContract
 import com.cyl.musiclake.ui.music.mv.MvModel
@@ -21,6 +17,20 @@ constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
     private val mvModel = MvModel()
     override fun loadMv(offset: Int) {
         mvModel.loadMv(offset, object : RequestCallBack<MvInfo> {
+            override fun success(result: MvInfo?) {
+                result?.data?.let {
+                    mView?.showMvList(it)
+                }
+            }
+
+            override fun error(msg: String?) {
+            }
+
+        })
+    }
+
+    override fun loadRecentMv(limit: Int) {
+        mvModel.loadRecentMv(limit, object : RequestCallBack<MvInfo> {
             override fun success(result: MvInfo?) {
                 result?.data?.let {
                     mView?.showMvList(it)

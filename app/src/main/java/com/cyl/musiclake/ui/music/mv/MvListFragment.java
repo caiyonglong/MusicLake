@@ -30,13 +30,15 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
     RecyclerView mRecyclerView;
 
     private int mOffset = 0;
+    private String mvType = "rank";
 
     //适配器
     private TopMvListAdapter mAdapter;
     private List<MvInfoDetail> mvList = new ArrayList<>();
 
-    public static MvListFragment newInstance() {
+    public static MvListFragment newInstance(String type) {
         Bundle args = new Bundle();
+        args.putString("type", type);
         MvListFragment fragment = new MvListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -73,9 +75,16 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
 
     @Override
     protected void loadData() {
+        if (getArguments() != null) {
+            mvType = getArguments().getString("type");
+        }
         mvList.clear();
-//        初始化列表,当无数据时显示提示
-        mPresenter.loadMv(0);
+        if (mvType.equals("rank")) {
+            mPresenter.loadMv(0);
+        } else {
+            mAdapter.setEnableLoadMore(false);
+            mPresenter.loadRecentMv(30);
+        }
     }
 
     @Override

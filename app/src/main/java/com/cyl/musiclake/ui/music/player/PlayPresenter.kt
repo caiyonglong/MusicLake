@@ -72,7 +72,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter {
 
     }
 
-    override fun updateNowPlaying(music: Music?) {
+    override fun updateNowPlaying(music: Music) {
         mView?.showNowPlaying(music)
 
         CoverLoader.loadImageViewByMusic(mView.context, music) { bitmap ->

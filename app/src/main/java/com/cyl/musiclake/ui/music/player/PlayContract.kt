@@ -31,6 +31,6 @@ interface PlayContract {
 
         fun loadLyric(result: String?, status: Boolean)
 
-        fun updateNowPlaying(music: Music?)
+        fun updateNowPlaying(music: Music)
     }
 }
