@@ -73,6 +73,12 @@ public class NeteasePlaylistFragment extends BaseFragment {
         }
     }
 
+
+    @Override
+    protected String getToolBarTitle() {
+        return getString(R.string.charts_netease);
+    }
+
     public static NeteasePlaylistFragment newInstance() {
         Bundle args = new Bundle();
 
@@ -83,7 +89,7 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview_notoolbar;
+        return R.layout.fragment_recyclerview;
     }
 
     @Override
@@ -136,13 +142,11 @@ public class NeteasePlaylistFragment extends BaseFragment {
 
     @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mSwipeRefreshLayout.setRefreshing(false);
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mSwipeRefreshLayout.setRefreshing(false));
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Intent intent = new Intent(getActivity(), NeteasePlaylistActivity.class);
             intent.putExtra("title", neteaseLists.get(position).getName());
-            intent.putExtra("id", neteaseLists.get(position).getId());
+            intent.putExtra("id", neteaseLists.get(position).getPid());
             startActivity(intent);
         });
     }

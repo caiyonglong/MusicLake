@@ -30,6 +30,7 @@ class CoverFragment : RxFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initAlbumPic(civ_cover)
+        updateMusicType(PlayManager.getPlayingMusic())
     }
 
     fun updateMusicType(music: Music?) {
@@ -60,14 +61,13 @@ class CoverFragment : RxFragment() {
         super.onResume()
         bitmap?.let {
             civ_cover?.setImageBitmap(bitmap)
-            updateMusicType(PlayManager.getPlayingMusic())
         }
     }
 
     /**
      * 初始化旋转动画
      */
-    fun initAlbumPic(view: View?) {
+    private fun initAlbumPic(view: View?) {
         if (view == null) return
         operatingAnim = ObjectAnimator.ofFloat(view, "rotation", 0F, 359F)
         operatingAnim?.duration = (20 * 1000).toLong()
@@ -75,6 +75,7 @@ class CoverFragment : RxFragment() {
         operatingAnim?.repeatMode = ObjectAnimator.RESTART
         operatingAnim?.interpolator = LinearInterpolator()
     }
+
 
     companion object {
         fun newInstance(): CoverFragment {

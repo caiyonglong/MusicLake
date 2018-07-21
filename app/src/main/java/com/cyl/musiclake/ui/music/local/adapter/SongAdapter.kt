@@ -34,6 +34,7 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
                         if (it.size > 0) {
                             url = result.musics?.first()?.image
                             item.coverUri = url
+                            notifyItemChanged(holder.adapterPosition)
                             SongLoader.updateMusic(item)
                             CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
                         }

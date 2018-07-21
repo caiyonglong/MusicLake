@@ -32,8 +32,6 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
     private static final String TAG = "BaiduPlaylistFragment";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
@@ -48,8 +46,13 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
     }
 
     @Override
+    protected String getToolBarTitle() {
+        return getString(R.string.charts_baidu);
+    }
+
+    @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview_notoolbar;
+        return R.layout.fragment_recyclerview;
     }
 
     @Override
@@ -87,7 +90,7 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
             intent.putExtra(Extras.BILLBOARD_TITLE, playlist.getName());
             intent.putExtra(Extras.BILLBOARD_DESC, playlist.getDes());
             intent.putExtra(Extras.BILLBOARD_ALBUM, playlist.getCoverUrl());
-            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getId());
+            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getPid());
             startActivity(intent);
         });
     }

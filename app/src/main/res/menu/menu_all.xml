@@ -7,11 +7,6 @@
             android:icon="@drawable/ic_exit"
             android:title="@string/login" />
 
-        <item
-            android:id="@+id/nav_menu_test"
-            android:icon="@drawable/ic_test"
-            android:title="@string/title_test" />
-
         <item android:title="@string/title_function">
             <menu>
                 <item
@@ -31,6 +26,10 @@
                     android:id="@+id/nav_menu_about"
                     android:icon="@drawable/ic_about"
                     android:title="@string/pref_title_about" />
+                <item
+                    android:id="@+id/nav_menu_feedback"
+                    android:icon="@drawable/ic_feedback"
+                    android:title="@string/about_feedback" />
                 <item
                     android:id="@+id/nav_menu_setting"
                     android:icon="@mipmap/icon_setting"

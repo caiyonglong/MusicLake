@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.player
 
-import android.animation.Animator
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -19,10 +18,11 @@ import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.dialog.downloadMusic
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
-import com.cyl.musiclake.ui.music.playqueue.UIUtils
+import com.cyl.musiclake.utils.ColorUtil
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.view.DepthPageTransformer
@@ -174,7 +174,29 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         }
     }
 
+    private var mPalette: Palette? = null
+    private var mSwatch: Palette.Swatch? = null
+
     override fun setPalette(palette: Palette?) {
+        if (palette == null) return
+        mPalette = palette
+        mSwatch = palette.vibrantSwatch
+        mSwatch?.let {
+            titleIv.setTextColor(it.titleTextColor)
+            subTitleTv.setTextColor(it.bodyTextColor)
+            //set icon color
+            val blackWhiteColor = ColorUtil.getBlackWhiteColor(it.rgb)
+            progressTv.setTextColor(blackWhiteColor)
+            durationTv.setTextColor(blackWhiteColor)
+            playModeIv.setColorFilter(blackWhiteColor)
+            prevPlayIv.setColor(blackWhiteColor)
+            nextPlayIv.setColor(blackWhiteColor)
+            playQueueIv.setColor(blackWhiteColor)
+            downloadIv.setColor(blackWhiteColor)
+            shareIv.setColor(blackWhiteColor)
+            playlistAddIv.setColor(blackWhiteColor)
+            playPauseIv.btnColor = blackWhiteColor
+        }
     }
 
     override fun showLyric(lyric: String?, isFilePath: Boolean) {

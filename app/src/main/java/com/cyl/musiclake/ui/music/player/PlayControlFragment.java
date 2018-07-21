@@ -28,7 +28,7 @@ import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
-import com.cyl.musiclake.ui.music.playqueue.UIUtils;
+import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
@@ -149,7 +149,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @OnClick(R.id.skip_queue)
     void openPlayQueue() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        playQueueDialog = PlayQueueDialog.newInstance();
+        playQueueDialog = PlayQueueDialog.Companion.newInstance();
         playQueueDialog.show(fm, "fragment_bottom_dialog");
     }
 
@@ -239,15 +239,6 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         mViewPager.setCurrentItem(0);
     }
 
-    /**
-     * 退出播放页
-     */
-    private void onBackPressed() {
-        getActivity().onBackPressed();
-//        iv_back.setEnabled(false);
-//        mHandler.postDelayed(() -> iv_back.setEnabled(true), 300);
-    }
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -313,16 +304,15 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 //        StatusBarUtil.setColor(getActivity(), statusBarColor);
 //        mLrcView.setHighLightTextColor(statusBarColor);
 //        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
-//        tv_time.setTextColor(blackWhiteColor);
+        tv_time.setTextColor(blackWhiteColor);
 //        mTvArtistAlbum.setTextColor(blackWhiteColor);
-//        tv_duration.setTextColor(blackWhiteColor);
+        tv_duration.setTextColor(blackWhiteColor);
 //        mLrcView.setHintColor(blackWhiteColor);
 //        mBtnNext.setEnabled(true);
 //        mBtnNext.setcolo(blackWhiteColor);
         skip_prev.setColor(blackWhiteColor);
         skip_next.setColor(blackWhiteColor);
-//        skip_queue.setColor(blackWhiteColor);
-//        skip_download.setColor(blackWhiteColor);
+        skip_queue.setColor(blackWhiteColor);
         mPlayOrPause.setBtnColor(blackWhiteColor);
         mPlayOrPause.setEnabled(true);
     }

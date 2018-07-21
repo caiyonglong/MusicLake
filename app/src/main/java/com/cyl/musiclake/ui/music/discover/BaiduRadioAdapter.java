@@ -22,6 +22,7 @@ public class BaiduRadioAdapter extends BaseQuickAdapter<RadioChannel, BaseViewHo
     @Override
     protected void convert(BaseViewHolder helper, RadioChannel channel) {
         helper.setText(R.id.title, channel.getName());
+        helper.setVisible(R.id.title, true);
         CoverLoader.loadImageView(mContext, channel.getThumb(), helper.getView(R.id.iv_cover));
     }
 }

@@ -140,7 +140,7 @@
     <string name="now_play">正在播放</string>
     <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="unable_to_play_exception">播放异常</string>
-    <string name="loading">努力加载中...</string>
+    <string name="loading">努力加载中&#8230;</string>
     <string name="tip_empty_song">空空如也</string>
     <string name="tip_empty_queue">播放队列为空</string>
     <string name="tip_empty_playlist">暂无歌单，点击右上角新建</string>
@@ -170,11 +170,11 @@
     <string name="delete">删除</string>
     <string name="pause">暂停</string>
     <string name="start">开始</string>
-    <string name="tasks_manager_demo_status_loading">加载中...</string>
+    <string name="tasks_manager_demo_status_loading">加载中&#8230;</string>
     <string name="tasks_manager_demo_status_pending">队列中</string>
     <string name="tasks_manager_demo_status_started">开始下载</string>
     <string name="tasks_manager_demo_status_connected">已连接上</string>
-    <string name="tasks_manager_demo_status_progress">下载中...</string>
+    <string name="tasks_manager_demo_status_progress">下载中&#8230;</string>
     <string name="tasks_manager_demo_status_downloading" formatted="false">已下载%d %%</string>
     <string name="tasks_manager_demo_status_error">出错</string>
     <string name="tasks_manager_demo_status_paused">暂停</string>
@@ -215,6 +215,7 @@
     <string name="playlist_num">%1$s("%2$d")</string>
     <string name="charts_baidu">百度排行榜</string>
     <string name="charts_netease">网易排行榜</string>
+    <string name="see_all">查看全部</string>
     <string name="radio">电台列表</string>
     <string name="hot_artist">热门歌手</string>
     <string name="genes">流派</string>
@@ -243,6 +244,7 @@
     <string name="lyric_default_hint">暂无歌词</string>
     <string name="add_to_playlist">增加到歌单</string>
     <string name="share_content">\"我正在使用 音乐湖 听音乐，我觉得很不错，推荐给你用下，链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
+    <string name="feedback_content">==============我正在使用 音乐湖 听音乐==============\n\n Android 版本号: %1$s \n\n 手机型号： %2$s %3$s \n\n反馈问题：\n "</string>
     <string name="retry">重试</string>
     <string name="general_error">网络错误</string>
     <string name="qq_login_tips">QQ登录</string>

@@ -35,6 +35,7 @@ import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.Tools;
 import com.jaeger.library.StatusBarUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -236,8 +237,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
                 break;
-            case R.id.nav_menu_test:
-                mTargetClass = PlayerActivity.class;
+            case R.id.nav_menu_feedback:
+                Tools.INSTANCE.feeback(this);
                 break;
             case R.id.nav_menu_about:
                 mTargetClass = AboutActivity.class;
@@ -356,14 +357,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(UserStatus.getUserInfo(this).getNick());
             mNick.setText(getResources().getString(R.string.app_name));
-//            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
-//            mNavigationView.getMenu().removeItem(R.id.nav_menu_test);
             mNick.setText(getResources().getString(R.string.login_hint));
         }
     }

@@ -27,6 +27,9 @@ import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.tencent.bugly.beta.Beta;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 import static com.cyl.musiclake.player.MusicPlayerService.SCHEDULE_CHANGED;
 import static com.cyl.musiclake.player.MusicPlayerService.mShutdownScheduled;
 import static com.cyl.musiclake.player.MusicPlayerService.totalTime;
@@ -86,6 +89,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
         updateTimeSwitch(MusicPlayerService.mShutdownScheduled);
         RxBus.getInstance().register(ScheduleTaskEvent.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(metaChangedEvent -> {
                     if (mTimingSwitch != null) {
                         mTimingSwitch.setSummary(FormatUtil.INSTANCE.formatTime(MusicPlayerService.time));

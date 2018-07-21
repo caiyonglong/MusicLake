@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="250dp"
     android:layout_gravity="top"
-    android:background="@drawable/bg_frag_player">
+    android:background="@drawable/bg_button">
 
     <ImageView
         android:id="@+id/iv_play_page_bg"
@@ -140,7 +140,6 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_previous"
                     app:materialIcon="skip_previous"
@@ -167,7 +166,6 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:elevation="10dp"
                         android:scaleType="fitXY"
                         android:translationZ="5dp"
@@ -191,7 +189,6 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="center"
                     app:materialIcon="skip_next"
                     app:materialIconColor="@color/white"
@@ -203,7 +200,6 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_detail"
                     app:materialIcon="playlist_play"
                     app:materialIconColor="@color/white"

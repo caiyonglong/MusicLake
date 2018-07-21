@@ -16,6 +16,7 @@ import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
+import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
 
     private static final String TAG = "FoundFragment";
 
-    private OnlineAdapter mBaiduAdapter;
+    private TopListAdapter mBaiduAdapter;
     private TopListAdapter mNeteaseAdapter;
     private TopArtistListAdapter mArtistListAdapter;
     private BaiduRadioAdapter mRadioAdapter;
@@ -56,12 +57,12 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     RecyclerView mRadioRsv;
 
 
-    @OnClick(R.id.baiChartsTv)
+    @OnClick(R.id.seeAllBaiTv)
     void toBaidu() {
-        NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
+        NavigationHelper.INSTANCE.navigateFragment(getActivity(), BaiduPlaylistFragment.newInstance());
     }
 
-    @OnClick(R.id.wanChartsTv)
+    @OnClick(R.id.seeAllWangTv)
     void toNetease() {
         NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
     }
@@ -82,15 +83,15 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     @Override
     public void initViews() {
         //初始化列表
-        mBaiChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 1, LinearLayoutManager.VERTICAL, false));
+        mBaiChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
         //适配器
-        mBaiduAdapter = new OnlineAdapter(playlist);
+        mBaiduAdapter = new TopListAdapter(playlist);
         mBaiChartsRv.setAdapter(mBaiduAdapter);
         mBaiChartsRv.setFocusable(false);
         mBaiChartsRv.setNestedScrollingEnabled(false);
         mBaiduAdapter.bindToRecyclerView(mBaiChartsRv);
 
-        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
+        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
         //适配器
         mNeteaseAdapter = new TopListAdapter(playlist);
         mWangChartsRv.setAdapter(mNeteaseAdapter);
@@ -107,7 +108,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mArtistListAdapter.bindToRecyclerView(mChartsArtistRcv);
 
         //电台列表
-        mRadioRsv.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.HORIZONTAL, false));
+        mRadioRsv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
         //适配器
         mRadioAdapter = new BaiduRadioAdapter(channels);
         mRadioRsv.setAdapter(mRadioAdapter);

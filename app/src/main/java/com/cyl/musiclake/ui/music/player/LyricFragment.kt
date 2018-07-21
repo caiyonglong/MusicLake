@@ -26,6 +26,7 @@ class LyricFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        showLyric(MusicPlayerService.lyric, false)
     }
 
 
@@ -50,13 +51,6 @@ class LyricFragment : Fragment() {
             }
         } else {
             lyricShow?.reset()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (lyricInfo == null) {
-            showLyric(MusicPlayerService.lyric, false)
         }
     }
 

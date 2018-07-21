@@ -3,7 +3,7 @@
 
     <color name="backgroundColor">#E8E8E0</color>
     <color name="setting_blue">#4A90E2</color>
-    <color name="logo_blue">#2f88f1</color>
+    <color name="logo_blue">#4285f5</color>
 
     <color name="main_blue_light">#3F56B5</color>
     <color name="main_blue_dark">#30459E</color>
@@ -32,8 +32,8 @@
     <color name="bg_color_blue">#43D5FF</color>
     <color name="bg_color_blue_light">#84B5CA</color>
     <!--应用基础色-->
-    <color name="colorPrimary">#0091EA</color>
-    <color name="colorPrimaryDark">#01579B</color>
+    <color name="colorPrimary">#4285f5</color>
+    <color name="colorPrimaryDark">#4285f5</color>
     <color name="colorAccent">#ffb701</color>
     <color name="white">#ffffff</color>
     <color name="gray">#9e9e9e</color>
