@@ -839,38 +839,46 @@ public class MusicPlayerService extends Service {
     public static String lyric = null;
 
 
+    /**
+     * 加载歌词
+     */
     private void loadLyric() {
         if (mPlayingMusic != null) {
-            if (lyricChangedEvent == null) {
-                lyricChangedEvent = new LyricChangedEvent("歌词加载中...", true);
-            } else {
-                lyricChangedEvent.setLyric("歌词加载中...");
-            }
+            updateLyric(getString(R.string.loading_lyric));
             Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
             if (observable != null) {
                 ApiManager.request(observable, new RequestCallBack<String>() {
                     @Override
                     public void success(String result) {
-                        lyricChangedEvent.setLyric(result);
-                        lyric = result;
-                        mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
+                        updateLyric(result);
                     }
 
                     @Override
                     public void error(String msg) {
-                        lyricChangedEvent.setLyric(msg);
-                        lyric = msg;
-                        mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
+                        updateLyric(msg);
                     }
                 });
             } else {
-                lyric = "";
-                lyricChangedEvent.setLyric("");
+                updateLyric("");
             }
         } else {
-            lyricChangedEvent = new LyricChangedEvent("", true);
-            lyric = "";
+            updateLyric("");
         }
+    }
+
+    /**
+     * 更新歌词
+     *
+     * @param lyricInfo
+     */
+    private void updateLyric(String lyricInfo) {
+        lyric = lyricInfo;
+        if (lyricChangedEvent == null) {
+            lyricChangedEvent = new LyricChangedEvent(lyricInfo, true);
+        } else {
+            lyricChangedEvent.setLyric(lyricInfo);
+        }
+        mFloatLyricViewManager.setLyric(lyricInfo);
         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
     }
 

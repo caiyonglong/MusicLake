@@ -1,39 +1,19 @@
 package com.cyl.musiclake.player;
 
-import android.app.ActivityManager;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-
-import com.cyl.musiclake.utils.LogUtil;
-
 import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.cyl.musiclake.MusicApp;
-import com.cyl.musiclake.api.MusicApi;
-import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
 import com.cyl.musiclake.view.lyric.LyricParseUtils;
 
-import java.io.File;
-import java.util.List;
-import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class FloatLyricViewManager {
     private static final String TAG = "FloatLyricViewManager";
@@ -81,8 +61,8 @@ public class FloatLyricViewManager {
      *
      * @param lyricInfo
      */
-    public void setLyric(LyricInfo lyricInfo) {
-        mLyricInfo = lyricInfo;
+    public void setLyric(String lyricInfo) {
+        mLyricInfo = LyricParseUtils.setLyricResource(lyricInfo);
         isFirstSettingLyric = true;
     }
 
@@ -142,7 +122,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-            setLyric(LyricParseUtils.setLyricResource(MusicPlayerService.lyric));
+            setLyric(MusicPlayerService.lyric);
         }
     }
 
