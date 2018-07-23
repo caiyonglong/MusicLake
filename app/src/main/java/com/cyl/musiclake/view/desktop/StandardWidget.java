@@ -13,6 +13,7 @@ import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.LogUtil;
 
 
 /**
@@ -30,6 +31,7 @@ public class StandardWidget extends BaseWidget {
 
     @Override
     void onViewsUpdate(Context context, RemoteViews remoteViews, ComponentName serviceName, Bundle extras) {
+        LogUtil.e("BaseWidget", "接收到广播------------- onViewsUpdate");
         if (isFirstCreate) {
             remoteViews.setOnClickPendingIntent(R.id.iv_next, PendingIntent.getService(
                     context,
@@ -68,25 +70,24 @@ public class StandardWidget extends BaseWidget {
                     NavigationHelper.INSTANCE.getLyricIntent(context),
                     PendingIntent.FLAG_UPDATE_CURRENT
             ));
+            isFirstCreate = false;
         }
-
-        remoteViews.setTextViewText(R.id.tv_title, PlayManager.getSongName() + "-" + PlayManager.getSongArtist());
+        remoteViews.setTextViewText(R.id.tv_title, PlayManager.getSongName() + " - " + PlayManager.getSongArtist());
         remoteViews.setImageViewResource(R.id.iv_play_pause,
                 PlayManager.isPlaying() ? R.drawable.ic_pause : R.drawable.ic_play);
-        if (PlayManager.getPlayingMusic() != null) {
-            CoverLoader.loadImageViewByMusic(MusicApp.getAppContext(), PlayManager.getPlayingMusic(), artwork -> {
-                if (artwork != null) {
-                    remoteViews.setImageViewBitmap(R.id.iv_cover, artwork);
-                } else {
-                    remoteViews.setImageViewResource(R.id.iv_cover, R.drawable.default_cover);
-                }
-            });
-        }
+        CoverLoader.loadImageViewByMusic(MusicApp.getAppContext(), PlayManager.getPlayingMusic(), artwork -> {
+            if (artwork != null) {
+                remoteViews.setImageViewBitmap(R.id.iv_cover, artwork);
+            } else {
+                remoteViews.setImageViewResource(R.id.iv_cover, R.drawable.default_cover);
+            }
+        });
     }
 
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
-        isFirstCreate = false;
+        LogUtil.e("BaseWidget", "接收到广播------------- 第一次创建");
+        isFirstCreate = true;
     }
 }
