@@ -8,15 +8,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_16"
         android:gravity="center"
         android:orientation="vertical">
 
-
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_16"
             android:background="@drawable/btn_bg"
             android:src="@mipmap/ic_launcher_foreground" />
 
@@ -24,95 +24,23 @@
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/dp_8"
+            android:padding="8dp"
             android:text="@string/version"
             android:textColor="@color/black" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/introduceTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/about_project"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/tv_project"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="@string/about_project_url" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/grey" />
-
-    <LinearLayout
-        android:id="@+id/ll_feedback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="@string/about_feedback"
-            android:textColor="@color/black" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_navigate_next"
-            android:textColor="@color/colorPrimary" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/grey" />
-
-    <LinearLayout
-        android:id="@+id/ll_introduce"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_margin="@dimen/dp_8"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:padding="8dp"
             android:text="@string/about_software"
-            android:textColor="@color/black" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_navigate_next"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/black"
+            android:textColorLink="@color/blue" />
 
     </LinearLayout>
-
 </LinearLayout>

@@ -31,6 +31,9 @@ class CoverFragment : RxFragment() {
         super.onActivityCreated(savedInstanceState)
         initAlbumPic(civ_cover)
         updateMusicType(PlayManager.getPlayingMusic())
+        if (PlayManager.isPlaying()) {
+            operatingAnim?.start()
+        }
     }
 
     fun updateMusicType(music: Music?) {

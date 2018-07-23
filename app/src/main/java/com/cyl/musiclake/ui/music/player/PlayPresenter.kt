@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.player
 
-import android.os.Handler
 import android.support.v7.graphics.Palette
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BasePresenter
@@ -9,7 +8,8 @@ import com.cyl.musiclake.event.LyricChangedEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
-import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.player.MusicPlayerService
+import com.cyl.musiclake.player.playback.PlayProgressListener
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ImageUtils
 import javax.inject.Inject
@@ -20,27 +20,14 @@ import javax.inject.Inject
  */
 
 class PlayPresenter @Inject
-constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter {
-
-
-    private var mProgress: Int = 0
-    private var duration: Int = 0
-    private var mHandler: Handler? = null
-
-    private val updateProgress = object : Runnable {
-        override fun run() {
-            mProgress = PlayManager.getCurrentPosition()
-            if (duration == 0) {
-                duration = PlayManager.getDuration()
-            }
-            mView.updateProgress(mProgress, duration)
-            mHandler?.postDelayed(this, 500)
-        }
+constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, PlayProgressListener {
+    override fun onProgressUpdate(position: Long, duration: Long) {
+        mView.updateProgress(position, duration)
     }
 
     override fun attachView(view: PlayContract.View) {
         super.attachView(view)
-        mHandler = Handler()
+        MusicPlayerService.addProgressListener(this)
         val disposable = RxBus.getInstance().register(MetaChangedEvent::class.java)
                 .compose(mView.bindToLife())
                 .subscribe { event -> updateNowPlaying(event.music) }
@@ -62,7 +49,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter {
 
     override fun detachView() {
         super.detachView()
-        mHandler!!.removeCallbacks(updateProgress)
+        MusicPlayerService.removeProgressListener(this)
     }
 
     override fun loadLyric(result: String?, status: Boolean) {
@@ -73,10 +60,9 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter {
         mView?.showNowPlaying(music)
 
         CoverLoader.loadImageViewByMusic(mView.context, music) { bitmap ->
-            mView.setPlayingBitmap(bitmap)
-            mView.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, mView.context, 12))
+            mView?.setPlayingBitmap(bitmap)
+            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, mView.context, 12))
             Palette.Builder(bitmap).generate { palette -> mView.setPalette(palette) }
         }
-        mHandler?.post(updateProgress)
     }
 }

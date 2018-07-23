@@ -1,9 +1,11 @@
 package com.cyl.musiclake;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.cyl.musicapi.BaseApiImpl;
@@ -60,6 +62,7 @@ public class MusicApp extends Application {
         mTencent = Tencent.createInstance(Constants.APP_ID, this);
         initBugly();
         initDB();
+        registerListener();
         initFileDownload();
         BaseApiImpl.INSTANCE.initWebView(this);
         WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -122,5 +125,54 @@ public class MusicApp extends Application {
         FileDownloader.getImpl().pauseAll();
     }
 
+    public static int count = 0;
+
+    /**
+     * 注册监听
+     */
+    private void registerListener() {
+        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                if (count == 0) { //后台切换到前台
+                    LogUtil.d(">>>>>>>>>>>>>>>>>>>App切到前台");
+                }
+                count++;
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                count--;
+                if (count == 0) {
+                    LogUtil.d(">>>>>>>>>>>>>>>>>>>App切到后台");
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+    }
 
 }

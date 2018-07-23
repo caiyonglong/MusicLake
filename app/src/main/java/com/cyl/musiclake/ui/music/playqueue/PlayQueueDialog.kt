@@ -178,6 +178,8 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         musicList = songs
         updatePlayMode()
         mAdapter!!.setNewData(songs)
+        //滚动到正在播放的位置
+        recyclerView.scrollToPosition(PlayManager.position())
     }
 
     override fun showEmptyView() {

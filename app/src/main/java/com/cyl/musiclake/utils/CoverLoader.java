@@ -11,6 +11,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -150,6 +151,7 @@ public class CoverLoader {
         GlideApp.with(mContext)
                 .load(url)
                 .error(R.drawable.default_cover_player)
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
@@ -158,6 +160,7 @@ public class CoverLoader {
         GlideApp.with(mContext)
                 .load(url)
                 .error(defaultUrl)
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
@@ -188,7 +191,7 @@ public class CoverLoader {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                         if (callBack != null) {
                             callBack.showBitmap(resource);
                         }

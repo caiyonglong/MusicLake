@@ -31,19 +31,19 @@ object FormatUtil {
      * @return 时间
      */
     fun formatTime(time: Long): String {
-        var time = time
+        var temp = time
         // TODO Auto-generated method stub
-        if (time == 0L) {
+        if (temp == 0L) {
             return "00:00"
         }
-        time /= 1000
-        val s = (time % 60).toInt() // s秒
-        val m = (time / 60 % 60).toInt() //m分
-        val h = (time / 60 / 60 % 24).toInt() //h小时s
+        temp /= 1000
+        val s = (temp % 60) // s秒
+        val m = (temp / 60 % 60) //m分
+        val h = (temp / 60 / 60 % 24) //h小时s
         return if (h > 0) {
-            (if (h > 9) h else "0$h").toString() + ":" + (if (m > 9) m else "0$m") + ":" + if (s > 9) s else "0$s"
+            "${if (h > 9) "$h" else "0$h"}:${if (m > 9) "$m" else "0$m"}:${if (s > 9) "$s" else "0$s"}"
         } else {
-            (if (m > 9) m else "0$m").toString() + ":" + if (s > 9) s else "0$s"
+            "${if (m > 9) "$m" else "0$m"}:${if (s > 9) "$s" else "0$s"}"
         }
     }
 

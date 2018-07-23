@@ -18,13 +18,13 @@ interface PlayContract {
 
         fun setPalette(palette: Palette?)
 
-        fun showLyric(lyric: String?, isFilePath: Boolean)
+        fun showLyric(lyric: String?, init: Boolean)
 
         fun updatePlayStatus(isPlaying: Boolean)
 
         fun updatePlayMode()
 
-        fun updateProgress(progress: Int, max: Int)
+        fun updateProgress(progress: Long, max: Long)
 
         fun showNowPlaying(music: Music?)
     }

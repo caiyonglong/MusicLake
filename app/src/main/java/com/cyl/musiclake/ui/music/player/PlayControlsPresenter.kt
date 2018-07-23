@@ -15,7 +15,9 @@ import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.event.LyricChangedEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.StatusChangedEvent
+import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.player.playback.PlayProgressListener
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ImageUtils
 import com.cyl.musiclake.utils.LogUtil
@@ -33,24 +35,18 @@ import org.jetbrains.anko.uiThread
  */
 
 class PlayControlsPresenter @Inject
-constructor() : BasePresenter<PlayControlsContract.View>(), PlayControlsContract.Presenter {
+constructor() : BasePresenter<PlayControlsContract.View>(), PlayControlsContract.Presenter, PlayProgressListener {
+    override fun onProgressUpdate(position: Long, duration: Long) {
+        mView.updateProgress(position.toInt())
+        mView.setProgressMax(PlayManager.getDuration())
+    }
 
     private var isPlayPauseClick = false
-    private var mProgress: Int = 0
-    private var mHandler: Handler? = null
 
-    private val updateProgress = object : Runnable {
-        override fun run() {
-            mProgress = PlayManager.getCurrentPosition()
-            mView.updateProgress(mProgress)
-            mView.setProgressMax(PlayManager.getDuration())
-            mHandler!!.postDelayed(this, 500)
-        }
-    }
 
     override fun attachView(view: PlayControlsContract.View) {
         super.attachView(view)
-        mHandler = Handler()
+        MusicPlayerService.addProgressListener(this)
         var disposable = RxBus.getInstance().register(MetaChangedEvent::class.java)
                 .compose(mView.bindToLife())
                 .subscribe { event -> updateNowPlayingCard(event.music) }
@@ -74,9 +70,7 @@ constructor() : BasePresenter<PlayControlsContract.View>(), PlayControlsContract
 
     override fun detachView() {
         super.detachView()
-        if (updateProgress != null) {
-            mHandler!!.removeCallbacks(updateProgress)
-        }
+        MusicPlayerService.removeProgressListener(this)
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -105,7 +99,7 @@ constructor() : BasePresenter<PlayControlsContract.View>(), PlayControlsContract
 
 
     override fun updateNowPlayingCard(music: Music?) {
-        LogUtil.d(TAG, "updateNowPlayingCard$mProgress")
+        LogUtil.d(TAG, "updateNowPlayingCard")
         if (mView == null) return
         if (music == null || PlayManager.getPlayList().size == 0) {
             val bitmap = BitmapFactory.decodeResource(mView.context.resources, R.drawable.header_material)
@@ -148,7 +142,6 @@ constructor() : BasePresenter<PlayControlsContract.View>(), PlayControlsContract
             }
         }
         isPlayPauseClick = false
-        mHandler!!.post(updateProgress)
     }
 
     override fun updatePlayStatus(isPlaying: Boolean) {

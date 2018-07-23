@@ -23,17 +23,7 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.version)
     TextView mVersion;
 
-    @OnClick(R.id.tv_project)
-    void show() {
-        WebActivity.start(this, "项目地址", ABOUT_MUSIC_LAKE);
-    }
-
-    @OnClick(R.id.ll_feedback)
-    void feedback() {
-        WebActivity.start(this, "意见反馈", ABOUT_MUSIC_LAKE_ISSUES);
-    }
-
-    @OnClick(R.id.ll_introduce)
+    @OnClick(R.id.introduceTv)
     void introduce() {
         WebActivity.start(this, "关于软件", ABOUT_MUSIC_LAKE_URL);
     }

@@ -7,38 +7,30 @@
             android:icon="@drawable/ic_exit"
             android:title="@string/login" />
 
-        <item android:title="@string/title_function">
-            <menu>
-                <item
-                    android:id="@+id/nav_menu_playQueue"
-                    android:icon="@drawable/ic_playlist_play"
-                    android:title="@string/playlist_queue" />
-                <item
-                    android:id="@+id/nav_menu_equalizer"
-                    android:icon="@drawable/ic_equalizer_black"
-                    android:title="@string/equalizer" />
-            </menu>
-        </item>
+        <item
+            android:id="@+id/nav_menu_playQueue"
+            android:icon="@drawable/ic_playlist_play"
+            android:title="@string/playlist_queue" />
+        <item
+            android:id="@+id/nav_menu_equalizer"
+            android:icon="@drawable/ic_equalizer_black"
+            android:title="@string/equalizer" />
 
-        <item android:title="@string/title_common">
-            <menu>
-                <item
-                    android:id="@+id/nav_menu_about"
-                    android:icon="@drawable/ic_about"
-                    android:title="@string/pref_title_about" />
-                <item
-                    android:id="@+id/nav_menu_feedback"
-                    android:icon="@drawable/ic_feedback"
-                    android:title="@string/about_feedback" />
-                <item
-                    android:id="@+id/nav_menu_setting"
-                    android:icon="@mipmap/icon_setting"
-                    android:title="@string/settings" />
-                <item
-                    android:id="@+id/nav_menu_exit"
-                    android:icon="@mipmap/icon_exit"
-                    android:title="@string/exit" />
-            </menu>
-        </item>
+        <item
+            android:id="@+id/nav_menu_about"
+            android:icon="@drawable/ic_about"
+            android:title="@string/pref_title_about" />
+        <item
+            android:id="@+id/nav_menu_feedback"
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/about_feedback" />
+        <item
+            android:id="@+id/nav_menu_setting"
+            android:icon="@mipmap/icon_setting"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/nav_menu_exit"
+            android:icon="@mipmap/icon_exit"
+            android:title="@string/exit" />
     </group>
 </menu>

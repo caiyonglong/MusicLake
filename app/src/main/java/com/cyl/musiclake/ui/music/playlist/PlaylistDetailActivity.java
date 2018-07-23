@@ -223,6 +223,9 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
         } else if (mPlaylist.getPid() != null && mPlaylist.getPid().equals(Constants.PLAYLIST_LOVE_ID)) {
             menu.removeItem(R.id.action_rename_playlist);
             menu.removeItem(R.id.action_delete_playlist);
+        } else if (mPlaylist.getType() == 2) {
+            menu.removeItem(R.id.action_rename_playlist);
+            menu.removeItem(R.id.action_delete_playlist);
         }
         return super.onCreateOptionsMenu(menu);
     }

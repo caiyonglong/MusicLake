@@ -188,6 +188,7 @@
     <string name="setting_lyric_des">点击请求悬浮窗权限</string>
     <string name="setting_timing">定时关闭</string>
     <string name="setting_timing_summary">定时关闭</string>
+    <string name="count_down_time">定时关闭播放</string>
 
     <!--about-->
     <string name="title_about">关于音乐湖</string>
@@ -235,8 +236,9 @@
 
     <string name="res_baidu">百度</string>
     <string name="res_qq">QQ</string>
-    <string name="res_wangyi">网易</string>
+    <string name="res_wangyi">网易云</string>
     <string name="res_xiami">虾米</string>
+    <string name="res_local">本地</string>
 
     <string name="equalizer">均衡器</string>
     <string name="artist_tips">歌手 - 专辑</string>
@@ -272,4 +274,6 @@
     <string name="mv_comment">最新评论</string>
     <string name="title_activity_player">PlayerActivity</string>
     <string name="playlist_queue_clear">清空播放队列?</string>
+    <string name="menu_rename">重命名</string>
+    <string name="menu_delete_playlist">删除歌单</string>
 </resources>

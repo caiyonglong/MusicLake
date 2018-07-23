@@ -18,6 +18,7 @@ class SearchPresenter @Inject
 constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
 
     override fun search(key: String, type: SearchEngine.Filter, limit: Int, page: Int) {
+        mView?.showLoading()
         ApiManager.request(MusicApiServiceImpl
                 .searchMusic(key, type, limit, page)
                 .compose(mView?.bindToLife()),

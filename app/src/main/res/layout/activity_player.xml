@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:maxHeight="2dp"
-                        android:progress="30"
+                        android:progress="0"
                         android:tag="tint_accent_color" />
 
 

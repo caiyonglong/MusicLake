@@ -18,6 +18,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -96,28 +97,12 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, mPlaylist.getName() + mPlaylist.getPid());
+                mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = mPlaylist.getMusicList().get(position);
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), "");
-                        break;
-                    case R.id.popup_add_playlist:
-                        AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
-                        break;
-                    case R.id.popup_song_download:
-                        action = 1;
-                        break;
-                }
-                return false;
-            });
-            popupMenu.inflate(R.menu.popup_song_online);
-            popupMenu.show();
+            PopupDialogFragment.Companion.newInstance(music).show(this);
         });
     }
 

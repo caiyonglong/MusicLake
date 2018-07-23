@@ -276,6 +276,7 @@ public class LyricView extends View {
                     canvas.translate(x, y);
                     staticLayout.draw(canvas);
                     canvas.restore();
+                    staticLayout = null;
                 } else {
                     canvas.drawText(mLyricInfo.songLines.get(i).content, x, y, mTextPaint);
                 }

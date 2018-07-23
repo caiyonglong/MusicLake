@@ -1,6 +1,8 @@
 package com.cyl.musiclake.ui.music.mv;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.widget.NestedScrollView;
@@ -10,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cyl.musicapi.netease.CommentsItemInfo;
@@ -17,11 +21,13 @@ import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musicapi.netease.MvInfoDetailInfo;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.ui.music.discover.MvDetailPresenter;
+import com.cyl.musiclake.view.custom.DisplayUtils;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.listener.VideoControlsSeekListener;
-import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.exoplayer2.Player;
 
@@ -29,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
@@ -54,6 +61,10 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
 
     @BindView(R.id.rv_comment)
     RecyclerView mRvComment;
+    @BindView(R.id.singerView)
+    View mSingerView;
+    @BindView(R.id.singerTv)
+    TextView mTvSinger;
 
     @BindView(R.id.video_view)
     VideoView mVideoView;
@@ -75,6 +86,49 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     TextView mTvMvDetail;
     @BindView(R.id.tv_publish_time)
     TextView mTvPublishTime;
+    @BindView(R.id.fullscreenIv)
+    ImageView mFullScreenIv;
+
+    //是否是横屏
+    boolean isPortrait = true;
+
+    @OnClick(R.id.fullscreenIv)
+    void fullscreen() {
+        if (isPortrait) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            ViewGroup.LayoutParams ll = mVideoView.getLayoutParams();
+            ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            ll.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            isPortrait = false;
+            mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_exit_white_36dp);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            ViewGroup.LayoutParams ll = mVideoView.getLayoutParams();
+            ll.height = DisplayUtils.dp2px(200f);
+            ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            isPortrait = true;
+            mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_white);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isPortrait) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            ViewGroup.LayoutParams ll = mVideoView.getLayoutParams();
+            ll.height = DisplayUtils.dp2px(200f);
+            ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            isPortrait = true;
+            mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_white);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
     @Override
     protected int getLayoutResID() {
@@ -95,11 +149,14 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mNestedScrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                 Log.e(TAG, scrollY + "---" + oldScrollY);
-//                Log.e(TAG, scrollY + "---" + oldScrollY);
-
+                if (scrollY > 300 && scrollY <= 400) {
+                    mSingerView.setVisibility(View.VISIBLE);
+                    mSingerView.setAlpha((scrollY - 300) * 0.1f);
+                } else if (scrollY < 300 && mSingerView.getVisibility() == View.VISIBLE) {
+                    mSingerView.setVisibility(View.GONE);
+                }
             });
         }
-
     }
 
     @Override
@@ -202,7 +259,6 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             mRvHotComment.setNestedScrollingEnabled(false);
             mHotCommentAdapter.bindToRecyclerView(mRvHotComment);
 
-
         } else {
             mHotCommentAdapter.notifyDataSetChanged();
         }
@@ -234,39 +290,23 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
         mTvCommentCount.setText(String.valueOf(info.getCommentCount()));
         mTvName.setText(info.getName());
         mTvArtist.setText(info.getArtistName());
+        mTvSinger.setText(info.getArtistName());
         mTvMvDetail.setText(info.getDesc());
         mTvPublishTime.setText(getString(R.string.publish_time, info.getPublishTime()));
+
+        mSingerView.setOnClickListener(v -> {
+            Artist artist = new Artist();
+            artist.setId(info.getArtistId());
+            artist.setType(Constants.NETEASE);
+            artist.setName(info.getArtistName());
+            NavigationHelper.INSTANCE.navigateToPlaylist(this, artist);
+        });
     }
 
     private void initPlayer() {
         mVideoView.setVisibility(View.VISIBLE);
         mVideoView.setOnPreparedListener(this);
         mVideoView.setRepeatMode(Player.REPEAT_MODE_ONE);
-        mVideoView.getVideoControls().setSeekListener(new VideoControlsSeekListener() {
-            @Override
-            public boolean onSeekStarted() {
-                return false;
-            }
-
-            @Override
-            public boolean onSeekEnded(long seekTime) {
-                mVideoView.seekTo(seekTime);
-                return false;
-            }
-        });
-        mVideoView.getVideoControls().setVisibilityListener(new VideoControlsVisibilityListener() {
-            @Override
-            public void onControlsShown() {
-                if (mToolbar != null)
-                    mToolbar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onControlsHidden() {
-                if (mToolbar != null)
-                    mToolbar.setVisibility(View.GONE);
-            }
-        });
     }
 
     @Override

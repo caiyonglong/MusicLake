@@ -23,7 +23,6 @@ import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumDetailPresenter;
-import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;

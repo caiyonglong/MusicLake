@@ -1,7 +1,11 @@
 package com.cyl.musiclake.ui.main;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.audiofx.AudioEffect;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +32,6 @@ import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
-import com.cyl.musiclake.ui.music.player.PlayerActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -35,8 +39,8 @@ import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
-import com.jaeger.library.StatusBarUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.tencent.tauth.Tencent;
@@ -82,12 +86,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
+        transparentStatusBar(this);
+
         //菜单栏的头部控件初始化
         initNavView();
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
-        StatusBarUtil.setTransparentForImageView(this, null);
 
         setUserStatusInfo();
         /**登陆成功重新设置用户新*/
@@ -110,7 +114,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .subscribe(event -> updatePlaySongInfo(event.getMusic()));
     }
 
+    /**
+     * 使状态栏透明
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static void transparentStatusBar(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
     private void updatePlaySongInfo(Music music) {
+        if (mSlidingUpPaneLayout == null) return;
         if (music != null && music.getCoverUri() != null) {
             mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
             CoverLoader.loadImageView(this, music.getCoverUri(), mImageView);
@@ -126,6 +145,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvatarIcon = headerView.findViewById(R.id.header_face);
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
+
     }
 
     @Override
@@ -244,9 +264,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mTargetClass = AboutActivity.class;
                 break;
             case R.id.nav_menu_equalizer:
-                Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
-                startActivityForResult(effects, 666);
+                try {
+                    Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
+                    startActivityForResult(effects, 666);
+                } catch (Exception e) {
+                    ToastUtils.show("设备不支持均衡！");
+                }
                 break;
             case R.id.nav_menu_exit:
                 mTargetClass = null;

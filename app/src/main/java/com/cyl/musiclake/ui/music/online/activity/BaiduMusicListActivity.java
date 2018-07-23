@@ -18,6 +18,7 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -109,28 +110,12 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.BAIDU + type);
+                mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), getLocalClassName());
-                        break;
-                    case R.id.popup_add_playlist:
-                        ToastUtils.show("暂不支持添加百度音乐");
-                        break;
-                    case R.id.popup_song_download:
-                        PopupUtilsKt.downloadMusic(this, music);
-                        break;
-                }
-                return false;
-            });
-            popupMenu.inflate(R.menu.popup_song_online);
-            popupMenu.show();
+            PopupDialogFragment.Companion.newInstance(music).show(this);
         });
         mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             if (mCurrentCounter < TOTAL_COUNTER) {

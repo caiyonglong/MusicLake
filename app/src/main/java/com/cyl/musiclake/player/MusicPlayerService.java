@@ -45,7 +45,8 @@ import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
-import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.player.playback.PlayProgressListener;
+import com.cyl.musiclake.ui.music.player.PlayerActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
@@ -58,8 +59,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.support.v4.app.NotificationCompat.Builder;
 
@@ -175,6 +180,25 @@ public class MusicPlayerService extends Service {
 
     private boolean showLyric;
 
+    private static List<PlayProgressListener> listenerList = new ArrayList<>();
+
+    public static void addProgressListener(PlayProgressListener listener) {
+        listenerList.add(listener);
+    }
+
+    public static void removeProgressListener(PlayProgressListener listener) {
+        listenerList.remove(listener);
+    }
+
+    private Disposable disposable = Observable
+            .interval(500, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(v -> {
+                for (int i = 0; i < listenerList.size(); i++) {
+                    listenerList.get(i).onProgressUpdate(getCurrentPosition(), getDuration());
+                }
+            });
 
     public class MusicPlayerHandler extends Handler {
         private final WeakReference<MusicPlayerService> mService;
@@ -703,10 +727,11 @@ public class MusicPlayerService extends Service {
 
     /**
      * 切换歌单播放
+     * 1、歌单不一样切换
      */
     public void play(List<Music> musicList, int id, String pid) {
         if (musicList.size() <= id) return;
-        if (!mPlaylistId.equals(pid) || mPlayQueue.size() == 0) {
+        if (!mPlaylistId.equals(pid) || mPlayQueue.size() == 0 || mPlayQueue.size() != musicList.size()) {
             setPlayQueue(musicList);
             mPlaylistId = pid;
         }
@@ -923,9 +948,11 @@ public class MusicPlayerService extends Service {
         switch (what) {
             case META_CHANGED:
                 loadLyric();
+                sendBroadcast(new Intent(META_CHANGED));
                 mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
                 break;
             case PLAY_STATE_CHANGED:
+                sendBroadcast(new Intent(PLAY_STATE_CHANGED));
                 mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying())));
                 break;
             case PLAY_QUEUE_CLEAR:
@@ -933,7 +960,6 @@ public class MusicPlayerService extends Service {
                 mMainHandler.post(() -> RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID)));
                 break;
         }
-
     }
 
 
@@ -1037,7 +1063,7 @@ public class MusicPlayerService extends Service {
         int playButtonResId = isMusicPlaying
                 ? R.drawable.ic_pause : R.drawable.ic_play;
 
-        Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+        Intent nowPlayingIntent = new Intent(this, PlayerActivity.class);
         nowPlayingIntent.setAction(Constants.DEAULT_NOTIFICATION);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (mNotificationPostTime == 0) {
@@ -1240,12 +1266,11 @@ public class MusicPlayerService extends Service {
             seekTo(0);
             releaseServiceUiAndStop();
         } else if (ACTION_LYRIC.equals(action)) {
-            if (SystemUtils.isOpenSystemWindow() && SystemUtils.isOpenUsageAccess()) {
+            if (SystemUtils.isOpenSystemWindow()) {
                 showLyric = !showLyric;
                 showDesktopLyric(showLyric);
             } else {
                 //启动Activity让用户授权
-                ToastUtils.show(this, "请前往设置中打开悬浮窗权限");
             }
         } else if (ACTION_CLOSE.equals(action)) {
             releaseServiceUiAndStop();
@@ -1333,7 +1358,7 @@ public class MusicPlayerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        disposable.dispose();
         // Remove any sound effects
         final Intent audioEffectsIntent = new Intent(
                 AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);

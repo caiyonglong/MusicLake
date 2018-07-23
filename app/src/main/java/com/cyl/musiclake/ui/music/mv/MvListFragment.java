@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.mv;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -49,21 +50,28 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
 
     @Override
     public void initViews() {
-        //初始化列表
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+        if (getArguments() != null) {
+            mvType = getArguments().getString("type");
+        }
+
         //适配器
         mAdapter = new TopMvListAdapter(mvList);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setEnableLoadMore(true);
         mAdapter.bindToRecyclerView(mRecyclerView);
+        if (mvType != null && mvType.equals("rank")) {
+            //初始化列表
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            //成功获取更多数据
-            mPresenter.loadMv(mvList.size());
-        }, 1000), mRecyclerView);
-
+            mAdapter.setEnableLoadMore(true);
+            mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
+                //成功获取更多数据
+                mPresenter.loadMv(mvList.size());
+            }, 1000), mRecyclerView);
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+        }
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -74,9 +82,6 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
     @Override
     protected void loadData() {
         showLoading();
-        if (getArguments() != null) {
-            mvType = getArguments().getString("type");
-        }
         mvList.clear();
         if (mvType.equals("rank")) {
             mPresenter.loadMv(0);

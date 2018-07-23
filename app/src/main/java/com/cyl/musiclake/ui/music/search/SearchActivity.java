@@ -23,6 +23,7 @@ import com.cyl.musiclake.data.db.DaoLitepal;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.db.SearchHistoryBean;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -162,30 +163,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
-            PopupMenu popupMenu = new PopupMenu(this, view);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance(music)
-                                .show(getSupportFragmentManager(), TAG);
-                        break;
-                    case R.id.popup_song_goto_artist:
-                        LogUtil.e(TAG, music.toString());
-                        Intent intent = new Intent(this, ArtistInfoActivity.class);
-                        intent.putExtra(Extras.TING_UID, music);
-                        startActivity(intent);
-                        break;
-                    case R.id.popup_add_playlist:
-                        AddPlaylistUtils.INSTANCE.getPlaylist(this, music);
-                        break;
-                    case R.id.popup_song_download:
-                        PopupUtilsKt.downloadMusic(this, music);
-                        break;
-                }
-                return true;
-            });
-            popupMenu.inflate(R.menu.popup_song_online);
-            popupMenu.show();
+            PopupDialogFragment.Companion.newInstance(music).show(this);
         });
         mAdapter.setOnLoadMoreListener(() -> resultListRcv.postDelayed(() -> {
             if (mCurrentCounter == 0) {

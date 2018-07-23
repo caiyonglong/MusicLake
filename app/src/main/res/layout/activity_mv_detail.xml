@@ -3,18 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.devbrackets.android.exomedia.ui.widget.VideoView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:fitsSystemWindows="true"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/nestedScrollView"
         app:layout_constraintTop_toTopOf="parent"
         app:useDefaultControls="true"
         app:useTextureViewBacking="true"
-        app:videoScale="centerCrop"/>
+        app:videoScale="centerCrop" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -229,10 +231,30 @@
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
+        android:id="@+id/singerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@+id/nestedScrollView">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_16"
+            android:text="@string/song_artist"
+            android:textColor="@color/black" />
 
+        <TextView
+            android:id="@+id/singerTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_16"
+            android:textColor="@color/black"
+            tools:text="1231" />
     </LinearLayout>
 
     <ProgressBar

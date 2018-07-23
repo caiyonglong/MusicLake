@@ -11,6 +11,7 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.text.InputType;
+
 import com.cyl.musiclake.utils.LogUtil;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -42,7 +43,7 @@ import static com.cyl.musiclake.player.MusicPlayerService.totalTime;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
-    private PreferenceScreen  mPreferenceCache, mPreferenceUpdate;
+    private PreferenceScreen mPreferenceCache, mPreferenceUpdate;
     public SwitchPreference mWifiSwitch, mTimingSwitch;
     public CheckBoxPreference mLyricCheckBox;
     private int time = 0;
@@ -238,10 +239,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                 intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
                 startActivityForResult(intent, 100);
-            } else if (!SystemUtils.isOpenUsageAccess() && SystemUtils.isMarshmallow()) {
-                ToastUtils.show(getActivity(), "获取<有权查看使用权限的应用>权限");
-                Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-                startActivityForResult(intent, 101);
             } else {
                 mLyricCheckBox.setChecked(true);
                 ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
@@ -269,12 +266,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 checkLyricPermission();
             } else {
                 ToastUtils.show(MusicApp.getAppContext(), "悬浮窗权限已被拒绝！");
-            }
-        } else if (requestCode == 101) {
-            if (SystemUtils.isOpenUsageAccess()) {
-                checkLyricPermission();
-            } else {
-                ToastUtils.show(MusicApp.getAppContext(), "有权查看使用权限的应用权限已被拒绝！");
             }
         }
     }

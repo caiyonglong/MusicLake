@@ -106,10 +106,7 @@ public class FloatLyricViewManager {
      */
     private boolean isHome() {
         try {
-            String topPackageName = getProcess();
-            if (topPackageName != null) {
-                return topPackageName.equals(mContext.getPackageName());
-            }
+            return MusicApp.count != 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,48 +199,48 @@ public class FloatLyricViewManager {
         return mWindowManager;
     }
 
-    private String getProcess() throws Exception {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return getProcessNew();
-        } else {
-            return getProcessOld();
-        }
-    }
-
-    private String topPackageName = null;
-
-    //API 21 and above
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private String getProcessNew() throws Exception {
-        UsageStatsManager mUsageStatsManager = (UsageStatsManager) MusicApp.getAppContext().getSystemService(Context.USAGE_STATS_SERVICE);
-        long time = System.currentTimeMillis();
-        // We get usage stats for the last 10 seconds
-        List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 5, time);
-        // Sort the stats by the last time used
-
-        if (stats != null) {
-            SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
-            for (UsageStats usageStats : stats) {
-                mySortedMap.put(usageStats.getLastTimeUsed(), usageStats);
-            }
-            if (!mySortedMap.isEmpty()) {
-                topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
-            }
-        }
-        return topPackageName;
-    }
-
-    //API below 21
-    @SuppressWarnings("deprecation")
-    private String getProcessOld() throws Exception {
-        String topPackageName = null;
-        ActivityManager activity = (ActivityManager) MusicApp.getAppContext().getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTask = activity.getRunningTasks(1);
-        if (runningTask != null) {
-            ActivityManager.RunningTaskInfo taskTop = runningTask.get(0);
-            ComponentName componentTop = taskTop.topActivity;
-            topPackageName = componentTop.getPackageName();
-        }
-        return topPackageName;
-    }
+//    private String getProcess() throws Exception {
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            return getProcessNew();
+//        } else {
+//            return getProcessOld();
+//        }
+//    }
+//
+//    private String topPackageName = null;
+//
+//    //API 21 and above
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    private String getProcessNew() throws Exception {
+//        UsageStatsManager mUsageStatsManager = (UsageStatsManager) MusicApp.getAppContext().getSystemService(Context.USAGE_STATS_SERVICE);
+//        long time = System.currentTimeMillis();
+//        // We get usage stats for the last 10 seconds
+//        List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 5, time);
+//        // Sort the stats by the last time used
+//
+//        if (stats != null) {
+//            SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
+//            for (UsageStats usageStats : stats) {
+//                mySortedMap.put(usageStats.getLastTimeUsed(), usageStats);
+//            }
+//            if (!mySortedMap.isEmpty()) {
+//                topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
+//            }
+//        }
+//        return topPackageName;
+//    }
+//
+//    //API below 21
+//    @SuppressWarnings("deprecation")
+//    private String getProcessOld() throws Exception {
+//        String topPackageName = null;
+//        ActivityManager activity = (ActivityManager) MusicApp.getAppContext().getSystemService(Context.ACTIVITY_SERVICE);
+//        List<ActivityManager.RunningTaskInfo> runningTask = activity.getRunningTasks(1);
+//        if (runningTask != null) {
+//            ActivityManager.RunningTaskInfo taskTop = runningTask.get(0);
+//            ComponentName componentTop = taskTop.topActivity;
+//            topPackageName = componentTop.getPackageName();
+//        }
+//        return topPackageName;
+//    }
 }

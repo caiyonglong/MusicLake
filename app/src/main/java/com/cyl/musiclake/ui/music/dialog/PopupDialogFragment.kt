@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior

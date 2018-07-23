@@ -26,9 +26,9 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
-import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
@@ -304,9 +304,9 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 //        StatusBarUtil.setColor(getActivity(), statusBarColor);
 //        mLrcView.setHighLightTextColor(statusBarColor);
 //        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
-        tv_time.setTextColor(blackWhiteColor);
+//        tv_time.setTextColor(blackWhiteColor);
 //        mTvArtistAlbum.setTextColor(blackWhiteColor);
-        tv_duration.setTextColor(blackWhiteColor);
+//        tv_duration.setTextColor(blackWhiteColor);
 //        mLrcView.setHintColor(blackWhiteColor);
 //        mBtnNext.setEnabled(true);
 //        mBtnNext.setcolo(blackWhiteColor);
@@ -427,16 +427,16 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     }
 
     @Override
-    public void updateProgress(int progress, int max) {
-        mSeekBar.setProgress(progress);
-        mProgressBar.setProgress(progress);
-        tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
+    public void updateProgress(long progress, long max) {
+//        mSeekBar.setProgress((int) progress);
+        mProgressBar.setProgress((int) progress);
+//        tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
         mLrcView.setCurrentTimeMillis(progress);
 
 
-        mSeekBar.setMax(max);
-        mProgressBar.setMax(max);
-        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
+//        mSeekBar.setMax((int) max);
+        mProgressBar.setMax((int) max);
+//        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
     }
 
     @Override
