@@ -10,32 +10,34 @@
 - [x] 播放历史
 - [x] 播放队列
 - [x] 网络歌曲下载
-- [x] 播放歌词、桌面歌词
+- [x] 播放歌词、桌面歌词、桌面小控件
 - [x] 通知栏控制，线控播放
 - [x] 音频焦点控制
 - [x] QQ登录、在线歌单同步
 
+# 新增
+新增百度电台列表，网易云mv排行榜
+
 # 计划
-- [ ] 优化项目架构，代码编码规范
 - [ ] 验证，修复bug
-- [ ] 完善百度音乐，QQ音乐、虾米音乐、网易云音乐的api
-- [ ] 合并榜单，作为一个音乐发现界面
 
 
 # release note
 [点这下载](https://github.com/caiyonglong/MusicLake/releases)
 
-# 音乐来源
-- 绝大部分来源于[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)和[LIU9293/musicAPI](https://github.com/LIU9293/musicAPI)等
+# 音乐Api来源
+- [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 - [sunzongzheng/musicApi](https://github.com/sunzongzheng/musicApi)
+- 百度音乐api
 
 # 项目运行截图
 <p>
-<img src="screenshots/preview1.png" width="300px"/>
-<img src="screenshots/preview2.png" width="300px"/>
-<img src="screenshots/preview3.png" width="300px"/>
-<img src="screenshots/preview4.png" width="300px"/>
-<img src="screenshots/preview5.png" width="300px"/>
-<img src="screenshots/preview6.png" width="300px"/>
-<img src="screenshots/preview7.png" width="300px"/> 
+<img src="screenshots/preview1.png" width="90" height="160"/>
+<img src="screenshots/preview2.png" width="90" height="160"/>
+<img src="screenshots/preview3.png" width="90" height="160"/>
+<img src="screenshots/preview4.png" width="90" height="160"/>
+<img src="screenshots/preview5.png" width="90" height="160"/>
+<img src="screenshots/preview6.png" width="90" height="160"/>
+<img src="screenshots/preview7.png" width="90" height="160"/>
+<img src="screenshots/preview8.png" width="90" height="160"/>
 </p>

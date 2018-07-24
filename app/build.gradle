@@ -37,7 +37,7 @@ android {
         variant.outputs.all { output ->
             def time = new Date().format("yyyy-MM-dd HHmmss", TimeZone.getTimeZone("GMT+08"))
             //这里修改apk文件名
-            outputFileName = "app-muisc_lake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
+            outputFileName = "app-music_lake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
         }
     }
     compileSdkVersion 27
