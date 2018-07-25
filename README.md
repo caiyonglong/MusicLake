@@ -32,12 +32,12 @@
 
 # 项目运行截图
 <p>
-<img src="screenshots/preview1.png" width="90" height="160"/>
-<img src="screenshots/preview2.png" width="90" height="160"/>
-<img src="screenshots/preview3.png" width="90" height="160"/>
-<img src="screenshots/preview4.png" width="90" height="160"/>
-<img src="screenshots/preview5.png" width="90" height="160"/>
-<img src="screenshots/preview6.png" width="90" height="160"/>
-<img src="screenshots/preview7.png" width="90" height="160"/>
-<img src="screenshots/preview8.png" width="90" height="160"/>
+<img src="screenshots/preview1.png" width="180" height="320"/>
+<img src="screenshots/preview2.png" width="180" height="320"/>
+<img src="screenshots/preview3.png" width="180" height="320"/>
+<img src="screenshots/preview4.png" width="180" height="320"/>
+<img src="screenshots/preview5.png" width="180" height="320"/>
+<img src="screenshots/preview6.png" width="180" height="320"/>
+<img src="screenshots/preview7.png" width="180" height="320"/>
+<img src="screenshots/preview8.png" width="180" height="320"/>
 </p>

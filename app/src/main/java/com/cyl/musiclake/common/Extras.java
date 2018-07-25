@@ -14,6 +14,9 @@ public class Extras {
     public static final String BILLBOARD_ALBUM = "billboard_album";
 
     public static final String ALBUM = "album";
+    public static final String SONG_NAME = "song_name";
+    public static final String PLAY_STATUS = "play_status";
+    public static final String SONG = "song";
 
     public static final String SECRET_ID = "secret_id";
 

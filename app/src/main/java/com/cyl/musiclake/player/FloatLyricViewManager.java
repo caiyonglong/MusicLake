@@ -22,25 +22,26 @@ public class FloatLyricViewManager {
     private static WindowManager mWindowManager;
     private Handler handler = new Handler();
     private LyricInfo mLyricInfo;
+    private String mSongName;
     private boolean isFirstSettingLyric; //第一次设置歌词
 
     /**
      * 定时器，定时进行检测当前应该创建还是移除悬浮窗。
      */
-    private static Timer timer;
+//    private static Timer timer;
     private Context mContext;
 
     public FloatLyricViewManager(Context context) {
         mContext = context;
     }
 
-    public void stopFloatLyric() {
-        // Service被终止的同时也停止定时器继续运行
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
+//    public void stopFloatLyric() {
+//        // Service被终止的同时也停止定时器继续运行
+//        if (timer != null) {
+//            timer.cancel();
+//            timer = null;
+//        }
+//    }
 
 
     public void updatePlayStatus(boolean isPlaying) {
@@ -50,10 +51,10 @@ public class FloatLyricViewManager {
 
     public void startFloatLyric() {
         // 开启定时器，每隔0.5秒刷新一次
-        if (timer == null) {
-            timer = new Timer();
-            timer.scheduleAtFixedRate(new RefreshTask(), 0, 1);
-        }
+//        if (timer == null) {
+//            timer = new Timer();
+//            timer.scheduleAtFixedRate(new RefreshTask(), 0, 1);
+//        }
     }
 
     /**
@@ -61,25 +62,19 @@ public class FloatLyricViewManager {
      *
      * @param lyricInfo
      */
-    public void setLyric(String lyricInfo) {
+    public void setLyric(String title, String lyricInfo) {
+        mSongName = title;
         mLyricInfo = LyricParseUtils.setLyricResource(lyricInfo);
         isFirstSettingLyric = true;
     }
 
-    class RefreshTask extends TimerTask {
-        @Override
-        public void run() {
-            // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
-            if (!isHome() && !isWindowShowing()) {
-                handler.post(() -> createFloatLyricView(mContext));
-            } else if (isHome() && isWindowShowing()) {
-                handler.post(() -> removeFloatLyricView(mContext));
-            } else if (isWindowShowing()) {
-                handler.post(() -> updateLyric(mContext));
-            }
-        }
-
-    }
+//    class RefreshTask extends TimerTask {
+//        @Override
+//        public void run() {
+//
+//        }
+//
+//    }
 
     /**
      * 判断当前界面是否是应用界面
@@ -122,7 +117,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-            setLyric(MusicPlayerService.lyric);
+//            setLyric(mSongName, MusicPlayerService.lyric);
         }
     }
 
@@ -141,19 +136,27 @@ public class FloatLyricViewManager {
 
     /**
      * 更新小悬浮窗的TextView上的数据，显示内存使用的百分比。
-     *
-     * @param context 可传入应用程序上下文。
      */
-    public void updateLyric(Context context) {
-        if (mFloatLyricView != null) {
-            if (isFirstSettingLyric) {
-                mFloatLyricView.mTitle.setText(PlayManager.getSongName());
-                mFloatLyricView.mLyricText.setLyricInfo(mLyricInfo);
-                isFirstSettingLyric = false;
-            }
-            mFloatLyricView.mLyricText.setCurrentTimeMillis(PlayManager.getCurrentPosition());
-            mFloatLyricView.mLyricText.setDurationMillis(PlayManager.getDuration());
+    public void updateLyric(long positon, long duration) {
+        // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
+        if (!isHome() && !isWindowShowing()) {
+            handler.post(() -> createFloatLyricView(mContext));
+        } else if (isHome() && isWindowShowing()) {
+            handler.post(() -> removeFloatLyricView(mContext));
+        } else if (isWindowShowing()) {
+            handler.post(() -> {
+                if (mFloatLyricView != null) {
+                    if (isFirstSettingLyric) {
+                        mFloatLyricView.mTitle.setText(mSongName);
+                        mFloatLyricView.mLyricText.setLyricInfo(mLyricInfo);
+                        isFirstSettingLyric = false;
+                    }
+                    mFloatLyricView.mLyricText.setCurrentTimeMillis(positon);
+                    mFloatLyricView.mLyricText.setDurationMillis(duration);
+                }
+            });
         }
+
     }
 
     /**

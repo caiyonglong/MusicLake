@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -35,6 +36,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
 import com.cyl.musiclake.data.db.Music;
@@ -878,7 +880,7 @@ public class MusicPlayerService extends Service {
         } else {
             lyricChangedEvent.setLyric(lyricInfo);
         }
-        mFloatLyricViewManager.setLyric(lyricInfo);
+        mFloatLyricViewManager.setLyric(getTitle(), lyricInfo);
         mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
     }
 
@@ -956,11 +958,11 @@ public class MusicPlayerService extends Service {
         switch (what) {
             case META_CHANGED:
                 loadLyric();
-                sendBroadcast(new Intent(META_CHANGED));
+                updateWidget(META_CHANGED);
                 mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
                 break;
             case PLAY_STATE_CHANGED:
-                sendBroadcast(new Intent(PLAY_STATE_CHANGED));
+                updateWidget(PLAY_STATE_CHANGED);
                 mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying())));
                 break;
             case PLAY_QUEUE_CLEAR:
@@ -968,6 +970,17 @@ public class MusicPlayerService extends Service {
                 mMainHandler.post(() -> RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID)));
                 break;
         }
+    }
+
+    private void updateWidget(String action) {
+        Intent intent = new Intent(action);
+        Bundle bundle = new Bundle();
+        bundle.putString(Extras.SONG_NAME, getTitle() + " - " + getArtistName());
+        if (action.equals(META_CHANGED)) {
+            bundle.putParcelable(Extras.SONG, getPlayingMusic());
+        }
+        bundle.putBoolean(Extras.PLAY_STATUS, isPlaying());
+        sendBroadcast(intent);
     }
 
 
@@ -1161,12 +1174,26 @@ public class MusicPlayerService extends Service {
         }
     }
 
+    private Timer lyricTimer;
 
     public void showDesktopLyric(boolean show) {
         if (show) {
+            // 开启定时器，每隔0.5秒刷新一次
+            if (lyricTimer == null) {
+                lyricTimer = new Timer();
+                lyricTimer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        mFloatLyricViewManager.updateLyric(getCurrentPosition(), getDuration());
+                    }
+                }, 0, 1);
+            }
             mFloatLyricViewManager.startFloatLyric();
         } else {
-            mFloatLyricViewManager.stopFloatLyric();
+            if (lyricTimer != null) {
+                lyricTimer.cancel();
+                lyricTimer = null;
+            }
             mFloatLyricViewManager.removeFloatLyricView(this);
         }
     }
@@ -1274,12 +1301,7 @@ public class MusicPlayerService extends Service {
             seekTo(0);
             releaseServiceUiAndStop();
         } else if (ACTION_LYRIC.equals(action)) {
-            if (SystemUtils.isOpenSystemWindow()) {
-                showLyric = !showLyric;
-                showDesktopLyric(showLyric);
-            } else {
-                //启动Activity让用户授权
-            }
+            startFloatLyric();
         } else if (ACTION_CLOSE.equals(action)) {
             releaseServiceUiAndStop();
             System.exit(0);
@@ -1289,6 +1311,19 @@ public class MusicPlayerService extends Service {
             totalTime = intent.getIntExtra("time", 0);
             LogUtil.e(TAG, SCHEDULE_CHANGED + "----" + totalTime);
             startRemind(totalTime);
+        }
+    }
+
+    /**
+     * 开启歌词
+     */
+    private void startFloatLyric() {
+        if (SystemUtils.isOpenSystemWindow()) {
+            showLyric = !showLyric;
+            showDesktopLyric(showLyric);
+        } else {
+            //启动Activity让用户授权
+            ToastUtils.show("请在应用设置中，打开显示悬浮窗权限");
         }
     }
 
