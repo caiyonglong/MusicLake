@@ -47,6 +47,7 @@ import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.player.playback.PlayProgressListener;
+import com.cyl.musiclake.player.playqueue.PlayQueueManager;
 import com.cyl.musiclake.ui.music.player.PlayerActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -142,12 +143,6 @@ public class MusicPlayerService extends Service {
     private int mPlayingPos = -1;
     private int mNextPlayPos = -1;
     private String mPlaylistId = Constants.PLAYLIST_QUEUE_ID;
-
-    //播放模式：0顺序播放、1随机播放、2单曲循环
-    private int mRepeatMode = 0;
-    public static final int PLAY_MODE_LOOP = 0;
-    public static final int PLAY_MODE_RANDOM = 1;
-    public static final int PLAY_MODE_REPEAT = 2;
 
     //广播接收者
     ServiceReceiver mServiceReceiver;
@@ -247,7 +242,7 @@ public class MusicPlayerService extends Service {
 //                        service.bumpSongCount(); //更新歌曲的播放次数
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完毕且暂时没有下一首
-                        if (service.mRepeatMode == PLAY_MODE_REPEAT) {
+                        if (PlayQueueManager.INSTANCE.getPlayModeId() == PlayQueueManager.PLAY_MODE_REPEAT) {
                             service.seekTo(0);
                             mMainHandler.post(service::play);
                         } else {
@@ -343,7 +338,7 @@ public class MusicPlayerService extends Service {
 
         //初始化主线程Handler
         mMainHandler = new Handler(Looper.getMainLooper());
-        mRepeatMode = SPUtils.getPlayMode();
+        PlayQueueManager.INSTANCE.getPlayModeId();
 
         //初始化工作线程
         mWorkThread = new HandlerThread("MusicPlayerThread");
@@ -617,23 +612,24 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getNextPosition() {
+        int playModeId = PlayQueueManager.INSTANCE.getPlayModeId();
         if (mPlayQueue == null || mPlayQueue.isEmpty()) {
             return -1;
         }
         if (mPlayQueue.size() == 1) {
             return 0;
         }
-        if (mRepeatMode == PLAY_MODE_REPEAT) {
+        if (playModeId == PlayQueueManager.PLAY_MODE_REPEAT) {
             if (mPlayingPos < 0) {
                 return 0;
             }
-        } else if (mRepeatMode == PLAY_MODE_LOOP) {
+        } else if (playModeId == PlayQueueManager.PLAY_MODE_LOOP) {
             if (mPlayingPos == mPlayQueue.size() - 1) {
                 return 0;
             } else if (mPlayingPos < mPlayQueue.size() - 1) {
                 return mPlayingPos + 1;
             }
-        } else if (mRepeatMode == PLAY_MODE_RANDOM) {
+        } else if (playModeId == PlayQueueManager.PLAY_MODE_RANDOM) {
             return new Random().nextInt(mPlayQueue.size());
         }
         return mPlayingPos;
@@ -645,23 +641,24 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getPreviousPosition() {
+        int playModeId = PlayQueueManager.INSTANCE.getPlayModeId();
         if (mPlayQueue == null || mPlayQueue.isEmpty()) {
             return -1;
         }
         if (mPlayQueue.size() == 1) {
             return 0;
         }
-        if (mRepeatMode == PLAY_MODE_REPEAT) {
+        if (playModeId == PlayQueueManager.PLAY_MODE_REPEAT) {
             if (mPlayingPos < 0) {
                 return 0;
             }
-        } else if (mRepeatMode == PLAY_MODE_LOOP) {
+        } else if (playModeId == PlayQueueManager.PLAY_MODE_LOOP) {
             if (mPlayingPos == 0) {
                 return mPlayQueue.size() - 1;
             } else if (mPlayingPos > 0) {
                 return mPlayingPos - 1;
             }
-        } else if (mRepeatMode == PLAY_MODE_RANDOM) {
+        } else if (playModeId == PlayQueueManager.PLAY_MODE_RANDOM) {
             mPlayingPos = new Random().nextInt(mPlayQueue.size());
             return new Random().nextInt(mPlayQueue.size());
         }
@@ -847,8 +844,6 @@ public class MusicPlayerService extends Service {
         SPUtils.setPlayPosition(mPlayingPos);
         //保存歌曲进度
         SPUtils.savePosition(getCurrentPosition());
-        //保存歌曲状态
-        SPUtils.savePlayMode(mRepeatMode);
         notifyChange(PLAY_QUEUE_CHANGE);
     }
 

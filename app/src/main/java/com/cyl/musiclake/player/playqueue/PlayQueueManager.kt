@@ -3,7 +3,6 @@ package com.cyl.musiclake.player.playqueue
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.utils.SPUtils
-import java.util.*
 
 /**
  * Created by master on 2018/5/14.
@@ -13,13 +12,13 @@ object PlayQueueManager {
     /**
      * 播放模式 0：顺序播放，1：单曲循环，2：随机播放
      */
-    val PLAY_MODE_LOOP = 0
-    val PLAY_MODE_REPEAT = 1
-    val PLAY_MODE_RANDOM = 2
+    const val PLAY_MODE_LOOP = 0
+    const val PLAY_MODE_REPEAT = 1
+    const val PLAY_MODE_RANDOM = 2
     //播放模式
-    var playingModeId = 0
+    private var playingModeId = 0
 
-    val playingMode = arrayOf("顺序播放", "单曲循环", "随机播放")
+    private val playingMode = arrayOf("顺序播放", "单曲循环", "随机播放")
 
     /**
      * 更新播放模式
@@ -32,7 +31,7 @@ object PlayQueueManager {
     }
 
     /**
-     * 获取播放模式
+     * 获取播放模式id
      */
     fun getPlayModeId(): Int {
         playingModeId = SPUtils.getPlayMode()
