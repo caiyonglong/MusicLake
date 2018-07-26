@@ -199,37 +199,6 @@ public class CoverLoader {
                 });
     }
 
-    public static void loadBitmap(Context mContext, BitmapCallBack callBack) {
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(getCoverUriByRandom())
-                .error(getCoverUriByRandom())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        if (callBack != null) {
-                            callBack.showBitmap(resource);
-                        }
-                    }
-                });
-    }
-
-    public static void loadImageSync(Context mContext, BitmapCallBack callBack) {
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(getCoverUriByRandom())
-                .error(getCoverUriByRandom())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        if (callBack != null) {
-                            callBack.showBitmap(resource);
-                        }
-                    }
-                });
-    }
 
     public static Drawable createBlurredImageFromBitmap(Bitmap bitmap, Context context, int inSampleSize) {
 

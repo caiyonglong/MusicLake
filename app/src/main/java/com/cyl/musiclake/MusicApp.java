@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -15,6 +16,7 @@ import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
+import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
@@ -126,6 +128,7 @@ public class MusicApp extends Application {
     }
 
     public static int count = 0;
+    public static int Activitycount = 0;
 
     /**
      * 注册监听
@@ -134,7 +137,7 @@ public class MusicApp extends Application {
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
+                Activitycount++;
             }
 
             @Override
@@ -143,7 +146,6 @@ public class MusicApp extends Application {
                     LogUtil.d(">>>>>>>>>>>>>>>>>>>App切到前台");
                 }
                 count++;
-
             }
 
             @Override
@@ -170,9 +172,15 @@ public class MusicApp extends Application {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-
+                Activitycount--;
+                if (Activitycount == 0) {
+                    LogUtil.d(">>>>>>>>>>>>>>>>>>>APP 关闭");
+//                    stopService(new Intent(activity, MusicPlayerService.class));
+                }
             }
         });
     }
+
+
 
 }

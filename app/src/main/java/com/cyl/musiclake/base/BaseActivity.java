@@ -94,8 +94,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         initToolBar();
         attachView();
         initView();
-        initData();
-        listener();
     }
 
     /**
@@ -242,6 +240,8 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         mService = IMusicService.Stub.asInterface(iBinder);
+        initData();
+        listener();
     }
 
     @Override

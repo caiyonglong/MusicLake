@@ -2,11 +2,6 @@ package com.cyl.musiclake.view.lyric;
 
 import android.content.Context;
 import android.content.Intent;
-
-import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.event.LyricChangedEvent;
-import com.cyl.musiclake.utils.LogUtil;
-
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,8 +13,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.player.MusicPlayerService;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.rtugeek.android.colorseekbar.ColorSeekBar;
 
@@ -27,8 +23,6 @@ import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.lang.reflect.Field;
-
-import io.reactivex.disposables.Disposable;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -151,7 +145,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
         mLyricText.setFontColorScale(mFontColor);
         mColorSeekBar.setColorBarPosition(mFontColor);
 
-        setPlayStatus(PlayManager.isPlaying());
+        setPlayStatus(MusicPlayerService.getInstance().isPlaying());
 
         mSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -274,12 +268,12 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.music_app:
-                Intent intent = new Intent(getContext(), MainActivity.class);
+                Intent intent = NavigationHelper.INSTANCE.getNowPlayingIntent(getContext());
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
             case R.id.btn_close:
-                PlayManager.showDesktopLyric(false);
+                MusicPlayerService.getInstance().showDesktopLyric(false);
                 break;
             case R.id.btn_lock:
                 mMovement = !mMovement;
@@ -290,14 +284,14 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
                 }
                 break;
             case R.id.btn_previous:
-                PlayManager.prev();
+                MusicPlayerService.getInstance().prev();
                 break;
             case R.id.btn_play:
-                PlayManager.playPause();
-                setPlayStatus(PlayManager.isPlaying());
+                MusicPlayerService.getInstance().playPause();
+                setPlayStatus(MusicPlayerService.getInstance().isPlaying());
                 break;
             case R.id.btn_next:
-                PlayManager.next();
+                MusicPlayerService.getInstance().next();
                 break;
             case R.id.btn_settings:
                 isHiddenSettings = !isHiddenSettings;

@@ -11,6 +11,7 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -73,16 +74,18 @@ public class StandardWidget extends BaseWidget {
             ));
             isFirstCreate = false;
         }
-        remoteViews.setTextViewText(R.id.tv_title, extras.getString(Extras.SONG_NAME));
         remoteViews.setImageViewResource(R.id.iv_play_pause,
                 extras.getBoolean(Extras.PLAY_STATUS, false) ? R.drawable.ic_pause : R.drawable.ic_play);
-        if (extras.getParcelable(Extras.SONG) != null) {
-            CoverLoader.loadImageViewByMusic(MusicApp.getAppContext(), extras.getParcelable(Extras.SONG), artwork -> {
+        Music music = MusicPlayerService.getInstance().getPlayingMusic();
+        if (music != null) {
+            remoteViews.setTextViewText(R.id.tv_title, music.getTitle() + " - " + music.getArtist());
+            CoverLoader.loadImageViewByMusic(context, music, artwork -> {
                 if (artwork != null) {
                     remoteViews.setImageViewBitmap(R.id.iv_cover, artwork);
                 } else {
                     remoteViews.setImageViewResource(R.id.iv_cover, R.drawable.default_cover);
                 }
+
             });
         }
     }

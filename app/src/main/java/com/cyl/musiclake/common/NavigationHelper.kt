@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.transition.TransitionInflater
 import android.util.Pair
 import android.view.View
 import com.cyl.musiclake.R
@@ -19,7 +18,9 @@ import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.download.DownloadFragment
-import com.cyl.musiclake.ui.music.local.fragment.*
+import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
+import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
+import com.cyl.musiclake.ui.music.player.PlayerActivity
 import com.cyl.musiclake.ui.music.playlist.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment
@@ -223,6 +224,32 @@ object NavigationHelper {
         return intent
     }
 
+    /**
+     * 下一首
+     */
+    fun getNextIntent(context: Context): Intent {
+        val intent = Intent(MusicPlayerService.ACTION_NEXT)
+        intent.component = ComponentName(context, MusicPlayerService::class.java)
+        return intent
+    }
+
+    /**
+     * 上一首
+     */
+    fun getPrevIntent(context: Context): Intent {
+        val intent = Intent(MusicPlayerService.ACTION_PREV)
+        intent.component = ComponentName(context, MusicPlayerService::class.java)
+        return intent
+    }
+
+    /**
+     * 暂停
+     */
+    fun getPlayPauseIntent(context: Context): Intent {
+        val intent = Intent(MusicPlayerService.ACTION_PREV)
+        intent.component = ComponentName(context, MusicPlayerService::class.java)
+        return intent
+    }
 
     /**
      * 扫描文件夹

@@ -9,8 +9,6 @@ import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.utils.FileUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 /**
  * Author   : D22434
@@ -92,6 +90,9 @@ object MusicApi {
         return DoubanApiServiceImpl.getMusicInfo(info)
     }
 
+    /**
+     *获取本地歌词
+     */
     fun getLocalLyricInfo(path: String?): Observable<String> {
         return Observable.create { emitter ->
             try {

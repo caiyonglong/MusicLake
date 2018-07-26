@@ -16,7 +16,6 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -182,6 +181,12 @@ public class MusicPlayerService extends Service {
 
     private boolean showLyric;
 
+    private static MusicPlayerService instance;
+
+    public static MusicPlayerService getInstance() {
+        return instance;
+    }
+
     private static List<PlayProgressListener> listenerList = new ArrayList<>();
 
     public static void addProgressListener(PlayProgressListener listener) {
@@ -317,6 +322,8 @@ public class MusicPlayerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.e(TAG, "onCreate");
+        instance = this;
         //初始化广播
         initReceiver();
         //初始化参数
@@ -545,7 +552,7 @@ public class MusicPlayerService extends Service {
                 ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
                     @Override
                     public void success(Music result) {
-                        LogUtil.e(TAG, "-----" + result);
+                        LogUtil.e(TAG, "-----" + result.toString());
                         mPlayingMusic = result;
                         saveHistory();
                         isMusicPlaying = true;
@@ -561,10 +568,14 @@ public class MusicPlayerService extends Service {
             saveHistory();
             mHistoryPos.add(mPlayingPos);
             isMusicPlaying = true;
-            mPlayer.setDataSource(mPlayingMusic.getUri());
+
+
+            if (mPlayingMusic.getUri() != null) {
+                mPlayer.setDataSource(mPlayingMusic.getUri());
+                mediaSessionManager.updateMetaData(mPlayingMusic.getUri());
+            }
             audioAndFocusManager.requestAudioFocus();
             updateNotification(false);
-            mediaSessionManager.updateMetaData(mPlayingMusic.getUri());
 
             final Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
             intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
@@ -679,13 +690,15 @@ public class MusicPlayerService extends Service {
     public void play() {
         if (mPlayer.isInitialized()) {
             mPlayer.start();
+            isMusicPlaying = true;
             notifyChange(PLAY_STATE_CHANGED);
             audioAndFocusManager.requestAudioFocus();
             mHandler.removeMessages(VOLUME_FADE_DOWN);
             mHandler.sendEmptyMessage(VOLUME_FADE_UP); //组件调到正常音量
 
-            isMusicPlaying = true;
             updateNotification(true);
+        } else {
+            playCurrentAndNext();
         }
     }
 
@@ -752,6 +765,7 @@ public class MusicPlayerService extends Service {
             if (mPlayer.isInitialized()) {
                 play();
             } else {
+                isMusicPlaying = true;
                 playCurrentAndNext();
             }
         }
@@ -807,6 +821,7 @@ public class MusicPlayerService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
+        LogUtil.e(TAG, "onUnbind");
         mServiceInUse = false;
         savePlayQueue(false);
 
@@ -831,7 +846,7 @@ public class MusicPlayerService extends Service {
         //保存歌曲id
         SPUtils.setPlayPosition(mPlayingPos);
         //保存歌曲进度
-        SPUtils.savePosition(mPlayer.position());
+        SPUtils.savePosition(getCurrentPosition());
         //保存歌曲状态
         SPUtils.savePlayMode(mRepeatMode);
         notifyChange(PLAY_QUEUE_CHANGE);
@@ -972,17 +987,17 @@ public class MusicPlayerService extends Service {
         }
     }
 
+    /**
+     * 更新桌面小控件
+     */
     private void updateWidget(String action) {
         Intent intent = new Intent(action);
-        Bundle bundle = new Bundle();
-        bundle.putString(Extras.SONG_NAME, getTitle() + " - " + getArtistName());
+        intent.putExtra(Extras.PLAY_STATUS, isPlaying());
         if (action.equals(META_CHANGED)) {
-            bundle.putParcelable(Extras.SONG, getPlayingMusic());
+            intent.putExtra(Extras.SONG, mPlayingMusic);
         }
-        bundle.putBoolean(Extras.PLAY_STATUS, isPlaying());
         sendBroadcast(intent);
     }
-
 
     /**
      * 获取标题
@@ -1401,6 +1416,7 @@ public class MusicPlayerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        LogUtil.e(TAG, "onDestroy");
         disposable.dispose();
         // Remove any sound effects
         final Intent audioEffectsIntent = new Intent(
@@ -1413,6 +1429,7 @@ public class MusicPlayerService extends Service {
         //释放mPlayer
         if (mPlayer != null) {
             mPlayer.stop();
+            isMusicPlaying = false;
             mPlayer.release();
             mPlayer = null;
         }

@@ -20,8 +20,8 @@ public class FloatLyricViewManager {
     private static FloatLyricView mFloatLyricView;
     private static WindowManager.LayoutParams mFloatLyricViewParams;
     private static WindowManager mWindowManager;
-    private Handler handler = new Handler();
     private LyricInfo mLyricInfo;
+    private Handler handler = new Handler();
     private String mSongName;
     private boolean isFirstSettingLyric; //第一次设置歌词
 
@@ -68,13 +68,20 @@ public class FloatLyricViewManager {
         isFirstSettingLyric = true;
     }
 
-//    class RefreshTask extends TimerTask {
-//        @Override
-//        public void run() {
-//
-//        }
-//
-//    }
+    class RefreshTask extends TimerTask {
+        @Override
+        public void run() {
+            // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
+//            if (!isHome() && !isWindowShowing()) {
+//                handler.post(() -> createFloatLyricView(mContext));
+//            } else if (isHome() && isWindowShowing()) {
+//                handler.post(() -> removeFloatLyricView(mContext));
+//            } else if (isWindowShowing()) {
+//                handler.post(() -> updateLyric(mContext));
+//            }
+        }
+
+    }
 
     /**
      * 判断当前界面是否是应用界面
@@ -117,7 +124,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-//            setLyric(mSongName, MusicPlayerService.lyric);
+            setLyric(mSongName, MusicPlayerService.lyric);
         }
     }
 

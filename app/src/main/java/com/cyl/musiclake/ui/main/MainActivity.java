@@ -145,14 +145,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvatarIcon = headerView.findViewById(R.id.header_face);
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
-
     }
 
     @Override
     protected void initData() {
         String from = getIntent().getAction();
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
+            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
+            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
         updatePlaySongInfo(PlayManager.getPlayingMusic());
         //加载主fragment
