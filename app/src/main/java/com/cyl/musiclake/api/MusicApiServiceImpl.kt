@@ -238,4 +238,14 @@ object MusicApiServiceImpl {
                     }
         }
     }
+
+    /**
+     * 获取本地歌词
+     */
+    fun getLocalLyricInfo(music: Music): Observable<String> {
+        val mLyricPath = FileUtils.getLrcDir() + music.title + "-" + music.artist + ".lrc"
+        //网络歌词
+        return  MusicApi.getLocalLyricInfo(mLyricPath)
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.cyl.musiclake.player;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -9,6 +10,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.utils.CoverLoader;
 
 /**
  * MediaSession管理类
@@ -96,25 +98,27 @@ public class MediaSessionManager {
     /**
      * 更新正在播放的音乐信息，切换歌曲时调用
      */
-    public void updateMetaData(String path) {
-//        if (!StringUtils.isReal(path)) {
-//            mMediaSession.setMetadata(null);
-//            return;
-////        }
-//        Music songInfo = PlayManager.getPlayingMusic();
-//
-//        MediaMetadataCompat.Builder metaDta = new MediaMetadataCompat.Builder()
-//                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, songInfo.getTitle())
-//                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songInfo.getArtist())
-//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, songInfo.getAlbum())
-//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, songInfo.getArtist())
-//                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, songInfo.getDuration());
-////                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, getCoverBitmap(songInfo));
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            metaDta.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, getCount());
-//        }
-//        mMediaSession.setMetadata(metaDta.build());
+    public void updateMetaData(Music songInfo) {
+        if (songInfo == null) {
+            mMediaSession.setMetadata(null);
+            return;
+        }
+
+        MediaMetadataCompat.Builder metaDta = new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, songInfo.getTitle())
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songInfo.getArtist())
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, songInfo.getAlbum())
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, songInfo.getArtist())
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, songInfo.getDuration());
+
+        CoverLoader.loadImageViewByMusic(context, songInfo, bitmap -> {
+            metaDta.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+            mMediaSession.setMetadata(metaDta.build());
+        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            metaDta.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, getCount());
+        }
+        mMediaSession.setMetadata(metaDta.build());
 
     }
 
@@ -126,15 +130,6 @@ public class MediaSessionManager {
             return 0;
         }
     }
-
-//    private Bitmap getCoverBitmap(Music info) {
-//        if (StringUtils.isReal(info.getAlbum_path())) {
-//            return BitmapFactory.decodeFile(info.getAlbum_path());
-//        } else {
-//            return BitmapFactory.decodeResource(context.getResources(), R.drawable.default_song);
-//        }
-//    }
-
 
     public MediaSessionCompat.Token getMediaSession() {
         return mMediaSession.getSessionToken();

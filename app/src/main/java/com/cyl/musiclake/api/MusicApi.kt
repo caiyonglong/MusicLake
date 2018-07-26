@@ -38,10 +38,7 @@ object MusicApi {
                 }
             }
             Constants.LOCAL -> {
-                getLocalLyricInfo(music.lyric).flatMap { result ->
-                    music.lyric = result
-                    BaiduApiServiceImpl.getBaiduLyric(music)
-                }
+                MusicApiServiceImpl.getLocalLyricInfo(music)
             }
             else -> {
                 MusicApiServiceImpl.getLyricInfo(music)
@@ -91,7 +88,7 @@ object MusicApi {
     }
 
     /**
-     *获取本地歌词
+     * 根据路径获取本地歌词
      */
     fun getLocalLyricInfo(path: String?): Observable<String> {
         return Observable.create { emitter ->

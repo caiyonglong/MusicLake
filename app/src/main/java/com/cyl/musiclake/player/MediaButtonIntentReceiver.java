@@ -28,7 +28,7 @@ import java.util.List;
  */
 
 public class MediaButtonIntentReceiver extends BroadcastReceiver {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String TAG = "ButtonIntentReceiver";
 
     private static final int MSG_LONGPRESS_TIMEOUT = 1;

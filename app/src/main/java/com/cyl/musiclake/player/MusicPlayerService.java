@@ -567,8 +567,10 @@ public class MusicPlayerService extends Service {
 
             if (mPlayingMusic.getUri() != null) {
                 mPlayer.setDataSource(mPlayingMusic.getUri());
-                mediaSessionManager.updateMetaData(mPlayingMusic.getUri());
             }
+
+            mediaSessionManager.updateMetaData(mPlayingMusic);
+
             audioAndFocusManager.requestAudioFocus();
             updateNotification(false);
 
@@ -856,6 +858,7 @@ public class MusicPlayerService extends Service {
      */
     private void loadLyric() {
         if (mPlayingMusic != null) {
+            mPlayingMusic.setDuration(getDuration());
             updateLyric(getString(R.string.loading_lyric));
             Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
             if (observable != null) {
@@ -973,6 +976,7 @@ public class MusicPlayerService extends Service {
                 break;
             case PLAY_STATE_CHANGED:
                 updateWidget(PLAY_STATE_CHANGED);
+                mediaSessionManager.updatePlaybackState();
                 mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying())));
                 break;
             case PLAY_QUEUE_CLEAR:

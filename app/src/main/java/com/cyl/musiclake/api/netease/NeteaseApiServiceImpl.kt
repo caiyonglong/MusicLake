@@ -14,9 +14,7 @@ import io.reactivex.ObservableOnSubscribe
 object NeteaseApiServiceImpl {
     private val TAG = "NeteaseApiServiceImpl"
 
-    val apiService: NeteaseApiService
-        get() = ApiManager.getInstance().create(NeteaseApiService::class.java, Constants.BASE_NETEASE_URL)
-
+    val apiService by lazy { ApiManager.getInstance().create(NeteaseApiService::class.java, Constants.BASE_NETEASE_URL) }
 
     /**
      * 获取歌单歌曲
