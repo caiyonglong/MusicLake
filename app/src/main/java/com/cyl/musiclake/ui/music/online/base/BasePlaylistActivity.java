@@ -9,24 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.AddPlaylistUtils;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
-import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
-import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.DialogUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SizeUtils;
-import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,10 +112,10 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this, 150));
         mViewHeader.setLayoutParams(params);
 
-        mIvCover = (ImageView) mViewHeader.findViewById(R.id.iv_cover);
-        mTvTitle = (TextView) mViewHeader.findViewById(R.id.tv_title);
-        mTvDate = (TextView) mViewHeader.findViewById(R.id.tv_update_date);
-        mTvDesc = (TextView) mViewHeader.findViewById(R.id.tv_comment);
+        mIvCover = mViewHeader.findViewById(R.id.iv_cover);
+        mTvTitle = mViewHeader.findViewById(R.id.tv_title);
+        mTvDate = mViewHeader.findViewById(R.id.tv_update_date);
+        mTvDesc = mViewHeader.findViewById(R.id.tv_comment);
     }
 
     @Override
@@ -165,7 +160,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         if (action == 0) {
             PlayManager.playOnline(music);
         } else if (action == 1) {
-            PopupUtilsKt.downloadMusic(this, music);
+            UIUtilsKt.downloadMusic(this, music);
         }
     }
 }

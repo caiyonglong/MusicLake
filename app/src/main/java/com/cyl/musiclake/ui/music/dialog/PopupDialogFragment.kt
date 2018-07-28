@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.dialog
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
@@ -16,13 +15,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.AddPlaylistUtils
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.utils.ConvertUtils
+import kotlinx.android.synthetic.main.fragment_recyclerview_collapsingtoolbar.*
 
 class PopupDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -127,7 +128,7 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
                     R.drawable.ic_queue_play_next -> PlayManager.nextPlay(music)
                     R.drawable.ic_playlist_add -> {
                         if (music?.type != Constants.LOCAL) {
-                            AddPlaylistUtils.getPlaylist(mContext, music)
+                            OnlinePlaylistUtils.getPlaylist(mContext, music)
                         }
                     }
                     R.drawable.ic_art_track -> {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.cyl.musiclake.R
+import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import kotlinx.android.synthetic.main.frag_player_lrcview.*
@@ -26,7 +27,7 @@ class LyricFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        showLyric(MusicPlayerService.lyric, false)
+        showLyric(FloatLyricViewManager.lyricInfo, false)
     }
 
 

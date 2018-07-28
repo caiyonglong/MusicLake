@@ -790,4 +790,13 @@ public class LyricView extends View {
         setTouchable(true);
         invalidateView();
     }
+
+    public void setTextSize(int size) {
+        setRawTextSize(size);
+    }
+
+    public void setTextColor(int color) {
+        mHighLightColor = color;
+        invalidateView();
+    }
 }

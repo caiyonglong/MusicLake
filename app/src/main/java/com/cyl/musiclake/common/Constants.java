@@ -20,6 +20,7 @@ public class Constants {
     public static final String PLAYLIST_LOCAL_ID = "local";
     public static final String PLAYLIST_QUEUE_ID = "queue";
     public static final String PLAYLIST_DOWNLOAD_ID = "download";
+    //在线歌单
     public static final String PLAYLIST_CUSTOM_ID = "custom";
 
 

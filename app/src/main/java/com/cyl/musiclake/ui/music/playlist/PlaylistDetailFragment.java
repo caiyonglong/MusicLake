@@ -14,17 +14,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.api.AddPlaylistUtils;
-import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
@@ -32,9 +28,9 @@ import com.cyl.musiclake.db.Album;
 import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.OnlinePlaylistUtils;
+import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
-import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
-import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -224,7 +220,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         switch (id) {
             case R.id.action_delete_playlist:
                 LogUtil.e("action_delete_playlist");
-                PopupUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, isHistory -> {
+                UIUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, isHistory -> {
                     if (isHistory) {
                         musicList.clear();
                         PlayHistoryLoader.INSTANCE.clearPlayHistory();
@@ -232,7 +228,10 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                         showEmptyState();
                         RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID));
                     } else if (mPresenter != null) {
-                        mPresenter.deletePlaylist(mPlaylist);
+                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(mPlaylist, result -> {
+                            onBackPress();
+                            return null;
+                        });
                     }
                     return null;
                 }, () -> null);

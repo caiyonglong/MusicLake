@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:background="?android:attr/selectableItemBackground"
     tools:layout_editor_absoluteY="25dp">
 
 
@@ -64,7 +65,8 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_more"
         app:layout_constraintHorizontal_bias="0.981"
         app:layout_constraintStart_toEndOf="@+id/tv_artist"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/song_resource" />
 
     <ImageView
         android:id="@+id/iv_more"

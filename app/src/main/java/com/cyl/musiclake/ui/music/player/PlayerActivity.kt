@@ -2,12 +2,13 @@ package com.cyl.musiclake.ui.music.player
 
 import android.animation.ObjectAnimator
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -16,16 +17,18 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.AddPlaylistUtils
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.UIUtils
-import com.cyl.musiclake.ui.music.dialog.downloadMusic
+import com.cyl.musiclake.ui.downloadMusic
+import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.utils.ColorUtil
@@ -35,7 +38,6 @@ import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
-import kotlinx.android.synthetic.main.frag_player_coverview.*
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
@@ -88,7 +90,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         PlayManager.isPlaying().let {
             updatePlayStatus(it)
         }
-        showLyric(MusicPlayerService.lyric, true)
+        showLyric(FloatLyricViewManager.lyricInfo, true)
         updateMusicType(playingMusic?.type)
     }
 
@@ -151,7 +153,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * 添加到歌單
      */
     fun addToPlaylist(view: View?) {
-        AddPlaylistUtils.getPlaylist(this, playingMusic)
+        OnlinePlaylistUtils.getPlaylist(this, playingMusic)
     }
 
     /**
@@ -191,25 +193,43 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var mSwatch: Palette.Swatch? = null
 
     override fun setPalette(palette: Palette?) {
-        if (palette == null) return
+
         mPalette = palette
-        mSwatch = palette.vibrantSwatch
-        mSwatch?.let {
-            subTitleTv.setTextColor(it.bodyTextColor)
-            //set icon color
-            val blackWhiteColor = ColorUtil.getBlackWhiteColor(it.rgb)
-            titleIv.setTextColor(blackWhiteColor)
-            progressTv.setTextColor(blackWhiteColor)
-            durationTv.setTextColor(blackWhiteColor)
-            playModeIv.setColorFilter(blackWhiteColor)
-            prevPlayIv.setColor(blackWhiteColor)
-            nextPlayIv.setColor(blackWhiteColor)
-            playQueueIv.setColor(blackWhiteColor)
-            downloadIv.setColor(blackWhiteColor)
-            shareIv.setColor(blackWhiteColor)
-            playlistAddIv.setColor(blackWhiteColor)
-            playPauseIv.btnColor = blackWhiteColor
+        mSwatch = ColorUtil.getMostPopulousSwatch(palette)
+
+        val paletteColor: Int
+        if (mSwatch != null) {
+            paletteColor = mSwatch?.rgb!!
+            val artistColor = mSwatch!!.titleTextColor
+            titleIv.setTextColor(ColorUtil.getOpaqueColor(artistColor))
+            subTitleTv.setTextColor(artistColor)
+        } else {
+            mSwatch = palette?.mutedSwatch ?: palette?.vibrantSwatch
+            if (mSwatch != null) {
+                paletteColor = mSwatch!!.rgb
+                val artistColor = mSwatch!!.titleTextColor
+                titleIv.setTextColor(ColorUtil.getOpaqueColor(artistColor))
+                subTitleTv.setTextColor(artistColor)
+            } else {
+                paletteColor = Color.WHITE
+                titleIv.setTextColor(ContextCompat.getColor(context!!, android.R.color.primary_text_light))
+                subTitleTv.setTextColor(ContextCompat.getColor(context!!, android.R.color.secondary_text_light))
+            }
         }
+        //set icon color
+        val blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor)
+        val statusBarColor = ColorUtil.getStatusBarColor(paletteColor)
+
+        progressTv.setTextColor(blackWhiteColor)
+        durationTv.setTextColor(blackWhiteColor)
+        playModeIv.setColorFilter(blackWhiteColor)
+        prevPlayIv.setColor(blackWhiteColor)
+        nextPlayIv.setColor(blackWhiteColor)
+        playQueueIv.setColor(blackWhiteColor)
+        downloadIv.setColor(blackWhiteColor)
+        shareIv.setColor(blackWhiteColor)
+        playlistAddIv.setColor(blackWhiteColor)
+        playPauseIv.btnColor = blackWhiteColor
     }
 
     override fun showLyric(lyric: String?, init: Boolean) {
@@ -228,12 +248,26 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         } else {
             mLyricView?.reset()
         }
+
+        searchLyricIv.setOnClickListener {
+            MusicLyricDialog().apply {
+                title = playingMusic?.title!!
+                duration = PlayManager.getDuration().toLong()
+                searchListener = {
+                }
+                textSizeListener = {
+                    mLyricView?.setTextSize(it.toInt())
+                }
+                textColorListener = {
+                    mLyricView?.setTextColor(it)
+                }
+                lyricListener = {
+                    mLyricView?.setLyricContent(it)
+                }
+            }.show(this)
+
+        }
     }
-//
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_content, menu)
-//        return super.onCreateOptionsMenu(menu)
-//    }
 
     override fun updateProgress(progress: Long, max: Long) {
         progressSb.progress = progress.toInt()
@@ -262,7 +296,11 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
             override fun onPageSelected(position: Int) {
                 LogUtil.d("PlayControlFragment", "--$position")
-
+                if (position == 0) {
+                    searchLyricIv.visibility = View.GONE
+                } else {
+                    searchLyricIv.visibility = View.VISIBLE
+                }
             }
 
             override fun onPageScrollStateChanged(state: Int) {

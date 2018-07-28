@@ -15,6 +15,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * 作者：yonglong on 2016/8/14 16:15
@@ -35,7 +38,7 @@ public class PlaylistManagerActivity extends BaseActivity {
     RecyclerView mPlaylistRcv;
 
     private PlaylistEditAdapter mAdapter;
-    private List<Playlist> playlists = new ArrayList<>();
+    private List<Playlist> playlists = OnlinePlaylistUtils.INSTANCE.getPlaylists();
 
     public Map<String, Playlist> checkedMap = new HashMap<>();
 
@@ -106,14 +109,15 @@ public class PlaylistManagerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        PlaylistModel.INSTANCE.loadAllPlaylist(playlists -> {
-            this.playlists = playlists;
-            mAdapter.setNewData(playlists);
-            return null;
-        }, error -> {
-            ToastUtils.show(error);
-            return null;
-        });
+//        PlaylistModel.Companion.loadAllPlaylist(playlists -> {
+//            this.playlists = playlists;
+//        playlists =
+//        mAdapter.setNewData(playlists);
+//            return null;
+//        }, error -> {
+//            ToastUtils.show(error);
+//            return null;
+//        });
     }
 
     @Override
@@ -124,18 +128,14 @@ public class PlaylistManagerActivity extends BaseActivity {
     public void delete(View view) {
         new MaterialDialog.Builder(this)
                 .title("提示")
-                .content("是否删除这个歌单？")
+                .content("是否删除歌单？")
                 .onPositive((dialog, which) -> {
-                    boolean success = false;
                     for (String key : checkedMap.keySet()) {
-                        PlaylistModel.INSTANCE.deletePlaylist(checkedMap.get(key));
-                        playlists.remove(checkedMap.get(key));
-                        success = true;
-                    }
-                    if (success) {
-                        mAdapter.notifyDataSetChanged();
-                        RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
-                        ToastUtils.show(getString(R.string.playlist_delete_success));
+                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(checkedMap.get(key), s -> {
+                            playlists.remove(checkedMap.get(key));
+                            mAdapter.setNewData(playlists);
+                            return null;
+                        });
                     }
                 })
                 .positiveText("确定")

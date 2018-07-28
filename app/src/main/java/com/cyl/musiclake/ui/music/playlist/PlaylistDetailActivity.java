@@ -25,8 +25,9 @@ import com.cyl.musiclake.db.Album;
 import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.OnlinePlaylistUtils;
+import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
-import com.cyl.musiclake.ui.music.dialog.PopupUtilsKt;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -158,7 +159,7 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
         switch (id) {
             case R.id.action_delete_playlist:
                 LogUtil.e("action_delete_playlist");
-                PopupUtilsKt.deletePlaylist(PlaylistDetailActivity.this, mPlaylist, isHistory -> {
+                UIUtilsKt.deletePlaylist(PlaylistDetailActivity.this, mPlaylist, isHistory -> {
                     if (isHistory) {
                         musicList.clear();
                         PlayHistoryLoader.INSTANCE.clearPlayHistory();
@@ -166,7 +167,10 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
                         showEmptyState();
                         RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID));
                     } else if (mPresenter != null) {
-                        mPresenter.deletePlaylist(mPlaylist);
+                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(mPlaylist, result -> {
+                            onBackPress();
+                            return null;
+                        });
                     }
                     return null;
                 }, () -> null);

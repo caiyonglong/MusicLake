@@ -161,18 +161,11 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         }
     }
 
+    /**
+     * 删除歌单
+     */
     override fun deletePlaylist(playlist: Playlist) {
-        ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.deletePlaylist(it) }, object : RequestCallBack<String> {
-            override fun success(result: String) {
-                mView.success(1)
-                RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
-                ToastUtils.show(result)
-            }
 
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
-            }
-        })
     }
 
     override fun renamePlaylist(playlist: Playlist, title: String) {

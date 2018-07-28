@@ -8,40 +8,42 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.RxBus;
+import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.event.LyricChangedEvent;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
 import com.cyl.musiclake.view.lyric.LyricParseUtils;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import io.reactivex.Observable;
 
 public class FloatLyricViewManager {
     private static final String TAG = "FloatLyricViewManager";
     private static FloatLyricView mFloatLyricView;
     private static WindowManager.LayoutParams mFloatLyricViewParams;
     private static WindowManager mWindowManager;
-    private LyricInfo mLyricInfo;
+    private static LyricInfo mLyricInfo;
     private Handler handler = new Handler();
     private String mSongName;
-    private boolean isFirstSettingLyric; //第一次设置歌词
+    private static boolean isFirstSettingLyric; //第一次设置歌词
+
+    /**
+     * 歌词信息
+     */
+    public static String lyricInfo;
+    private static LyricChangedEvent lyricChangedEvent;
 
     /**
      * 定时器，定时进行检测当前应该创建还是移除悬浮窗。
      */
-//    private static Timer timer;
     private Context mContext;
 
-    public FloatLyricViewManager(Context context) {
+    FloatLyricViewManager(Context context) {
         mContext = context;
     }
-
-//    public void stopFloatLyric() {
-//        // Service被终止的同时也停止定时器继续运行
-//        if (timer != null) {
-//            timer.cancel();
-//            timer = null;
-//        }
-//    }
 
 
     public void updatePlayStatus(boolean isPlaying) {
@@ -50,38 +52,61 @@ public class FloatLyricViewManager {
     }
 
     public void startFloatLyric() {
-        // 开启定时器，每隔0.5秒刷新一次
-//        if (timer == null) {
-//            timer = new Timer();
-//            timer.scheduleAtFixedRate(new RefreshTask(), 0, 1);
-//        }
+
     }
+
+
+    /**
+     * 加载歌词
+     */
+    public void loadLyric(Music mPlayingMusic) {
+        updateLyric("");
+        if (mPlayingMusic != null) {
+            mSongName = mPlayingMusic.getTitle();
+            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
+            if (observable != null) {
+                ApiManager.request(observable, new RequestCallBack<String>() {
+                    @Override
+                    public void success(String result) {
+                        updateLyric(result);
+                    }
+
+                    @Override
+                    public void error(String msg) {
+                        updateLyric(msg);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 更新歌词
+     *
+     * @param info 歌词
+     */
+    private void updateLyric(String info) {
+        lyricInfo = info;
+        if (lyricChangedEvent == null) {
+            lyricChangedEvent = new LyricChangedEvent(lyricInfo, true);
+        } else {
+            lyricChangedEvent.setLyric(lyricInfo);
+        }
+        setLyric(lyricInfo);
+        RxBus.getInstance().post(lyricChangedEvent);
+    }
+
 
     /**
      * 设置歌词
      *
-     * @param lyricInfo
+     * @param lyricInfo 歌词信息
      */
-    public void setLyric(String title, String lyricInfo) {
-        mSongName = title;
+    public static void setLyric(String lyricInfo) {
         mLyricInfo = LyricParseUtils.setLyricResource(lyricInfo);
         isFirstSettingLyric = true;
     }
 
-    class RefreshTask extends TimerTask {
-        @Override
-        public void run() {
-            // 当前界面不是本应用界面，且没有悬浮窗显示，则创建悬浮窗。
-//            if (!isHome() && !isWindowShowing()) {
-//                handler.post(() -> createFloatLyricView(mContext));
-//            } else if (isHome() && isWindowShowing()) {
-//                handler.post(() -> removeFloatLyricView(mContext));
-//            } else if (isWindowShowing()) {
-//                handler.post(() -> updateLyric(mContext));
-//            }
-        }
-
-    }
 
     /**
      * 判断当前界面是否是应用界面
@@ -101,7 +126,7 @@ public class FloatLyricViewManager {
      *
      * @param context 必须为应用程序的Context.
      */
-    public void createFloatLyricView(Context context) {
+    private void createFloatLyricView(Context context) {
         WindowManager windowManager = getWindowManager(context);
         Point size = new Point();
         //获取屏幕宽高
@@ -116,7 +141,7 @@ public class FloatLyricViewManager {
                 mFloatLyricViewParams.format = PixelFormat.RGBA_8888;
                 mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                mFloatLyricViewParams.gravity = Gravity.LEFT | Gravity.TOP;
+                mFloatLyricViewParams.gravity = Gravity.START | Gravity.TOP;
                 mFloatLyricViewParams.width = mFloatLyricView.viewWidth;
                 mFloatLyricViewParams.height = mFloatLyricView.viewHeight;
                 mFloatLyricViewParams.x = screenWidth;
@@ -124,7 +149,7 @@ public class FloatLyricViewManager {
             }
             mFloatLyricView.setParams(mFloatLyricViewParams);
             windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-            setLyric(mSongName, MusicPlayerService.lyric);
+            setLyric(lyricInfo);
         }
     }
 
@@ -172,7 +197,7 @@ public class FloatLyricViewManager {
      * @return 有悬浮窗显示在桌面上返回true，没有的话返回false。
      */
 
-    public static boolean isWindowShowing() {
+    private static boolean isWindowShowing() {
         return mFloatLyricView != null;
     }
 

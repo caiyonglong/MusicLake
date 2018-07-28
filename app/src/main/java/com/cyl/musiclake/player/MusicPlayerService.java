@@ -729,7 +729,7 @@ public class MusicPlayerService extends Service {
     /**
      * 下一首播放
      *
-     * @param music
+     * @param music 设置的歌曲
      */
     public void nextPlay(Music music) {
         if (mPlayQueue.size() == 0) {
@@ -803,7 +803,7 @@ public class MusicPlayerService extends Service {
     /**
      * 是否正在播放音乐
      *
-     * @return
+     * @return 是否正在播放音乐
      */
     public boolean isPlaying() {
         return isMusicPlaying;
@@ -849,53 +849,6 @@ public class MusicPlayerService extends Service {
         notifyChange(PLAY_QUEUE_CHANGE);
     }
 
-    private LyricChangedEvent lyricChangedEvent;
-    public static String lyric = null;
-
-
-    /**
-     * 加载歌词
-     */
-    private void loadLyric() {
-        if (mPlayingMusic != null) {
-            mPlayingMusic.setDuration(getDuration());
-            updateLyric(getString(R.string.loading_lyric));
-            Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
-            if (observable != null) {
-                ApiManager.request(observable, new RequestCallBack<String>() {
-                    @Override
-                    public void success(String result) {
-                        updateLyric(result);
-                    }
-
-                    @Override
-                    public void error(String msg) {
-                        updateLyric(msg);
-                    }
-                });
-            } else {
-                updateLyric("");
-            }
-        } else {
-            updateLyric("");
-        }
-    }
-
-    /**
-     * 更新歌词
-     *
-     * @param lyricInfo
-     */
-    private void updateLyric(String lyricInfo) {
-        lyric = lyricInfo;
-        if (lyricChangedEvent == null) {
-            lyricChangedEvent = new LyricChangedEvent(lyricInfo, true);
-        } else {
-            lyricChangedEvent.setLyric(lyricInfo);
-        }
-        mFloatLyricViewManager.setLyric(getTitle(), lyricInfo);
-        mMainHandler.post(() -> RxBus.getInstance().post(lyricChangedEvent));
-    }
 
     private void saveHistory() {
         PlayHistoryLoader.INSTANCE.addSongToHistory(mPlayingMusic);
@@ -964,13 +917,13 @@ public class MusicPlayerService extends Service {
     /**
      * 发送更新广播
      *
-     * @param what
+     * @param what 发送更新广播
      */
     private void notifyChange(final String what) {
         if (DEBUG) LogUtil.d(TAG, "notifyChange: what = " + what);
         switch (what) {
             case META_CHANGED:
-                loadLyric();
+                mFloatLyricViewManager.loadLyric(mPlayingMusic);
                 updateWidget(META_CHANGED);
                 mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
                 break;
@@ -1051,7 +1004,7 @@ public class MusicPlayerService extends Service {
     /**
      * 设置播放队列
      *
-     * @param playQueue
+     * @param playQueue 播放队列
      */
     public void setPlayQueue(List<Music> playQueue) {
         mPlayQueue.clear();
@@ -1064,7 +1017,7 @@ public class MusicPlayerService extends Service {
     /**
      * 获取播放队列
      *
-     * @return
+     * @return 获取播放队列
      */
     public List<Music> getPlayQueue() {
         if (mPlayQueue.size() > 0) {
@@ -1077,7 +1030,7 @@ public class MusicPlayerService extends Service {
     /**
      * 获取当前音乐在播放队列中的位置
      *
-     * @return
+     * @return 当前音乐在播放队列中的位置
      */
     public int getPlayPosition() {
         if (mPlayingPos >= 0) {
@@ -1152,7 +1105,7 @@ public class MusicPlayerService extends Service {
     /**
      * 创建Notification ChannelID
      *
-     * @return
+     * @return 频道id
      */
     private String initChannelId() {
         // 通知渠道的id
@@ -1163,7 +1116,7 @@ public class MusicPlayerService extends Service {
         String description = "通知栏播放控制";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel mChannel = null;
+            NotificationChannel mChannel;
             mChannel = new NotificationChannel(id, name, importance);
             mChannel.setDescription(description);
             mChannel.enableLights(false);
@@ -1202,7 +1155,6 @@ public class MusicPlayerService extends Service {
                     }
                 }, 0, 1);
             }
-            mFloatLyricViewManager.startFloatLyric();
         } else {
             if (lyricTimer != null) {
                 lyricTimer.cancel();
@@ -1275,7 +1227,7 @@ public class MusicPlayerService extends Service {
     private class ServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtil.d(TAG, intent.getAction().toString());
+            LogUtil.d(TAG, intent.getAction());
             handleCommandIntent(intent);
         }
     }
