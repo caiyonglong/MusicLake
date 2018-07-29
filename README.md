@@ -1,43 +1,36 @@
 # MusicLake
-- Android 音乐播放器，基于MVP + Retrofit + Rxjava2 框架。
-- 音乐来源本地音乐、百度音乐，QQ音乐、虾米音乐、网易云音乐
+- Android 音乐播放器
+- 除了本地音乐，还包括百度音乐，QQ音乐、虾米音乐、网易云音乐等网络音乐播放
+- 支持在线歌曲下载
+- 歌词播放、桌面歌词、桌面小控件
+- 通知栏控制、线控播放、音频焦点控制
+- QQ登录、在线歌单同步
+- 百度电台列表，网易云mv排行榜，mv播放评论
+- 酷狗歌词搜索、修改歌词样式
+- 更多体验请[下载apk](https://github.com/caiyonglong/MusicLake/releases)，欢迎star，尽情提[#issues](https://github.com/caiyonglong/MusicLake/issues)
 
-# 已完成功能
+# 更新日志
+[查看](RELEASENOTE.md)
 
-- [x] 本地听歌。按专辑、歌手、文件夹分类
-- [x] 在线听歌。百度音乐，QQ音乐、虾米音乐、网易云音乐
-- [x] 本地歌单
-- [x] 播放历史
-- [x] 播放队列
-- [x] 网络歌曲下载
-- [x] 播放歌词、桌面歌词、桌面小控件
-- [x] 通知栏控制，线控播放
-- [x] 音频焦点控制
-- [x] QQ登录、在线歌单同步
-
-# 新增
-新增百度电台列表，网易云mv排行榜
-
-# 计划
-- [ ] 验证，修复bug
-
-
-# release note
+# 下载
 [点这下载](https://github.com/caiyonglong/MusicLake/releases)
 
-# 音乐Api来源
+# 相关项目|音乐API
+- [PC端](https://github.com/sunzongzheng/music)
+- [音乐API](https://github.com/sunzongzheng/musicApi)
 - [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
-- [sunzongzheng/musicApi](https://github.com/sunzongzheng/musicApi)
-- 百度音乐api
 
-# 项目运行截图
+# 软件运行截图
 <p>
-<img src="screenshots/preview1.png" width="180" height="320"/>
-<img src="screenshots/preview2.png" width="180" height="320"/>
-<img src="screenshots/preview3.png" width="180" height="320"/>
-<img src="screenshots/preview4.png" width="180" height="320"/>
-<img src="screenshots/preview5.png" width="180" height="320"/>
-<img src="screenshots/preview6.png" width="180" height="320"/>
-<img src="screenshots/preview7.png" width="180" height="320"/>
-<img src="screenshots/preview8.png" width="180" height="320"/>
+<img src="screenshots/preview1.png" width="225" height="400"/>
+<img src="screenshots/preview2.png" width="225" height="400"/>
+<img src="screenshots/preview3.png" width="225" height="400"/>
+<img src="screenshots/preview4.png" width="225" height="400"/>
+<img src="screenshots/preview5.png" width="225" height="400"/>
+<img src="screenshots/preview6.png" width="225" height="400"/>
+<img src="screenshots/preview7.png" width="225" height="400"/>
+<img src="screenshots/preview8.png" width="225" height="400"/>
+<img src="screenshots/preview9.png" width="225" height="400"/>
+<img src="screenshots/preview10.png" width="225" height="400"/>
+<img src="screenshots/preview11.png" width="225" height="400"/>
 </p>
