@@ -1,22 +1,20 @@
 package com.cyl.musiclake.ui.music.playqueue
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
+import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -25,8 +23,7 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.UIUtils
 import com.trello.rxlifecycle2.LifecycleTransformer
-
-import java.util.ArrayList
+import java.util.*
 
 class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
@@ -188,7 +185,6 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     }
 
     companion object {
-
         fun newInstance(): PlayQueueDialog {
             val args = Bundle()
             val fragment = PlayQueueDialog()
@@ -197,5 +193,9 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         }
     }
 
+    fun showIt(context: AppCompatActivity) {
+        val fm = context.supportFragmentManager
+        show(fm, "dialog")
+    }
 
 }

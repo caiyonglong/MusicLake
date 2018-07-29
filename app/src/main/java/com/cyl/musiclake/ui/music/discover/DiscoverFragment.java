@@ -6,16 +6,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.cyl.musicapi.baidu.RadioChannel;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.db.Artist;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
-import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
 
@@ -42,7 +41,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     private BaiduRadioAdapter mRadioAdapter;
     private List<Playlist> playlist = new ArrayList<>();
     private List<Artist> artists = new ArrayList<>();
-    private List<RadioChannel> channels = new ArrayList<>();
+    private List<Playlist> channels = new ArrayList<>();
 
     @BindView(R.id.baiChartsRv)
     RecyclerView mBaiChartsRv;
@@ -56,6 +55,16 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     @BindView(R.id.radioRsv)
     RecyclerView mRadioRsv;
 
+
+    @OnClick(R.id.seeAllArtistTv)
+    void toArtistList() {
+        NavigationHelper.INSTANCE.navigateFragment(getActivity(), AllListFragment.newInstance(Constants.NETEASE_ARITIST_LIST));
+    }
+
+    @OnClick(R.id.seeAllRadioTv)
+    void toRadioList() {
+        NavigationHelper.INSTANCE.navigateFragment(getActivity(), AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST));
+    }
 
     @OnClick(R.id.seeAllBaiTv)
     void toBaidu() {
@@ -156,14 +165,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         });
 
         mRadioAdapter.setOnItemClickListener((adapter, view, position) -> {
-            RadioChannel channel = channels.get(position);
-            Playlist playlist = new Playlist();
-            playlist.setName(channel.getName());
-            playlist.setPid(channel.getChName());
-            playlist.setCoverUrl(channel.getThumb());
-            playlist.setDes(channel.getCateSname());
-            playlist.setType(2);
-            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), playlist, null);
+            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), channels.get(position), null);
         });
     }
 
@@ -193,7 +195,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     }
 
     @Override
-    public void showRaioChannels(List<RadioChannel> channels) {
+    public void showRadioChannels(List<Playlist> channels) {
         this.channels = channels;
         mRadioAdapter.setNewData(channels);
     }

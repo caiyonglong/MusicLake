@@ -19,7 +19,7 @@ public interface DiscoverContract {
 
         void showArtistCharts(List<Artist> charts);
 
-        void showRaioChannels(List<RadioChannel> channels);
+        void showRadioChannels(List<Playlist> channels);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {

@@ -9,16 +9,16 @@ import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadConnectListener
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.model.FileDownloadStatus
-import com.liulishuo.filedownloader.util.FileDownloadUtils
 import java.lang.ref.WeakReference
+
 
 /**
  * Created by yonglong on 2018/1/23.
+ * 下载任务管理
  */
 
 object TasksManager {
-
-    private val modelList: MutableList<TasksManagerModel> = DownloadLoader.getDownloadingList()
+    private val modelList = DownloadLoader.getDownloadingList()
 
     private val taskSparseArray = SparseArray<BaseDownloadTask>()
 
@@ -36,15 +36,18 @@ object TasksManager {
     }
 
     fun updateViewHolder(id: Int, holder: TaskItemAdapter.TaskItemViewHolder) {
-        val task = taskSparseArray.get(id) ?: return
-
-        task.tag = holder
+        if (taskSparseArray.get(id) != null) {
+            taskSparseArray.get(id).tag = holder
+        }
     }
 
     fun releaseTask() {
         taskSparseArray.clear()
     }
 
+    /**
+     * 注册监听
+     */
     private fun registerServiceConnectionListener(activityWeakReference: WeakReference<DownloadManagerFragment>?) {
         if (listener != null) {
             FileDownloader.getImpl().removeServiceConnectListener(listener)
@@ -89,10 +92,16 @@ object TasksManager {
         releaseTask()
     }
 
+    /**
+     * 根据位置获取
+     */
     operator fun get(position: Int): TasksManagerModel {
         return modelList[position]
     }
 
+    /**
+     * 根据model id获取对象
+     */
     fun getById(id: Int): TasksManagerModel? {
         for (model in modelList) {
             if (model.id == id) {

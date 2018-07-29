@@ -19,10 +19,10 @@ object NeteaseApiServiceImpl {
     /**
      * 获取歌单歌曲
      */
-    fun getTopArtists(limit: Int, offset: Int): Observable<List<Artist>> {
+    fun getTopArtists(limit: Int, offset: Int): Observable<MutableList<Artist>> {
         return apiService.getTopArtists(offset, limit)
                 .flatMap { it ->
-                    Observable.create(ObservableOnSubscribe<List<Artist>> { e ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Artist>> { e ->
                         try {
                             if (it.code == 200) {
                                 val list = mutableListOf<Artist>()
@@ -32,6 +32,7 @@ object NeteaseApiServiceImpl {
                                     artistsBean.name = it.name
                                     artistsBean.picUrl = it.picUrl
                                     artistsBean.score = it.score
+                                    artistsBean.musicSize = it.musicSize
                                     artistsBean.albumSize = it.albumSize
                                     artistsBean.type = Constants.NETEASE
                                     list.add(artistsBean)

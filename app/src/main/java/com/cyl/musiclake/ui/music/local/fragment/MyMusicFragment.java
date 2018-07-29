@@ -105,7 +105,6 @@ public class MyMusicFragment extends BaseFragment<MyMusicPresenter> implements M
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-//                    Pair<View, String> transitionViews = new Pair<View, String>(view.findViewById(R.id.iv_album), "transition_album_art" + position);
                     NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), playlists.get(position), null);
                 }
         );

@@ -60,7 +60,7 @@
                 android:maxLength="20"
                 android:singleLine="true"
                 android:text="@string/app_name"
-                android:textSize="13sp" />
+                android:textSize="13sp"  />
         </LinearLayout>
 
         <com.cyl.musiclake.view.PlayPauseView
@@ -68,7 +68,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             app:anim_duration="300"
             app:bg_color="#ffffff"
             app:btn_color="@color/colorPrimary"
@@ -81,7 +81,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_marginEnd="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/play_next"
             android:scaleType="fitXY"
             android:src="@drawable/ic_skip_next_black_18dp" />

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
+import android.widget.Toast
 import com.cyl.musicapi.bean.*
 import com.google.gson.Gson
 import org.json.JSONObject
@@ -48,8 +49,11 @@ object BaseApiImpl {
      */
     fun searchSong(query: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit) {
         mWebView?.callHandler("asyn.searchSong", arrayOf(query, limit, offset)) { retValue: JSONObject ->
-            val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
-            success.invoke(result)
+            try {
+                val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+            }
         }
 //        when (type) {
 //            "ANY" -> {

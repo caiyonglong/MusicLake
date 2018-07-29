@@ -7,11 +7,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
@@ -25,25 +23,18 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
 import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.player.FloatLyricViewManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
-import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.FormatUtil;
-import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.view.DepthPageTransformer;
 import com.cyl.musiclake.view.LyricView;
-import com.cyl.musiclake.view.MultiTouchViewPager;
 import com.cyl.musiclake.view.PlayPauseView;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -97,17 +88,11 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
     @BindView(R.id.song_progress)
     SeekBar mSeekBar;
-    @BindView(R.id.viewpager_player)
-    MultiTouchViewPager mViewPager;
+    @BindView(R.id.lyricView)
+    LyricView mLrcView;
 
-    //ViewPager中界面专辑和歌词
-    private LyricView mLrcView;
-    private Drawable mDrawable;
-
-    private PlayQueueDialog playQueueDialog = null;
     private Palette mPalette;
     private Palette.Swatch mSwatch;
-    private List<View> mViewPagerContent;
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
     public ObjectAnimator operatingAnim;
     public long currentPlayTime = 0;
@@ -148,9 +133,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
     @OnClick(R.id.skip_queue)
     void openPlayQueue() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        playQueueDialog = PlayQueueDialog.Companion.newInstance();
-        playQueueDialog.show(fm, "fragment_bottom_dialog");
+        PlayQueueDialog.Companion.newInstance().showIt((AppCompatActivity) mFragmentComponent.getActivity());
     }
 
     public static PlayControlFragment newInstance() {
@@ -169,14 +152,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     public void initViews() {
         //初始化控件
         topContainer = rootView.findViewById(R.id.top_container);
-        //初始化viewpager
-        if (mViewPager != null) {
-            setupViewPager(mViewPager);
-            mViewPager.setPageTransformer(false, new DepthPageTransformer());
-            mViewPager.setOffscreenPageLimit(1);
-            mViewPager.setCurrentItem(0);
-        }
-
+        showLyric(FloatLyricViewManager.lyricInfo, true);
         updatePlayStatus(PlayManager.isPlaying());
     }
 
@@ -198,45 +174,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     protected void loadData() {
         Music music = PlayManager.getPlayingMusic();
         mPresenter.updateNowPlaying(music);
-    }
-
-    private void setupViewPager(MultiTouchViewPager viewPager) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View lrcView = inflater.inflate(R.layout.frag_player_lrcview, null);
-        mLrcView = lrcView.findViewById(R.id.lyricShow);
-        mViewPagerContent = new ArrayList<>(1);
-        mViewPagerContent.add(lrcView);
-        viewPager.setAdapter(new MyPagerAdapter(mViewPagerContent));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                LogUtil.d("PlayControlFragment", "--" + position);
-//                if (position == 1 && mSlidingUpPaneLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-//                    mSlidingUpPaneLayout.setTouchEnabled(false);
-//                } else {
-//                    mSlidingUpPaneLayout.setTouchEnabled(true);
-//                }
-                if (position == 0) {
-                    mLrcView.updateView(false);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         initAlbumPic(mIvAlbum);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mViewPager.setCurrentItem(0);
     }
 
     @Override
@@ -300,7 +238,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         }
         //set icon color
         int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
-        int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
+//        int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
 //        StatusBarUtil.setColor(getActivity(), statusBarColor);
 //        mLrcView.setHighLightTextColor(statusBarColor);
 //        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
@@ -320,25 +258,14 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @Override
     public void showLyric(String lyricInfo, boolean isFilePath) {
         //初始化歌词配置
-//        mLrcView.set(15.0f);
-//        mLrcView.setTextSize(17.0f);
         mLrcView.setTouchable(false);
-//        mLrcView.setPlayable(true);
         mLrcView.setOnPlayerClickListener((progress, content) -> {
             PlayManager.seekTo((int) progress);
             if (!PlayManager.isPlaying()) {
                 PlayManager.playPause();
             }
         });
-        if (lyricInfo != null) {
-            if (isFilePath) {
-                mLrcView.setLyricFile(new File(lyricInfo), "utf-8");
-            } else {
-                mLrcView.setLyricContent(lyricInfo);
-            }
-        } else {
-            mLrcView.reset();
-        }
+        mLrcView.setLyricContent(lyricInfo);
     }
 
 
@@ -432,8 +359,6 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         mProgressBar.setProgress((int) progress);
 //        tv_time.setText(FormatUtil.INSTANCE.formatTime(progress));
         mLrcView.setCurrentTimeMillis(progress);
-
-
 //        mSeekBar.setMax((int) max);
         mProgressBar.setMax((int) max);
 //        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));

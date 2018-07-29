@@ -50,7 +50,8 @@ class MusicLyricDialog : DialogFragment() {
     var textSizeListener: ((Float) -> Unit)? = null
     var textColorListener: ((Int) -> Unit)? = null
     var lyricListener: ((String) -> Unit)? = null
-    var title: String = ""
+    var title: String? = ""
+    var artist: String? = ""
     var duration: Long = 0
 
     override fun onStart() {
@@ -92,7 +93,7 @@ class MusicLyricDialog : DialogFragment() {
         }
         searchLyricView.setOnClickListener {
             loadingView.visibility = View.VISIBLE
-            searchLyric(title, duration)
+            searchLyric(title.toString(), duration)
         }
         formatColorSb.setOnColorChangeListener { _, _, color ->
             formatColorTv.setTextColor(color)
@@ -173,8 +174,8 @@ class MusicLyricDialog : DialogFragment() {
                             override fun success(result: String?) {
                                 result?.let { it1 ->
                                     lyricListener?.invoke(it1)
-                                    FloatLyricViewManager.lyricInfo = it1
                                     selectId = position
+                                    FloatLyricViewManager.saveLyricInfo(title, artist, it1)
                                     ToastUtils.show(getString(R.string.lyric_search_apply))
                                     dismiss()
                                 }

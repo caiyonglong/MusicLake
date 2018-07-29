@@ -17,8 +17,15 @@ object DownloadLoader {
         val musicList = mutableListOf<Music>()
         val data = LitePal.where("finish = 1").find(TasksManagerModel::class.java)
         data.forEach {
-            val music = it.mid?.let { it1 -> DaoLitepal.getMusicInfo(it1) }
-            music?.let { it1 -> musicList.addAll(it1) }
+            val music = it.mid?.let { it1 ->
+                DaoLitepal.getMusicInfo(it1)
+            }
+            music?.forEach { origin ->
+                if (origin.uri == null || origin.uri?.startsWith("http:")!!) {
+                    origin.uri = it.path
+                }
+                musicList.add(origin)
+            }
         }
         return musicList
     }

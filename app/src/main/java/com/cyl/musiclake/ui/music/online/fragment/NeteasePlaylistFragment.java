@@ -42,8 +42,6 @@ public class NeteasePlaylistFragment extends BaseFragment {
     private OnlineAdapter mAdapter;
     List<Playlist> neteaseLists = new ArrayList<>();
 
-    private BaseApiImpl baseApi;
-
     private String[] charts = new String[]{"云音乐新歌榜"
             , "云音乐热歌榜"
             , "网易原创歌曲榜"

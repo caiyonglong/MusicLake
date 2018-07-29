@@ -162,12 +162,12 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/dp_8"
-                        android:padding="@dimen/dp_8" />
+                    <!--<android.support.design.widget.FloatingActionButton-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_margin="@dimen/dp_8"-->
+                    <!--android:padding="@dimen/dp_8" >-->
 
 
                     <com.cyl.musiclake.view.PlayPauseView
@@ -175,12 +175,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_margin="8dp"
                         android:scaleType="fitXY"
                         app:anim_duration="300"
                         app:bg_color="@color/translucent"
                         app:btn_color="@color/white"
                         app:elevation="10dp" />
+
+                    <!--</android.support.design.widget.FloatingActionButton>-->
+
 
                     <ProgressBar
                         android:id="@+id/loadingPb"
@@ -188,6 +190,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:visibility="gone"
                         android:layout_margin="@dimen/dp_8" />
 
                 </FrameLayout>

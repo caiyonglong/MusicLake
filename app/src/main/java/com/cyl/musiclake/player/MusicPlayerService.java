@@ -39,7 +39,6 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
 import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
@@ -713,6 +712,7 @@ public class MusicPlayerService extends Service {
      * @param music
      */
     public void play(Music music) {
+        if (music == null) return;
         if (mPlayingPos == -1 || mPlayQueue.size() == 0) {
             mPlayQueue.add(music);
             mPlayingPos = 0;

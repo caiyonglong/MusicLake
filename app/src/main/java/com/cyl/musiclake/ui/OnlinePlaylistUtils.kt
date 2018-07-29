@@ -92,7 +92,7 @@ object OnlinePlaylistUtils {
     /**
      * 获取在线歌单
      */
-    fun getPlaylist(activity: AppCompatActivity?, music: Music?) {
+    fun addToPlaylist(activity: AppCompatActivity?, music: Music?) {
         if (activity == null) return
         if (music == null) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.resource_error))

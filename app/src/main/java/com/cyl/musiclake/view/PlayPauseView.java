@@ -63,6 +63,7 @@ public class PlayPauseView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
+        mPaint.setStyle(Paint.Style.FILL);
         mRingPaint = new Paint();
         mRingPaint.setAntiAlias(true);
         mRingPaint.setColor(Color.parseColor("#ec407a"));
@@ -119,8 +120,8 @@ public class PlayPauseView extends View {
 //        int rectLT = (int) (mWidth / 2 - radius / Math.sqrt(2));
 //        int rectRB = (int) (mWidth / 2 + radius / Math.sqrt(2));
         mRadius = mWidth / 2;
-       /* if (getPadding() > mRadius / Math.sqrt(2) || mPadding < 0) {
-            *//*throw new IllegalArgumentException("The value of your padding is too large. " +
+        /* if (getPadding() > mRadius / Math.sqrt(2) || mPadding < 0) {
+         *//*throw new IllegalArgumentException("The value of your padding is too large. " +
                     "The value must not be greater than " + (int) (mRadius / Math.sqrt(2)));*//*
         }*/
         mPadding = getSpacePadding() == 0 ? mRadius / 3f : getSpacePadding();
@@ -137,8 +138,8 @@ public class PlayPauseView extends View {
         mRect.right = rectRB;
 //        mRectWidth = mRect.width();
 //        mRectHeight = mRect.height();
-        mRectWidth = 2 * space + 1; //改为float类型，否则动画有抖动。并增加一像素防止三角形之间有缝隙
-        mRectHeight = 2 * space + 1;
+        mRectWidth = 2 * space + 2; //改为float类型，否则动画有抖动。并增加一像素防止三角形之间有缝隙
+        mRectHeight = 2 * space + 2;
         mGapWidth = getGapWidth() != 0 ? getGapWidth() : mRectWidth / 3;
         mProgress = isPlaying ? 0 : 1;
         mAnimDuration = getAnimDuration() < 0 ? 200 : getAnimDuration();
@@ -171,7 +172,6 @@ public class PlayPauseView extends View {
         float rightRightBottom = rightRightTop - barWidth * mProgress; //右边矩形右下角
 
         mPaint.setColor(mBtnColor);
-        mPaint.setStyle(Paint.Style.FILL);
 
         if (mDirection == Direction.NEGATIVE.value) {
             mLeftPath.moveTo(mRectLT, mRectLT);

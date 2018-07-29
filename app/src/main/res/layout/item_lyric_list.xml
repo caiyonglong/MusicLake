@@ -11,10 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:drawableStart="@drawable/ic_review"
         android:layout_marginStart="@dimen/dp_8"
+        android:drawablePadding="@dimen/dp_8"
+        android:drawableStart="@drawable/ic_review"
         android:gravity="center"
-        android:text="@string/lyric_preview" />
+        android:text="@string/lyric_preview"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/titleTv"

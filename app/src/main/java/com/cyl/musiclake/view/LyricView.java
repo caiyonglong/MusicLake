@@ -7,12 +7,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.IntDef;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -24,10 +28,12 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.player.FloatLyricViewManager;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
 import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
 import com.cyl.musiclake.view.lyric.LyricParseUtils;
@@ -56,7 +62,7 @@ public class LyricView extends View {
     private static final int UNITS_SECOND = 1000;
     private static final int UNITS_MILLISECOND = 1;
 
-    private static final int FLING_ANIMATOR_DURATION = 500 * UNITS_MILLISECOND;
+    private static final int FLING_ANIMATOR_DURATION = 420 * UNITS_MILLISECOND;
 
     private static final int THRESHOLD_Y_VELOCITY = 1600;
 
@@ -64,7 +70,7 @@ public class LyricView extends View {
     private static final int INDICATOR_ICON_PLAY_WIDTH = 15;//sp
     private static final int INDICATOR_LINE_MARGIN = 10;//dp
     private static final int INDICATOR_TIME_TEXT_SIZE = 10;//sp
-    private static final int INDICATOR_TIME_MARGIN_RIGHT = 7;//dp
+    private static final int INDICATOR_TIME_MARGIN_RIGHT = 2;//dp
 
     private static final int DEFAULT_TEXT_SIZE = 16;//sp
     private static final int DEFAULT_MAX_LENGTH = 300;//dp
@@ -80,7 +86,7 @@ public class LyricView extends View {
     private int mTextSize;
     private float mLineHeight;
     private LyricInfo mLyricInfo;
-    private String mDefaultHint;
+    private String mDefaultHint = "暂无歌词";
     private int mMaxLength;
 
     private TextPaint mTextPaint;
@@ -88,6 +94,10 @@ public class LyricView extends View {
     private Paint mLinePaint;
     private Paint mTimerPaint;
 
+    private final int MSG_PLAYER_SLIDE = 0x158;
+    private final int MSG_PLAYER_HIDE = 0x157;
+
+    private Bitmap bitmap;
     private boolean mFling = false;
     private ValueAnimator mFlingAnimator;
     private float mScrollY = 0;
@@ -300,7 +310,10 @@ public class LyricView extends View {
         mTextAlign = ta.getInt(R.styleable.LyricView_textAlign, CENTER);
         mMaxLength = ta.getDimensionPixelSize(R.styleable.LyricView_maxLength, (int) getRawSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MAX_LENGTH));
         mLineSpace = ta.getDimensionPixelSize(R.styleable.LyricView_lineSpace, (int) getRawSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_LINE_SPACE));
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_location);
+//
         ta.recycle();
+
     }
 
     public void setOnPlayerClickListener(OnPlayerClickListener mClickListener) {
@@ -362,12 +375,12 @@ public class LyricView extends View {
                     mLineFeedRecord.add(i, mExtraHeight);
                 }
             } else {
-                mDefaultHint = lyricInfo;
+                mDefaultHint = getContext().getString(R.string.lyric_default_hint);
                 invalidateView();
             }
         } else {
             mLyricInfo = null;
-            mDefaultHint = lyricInfo;
+            mDefaultHint = getContext().getString(R.string.lyric_default_hint);
             invalidateView();
         }
     }
@@ -391,7 +404,9 @@ public class LyricView extends View {
     }
 
     private void actionDown(MotionEvent event) {
-        removeCallbacks(hideIndicator);
+//        removeCallbacks(hideIndicator);
+        postman.removeMessages(MSG_PLAYER_HIDE);
+        postman.removeMessages(MSG_PLAYER_SLIDE);
         mLastScrollY = mScrollY;
         mDownX = event.getX();
         mDownY = event.getY();
@@ -418,10 +433,10 @@ public class LyricView extends View {
     }
 
     private void actionUp(MotionEvent event) {
-
-        postDelayed(hideIndicator, 2 * UNITS_SECOND);
-
         releaseVelocityTracker();
+        // 2.4s 后发送一个指示器隐藏的请求
+//        postDelayed(hideIndicator, 2 * UNITS_SECOND);
+        postman.sendEmptyMessageDelayed(MSG_PLAYER_HIDE, 2400);
 
         if (scrollable()) {
             if (overScrolled() && mScrollY < 0) {
@@ -440,7 +455,7 @@ public class LyricView extends View {
                 if (mLineNumberUnderIndicator != mCurrentPlayLine) {
                     mShowIndicator = false;
                     if (mClickListener != null) {
-                        setUserTouch(false);
+                        setUserTouch(false);// 用户手指离开屏幕，取消触摸标记
                         mClickListener.onPlayerClicked(mLyricInfo.songLines.get(mLineNumberUnderIndicator).start, mLyricInfo.songLines.get(mLineNumberUnderIndicator).content);
                     }
                 }
@@ -466,24 +481,30 @@ public class LyricView extends View {
 
         //绘制 播放 按钮
         Path pathPlay = new Path();
+
+        mBtnPlayRect = new Rect(getMeasuredWidth() - bitmap.getWidth(), (int) (getMeasuredHeight() * 0.5f - bitmap.getHeight() * 0.5f)
+                , getMeasuredWidth(), (int) (getMeasuredHeight() * 0.5f + bitmap.getHeight() * 0.5f));
+
         float yCoordinate = mBtnPlayRect.left + (float) Math.sqrt(Math.pow(mBtnPlayRect.width(), 2) - Math.pow(mBtnPlayRect.width() * 0.5f, 2));
+        //保留宽度
         float remainWidth = mBtnPlayRect.right - yCoordinate;
+//
+//        pathPlay.moveTo(mBtnPlayRect.centerX() - mBtnPlayRect.width() * 0.5f, mBtnPlayRect.centerY() - mBtnPlayRect.height() * 0.5f);
+//        pathPlay.lineTo(mBtnPlayRect.centerX() - mBtnPlayRect.width() * 0.5f, mBtnPlayRect.centerY() + mBtnPlayRect.height() * 0.5f);
+//        pathPlay.lineTo(yCoordinate, mBtnPlayRect.centerY());
+//        pathPlay.lineTo(mBtnPlayRect.centerX() - mBtnPlayRect.width() * 0.5f, mBtnPlayRect.centerY() - mBtnPlayRect.height() * 0.5f);
 
-        pathPlay.moveTo(mBtnPlayRect.centerX() - mBtnPlayRect.width() * 0.5f, mBtnPlayRect.centerY() - mBtnPlayRect.height() * 0.5f);
-        pathPlay.lineTo(mBtnPlayRect.centerX() - mBtnPlayRect.width() * 0.5f, mBtnPlayRect.centerY() + mBtnPlayRect.height() * 0.5f);
-        pathPlay.lineTo(yCoordinate, mBtnPlayRect.centerY());
-        pathPlay.lineTo(mBtnPlayRect.centerX() - mBtnPlayRect.width() * 0.5f, mBtnPlayRect.centerY() - mBtnPlayRect.height() * 0.5f);
-
-        canvas.drawPath(pathPlay, mBtnPlayPaint);
+//        canvas.drawPath(pathPlay, mBtnPlayPaint);
+        canvas.drawBitmap(bitmap, mBtnPlayRect.left, mBtnPlayRect.top, mBtnPlayPaint);
 
         //绘制 分割线
         Path pathLine = new Path();
-        pathLine.moveTo(mBtnPlayRect.right + getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_LINE_MARGIN) - remainWidth, getMeasuredHeight() * 0.5f);
-        pathLine.lineTo(getWidth() - mTimerRect.width() - getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_TIME_MARGIN_RIGHT) - getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_LINE_MARGIN), getHeight() * 0.5f);
+        pathLine.moveTo(mBtnPlayRect.left - getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_LINE_MARGIN) - remainWidth, getMeasuredHeight() * 0.5f);
+        pathLine.lineTo(mTimerRect.width() + getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_TIME_MARGIN_RIGHT) + getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_LINE_MARGIN), getHeight() * 0.5f);
         canvas.drawPath(pathLine, mLinePaint);
 
         //绘制 时间
-        canvas.drawText(measureCurrentTime(), getWidth() - getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_TIME_MARGIN_RIGHT), (getHeight() + mTimerRect.height()) * 0.5f, mTimerPaint);
+        canvas.drawText(measureCurrentTime(), mTimerRect.width() + getRawSize(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_TIME_MARGIN_RIGHT), (getHeight() + mTimerRect.height()) * 0.5f, mTimerPaint);
     }
 
     private boolean clickPlayer(MotionEvent event) {
@@ -495,6 +516,12 @@ public class LyricView extends View {
         return false;
     }
 
+
+    /**
+     * 滑行动画
+     *
+     * @param velocity 滑动速度
+     */
     private void doFlingAnimator(float velocity) {
 
         float distance = (velocity / Math.abs(velocity) * (Math.abs(velocity) * SLIDE_COEFFICIENT));
@@ -599,7 +626,6 @@ public class LyricView extends View {
         mBtnPlayPaint.setAntiAlias(true);
         mBtnPlayPaint.setColor(mBtnColor);
         mBtnPlayPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mBtnPlayPaint.setAlpha(128);
 
         mLinePaint = new Paint();
         mLinePaint.setDither(true);
@@ -661,6 +687,11 @@ public class LyricView extends View {
         }
     }
 
+    /**
+     * 从当前位置滑动到指定位置上
+     *
+     * @param toY 指定纵坐标位置
+     */
     private void smoothScrollTo(float toY) {
         final ValueAnimator animator = ValueAnimator.ofFloat(mScrollY, toY);
         animator.addUpdateListener(valueAnimator -> {
@@ -668,11 +699,7 @@ public class LyricView extends View {
             invalidateView();
         });
 
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
+        animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animator) {
                 mFling = false;
@@ -681,16 +708,12 @@ public class LyricView extends View {
             }
 
             @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-
-            @Override
             public void onAnimationStart(Animator animator) {
                 mFling = true;
             }
         });
         animator.setDuration(640);
-        animator.setInterpolator(new LinearInterpolator());
+        animator.setInterpolator(new OvershootInterpolator(0.5f));
 
         animator.start();
     }
@@ -764,7 +787,23 @@ public class LyricView extends View {
         }
     }
 
+    @SuppressLint("HandlerLeak")
+    Handler postman = new Handler() {
 
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_PLAYER_HIDE:
+                    postman.sendEmptyMessageDelayed(MSG_PLAYER_SLIDE, 1200);
+                    setUserTouch(false);
+                    invalidateView();
+                case MSG_PLAYER_SLIDE:
+                    smoothScrollTo(measureCurrentScrollY(mCurrentPlayLine));
+                    invalidateView();
+            }
+        }
+    };
     Runnable hideIndicator = new Runnable() {
         @Override
         public void run() {
@@ -778,24 +817,58 @@ public class LyricView extends View {
     public @interface Alignment {
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        FloatLyricViewManager.setLyricChangeListener(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        FloatLyricViewManager.removeLyricChangeListener(this);
+    }
+
+    /**
+     * 点击事件接口
+     */
     public interface OnPlayerClickListener {
         void onPlayerClicked(long progress, String content);
     }
 
+    /**
+     * 设置歌词是否可触摸
+     *
+     * @param touchable true or false
+     */
     public void setTouchable(boolean touchable) {
         mTouchable = touchable;
     }
 
-    public void updateView(boolean touchable) {
-        setTouchable(true);
-        invalidateView();
+    /**
+     * 隐藏指示器
+     *
+     * @param show true or false
+     */
+    public void setIndicatorShow(boolean show) {
+        mShowIndicator = show;
     }
 
+    /**
+     * 设置歌词文本内容字体大小
+     *
+     * @param size 字体大小
+     */
     public void setTextSize(int size) {
         setRawTextSize(size);
     }
 
-    public void setTextColor(int color) {
+    /**
+     * 设置高亮显示文本的字体颜色
+     *
+     * @param color 颜色值
+     */
+    public void setHighLightTextColor(int color) {
         mHighLightColor = color;
         invalidateView();
     }

@@ -61,20 +61,38 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="@string/hot_artist"
-                    android:textColor="@color/black" />
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text="@string/hot_artist"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/seeAllArtistTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@string/see_all"
+
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/sp_12" />
+                </LinearLayout>
 
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/chartsArtistRcv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
                     android:layout_marginBottom="@dimen/dp_8"
+                    android:focusable="false"
                     android:focusableInTouchMode="false" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -130,13 +148,29 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/radio"
-                android:textColor="@color/black" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="@string/radio"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/seeAllRadioTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/see_all"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/sp_12" />
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/radioRsv"

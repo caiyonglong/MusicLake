@@ -381,7 +381,7 @@ public class ImageUtils {
         options.inSampleSize = inSampleSize;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         byte[] imageInByte = stream.toByteArray();
         ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
         Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);

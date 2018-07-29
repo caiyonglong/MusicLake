@@ -5,10 +5,15 @@ import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.api.doupan.DoubanMusic
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.net.ApiManager
+import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.FileUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
+import io.reactivex.internal.operators.maybe.MaybeDoAfterSuccess
 
 /**
  * Author   : D22434
@@ -85,6 +90,25 @@ object MusicApi {
      */
     fun getMusicAlbumInfo(info: String): Observable<DoubanMusic> {
         return DoubanApiServiceImpl.getMusicInfo(info)
+    }
+
+    /**
+     * 加载图片
+     */
+    fun getMusicAlbumPic(info: String, success: (String?) -> Unit) {
+        ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
+            override fun success(result: DoubanMusic?) {
+                val data = result?.musics
+                data?.let {
+                    if (it.size > 0) {
+                        success.invoke(result.musics?.first()?.image)
+                    }
+                }
+            }
+
+            override fun error(msg: String?) {
+            }
+        })
     }
 
     /**

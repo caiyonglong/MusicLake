@@ -8,12 +8,9 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.data.DownloadLoader;
-import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
-import com.cyl.musiclake.player.PlayManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -55,10 +52,7 @@ public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter>
     @Override
     public void initViews() {
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN);
-        mAdapter = new TaskItemAdapter(models);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerView);
+        TasksManager.INSTANCE.onCreate(new WeakReference<>(this));
     }
 
     @Override
@@ -86,12 +80,6 @@ public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter>
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             mPresenter.loadDownloading();
         });
-        mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (view.getId() != R.id.iv_more) {
-                Music music = SongLoader.INSTANCE.getMusicInfo(models.get(position).getMid());
-                PlayManager.playOnline(music);
-            }
-        });
     }
 
     @Override
@@ -103,14 +91,12 @@ public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter>
     @Override
     public void onLazyLoad() {
         models = TasksManager.INSTANCE.getModelList();
-        mAdapter.setNewData(models);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         TasksManager.INSTANCE.onDestroy();
-        mAdapter = null;
     }
 
     @Override
@@ -125,11 +111,18 @@ public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter>
 
     @Override
     public void showDownloadList(List<TasksManagerModel> modelList) {
-        TasksManager.INSTANCE.onCreate(new WeakReference<>(this));
-        mAdapter.setNewData(models);
+        updateDownLoadList(modelList);
+    }
+
+    public void updateDownLoadList(List<TasksManagerModel> list) {
+        models = list;
         hideLoading();
         if (models.size() == 0) {
             showEmptyState();
+        } else {
+            mAdapter = new TaskItemAdapter(getContext());
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            mRecyclerView.setAdapter(mAdapter);
         }
     }
 }

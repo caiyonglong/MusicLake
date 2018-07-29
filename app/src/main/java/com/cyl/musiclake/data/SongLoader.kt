@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
 import android.text.TextUtils
+import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.data.db.Music
@@ -144,9 +145,21 @@ object SongLoader {
     fun getLocalMusic(context: Context, isLocal: Boolean = false): MutableList<Music> {
         val data = getSongsForDB()
         if (data.size == 0 || isLocal) {
-            val musicLists = getAllLocalSongs(context)
             data.clear()
-            data.addAll(musicLists)
+            val musicLists = getAllLocalSongs(context)
+            musicLists.forEach {
+                if (it.coverUri == null) {
+                    val info = it.title + "," + it.artist
+                    MusicApi.getMusicAlbumPic(info) { url ->
+                        it.coverUri = url
+                        it.saveAsync()
+                        data.add(it)
+                    }
+                } else {
+                    data.add(it)
+                }
+
+            }
         }
         return data
     }

@@ -90,49 +90,6 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
             Music music = (Music) adapter.getItem(position);
             PopupDialogFragment.Companion.newInstance(music)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
-//            PopupMenu popupMenu = new PopupMenu(getContext(), view);
-//            popupMenu.setOnMenuItemClickListener(item -> {
-//                switch (item.getItemId()) {
-//                    case R.id.popup_song_play:
-//                        PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID);
-//                        break;
-//                    case R.id.popup_song_detail:
-//                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
-//                                .show(getChildFragmentManager(), getTag());
-//                        break;
-//                    case R.id.popup_song_goto_album:
-//                        LogUtil.e("album", music.toString() + "");
-//                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
-//                                music.getAlbumId(),
-//                                music.getAlbum(), null);
-//                        break;
-//                    case R.id.popup_song_goto_artist:
-//                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
-//                                music.getArtistId(),
-//                                music.getArtist(), null);
-//                        break;
-//                    case R.id.popup_song_addto_queue:
-//                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
-//                        break;
-//                    case R.id.popup_song_delete:
-//                        new MaterialDialog.Builder(getContext())
-//                                .title("警告")
-//                                .content("是否删除这首歌曲？")
-//                                .onPositive((dialog, which) -> {
-//                                    FileUtils.delFile(musicList.get(position).getUri());
-//                                    SongLoader.INSTANCE.removeSong(musicList.get(position));
-//                                    musicList.remove(position);
-//                                    mAdapter.setNewData(musicList);
-//                                })
-//                                .positiveText("确定")
-//                                .negativeText("取消")
-//                                .show();
-//                        break;
-//                }
-//                return false;
-//            });
-//            popupMenu.inflate(R.menu.popup_song);
-//            popupMenu.show();
         });
     }
 

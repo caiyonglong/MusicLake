@@ -78,14 +78,7 @@ public class MusicApp extends Application {
      */
     private void initFileDownload() {
         FileDownloadLog.NEED_LOG = true;
-        FileDownloader.setupOnApplicationOnCreate(this)
-                .connectionCreator(new FileDownloadUrlConnection
-                        .Creator(new FileDownloadUrlConnection.Configuration()
-                        .connectTimeout(15_000) // set connection timeout.
-                        .readTimeout(15_000) // set read timeout.
-                        .proxy(Proxy.NO_PROXY) // set proxy
-                ))
-                .commit();
+        FileDownloader.setup(this);
     }
 
     /**
@@ -180,7 +173,6 @@ public class MusicApp extends Application {
             }
         });
     }
-
 
 
 }

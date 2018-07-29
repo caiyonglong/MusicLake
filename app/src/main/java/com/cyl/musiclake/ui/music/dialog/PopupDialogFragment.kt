@@ -128,7 +128,7 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
                     R.drawable.ic_queue_play_next -> PlayManager.nextPlay(music)
                     R.drawable.ic_playlist_add -> {
                         if (music?.type != Constants.LOCAL) {
-                            OnlinePlaylistUtils.getPlaylist(mContext, music)
+                            OnlinePlaylistUtils.addToPlaylist(mContext, music)
                         }
                     }
                     R.drawable.ic_art_track -> {

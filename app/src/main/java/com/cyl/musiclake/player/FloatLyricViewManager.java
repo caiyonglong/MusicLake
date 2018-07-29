@@ -8,15 +8,19 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.cyl.musiclake.MusicApp;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.api.MusicApiServiceImpl;
 import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.event.LyricChangedEvent;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
+import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.lyric.FloatLyricView;
 import com.cyl.musiclake.view.lyric.LyricInfo;
 import com.cyl.musiclake.view.lyric.LyricParseUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -34,7 +38,6 @@ public class FloatLyricViewManager {
      * 歌词信息
      */
     public static String lyricInfo;
-    private static LyricChangedEvent lyricChangedEvent;
 
     /**
      * 定时器，定时进行检测当前应该创建还是移除悬浮窗。
@@ -45,14 +48,26 @@ public class FloatLyricViewManager {
         mContext = context;
     }
 
+    /**
+     * ---------------------------歌词View更新-----------------------------
+     */
+    private static List<LyricView> lyricViews = new ArrayList<>();
+
+    public static void setLyricChangeListener(LyricView lyricView) {
+        lyricViews.add(lyricView);
+    }
+
+    public static void removeLyricChangeListener(LyricView lyricView) {
+        lyricViews.remove(lyricView);
+    }
+
+    /**
+     * -----------------------------------------------------------------
+     */
 
     public void updatePlayStatus(boolean isPlaying) {
         if (mFloatLyricView != null)
             mFloatLyricView.setPlayStatus(isPlaying);
-    }
-
-    public void startFloatLyric() {
-
     }
 
 
@@ -60,7 +75,7 @@ public class FloatLyricViewManager {
      * 加载歌词
      */
     public void loadLyric(Music mPlayingMusic) {
-        updateLyric("");
+        resetLyric("");
         if (mPlayingMusic != null) {
             mSongName = mPlayingMusic.getTitle();
             Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
@@ -73,10 +88,42 @@ public class FloatLyricViewManager {
 
                     @Override
                     public void error(String msg) {
-                        updateLyric(msg);
+                        updateLyric("");
+                        LogUtil.e("LoadLyric", msg);
                     }
                 });
+            } else {
+                updateLyric("");
             }
+        } else {
+            updateLyric("");
+        }
+    }
+
+    /**
+     * 保存歌词
+     *
+     * @param info 歌词
+     */
+    public static void saveLyricInfo(String name,String artist, String info) {
+        lyricInfo = info;
+        MusicApiServiceImpl.INSTANCE.saveLyricInfo(name,artist, info);
+        setLyric(lyricInfo);
+        for (int i = 0; i < lyricViews.size(); i++) {
+            lyricViews.get(i).setLyricContent(info);
+        }
+    }
+
+    /**
+     * 重置
+     *
+     * @param info 歌词
+     */
+    private void resetLyric(String info) {
+        lyricInfo = info;
+        setLyric(lyricInfo);
+        for (int i = 0; i < lyricViews.size(); i++) {
+            lyricViews.get(i).reset();
         }
     }
 
@@ -87,13 +134,10 @@ public class FloatLyricViewManager {
      */
     private void updateLyric(String info) {
         lyricInfo = info;
-        if (lyricChangedEvent == null) {
-            lyricChangedEvent = new LyricChangedEvent(lyricInfo, true);
-        } else {
-            lyricChangedEvent.setLyric(lyricInfo);
-        }
         setLyric(lyricInfo);
-        RxBus.getInstance().post(lyricChangedEvent);
+        for (int i = 0; i < lyricViews.size(); i++) {
+            lyricViews.get(i).setLyricContent(info);
+        }
     }
 
 

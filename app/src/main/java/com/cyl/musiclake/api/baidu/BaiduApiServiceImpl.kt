@@ -1,7 +1,6 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
-import com.cyl.musicapi.baidu.RadioChannel
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
@@ -188,16 +187,22 @@ object BaiduApiServiceImpl {
     /**
      * 搜索建议
      */
-    fun getRadioChannel(): Observable<MutableList<RadioChannel>> {
+    fun getRadioChannel(): Observable<MutableList<Playlist>> {
         return apiService.radioChannels
                 .flatMap {
-                    Observable.create(ObservableOnSubscribe<MutableList<RadioChannel>> { e ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Playlist>> { e ->
                         try {
-                            var result = mutableListOf<RadioChannel>()
+                            var result = mutableListOf<Playlist>()
                             if (it.errorCode == 22000) {
-                                it.result?.let {
-                                    it[0].channellist?.let {
-                                        result = it
+                                it.result?.get(0)?.channellist?.let {
+                                    it.forEach {
+                                        val playlist = Playlist()
+                                        playlist.name = it.name
+                                        playlist.pid = it.chName
+                                        playlist.coverUrl = it.thumb
+                                        playlist.des = it.cateSname
+                                        playlist.type = 2
+                                        result.add(playlist)
                                     }
                                 }
                             }

@@ -53,8 +53,8 @@ public class DownloadFragment extends BaseLazyFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(DownloadedFragment.newInstance(), "已下载");
-        adapter.addFragment(DownloadManagerFragment.newInstance(), "正在下载");
+        adapter.addFragment(DownloadedFragment.newInstance(), getString(R.string.download_complete));
+        adapter.addFragment(DownloadManagerFragment.newInstance(), getString(R.string.download_processing));
         viewPager.setAdapter(adapter);
     }
 

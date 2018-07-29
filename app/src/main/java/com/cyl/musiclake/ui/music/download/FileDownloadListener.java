@@ -48,7 +48,6 @@ public class FileDownloadListener extends FileDownloadSampleListener {
         if (tag == null) {
             return;
         }
-
         tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_started);
     }
 
@@ -74,7 +73,6 @@ public class FileDownloadListener extends FileDownloadSampleListener {
         if (tag == null) {
             return;
         }
-
         tag.updateDownloading(FileDownloadStatus.progress, soFarBytes
                 , totalBytes);
     }

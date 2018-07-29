@@ -64,11 +64,17 @@
 
         </LinearLayout>
 
-        <com.cyl.musiclake.view.MultiTouchViewPager
-            android:id="@+id/viewpager_player"
+        <com.cyl.musiclake.view.LyricView
+            android:id="@+id/lyricView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_margin="@dimen/dp_16"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            app:highlightColor="@color/amber"
+            app:textAlign="center"
+            app:textColor="@color/white" />
 
         <LinearLayout
             android:id="@+id/detailView"
@@ -146,8 +152,8 @@
                 <FrameLayout
                     android:layout_width="@dimen/dp_64"
                     android:layout_height="@dimen/dp_64"
-                    android:layout_weight="1"
                     android:layout_margin="@dimen/dp_16"
+                    android:layout_weight="1"
                     android:gravity="center">
 
                     <android.support.design.widget.FloatingActionButton
@@ -168,8 +174,7 @@
                         android:translationZ="5dp"
                         app:anim_duration="300"
                         app:bg_color="@color/translucent"
-                        app:btn_color="@color/white"
-                        tools:targetApi="lollipop" />
+                        app:btn_color="@color/white" />
 
                     <ProgressBar
                         android:id="@+id/pb_loading"

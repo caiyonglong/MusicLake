@@ -5,7 +5,6 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.event.LyricChangedEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
@@ -32,9 +31,6 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
         val disposable = RxBus.getInstance().register(MetaChangedEvent::class.java)
                 .compose(mView.bindToLife())
                 .subscribe { event -> updateNowPlaying(event.music) }
-        val disposable2 = RxBus.getInstance().register(LyricChangedEvent::class.java)
-                .compose(mView.bindToLife())
-                .subscribe { event -> loadLyric(event.lyric, event.isStatus) }
         val disposable1 = RxBus.getInstance().register(PlayModeEvent::class.java)
                 .subscribe { event -> mView?.updatePlayMode() }
         val disposable3 = RxBus.getInstance().register(StatusChangedEvent::class.java)
@@ -44,17 +40,12 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
                 }
         disposables.add(disposable)
         disposables.add(disposable1)
-        disposables.add(disposable2)
         disposables.add(disposable3)
     }
 
     override fun detachView() {
         super.detachView()
         MusicPlayerService.removeProgressListener(this)
-    }
-
-    override fun loadLyric(result: String?, status: Boolean) {
-        mView?.showLyric(result, false)
     }
 
     override fun updateNowPlaying(music: Music?) {

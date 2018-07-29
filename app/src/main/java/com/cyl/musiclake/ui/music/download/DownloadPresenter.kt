@@ -20,7 +20,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
     override fun attachView(view: DownloadContract.View) {
         super.attachView(view)
         RxBus.getInstance().register(TasksManagerModel::class.java)
-                .subscribe { taskChangedEvent ->
+                .subscribe {
                     if (mView != null && mView.context != null) {
                         loadDownloadMusic()
                     }

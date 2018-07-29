@@ -31,8 +31,6 @@ interface PlayContract {
 
     interface Presenter : BaseContract.BasePresenter<View> {
 
-        fun loadLyric(result: String?, status: Boolean)
-
         fun updateNowPlaying(music: Music?)
     }
 }

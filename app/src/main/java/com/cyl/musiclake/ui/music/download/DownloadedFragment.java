@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.download;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.PopupMenu;
@@ -17,6 +18,7 @@ import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.FileUtils;
@@ -56,52 +58,12 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID);
+                mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            PopupMenu popupMenu = new PopupMenu(getContext(), view);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.popup_song_play:
-                        PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID);
-                        break;
-                    case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
-                                .show(getChildFragmentManager(), getTag());
-                        break;
-                    case R.id.popup_song_goto_album:
-                        LogUtil.e("album", music.toString() + "");
-                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
-                                music.getAlbumId(),
-                                music.getAlbum(), null);
-                        break;
-                    case R.id.popup_song_goto_artist:
-                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
-                                music.getArtistId(),
-                                music.getArtist(), null);
-                        break;
-                    case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
-                        break;
-                    case R.id.popup_song_delete:
-                        new MaterialDialog.Builder(getContext())
-                                .title("提示")
-                                .content("是否删除这首歌曲？")
-                                .onPositive((dialog, which) -> {
-                                    FileUtils.delFile(musicList.get(position).getUri());
-                                    SongLoader.INSTANCE.removeSong(musicList.get(position));
-                                    mAdapter.notifyItemChanged(position);
-                                })
-                                .positiveText("确定")
-                                .negativeText("取消")
-                                .show();
-                        break;
-                }
-                return false;
-            });
-            popupMenu.inflate(R.menu.popup_song);
-            popupMenu.show();
+            PopupDialogFragment.Companion.newInstance(music).show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }
 

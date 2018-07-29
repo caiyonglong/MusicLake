@@ -277,6 +277,7 @@
     <string name="playlist_queue_clear">清空播放队列?</string>
     <string name="menu_rename">重命名</string>
     <string name="menu_delete_playlist">删除歌单</string>
+    <!--歌词-->
     <string name="loading_lyric">歌词加载中…</string>
     <string name="lyric_format">字体样式</string>
     <string name="lyric_format_color">歌词颜色</string>
@@ -288,4 +289,7 @@
     <string name="lyric_search_apply">歌词修改成功</string>
     <string name="love">收藏</string>
     <string name="song_resource">音乐来源</string>
+    <string name="download_complete">已下载</string>
+    <string name="download_processing">正在下载</string>
+    <string name="dd">暂无歌词</string>
 </resources>

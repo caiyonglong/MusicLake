@@ -1,12 +1,15 @@
 package com.cyl.musiclake.ui.music.download;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
@@ -21,23 +24,20 @@ import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yonglong on 2018/1/23.
  */
 
-public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskItemAdapter.TaskItemViewHolder> {
+public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
-    private List<TasksManagerModel> models;
+    private Context mContext;
 
-    public TaskItemAdapter(List<TasksManagerModel> models) {
-        super(R.layout.item_download_music, models);
-        this.models = models;
+    public TaskItemAdapter(Context mContext) {
+        this.mContext = mContext;
     }
 
-    private FileDownloadListener taskDownloadListener = new FileDownloadListener();
+    public static final FileDownloadListener taskDownloadListener = new FileDownloadListener();
 
     private View.OnClickListener taskActionOnClickListener = v -> {
         if (v.getTag() == null) {
@@ -58,12 +58,9 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
                     .setPath(model.getPath())
                     .setCallbackProgressTimes(100)
                     .setListener(taskDownloadListener);
-
-            TasksManager.INSTANCE
-                    .addTaskForViewHolder(task);
-
-            TasksManager.INSTANCE
-                    .updateViewHolder(holder.id, holder);
+            TasksManager.INSTANCE.addTaskForViewHolder(task);
+            holder.id = task.getId();
+            TasksManager.INSTANCE.updateViewHolder(holder.id, holder);
 
             task.start();
         } else if (action.equals(v.getResources().getString(R.string.delete))) {
@@ -74,16 +71,22 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
         }
     };
 
+    @NonNull
+    @Override
+    public TaskItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_download_music, parent, false);
+        return new TaskItemViewHolder(view);
+    }
 
     @Override
-    protected void convert(TaskItemViewHolder holder, TasksManagerModel model) {
+    public void onBindViewHolder(@NonNull TaskItemViewHolder holder, int position) {
+        TasksManagerModel model = TasksManager.INSTANCE.get(position);
         holder.taskActionBtn.setOnClickListener(taskActionOnClickListener);
         holder.update(model.getId(), holder.getAdapterPosition());
         holder.taskActionBtn.setTag(holder);
         holder.taskNameTv.setText(model.getName());
 
-        TasksManager.INSTANCE
-                .updateViewHolder(holder.id, holder);
+        TasksManager.INSTANCE.updateViewHolder(holder.id, holder);
 
         holder.taskActionBtn.setEnabled(true);
 
@@ -102,7 +105,6 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
                 // already downloaded and exist
                 LogUtil.e(TAG, "already downloaded and exist");
                 holder.updateDownloaded();
-                TasksManager.INSTANCE.finishTask(model.getId());
             } else if (status == FileDownloadStatus.progress) {
                 // downloading
                 holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getId())
@@ -120,10 +122,10 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
 
     @Override
     public int getItemCount() {
-        return models.size();
+        return TasksManager.INSTANCE.getModelList().size();
     }
 
-    public class TaskItemViewHolder extends BaseViewHolder {
+    public class TaskItemViewHolder extends RecyclerView.ViewHolder {
         public TaskItemViewHolder(View itemView) {
             super(itemView);
             assignViews();
@@ -155,6 +157,8 @@ public class TaskItemAdapter extends BaseQuickAdapter<TasksManagerModel, TaskIte
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
             NavigationHelper.INSTANCE.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
+            TasksManager.INSTANCE.get(position);
+
             RxBus.getInstance().post(new TasksManagerModel());
         }
 

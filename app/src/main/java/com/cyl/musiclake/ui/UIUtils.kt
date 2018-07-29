@@ -3,19 +3,13 @@ package com.cyl.musiclake.ui
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
@@ -26,12 +20,11 @@ import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
-import com.cyl.musiclake.ui.music.download.FileDownloadListener
-import com.cyl.musiclake.ui.my.user.UserStatus
-import com.cyl.musiclake.utils.*
-import com.cyl.musiclake.view.custom.DisplayUtils
+import com.cyl.musiclake.ui.music.download.TaskItemAdapter
+import com.cyl.musiclake.utils.FileUtils
+import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import com.liulishuo.filedownloader.FileDownloader
-import java.lang.reflect.Field
 
 object UIUtils {
     /**
@@ -131,7 +124,7 @@ fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) ->
 /**
  * 下载歌曲
  */
-fun Context.downloadMusic(music: Music?) {
+fun AppCompatActivity.downloadMusic(music: Music?) {
     if (music == null) {
         ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
         return
@@ -144,21 +137,21 @@ fun Context.downloadMusic(music: Music?) {
     ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
         override fun success(result: Music) {
             LogUtil.e(javaClass.simpleName, "-----${result.uri}")
-            if (!NetworkUtils.isWifiConnected(this@downloadMusic) && SPUtils.getWifiMode()) {
-                MaterialDialog.Builder(this@downloadMusic)
-                        .title("提示")
-                        .content(R.string.download_network_tips)
-                        .onPositive { _, _ ->
-                            addDownloadQueue(result)
-                        }
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .show()
-            } else if (result.uri != null && result.uri?.startsWith("http")!!) {
-                addDownloadQueue(result)
-            } else {
-                ToastUtils.show(this@downloadMusic, "下载地址异常！")
-            }
+//            if (!NetworkUtils.isWifiConnected(this@downloadMusic) && SPUtils.getWifiMode()) {
+            MaterialDialog.Builder(this@downloadMusic)
+                    .title("提示")
+                    .content(R.string.download_network_tips)
+                    .onPositive { _, _ ->
+                        addDownloadQueue(result)
+                    }
+                    .positiveText("确定")
+                    .negativeText("取消")
+                    .show()
+//            } else if (result.uri != null && result.uri?.startsWith("http")!!) {
+//                addDownloadQueue(result)
+//            } else {
+//                ToastUtils.show(this@downloadMusic, "下载地址异常！")
+//            }
         }
 
         override fun error(msg: String) {
@@ -177,10 +170,9 @@ fun Context.addDownloadQueue(result: Music) {
             .create(result.uri)
             .setPath(path)
             .setCallbackProgressTimes(100)
-            .setListener(FileDownloadListener())
-    TasksManager
-            .addTaskForViewHolder(task)
-    val model = TasksManager.addTask(task.id, result.mid!!, result.title!!, result.uri!!, path)
-    model?.saveAsync()
+            .setListener(TaskItemAdapter.taskDownloadListener)
+
+    TasksManager.addTaskForViewHolder(task)
+    TasksManager.addTask(task.id, result.mid!!, result.title!!, result.uri!!, path)
     task.start()
 }

@@ -58,13 +58,14 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
 
     @OnClick(R.id.fab)
     void onPlayAll() {
-        PlayManager.play(0, musicList, mPlaylist.getPid());
+        PlayManager.play(0, musicList, pid);
     }
 
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
     private Playlist mPlaylist;
     private Artist mArtist;
+    private String pid;
     private Album mAlbum;
     private String title;
     private String coverUrl;
@@ -111,9 +112,18 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
         mArtist = (Artist) getIntent().getSerializableExtra(Extras.ARTIST);
         mAlbum = (Album) getIntent().getSerializableExtra(Extras.ALBUM);
 
-        if (mPlaylist != null) title = mPlaylist.getName();
-        if (mArtist != null) title = mArtist.getName();
-        if (mAlbum != null) title = mAlbum.getName();
+        if (mPlaylist != null) {
+            title = mPlaylist.getName();
+            pid = mPlaylist.getPid();
+        }
+        if (mArtist != null) {
+            title = mArtist.getName();
+            pid = String.valueOf(mArtist.getId());
+        }
+        if (mAlbum != null) {
+            title = mAlbum.getName();
+            pid = String.valueOf(mAlbum.getId());
+        }
         return title;
     }
 

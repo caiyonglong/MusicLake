@@ -17,15 +17,14 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.player.FloatLyricViewManager
-import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
@@ -138,8 +137,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * 打开播放队列
      */
     fun openPlayQueue(view: View?) {
-        val fm = supportFragmentManager
-        PlayQueueDialog.newInstance().show(fm, "fragment_bottom_dialog")
+        PlayQueueDialog.newInstance().showIt(this)
     }
 
     /**
@@ -153,7 +151,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * 添加到歌單
      */
     fun addToPlaylist(view: View?) {
-        OnlinePlaylistUtils.getPlaylist(this, playingMusic)
+        OnlinePlaylistUtils.addToPlaylist(this, playingMusic)
     }
 
     /**
@@ -243,15 +241,13 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 }
             }
         }
-        if (lyric != null) {
-            mLyricView?.setLyricContent(lyric)
-        } else {
-            mLyricView?.reset()
-        }
+        mLyricView?.setLyricContent(lyric)
+
 
         searchLyricIv.setOnClickListener {
             MusicLyricDialog().apply {
-                title = playingMusic?.title!!
+                title = playingMusic?.title
+                artist = playingMusic?.artist
                 duration = PlayManager.getDuration().toLong()
                 searchListener = {
                 }
@@ -259,7 +255,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                     mLyricView?.setTextSize(it.toInt())
                 }
                 textColorListener = {
-                    mLyricView?.setTextColor(it)
+                    mLyricView?.setHighLightTextColor(it)
                 }
                 lyricListener = {
                     mLyricView?.setLyricContent(it)
@@ -298,6 +294,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 LogUtil.d("PlayControlFragment", "--$position")
                 if (position == 0) {
                     searchLyricIv.visibility = View.GONE
+                    mLyricView?.setIndicatorShow(false)
                 } else {
                     searchLyricIv.visibility = View.VISIBLE
                 }
