@@ -25,6 +25,8 @@
 <img src="screenshots/preview1.png" width="225" height="400"/>
 <img src="screenshots/preview2.png" width="225" height="400"/>
 <img src="screenshots/preview3.png" width="225" height="400"/>
+<img src="screenshots/preview13.png" width="225" height="400"/>
+<img src="screenshots/preview14.png" width="225" height="400"/>
 <img src="screenshots/preview4.png" width="225" height="400"/>
 <img src="screenshots/preview5.png" width="225" height="400"/>
 <img src="screenshots/preview6.png" width="225" height="400"/>
@@ -33,4 +35,5 @@
 <img src="screenshots/preview9.png" width="225" height="400"/>
 <img src="screenshots/preview10.png" width="225" height="400"/>
 <img src="screenshots/preview11.png" width="225" height="400"/>
+<img src="screenshots/preview12.png" width="225" height="400"/>
 </p>
