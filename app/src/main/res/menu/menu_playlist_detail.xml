@@ -11,9 +11,9 @@
         android:icon="@drawable/ic_mode_edit"
         android:title="@string/menu_rename"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_share_white"
-        android:title="@string/share_title"
-        app:showAsAction="ifRoom" />
+    <!--<item-->
+        <!--android:id="@+id/action_share"-->
+        <!--android:icon="@drawable/ic_share_white"-->
+        <!--android:title="@string/share_title"-->
+        <!--app:showAsAction="ifRoom" />-->
 </menu>

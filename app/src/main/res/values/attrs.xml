@@ -46,5 +46,10 @@
         <attr name="tv_desc" format="reference|string" />
         <attr name="iv_icon_color" format="reference|color" />
     </declare-styleable>
+    <!--音乐条目属性-->
+    <declare-styleable name="FlipperView">
+        <attr name="fv_radius" format="dimension|reference" />
+        <attr name="fv_color" format="reference|color" />
+    </declare-styleable>
 
 </resources>

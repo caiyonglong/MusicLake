@@ -15,6 +15,7 @@ import android.widget.EditText;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.DaoLitepal;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.db.SearchHistoryBean;
@@ -124,6 +125,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             Music music = searchResults.get(position);
             LogUtil.e(TAG, music.toString());
             PlayManager.playOnline(music);
+            NavigationHelper.INSTANCE.navigateToPlaying(this);
         });
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override

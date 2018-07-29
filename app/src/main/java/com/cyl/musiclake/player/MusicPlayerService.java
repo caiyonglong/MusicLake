@@ -583,7 +583,7 @@ public class MusicPlayerService extends Service {
                 mHandler.sendEmptyMessage(VOLUME_FADE_UP); //组件调到正常音量
 
                 isMusicPlaying = true;
-                notifyChange(PLAY_STATE_CHANGED);
+//                notifyChange(PLAY_STATE_CHANGED);
             }
         }
     }

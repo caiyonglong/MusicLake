@@ -115,14 +115,15 @@ public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter>
     }
 
     public void updateDownLoadList(List<TasksManagerModel> list) {
-        models = list;
         hideLoading();
-        if (models.size() == 0) {
-            showEmptyState();
-        } else {
+        if (mAdapter == null) {
             mAdapter = new TaskItemAdapter(getContext());
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             mRecyclerView.setAdapter(mAdapter);
         }
+        if (models.size() == 0) {
+            showEmptyState();
+        }
+        mAdapter.notifyDataSetChanged();
     }
 }

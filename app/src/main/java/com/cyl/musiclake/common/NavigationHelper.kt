@@ -208,11 +208,18 @@ object NavigationHelper {
     }
 
 
+    fun navigateToPlaying(context: Activity) {
+        val intent = Intent(context, PlayerActivity::class.java)
+        context.startActivity(intent)
+    }
+
+
     fun getNowPlayingIntent(context: Context): Intent {
         val intent = Intent(context, MainActivity::class.java)
         intent.action = Constants.DEAULT_NOTIFICATION
         return intent
     }
+
 
     fun getUpdateWidgetIntent(context: Context): Intent {
         return Intent("com.cyl.music_lake.appwidget_update")

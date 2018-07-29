@@ -167,49 +167,6 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
             Music music = musicList.get(position);
             PopupDialogFragment.Companion.newInstance(music)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
-//            PopupMenu popupMenu = new PopupMenu(getContext(), view);
-//            popupMenu.setOnMenuItemClickListener(item -> {
-//                switch (item.getItemId()) {
-//                    case R.id.popup_song_play:
-//                        if (mPlaylist != null) {
-//                            PlayManager.play(position, musicList, mPlaylist.getPid());
-//                        } else if (mArtist != null) {
-//                            PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
-//                        } else if (mAlbum != null) {
-//                            PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
-//                        }
-//                        break;
-//                    case R.id.popup_song_detail:
-//                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
-//                                .show(getChildFragmentManager(), getTag());
-//                        break;
-//                    case R.id.popup_song_addto_queue:
-//                        AddPlaylistUtils.INSTANCE.getPlaylist((AppCompatActivity) getActivity(), musicList.get(position));
-//                        break;
-//                    case R.id.popup_to_artist:
-//                        Artist artist = MusicUtils.INSTANCE.getArtistInfo(music);
-//                        if (artist != null) {
-//                            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist);
-//                        }
-//                        break;
-//                    case R.id.popup_song_delete:
-//                        new MaterialDialog.Builder(getContext())
-//                                .title("提示")
-//                                .content("是否移除这首歌曲？")
-//                                .onPositive((dialog, which) -> {
-//                                    if (mPresenter != null) {
-//                                        mPresenter.disCollectMusic(mPlaylist.getPid(), position, musicList.get(position));
-//                                    }
-//                                })
-//                                .positiveText("确定")
-//                                .negativeText("取消")
-//                                .show();
-//                        break;
-//                }
-//                return false;
-//            });
-//            popupMenu.inflate(R.menu.popup_playlist);
-//            popupMenu.show();
         });
     }
 
@@ -253,18 +210,18 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                         .negativeText("取消")
                         .show();
                 break;
-            case R.id.action_share:
-                Intent intent3 = new Intent(getActivity(), EditActivity.class);
-                StringBuilder content = new StringBuilder();
-                if (musicList.size() > 0) {
-                    content = new StringBuilder("分享歌单\n");
-                }
-                for (int i = 0; i < musicList.size(); i++) {
-                    content.append(musicList.get(i).getTitle()).append("---").append(musicList.get(i).getArtist());
-                    content.append("\n");
-                }
-                intent3.putExtra("content", content.toString());
-                startActivity(intent3);
+//            case R.id.action_share:
+//                Intent intent3 = new Intent(getActivity(), EditActivity.class);
+//                StringBuilder content = new StringBuilder();
+//                if (musicList.size() > 0) {
+//                    content = new StringBuilder("分享歌单\n");
+//                }
+//                for (int i = 0; i < musicList.size(); i++) {
+//                    content.append(musicList.get(i).getTitle()).append("---").append(musicList.get(i).getArtist());
+//                    content.append("\n");
+//                }
+//                intent3.putExtra("content", content.toString());
+//                startActivity(intent3);
 //                break;
 //            case R.id.action_add:
 //                List<String> titles = new ArrayList<>();
@@ -294,7 +251,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 //                            ToastUtils.show(getContext(), num + "首添加成功，" + (sum - num) + "首已存在此歌单添加失败");
 //                            RxBus.getInstance().post(new Playlist());
 //                        }).show();
-                break;
+//                break;
         }
         return super.
 

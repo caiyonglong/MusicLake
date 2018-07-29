@@ -12,6 +12,7 @@
     <string name="header_author_url">个性标签</string>
     <string name="widget_standard">音乐湖</string>
     <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
+    <string name="warning">警告！</string>
     <string name="resource_error">歌曲资源异常</string>
     <string name="prompt_login">请先登录！</string>
     <string name="title_common">通用</string>
@@ -199,7 +200,7 @@
     <string name="about_version">软件版本号</string>
     <string name="about_project">项目地址</string>
     <string name="about_feedback">意见反馈</string>
-    <string name="about_software">关于软件</string>
+    <string name="about_software"><u>关于软件</u></string>
     <string name="about_project_url">https://github.com/caiyonglong/MusicLake</string>
     <string name="share_title">分享</string>
     <string name="browser_title">使用系统浏览器打开</string>
@@ -251,6 +252,7 @@
     <string name="retry">重试</string>
     <string name="general_error">网络错误</string>
     <string name="qq_login_tips">QQ登录</string>
+    <string name="login_tips">登录后，可以使用在线同步歌单，Android端、PC端都可使用！</string>
 
 
     <string name="popup_song_detail">歌曲详情</string>
@@ -277,6 +279,7 @@
     <string name="playlist_queue_clear">清空播放队列?</string>
     <string name="menu_rename">重命名</string>
     <string name="menu_delete_playlist">删除歌单</string>
+    <string name="menu_other">其他</string>
     <!--歌词-->
     <string name="loading_lyric">歌词加载中…</string>
     <string name="lyric_format">字体样式</string>
@@ -291,5 +294,6 @@
     <string name="song_resource">音乐来源</string>
     <string name="download_complete">已下载</string>
     <string name="download_processing">正在下载</string>
+    <string name="download_content">是否将 %1$s 添加到下载队列</string>
     <string name="dd">暂无歌词</string>
 </resources>

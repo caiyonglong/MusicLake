@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.graphics.Palette
@@ -33,6 +32,7 @@ import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.utils.ColorUtil
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
@@ -45,7 +45,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private lateinit var lyricView: View
     private val viewPagerContent = mutableListOf<View>()
     private var mLyricView: LyricView? = null
-
+    private var coverAnimator: ObjectAnimator? = null
 
     override fun showNowPlaying(music: Music?) {
         if (music == null) finish()
@@ -60,7 +60,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         music?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
-
+        coverAnimator?.start()
     }
 
     override fun getLayoutResID(): Int {
@@ -175,15 +175,14 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun updatePlayStatus(isPlaying: Boolean) {
-        if (isPlaying) playPauseIv.play() else playPauseIv.pause()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (isPlaying && !coverAnimator.isStarted) {
-                coverAnimator.start()
-            } else if (isPlaying && coverAnimator.isPaused) {
-                coverAnimator.resume()
-            } else {
-                coverAnimator.pause()
+        if (isPlaying) {
+            playPauseIv.play()
+            coverAnimator?.isStarted?.let {
+                if (it) coverAnimator?.resume() else coverAnimator?.start()
             }
+        } else {
+            coverAnimator?.pause()
+            playPauseIv.pause()
         }
     }
 
@@ -216,7 +215,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         }
         //set icon color
         val blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor)
-        val statusBarColor = ColorUtil.getStatusBarColor(paletteColor)
+//        val statusBarColor = ColorUtil.getStatusBarColor(paletteColor)
 
         progressTv.setTextColor(blackWhiteColor)
         durationTv.setTextColor(blackWhiteColor)
@@ -233,6 +232,8 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     override fun showLyric(lyric: String?, init: Boolean) {
         if (init) {
             //初始化歌词配置
+            mLyricView?.setTextSize(SPUtils.getFontSize())
+            mLyricView?.setHighLightTextColor(SPUtils.getFontColor())
             mLyricView?.setTouchable(true)
             mLyricView?.setOnPlayerClickListener { progress, _ ->
                 PlayManager.seekTo(progress.toInt())
@@ -252,7 +253,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 searchListener = {
                 }
                 textSizeListener = {
-                    mLyricView?.setTextSize(it.toInt())
+                    mLyricView?.setTextSize(it)
                 }
                 textColorListener = {
                     mLyricView?.setHighLightTextColor(it)
@@ -315,18 +316,17 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
 
-    private lateinit var coverAnimator: ObjectAnimator
-
     /**
      * 初始化旋转动画
      */
     private fun initAlbumPic(view: View?) {
         if (view == null) return
-        coverAnimator = ObjectAnimator.ofFloat(view, "rotation", 0F, 359F)
-        coverAnimator.duration = (20 * 1000).toLong()
-        coverAnimator.repeatCount = -1
-        coverAnimator.repeatMode = ObjectAnimator.RESTART
-        coverAnimator.interpolator = LinearInterpolator()
+        coverAnimator = ObjectAnimator.ofFloat(view, "rotation", 0F, 359F).apply {
+            duration = (20 * 1000).toLong()
+            repeatCount = -1
+            repeatMode = ObjectAnimator.RESTART
+            interpolator = LinearInterpolator()
+        }
     }
 
 

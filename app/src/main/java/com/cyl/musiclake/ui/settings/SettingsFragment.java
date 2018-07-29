@@ -21,7 +21,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.player.MusicPlayerService;
-import com.cyl.musiclake.utils.DataClearmanager;
+import com.cyl.musiclake.utils.DataClearManager;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
@@ -66,12 +66,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         initView();
 
         new Handler().post(() -> {
-            try {
-                String size = DataClearmanager.getTotalCacheSize(getActivity());
-                mPreferenceCache.setSummary(size);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String size = DataClearManager.getTotalCacheSize(MusicApp.getAppContext());
+            mPreferenceCache.setSummary(size);
+
         });
 
 
@@ -199,9 +196,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                             new Handler().post(() -> {
                                 try {
                                     //清除缓存
-                                    DataClearmanager.cleanApplicationData(getActivity());
+                                    DataClearManager.cleanApplicationData(MusicApp.getAppContext());
                                     ToastUtils.show(getActivity(), "清除成功");
-                                    String size = DataClearmanager.getTotalCacheSize(getActivity());
+                                    String size = DataClearManager.getTotalCacheSize(MusicApp.getAppContext());
                                     mPreferenceCache.setSummary(size);
                                 } catch (Exception e) {
                                     //清除失败

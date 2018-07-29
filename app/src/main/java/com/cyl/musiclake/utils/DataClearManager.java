@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * Created by 永龙 on 2016/4/11.
  */
-public class DataClearmanager {
+public class DataClearManager {
     /**
      * * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * *
      *
@@ -89,10 +89,15 @@ public class DataClearmanager {
     private static void deleteFilesByDirectory(File directory) {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {
-                item.delete();
+                if (item.isDirectory()) {
+                    deleteFilesByDirectory(item);
+                } else {
+                    item.delete();
+                }
             }
         }
     }
+
 
     // 获取文件
     //Context.getExternalFilesDir() --> SDCard/Android/data/你的应用的包名/files/ 目录，一般放一些长时间保存的数据
@@ -190,10 +195,15 @@ public class DataClearmanager {
         return getFormatSize(getFolderSize(file));
     }
 
-    public static String getTotalCacheSize(Context context) throws Exception {
-        long cacheSize = getFolderSize(new File(FileUtils.getImageDir()));
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            cacheSize += getFolderSize(context.getExternalCacheDir());
+    public static String getTotalCacheSize(Context context) {
+        long cacheSize = 0;
+        try {
+            cacheSize = getFolderSize(context.getCacheDir());
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                cacheSize += getFolderSize(context.getExternalCacheDir());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return getFormatSize(cacheSize);
     }
@@ -206,8 +216,8 @@ public class DataClearmanager {
     public static void cleanApplicationData(Context context) {
         cleanInternalCache(context);
         cleanExternalCache(context);
-        cleanFiles(context);
-        cleanSharedPreference(context);
+//        cleanFiles(context);
+//        cleanSharedPreference(context);
         cleanFiles(context);
         //清除缓存的用户头像
         cleanCustomCache(FileUtils.getImageDir());

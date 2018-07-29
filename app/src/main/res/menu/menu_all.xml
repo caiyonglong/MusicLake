@@ -16,21 +16,26 @@
             android:icon="@drawable/ic_equalizer_black"
             android:title="@string/equalizer" />
 
-        <item
-            android:id="@+id/nav_menu_about"
-            android:icon="@drawable/ic_about"
-            android:title="@string/pref_title_about" />
-        <item
-            android:id="@+id/nav_menu_feedback"
-            android:icon="@drawable/ic_feedback"
-            android:title="@string/about_feedback" />
-        <item
-            android:id="@+id/nav_menu_setting"
-            android:icon="@mipmap/icon_setting"
-            android:title="@string/settings" />
-        <item
-            android:id="@+id/nav_menu_exit"
-            android:icon="@mipmap/icon_exit"
-            android:title="@string/exit" />
     </group>
+    <item android:title="@string/menu_other">
+        <group>
+            <item
+                android:id="@+id/nav_menu_about"
+                android:icon="@drawable/ic_about"
+                android:title="@string/pref_title_about" />
+            <item
+                android:id="@+id/nav_menu_feedback"
+                android:icon="@drawable/ic_feedback"
+                android:title="@string/about_feedback" />
+            <item
+                android:id="@+id/nav_menu_setting"
+                android:icon="@mipmap/icon_setting"
+                android:title="@string/settings" />
+            <item
+                android:id="@+id/nav_menu_exit"
+                android:icon="@mipmap/icon_exit"
+                android:title="@string/exit" />
+        </group>
+    </item>
+
 </menu>

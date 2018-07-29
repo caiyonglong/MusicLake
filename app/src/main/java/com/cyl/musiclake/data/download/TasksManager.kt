@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference
  */
 
 object TasksManager {
-    private val modelList = DownloadLoader.getDownloadingList()
+    private var modelList = DownloadLoader.getDownloadingList()
 
     private val taskSparseArray = SparseArray<BaseDownloadTask>()
 
@@ -140,6 +140,7 @@ object TasksManager {
 
     fun finishTask(id: Int) {
         DownloadLoader.updateTask(id)
+        modelList = DownloadLoader.getDownloadingList()
     }
 
     fun addTask(id: Int, mid: String, name: String, url: String, path: String): TasksManagerModel? {

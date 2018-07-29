@@ -857,10 +857,10 @@ public class LyricView extends View {
     /**
      * 设置歌词文本内容字体大小
      *
-     * @param size 字体大小
+     * @param progress 进度条大小0-100
      */
-    public void setTextSize(int size) {
-        setRawTextSize(size);
+    public void setTextSize(int progress) {
+        setRawTextSize((float) (progress * 0.2 + 35));
     }
 
     /**

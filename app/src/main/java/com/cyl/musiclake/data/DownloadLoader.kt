@@ -4,6 +4,7 @@ import android.text.TextUtils
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.download.TasksManagerModel
+import com.cyl.musiclake.utils.ToastUtils
 import com.liulishuo.filedownloader.util.FileDownloadUtils
 import org.litepal.LitePal
 
@@ -34,13 +35,23 @@ object DownloadLoader {
      * 获取已下载列表
      */
     fun getDownloadingList(): MutableList<TasksManagerModel> {
-        val data = LitePal.where("finish = 0").find(TasksManagerModel::class.java)
-        return data
+        return LitePal.where("finish = 0").find(TasksManagerModel::class.java)
     }
 
+    /**
+     * 是否已在下载列表
+     */
+    fun isHasMusic(mid: String): Boolean {
+        return LitePal.isExist(TasksManagerModel::class.java, "mid = ?", mid)
+    }
 
     fun addTask(mid: String, name: String, url: String, path: String): TasksManagerModel? {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
+            return null
+        }
+        //判断是否已下载过
+        if (isHasMusic(mid)) {
+            ToastUtils.show("下载列表已存在 $name")
             return null
         }
         // have to use FileDownloadUtils.generateId to associate TasksManagerModel with FileDownloader

@@ -183,7 +183,7 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     @Override
     public void showEmptyState() {
         if (emptyStateView != null) animateView(emptyStateView, true, 200);
-//        if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
+        if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
         animateView(errorPanelRoot, false, 150);
     }
 

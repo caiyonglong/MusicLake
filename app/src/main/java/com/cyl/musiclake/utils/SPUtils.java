@@ -99,12 +99,12 @@ public class SPUtils {
     }
 
 
-    public static float getFontSize() {
-        return getFloat(DESKTOP_LYRIC_SIZE, 30);
+    public static int getFontSize() {
+        return getInt(DESKTOP_LYRIC_SIZE, 30);
     }
 
-    public static void saveFontSize(float size) {
-        saveFloat(DESKTOP_LYRIC_SIZE, size);
+    public static void saveFontSize(int size) {
+        saveInt(DESKTOP_LYRIC_SIZE, size);
     }
 
 

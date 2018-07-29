@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -282,20 +281,16 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @Override
     public void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (operatingAnim != null && operatingAnim.isPaused()) {
-                operatingAnim.resume();
-            }
+        if (operatingAnim != null && operatingAnim.isPaused()) {
+            operatingAnim.resume();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (operatingAnim != null) {
-                operatingAnim.pause();
-            }
+        if (operatingAnim != null) {
+            operatingAnim.pause();
         }
     }
 
@@ -338,12 +333,14 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
             mPlayOrPause.pause();
         }
         if (operatingAnim != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (isPlaying) {
+            if (isPlaying) {
+                if (operatingAnim.isStarted()) {
                     operatingAnim.resume();
                 } else {
-                    operatingAnim.pause();
+                    operatingAnim.start();
                 }
+            } else {
+                operatingAnim.pause();
             }
         }
     }

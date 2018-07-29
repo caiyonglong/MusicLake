@@ -18,6 +18,7 @@ import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
@@ -29,6 +30,7 @@ import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.music.player.PlayerActivity;
 import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -153,6 +155,7 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
                     PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
                 }
                 mAdapter.notifyDataSetChanged();
+                NavigationHelper.INSTANCE.navigateToPlaying(this);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -202,19 +205,19 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
                         .negativeText("取消")
                         .show();
                 break;
-            case R.id.action_share:
-                Intent intent3 = new Intent(this, EditActivity.class);
-                StringBuilder content = new StringBuilder();
-                if (musicList.size() > 0) {
-                    content = new StringBuilder("分享歌单\n");
-                }
-                for (int i = 0; i < musicList.size(); i++) {
-                    content.append(musicList.get(i).getTitle()).append("---").append(musicList.get(i).getArtist());
-                    content.append("\n");
-                }
-                intent3.putExtra("content", content.toString());
-                startActivity(intent3);
-                break;
+//            case R.id.action_share:
+//                Intent intent3 = new Intent(this, EditActivity.class);
+//                StringBuilder content = new StringBuilder();
+//                if (musicList.size() > 0) {
+//                    content = new StringBuilder("分享歌单\n");
+//                }
+//                for (int i = 0; i < musicList.size(); i++) {
+//                    content.append(musicList.get(i).getTitle()).append("---").append(musicList.get(i).getArtist());
+//                    content.append("\n");
+//                }
+//                intent3.putExtra("content", content.toString());
+//                startActivity(intent3);
+//                break;
         }
         return super.
 

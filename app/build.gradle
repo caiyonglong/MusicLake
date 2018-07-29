@@ -12,9 +12,9 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.cyl.musiclake"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 27
-        versionCode 11
+        versionCode 12
         versionName "4.1.0"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8

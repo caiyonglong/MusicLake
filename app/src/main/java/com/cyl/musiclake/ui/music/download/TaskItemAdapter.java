@@ -157,8 +157,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
             NavigationHelper.INSTANCE.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
-            TasksManager.INSTANCE.get(position);
-
+            TasksManager.INSTANCE.finishTask(id);
             RxBus.getInstance().post(new TasksManagerModel());
         }
 

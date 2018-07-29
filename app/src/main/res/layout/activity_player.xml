@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange"
+    android:background="@color/colorPrimary"
     tools:context=".ui.music.player.PlayerActivity">
 
     <ImageView
@@ -33,9 +33,11 @@
                 android:id="@+id/titleIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="center"
-                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
                 tools:text="@string/play_no_resource" />
@@ -137,6 +139,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/play_mode"
                     android:gravity="center"
                     android:onClick="changePlayMode"
@@ -149,6 +152,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:onClick="prevPlay"
                     android:scaleType="center"
                     android:src="@drawable/ic_skip_previous"
@@ -157,31 +161,31 @@
                     app:materialIconSize="32dp" />
 
                 <FrameLayout
-                    android:layout_width="@dimen/dp_64"
-                    android:layout_height="@dimen/dp_64"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_72"
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <!--<android.support.design.widget.FloatingActionButton-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:layout_margin="@dimen/dp_8"-->
-                    <!--android:padding="@dimen/dp_8" >-->
-
+                    <android.support.design.widget.FloatingActionButton
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/dp_8" />
 
                     <com.cyl.musiclake.view.PlayPauseView
                         android:id="@+id/playPauseIv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_margin="@dimen/dp_8"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:elevation="@dimen/dp_10"
                         android:scaleType="fitXY"
                         app:anim_duration="300"
+
                         app:bg_color="@color/translucent"
                         app:btn_color="@color/white"
                         app:elevation="10dp" />
-
-                    <!--</android.support.design.widget.FloatingActionButton>-->
 
 
                     <ProgressBar
@@ -190,8 +194,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:layout_margin="@dimen/dp_8" />
+                        android:layout_margin="@dimen/dp_8"
+                        android:visibility="gone" />
 
                 </FrameLayout>
 
@@ -201,7 +205,9 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:onClick="nextPlay"
+
                     android:scaleType="center"
                     app:materialIcon="skip_next"
                     app:materialIconColor="@color/white"
@@ -213,8 +219,10 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:onClick="openPlayQueue"
                     android:src="@drawable/ic_detail"
+
                     app:materialIcon="playlist_play"
                     app:materialIconColor="@color/white"
                     app:materialIconSize="24dp" />
@@ -236,8 +244,10 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/love"
                     android:onClick="collectMusic"
+
                     android:scaleType="centerInside"
                     android:src="@drawable/item_favorite" />
 
@@ -247,7 +257,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+
                     android:gravity="center"
                     android:onClick="downloadMusic"
                     app:materialIcon="arrow_collapse_down"
@@ -261,7 +272,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+
                     android:gravity="center"
                     android:onClick="shareMusic"
                     app:materialIcon="share"
@@ -274,8 +286,9 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/equalizer"
-                    android:foreground="?android:attr/selectableItemBackground"
+
                     android:gravity="center"
                     android:src="@drawable/ic_equalizer"
                     android:visibility="gone" />
@@ -286,7 +299,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
                     android:onClick="addToPlaylist"
                     app:materialIcon="playlist_plus"

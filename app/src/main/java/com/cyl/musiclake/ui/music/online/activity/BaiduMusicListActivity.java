@@ -16,6 +16,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
@@ -109,6 +110,7 @@ public class BaiduMusicListActivity extends BaseActivity<BaiduListPresenter> imp
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.BAIDU + type);
                 mAdapter.notifyDataSetChanged();
+                NavigationHelper.INSTANCE.navigateToPlaying(this);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

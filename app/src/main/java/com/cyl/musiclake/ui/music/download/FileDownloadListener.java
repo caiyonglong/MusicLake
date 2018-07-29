@@ -110,7 +110,6 @@ public class FileDownloadListener extends FileDownloadSampleListener {
         super.completed(task);
         LogUtil.d(TAG, "completed:" +task.getId() + "-" + task.getStatus());
         ToastUtils.show(task.getFilename() + " 下载完成");
-        TasksManager.INSTANCE.finishTask(task.getId());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;

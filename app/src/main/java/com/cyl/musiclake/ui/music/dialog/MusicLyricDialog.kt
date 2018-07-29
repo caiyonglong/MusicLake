@@ -20,9 +20,9 @@ import com.cyl.musiclake.api.kugou.KuGouApiServiceImpl
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.FloatLyricViewManager
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import com.rtugeek.android.colorseekbar.ColorSeekBar
-import kotlinx.android.synthetic.main.item_lyric_list.*
 import org.jetbrains.anko.support.v4.toast
 
 /**
@@ -38,7 +38,7 @@ class MusicLyricDialog : DialogFragment() {
     private val searchLyricView by lazy { rootView.findViewById<View>(R.id.searchLyricView) }
     private val lyricFormatView by lazy { rootView.findViewById<View>(R.id.lyricFormatView) }
     private val formatView by lazy { rootView.findViewById<View>(R.id.formatView) }
-    private val containerView by lazy { rootView.findViewById<View>(R.id.containerView) }
+    private val closeIv by lazy { rootView.findViewById<View>(R.id.closeIv) }
     private val formatColorTv by lazy { rootView.findViewById<TextView>(R.id.formatColorTv) }
     private val formatColorSb by lazy { rootView.findViewById<ColorSeekBar>(R.id.formatColorSb) }
     private val formatSizeSb by lazy { rootView.findViewById<SeekBar>(R.id.formatSizeSb) }
@@ -47,7 +47,7 @@ class MusicLyricDialog : DialogFragment() {
     private val lyricResultView by lazy { rootView.findViewById<View>(R.id.lyricResultView) }
 
     var searchListener: (() -> Unit)? = null
-    var textSizeListener: ((Float) -> Unit)? = null
+    var textSizeListener: ((Int) -> Unit)? = null
     var textColorListener: ((Int) -> Unit)? = null
     var lyricListener: ((String) -> Unit)? = null
     var title: String? = ""
@@ -84,7 +84,7 @@ class MusicLyricDialog : DialogFragment() {
      *初始化监听事件
      */
     private fun initListener() {
-        containerView.setOnClickListener {
+        closeIv.setOnClickListener {
             dismiss()
         }
         lyricFormatView.setOnClickListener {
@@ -98,6 +98,7 @@ class MusicLyricDialog : DialogFragment() {
         formatColorSb.setOnColorChangeListener { _, _, color ->
             formatColorTv.setTextColor(color)
             textColorListener?.invoke(color)
+            SPUtils.saveFontColor(color)
         }
         formatSizeSb.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -107,7 +108,9 @@ class MusicLyricDialog : DialogFragment() {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                textSizeListener?.invoke((progress * 0.2 + 35).toFloat())
+                textSizeListener?.invoke(progress)
+                //初始化歌词配置
+                SPUtils.saveFontSize(progress)
             }
         })
     }
@@ -154,14 +157,17 @@ class MusicLyricDialog : DialogFragment() {
             holder.titleTv.text = candidates[position].song
             holder.subTitleTv.text = candidates[position].singer
             holder.itemView.setOnClickListener {
+                loadingView.visibility = View.VISIBLE
                 ApiManager.request(KuGouApiServiceImpl.getKugouLyricInfo(candidates[position]),
                         object : RequestCallBack<String> {
                             override fun success(result: String?) {
                                 result?.let { it1 -> lyricListener?.invoke(it1) }
+                                loadingView.visibility = View.GONE
                             }
 
                             override fun error(msg: String?) {
                                 msg?.let { it1 -> toast(it1) }
+                                loadingView.visibility = View.GONE
                             }
 
                         })
@@ -169,10 +175,12 @@ class MusicLyricDialog : DialogFragment() {
             holder.selectTv.isChecked = (selectId == position)
 
             holder.selectTv.setOnClickListener {
+                loadingView.visibility = View.VISIBLE
                 ApiManager.request(KuGouApiServiceImpl.getKugouLyricInfo(candidates[position]),
                         object : RequestCallBack<String> {
                             override fun success(result: String?) {
                                 result?.let { it1 ->
+                                    loadingView.visibility = View.GONE
                                     lyricListener?.invoke(it1)
                                     selectId = position
                                     FloatLyricViewManager.saveLyricInfo(title, artist, it1)
@@ -182,6 +190,8 @@ class MusicLyricDialog : DialogFragment() {
                             }
 
                             override fun error(msg: String?) {
+                                msg?.let { it1 -> toast(msg) }
+                                loadingView.visibility = View.GONE
                             }
 
                         })

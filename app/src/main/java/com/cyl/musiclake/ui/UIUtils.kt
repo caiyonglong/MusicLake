@@ -21,9 +21,7 @@ import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.music.download.TaskItemAdapter
-import com.cyl.musiclake.utils.FileUtils
-import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.ToastUtils
+import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
 
 object UIUtils {
@@ -133,25 +131,32 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
         ToastUtils.show(MusicApp.getAppContext(), "已经本地音乐!")
         return
     }
-
     ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
         override fun success(result: Music) {
             LogUtil.e(javaClass.simpleName, "-----${result.uri}")
-//            if (!NetworkUtils.isWifiConnected(this@downloadMusic) && SPUtils.getWifiMode()) {
-            MaterialDialog.Builder(this@downloadMusic)
-                    .title("提示")
-                    .content(R.string.download_network_tips)
-                    .onPositive { _, _ ->
-                        addDownloadQueue(result)
-                    }
-                    .positiveText("确定")
-                    .negativeText("取消")
-                    .show()
-//            } else if (result.uri != null && result.uri?.startsWith("http")!!) {
-//                addDownloadQueue(result)
-//            } else {
-//                ToastUtils.show(this@downloadMusic, "下载地址异常！")
-//            }
+            if (!NetworkUtils.isWifiConnected(this@downloadMusic) && SPUtils.getWifiMode()) {
+                MaterialDialog.Builder(this@downloadMusic)
+                        .title(R.string.warning_add_playlist)
+                        .content(R.string.download_network_tips)
+                        .onPositive { _, _ ->
+                            addDownloadQueue(result)
+                        }
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .show()
+            } else if (result.uri != null && result.uri?.startsWith("http")!!) {
+                MaterialDialog.Builder(this@downloadMusic)
+                        .title(R.string.popup_download)
+                        .content(R.string.download_content, music.title)
+                        .onPositive { _, _ ->
+                            addDownloadQueue(result)
+                        }
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .show()
+            } else {
+                ToastUtils.show(this@downloadMusic, "下载地址异常！")
+            }
         }
 
         override fun error(msg: String) {
@@ -171,8 +176,9 @@ fun Context.addDownloadQueue(result: Music) {
             .setPath(path)
             .setCallbackProgressTimes(100)
             .setListener(TaskItemAdapter.taskDownloadListener)
-
-    TasksManager.addTaskForViewHolder(task)
-    TasksManager.addTask(task.id, result.mid!!, result.title!!, result.uri!!, path)
-    task.start()
+    val model = TasksManager.addTask(task.id, result.mid!!, result.title!!, result.uri!!, path)
+    if (model != null) {
+        TasksManager.addTaskForViewHolder(task)
+        task.start()
+    }
 }

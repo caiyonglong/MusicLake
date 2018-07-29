@@ -13,10 +13,10 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -93,6 +93,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, mPlaylist.getName() + mPlaylist.getPid());
                 mAdapter.notifyDataSetChanged();
+                NavigationHelper.INSTANCE.navigateToPlaying(this);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -154,13 +155,5 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         musicList = playlist.getMusicList();
         mAdapter.setNewData(playlist.getMusicList());
         showHeaderInfo();
-    }
-
-    public void showMusicInfo(Music music) {
-        if (action == 0) {
-            PlayManager.playOnline(music);
-        } else if (action == 1) {
-            UIUtilsKt.downloadMusic(this, music);
-        }
     }
 }

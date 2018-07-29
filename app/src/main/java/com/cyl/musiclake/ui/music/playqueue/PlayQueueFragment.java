@@ -20,9 +20,11 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +121,13 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position);
                 mAdapter.notifyDataSetChanged();
+                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity());
             }
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Music music = musicInfos.get(position);
+            PopupDialogFragment.Companion.newInstance(music)
+                    .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }
 

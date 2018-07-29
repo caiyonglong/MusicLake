@@ -75,3 +75,6 @@
 -keep class * extends org.litepal.crud.LitePalSupport {
     *;
 }
+-keep class com.cyl.musiclake.api.doupan.DoubanMusic {
+    *;
+}
