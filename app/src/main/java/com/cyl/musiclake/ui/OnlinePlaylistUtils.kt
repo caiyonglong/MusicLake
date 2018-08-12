@@ -65,6 +65,7 @@ object OnlinePlaylistUtils {
         })
     }
 
+
     /**
      * 获取在线歌单
      */
@@ -155,4 +156,17 @@ object OnlinePlaylistUtils {
         })
     }
 
+    fun disCollectMusic(pid: String, music: Music, success: () -> Unit) {
+        ApiManager.request(PlaylistApiServiceImpl.disCollectMusic(pid, music), object : RequestCallBack<String> {
+            override fun success(result: String) {
+                ToastUtils.show(result)
+                RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                success.invoke()
+            }
+
+            override fun error(msg: String) {
+                ToastUtils.show(msg)
+            }
+        })
+    }
 }

@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -22,6 +23,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.app.NotificationCompat;
@@ -31,6 +33,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
@@ -1288,8 +1291,18 @@ public class MusicPlayerService extends Service {
             showLyric = !showLyric;
             showDesktopLyric(showLyric);
         } else {
-            //启动Activity让用户授权
-            ToastUtils.show("请在应用设置中，打开显示悬浮窗权限");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    intent.setData(Uri.parse("package:" + MusicApp.getAppContext().getPackageName()));
+                    MusicApp.getAppContext().startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(getString(R.string.float_settings));
+                }
+            } else {
+                ToastUtils.show(getString(R.string.float_settings));
+            }
         }
     }
 

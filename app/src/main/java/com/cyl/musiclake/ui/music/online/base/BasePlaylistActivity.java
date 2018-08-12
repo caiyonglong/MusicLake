@@ -13,11 +13,12 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.db.Playlist;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
@@ -98,7 +99,7 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = mPlaylist.getMusicList().get(position);
-            PopupDialogFragment.Companion.newInstance(music).show(this);
+            BottomDialogFragment.Companion.newInstance(music, Constants.OP_ONLINE).show(this);
         });
     }
 

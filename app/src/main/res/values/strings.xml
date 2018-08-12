@@ -257,11 +257,14 @@
 
     <string name="popup_song_detail">歌曲详情</string>
     <string name="popup_play_next">下一首播放</string>
+    <string name="popup_add_to_playlist">添加到歌单</string>
     <string name="popup_detail">查看歌曲信息</string>
     <string name="popup_download">下载歌曲</string>
+    <string name="popup_delete">删除</string>
     <string name="popup_detail_edit">编辑歌曲信息</string>
-    <string name="popup_artist">歌手：%1$s</string>
-    <string name="popup_album">专辑：%1$s</string>
+    <string name="popup_artist">查看歌手</string>
+    <string name="popup_album">查看专辑</string>
+    <string name="popup_share">分享</string>
 
     <string name="download_add_success">下载任务添加成功</string>
     <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
@@ -296,4 +299,7 @@
     <string name="download_processing">正在下载</string>
     <string name="download_content">是否将 %1$s 添加到下载队列</string>
     <string name="dd">暂无歌词</string>
+    <string name="recently_update">最近更新：%1$s</string>
+    <string name="float_settings">请在设置中，打开悬浮窗设置</string>
+
 </resources>

@@ -41,8 +41,8 @@ import kotlinx.android.synthetic.main.activity_player.*
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     private var playingMusic: Music? = null
-    private lateinit var coverView: View
-    private lateinit var lyricView: View
+    private var coverView: View? = null
+    private var lyricView: View? = null
     private val viewPagerContent = mutableListOf<View>()
     private var mLyricView: LyricView? = null
     private var coverAnimator: ObjectAnimator? = null
@@ -82,7 +82,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun initData() {
         setupViewPager(viewPager)
-        initAlbumPic(coverView.findViewById(R.id.civ_cover))
+        initAlbumPic(coverView?.findViewById(R.id.civ_cover))
         mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic())
         //初始加載歌詞
         //更新播放状态
@@ -166,7 +166,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun setPlayingBitmap(albumArt: Bitmap?) {
-        coverView.findViewById<ImageView>(R.id.civ_cover).setImageBitmap(albumArt)
+        coverView?.findViewById<ImageView>(R.id.civ_cover)?.setImageBitmap(albumArt)
     }
 
     override fun setPlayingBg(albumArt: Drawable?) {
@@ -279,9 +279,13 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //初始化View
         coverView = LayoutInflater.from(this).inflate(R.layout.frag_player_coverview, viewPager, false)
         lyricView = LayoutInflater.from(this).inflate(R.layout.frag_player_lrcview, viewPager, false)
-        mLyricView = lyricView.findViewById(R.id.lyricShow)
-        viewPagerContent.add(coverView)
-        viewPagerContent.add(lyricView)
+        mLyricView = lyricView?.findViewById(R.id.lyricShow)
+        coverView?.let {
+            viewPagerContent.add(it)
+        }
+        lyricView?.let {
+            viewPagerContent.add(it)
+        }
 
         val mAdapter = MyPagerAdapter(viewPagerContent)
         viewPager.adapter = mAdapter
@@ -352,7 +356,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             }
         }
         value?.let {
-            coverView.findViewById<TextView>(R.id.tv_source).text = value
+            coverView?.findViewById<TextView>(R.id.tv_source)?.text = value
         }
     }
 

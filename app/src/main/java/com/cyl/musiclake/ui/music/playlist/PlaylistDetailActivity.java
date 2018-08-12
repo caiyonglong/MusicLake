@@ -28,10 +28,8 @@ import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.music.player.PlayerActivity;
-import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.ItemDecoration;
@@ -47,7 +45,7 @@ import butterknife.OnClick;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter> implements PlaylistDetailContract.View {
+public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter> implements PlaylistDetailContract.View, BottomDialogFragment.RemoveMusicListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -71,6 +69,8 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
     private Album mAlbum;
     private String title;
     private String coverUrl;
+
+    private BottomDialogFragment bottomDialogFragment;
 
     public static void newInstance(Context context, Playlist playlist) {
         Intent intent = new Intent(context, PlaylistDetailActivity.class);
@@ -160,8 +160,16 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = musicList.get(position);
-            PopupDialogFragment.Companion.newInstance(music)
-                    .show(this);
+            if (mPlaylist != null && mPlaylist.getType() == 1) {
+                bottomDialogFragment = BottomDialogFragment.Companion.newInstance(music, Constants.OP_PLAYLIST);
+                bottomDialogFragment.setRemoveMusicListener(this);
+                bottomDialogFragment.setPosition(position);
+                bottomDialogFragment.show(this);
+            } else {
+                bottomDialogFragment = BottomDialogFragment.Companion.newInstance(music, Constants.OP_ONLINE);
+                bottomDialogFragment.setPosition(position);
+                bottomDialogFragment.show(this);
+            }
         });
     }
 
@@ -205,19 +213,6 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
                         .negativeText("取消")
                         .show();
                 break;
-//            case R.id.action_share:
-//                Intent intent3 = new Intent(this, EditActivity.class);
-//                StringBuilder content = new StringBuilder();
-//                if (musicList.size() > 0) {
-//                    content = new StringBuilder("分享歌单\n");
-//                }
-//                for (int i = 0; i < musicList.size(); i++) {
-//                    content.append(musicList.get(i).getTitle()).append("---").append(musicList.get(i).getArtist());
-//                    content.append("\n");
-//                }
-//                intent3.putExtra("content", content.toString());
-//                startActivity(intent3);
-//                break;
         }
         return super.
 
@@ -280,5 +275,16 @@ public class PlaylistDetailActivity extends BaseActivity<PlaylistDetailPresenter
     @Override
     public void success(int type) {
         onBackPress();
+    }
+
+    /**
+     * 删除歌曲
+     */
+    @Override
+    public void remove(int positon, Music music) {
+        OnlinePlaylistUtils.INSTANCE.disCollectMusic(pid, music, () -> {
+            removeMusic(positon);
+            return null;
+        });
     }
 }

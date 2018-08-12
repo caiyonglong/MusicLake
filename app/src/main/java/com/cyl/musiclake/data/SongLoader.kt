@@ -148,17 +148,7 @@ object SongLoader {
             data.clear()
             val musicLists = getAllLocalSongs(context)
             musicLists.forEach {
-                if (it.coverUri == null) {
-                    val info = it.title + "," + it.artist
-                    MusicApi.getMusicAlbumPic(info) { url ->
-                        it.coverUri = url
-                        it.saveAsync()
-                        data.add(it)
-                    }
-                } else {
-                    data.add(it)
-                }
-
+                data.add(it)
             }
         }
         return data

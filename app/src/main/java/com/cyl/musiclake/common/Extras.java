@@ -34,6 +34,7 @@ public class Extras {
     public static final String ALBUM_ID = "album_id";
     public static final String ARTIST_ID = "artist_id";
     public static final String PLAYLIST_ID = "playlist_id";
+    public static final String PLAYLIST_TYPE = "playlist_type";
     public static final String PLAYLIST = "playlist";
     public static final String ARTIST = "artist";
 

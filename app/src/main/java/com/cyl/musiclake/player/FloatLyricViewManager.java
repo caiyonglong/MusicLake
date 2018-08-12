@@ -105,9 +105,9 @@ public class FloatLyricViewManager {
      *
      * @param info 歌词
      */
-    public static void saveLyricInfo(String name,String artist, String info) {
+    public static void saveLyricInfo(String name, String artist, String info) {
         lyricInfo = info;
-        MusicApiServiceImpl.INSTANCE.saveLyricInfo(name,artist, info);
+        MusicApiServiceImpl.INSTANCE.saveLyricInfo(name, artist, info);
         setLyric(lyricInfo);
         for (int i = 0; i < lyricViews.size(); i++) {
             lyricViews.get(i).setLyricContent(info);
@@ -171,29 +171,34 @@ public class FloatLyricViewManager {
      * @param context 必须为应用程序的Context.
      */
     private void createFloatLyricView(Context context) {
-        WindowManager windowManager = getWindowManager(context);
-        Point size = new Point();
-        //获取屏幕宽高
-        windowManager.getDefaultDisplay().getSize(size);
-        int screenWidth = size.x;
-        int screenHeight = size.y;
-        if (mFloatLyricView == null) {
-            mFloatLyricView = new FloatLyricView(context);
-            if (mFloatLyricViewParams == null) {
-                mFloatLyricViewParams = new WindowManager.LayoutParams();
-                mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-                mFloatLyricViewParams.format = PixelFormat.RGBA_8888;
-                mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                mFloatLyricViewParams.gravity = Gravity.START | Gravity.TOP;
-                mFloatLyricViewParams.width = mFloatLyricView.viewWidth;
-                mFloatLyricViewParams.height = mFloatLyricView.viewHeight;
-                mFloatLyricViewParams.x = screenWidth;
-                mFloatLyricViewParams.y = screenHeight / 2;
+        try {
+
+            WindowManager windowManager = getWindowManager(context);
+            Point size = new Point();
+            //获取屏幕宽高
+            windowManager.getDefaultDisplay().getSize(size);
+            int screenWidth = size.x;
+            int screenHeight = size.y;
+            if (mFloatLyricView == null) {
+                mFloatLyricView = new FloatLyricView(context);
+                if (mFloatLyricViewParams == null) {
+                    mFloatLyricViewParams = new WindowManager.LayoutParams();
+                    mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+                    mFloatLyricViewParams.format = PixelFormat.RGBA_8888;
+                    mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                            | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                    mFloatLyricViewParams.gravity = Gravity.START | Gravity.TOP;
+                    mFloatLyricViewParams.width = mFloatLyricView.viewWidth;
+                    mFloatLyricViewParams.height = mFloatLyricView.viewHeight;
+                    mFloatLyricViewParams.x = screenWidth;
+                    mFloatLyricViewParams.y = screenHeight / 2;
+                }
+                mFloatLyricView.setParams(mFloatLyricViewParams);
+                windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
+                setLyric(lyricInfo);
             }
-            mFloatLyricView.setParams(mFloatLyricViewParams);
-            windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
-            setLyric(lyricInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

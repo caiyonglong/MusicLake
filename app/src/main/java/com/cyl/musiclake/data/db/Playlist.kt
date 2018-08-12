@@ -36,7 +36,7 @@ class Playlist() : LitePalSupport(), Parcelable {
     var type: Int = 0
 
     //歌曲集合
-    var musicList: MutableList<Music> = ArrayList()
+    var musicList = mutableListOf<Music>()
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()

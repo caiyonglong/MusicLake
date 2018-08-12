@@ -1,9 +1,11 @@
 package com.cyl.musiclake.ui.music.local.adapter
 
 import android.view.View
+import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.player.PlayManager
@@ -18,24 +20,7 @@ import com.cyl.musiclake.utils.CoverLoader
  */
 class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList) {
     override fun convert(holder: BaseViewHolder, item: Music) {
-//            val info = item.title + "," + item.artist
-//            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
-//                override fun success(result: DoubanMusic?) {
-//                    val data = result?.musics
-//                    data?.let {
-//                        if (it.size > 0) {
-//                            url = result.musics?.first()?.image
-//                            item.coverUri = url
-//                            notifyItemChanged(holder.adapterPosition)
-//                            SongLoader.updateMusic(item)
-//                            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
-//                        }
-//                    }
-//                }
-//
-//                override fun error(msg: String?) {
-//                }
-//            })
+
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
@@ -71,5 +56,33 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
                 }
             }
         }
+        val info = item.title + "," + item.artist
+        if (item.coverUri != null) {
+            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+        }
+        MusicApi.getMusicAlbumPic(info) {
+            item.coverUri = it
+            notifyItemChanged(holder.adapterPosition)
+            item.saveAsync()
+        }
+
+//            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
+//                override fun success(result: DoubanMusic?) {
+//                    val data = result?.musics
+//                    data?.let {
+//                        if (it.size > 0) {
+//                            url = result.musics?.first()?.image
+//                            item.coverUri = url
+//                            notifyItemChanged(holder.adapterPosition)
+//                            SongLoader.updateMusic(item)
+//                            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
+//                        }
+//                    }
+//                }
+//
+//                override fun error(msg: String?) {
+//                }
+//            })
+
     }
 }

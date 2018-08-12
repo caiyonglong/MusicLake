@@ -7,6 +7,11 @@ import android.os.Environment;
  */
 public class Constants {
 
+    //歌曲操作区分
+    public static final int OP_LOCAL = 0; //没有歌曲下载、删除、修改(后续会有)、添加到歌单
+    public static final int OP_ONLINE = 1; //没有歌曲删除、修改、添加到歌单
+    public static final int OP_PLAYLIST = 2;//修改(后续会有)、添加到歌单
+
     //歌曲类型
     public static final String LOCAL = "local";
     public static final String QQ = "qq";

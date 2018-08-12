@@ -6,23 +6,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.PopupMenu;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.data.SongLoader;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.data.download.TasksManagerModel;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
-import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.utils.FileUtils;
-import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +55,7 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            PopupDialogFragment.Companion.newInstance(music).show((AppCompatActivity) mFragmentComponent.getActivity());
+            BottomDialogFragment.Companion.newInstance(music).show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }
 

@@ -58,7 +58,7 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
      */
     @Override
     public void initViews() {
-        mAdapter = new AlbumAdapter(null);
+        mAdapter = new AlbumAdapter(albumList);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);

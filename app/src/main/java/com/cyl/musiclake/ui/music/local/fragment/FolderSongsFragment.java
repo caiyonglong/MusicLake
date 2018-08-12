@@ -5,13 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
@@ -19,13 +13,10 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
-import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.music.local.presenter.FolderSongPresenter;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.ItemDecoration;
 
 import java.util.ArrayList;
@@ -105,7 +96,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            PopupDialogFragment.Companion.newInstance(musicList.get(position)).show((AppCompatActivity) mFragmentComponent.getActivity());
+            BottomDialogFragment.Companion.newInstance(musicList.get(position)).show((AppCompatActivity) mFragmentComponent.getActivity());
 //            PopupMenu popupMenu = new PopupMenu(getContext(), view);
 //            popupMenu.setOnMenuItemClickListener(item -> {
 //                switch (item.getItemId()) {

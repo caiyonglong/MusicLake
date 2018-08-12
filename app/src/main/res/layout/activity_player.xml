@@ -38,9 +38,10 @@
                 android:focusableInTouchMode="true"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
-                tools:text="@string/play_no_resource" />
+                tools:text="@string/song_title" />
 
             <TextView
                 android:id="@+id/subTitleTv"

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.playlist;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -30,9 +29,8 @@ import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.ItemDecoration;
@@ -165,7 +163,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = musicList.get(position);
-            PopupDialogFragment.Companion.newInstance(music)
+            BottomDialogFragment.Companion.newInstance(music)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }

@@ -18,7 +18,7 @@ import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.SongsContract;
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter;
@@ -88,7 +88,7 @@ public class SongsFragment extends BaseLazyFragment<SongsPresenter> implements S
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            PopupDialogFragment.Companion.newInstance(music)
+            BottomDialogFragment.Companion.newInstance(music,Constants.OP_LOCAL)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }

@@ -15,12 +15,13 @@ import android.widget.EditText;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.DaoLitepal;
 import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.db.SearchHistoryBean;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.dialog.PopupDialogFragment;
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.LogUtil;
 
@@ -158,7 +159,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
-            PopupDialogFragment.Companion.newInstance(music).show(this);
+            BottomDialogFragment.Companion.newInstance(music, Constants.OP_ONLINE).show(this);
         });
         mAdapter.setOnLoadMoreListener(() -> resultListRcv.postDelayed(() -> {
             if (mCurrentCounter == 0) {

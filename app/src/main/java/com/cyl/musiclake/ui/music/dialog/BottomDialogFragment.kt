@@ -15,28 +15,50 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.utils.ConvertUtils
-import kotlinx.android.synthetic.main.fragment_recyclerview_collapsingtoolbar.*
 
-class PopupDialogFragment : BottomSheetDialogFragment() {
+class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
-    var mAdapter = ItemAdapter()
+    private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false) }
+    private val recyclerView by lazy { mRootView.findViewById<RecyclerView>(R.id.bottomSheetRv) }
+    private val titleTv by lazy { mRootView.findViewById<TextView>(R.id.titleTv) }
+    private val subTitleTv by lazy { mRootView.findViewById<TextView>(R.id.subTitleTv) }
+
+    var mAdapter: ItemAdapter? = null
+    var type: Int = 0
+
+    var removeMusicListener: RemoveMusicListener? = null
+    var position: Int = 0
+
+    interface RemoveMusicListener {
+        fun remove(position: Int, music: Music?)
+    }
 
     companion object {
         var music: Music? = null
 
-        fun newInstance(music: Music): PopupDialogFragment {
+        fun newInstance(music: Music?): BottomDialogFragment {
             val args = Bundle()
             this.music = music
-            val fragment = PopupDialogFragment()
+            val fragment = BottomDialogFragment()
             fragment.arguments = args
+            return fragment
+        }
+
+        fun newInstance(music: Music?, type: Int): BottomDialogFragment {
+            val args = Bundle()
+            this.music = music
+            val fragment = BottomDialogFragment()
+            fragment.arguments = args
+            args.putInt(Extras.PLAYLIST_TYPE, type)
             return fragment
         }
     }
@@ -51,17 +73,21 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.bottomSheetRv)
-        val titleTv = view.findViewById<TextView>(R.id.titleTv)
-        val subTitleTv = view.findViewById<TextView>(R.id.subTitleTv)
+        initItems()
+        dialog.setContentView(mRootView)
+        mBehavior = BottomSheetBehavior.from(mRootView.parent as View)
+        return dialog
+    }
+
+    private fun initItems() {
         titleTv.text = music?.title
         subTitleTv.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
+        arguments?.getInt(Extras.PLAYLIST_TYPE, 0)?.let {
+            type = it
+        }
+        mAdapter = ItemAdapter(type)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
-        dialog.setContentView(view)
-        mBehavior = BottomSheetBehavior.from(view.parent as View)
-        return dialog
     }
 
     private fun turnToAlbum() {
@@ -91,25 +117,29 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    inner class ItemAdapter(val type: Int = 0) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
-
-        private val local = arrayOf("下一首播放", "查看歌手", "查看专辑", "修改歌曲信息", "分享")
-        private val iconsLocal = arrayOf(R.drawable.ic_queue_play_next, R.drawable.ic_art_track,
-                R.drawable.ic_album, R.drawable.ic_mode_edit, R.drawable.ic_share_black)
-        private val online = arrayOf("下一首播放", "加到歌单", "查看歌手", "查看专辑", "下载", "分享")
-        private val iconsOnline = arrayOf(R.drawable.ic_queue_play_next, R.drawable.ic_playlist_add,
-                R.drawable.ic_art_track, R.drawable.ic_album,
-                R.drawable.item_download, R.drawable.ic_share_black)
-        var data: Array<String>
-        var icons: Array<Int>
+    inner class ItemAdapter(type: Int = 0) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+        private var itemData = mutableMapOf(
+                R.string.popup_play_next to R.drawable.ic_queue_play_next,
+                R.string.popup_add_to_playlist to R.drawable.ic_playlist_add,
+                R.string.popup_album to R.drawable.ic_album,
+                R.string.popup_artist to R.drawable.ic_art_track,
+                R.string.popup_download to R.drawable.item_download,
+                R.string.popup_delete to R.drawable.ic_delete,
+                R.string.popup_share to R.drawable.ic_share_black)
+        val data = mutableListOf<PopupItemBean>()
 
         init {
             if (music?.type == Constants.LOCAL) {
-                data = local
-                icons = iconsLocal
-            } else {
-                data = online
-                icons = iconsOnline
+                itemData.remove(R.string.popup_download)
+                itemData.remove(R.string.popup_add_to_playlist)
+                itemData.remove(R.string.popup_delete)
+            }
+            if (type == Constants.OP_ONLINE) {
+                itemData.remove(R.string.popup_delete)
+            }
+
+            itemData.forEach {
+                data.add(PopupItemBean(getString(it.key), it.value))
             }
         }
 
@@ -119,12 +149,12 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
         }
 
         override fun onBindViewHolder(holder: ItemAdapter.ItemViewHolder, position: Int) {
-            holder.textView.text = data[position]
-            holder.icon.setImageResource(icons[position])
+            holder.textView.text = data[position].title
+            holder.icon.setImageResource(data[position].icon)
             holder.icon.setColorFilter(Color.parseColor("#0091EA"))
 
             holder.itemView.setOnClickListener {
-                when (icons[position]) {
+                when (data[position].icon) {
                     R.drawable.ic_queue_play_next -> PlayManager.nextPlay(music)
                     R.drawable.ic_playlist_add -> {
                         if (music?.type != Constants.LOCAL) {
@@ -136,6 +166,9 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
                     }
                     R.drawable.ic_album -> {
                         turnToAlbum()
+                    }
+                    R.drawable.ic_delete -> {
+                        removeMusicListener?.remove(this@BottomDialogFragment.position, music)
                     }
                     R.drawable.item_download -> {
                         if (music?.type != Constants.LOCAL) {
@@ -162,4 +195,4 @@ class PopupDialogFragment : BottomSheetDialogFragment() {
     }
 }
 
-
+data class PopupItemBean(val title: String = "", val icon: Int = 0)

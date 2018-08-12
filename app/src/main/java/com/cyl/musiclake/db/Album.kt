@@ -20,7 +20,7 @@ class Album : LitePalSupport, Serializable {
     var artistId: Long = 0
     var count: Int = 0
 
-    var songs: List<Music> = ArrayList()
+    var songs = mutableListOf<Music>()
 
     constructor() {}
 

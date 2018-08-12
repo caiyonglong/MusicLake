@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+
+repositories {
+    mavenCentral()
+}
+apply plugin: 'kotlin-android-extensions'
 android {
     signingConfigs {
         release {
@@ -90,7 +95,7 @@ dependencies {
     api 'com.jaeger.statusbaruitl:library:1.3.5'
     api 'org.litepal.android:core:2.0.0'
     //dagger2
-    api 'com.google.dagger:dagger:2.7'
+    api 'com.google.dagger:dagger:2.11'
 
     api 'com.hyman:flowlayout-lib:1.1.2'
     // Appcompat-v7 (only Anko Commons)
@@ -99,11 +104,7 @@ dependencies {
 
     api 'com.devbrackets.android:exomedia:4.2.1'
 
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
-    implementation project(':musicapi')
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    api project(':musicapi')
 
 }
-repositories {
-    mavenCentral()
-}
-apply plugin: 'kotlin-android-extensions'
