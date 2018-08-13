@@ -23,50 +23,67 @@
         app:title="">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/titleIv"
+            <ImageView
+                android:id="@+id/backIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_16"
-                tools:text="@string/song_title" />
+                android:layout_marginEnd="@dimen/dp_16"
+                android:contentDescription="@string/search_lyric"
+                android:src="@drawable/ic_arrow_back" />
 
-            <TextView
-                android:id="@+id/subTitleTv"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    tools:text="歌曲名歌曲名歌曲名歌曲名歌曲名歌曲名歌曲名歌曲名歌曲名歌曲名歌曲歌曲名歌曲名歌曲" />
+
+                <TextView
+                    android:id="@+id/subTitleTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="@string/artist_tips" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/searchLyricIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_4"
-                android:gravity="center"
-                android:lines="1"
-                android:textSize="@dimen/sp_12"
-                tools:text="@string/artist_tips" />
+                android:layout_margin="@dimen/dp_16"
+                android:contentDescription="@string/search_lyric"
+                android:src="@drawable/ic_search_lyric"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/searchLyricIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="@dimen/dp_16"
-            android:contentDescription="@string/search_lyric"
-            android:src="@drawable/ic_search_lyric"
-            android:visibility="gone" />
-
 
     </android.support.v7.widget.Toolbar>
+
 
     <LinearLayout
         android:id="@+id/topContainer"

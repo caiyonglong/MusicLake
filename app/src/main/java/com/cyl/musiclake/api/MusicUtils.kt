@@ -101,9 +101,9 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.coverUri = musicInfo.album.cover
-        music.coverBig = musicInfo.album.cover
-        music.coverSmall = musicInfo.album.cover
+        music.coverUri = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 150)
+        music.coverBig = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 300)
+        music.coverSmall = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 90)
         return music
     }
 
@@ -131,12 +131,34 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.coverUri = song.album.cover
-        music.coverBig = song.album.cover
-        music.coverSmall = song.album.cover
+        music.coverUri = getAlbumPic(song.album.cover, type, 150)
+        music.coverBig = getAlbumPic(song.album.cover, type, 300)
+        music.coverSmall = getAlbumPic(song.album.cover, type, 90)
         return music
     }
 
+    /**
+     * 根据不同的歌曲类型生成不同的图片
+     */
+    fun getAlbumPic(url: String, type: String, width: Int = 140): String {
+        return when (type) {
+            Constants.QQ -> {
+                url.replace("300x300", "${width}x$width")
+            }
+            Constants.XIAMI -> {
+                "$url@1e_1c_100Q_${width}w_${width}h"
+            }
+            Constants.NETEASE -> {
+                "$url?param=${width}y$width"
+            }
+            Constants.BAIDU -> {
+                "$url?@s_1,w_$width,h_$width"
+            }
+            else -> {
+                ""
+            }
+        }
+    }
 
     /**
      * 本地歌曲实体转化成在线歌单歌曲实体

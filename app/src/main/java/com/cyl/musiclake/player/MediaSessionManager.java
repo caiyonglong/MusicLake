@@ -111,7 +111,7 @@ public class MediaSessionManager {
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, songInfo.getArtist())
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, songInfo.getDuration());
 
-        CoverLoader.loadImageViewByMusic(context, songInfo, bitmap -> {
+        CoverLoader.loadBigImageView(context, songInfo, bitmap -> {
             metaDta.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
             mMediaSession.setMetadata(metaDta.build());
         });

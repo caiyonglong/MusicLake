@@ -45,7 +45,9 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     @Override
     protected void listener() {
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadDownloadMusic();
+            if (mPresenter != null) {
+                mPresenter.loadDownloadMusic();
+            }
         });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {

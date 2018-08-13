@@ -60,11 +60,13 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
         if (item.coverUri != null) {
             CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         }
-        MusicApi.getMusicAlbumPic(info) {
+        MusicApi.getMusicAlbumPic(info, success = {
             item.coverUri = it
+            item.coverBig = it
+            item.coverSmall = it
             notifyItemChanged(holder.adapterPosition)
             item.saveAsync()
-        }
+        })
 
 //            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
 //                override fun success(result: DoubanMusic?) {

@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
+import com.cyl.musiclake.R.id.backIv
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.common.Constants
@@ -67,8 +68,8 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         return R.layout.activity_player
     }
 
-    override fun setToolbarTitle(): String {
-        return ""
+    override fun hasToolbar(): Boolean {
+        return false
     }
 
     override fun initView() {
@@ -88,6 +89,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //更新播放状态
         PlayManager.isPlaying().let {
             updatePlayStatus(it)
+        }
+        backIv.setOnClickListener {
+            finish()
         }
         showLyric(FloatLyricViewManager.lyricInfo, true)
         updateMusicType(playingMusic?.type)
@@ -222,6 +226,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         playModeIv.setColorFilter(blackWhiteColor)
         prevPlayIv.setColor(blackWhiteColor)
         nextPlayIv.setColor(blackWhiteColor)
+        backIv.setColorFilter(blackWhiteColor)
         playQueueIv.setColor(blackWhiteColor)
         downloadIv.setColor(blackWhiteColor)
         shareIv.setColor(blackWhiteColor)
@@ -298,7 +303,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             override fun onPageSelected(position: Int) {
                 LogUtil.d("PlayControlFragment", "--$position")
                 if (position == 0) {
-                    searchLyricIv.visibility = View.GONE
+                    searchLyricIv.visibility = View.INVISIBLE
                     mLyricView?.setIndicatorShow(false)
                 } else {
                     searchLyricIv.visibility = View.VISIBLE

@@ -5,41 +5,46 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_72"
-    android:background="?attr/selectableItemBackground"
+    android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     tools:layout_editor_absoluteY="25dp">
 
     <View
         android:id="@+id/v_playing"
-        android:layout_width="5dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         android:contentDescription="@null"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_cover"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_cover"
-        android:layout_width="50dp"
-        android:layout_height="51dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:elevation="1dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/default_cover" />
 
 
     <TextView
         android:id="@+id/tv_title"
         style="@style/AppTheme.Text"
-        android:layout_width="228dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -48,6 +53,7 @@
         android:lines="1"
         android:text="@string/song"
         android:textSize="@dimen/text_size_common"
+        app:layout_constraintBottom_toTopOf="@+id/tv_artist"
         app:layout_constraintEnd_toStartOf="@+id/iv_resource"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
@@ -55,9 +61,9 @@
 
     <TextView
         android:id="@+id/tv_artist"
-        android:layout_width="228dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
@@ -66,11 +72,10 @@
         android:text="@string/artist_tips"
         android:textColor="@color/grey"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/iv_resource"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_title"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
 
     <ImageView
@@ -87,18 +92,20 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iv_more"
+        app:layout_constraintStart_toEndOf="@+id/tv_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_more"
-        android:layout_width="36dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
         android:contentDescription="@null"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_music_list_icon_more"
+        android:src="@drawable/ic_more_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_resource"
         app:layout_constraintTop_toTopOf="parent" />
 
 

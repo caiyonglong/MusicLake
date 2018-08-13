@@ -23,10 +23,10 @@ class AlbumAdapter(albumList: List<Album>) : BaseQuickAdapter<Album, BaseViewHol
         CoverLoader.loadImageView(mContext, album.cover, helper.getView(R.id.album))
         album.name?.let {
             if (album.cover.isNullOrEmpty()) {
-                MusicApi.getMusicAlbumPic(it) {
+                MusicApi.getMusicAlbumPic(it, success = {
                     notifyItemChanged(helper.adapterPosition)
                     CoverLoader.loadImageView(mContext, it, helper.getView(R.id.album))
-                }
+                })
             }
         }
     }

@@ -75,6 +75,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Nullable
     @BindView(R.id.toolbar)
     public Toolbar mToolbar;
+
     protected Handler mHandler;
     private Unbinder unbinder;
     private PlayManager.ServiceToken mToken;

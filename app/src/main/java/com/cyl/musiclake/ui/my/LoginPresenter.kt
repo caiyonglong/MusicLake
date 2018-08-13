@@ -115,46 +115,50 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == REQUEST_LOGIN) {
             if (resultCode == -1) {
-                Tencent.onActivityResultData(requestCode, resultCode, data, loginListener)
-                Tencent.handleResultData(data, loginListener)
-                val info = UserInfo(mView.context, mTencent!!.qqToken)
-                info.getUserInfo(object : IUiListener {
-                    override fun onComplete(o: Any) {
-                        try {
-                            val info = o as JSONObject
-                            val nickName = info.getString("nickname")//获取用户昵称
-                            val iconUrl = info.getString("figureurl_qq_2")//获取用户头像的url
-                            val gender = info.getString("gender")//获取用户性别
-                            //                            Map<String, String> params = new HashMap<String, String>();
-                            //                            params.put(Constants.PARAM_METHOD, "qq");
-                            //                            params.put(Constants.USERNAME, nickName);
-                            //                            params.put(Constants.USER_SEX, gender);
-                            //                            params.put(Constants.USER_IMG, iconUrl);
-                            //                            params.put(Constants.USER_ID, mTencent.getOpenId());
-                            val userInfo = User()
-                            userInfo.id = mTencent!!.openId
-                            userInfo.avatar = iconUrl
-                            userInfo.sex = gender
-                            userInfo.name = nickName
-                            userInfo.nick = nickName
-                            //保存用户信息
-                            userModel!!.savaInfo(userInfo)
-                            getPrivateToken()
-                        } catch (e: JSONException) {
-                            ToastUtils.show("网络异常，请稍后重试！")
-                            e.printStackTrace()
+                try {
+                    Tencent.onActivityResultData(requestCode, resultCode, data, loginListener)
+                    Tencent.handleResultData(data, loginListener)
+                    val info = UserInfo(mView.context, mTencent!!.qqToken)
+                    info.getUserInfo(object : IUiListener {
+                        override fun onComplete(o: Any) {
+                            try {
+                                val info = o as JSONObject
+                                val nickName = info.getString("nickname")//获取用户昵称
+                                val iconUrl = info.getString("figureurl_qq_2")//获取用户头像的url
+                                val gender = info.getString("gender")//获取用户性别
+                                //                            Map<String, String> params = new HashMap<String, String>();
+                                //                            params.put(Constants.PARAM_METHOD, "qq");
+                                //                            params.put(Constants.USERNAME, nickName);
+                                //                            params.put(Constants.USER_SEX, gender);
+                                //                            params.put(Constants.USER_IMG, iconUrl);
+                                //                            params.put(Constants.USER_ID, mTencent.getOpenId());
+                                val userInfo = User()
+                                userInfo.id = mTencent!!.openId
+                                userInfo.avatar = iconUrl
+                                userInfo.sex = gender
+                                userInfo.name = nickName
+                                userInfo.nick = nickName
+                                //保存用户信息
+                                userModel!!.savaInfo(userInfo)
+                                getPrivateToken()
+                            } catch (e: JSONException) {
+                                ToastUtils.show("网络异常，请稍后重试！")
+                                e.printStackTrace()
+                            }
+
                         }
 
-                    }
+                        override fun onError(uiError: UiError) {
+                            mView?.hideLoading()
+                        }
 
-                    override fun onError(uiError: UiError) {
-                        mView?.hideLoading()
-                    }
-
-                    override fun onCancel() {
-                        mView?.hideLoading()
-                    }
-                })
+                        override fun onCancel() {
+                            mView?.hideLoading()
+                        }
+                    })
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
             }
         }
     }

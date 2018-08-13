@@ -1,6 +1,7 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
+import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.data.db.Playlist
@@ -140,7 +141,8 @@ object BaiduApiServiceImpl {
                         music.lyric = songInfo.lrcLink
                         music.coverSmall = songInfo.songPicSmall
                         music.coverUri = songInfo.songPicBig
-                        music.coverBig = songInfo.songPicRadio.split("@")[0]
+                        music.coverBig = MusicUtils.getAlbumPic(songInfo.songPicRadio.split("@")[0], Constants.BAIDU, 300)
+
                     }
                     Observable.create(ObservableOnSubscribe<Music> { e ->
                         if (music.uri != null) {
@@ -228,7 +230,9 @@ object BaiduApiServiceImpl {
                                 music.artist = it.artist
                                 music.artistId = it.artistId
                                 music.mid = it.songid
-                                music.coverUri = it.thumb.split("@")[0]
+                                music.coverUri = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 150)
+                                music.coverSmall = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 90)
+                                music.coverBig = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 300)
                                 songs.add(music)
                             }
                         }
