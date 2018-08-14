@@ -91,7 +91,7 @@ object UIUtils {
 /**
  * 删除歌单
  */
-fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) -> Unit)?, fail: (() -> Unit)?) {
+fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) -> Unit)?, fail: (() -> Unit)? = null) {
     when (playlist.pid) {
         Constants.PLAYLIST_HISTORY_ID -> {
             MaterialDialog.Builder(this)
