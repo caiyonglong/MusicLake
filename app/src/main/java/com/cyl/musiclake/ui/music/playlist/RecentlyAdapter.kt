@@ -1,17 +1,12 @@
 package com.cyl.musiclake.ui.music.playlist
 
-import android.support.v4.content.ContextCompat
 import android.view.View
-import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.api.doupan.DoubanMusic
 import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
@@ -26,27 +21,16 @@ class RecentlyAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
 
     override fun convert(holder: BaseViewHolder, item: Music) {
         var url = item.coverUri
-        if (url == null) {
-            val info = item.title + "," + item.artist
-            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
-                override fun success(result: DoubanMusic?) {
-                    val data = result?.musics
-                    data?.let {
-                        if (it.size > 0) {
-                            url = result?.musics?.first()?.image
-                            item.coverUri = url
-                            SongLoader.updateMusic(item)
-                            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
-                        }
-                    }
-                }
-
-                override fun error(msg: String?) {
-                }
-            })
-        } else {
-            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
-        }
+//        if (url == null) {
+//            val info = item.title + "," + item.artist
+//            MusicApi.getMusicAlbumPic(info, success = {
+//                item.coverUri = url
+//                SongLoader.updateMusic(item)
+//                CoverLoader.loadImageView(mContext, url, holder.getView(R.id.iv_cover))
+//            })
+//        } else {
+        CoverLoader.loadImageView(mContext, url, holder.getView(R.id.iv_cover))
+//        }
 
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))

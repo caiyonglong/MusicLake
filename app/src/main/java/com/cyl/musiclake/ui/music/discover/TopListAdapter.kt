@@ -20,7 +20,7 @@ class TopListAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, BaseView
         helper.setText(R.id.title, neteaseList.name)
         if (neteaseList.coverUrl == null)
             return
-        CoverLoader.loadImageView(mContext, neteaseList.coverUrl, helper.getView<ImageView>(R.id.iv_cover))
+        CoverLoader.loadImageView(mContext, neteaseList.coverUrl, helper.getView(R.id.iv_cover))
     }
 }
 

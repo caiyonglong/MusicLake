@@ -102,7 +102,7 @@ object MusicUtils {
             music.artistId = artistIds
         }
         music.coverUri = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 150)
-        music.coverBig = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 300)
+        music.coverBig = musicInfo.album.cover
         music.coverSmall = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 90)
         return music
     }
@@ -132,7 +132,7 @@ object MusicUtils {
             music.artistId = artistIds
         }
         music.coverUri = getAlbumPic(song.album.cover, type, 150)
-        music.coverBig = getAlbumPic(song.album.cover, type, 300)
+        music.coverBig = song.album.cover
         music.coverSmall = getAlbumPic(song.album.cover, type, 90)
         return music
     }
@@ -140,10 +140,10 @@ object MusicUtils {
     /**
      * 根据不同的歌曲类型生成不同的图片
      */
-    fun getAlbumPic(url: String, type: String, width: Int = 140): String {
+    fun getAlbumPic(url: String?, type: String?, width: Int = 140): String? {
         return when (type) {
             Constants.QQ -> {
-                url.replace("300x300", "${width}x$width")
+                url?.replace("300x300", "${width}x$width")
             }
             Constants.XIAMI -> {
                 "$url@1e_1c_100Q_${width}w_${width}h"
@@ -155,7 +155,7 @@ object MusicUtils {
                 "$url?@s_1,w_$width,h_$width"
             }
             else -> {
-                ""
+                url
             }
         }
     }

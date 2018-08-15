@@ -1,10 +1,8 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.ui.music.local.contract.ArtistSongContract
-import com.cyl.musiclake.utils.CoverLoader
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -24,7 +22,7 @@ constructor() : BasePresenter<ArtistSongContract.View>(), ArtistSongContract.Pre
                 mView.showSongs(data)
             }
         }
-        CoverLoader.loadImageViewByDouban(MusicApp.getAppContext(), artistName, null) { bitmap -> mView.showAlbumArt(bitmap) }
+//        CoverLoader.loadImageViewByDouban(MusicApp.getAppContext(), artistName, null) { bitmap -> mView.showAlbumArt(bitmap) }
     }
 
 }

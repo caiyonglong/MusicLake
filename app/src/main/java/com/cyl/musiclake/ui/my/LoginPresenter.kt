@@ -112,9 +112,9 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_LOGIN) {
-            if (resultCode == -1) {
+            if (resultCode == -1 && data != null) {
                 try {
                     Tencent.onActivityResultData(requestCode, resultCode, data, loginListener)
                     Tencent.handleResultData(data, loginListener)
@@ -159,6 +159,8 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 }
+            } else {
+                mView?.hideLoading()
             }
         }
     }

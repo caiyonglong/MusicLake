@@ -118,6 +118,34 @@ object BaiduApiServiceImpl {
     }
 
     /**
+     * 搜索专辑图，通过百度搜索,获取Album_Info:pic_small
+     */
+    fun getSearchPicInfo(query: String): Observable<String> {
+        val params = mutableMapOf(
+                Constants.PARAM_QUERY to query,
+                Constants.PARAM_PAGE_SIZE to 1,
+                Constants.PARAM_PAGE_NO to 1
+        )
+        return apiService.getSearchMerge(params)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<String> { e ->
+                        try {
+                            var url = ""
+                            if (it.errorCode == 22000) {
+                                it.result.albumInfo.albumList?.get(0)?.picSmall?.let {
+                                    url = it
+                                }
+                            }
+                            e.onNext(url)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
+                }
+    }
+
+    /**
      * 获取歌单详情
      * "http://music.baidu.com/data/music/links?songIds=$mid"
      */
@@ -158,7 +186,7 @@ object BaiduApiServiceImpl {
     /**
      * 获取歌词
      */
-    fun getBaiduLyric(music: Music): Observable<String> {
+    fun getBaiduLyric(music: Music): Observable<String>? {
         //本地歌词路径
         val mLyricPath = FileUtils.getLrcDir() + music.title + "-" + music.artist + ".lrc"
         //网络歌词
@@ -173,14 +201,18 @@ object BaiduApiServiceImpl {
                     emitter.onError(e)
                 }
             }
-        } else apiService.getBaiduLyric(mLyricUrl)
-                .flatMap { baiDuLyricInfo ->
-                    val lyric = baiDuLyricInfo.string()
-                    //保存文件
-                    val save = FileUtils.writeText(mLyricPath, lyric)
-                    LogUtil.e("保存网络歌词：$save")
-                    Observable.fromArray(lyric)
-                }
+        } else if (mLyricUrl != null) {
+            apiService.getBaiduLyric(mLyricUrl)
+                    .flatMap { baiDuLyricInfo ->
+                        val lyric = baiDuLyricInfo.string()
+                        //保存文件
+                        val save = FileUtils.writeText(mLyricPath, lyric)
+                        LogUtil.e("保存网络歌词：$save")
+                        Observable.fromArray(lyric)
+                    }
+        } else {
+            null
+        }
     }
 
     /**
@@ -190,11 +222,11 @@ object BaiduApiServiceImpl {
      * 搜索建议
      */
     fun getRadioChannel(): Observable<MutableList<Playlist>> {
-        return apiService.radioChannels
+        return apiService.getRadioChannels()
                 .flatMap {
                     Observable.create(ObservableOnSubscribe<MutableList<Playlist>> { e ->
                         try {
-                            var result = mutableListOf<Playlist>()
+                            val result = mutableListOf<Playlist>()
                             if (it.errorCode == 22000) {
                                 it.result?.get(0)?.channellist?.let {
                                     it.forEach {
@@ -217,8 +249,11 @@ object BaiduApiServiceImpl {
                 }
     }
 
+    /**
+     * 电台歌单列表
+     */
     fun getRadioChannelInfo(playlist: Playlist): Observable<Playlist> {
-        return apiService.getRadioChannelSongs(playlist.pid)
+        return apiService.getRadioChannelSongs(playlist.pid!!)
                 .flatMap {
                     val songs = mutableListOf<Music>()
                     if (it.errorCode == 22000) {

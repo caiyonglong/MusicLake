@@ -56,17 +56,16 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
                 }
             }
         }
-        val info = item.title + "," + item.artist
         if (item.coverUri != null) {
             CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         }
-        MusicApi.getMusicAlbumPic(info, success = {
-            item.coverUri = it
-            item.coverBig = it
-            item.coverSmall = it
-            notifyItemChanged(holder.adapterPosition)
-            item.saveAsync()
-        })
+//        MusicApi.getMusicAlbumPic(item.title.toString(), success = {
+//            item.coverUri = it
+//            item.coverBig = it
+//            item.coverSmall = it
+//            notifyItemChanged(holder.adapterPosition)
+//            item.saveAsync()
+//        })
 
 //            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
 //                override fun success(result: DoubanMusic?) {

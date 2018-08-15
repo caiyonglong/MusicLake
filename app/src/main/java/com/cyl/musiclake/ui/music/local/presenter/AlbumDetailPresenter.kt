@@ -26,7 +26,7 @@ constructor() : BasePresenter<AlbumDetailContract.View>(), AlbumDetailContract.P
                 mView.showAlbumSongs(data)
             }
         }
-        CoverLoader.loadImageViewByDouban(MusicApp.getAppContext(), albumName, null) { resource -> mView.showAlbumArt(resource) }
+//        CoverLoader.loadImageViewByDouban(MusicApp.getAppContext(), albumName, null) { resource -> mView.showAlbumArt(resource) }
     }
 
 }

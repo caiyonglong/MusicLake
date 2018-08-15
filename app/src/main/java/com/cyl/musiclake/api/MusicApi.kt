@@ -2,8 +2,6 @@ package com.cyl.musiclake.api
 
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
-import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
-import com.cyl.musiclake.api.doupan.DoubanMusic
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.Music
 import com.cyl.musiclake.net.ApiManager
@@ -86,35 +84,29 @@ object MusicApi {
     /**
      * 加载图片
      */
-    fun getMusicAlbumInfo(info: String): Observable<DoubanMusic> {
-        return DoubanApiServiceImpl.getMusicInfo(info)
-    }
+//    fun getMusicAlbumInfo(info: String): Observable<String> {
+//        return BaiduApiServiceImpl.getSearchPicInfo(info)
+//    }
 
     /**
      * 加载图片
      */
-    fun getMusicAlbumPic(info: String, success: (String?) -> Unit, fail: (() -> Unit?)? = null) {
-        ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
-            override fun success(result: DoubanMusic?) {
-                val data = result?.musics
-                data?.let {
-                    if (it.size > 0) {
-                        success.invoke(result.musics?.first()?.image)
-                    } else {
-                        fail?.invoke()
-                    }
-                }
-                if (data == null) {
-                    fail?.invoke()
-                }
-            }
-
-            override fun error(msg: String?) {
-                LogUtil.e("getMusicAlbumPic", msg)
-                fail?.invoke()
-            }
-        })
-    }
+//    fun getMusicAlbumPic(info: String, success: (String?) -> Unit, fail: (() -> Unit?)? = null) {
+//        ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<String> {
+//            override fun success(result: String?) {
+//                if (result == null) {
+//                    fail?.invoke()
+//                } else {
+//                    success.invoke(result)
+//                }
+//            }
+//
+//            override fun error(msg: String?) {
+//                LogUtil.e("getMusicAlbumPic", msg)
+//                fail?.invoke()
+//            }
+//        })
+//    }
 
     /**
      * 根据路径获取本地歌词

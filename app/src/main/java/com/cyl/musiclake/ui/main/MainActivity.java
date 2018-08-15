@@ -130,10 +130,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void updatePlaySongInfo(Music music) {
         if (mSlidingUpPaneLayout == null) return;
-        if (music != null && music.getCoverUri() != null) {
+        if (music != null) {
             mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
             CoverLoader.loadImageView(this, music.getCoverUri(), mImageView);
-        } else if (music == null) {
+        } else  {
             mSlidingUpPaneLayout.setPanelHeight(0);
             mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }

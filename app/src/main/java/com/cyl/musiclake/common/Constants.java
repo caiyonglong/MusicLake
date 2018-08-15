@@ -179,11 +179,13 @@ public class Constants {
     public static final String METHOD_MUSIC_INFO = "baidu.ting.song.getInfos";
     public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";
+    public static final String METHOD_SEARCH_MERGE = "baidu.ting.search.merge";
 
     public static final String PARAM_METHOD = "method";
     public static final String PARAM_TYPE = "type";
     public static final String PARAM_SIZE = "size";
-    public static final String PARAM_PAGESIZE = "page_size";
+    public static final String PARAM_PAGE_SIZE = "page_size";
+    public static final String PARAM_PAGE_NO = "page_no";
     public static final String PARAM_OFFSET = "offset";
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";

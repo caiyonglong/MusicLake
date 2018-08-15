@@ -27,6 +27,7 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.PlayPauseView;

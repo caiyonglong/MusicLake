@@ -50,11 +50,12 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
 
     override fun updateNowPlaying(music: Music?) {
         mView?.showNowPlaying(music)
-
-        CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
-            mView?.setPlayingBitmap(bitmap)
-            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, MusicApp.getAppContext(), 12))
+        CoverLoader.loadImageViewByMusic(mView?.context, music) { bitmap ->
             Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
+        }
+        CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
+            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, MusicApp.getAppContext(), 12))
+            mView.setPlayingBitmap(bitmap)
         }
     }
 }

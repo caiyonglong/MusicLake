@@ -11,7 +11,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.db.Album
 import com.cyl.musiclake.utils.CoverLoader
 
-class AlbumAdapter(albumList: List<Album>) : BaseQuickAdapter<Album, BaseViewHolder>(R.layout.item_playlist_grid, albumList) {
+class AlbumAdapter(private val albumList: List<Album>) : BaseQuickAdapter<Album, BaseViewHolder>(R.layout.item_playlist_grid, albumList) {
 
     override fun convert(helper: BaseViewHolder, album: Album) {
         helper.setText(R.id.name, album.name)
@@ -21,13 +21,14 @@ class AlbumAdapter(albumList: List<Album>) : BaseQuickAdapter<Album, BaseViewHol
             helper.getView<View>(R.id.album).transitionName = Constants.TRANSTITION_ALBUM
         }
         CoverLoader.loadImageView(mContext, album.cover, helper.getView(R.id.album))
-        album.name?.let {
-            if (album.cover.isNullOrEmpty()) {
-                MusicApi.getMusicAlbumPic(it, success = {
-                    notifyItemChanged(helper.adapterPosition)
-                    CoverLoader.loadImageView(mContext, it, helper.getView(R.id.album))
-                })
-            }
-        }
+//        album.name?.let {
+//            if (album.cover.isNullOrEmpty()) {
+//                MusicApi.getMusicAlbumPic(it, success = {
+//                    //                    albumList[helper.adapterPosition].cover = it
+////                    notifyItemChanged(helper.adapterPosition)
+//                    CoverLoader.loadImageView(mContext, it, helper.getView(R.id.album))
+//                })
+//            }
+//        }
     }
 }

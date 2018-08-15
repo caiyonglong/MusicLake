@@ -37,7 +37,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
-
+                println(msg)
             }
         })
     }
@@ -79,7 +79,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
-
+                println(msg)
             }
         })
     }
@@ -93,6 +93,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
+                println(msg)
             }
         })
     }
