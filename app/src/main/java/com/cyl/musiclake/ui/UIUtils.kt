@@ -26,6 +26,21 @@ import com.liulishuo.filedownloader.FileDownloader
 
 object UIUtils {
     /**
+     * 防止快速点击却换歌曲
+     */
+    private var lastClickTime: Long = 0
+
+    @Synchronized
+    fun isFastClick(): Boolean {
+        val time = System.currentTimeMillis()
+        if (time - lastClickTime < 500) {
+            return true
+        }
+        lastClickTime = time
+        return false
+    }
+
+    /**
      * 改变播放模式
      */
     fun updatePlayMode(imageView: ImageView, isChange: Boolean = false) {

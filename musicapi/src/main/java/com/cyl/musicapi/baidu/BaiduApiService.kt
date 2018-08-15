@@ -15,7 +15,7 @@ import retrofit2.http.Url
 
 interface BaiduApiService {
 
-    @GET("v1/restserver/ting?from=qianqian&version5.6.5.0&method=baidu.ting.radio.getCategoryList&format=json")
+    @GET("v1/restserver/ting?from=qianqian&version=5.6.5.0&method=baidu.ting.radio.getCategoryList&format=json")
     fun getRadioChannels(): Observable<RadioData>
 
     @GET

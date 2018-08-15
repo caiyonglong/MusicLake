@@ -27,7 +27,6 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
-import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.PlayPauseView;
@@ -99,11 +98,13 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
     @OnClick(R.id.skip_next)
     void next() {
+        if (UIUtils.INSTANCE.isFastClick()) return;
         PlayManager.next();
     }
 
     @OnClick(R.id.play_next)
     void nextBottom() {
+        if (UIUtils.INSTANCE.isFastClick()) return;
         PlayManager.next();
     }
 
@@ -119,6 +120,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
     @OnClick(R.id.previous)
     void prev() {
+        if (UIUtils.INSTANCE.isFastClick()) return;
         PlayManager.prev();
     }
 

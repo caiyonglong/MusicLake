@@ -126,10 +126,12 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
 
     fun nextPlay(view: View?) {
+        if (UIUtils.isFastClick()) return
         PlayManager.next()
     }
 
     fun prevPlay(view: View?) {
+        if (UIUtils.isFastClick()) return
         PlayManager.prev()
     }
 

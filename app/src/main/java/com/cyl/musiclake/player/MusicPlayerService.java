@@ -534,6 +534,8 @@ public class MusicPlayerService extends Service {
         }
     }
 
+    Observable<Music> observable;
+
     /**
      * 播放当前歌曲
      */
@@ -546,7 +548,9 @@ public class MusicPlayerService extends Service {
             notifyChange(META_CHANGED);
             LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
+                if (observable != null) observable.subscribe().dispose();
+                observable = MusicApi.INSTANCE.getMusicInfo(mPlayingMusic);
+                ApiManager.request(observable, new RequestCallBack<Music>() {
                     @Override
                     public void success(Music result) {
                         LogUtil.e(TAG, "-----" + result.toString());

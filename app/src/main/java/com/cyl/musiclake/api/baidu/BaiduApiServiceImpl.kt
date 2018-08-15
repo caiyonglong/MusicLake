@@ -18,8 +18,7 @@ import java.util.*
 
 object BaiduApiServiceImpl {
     private val TAG = "BaiduApiServiceImpl"
-    private val apiService: BaiduApiService
-        get() = ApiManager.getInstance().create(BaiduApiService::class.java, Constants.BASE_URL_BAIDU_MUSIC)
+    private val apiService by lazy { ApiManager.getInstance().create(BaiduApiService::class.java, Constants.BASE_URL_BAIDU_MUSIC) }
 
     //    http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.0.7.1&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2
 
