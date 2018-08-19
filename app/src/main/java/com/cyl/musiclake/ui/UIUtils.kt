@@ -10,19 +10,25 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApi
+import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.download.TasksManager
+import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.music.download.TaskItemAdapter
+import com.cyl.musiclake.ui.my.user.User
+import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
+import org.greenrobot.eventbus.EventBus
+import org.litepal.util.Const
 
 object UIUtils {
     /**
@@ -86,7 +92,7 @@ object UIUtils {
                 override fun onAnimationEnd(animation: Animator?) {
                     music?.let {
                         it.isLove = SongLoader.updateFavoriteSong(it)
-                        RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
+                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
                     }
                 }
 
@@ -196,4 +202,36 @@ fun Context.addDownloadQueue(result: Music) {
         TasksManager.addTaskForViewHolder(task)
         task.start()
     }
+}
+
+/**
+ * 更新用户Token(主要用于在线歌单)
+ */
+fun updateLoginToken(accessToken: String, openId: String) {
+    ApiManager.request(PlaylistApiServiceImpl.login(accessToken, openId),
+            object : RequestCallBack<User> {
+                override fun success(result: User?) {
+                    if (result != null) {
+                        //保存用户信息
+                        UserStatus.saveUserInfo(MusicApp.getAppContext(), result)
+                    }
+                    EventBus.getDefault().post(LoginEvent(true, result))
+                }
+
+                override fun error(msg: String) {
+                }
+            }
+    )
+}
+
+/**
+ * 注销登录
+ */
+fun logout() {
+    UserStatus.clearUserInfo(MusicApp.getAppContext())
+    UserStatus.saveuserstatus(MusicApp.getAppContext(), false)
+    SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, "")
+    SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
+    MusicApp.mTencent.logout(MusicApp.getAppContext())
+    EventBus.getDefault().post(LoginEvent(false, null))
 }

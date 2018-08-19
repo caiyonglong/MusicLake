@@ -1,14 +1,12 @@
 package com.cyl.musiclake.ui.music.playqueue
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,7 +16,7 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.UIUtils

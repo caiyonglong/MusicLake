@@ -1,16 +1,11 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
 import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.DownloadLoader
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.event.LoginEvent
-import com.cyl.musiclake.event.MetaChangedEvent
-import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -27,24 +22,10 @@ class MyMusicPresenter @Inject
 constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter {
     private var playlists = mutableListOf<Playlist>()
 
-    init {
-        /**登陆成功重新设置用户新 */
-        RxBus.getInstance().register(MetaChangedEvent::class.java).subscribe { event -> updateHistory() }
-        RxBus.getInstance().register(LoginEvent::class.java).subscribe { event -> loadPlaylist() }
-        RxBus.getInstance().register(PlaylistEvent::class.java).subscribe {
-            when (it.type) {
-                Constants.PLAYLIST_CUSTOM_ID -> loadPlaylist()
-                Constants.PLAYLIST_LOVE_ID -> updateFavorite()
-                Constants.PLAYLIST_HISTORY_ID -> updateHistory()
-                Constants.PLAYLIST_DOWNLOAD_ID -> updateDownload()
-            }
-        }
-    }
-
     /**
      * 更新播放历史
      */
-    private fun updateHistory() {
+    fun updateHistory() {
         doAsync {
             val data = PlayHistoryLoader.getPlayHistory()
             uiThread {
@@ -68,7 +49,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     /**
      * 更新本地歌单
      */
-    private fun updateFavorite() {
+    fun updateFavorite() {
         doAsync {
             val data = SongLoader.getFavoriteSong()
             uiThread {
@@ -81,7 +62,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     /**
      * 更新本地歌单
      */
-    private fun updateDownload() {
+    fun updateDownload() {
         doAsync {
             val data = DownloadLoader.getDownloadList()
             uiThread {

@@ -54,7 +54,7 @@ public class LocalMusicFragment extends BaseLazyFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(SongsFragment.newInstance(), "本地");
+        adapter.addFragment(SongsFragment.Companion.newInstance(), "本地");
         adapter.addFragment(AlbumFragment.newInstance(), "专辑");
         adapter.addFragment(ArtistFragment.newInstance(), "艺术家");
         adapter.addFragment(FoldersFragment.newInstance(), "文件夹");

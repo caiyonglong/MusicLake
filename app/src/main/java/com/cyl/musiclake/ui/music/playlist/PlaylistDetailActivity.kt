@@ -1,30 +1,23 @@
 package com.cyl.musiclake.ui.music.playlist
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import butterknife.BindView
-import butterknife.OnClick
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.PlayHistoryLoader
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.db.Album
-import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
@@ -36,6 +29,7 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.view.ItemDecoration
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -78,14 +72,20 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         mPlaylist?.let {
             title = it.name
             pid = it.pid
+            coverUrl = it.coverUrl
+            CoverLoader.loadImageView(context, coverUrl, album_art)
         }
         mArtist?.let {
             title = it.name
             pid = it.id.toString()
+            coverUrl = it.picUrl
+            CoverLoader.loadImageView(context, coverUrl, album_art)
         }
         mAlbum?.let {
             title = it.name
             pid = it.id.toString()
+            coverUrl = it.cover
+            CoverLoader.loadImageView(context, coverUrl, album_art)
         }
         return title
     }
@@ -130,7 +130,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         when (id) {
@@ -143,7 +142,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                             PlayHistoryLoader.clearPlayHistory()
                             mAdapter?.notifyDataSetChanged()
                             showEmptyState()
-                            RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_HISTORY_ID))
+                            EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_HISTORY_ID))
                         } else if (mPresenter != null) {
                             OnlinePlaylistUtils.deletePlaylist(it) { _ ->
                                 onBackPress()
@@ -213,23 +212,21 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         hideLoading()
         musicList.addAll(songList!!)
         mAdapter!!.setNewData(musicList)
-        mPlaylist?.coverUrl?.let {
-            coverUrl = it
+        if (coverUrl == null) {
+            mPlaylist?.coverUrl?.let {
+                coverUrl = it
+            }
+            mArtist?.picUrl?.let {
+                coverUrl = it
+            }
+            if (musicList.size > 0 && coverUrl == null) {
+                coverUrl = musicList[0].coverUri
+            }
+            CoverLoader.loadImageView(context, coverUrl, album_art)
         }
-        mArtist?.picUrl?.let {
-            coverUrl = it
-        }
-        if (musicList.size > 0 && coverUrl == null) {
-            coverUrl = musicList[0].coverUri
-        }
-        CoverLoader.loadImageView(context, coverUrl, album_art)
         if (musicList.size == 0) {
             showEmptyState()
         }
-    }
-
-    override fun changePlayStatus(isPlaying: Boolean?) {
-
     }
 
     override fun removeMusic(position: Int) {

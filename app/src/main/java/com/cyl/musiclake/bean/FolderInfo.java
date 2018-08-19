@@ -1,4 +1,4 @@
-package com.cyl.musiclake.db;
+package com.cyl.musiclake.bean;
 
 import org.litepal.crud.LitePalSupport;
 

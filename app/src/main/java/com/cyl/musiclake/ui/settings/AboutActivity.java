@@ -1,14 +1,11 @@
 package com.cyl.musiclake.ui.settings;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.pm.PackageManager;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.TextView;
 
-import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.ui.main.WebActivity;
@@ -69,14 +66,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        try {
-            String version = MusicApp.getAppContext()
-                    .getPackageManager()
-                    .getPackageInfo(MusicApp.getAppContext().getPackageName(), 0).versionName;
-            mVersion.setText(version);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        mVersion.setText(String.format("v%s", BuildConfig.VERSION_NAME));
     }
 
     @Override

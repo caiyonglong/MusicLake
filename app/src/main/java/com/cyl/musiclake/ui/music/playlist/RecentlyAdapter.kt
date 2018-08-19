@@ -4,9 +4,7 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader

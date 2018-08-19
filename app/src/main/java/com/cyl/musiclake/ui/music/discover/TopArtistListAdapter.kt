@@ -4,7 +4,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.utils.CoverLoader
 
 /**

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.player;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -9,7 +8,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.CoverLoader;
 
 /**

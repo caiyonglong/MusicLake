@@ -2,8 +2,8 @@ package com.cyl.musiclake.ui.music.search
 
 
 import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.db.SearchHistoryBean
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.SearchHistoryBean
 
 interface SearchContract {
 

@@ -4,7 +4,7 @@
         <attr name="bg_color" format="color" />
         <attr name="btn_color" format="color" />
         <attr name="gap_width" format="float" />
-        <attr name="border_width" format="float" />
+        <attr name="border_width" format="float|reference" />
         <attr name="space_padding" format="float" />
         <attr name="anim_duration" format="integer" />
         <attr name="anim_direction">
@@ -42,7 +42,7 @@
     <!--音乐条目属性-->
     <declare-styleable name="LocalItemView">
         <attr name="tv_name" format="reference|string" />
-        <attr name="iv_icon" format="reference|integer"/>
+        <attr name="iv_icon" format="reference|integer" />
         <attr name="tv_desc" format="reference|string" />
         <attr name="iv_icon_color" format="reference|color" />
     </declare-styleable>

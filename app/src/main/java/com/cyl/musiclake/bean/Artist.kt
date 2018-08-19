@@ -1,10 +1,8 @@
-package com.cyl.musiclake.db
+package com.cyl.musiclake.bean
 
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.Music
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
-import java.util.*
 
 /**
  * Created by yonglong on 2016/11/23.

@@ -76,15 +76,11 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView == null)
-            rootView = inflater.inflate(getLayoutId(), container, false);
+        rootView = inflater.inflate(getLayoutId(), container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initToolBar();
-        initViews();
-        listener();
-        loadData();
         return rootView;
     }
+
 
     private void initToolBar() {
         if (getActivity() != null && mToolbar != null) {
@@ -150,6 +146,10 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        initToolBar();
+        initViews();
+        listener();
+        loadData();
     }
 
 

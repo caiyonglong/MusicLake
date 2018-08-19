@@ -20,6 +20,8 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -171,7 +173,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void success(User user) {
-        RxBus.getInstance().post(new LoginEvent());
+        EventBus.getDefault().post(new LoginEvent(true, user));
         finish();
     }
 }

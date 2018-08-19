@@ -37,11 +37,11 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
-import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.event.ScheduleTaskEvent;
@@ -56,6 +56,8 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -90,6 +92,9 @@ public class MusicPlayerService extends Service {
     public static final String ACTION_LYRIC = "com.cyl.music_lake.notify.lyric";// 播放暂停广播
 
     public static final String PLAY_STATE_CHANGED = "com.cyl.music_lake.play_state";// 播放暂停广播
+
+    public static final String PLAY_STATE_LOADING_CHANGED = "com.cyl.music_lake.play_state_loading";// 播放loading
+
     public static final String DURATION_CHANGED = "com.cyl.music_lake.duration";// 播放时长
 
     public static final String TRACK_ERROR = "com.cyl.music_lake.error";
@@ -261,6 +266,7 @@ public class MusicPlayerService extends Service {
                     case PREPARE_ASYNC_UPDATE:
                         int percent = (int) msg.obj;
                         LogUtil.e(TAG, "Loading ... " + percent);
+                        notifyChange(PLAY_STATE_LOADING_CHANGED);
                         break;
                     case PLAYER_PREPARED:
                         //执行prepared之后 准备完成，更新总时长
@@ -928,17 +934,21 @@ public class MusicPlayerService extends Service {
             case META_CHANGED:
                 mFloatLyricViewManager.loadLyric(mPlayingMusic);
                 updateWidget(META_CHANGED);
-                mMainHandler.post(() -> RxBus.getInstance().post(new MetaChangedEvent(mPlayingMusic)));
+                notifyChange(PLAY_STATE_CHANGED);
+                EventBus.getDefault().post(new MetaChangedEvent(mPlayingMusic));
                 break;
             case PLAY_STATE_CHANGED:
                 updateWidget(PLAY_STATE_CHANGED);
                 mediaSessionManager.updatePlaybackState();
-                mMainHandler.post(() -> RxBus.getInstance().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying())));
+                EventBus.getDefault().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying()));
                 break;
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
-                mMainHandler.post(() -> RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID)));
+                EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID));
                 break;
+//            case PLAY_STATE_LOADING_CHANGED:
+//                EventBus.getDefault().post(new StatusChangedEvent(false, isPlaying()));
+//                break;
         }
     }
 

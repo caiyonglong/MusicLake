@@ -3,7 +3,7 @@ package com.cyl.musiclake.api.qq;
 import android.util.Base64;
 
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;

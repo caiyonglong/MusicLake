@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.graphics.Palette
@@ -16,12 +17,14 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.R.id.backIv
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.TransitionAnimationUtils
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.event.MetaChangedEvent
+import com.cyl.musiclake.event.PlayModeEvent
+import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
@@ -38,6 +41,9 @@ import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
@@ -367,4 +373,29 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPlayModeChangedEvent(event: PlayModeEvent) {
+        updatePlayMode()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMetaChangedEvent(event: MetaChangedEvent) {
+        mPresenter?.updateNowPlaying(event.music)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updatePlayStatus(event: StatusChangedEvent) {
+        playPauseIv.setLoading(!event.isPrepared)
+        updatePlayStatus(event.isPlaying)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
+    }
 }

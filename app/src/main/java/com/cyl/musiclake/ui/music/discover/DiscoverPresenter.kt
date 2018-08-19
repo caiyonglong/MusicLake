@@ -1,14 +1,13 @@
 package com.cyl.musiclake.ui.music.discover
 
 import com.cyl.musicapi.BaseApiImpl
-import com.cyl.musicapi.baidu.RadioChannel
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import java.util.*

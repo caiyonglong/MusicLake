@@ -3,10 +3,10 @@ package com.cyl.musiclake.ui.music.playlist
 import android.content.Context
 
 import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.db.Album
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
 
 interface PlaylistDetailContract {
 
@@ -15,8 +15,6 @@ interface PlaylistDetailContract {
         override fun getContext(): Context
 
         fun showPlaylistSongs(songList: MutableList<Music>?)
-
-        fun changePlayStatus(isPlaying: Boolean?)
 
         fun removeMusic(position: Int)
 

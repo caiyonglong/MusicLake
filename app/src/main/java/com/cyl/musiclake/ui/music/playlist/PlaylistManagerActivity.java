@@ -10,22 +10,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.db.Playlist;
-import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
-import com.cyl.musiclake.utils.ToastUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * 作者：yonglong on 2016/8/14 16:15

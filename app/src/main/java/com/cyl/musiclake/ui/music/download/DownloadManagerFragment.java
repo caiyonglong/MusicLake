@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
 

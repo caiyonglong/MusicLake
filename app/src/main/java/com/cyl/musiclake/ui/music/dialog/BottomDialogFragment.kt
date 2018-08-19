@@ -19,7 +19,7 @@ import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.downloadMusic

@@ -32,6 +32,7 @@
     <string name="song_num">%1$d 首</string>
     <string name="default_num">0 首</string>
     <string name="random_play">随机播放</string>
+    <string name="random_play_num">随机播放(%1$d首)</string>
 
 
     <string name="near_people">分享人资料</string>

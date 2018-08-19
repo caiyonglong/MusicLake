@@ -2,8 +2,8 @@ package com.cyl.musiclake.data
 
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 
 /**
  * 作者：yonglong on 2016/11/6 17:02

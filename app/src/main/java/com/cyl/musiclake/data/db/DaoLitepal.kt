@@ -1,7 +1,10 @@
 package com.cyl.musiclake.data.db
 
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.MusicToPlaylist
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.db.SearchHistoryBean
+import com.cyl.musiclake.bean.SearchHistoryBean
 import org.litepal.LitePal
 
 /**

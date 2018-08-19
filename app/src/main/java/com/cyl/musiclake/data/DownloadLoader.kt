@@ -2,7 +2,7 @@ package com.cyl.musiclake.data
 
 import android.text.TextUtils
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.data.download.TasksManagerModel
 import com.cyl.musiclake.utils.ToastUtils
 import com.liulishuo.filedownloader.util.FileDownloadUtils

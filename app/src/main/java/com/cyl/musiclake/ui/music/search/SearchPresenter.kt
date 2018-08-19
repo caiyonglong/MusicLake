@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.search
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import org.jetbrains.anko.doAsync

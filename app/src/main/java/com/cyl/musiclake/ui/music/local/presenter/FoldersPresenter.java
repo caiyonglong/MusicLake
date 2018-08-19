@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter;
 
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.db.FolderInfo;
+import com.cyl.musiclake.bean.FolderInfo;
 import com.cyl.musiclake.data.AppRepository;
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract;
 

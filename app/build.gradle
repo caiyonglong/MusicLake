@@ -103,6 +103,8 @@ dependencies {
     api 'com.amitshekhar.android:debug-db:1.0.3'
 
     api 'com.devbrackets.android:exomedia:4.2.1'
+    //Eventbus
+    api 'org.greenrobot:eventbus:3.1.1'
 
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
     api project(':musicapi')

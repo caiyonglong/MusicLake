@@ -3,11 +3,8 @@ package com.cyl.musiclake.api
 
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.utils.FileUtils
-import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 

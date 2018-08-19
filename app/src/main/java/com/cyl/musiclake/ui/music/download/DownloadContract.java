@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.download;
 
 
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.data.download.TasksManagerModel;
 
 import java.util.List;

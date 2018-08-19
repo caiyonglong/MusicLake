@@ -2,6 +2,9 @@ package com.cyl.musiclake.data.db;
 
 import android.database.Cursor;
 
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
+
 import java.util.List;
 
 /**

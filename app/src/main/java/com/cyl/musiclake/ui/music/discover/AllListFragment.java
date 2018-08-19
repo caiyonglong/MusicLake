@@ -10,7 +10,7 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.db.Artist;
+import com.cyl.musiclake.bean.Artist;
 
 import butterknife.BindView;
 

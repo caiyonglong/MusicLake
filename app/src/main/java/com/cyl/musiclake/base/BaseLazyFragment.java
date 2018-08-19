@@ -84,10 +84,6 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
         if (rootView == null)
             rootView = inflater.inflate(getLayoutId(), container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initSwipeLayout();
-        initViews();
-        listener();
-        loadData();
         return rootView;
     }
 
@@ -215,6 +211,10 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        initSwipeLayout();
+        initViews();
+        listener();
+        loadData();
         isPrepared = true;
         //只有Fragment onCreateView好了，
         //另外这里调用一次lazyLoad(）

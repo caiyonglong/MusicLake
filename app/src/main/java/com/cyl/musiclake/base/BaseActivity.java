@@ -25,6 +25,8 @@ import com.cyl.musiclake.player.PlayManager;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -249,4 +251,5 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     public void onServiceDisconnected(ComponentName componentName) {
         mService = null;
     }
+
 }

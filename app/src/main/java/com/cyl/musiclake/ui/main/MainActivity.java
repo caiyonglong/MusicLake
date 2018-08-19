@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,12 +22,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
@@ -39,15 +41,23 @@ import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.tencent.tauth.Tencent;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.UiError;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.disposables.Disposable;
+
+import static com.cyl.musiclake.ui.UIUtilsKt.logout;
+import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
 
 /**
  * 描述 主要的Activity
@@ -77,8 +87,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     Class<?> mTargetClass = null;
 
-    private Disposable flowable;
-
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_main;
@@ -87,32 +95,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void initView() {
         transparentStatusBar(this);
-
         //菜单栏的头部控件初始化
         initNavView();
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
-
-        setUserStatusInfo();
-        /**登陆成功重新设置用户新*/
-        flowable = RxBus.getInstance().register(LoginEvent.class)
-                .subscribe(event -> setUserStatusInfo());
-        flowable = RxBus.getInstance().register(PlaylistEvent.class)
-                .subscribe(event -> {
-                    if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID)) {
-                        setPlaylistQueueChange();
-                    } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
-                        Music music = PlayManager.getPlayingMusic();
-                        if (music != null && music.isLove()) {
-                            controlFragment.mIvLove.setImageResource(R.drawable.item_favorite_love);
-                        } else if (music != null && !music.isLove()) {
-                            controlFragment.mIvLove.setImageResource(R.drawable.item_favorite);
-                        }
-                    }
-                });
-        flowable = RxBus.getInstance().register(MetaChangedEvent.class)
-                .subscribe(event -> updatePlaySongInfo(event.getMusic()));
+        checkLoginStatus();
     }
+
 
     /**
      * 使状态栏透明
@@ -128,12 +117,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMetaChangedEvent(MetaChangedEvent event) {
+        updatePlaySongInfo(event.getMusic());
+    }
+
     private void updatePlaySongInfo(Music music) {
         if (mSlidingUpPaneLayout == null) return;
         if (music != null) {
             mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
-            CoverLoader.loadImageView(this, music.getCoverUri(), mImageView);
-        } else  {
+            CoverLoader.loadBigImageView(this, music, mImageView);
+        } else {
             mSlidingUpPaneLayout.setPanelHeight(0);
             mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
@@ -233,10 +227,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             .content("您确定要退出或切换其他账号吗？")
                             .positiveText("确定")
                             .onPositive((materialDialog, dialogAction) -> {
-                                UserStatus.clearUserInfo(this);
-                                UserStatus.saveuserstatus(this, false);
-                                Tencent.createInstance(Constants.APP_ID, this).logout(this);
-                                RxBus.getInstance().post(new LoginEvent());
+                                logout();
                             }).negativeText("取消").show();
                 } else {
                     mTargetClass = LoginActivity.class;
@@ -291,7 +282,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         startActivity(intent);
         mTargetClass = null;
     }
-
 
     private Runnable navigateLibrary = () -> {
         Fragment fragment = MainFragment.newInstance();
@@ -358,11 +348,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     private void setPlaylistQueueChange() {
 //        if (PlayManager.getPlayList().size() == 0) {
 //            mSlidingUpPaneLayout.setPanelState(PanelState.HIDDEN);
@@ -391,4 +376,57 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+    /**
+     * 登陆成功重新设置用户新
+     *
+     * @param event
+     */
+    @Subscribe
+    public void updateUserInfo(LoginEvent event) {
+        setUserStatusInfo();
+    }
+
+    /**
+     * 更新歌单
+     *
+     * @param event
+     */
+    @Subscribe
+    public void updatePlaylist(PlaylistEvent event) {
+        if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID)) {
+            setPlaylistQueueChange();
+        } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
+            Music music = PlayManager.getPlayingMusic();
+            if (music != null && music.isLove()) {
+                controlFragment.mIvLove.setImageResource(R.drawable.item_favorite_love);
+            } else if (music != null && !music.isLove()) {
+                controlFragment.mIvLove.setImageResource(R.drawable.item_favorite);
+            }
+        }
+    }
+
+    /**
+     * 检查QQ登录状态
+     */
+    private void checkLoginStatus() {
+        String token = SPUtils.getAnyByKey(SPUtils.QQ_ACCESS_TOKEN, "");
+        String openId = SPUtils.getAnyByKey(SPUtils.QQ_OPEN_ID, "");
+        if (token.length() > 0 && openId.length() > 0) {
+            updateLoginToken(token, openId);
+        } else {
+            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 }

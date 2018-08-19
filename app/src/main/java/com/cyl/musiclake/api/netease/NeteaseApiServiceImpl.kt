@@ -2,7 +2,7 @@ package com.cyl.musiclake.api.netease
 
 import com.cyl.musicapi.netease.*
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.net.ApiManager
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe

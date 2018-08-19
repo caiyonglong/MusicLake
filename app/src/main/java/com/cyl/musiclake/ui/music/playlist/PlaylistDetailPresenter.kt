@@ -5,19 +5,19 @@ import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.db.Album
-import com.cyl.musiclake.db.Artist
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.*
@@ -34,14 +34,6 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     private val netease = ArrayList<String>()
     private val qq = ArrayList<String>()
     private val xiami = ArrayList<String>()
-
-    override fun attachView(view: PlaylistDetailContract.View?) {
-        super.attachView(view)
-        val tt = RxBus.getInstance().register(StatusChangedEvent::class.java)
-                .compose(mView.bindToLife())
-                .subscribe { mView.changePlayStatus(it.isPrepared) }
-        disposables.add(tt)
-    }
 
     override fun loadArtistSongs(artist: Artist) {
         if (artist.type == null || artist.type == Constants.LOCAL) {
@@ -172,7 +164,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView.success(1)
-                RxBus.getInstance().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
                 ToastUtils.show(result)
             }
 

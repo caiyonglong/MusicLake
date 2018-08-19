@@ -12,9 +12,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Pair
 import android.view.View
 import com.cyl.musiclake.R
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.db.Album
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.download.DownloadFragment

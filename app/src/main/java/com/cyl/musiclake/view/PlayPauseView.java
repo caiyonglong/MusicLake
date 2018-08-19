@@ -1,5 +1,6 @@
 package com.cyl.musiclake.view;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -59,6 +60,16 @@ public class PlayPauseView extends View {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseView);
+        mBgColor = ta.getColor(R.styleable.PlayPauseView_bg_color, Color.WHITE);
+        mBtnColor = ta.getColor(R.styleable.PlayPauseView_btn_color, Color.BLACK);
+        mGapWidth = ta.getFloat(R.styleable.PlayPauseView_gap_width, 0);
+        mBorderWidth = ta.getFloat(R.styleable.PlayPauseView_border_width, 20);
+        mDirection = ta.getInt(R.styleable.PlayPauseView_anim_direction, Direction.POSITIVE.value);
+        mPadding = ta.getFloat(R.styleable.PlayPauseView_space_padding, 0);
+        mAnimDuration = ta.getInt(R.styleable.PlayPauseView_anim_duration, 200);
+        ta.recycle();
+
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -66,8 +77,9 @@ public class PlayPauseView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mRingPaint = new Paint();
         mRingPaint.setAntiAlias(true);
-        mRingPaint.setColor(Color.parseColor("#ec407a"));
+        mRingPaint.setColor(Color.parseColor("#e91e63"));
         mRingPaint.setStrokeWidth(mBorderWidth);
+        mRingPaint.setStyle(Paint.Style.STROKE);
         mRingPaint.setStrokeCap(Paint.Cap.ROUND);
         mRingPaint.setStrokeJoin(Paint.Join.ROUND);
 
@@ -75,15 +87,6 @@ public class PlayPauseView extends View {
         mRightPath = new Path();
         mRect = new Rect();
         mRingRect = new RectF();
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseView);
-        mBgColor = ta.getColor(R.styleable.PlayPauseView_bg_color, Color.WHITE);
-        mBtnColor = ta.getColor(R.styleable.PlayPauseView_btn_color, Color.BLACK);
-        mGapWidth = ta.getFloat(R.styleable.PlayPauseView_gap_width, 0);
-        mBorderWidth = ta.getFloat(R.styleable.PlayPauseView_border_width, 0);
-        mDirection = ta.getInt(R.styleable.PlayPauseView_anim_direction, Direction.POSITIVE.value);
-        mPadding = ta.getFloat(R.styleable.PlayPauseView_space_padding, 0);
-        mAnimDuration = ta.getInt(R.styleable.PlayPauseView_anim_duration, 200);
-        ta.recycle();
     }
 
     @SuppressWarnings("unused")
@@ -128,7 +131,6 @@ public class PlayPauseView extends View {
         if (getSpacePadding() > mRadius / Math.sqrt(2) || mPadding < 0) {
             mPadding = mRadius / 3f; //默认值
         }
-        mRingRect = new RectF(0, 0, mWidth, mHeight);
         float space = (float) (mRadius / Math.sqrt(2) - mPadding); //矩形宽高的一半
         mRectLT = (int) (mRadius - space);
         int rectRB = (int) (mRadius + space);
@@ -136,6 +138,10 @@ public class PlayPauseView extends View {
         mRect.bottom = rectRB;
         mRect.left = mRectLT;
         mRect.right = rectRB;
+        mRingRect.top = mRadius - space * 2;
+        mRingRect.bottom = mRadius + space * 2;
+        mRingRect.left = mRadius - space * 2;
+        mRingRect.right = mRadius + space * 2;
 //        mRectWidth = mRect.width();
 //        mRectHeight = mRect.height();
         mRectWidth = 2 * space + 2; //改为float类型，否则动画有抖动。并增加一像素防止三角形之间有缝隙
@@ -145,6 +151,7 @@ public class PlayPauseView extends View {
         mAnimDuration = getAnimDuration() < 0 ? 200 : getAnimDuration();
         startAngle = -90;
         sweepAngle = 120;
+        mRingPaint.setStrokeWidth(space / 2);
     }
 
     @Override
@@ -159,9 +166,9 @@ public class PlayPauseView extends View {
         mPaint.setColor(mBgColor);
         canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
 //        canvas.drawRect(mRect, mPaint);
-//        if (isLoading) {
-//            canvas.drawArc(mRingRect, startAngle, sweepAngle, true, mRingPaint); //
-//        }
+        if (isLoading) {
+            canvas.drawArc(mRingRect, startAngle, sweepAngle, false, mRingPaint); //
+        }
 
         float distance = mGapWidth * (1 - mProgress);  //暂停时左右两边矩形距离
         float barWidth = mRectWidth / 2 - distance / 2;     //一个矩形的宽度
@@ -214,18 +221,60 @@ public class PlayPauseView extends View {
         canvas.restore();
     }
 
-    public ValueAnimator getPlayPauseAnim() {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(isPlaying ? 1 : 0, isPlaying ? 0 : 1);
-        valueAnimator.setDuration(mAnimDuration);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mProgress = (float) animation.getAnimatedValue();
-                invalidate();
+
+    /**
+     * 显示Loading 动画
+     *
+     * @return
+     */
+    public ValueAnimator getLoadingAnim() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 360f);
+        valueAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        valueAnimator.setRepeatMode(ObjectAnimator.RESTART);
+        valueAnimator.setDuration(2000);
+        valueAnimator.addUpdateListener(animation -> {
+            sweepAngle = (float) animation.getAnimatedValue();
+            if (sweepAngle >= 90) {
+                startAngle++;
+                if (startAngle >= 360) {
+                    startAngle = 0;
+                }
             }
+            invalidate();
         });
         return valueAnimator;
     }
+
+
+    public ValueAnimator getPlayPauseAnim() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(isPlaying ? 1 : 0, isPlaying ? 0 : 1);
+        valueAnimator.setDuration(mAnimDuration);
+        valueAnimator.addUpdateListener(animation -> {
+            mProgress = (float) animation.getAnimatedValue();
+            invalidate();
+        });
+        return valueAnimator;
+    }
+
+    /**
+     * 开始Loading
+     */
+    public void startLoading() {
+        if (getLoadingAnim() != null) {
+            getLoadingAnim().cancel();
+        }
+        getLoadingAnim().start();
+    }
+
+    /**
+     * 停止Loading
+     */
+    public void stopLoading() {
+        if (getLoadingAnim() != null) {
+            getLoadingAnim().cancel();
+        }
+    }
+
 
     public void play() {
         if (getPlayPauseAnim() != null) {
@@ -312,6 +361,11 @@ public class PlayPauseView extends View {
 
     public void setLoading(boolean loading) {
         isLoading = loading;
+        if (isLoading) {
+            startLoading();
+        } else {
+            stopLoading();
+        }
         invalidate();
     }
 

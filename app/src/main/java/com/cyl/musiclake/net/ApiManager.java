@@ -2,9 +2,12 @@ package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
+import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -167,9 +170,14 @@ public class ApiManager {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (result != null) {
-                            result.error(e.getMessage());
+                        if (e.getMessage().contains("401")) {
+                            EventBus.getDefault().post(new LoginEvent(false, null));
+                        } else {
+                            if (result != null) {
+                                result.error(e.getMessage());
+                            }
                         }
+
                     }
 
                     @Override

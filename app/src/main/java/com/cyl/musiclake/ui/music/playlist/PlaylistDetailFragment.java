@@ -21,10 +21,10 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlayHistoryLoader;
-import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.data.db.Playlist;
-import com.cyl.musiclake.db.Album;
-import com.cyl.musiclake.db.Artist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
@@ -34,6 +34,8 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.ItemDecoration;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +183,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                         PlayHistoryLoader.INSTANCE.clearPlayHistory();
                         mAdapter.notifyDataSetChanged();
                         showEmptyState();
-                        RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID));
+                        EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID));
                     } else if (mPresenter != null) {
                         OnlinePlaylistUtils.INSTANCE.deletePlaylist(mPlaylist, result -> {
                             onBackPress();
@@ -309,11 +311,6 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         if (musicList.size() == 0) {
             showEmptyState();
         }
-    }
-
-    @Override
-    public void changePlayStatus(Boolean isPlaying) {
-
     }
 
     @Override

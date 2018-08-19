@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.local.contract;
 
 
-import com.cyl.musiclake.db.Artist;
+import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;

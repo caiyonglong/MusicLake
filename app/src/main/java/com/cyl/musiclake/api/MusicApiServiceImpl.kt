@@ -8,8 +8,8 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.api.doupan.DoubanMusic
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import com.cyl.musiclake.utils.FileUtils

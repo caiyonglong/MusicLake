@@ -24,7 +24,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.db.Artist;
+import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.ui.music.discover.MvDetailPresenter;
 import com.cyl.musiclake.view.custom.DisplayUtils;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;

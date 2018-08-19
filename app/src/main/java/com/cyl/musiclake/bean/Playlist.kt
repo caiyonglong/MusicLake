@@ -1,11 +1,9 @@
-package com.cyl.musiclake.data.db
+package com.cyl.musiclake.bean
 
 import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import org.litepal.crud.LitePalSupport
-import java.io.Serializable
-import java.util.*
 
 @SuppressLint("ParcelCreator")
 /**

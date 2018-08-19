@@ -4,6 +4,7 @@ package com.cyl.musiclake.ui.my
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.common.Constants
@@ -11,6 +12,7 @@ import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import com.tencent.connect.UserInfo
 import com.tencent.connect.common.Constants.REQUEST_LOGIN
@@ -29,8 +31,6 @@ class LoginPresenter @Inject
 constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     private var userModel: UserModel? = null
 
-    //QQ第三方登录
-    private var mTencent: Tencent? = null
     private var loginListener: IUiListener? = null
 
     init {
@@ -48,7 +48,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
 
     private fun getPrivateToken() {
         ApiManager.request(
-                PlaylistApiServiceImpl.login(mTencent!!.accessToken, mTencent!!.openId),
+                PlaylistApiServiceImpl.login(MusicApp.mTencent.accessToken, MusicApp.mTencent.openId),
                 object : RequestCallBack<User> {
                     override fun success(result: User?) {
                         if (result != null) {
@@ -80,8 +80,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     override fun loginByQQ(activity: Activity) {
         mView.showLoading()
         //QQ第三方登录
-        mTencent = Tencent.createInstance(Constants.APP_ID, mView.context)
-        mTencent!!.login(activity, "all", loginListener)
+        MusicApp.mTencent.login(activity, "all", loginListener)
         loginListener = object : IUiListener {
             override fun onComplete(o: Any) {
                 mView?.hideLoading()
@@ -94,8 +93,11 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                     val expires = `object`.getString("expires_in")
                     val openID = `object`.getString("openid")
                     LogUtil.e("QQ$accessToken--$expires--$openID")
-                    mTencent!!.setAccessToken(accessToken, expires)
-                    mTencent!!.openId = openID
+                    MusicApp.mTencent.setAccessToken(accessToken, expires)
+                    MusicApp.mTencent.openId = openID
+                    SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, openID)
+                    SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, accessToken)
+                    SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, accessToken)
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
@@ -118,7 +120,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                 try {
                     Tencent.onActivityResultData(requestCode, resultCode, data, loginListener)
                     Tencent.handleResultData(data, loginListener)
-                    val info = UserInfo(mView.context, mTencent!!.qqToken)
+                    val info = UserInfo(mView.context, MusicApp.mTencent.qqToken)
                     info.getUserInfo(object : IUiListener {
                         override fun onComplete(o: Any) {
                             try {
@@ -133,7 +135,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                                 //                            params.put(Constants.USER_IMG, iconUrl);
                                 //                            params.put(Constants.USER_ID, mTencent.getOpenId());
                                 val userInfo = User()
-                                userInfo.id = mTencent!!.openId
+                                userInfo.id = MusicApp.mTencent.openId
                                 userInfo.avatar = iconUrl
                                 userInfo.sex = gender
                                 userInfo.name = nickName

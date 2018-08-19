@@ -1,16 +1,13 @@
 package com.cyl.musiclake.ui.music.online.activity;
 
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.doupan.DoubanMusic;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.main.WebActivity;
 import com.cyl.musiclake.ui.music.online.contract.ArtistInfoContract;

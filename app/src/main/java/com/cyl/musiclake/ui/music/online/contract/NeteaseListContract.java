@@ -4,7 +4,7 @@
 //import com.cyl.musiclake.api.netease.NeteaseList;
 //import com.cyl.musiclake.api.netease.NeteaseMusic;
 //import com.cyl.musiclake.base.BaseContract;
-//import com.cyl.musiclake.data.db.Music;
+//import com.cyl.musiclake.bean.Music;
 //
 //public interface NeteaseListContract {
 //

@@ -5,7 +5,7 @@ import android.widget.TextView;
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.player.PlayManager;
 
 import butterknife.BindView;

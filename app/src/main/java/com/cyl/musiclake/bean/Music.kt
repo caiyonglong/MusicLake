@@ -1,4 +1,4 @@
-package com.cyl.musiclake.data.db
+package com.cyl.musiclake.bean
 
 import android.annotation.SuppressLint
 import android.os.Parcel

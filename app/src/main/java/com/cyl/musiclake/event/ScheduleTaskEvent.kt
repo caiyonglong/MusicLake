@@ -1,4 +1,4 @@
-package com.cyl.musiclake.event;
+package com.cyl.musiclake.event
 
 /**
  * Author   : D22434
@@ -6,6 +6,4 @@ package com.cyl.musiclake.event;
  * function :
  */
 
-public class ScheduleTaskEvent {
-
-}
+class ScheduleTaskEvent

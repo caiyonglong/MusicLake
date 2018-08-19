@@ -4,13 +4,12 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
 import android.text.TextUtils
-import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.data.db.Music
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.data.db.MusicCursorWrapper
-import com.cyl.musiclake.db.Album
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.utils.CoverLoader
 import org.litepal.LitePal
 

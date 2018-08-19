@@ -11,8 +11,8 @@ import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.utils.ToastUtils
 
 /**

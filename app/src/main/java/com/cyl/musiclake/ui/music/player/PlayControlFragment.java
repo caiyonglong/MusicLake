@@ -21,7 +21,10 @@ import android.widget.TextView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.PlayModeEvent;
+import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.player.FloatLyricViewManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
@@ -33,6 +36,9 @@ import com.cyl.musiclake.view.PlayPauseView;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.Nullable;
 
 import butterknife.BindView;
@@ -281,13 +287,6 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         mLoadingPrepared.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (operatingAnim != null && operatingAnim.isPaused()) {
-            operatingAnim.resume();
-        }
-    }
 
     @Override
     public void onPause() {
@@ -295,13 +294,6 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         if (operatingAnim != null) {
             operatingAnim.pause();
         }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        topContainer = null;
     }
 
     @Override
@@ -385,4 +377,45 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayModeChangedEvent(PlayModeEvent event) {
+        updatePlayMode();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMetaChangedEvent(MetaChangedEvent event) {
+        if (mPresenter != null) {
+            mPresenter.updateNowPlaying(event.getMusic());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStatusChangedEvent(StatusChangedEvent event) {
+        mPlayPause.setLoading(!event.isPrepared());
+        mPlayOrPause.setLoading(!event.isPrepared());
+        updatePlayStatus(event.isPlaying());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (operatingAnim != null && operatingAnim.isPaused()) {
+            operatingAnim.resume();
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        topContainer = null;
+        EventBus.getDefault().unregister(this);
+    }
+
 }

@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.online.contract;
 
 
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 
 import java.util.List;
 

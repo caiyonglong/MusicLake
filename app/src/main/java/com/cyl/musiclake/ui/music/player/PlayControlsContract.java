@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
 
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 
 
 public interface PlayControlsContract {

@@ -11,14 +11,16 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.db.Music;
-import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 作者：yonglong on 2016/9/14 15:56
@@ -83,7 +85,7 @@ public class CreatePlaylistDialog extends DialogFragment {
                         @Override
                         public void success(Playlist result) {
                             ToastUtils.show("歌单新建成功");
-                            RxBus.getInstance().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
+                            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
                         }
 
                         @Override

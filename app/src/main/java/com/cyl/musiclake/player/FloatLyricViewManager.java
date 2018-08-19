@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.MusicApiServiceImpl;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.utils.LogUtil;

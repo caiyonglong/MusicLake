@@ -8,7 +8,7 @@ import android.support.v4.app.DialogFragment;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 
 /**
  * 作者：yonglong on 2016/9/14 15:24

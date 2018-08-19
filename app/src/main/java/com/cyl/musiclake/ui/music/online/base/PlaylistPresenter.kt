@@ -3,11 +3,10 @@ package com.cyl.musiclake.ui.music.online.base
 import android.content.Context
 
 import com.cyl.musicapi.BaseApiImpl
-import com.cyl.musicapi.bean.ListItem
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 
 import java.util.ArrayList
 

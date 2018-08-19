@@ -6,8 +6,8 @@ import com.cyl.musicapi.playlist.PlaylistApiService
 import com.cyl.musicapi.playlist.PlaylistInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus

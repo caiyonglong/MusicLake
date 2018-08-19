@@ -19,7 +19,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
-import com.cyl.musiclake.data.db.Music;
+import com.cyl.musiclake.bean.Music;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -140,6 +140,17 @@ public class CoverLoader {
                         }
                     }
                 });
+    }
+
+    public static void loadBigImageView(Context mContext, Music music, ImageView imageView) {
+        if (music == null) return;
+        String url = getCoverUriByMusic(music, true);
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(url == null ? R.drawable.music_five : url)
+                .error(getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
     }
 
     /**

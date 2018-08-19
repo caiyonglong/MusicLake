@@ -1,32 +1,21 @@
 package com.cyl.musiclake.ui.music.mv;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.cyl.musicapi.netease.MvInfoDetail;
-import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.data.db.Music;
 import com.cyl.musiclake.ui.main.PageAdapter;
-import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
 import com.cyl.musiclake.view.custom.DisplayUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 

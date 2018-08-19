@@ -1,9 +1,8 @@
 package com.cyl.musiclake.ui.music.discover;
 
-import com.cyl.musicapi.baidu.RadioChannel;
 import com.cyl.musiclake.base.BaseContract;
-import com.cyl.musiclake.data.db.Playlist;
-import com.cyl.musiclake.db.Artist;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.bean.Artist;
 
 import java.util.List;
 

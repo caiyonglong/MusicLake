@@ -38,7 +38,10 @@ public class MusicApp extends Application {
     private PlayManager.ServiceToken mToken;
     @SuppressLint("StaticFieldLeak")
     public static Context mContext;
-    private Tencent mTencent;
+
+    //QQ第三方登录
+    public static Tencent mTencent;
+
 
     private ApplicationComponent mApplicationComponent;
     public Point screenSize = new Point();
@@ -60,9 +63,9 @@ public class MusicApp extends Application {
         initApplicationComponent();
         LitePal.initialize(this);
         UpdateUtils.init(this);
-        SPUtils.init(this);
         mTencent = Tencent.createInstance(Constants.APP_ID, this);
         initBugly();
+        initLogin();
         initDB();
         registerListener();
         initFileDownload();
@@ -71,6 +74,10 @@ public class MusicApp extends Application {
         if (manager != null) {
             manager.getDefaultDisplay().getSize(screenSize);
         }
+    }
+
+    private void initLogin() {
+        mTencent = Tencent.createInstance(Constants.APP_ID, MusicApp.getAppContext());
     }
 
     /**
@@ -168,7 +175,6 @@ public class MusicApp extends Application {
                 Activitycount--;
                 if (Activitycount == 0) {
                     LogUtil.d(">>>>>>>>>>>>>>>>>>>APP 关闭");
-//                    stopService(new Intent(activity, MusicPlayerService.class));
                 }
             }
         });

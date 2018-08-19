@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.musiclake.db.UpdateInfo;
+import com.cyl.musiclake.bean.UpdateInfo;
 import com.cyl.musiclake.common.Constants;
 
 /**

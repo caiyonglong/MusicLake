@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.data.db.Playlist;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;

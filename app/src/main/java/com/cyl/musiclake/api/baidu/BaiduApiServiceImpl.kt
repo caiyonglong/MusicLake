@@ -3,8 +3,8 @@ package com.cyl.musiclake.api.baidu
 import com.cyl.musicapi.baidu.BaiduApiService
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.Music
-import com.cyl.musiclake.data.db.Playlist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil

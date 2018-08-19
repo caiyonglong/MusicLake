@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.local.contract;
 
-import com.cyl.musiclake.db.Album;
+import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;

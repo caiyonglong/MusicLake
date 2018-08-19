@@ -1,17 +1,14 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
-import com.cyl.musiclake.db.Album;
+import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter;

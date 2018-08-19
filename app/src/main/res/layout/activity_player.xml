@@ -200,7 +200,6 @@
                         android:elevation="@dimen/dp_10"
                         android:scaleType="fitXY"
                         app:anim_duration="300"
-
                         app:bg_color="@color/translucent"
                         app:btn_color="@color/white"
                         app:elevation="10dp" />

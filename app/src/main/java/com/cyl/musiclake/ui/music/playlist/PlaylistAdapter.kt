@@ -3,8 +3,7 @@ package com.cyl.musiclake.ui.music.playlist
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.data.db.Playlist
-import com.cyl.musiclake.db.Artist
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.utils.CoverLoader
 
 /**

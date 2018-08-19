@@ -7,7 +7,7 @@
 //
 //import com.cyl.musiclake.bean.Album;
 //import com.cyl.musiclake.bean.Artist;
-//import com.cyl.musiclake.data.db.Playlist;
+//import com.cyl.musiclake.bean.Playlist;
 //import com.cyl.musiclake.utils.LogUtil;
 //
 //import java.util.ArrayList;

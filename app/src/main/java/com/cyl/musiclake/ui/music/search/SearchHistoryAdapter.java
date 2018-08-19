@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.search;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.db.SearchHistoryBean;
+import com.cyl.musiclake.bean.SearchHistoryBean;
 
 import java.util.List;
 
