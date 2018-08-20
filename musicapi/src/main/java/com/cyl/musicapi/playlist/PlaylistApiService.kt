@@ -94,5 +94,15 @@ interface PlaylistApiService {
     fun getUserInfo(@Query("access_token") token: String,
                     @Query("openid") openid: String): Observable<UserInfo>
 
+    /**
+     * 获取网易云排行榜
+     *
+     * @param token
+     * @param openid
+     * @return
+     */
+    @GET("music/netease/rank")
+    fun getNeteaseRank(@Query("ids") ids: IntArray): Observable<MutableList<PlaylistInfo>>
+
 
 }
