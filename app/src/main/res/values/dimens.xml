@@ -52,4 +52,6 @@
     <dimen name="text_size_common">16sp</dimen>
     <dimen name="text_size_mini">14sp</dimen>
     <dimen name="divider_height">0.5dp</dimen>
+    <dimen name="card_recycler_corner_radius">2dp</dimen>
+    <dimen name="card_recycler_elevation">2dp</dimen>
 </resources>
