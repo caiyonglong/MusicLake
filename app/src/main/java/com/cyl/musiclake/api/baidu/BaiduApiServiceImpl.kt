@@ -234,7 +234,7 @@ object BaiduApiServiceImpl {
                                         playlist.pid = it.chName
                                         playlist.coverUrl = it.thumb
                                         playlist.des = it.cateSname
-                                        playlist.type = 2
+                                        playlist.type = Playlist.PT_BAIDU
                                         result.add(playlist)
                                     }
                                 }

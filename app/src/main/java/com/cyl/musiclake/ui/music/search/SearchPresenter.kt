@@ -1,9 +1,12 @@
 package com.cyl.musiclake.ui.music.search
 
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.MusicApiServiceImpl
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.data.db.DaoLitepal
+import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import org.jetbrains.anko.doAsync
@@ -34,12 +37,23 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
                 })
     }
 
-    override fun getSuggestions(query: String) {
-        doAsync {
-            val data = DaoLitepal.getAllSearchInfo(query)
-            uiThread {
-                mView?.showSearchSuggestion(data)
-            }
+    override fun getHotSearchInfo() {
+        if (MusicApp.hotSearchList != null) {
+            mView?.showHotSearchInfo(MusicApp.hotSearchList)
+            return
+        } else {
+            ApiManager.request(NeteaseApiServiceImpl.getHotSearchInfo(), object : RequestCallBack<MutableList<HotSearchBean>> {
+                override fun success(result: MutableList<HotSearchBean>?) {
+                    result?.let {
+                        MusicApp.hotSearchList = it
+                        mView?.showHotSearchInfo(it)
+
+                    }
+                }
+
+                override fun error(msg: String?) {
+                }
+            })
         }
     }
 

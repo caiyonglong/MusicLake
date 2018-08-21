@@ -5,9 +5,9 @@ import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musicapi.playlist.PlaylistApiService
 import com.cyl.musicapi.playlist.PlaylistInfo
 import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -42,7 +42,7 @@ object PlaylistApiServiceImpl {
                         val playlist = Playlist()
                         playlist.id = playlistInfo.id
                         playlist.name = playlistInfo.name
-                        playlist.type = 1
+                        playlist.type = Playlist.PT_MY
                         result.add(playlist)
                     }
                     Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {
@@ -139,7 +139,7 @@ object PlaylistApiServiceImpl {
      * 调用接口失败返回{"msg":""}
      */
     fun renamePlaylist(pid: String, name: String): Observable<String> {
-        val playlist = PlaylistInfo(name)
+        val playlist = PlaylistInfo(name = name)
         return playlistApiService.renameMusic(token, pid, playlist)
                 .flatMap { it ->
                     val json = it.string()
@@ -228,4 +228,28 @@ object PlaylistApiServiceImpl {
     }
 
 
+    /**
+     * 网易云排行榜
+     */
+    fun getNeteaseRank(ids: IntArray, limit: Int): Observable<MutableList<Playlist>> {
+        return playlistApiService.getNeteaseRank(ids, limit)
+                .flatMap { data ->
+                    val list = mutableListOf<Playlist>()
+                    data.forEach {
+                        val playlist = Playlist()
+                        playlist.coverUrl = it.cover
+                        playlist.des = it.description
+                        playlist.pid = it.id
+                        playlist.name = it.name
+                        playlist.type = Playlist.PT_NETEASE
+                        playlist.playCount = it.playCount
+                        playlist.musicList = MusicUtils.getMusicList(it.list)
+                        list.add(playlist)
+                    }
+                    Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {
+                        it.onNext(list)
+                        it.onComplete()
+                    })
+                }
+    }
 }

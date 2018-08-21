@@ -55,7 +55,7 @@ object PlaylistLoader {
         playlist.date = System.currentTimeMillis()
         playlist.updateDate = System.currentTimeMillis()
         playlist.name = name
-        playlist.type = 0
+        playlist.type = Playlist.PT_LOCAL
         if (pid != Constants.PLAYLIST_QUEUE_ID)
             playlist.order = "updateDate desc"
         return DaoLitepal.saveOrUpdatePlaylist(playlist)

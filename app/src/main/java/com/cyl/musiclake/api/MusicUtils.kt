@@ -108,6 +108,18 @@ object MusicUtils {
     }
 
     /**
+     * 在线歌单歌曲歌曲实体类转化成本地歌曲实体(即可)
+     */
+    fun getMusicList(musicInfo: MutableList<MusicInfo>?): MutableList<Music> {
+        val musicList = mutableListOf<Music>()
+        musicInfo?.forEach {
+            musicList.add(getMusic(it))
+        }
+        return musicList
+    }
+
+
+    /**
      * 搜索歌曲实体类转化成本地歌曲实体
      */
     fun getSearchMusic(song: SongsItem, type: String): Music {

@@ -20,14 +20,5 @@ class AlbumAdapter(private val albumList: List<Album>) : BaseQuickAdapter<Album,
             helper.getView<View>(R.id.album).transitionName = Constants.TRANSTITION_ALBUM
         }
         CoverLoader.loadImageView(mContext, album.cover, helper.getView(R.id.album))
-//        album.name?.let {
-//            if (album.cover.isNullOrEmpty()) {
-//                MusicApi.getMusicAlbumPic(it, success = {
-//                    //                    albumList[helper.adapterPosition].cover = it
-////                    notifyItemChanged(helper.adapterPosition)
-//                    CoverLoader.loadImageView(mContext, it, helper.getView(R.id.album))
-//                })
-//            }
-//        }
     }
 }

@@ -1,8 +1,9 @@
 package com.cyl.musiclake.api.netease
 
 import com.cyl.musicapi.netease.*
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.HotSearchBean
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -82,5 +83,30 @@ object NeteaseApiServiceImpl {
      */
     fun getMvComment(mvid: String): Observable<MvComment> {
         return apiService.getMvComment(mvid)
+    }
+
+    /**
+     * 获取mv评论
+     */
+    fun getHotSearchInfo(): Observable<MutableList<HotSearchBean>> {
+        return apiService.getHotSearchInfo()
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MutableList<HotSearchBean>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<HotSearchBean>()
+                                it.result.hots?.forEach {
+                                    list.add(HotSearchBean(it.first))
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable("网络异常"))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
     }
 }

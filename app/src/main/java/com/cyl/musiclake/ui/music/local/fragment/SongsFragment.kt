@@ -4,31 +4,18 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AbsListView
-import android.widget.ImageView
-import android.widget.TextView
-
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseLazyFragment
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter
-import com.cyl.musiclake.view.ItemDecoration
-
-import java.util.ArrayList
-import java.util.Random
-
-import butterknife.BindView
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
+import kotlinx.android.synthetic.main.header_local_list.*
+import java.util.*
 
 /**
  * 功能：本地歌曲列表
@@ -38,12 +25,8 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
  */
 class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
-    private var mViewHeader: View? = null
-    private var mReloadLocal: ImageView? = null
-    private var mSongNumTv: TextView? = null
     private var mAdapter: SongAdapter? = null
     private val musicList = ArrayList<Music>()
-
 
     companion object {
         fun newInstance(): SongsFragment {
@@ -55,7 +38,7 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_recyclerview_notoolbar
+        return R.layout.frag_local_song
     }
 
     override fun initViews() {
@@ -63,10 +46,8 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         mAdapter = SongAdapter(musicList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
-        recyclerView.addItemDecoration(ItemDecoration(mFragmentComponent.activity, ItemDecoration.VERTICAL_LIST))
         mAdapter?.bindToRecyclerView(recyclerView)
         initHeaderView()
-        mAdapter?.addHeaderView(mViewHeader)
     }
 
     override fun initInjector() {
@@ -94,17 +75,11 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
 
     private fun initHeaderView() {
-        mViewHeader = LayoutInflater.from(mFragmentComponent.activity).inflate(R.layout.header_local_list, null)
-        val params = AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
-        mReloadLocal = mViewHeader?.findViewById(R.id.reloadIv)
-        mSongNumTv = mViewHeader?.findViewById(R.id.songNumTv)
-        mViewHeader?.layoutParams = params
-        mReloadLocal?.setOnClickListener { v ->
+        reloadIv?.setOnClickListener { v ->
             showLoading()
             mPresenter!!.loadSongs(true)
         }
-        mViewHeader?.setOnClickListener { v ->
+        randomPlayView?.setOnClickListener { v ->
             if (musicList.size == 0) return@setOnClickListener
             val id = Random().nextInt(musicList.size)
             PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID)
@@ -115,7 +90,7 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         musicList.clear()
         musicList.addAll(songList)
         mAdapter?.setNewData(songList)
-        mSongNumTv?.text = getString(R.string.random_play_num, songList.size)
+        songNumTv?.text = getString(R.string.random_play_num, songList.size)
         hideLoading()
     }
 

@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v7.widget.LinearLayoutManager
-import butterknife.OnClick
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseFragment
 import com.cyl.musiclake.bean.Music
@@ -37,22 +36,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     private var playlists: List<Playlist> = ArrayList()
     private var mAdapter: PlaylistAdapter? = null
 
-    @OnClick(R.id.playlistAddIv)
-    internal fun addPlaylist() {
-        if (UserStatus.getstatus(mFragmentComponent.activity)) {
-            val dialog = CreatePlaylistDialog.newInstance()
-            dialog.show(childFragmentManager, TAG_CREATE)
-        } else {
-            ToastUtils.show("请登录")
-        }
-    }
-
-    @OnClick(R.id.playlistManagerIv)
-    internal fun playlistManager() {
-        val intent = Intent(activity, PlaylistManagerActivity::class.java)
-        startActivity(intent)
-    }
-
     override fun getLayoutId(): Int {
         return R.layout.frag_local
     }
@@ -78,6 +61,20 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlists[position], null) }
+
+        playlistAddIv.setOnClickListener {
+            if (UserStatus.getstatus(mFragmentComponent.activity)) {
+                val dialog = CreatePlaylistDialog.newInstance()
+                dialog.show(childFragmentManager, TAG_CREATE)
+            } else {
+                ToastUtils.show("请登录")
+            }
+        }
+        playlistManagerIv.setOnClickListener {
+            val intent = Intent(activity, PlaylistManagerActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 

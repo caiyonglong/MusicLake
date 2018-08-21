@@ -20,7 +20,6 @@ class MvModel {
         ApiManager.request(observable, result)
     }
 
-
     /**
      *
      * 加载最新mv

@@ -103,7 +103,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
     override fun loadPlaylistSongs(playlist: Playlist) {
         when {
-            playlist.type == 0 -> doAsync {
+            playlist.type == Playlist.PT_LOCAL -> doAsync {
                 val data = playlist.pid?.let { PlaylistLoader.getMusicForPlaylist(it, playlist.order) }
                 uiThread {
                     if (data != null && data.isNotEmpty()) {
@@ -113,7 +113,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                     }
                 }
             }
-            playlist.type == 2 -> {
+            playlist.type == Playlist.PT_BAIDU -> {
                 ApiManager.request(BaiduApiServiceImpl.getRadioChannelInfo(playlist), object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)

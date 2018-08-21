@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.cyl.musicapi.BaseApiImpl;
+import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.data.download.TasksManager;
@@ -31,6 +32,7 @@ import com.tencent.tauth.Tencent;
 import org.litepal.LitePal;
 
 import java.net.Proxy;
+import java.util.List;
 
 public class MusicApp extends Application {
     @SuppressLint("StaticFieldLeak")
@@ -42,6 +44,7 @@ public class MusicApp extends Application {
     //QQ第三方登录
     public static Tencent mTencent;
 
+    public static List<HotSearchBean> hotSearchList;
 
     private ApplicationComponent mApplicationComponent;
     public Point screenSize = new Point();

@@ -211,7 +211,7 @@
 
     <!--歌单-->
     <string name="playlist_name">歌单名</string>
-    <string name="playlist_online">在线歌单</string>
+    <string name="playlist_online">我的歌单</string>
     <string name="playlist_creator">创建者</string>
     <string name="playlist_rename">重命名歌单</string>
 

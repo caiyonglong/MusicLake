@@ -3,7 +3,9 @@ package com.cyl.musiclake.ui.music.discover
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.CoverLoader
 
 /**
@@ -19,7 +21,11 @@ class TopListAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, BaseView
         helper.setText(R.id.title, neteaseList.name)
         if (neteaseList.coverUrl == null)
             return
-        CoverLoader.loadImageView(mContext, neteaseList.coverUrl, helper.getView(R.id.iv_cover))
+        val url = when (neteaseList.type) {
+            Playlist.PT_NETEASE -> MusicUtils.getAlbumPic(neteaseList.coverUrl, Constants.NETEASE, 300)
+            else -> neteaseList.coverUrl
+        }
+        CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))
     }
 }
 

@@ -96,6 +96,5 @@ public class AllListFragment extends BaseFragment {
     @Override
     protected void listener() {
         mSwipeRefreshLayout.setOnRefreshListener(() -> mSwipeRefreshLayout.setRefreshing(false));
-
     }
 }

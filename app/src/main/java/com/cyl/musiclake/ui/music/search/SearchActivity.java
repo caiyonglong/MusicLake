@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.search;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.DaoLitepal;
@@ -275,31 +277,29 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     }
 
     @Override
-    public void showSearchSuggestion(List<SearchHistoryBean> result) {
-        suggestions = result;
-        if (historyAdapter == null) {
-            historyAdapter = new SearchHistoryAdapter(suggestions);
-            historyRcv.setLayoutManager(new LinearLayoutManager(this));
-            historyRcv.setAdapter(historyAdapter);
-            historyAdapter.bindToRecyclerView(historyRcv);
-            historyAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-                return false;
-            });
-            historyAdapter.setOnItemClickListener((adapter, view, position) -> {
-            });
-            historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-                if (view.getId() == R.id.history_search) {
-                    searchEditText.setText(suggestions.get(position).getTitle());
-                    searchEditText.setSelection(suggestions.get(position).getTitle().length());
-                } else if (view.getId() == R.id.deleteView) {
-                    DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
-                    historyAdapter.remove(position);
-                }
-            });
-        } else {
-            suggestions = result;
-            historyAdapter.setNewData(result);
-        }
+    public void showHotSearchInfo(@NonNull List<HotSearchBean> result) {
+//        if (historyAdapter == null) {
+//            historyAdapter = new SearchHistoryAdapter(suggestions);
+//            historyRcv.setLayoutManager(new LinearLayoutManager(this));
+//            historyRcv.setAdapter(historyAdapter);
+//            historyAdapter.bindToRecyclerView(historyRcv);
+//            historyAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+//                return false;
+//            });
+//            historyAdapter.setOnItemClickListener((adapter, view, position) -> {
+//            });
+//            historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+//                if (view.getId() == R.id.history_search) {
+//                    searchEditText.setText(suggestions.get(position).getTitle());
+//                    searchEditText.setSelection(suggestions.get(position).getTitle().length());
+//                } else if (view.getId() == R.id.deleteView) {
+//                    DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
+//                    historyAdapter.remove(position);
+//                }
+//            });
+//        } else {
+//            historyAdapter.setNewData(result);
+//        }
     }
 
     @Override

@@ -18,7 +18,9 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/dp_4"
+            android:layout_margin="@dimen/dp_4"
+            app:cardCornerRadius="@dimen/dp_2"
+            app:cardElevation="@dimen/dp_2"
             app:cardUseCompatPadding="true">
 
             <LinearLayout
@@ -75,10 +77,11 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dp_4"
             android:orientation="vertical"
-            app:cardCornerRadius="@dimen/dp_4"
+            app:cardCornerRadius="@dimen/dp_2"
+            app:cardElevation="@dimen/dp_2"
             app:cardUseCompatPadding="true">
 
             <LinearLayout
@@ -94,16 +97,18 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_16"
                         android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text="@string/playlist_online" />
+                        android:text="@string/playlist_online"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_16" />
 
                     <ImageView
                         android:id="@+id/playlistAddIv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:padding="10dp"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_playlist_add" />
 
                     <ImageView
@@ -111,9 +116,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:padding="10dp"
+                        android:layout_margin="@dimen/dp_16"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_more" />
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="#0f000000" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -156,11 +167,6 @@
                         android:visibility="gone"
                         tools:visibility="visible" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_1"
-                        android:layout_alignParentTop="true"
-                        android:background="@drawable/toolbar_shadow_drawable" />
                 </RelativeLayout>
             </LinearLayout>
 

@@ -102,7 +102,7 @@ interface PlaylistApiService {
      * @return
      */
     @GET("music/netease/rank")
-    fun getNeteaseRank(@Query("ids") ids: IntArray): Observable<MutableList<PlaylistInfo>>
+    fun getNeteaseRank(@Query("ids") ids: IntArray, @Query("limit") limit: Int): Observable<MutableList<PlaylistInfo>>
 
 
 }

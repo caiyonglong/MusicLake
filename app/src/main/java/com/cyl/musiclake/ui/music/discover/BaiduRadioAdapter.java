@@ -25,4 +25,5 @@ public class BaiduRadioAdapter extends BaseQuickAdapter<Playlist, BaseViewHolder
         helper.setVisible(R.id.title, true);
         CoverLoader.loadImageView(mContext, channel.getCoverUrl(), helper.getView(R.id.iv_cover));
     }
+
 }

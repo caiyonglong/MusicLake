@@ -75,7 +75,7 @@ object OnlinePlaylistUtils {
                 playlists.clear()
                 result.forEach {
                     it.pid = it.id.toString()
-                    it.type = 1
+                    it.type = Playlist.PT_MY
                     playlists.add(it)
                     getPlaylistMusic(it) { result ->
                         Collections.replaceAll(playlists, it, result)

@@ -1,46 +1,64 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/playlist_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dp_4"
     android:foreground="?android:attr/selectableItemBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/card_recycler_corner_radius"
+    app:cardElevation="@dimen/card_recycler_elevation">
 
-    <ImageView
-        android:id="@+id/album"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_120"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/default_cover"
-        android:scaleType="centerCrop"
-        android:transitionName="transition_album_art"
-        tools:targetApi="lollipop" />
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/album"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_cover"
+            app:layout_constraintBottom_toTopOf="@+id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:ellipsize="end"
             android:lines="1"
-            android:text="歌单名"
+            android:text="@string/playlist_name"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/album"
+            app:layout_constraintEnd_toEndOf="@+id/album"
+            app:layout_constraintStart_toStartOf="@+id/album" />
 
         <TextView
             android:id="@+id/artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:lines="1"
-            android:text="歌单名"
-            android:textSize="12sp" />
-    </LinearLayout>
+            android:text="@string/playlist_creator"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/album" />
+    </android.support.constraint.ConstraintLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

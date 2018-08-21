@@ -13,6 +13,8 @@ import org.litepal.crud.LitePalSupport
  * 版本：2.5
  */
 class Playlist() : LitePalSupport(), Parcelable {
+
+
     var id: Long = 0
     //歌单id
     var pid: String? = null
@@ -30,8 +32,10 @@ class Playlist() : LitePalSupport(), Parcelable {
     var order: String? = null
     //封面
     var coverUrl: String? = null
-    //类型 0：本地歌单 1：在线同步歌单 2：百度音乐电台
+    //类型 0：本地歌单 1：在线同步歌单 2：百度音乐电台 3:网易云歌单
     var type: Int = 0
+    var playCount: Long = 0
+
 
     //歌曲集合
     var musicList = mutableListOf<Music>()
@@ -77,6 +81,10 @@ class Playlist() : LitePalSupport(), Parcelable {
     }
 
     companion object CREATOR : Parcelable.Creator<Playlist> {
+        const val PT_LOCAL = 0
+        const val PT_MY = 1
+        const val PT_BAIDU = 2
+        const val PT_NETEASE = 3
         override fun createFromParcel(parcel: Parcel): Playlist {
             return Playlist(parcel)
         }

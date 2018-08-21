@@ -39,6 +39,10 @@ interface NeteaseApiService {
     @GET("comment/mv")
     fun getMvComment(@Query("id") id: String): Observable<MvComment>
 
+
+    @GET("search/hot")
+    fun getHotSearchInfo(): Observable<HotSearchInfo>
+
     //    @Headers({"referer: http://music.163.com"})
 
     //

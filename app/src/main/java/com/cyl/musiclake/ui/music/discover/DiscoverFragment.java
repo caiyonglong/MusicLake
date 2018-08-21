@@ -199,4 +199,6 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         this.channels = channels;
         mRadioAdapter.setNewData(channels);
     }
+
+
 }
