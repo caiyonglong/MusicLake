@@ -58,7 +58,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mFragmentComponent.inject(this)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlists[position], null) }
 

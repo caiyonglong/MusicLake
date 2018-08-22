@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_8"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_8"
-        android:layout_weight="1.0"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_8"
+            android:layout_weight="1.0"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/task_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16"
+                tools:text="歌名" />
+
+            <TextView
+                android:id="@+id/task_status_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:layout_marginTop="4dp"
+                android:text="进度 10%"
+                android:textSize="12sp" />
+
+            <ProgressBar
+                android:id="@+id/task_pb"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/task_name_tv"
+            android:id="@+id/task_action_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp_16"
-            tools:text="歌名" />
-
-        <TextView
-            android:id="@+id/task_status_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_4"
-            android:layout_marginTop="4dp"
-            android:text="进度 10%"
-            android:textSize="12sp" />
-
-        <ProgressBar
-            android:id="@+id/task_pb"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/dp_8"
+            android:padding="@dimen/dp_16"
+            android:text="开始"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/task_action_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/dp_16"
-        android:background="@drawable/btn_bg"
-        android:text="开始"
-        android:textColor="@android:color/white"
-        android:textSize="14sp" />
-</LinearLayout>
+
+</android.support.v7.widget.CardView>

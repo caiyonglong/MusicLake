@@ -1,15 +1,21 @@
 package com.cyl.musiclake.ui.settings;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.support.design.widget.FloatingActionButton;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.ui.main.WebActivity;
+import com.cyl.musiclake.utils.Tools;
 import com.cyl.musiclake.view.FlipperView;
+import com.tencent.bugly.beta.Beta;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -23,20 +29,39 @@ public class AboutActivity extends BaseActivity {
 
     @BindView(R.id.flipperView)
     FlipperView flipperView;
-    @BindView(R.id.version)
+    @BindView(R.id.tv_about_version)
     TextView mVersion;
+    @BindView(R.id.cardEmailView)
+    View cardEmailView;
     @BindView(R.id.logoFab)
     FloatingActionButton mLogoFab;
+    @BindView(R.id.aboutContainerView)
+    View mView;
     ObjectAnimator animator;
 
-    @OnClick(R.id.introduceTv)
+    @OnClick(R.id.cardGithubView)
     void introduce() {
-        WebActivity.start(this, "关于软件", ABOUT_MUSIC_LAKE_URL);
+        Tools.INSTANCE.openBrowser(this, ABOUT_MUSIC_LAKE_URL);
     }
 
     @OnClick(R.id.logoFab)
     void toFlipper() {
         flipperView.setOnClick();
+    }
+
+    @OnClick(R.id.cardEmailView)
+    void toFeedback() {
+        Tools.INSTANCE.feeback(this);
+    }
+
+    @OnClick(R.id.shareFab)
+    void toShare() {
+        Tools.INSTANCE.share(this);
+    }
+
+    @OnClick(R.id.cardUpdateView)
+    void toUpdate() {
+        Beta.checkUpgrade();
     }
 
     @Override
@@ -46,13 +71,23 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        animator = ObjectAnimator.ofFloat(mLogoFab, "scaleX", 1f, 1.2f, 1f);
+        Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show);
+        mView.startAnimation(animation1);
+
+        animator = ObjectAnimator.ofFloat(mLogoFab, "scaleX", 1.1f, 0.9f);
         animator.setRepeatCount(-1);
-        animator.setRepeatMode(ValueAnimator.REVERSE);
-        animator.setDuration(1000);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setDuration(800);
         animator.addUpdateListener(animation -> {
             float x = (float) animation.getAnimatedValue();
             mLogoFab.setScaleY(x);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                super.onAnimationRepeat(animation);
+                flipperView.setOnClick();
+            }
         });
         animator.start();
     }
@@ -66,7 +101,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mVersion.setText(String.format("v%s", BuildConfig.VERSION_NAME));
+        mVersion.setText(String.format("版本号v%s", BuildConfig.VERSION_NAME));
     }
 
     @Override

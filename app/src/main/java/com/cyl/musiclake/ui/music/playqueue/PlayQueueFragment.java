@@ -44,7 +44,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview;
+        return R.layout.frag_play_queue;
     }
 
     public static PlayQueueFragment newInstance() {

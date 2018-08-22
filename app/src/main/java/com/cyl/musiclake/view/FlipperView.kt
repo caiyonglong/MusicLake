@@ -27,7 +27,9 @@ class FlipperView : View {
     private var centerX: Float = 0.0f
     private var centerY: Float = 0.0f
     private var radius: Float = 0.0f
+    private var maxLength: Float = 0.0f
     private var circleColor: Int = Color.RED
+
     private var circleColors = mutableListOf("#e51c23",
             "#e91e63",
             "#9c27b0",
@@ -70,7 +72,7 @@ class FlipperView : View {
 
         widths.add(0)
         alphas.add(200)
-        colors.add(circleColor)
+        colors.add(Color.WHITE)
         /**
          * 圆弧画笔
          */
@@ -90,20 +92,20 @@ class FlipperView : View {
 
             Log.e("draw ", "--" + widths[i].toFloat() + "--" + i)
 
-            if (widths[i] < centerX - radius) {
-                alphas[i] = (200 - (200f / (centerX - radius)) * widths[i]).toInt()
+            if (widths[i] < maxLength - radius) {
+                alphas[i] = (200 - (200f / (maxLength - radius) * widths[i])).toInt()
                 widths[i] = widths[i] + 1
             }
 
         }
-        Log.e("draw widths", "--" + widths[widths.size - 1].toFloat() + "--" + (centerX - radius).toInt())
-        if (widths[widths.size - 1] == (centerX - radius).toInt() / 6) {
-            widths.add(0)
-            alphas.add(200)
-            colors.add(getColorInt())
-        }
+//        Log.e("draw widths", "--" + widths[widths.size - 1].toFloat() + "--" + (centerX - radius).toInt())
+//        if (widths[widths.size - 1] == (maxLength - radius).toInt() / 10) {
+//            widths.add(0)
+//            alphas.add(200)
+//            colors.add(getColorInt())
+//        }
 
-        if (widths.size >= 30) {
+        if (widths.size >= maxLength - radius) {
             widths.removeAt(0)
             alphas.removeAt(0)
             colors.removeAt(0)
@@ -123,7 +125,7 @@ class FlipperView : View {
     }
 
     var position = 0
-    fun getColorInt(): Int {
+    private fun getColorInt(): Int {
         position = (position + 1) % (circleColors.size)
         return Color.parseColor(circleColors[position])
     }
@@ -133,18 +135,15 @@ class FlipperView : View {
         val myWidthSpecSize = View.MeasureSpec.getSize(widthMeasureSpec)
         val myHeightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec)
 
-        // 获取宽
-        val mWidth = if (myHeightSpecSize > myWidthSpecSize) {
-            myWidthSpecSize
-        } else {
-            myHeightSpecSize
-        }
 
         // 设置该view的宽高
-        setMeasuredDimension(mWidth, mWidth)
+        setMeasuredDimension(myWidthSpecSize, myHeightSpecSize)
 
-        centerY = (mWidth / 2).toFloat()
-        centerX = (mWidth / 2).toFloat()
+        centerY = (myHeightSpecSize / 2).toFloat()
+        centerX = (myWidthSpecSize / 2).toFloat()
+        //距离圆形最远距离
+        maxLength = Math.sqrt(Math.pow(centerX.toDouble(), 2.0) + Math.pow(centerY.toDouble(), 2.0)).toFloat()
+
     }
 
 }

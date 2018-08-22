@@ -33,21 +33,21 @@ class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
 
-        if (mSwatch != null) {
-            holder.setTextColor(R.id.tv_title, mSwatch!!.bodyTextColor)
-            holder.setTextColor(R.id.tv_artist, mSwatch!!.titleTextColor)
-            (holder.getView<View>(R.id.iv_clear) as ImageView).setColorFilter(ColorUtil.getBlackWhiteColor(mSwatch!!.rgb))
-        }
+//        if (mSwatch != null) {
+//            holder.setTextColor(R.id.tv_title, mSwatch!!.bodyTextColor)
+//            holder.setTextColor(R.id.tv_artist, mSwatch!!.titleTextColor)
+//            (holder.getView<View>(R.id.iv_clear) as ImageView).setColorFilter(ColorUtil.getBlackWhiteColor(mSwatch!!.rgb))
+//        }
         if (PlayManager.getPlayingId() == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
         } else {
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
         }
-        if (isDialog) {
-            holder.setImageResource(R.id.iv_clear, R.drawable.ic_clear)
-        } else {
-            holder.setImageResource(R.id.iv_clear, R.drawable.ic_more)
-        }
+//        if (isDialog) {
+//            holder.setImageResource(R.id.iv_clear, R.drawable.ic_clear)
+//        } else {
+//            holder.setImageResource(R.id.iv_clear, R.drawable.ic_more)
+//        }
         if (item.type == Constants.LOCAL) {
             holder.getView<View>(R.id.iv_resource).visibility = View.GONE
         } else {
@@ -68,7 +68,7 @@ class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
             }
         }
 
-        holder.addOnClickListener(R.id.iv_clear)
+        holder.addOnClickListener(R.id.iv_more)
         holder.addOnClickListener(R.id.iv_love)
     }
 

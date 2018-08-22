@@ -73,7 +73,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
 
     @OnClick(R.id.seeAllWangTv)
     void toNetease() {
-        NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.newInstance());
+        NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.Companion.newInstance());
     }
 
     public static DiscoverFragment newInstance() {

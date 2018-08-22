@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:paddingTop="@dimen/dp_8"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -16,7 +14,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/dp_8" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

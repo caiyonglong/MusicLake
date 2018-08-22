@@ -14,6 +14,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.utils.ToastUtils
+import org.litepal.util.Const
 
 /**
  * Created by master on 2018/4/7.
@@ -82,8 +83,14 @@ object MusicUtils {
      */
     fun getMusic(musicInfo: MusicInfo): Music {
         val music = Music()
-        music.mid = musicInfo.songId
-        music.collectId = musicInfo.id
+        musicInfo.songId?.let {
+            music.mid = it
+            music.collectId = it
+        }
+        musicInfo.id?.let {
+            music.mid = it
+            music.collectId = it
+        }
         music.title = musicInfo.name
         music.type = musicInfo.vendor
         music.album = musicInfo.album.name
@@ -101,18 +108,43 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.coverUri = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 150)
+        music.coverUri = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, 150)
         music.coverBig = musicInfo.album.cover
-        music.coverSmall = getAlbumPic(musicInfo.album.cover!!, musicInfo.vendor!!, 90)
+        music.coverSmall = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, 90)
         return music
     }
 
     /**
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体(即可)
+     * (网易云歌曲)
      */
     fun getMusicList(musicInfo: MutableList<MusicInfo>?): MutableList<Music> {
         val musicList = mutableListOf<Music>()
         musicInfo?.forEach {
+            val music = Music()
+            it.id?.let { id ->
+                music.mid = id
+                music.commentId = id
+            }
+            music.title = it.name
+            music.type = Constants.NETEASE
+            music.album = it.album.name
+            music.albumId = it.album.id
+            music.isCp = it.cp
+            if (it.artists != null) {
+                var artistIds = it.artists?.get(0)?.id
+                var artistNames = it.artists?.get(0)?.name
+                for (j in 1 until it.artists?.size!! - 1) {
+                    artistIds += ",${it.artists?.get(j)?.id}"
+                    artistNames += ",${it.artists?.get(j)?.name}"
+                }
+                music.artist = artistNames
+                music.artistId = artistIds
+            }
+            music.coverUri = getAlbumPic(it.album.cover, it.vendor, 150)
+            music.coverBig = it.album.cover
+            music.coverSmall = getAlbumPic(it.album.cover, it.vendor, 90)
+
             musicList.add(getMusic(it))
         }
         return musicList

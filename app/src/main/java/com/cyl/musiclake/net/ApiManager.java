@@ -170,11 +170,15 @@ public class ApiManager {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (e.getMessage().contains("401")) {
+                        if (e.getMessage() != null && e.getMessage().contains("401")) {
                             EventBus.getDefault().post(new LoginEvent(false, null));
                         } else {
                             if (result != null) {
-                                result.error(e.getMessage());
+                                if (e.getMessage() == null) {
+                                    result.error("");
+                                } else {
+                                    result.error(e.getMessage());
+                                }
                             }
                         }
 

@@ -43,12 +43,11 @@ import static com.cyl.musiclake.player.MusicPlayerService.totalTime;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
-    private PreferenceScreen mPreferenceCache, mPreferenceUpdate;
+    private PreferenceScreen mPreferenceCache;
     public SwitchPreference mWifiSwitch, mTimingSwitch;
     public CheckBoxPreference mLyricCheckBox;
     private int time = 0;
     private int[] times = new int[]{0, 15, 30, 45, 60};
-
 
     public static SettingsFragment newInstance() {
         Bundle args = new Bundle();
@@ -100,13 +99,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * 初始化控件
      */
     private void initView() {
-        mPreferenceUpdate = (PreferenceScreen) findPreference("key_update");
         mPreferenceCache = (PreferenceScreen) findPreference("key_cache");
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
         mTimingSwitch = (SwitchPreference) findPreference("key_timing");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
 
-        mPreferenceUpdate.setOnPreferenceClickListener(this);
         mPreferenceCache.setOnPreferenceClickListener(this);
         mTimingSwitch.setOnPreferenceClickListener(this);
         mLyricCheckBox.setOnPreferenceClickListener(this);
@@ -207,9 +204,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 }
                             });
                         }).show();
-                break;
-            case "key_update":
-                Beta.checkUpgrade();
                 break;
             case "key_timing":
                 if (mShutdownScheduled) {

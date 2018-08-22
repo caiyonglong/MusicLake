@@ -55,8 +55,6 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
                 println(msg)
             }
         })
-
-
     }
 
     override fun loadArtists() {

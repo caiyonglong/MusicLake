@@ -5,6 +5,8 @@
     <color name="setting_blue">#4A90E2</color>
     <color name="logo_blue">#4285f5</color>
 
+    <color name="main_background">#EEEEEE</color>
+
     <color name="main_blue_light">#3F56B5</color>
     <color name="main_blue_dark">#30459E</color>
     <color name="main_white">#FFFFFF</color>
@@ -37,7 +39,6 @@
     <color name="colorAccent">#ffb701</color>
     <color name="white">#ffffff</color>
     <color name="gray">#9e9e9e</color>
-
     <color name="colorPrimaryDarkTheme">#4a4959</color>
     <color name="colorPrimaryDarkDarkTheme">#525065</color>
     <color name="colorAccentDarkTheme">#ffb701</color>
@@ -85,6 +86,16 @@
     <color name="brown">#795548</color>
     <color name="grey">#9e9e9e</color>
     <color name="blueGrey">#607d8b</color>
+
+
+    <!-- Google Apps Color -->
+    <color name="app_blue">#4285F4</color>
+    <color name="app_blue_dark">#3367D6</color>
+    <color name="app_green">#0F9D58</color>
+    <color name="app_green_dark">#0B8043</color>
+    <color name="app_yellow">#F4B400</color>
+    <color name="app_yellow_dark">#F09300</color>
+    <color name="app_red">#DB4437</color>
 
     <color name="translucent">#00FFFFFF</color>
     <color name="translucent_white">#80FFFFFF</color>

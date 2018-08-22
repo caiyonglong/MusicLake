@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.cyl.musiclake.R
+import com.cyl.musiclake.common.Constants
 
 
 /**
@@ -26,4 +27,26 @@ object Tools {
         context?.startActivity(Intent.createChooser(intent,
                 context.getString(R.string.about_feedback)))
     }
+
+    /**
+     *分享链接
+     */
+    fun share(context: Context?) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_TEXT, context?.getString(R.string.share_content))
+        intent.type = "text/plain"
+        context?.startActivity(Intent.createChooser(intent, context.getString(R.string.share_title)))
+    }
+
+
+    /**
+     *分享链接
+     */
+    fun openBrowser(context: Context?, url: String) {
+        val uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        context?.startActivity(intent)
+    }
+
+
 }

@@ -1,73 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <include layout="@layout/item_toolbar" />
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/aboutContainerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
-            android:id="@+id/centerView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:orientation="vertical">
 
-            <com.cyl.musiclake.view.FlipperView
-                android:id="@+id/flipperView"
+            <include layout="@layout/card_about_1" />
+
+            <include layout="@layout/card_about_2" />
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_margin="@dimen/dp_16"
-                app:fv_color="@color/colorAccent"
-                app:fv_radius="@dimen/dp_56" />
+                android:layout_margin="@dimen/dp_8"
+                android:orientation="vertical"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="@dimen/dp_2"
+                app:cardElevation="@dimen/dp_2">
 
-            <FrameLayout
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="@dimen/dp_120"
-                android:layout_centerInParent="true">
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/logoFab"
+                <RelativeLayout
+                    android:id="@+id/centerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/dp_16"
-                    android:src="@drawable/ic_logo_big" />
-            </FrameLayout>
-        </RelativeLayout>
+                    android:layout_height="@dimen/dp_200"
+                    android:gravity="center">
 
+                    <com.cyl.musiclake.view.FlipperView
+                        android:id="@+id/flipperView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        app:fv_color="@color/colorAccent"
+                        app:fv_radius="@dimen/dp_56" />
 
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/centerView"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/dp_8"
-            android:padding="8dp"
-            android:text="@string/version"
-            android:textColor="@color/black" />
+                    <FrameLayout
+                        android:layout_width="@dimen/dp_120"
+                        android:layout_height="@dimen/dp_120"
+                        android:layout_centerInParent="true">
 
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/logoFab"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/dp_16"
+                            android:src="@drawable/ic_logo_big" />
+                    </FrameLayout>
+                </RelativeLayout>
 
-        <TextView
-            android:id="@+id/introduceTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/version"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/dp_8"
-            android:autoLink="all"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:linksClickable="true"
-            android:padding="8dp"
-            android:text="@string/about_software"
-            android:textColor="@color/colorPrimary" />
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-    </RelativeLayout>
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/shareFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/dp_16"
+        android:src="@drawable/ic_share_white" />
+</android.support.design.widget.CoordinatorLayout>

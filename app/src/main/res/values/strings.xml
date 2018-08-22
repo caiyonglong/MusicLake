@@ -303,5 +303,9 @@
     <string name="dd">暂无歌词</string>
     <string name="recently_update">最近更新：%1$s</string>
     <string name="float_settings">请在设置中，打开悬浮窗设置</string>
+    <string name="about_card1_message">嗨! 欢迎使用音乐湖！</string>
+    <string name="about_title">如果你喜欢这个应用，给个Star吧!</string>
+    <string name="about_git_hub">源代码(GitHub)</string>
+    <string name="about_update">检查更新</string>
 
 </resources>

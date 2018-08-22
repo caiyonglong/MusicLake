@@ -28,9 +28,6 @@
         <PreferenceScreen
             android:key="key_cache"
             android:title="@string/pref_title_clear" />
-        <PreferenceScreen
-            android:key="key_update"
-            android:title="@string/pref_title_update" />
 
     </PreferenceCategory>
 

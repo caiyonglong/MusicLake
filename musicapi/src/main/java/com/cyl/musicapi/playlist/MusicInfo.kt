@@ -22,9 +22,9 @@ data class Album(@SerializedName("id")
 
 
 data class MusicInfo(@SerializedName("id")
-                     val id: String? = "",
+                     val id: String?,
                      @SerializedName("songId")
-                     val songId: String? = "",
+                     val songId: String?,
                      @SerializedName("name")
                      val name: String? = "",
                      @SerializedName("artists")
