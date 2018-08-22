@@ -34,9 +34,8 @@ public class MvFragment extends BaseFragment<BasePresenter> {
     ViewPager mViewpager;
 
 
-    public static MvFragment newInstance(String type) {
+    public static MvFragment newInstance() {
         Bundle args = new Bundle();
-        args.putString("type", type);
         MvFragment fragment = new MvFragment();
         fragment.setArguments(args);
         return fragment;

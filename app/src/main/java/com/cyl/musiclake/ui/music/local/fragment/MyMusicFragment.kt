@@ -1,9 +1,7 @@
 package com.cyl.musiclake.ui.music.local.fragment
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseFragment
@@ -79,7 +77,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     override fun loadData() {
         mPresenter?.loadSongs()
-        showLoading()
     }
 
 

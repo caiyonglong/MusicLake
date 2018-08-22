@@ -12,6 +12,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ColorUtil
 import com.cyl.musiclake.utils.ConvertUtils
+import com.cyl.musiclake.utils.CoverLoader
 
 /**
  * Created by D22434 on 2017/9/26.
@@ -67,7 +68,9 @@ class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
                 }
             }
         }
-
+        if (item.coverUri != null) {
+            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+        }
         holder.addOnClickListener(R.id.iv_more)
         holder.addOnClickListener(R.id.iv_love)
     }

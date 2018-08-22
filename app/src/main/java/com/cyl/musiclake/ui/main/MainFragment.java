@@ -11,6 +11,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
+import com.cyl.musiclake.ui.music.mv.MvFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
 import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
 
@@ -75,7 +76,7 @@ public class MainFragment extends BaseFragment {
         mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), "我的");
         mAdapter.addFragment(DiscoverFragment.newInstance(), "发现");
         mAdapter.addFragment(NeteasePlaylistFragment.Companion.newInstance(), "排行榜");
-        mAdapter.addFragment(MvListFragment.newInstance("rank"), "MV");
+        mAdapter.addFragment(MvFragment.newInstance(), "MV");
 //        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);
     }

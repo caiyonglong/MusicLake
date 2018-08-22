@@ -97,7 +97,8 @@ dependencies {
     //dagger2
     api 'com.google.dagger:dagger:2.11'
 
-    api 'com.hyman:flowlayout-lib:1.1.2'
+    api 'com.google.android:flexbox:1.0.0'
+//    api 'com.hyman:flowlayout-lib:1.1.2'
     // Appcompat-v7 (only Anko Commons)
     api "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
     api 'com.amitshekhar.android:debug-db:1.0.3'

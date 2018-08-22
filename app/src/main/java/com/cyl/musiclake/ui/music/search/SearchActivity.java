@@ -17,15 +17,19 @@ import android.widget.EditText;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.HotSearchBean;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.SearchHistoryBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.db.DaoLitepal;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.SearchHistoryBean;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.utils.AnimationUtils;
 import com.cyl.musiclake.utils.LogUtil;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +49,16 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private String queryString;
     private SongAdapter mAdapter;
     private SearchHistoryAdapter historyAdapter;
-
+    private HotSearchAdapter hotSearchAdapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView resultListRcv;
     @BindView(R.id.suggestions_list)
     RecyclerView historyRcv;
+    @BindView(R.id.hotSearchView)
+    View hotSearchView;
+    @BindView(R.id.hotSearchRcv)
+    RecyclerView hotSearchRcv;
     @BindView(R.id.history_panel)
     View historyPanel;
     @BindView(R.id.toolbar_search_edit_text)
@@ -113,7 +121,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         resultListRcv.setLayoutManager(layoutManager);
         resultListRcv.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(resultListRcv);
-        mPresenter.getSearchHistory();
+        if (mPresenter != null) {
+            mPresenter.getSearchHistory();
+            mPresenter.getHotSearchInfo();
+        }
     }
 
     @Override
@@ -181,7 +192,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-//        restoreFilterChecked(menu, filterItemCheckedId);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -191,12 +201,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             case android.R.id.home:
                 finish();
                 break;
-//            case R.id.menu_filter_all:
-//            case R.id.menu_filter_qq:
-//            case R.id.menu_filter_xiami:
-//            case R.id.menu_filter_netease:
-//                changeFilter(item, getFilterFromMenuId(item.getItemId()));
-//                break;
             case R.id.menu_search:
                 queryString = searchEditText.getText().toString().trim();
                 search(queryString);
@@ -217,33 +221,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         }
     }
 
-
-//    private void restoreFilterChecked(Menu menu, int itemId) {
-//        if (itemId != -1) {
-//            MenuItem item = menu.findItem(itemId);
-//            if (item == null) return;
-//
-//            item.setChecked(true);
-//            filter = getFilterFromMenuId(itemId);
-//        }
-//    }
-
-
     int filterItemCheckedId = -1;
-
-//    private SearchEngine.Filter getFilterFromMenuId(int itemId) {
-//        switch (itemId) {
-//            case R.id.menu_filter_qq:
-//                return SearchEngine.Filter.QQ;
-//            case R.id.menu_filter_xiami:
-//                return SearchEngine.Filter.XIAMI;
-//            case R.id.menu_filter_netease:
-//                return SearchEngine.Filter.NETEASE;
-//            case R.id.menu_filter_all:
-//            default:
-//                return SearchEngine.Filter.ANY;
-//        }
-//    }
 
     private void search(String query) {
         if (query != null && query.length() > 0) {
@@ -278,28 +256,30 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void showHotSearchInfo(@NonNull List<HotSearchBean> result) {
-//        if (historyAdapter == null) {
-//            historyAdapter = new SearchHistoryAdapter(suggestions);
-//            historyRcv.setLayoutManager(new LinearLayoutManager(this));
-//            historyRcv.setAdapter(historyAdapter);
-//            historyAdapter.bindToRecyclerView(historyRcv);
-//            historyAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-//                return false;
-//            });
-//            historyAdapter.setOnItemClickListener((adapter, view, position) -> {
-//            });
-//            historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-//                if (view.getId() == R.id.history_search) {
-//                    searchEditText.setText(suggestions.get(position).getTitle());
-//                    searchEditText.setSelection(suggestions.get(position).getTitle().length());
-//                } else if (view.getId() == R.id.deleteView) {
-//                    DaoLitepal.INSTANCE.deleteSearchInfo(suggestions.get(position).getTitle());
-//                    historyAdapter.remove(position);
-//                }
-//            });
-//        } else {
-//            historyAdapter.setNewData(result);
-//        }
+        if (result.size() > 0) {
+            hotSearchView.setVisibility(View.VISIBLE);
+            AnimationUtils.animateView(hotSearchView, true, 600);
+        } else hotSearchView.setVisibility(View.GONE);
+        if (hotSearchAdapter == null) {
+            hotSearchAdapter = new HotSearchAdapter(result);
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+            layoutManager.setFlexDirection(FlexDirection.ROW);
+            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            hotSearchRcv.setLayoutManager(layoutManager);
+            hotSearchRcv.setAdapter(hotSearchAdapter);
+            hotSearchAdapter.bindToRecyclerView(hotSearchRcv);
+            hotSearchAdapter.setOnItemClickListener((adapter, view, position) -> {
+            });
+            hotSearchAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+                if (view.getId() == R.id.titleTv) {
+                    searchEditText.setText(result.get(position).getTitle());
+                    searchEditText.setSelection(result.get(position).getTitle().length());
+                    search(result.get(position).getTitle());
+                }
+            });
+        } else {
+            hotSearchAdapter.setNewData(result);
+        }
     }
 
     @Override

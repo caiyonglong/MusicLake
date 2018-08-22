@@ -42,7 +42,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun initViews() {
-        mSwipeRefreshLayout?.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN)
         mAdapter = SongAdapter(musicList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
@@ -55,14 +54,13 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun listener() {
-        mSwipeRefreshLayout!!.setOnRefreshListener { mPresenter!!.loadSongs(false) }
-        mAdapter!!.setOnItemClickListener { adapter, view, position ->
+        mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID)
-                mAdapter!!.notifyDataSetChanged()
+                mAdapter?.notifyDataSetChanged()
             }
         }
-        mAdapter!!.setOnItemChildClickListener { adapter, view, position ->
+        mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             val music = adapter.getItem(position) as Music?
             BottomDialogFragment.newInstance(music, Constants.OP_LOCAL)
                     .show(mFragmentComponent.activity as AppCompatActivity)
@@ -70,16 +68,17 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun onLazyLoad() {
-        mPresenter!!.loadSongs(false)
+        mPresenter?.loadSongs(false)
     }
 
 
     private fun initHeaderView() {
+        iconIv
         reloadIv?.setOnClickListener { v ->
             showLoading()
-            mPresenter!!.loadSongs(true)
+            mPresenter?.loadSongs(true)
         }
-        randomPlayView?.setOnClickListener { v ->
+        iconIv.setOnClickListener { v ->
             if (musicList.size == 0) return@setOnClickListener
             val id = Random().nextInt(musicList.size)
             PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID)
@@ -100,7 +99,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
     override fun hideLoading() {
         super.hideLoading()
-        mSwipeRefreshLayout?.isRefreshing = false
     }
 
     override fun setEmptyView() {

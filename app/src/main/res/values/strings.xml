@@ -151,6 +151,7 @@
 
     <string name="search">搜索</string>
     <string name="search_history">搜索历史</string>
+    <string name="search_hot">热门搜索</string>
     <string name="search_tips">歌手、歌名</string>
 
     <string name="create_playlist">新建歌单</string>

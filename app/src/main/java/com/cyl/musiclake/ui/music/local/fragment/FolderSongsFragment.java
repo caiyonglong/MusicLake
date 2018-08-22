@@ -97,45 +97,6 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             BottomDialogFragment.Companion.newInstance(musicList.get(position)).show((AppCompatActivity) mFragmentComponent.getActivity());
-//            PopupMenu popupMenu = new PopupMenu(getContext(), view);
-//            popupMenu.setOnMenuItemClickListener(item -> {
-//                switch (item.getItemId()) {
-//                    case R.id.popup_song_play:
-//                        PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID + path);
-//                        break;
-//                    case R.id.popup_song_detail:
-//                        ShowDetailDialog.newInstance(musicList.get(position))
-//                                .show(getChildFragmentManager(), getTag());
-//                        break;
-//                    case R.id.popup_song_goto_album:
-//                        LogUtil.e("album", music.toString() + "");
-//                        NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
-//                                music.getAlbumId(),
-//                                music.getAlbum(), null);
-//                        break;
-//                    case R.id.popup_song_goto_artist:
-//                        NavigationHelper.INSTANCE.navigateToArtist(getActivity(),
-//                                music.getArtistId(),
-//                                music.getArtist(), null);
-//                        break;
-//                    case R.id.popup_song_addto_queue:
-//                        AddPlaylistDialog.newInstance(music).show(getChildFragmentManager(), "ADD_PLAYLIST");
-//                        break;
-//                    case R.id.popup_song_delete:
-//                        new MaterialDialog.Builder(getContext())
-//                                .title("提示")
-//                                .content("是否移除这首歌曲？")
-//                                .onPositive((dialog, which) -> {
-//                                })
-//                                .positiveText("确定")
-//                                .negativeText("取消")
-//                                .show();
-//                        break;
-//                }
-//                return false;
-//            });
-//            popupMenu.inflate(R.menu.popup_song);
-//            popupMenu.show();
         });
     }
 

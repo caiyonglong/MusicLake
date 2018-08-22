@@ -47,7 +47,6 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
                     result?.let {
                         MusicApp.hotSearchList = it
                         mView?.showHotSearchInfo(it)
-
                     }
                 }
 
