@@ -12,7 +12,10 @@ interface NeteaseApiService {
 
     //    @Headers({"referer: http://music.163.com"})
     @GET("top/playlist/highquality")
-    fun neteasePlaylist(): Observable<NeteasePlaylist>
+    fun getTopPlaylist(@Query("cat") cat: String? = null, @Query("limit") limit: Int): Observable<NeteasePlaylist>
+
+    @GET("/playlist/detail")
+    fun getPlaylistDetail(@Query("id") id: String): Observable<NeteasePlaylistDetail>
 
     //    @Headers({"referer: http://music.163.com"})
     @GET("/toplist/artist")
@@ -39,21 +42,10 @@ interface NeteaseApiService {
     @GET("comment/mv")
     fun getMvComment(@Query("id") id: String): Observable<MvComment>
 
-
     @GET("search/hot")
     fun getHotSearchInfo(): Observable<HotSearchInfo>
 
-    //    @Headers({"referer: http://music.163.com"})
-
-    //
-//    //    @Headers({"referer: http://music.163.com"})
-//    @GET("music/url?")
-//    fun getMusicUrl(@Query("id") id: String): Observable<NeteaseMusicUrl>
-//
-//    //
-////    //    @Headers({"referer: http://music.163.com"})
-//    @GET("lyric")
-//    fun getMusicLyric(@Query("id") id: String): Observable<NeteaseLyric>
-
+    @GET("playlist/catlist")
+    fun getCatList(): Observable<CatListBean>
 
 }

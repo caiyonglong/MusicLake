@@ -1,9 +1,9 @@
 package com.cyl.musiclake.ui.music.playlist
 
-import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
@@ -115,6 +115,25 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
             playlist.type == Playlist.PT_BAIDU -> {
                 ApiManager.request(BaiduApiServiceImpl.getRadioChannelInfo(playlist), object : RequestCallBack<Playlist> {
+                    override fun error(msg: String?) {
+                        mView?.showError(msg, true)
+                    }
+
+                    override fun success(result: Playlist?) {
+                        result?.let {
+                            if (it.musicList.isNotEmpty()) {
+                                mView?.showPlaylistSongs(it.musicList)
+                            } else {
+                                mView?.showEmptyState()
+                            }
+                        }
+                    }
+
+                })
+
+            }
+            playlist.type == Playlist.PT_NETEASE -> {
+                ApiManager.request(playlist.pid?.let { NeteaseApiServiceImpl.getPlaylistDetail(it) }, object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)
                     }

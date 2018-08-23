@@ -1,14 +1,10 @@
 package com.cyl.musiclake.ui.music.discover
 
-import com.cyl.musicapi.BaseApiImpl
-import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import java.util.*
@@ -27,8 +23,6 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
         var radioList = mutableListOf<Playlist>()
     }
 
-    private val neteaseLists = ArrayList<Playlist>()
-
     override fun loadBaidu() {
         ApiManager.request(BaiduApiServiceImpl.getOnlinePlaylist(), object : RequestCallBack<List<Playlist>> {
             override fun success(result: List<Playlist>) {
@@ -44,8 +38,8 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
     /**
      * 加载网易排行榜（0歌曲）
      */
-    override fun loadNetease() {
-        val observable = PlaylistApiServiceImpl.getNeteaseRank(IntArray(21) { i -> i }, 0)
+    override fun loadNetease(tag: String) {
+        val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 20)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showNeteaseCharts(result)

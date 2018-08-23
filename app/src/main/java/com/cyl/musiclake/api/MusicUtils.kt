@@ -5,16 +5,16 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import com.cyl.musicapi.bean.ListItem
 import com.cyl.musicapi.bean.SongsItem
+import com.cyl.musicapi.netease.TracksItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.ToastUtils
-import org.litepal.util.Const
 
 /**
  * Created by master on 2018/4/7.
@@ -145,6 +145,40 @@ object MusicUtils {
             music.coverBig = it.album.cover
             music.coverSmall = getAlbumPic(it.album.cover, it.vendor, 90)
             if (!it.cp) {
+                musicList.add(music)
+            }
+        }
+        return musicList
+    }
+
+
+    fun getNeteaseMusicList(tracks: MutableList<TracksItem>?): MutableList<Music> {
+        val musicList = mutableListOf<Music>()
+        tracks?.forEach {
+            val music = Music()
+            it.id?.let { id ->
+                music.mid = id
+                music.commentId = id
+            }
+            music.title = it.name
+            music.type = Constants.NETEASE
+            music.album = it.album.name
+            music.albumId = it.album.id.toString()
+            music.isCp = (it.cp != 0)
+            if (it.artists != null) {
+                var artistIds = it.artists?.get(0)?.id.toString()
+                var artistNames = it.artists?.get(0)?.name
+                for (j in 1 until it.artists?.size!! - 1) {
+                    artistIds += ",${it.artists?.get(j)?.id}"
+                    artistNames += ",${it.artists?.get(j)?.name}"
+                }
+                music.artist = artistNames
+                music.artistId = artistIds
+            }
+            music.coverUri = getAlbumPic(it.album.picUrl, Constants.NETEASE, 150)
+            music.coverBig = it.album.picUrl
+            music.coverSmall = getAlbumPic(it.album.picUrl, Constants.NETEASE, 90)
+            if (it.cp != 0) {
                 musicList.add(music)
             }
         }

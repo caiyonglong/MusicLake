@@ -16,7 +16,6 @@ import java.lang.ref.WeakReference
  * Created by yonglong on 2018/1/23.
  * 下载任务管理
  */
-
 object TasksManager {
     private var modelList = DownloadLoader.getDownloadingList()
 
@@ -24,8 +23,7 @@ object TasksManager {
 
     private var listener: FileDownloadConnectListener? = null
 
-    val isReady: Boolean
-        get() = FileDownloader.getImpl().isServiceConnected
+    val isReady by lazy { FileDownloader.getImpl().isServiceConnected }
 
     fun addTaskForViewHolder(task: BaseDownloadTask) {
         taskSparseArray.put(task.id, task)
@@ -59,7 +57,6 @@ object TasksManager {
                 if (activityWeakReference?.get() == null) {
                     return
                 }
-
                 activityWeakReference.get()?.postNotifyDataChanged()
             }
 
@@ -67,7 +64,6 @@ object TasksManager {
                 if (activityWeakReference?.get() == null) {
                     return
                 }
-
                 activityWeakReference.get()?.postNotifyDataChanged()
             }
         }
@@ -102,7 +98,7 @@ object TasksManager {
     /**
      * 根据model id获取对象
      */
-    fun getById(id: Int): TasksManagerModel? {
+    private fun getById(id: Int): TasksManagerModel? {
         for (model in modelList) {
             if (model.id == id) {
                 return model

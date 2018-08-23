@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
@@ -36,7 +36,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     private static final String TAG = "FoundFragment";
 
     private TopListAdapter mBaiduAdapter;
-    private TopListAdapter mNeteaseAdapter;
+    private TopPlaylistAdapter mNeteaseAdapter;
     private TopArtistListAdapter mArtistListAdapter;
     private BaiduRadioAdapter mRadioAdapter;
     private List<Playlist> playlist = new ArrayList<>();
@@ -71,9 +71,25 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         NavigationHelper.INSTANCE.navigateFragment(getActivity(), BaiduPlaylistFragment.newInstance());
     }
 
-    @OnClick(R.id.seeAllWangTv)
-    void toNetease() {
-        NavigationHelper.INSTANCE.navigateFragment(getActivity(), NeteasePlaylistFragment.Companion.newInstance());
+    @OnClick(R.id.catTag1Tv)
+    void toCatTag1() {
+        if (mPresenter != null) {
+            mPresenter.loadNetease("华语");
+        }
+    }
+
+    @OnClick(R.id.catTag2Tv)
+    void toCatTag2() {
+        if (mPresenter != null) {
+            mPresenter.loadNetease("流行");
+        }
+    }
+
+    @OnClick(R.id.catTag3Tv)
+    void toCatTag3() {
+        if (mPresenter != null) {
+            mPresenter.loadNetease("古风");
+        }
     }
 
     public static DiscoverFragment newInstance() {
@@ -100,9 +116,9 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mBaiChartsRv.setNestedScrollingEnabled(false);
         mBaiduAdapter.bindToRecyclerView(mBaiChartsRv);
 
-        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
+        mWangChartsRv.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
         //适配器
-        mNeteaseAdapter = new TopListAdapter(playlist);
+        mNeteaseAdapter = new TopPlaylistAdapter(playlist);
         mWangChartsRv.setAdapter(mNeteaseAdapter);
         mWangChartsRv.setFocusable(false);
         mWangChartsRv.setNestedScrollingEnabled(false);
@@ -134,7 +150,7 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
     @Override
     protected void loadData() {
         mPresenter.loadBaidu();
-        mPresenter.loadNetease();
+        mPresenter.loadNetease("全部");
         mPresenter.loadArtists();
         mPresenter.loadRaios();
     }
@@ -144,19 +160,13 @@ public class DiscoverFragment extends BaseLazyFragment<DiscoverPresenter> implem
         mBaiduAdapter.setOnItemClickListener((adapter, view, position) -> {
             Playlist playlist = (Playlist) adapter.getItem(position);
             Intent intent = new Intent(getActivity(), BaiduMusicListActivity.class);
-            intent.putExtra(Extras.BILLBOARD_TITLE, playlist.getName());
-            intent.putExtra(Extras.BILLBOARD_DESC, playlist.getDes());
-            intent.putExtra(Extras.BILLBOARD_ALBUM, playlist.getCoverUrl());
-            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getPid());
+            intent.putExtra(Extras.PLAYLIST, playlist);
             startActivity(intent);
         });
 
         mNeteaseAdapter.setOnItemClickListener((adapter, view, position) -> {
             Playlist playlist = (Playlist) adapter.getData().get(position);
-            Intent intent = new Intent(getActivity(), NeteasePlaylistActivity.class);
-            intent.putExtra("title", playlist.getName());
-            intent.putExtra("id", playlist.getPid());
-            startActivity(intent);
+            NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), playlist, null);
         });
 
         mArtistListAdapter.setOnItemClickListener((adapter, view, position) -> {

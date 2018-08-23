@@ -24,6 +24,8 @@ import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yonglong on 2018/1/23.
@@ -32,9 +34,11 @@ import java.io.File;
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
     private Context mContext;
+    private List<TasksManagerModel> models = new ArrayList<>();
 
-    public TaskItemAdapter(Context mContext) {
+    public TaskItemAdapter(Context mContext, List<TasksManagerModel> list) {
         this.mContext = mContext;
+        this.models = list;
     }
 
     public static final FileDownloadListener taskDownloadListener = new FileDownloadListener();
@@ -80,7 +84,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
     @Override
     public void onBindViewHolder(@NonNull TaskItemViewHolder holder, int position) {
-        TasksManagerModel model = TasksManager.INSTANCE.get(position);
+        TasksManagerModel model = models.get(position);
         holder.taskActionBtn.setOnClickListener(taskActionOnClickListener);
         holder.update(model.getId(), holder.getAdapterPosition());
         holder.taskActionBtn.setTag(holder);
@@ -122,7 +126,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
     @Override
     public int getItemCount() {
-        return TasksManager.INSTANCE.getModelList().size();
+        return models.size();
     }
 
     public class TaskItemViewHolder extends RecyclerView.ViewHolder {

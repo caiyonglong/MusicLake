@@ -24,7 +24,7 @@ data class PlaylistsItem(@SerializedName("description")
                          @SerializedName("copywriter")
                          val copywriter: String = "",
                          @SerializedName("id")
-                         val id: Int = 0,
+                         val id: Long = 0,
                          @SerializedName("tag")
                          val tag: String = "",
                          @SerializedName("totalDuration")
@@ -46,7 +46,7 @@ data class PlaylistsItem(@SerializedName("description")
                          @SerializedName("userId")
                          val userId: Int = 0,
                          @SerializedName("tracks")
-                         val tracks: Any? = null,
+                         val tracks: MutableList<TracksItem>? = null,
                          @SerializedName("tags")
                          val tags: MutableList<String>?,
                          @SerializedName("anonimous")
@@ -126,9 +126,7 @@ data class Creator(@SerializedName("birthday")
                    @SerializedName("userType")
                    val userType: Int = 0,
                    @SerializedName("backgroundImgId")
-                   val backgroundImgId: Long = 0,
-                   @SerializedName("experts")
-                   val experts: String? = null)
+                   val backgroundImgId: Long = 0)
 
 
 data class SubscribersItem(@SerializedName("birthday")
@@ -190,14 +188,40 @@ data class SubscribersItem(@SerializedName("birthday")
 
 
 data class NeteasePlaylist(@SerializedName("lasttime")
-                        val lasttime: Long = 0,
-                        @SerializedName("total")
-                        val total: Int = 0,
-                        @SerializedName("code")
-                        val code: Int = 0,
-                        @SerializedName("more")
-                        val more: Boolean = false,
-                        @SerializedName("playlists")
-                        val playlists: MutableList<PlaylistsItem>?)
+                           val lasttime: Long = 0,
+                           @SerializedName("total")
+                           val total: Int = 0,
+                           @SerializedName("code")
+                           val code: Int = 0,
+                           @SerializedName("more")
+                           val more: Boolean = false,
+                           @SerializedName("playlists")
+                           val playlists: MutableList<PlaylistsItem>?)
 
+data class NeteasePlaylistDetail(
+        @SerializedName("code")
+        val code: Int = 0,
+        @SerializedName("playlist")
+        val playlist: PlaylistsItem?)
+
+
+data class TracksItem(@SerializedName("id")
+                      val id: String?,
+                      @SerializedName("name")
+                      val name: String? = "",
+                      @SerializedName("ar")
+                      val artists: MutableList<ArtistsItem>?,
+                      @SerializedName("al")
+                      val album: AlbumItem,
+                      @SerializedName("publishTime")
+                      val publishTime: Long = 0,
+                      @SerializedName("cp")
+                      val cp: Int = 0)
+
+data class AlbumItem(@SerializedName("picUrl")
+                     val picUrl: String = "",
+                     @SerializedName("name")
+                     val name: String = "",
+                     @SerializedName("id")
+                     val id: Int = 0)
 

@@ -34,6 +34,7 @@ object BaiduApiServiceImpl {
             for (item in it.content!!) {
                 val playlist = Playlist()
                 playlist.name = item.name
+                playlist.des = item.comment
                 playlist.type = Playlist.PT_BAIDU
                 playlist.pid = item.type.toString()
                 playlist.coverUrl = item.picS192

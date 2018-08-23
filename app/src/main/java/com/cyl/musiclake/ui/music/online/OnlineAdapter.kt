@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.online.adapter
+package com.cyl.musiclake.ui.music.online
 
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder

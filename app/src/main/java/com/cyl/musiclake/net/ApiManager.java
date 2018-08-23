@@ -3,6 +3,7 @@ package com.cyl.musiclake.net;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
 import com.cyl.musiclake.event.LoginEvent;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -158,9 +159,7 @@ public class ApiManager {
                 .subscribe(new Observer<T>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
-
                     @Override
                     public void onNext(T t) {
                         if (result != null) {
@@ -170,6 +169,7 @@ public class ApiManager {
 
                     @Override
                     public void onError(Throwable e) {
+                        LogUtil.e("ApiManager ", "Throwable==" + e.getMessage());
                         if (e.getMessage() != null && e.getMessage().contains("401")) {
                             EventBus.getDefault().post(new LoginEvent(false, null));
                         } else {

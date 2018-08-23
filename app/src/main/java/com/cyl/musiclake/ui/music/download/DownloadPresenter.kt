@@ -21,7 +21,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
         super.attachView(view)
         RxBus.getInstance().register(TasksManagerModel::class.java)
                 .subscribe {
-                    if (mView != null && mView.context != null) {
+                    mView?.let { _ ->
                         loadDownloadMusic()
                     }
                 }

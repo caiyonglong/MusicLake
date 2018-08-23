@@ -9,7 +9,7 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity
-import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter
+import com.cyl.musiclake.ui.music.online.OnlineAdapter
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract
 import com.cyl.musiclake.ui.music.online.presenter.OnlinePlaylistPresenter
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
@@ -57,14 +57,9 @@ class NeteasePlaylistFragment : BaseFragment<OnlinePlaylistPresenter>(), OnlineP
             val intent = Intent()
             if (allPlaylist[position].type == Playlist.PT_BAIDU) {
                 intent.setClass(activity, BaiduMusicListActivity::class.java)
-                intent.putExtra(Extras.BILLBOARD_TITLE, allPlaylist[position].name)
-                intent.putExtra(Extras.BILLBOARD_DESC, allPlaylist[position].des)
-                intent.putExtra(Extras.BILLBOARD_ALBUM, allPlaylist[position].coverUrl)
-                intent.putExtra(Extras.BILLBOARD_TYPE, allPlaylist[position].pid)
+                intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
             } else {
                 intent.setClass(activity, NeteasePlaylistActivity::class.java)
-                intent.putExtra("title", allPlaylist[position].name)
-                intent.putExtra("id", allPlaylist[position].pid)
                 intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
             }
             startActivity(intent)

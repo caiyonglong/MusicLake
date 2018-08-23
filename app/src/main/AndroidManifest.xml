@@ -66,12 +66,6 @@
             android:name=".ui.music.playlist.PlaylistManagerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.online.activity.ArtistInfoActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.music.player.LyricSearchActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.zone.NearPeopleAcivity"
             android:label="@string/near_people"
             android:launchMode="singleTask"

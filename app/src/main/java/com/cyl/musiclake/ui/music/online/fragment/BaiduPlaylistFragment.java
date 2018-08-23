@@ -11,7 +11,7 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
-import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter;
+import com.cyl.musiclake.ui.music.online.OnlineAdapter;
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract;
 import com.cyl.musiclake.ui.music.online.presenter.OnlinePlaylistPresenter;
 
@@ -86,10 +86,7 @@ public class BaiduPlaylistFragment extends BaseFragment<OnlinePlaylistPresenter>
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Playlist playlist = (Playlist) adapter.getItem(position);
             Intent intent = new Intent(getActivity(), BaiduMusicListActivity.class);
-            intent.putExtra(Extras.BILLBOARD_TITLE, playlist.getName());
-            intent.putExtra(Extras.BILLBOARD_DESC, playlist.getDes());
-            intent.putExtra(Extras.BILLBOARD_ALBUM, playlist.getCoverUrl());
-            intent.putExtra(Extras.BILLBOARD_TYPE, playlist.getPid());
+            intent.putExtra(Extras.PLAYLIST, playlist);
             startActivity(intent);
         });
     }

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
 import com.cyl.musiclake.bean.Music;
@@ -213,27 +214,8 @@ public class CoverLoader {
     }
 
 
-    public static Drawable createBlurredImageFromBitmap(Bitmap bitmap, Context context, int inSampleSize) {
-
-        RenderScript rs = RenderScript.create(context);
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = inSampleSize;
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] imageInByte = stream.toByteArray();
-        ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
-        Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);
-
-        final Allocation input = Allocation.createFromBitmap(rs, blurTemplate);
-        final Allocation output = Allocation.createTyped(rs, input.getType());
-        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        script.setRadius(10f);
-        script.setInput(input);
-        script.forEach(output);
-        output.copyTo(blurTemplate);
-
-        return new BitmapDrawable(context.getResources(), blurTemplate);
+    public static Drawable createBlurredImageFromBitmap(Bitmap bitmap) {
+        return ImageUtils.createBlurredImageFromBitmap(bitmap, MusicApp.getAppContext(), 12);
     }
 
 }
