@@ -60,6 +60,8 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
 
     public abstract String getToolBarTitle();
 
+    public abstract Playlist getmPlaylist();
+
     @Override
     protected void initView() {
         initHeaderView();
@@ -80,6 +82,8 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
+
+        showHeaderInfo(getmPlaylist());
     }
 
 
@@ -140,14 +144,16 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         return super.onOptionsItemSelected(item);
     }
 
-    public void showHeaderInfo() {
-        CoverLoader.loadImageView(this, mPlaylist.getCoverUrl(), mIvCover);
-        mTvTitle.setText(mPlaylist.getName());
-        if (mPlaylist.getDate() != 0) {
-            mTvDate.setText(getString(R.string.recent_update, FormatUtil.INSTANCE.distime(mPlaylist.getDate())));
+    public void showHeaderInfo(Playlist playlist) {
+        if (playlist != null) {
+            CoverLoader.loadImageView(this, playlist.getCoverUrl(), mIvCover);
+            mTvTitle.setText(playlist.getName());
+            if (playlist.getDate() != 0) {
+                mTvDate.setText(getString(R.string.recent_update, FormatUtil.INSTANCE.distime(mPlaylist.getDate())));
+            }
+            mTvDesc.setText(playlist.getDes());
+            mAdapter.setHeaderView(mViewHeader, 0);
         }
-        mTvDesc.setText(mPlaylist.getDes());
-        mAdapter.setHeaderView(mViewHeader, 0);
     }
 
     @Override
@@ -155,6 +161,12 @@ public abstract class BasePlaylistActivity extends BaseActivity<PlaylistPresente
         mPlaylist = playlist;
         musicList = playlist.getMusicList();
         mAdapter.setNewData(playlist.getMusicList());
-        showHeaderInfo();
+    }
+
+    @Override
+    public void showOnlineMusicList(List<Music> songList) {
+        musicList = songList;
+        mPlaylist.setMusicList(songList);
+        mAdapter.setNewData(songList);
     }
 }

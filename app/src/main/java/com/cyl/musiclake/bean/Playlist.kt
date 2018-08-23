@@ -32,7 +32,7 @@ class Playlist() : LitePalSupport(), Parcelable {
     var order: String? = null
     //封面
     var coverUrl: String? = null
-    //类型 0：本地歌单 1：在线同步歌单 2：百度音乐电台 3:网易云歌单
+    //类型 0：本地歌单 1：在线同步歌单 2：百度音乐电台 3:网易云歌单 4:百度排行榜
     var type: Int = 0
     var playCount: Long = 0
 

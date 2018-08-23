@@ -4,9 +4,13 @@ import android.content.Context
 
 import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.net.ApiManager
+import com.cyl.musiclake.net.RequestCallBack
 
 import java.util.ArrayList
 
@@ -18,26 +22,37 @@ import javax.inject.Inject
 
 class PlaylistPresenter @Inject
 constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Presenter {
-
-    override fun getPlaylist(idx: String, context: Context) {
-        BaseApiImpl.getInstance(context).getTopList(idx) { (data) ->
-            val playlist = Playlist()
-            playlist.pid = idx
-            playlist.name = data.name
-            playlist.count = data.playCount
-            playlist.coverUrl = data.cover
-            playlist.des = data.description
-            val musicList = ArrayList<Music>()
-            if (data.list!!.isNotEmpty()) {
-                for (item in data.list!!) {
-                    val music = MusicUtils.getMusic(item)
-                    if (music.isCp) continue
-                    musicList.add(music)
-                }
+    override fun loadPlaylist(idx: String, context: Context?) {
+        val observable = PlaylistApiServiceImpl.getNeteaseRank(intArrayOf(idx.toInt()), 200)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showPlayList(result.first())
             }
-            playlist.musicList = musicList
-            mView?.showPlayList(playlist)
-        }
+
+            override fun error(msg: String) {
+                mView?.showError(msg, true)
+                mView.hideLoading()
+            }
+        })
+    }
+
+    override fun loadOnlineMusicList(type: String, limit: Int, mOffset: Int) {
+        ApiManager.request(BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset), object : RequestCallBack<MutableList<Music>> {
+            override fun error(msg: String?) {
+                mView?.hideLoading()
+                mView?.showError(msg, true)
+            }
+
+            override fun success(result: MutableList<Music>?) {
+                result?.forEach {
+                    if (it.isCp)
+                        result.remove(it)
+                }
+                mView?.showOnlineMusicList(result)
+                mView?.hideLoading()
+            }
+
+        })
     }
 
 }

@@ -15,6 +15,7 @@ import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
+import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
 import com.cyl.musiclake.ui.music.player.CoverFragment;
 import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
@@ -81,4 +82,6 @@ public interface FragmentComponent {
     void inject(MvListFragment mvListFragment);
 
     void inject(@NotNull CoverFragment coverFragment);
+
+    void inject(@NotNull NeteasePlaylistFragment neteasePlaylistFragment);
 }

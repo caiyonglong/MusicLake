@@ -96,7 +96,7 @@ public class DownloadManagerFragment extends BaseLazyFragment<DownloadPresenter>
     @Override
     public void onDestroy() {
         super.onDestroy();
-        TasksManager.INSTANCE.onDestroy();
+//        TasksManager.INSTANCE.onDestroy();
     }
 
     @Override

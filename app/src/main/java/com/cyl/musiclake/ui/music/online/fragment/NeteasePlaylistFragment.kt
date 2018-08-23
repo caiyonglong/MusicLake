@@ -2,29 +2,16 @@ package com.cyl.musiclake.ui.music.online.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-
-import com.cyl.musicapi.BaseApiImpl
-import com.cyl.musicapi.bean.ListItem
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseFragment
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity
 import com.cyl.musiclake.ui.music.online.adapter.OnlineAdapter
-import com.cyl.musiclake.utils.LogUtil
-
-import java.util.ArrayList
-
-import butterknife.BindView
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
-import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract
+import com.cyl.musiclake.ui.music.online.presenter.OnlinePlaylistPresenter
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 
 /**
@@ -33,10 +20,10 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class NeteasePlaylistFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
+class NeteasePlaylistFragment : BaseFragment<OnlinePlaylistPresenter>(), OnlinePlaylistContract.View {
     //适配器
     private var mAdapter: OnlineAdapter? = null
-    private var neteaseLists: MutableList<Playlist> = ArrayList()
+    private var allPlaylist = mutableListOf<Playlist>()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_recyclerview_notoolbar
@@ -49,37 +36,47 @@ class NeteasePlaylistFragment : BaseFragment<BasePresenter<BaseContract.BaseView
         recyclerView.layoutManager = layoutManager
 
         //适配器
-        mAdapter = OnlineAdapter(neteaseLists)
+        mAdapter = OnlineAdapter(allPlaylist)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
     }
 
     override fun initInjector() {
-
+        mFragmentComponent.inject(this)
     }
 
-    override fun loadData() {
-        val observable = PlaylistApiServiceImpl.getNeteaseRank(IntArray(21) { i -> i }, 3)
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
-            override fun success(result: MutableList<Playlist>) {
-                neteaseLists = result
-                mAdapter?.setNewData(result)
-            }
 
-            override fun error(msg: String) {
-                println(msg)
-            }
-        })
+    override fun loadData() {
+        mPresenter?.loadTopList()
+        mPresenter?.loadBaiDuPlaylist()
     }
 
     override fun listener() {
         swipe_refresh?.setOnRefreshListener { swipe_refresh?.isRefreshing = false }
         mAdapter?.setOnItemClickListener { _, _, position ->
-            val intent = Intent(activity, NeteasePlaylistActivity::class.java)
-            intent.putExtra("title", neteaseLists[position].name)
-            intent.putExtra("id", neteaseLists[position].pid)
+            val intent = Intent()
+            if (allPlaylist[position].type == Playlist.PT_BAIDU) {
+                intent.setClass(activity, BaiduMusicListActivity::class.java)
+                intent.putExtra(Extras.BILLBOARD_TITLE, allPlaylist[position].name)
+                intent.putExtra(Extras.BILLBOARD_DESC, allPlaylist[position].des)
+                intent.putExtra(Extras.BILLBOARD_ALBUM, allPlaylist[position].coverUrl)
+                intent.putExtra(Extras.BILLBOARD_TYPE, allPlaylist[position].pid)
+            } else {
+                intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                intent.putExtra("title", allPlaylist[position].name)
+                intent.putExtra("id", allPlaylist[position].pid)
+                intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
+            }
             startActivity(intent)
         }
+    }
+
+    override fun showErrorInfo(msg: String?) {
+    }
+
+    override fun showCharts(charts: MutableList<Playlist>?) {
+        charts?.let { allPlaylist.addAll(it) }
+        mAdapter?.setNewData(allPlaylist)
     }
 
     companion object {

@@ -144,8 +144,9 @@ object MusicUtils {
             music.coverUri = getAlbumPic(it.album.cover, it.vendor, 150)
             music.coverBig = it.album.cover
             music.coverSmall = getAlbumPic(it.album.cover, it.vendor, 90)
-
-            musicList.add(getMusic(it))
+            if (!it.cp) {
+                musicList.add(music)
+            }
         }
         return musicList
     }
