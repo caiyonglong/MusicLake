@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.discover
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -16,6 +17,7 @@ import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_discover.*
 import java.util.*
 
@@ -91,6 +93,11 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         radioRsv?.isFocusable = false
         radioRsv?.isNestedScrollingEnabled = false
         mRadioAdapter?.bindToRecyclerView(radioRsv)
+
+        discoverContainerView.setOnScrollChangeListener { view: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            LogUtil.e("NestedScrollView", "$scrollY -----${wangChartsRv.layoutManager.height}-- ${wangChartsRv.height}")
+            LogUtil.e("NestedScrollView", "$scrollY -----${discoverContainerView.layoutParams.height}-- ${discoverContainerView.height}")
+        }
 
     }
 

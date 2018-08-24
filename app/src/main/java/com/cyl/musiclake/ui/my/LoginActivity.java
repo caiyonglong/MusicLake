@@ -118,7 +118,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(Constants.USER_EMAIL, username);
                     params.put(Constants.PASSWORD, password);
-//                    login(params);
                 }
             });
         }
@@ -130,9 +129,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         if (SystemUtils.isLollipop()) {
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
                     this,
-                    Pair.create((View) register, "transition_next"),
-                    Pair.create((View) fab, "transition_fab"),
-                    Pair.create((View) cv, "transition_cardView")).toBundle());
+                    Pair.create(register, "transition_next"),
+                    Pair.create(fab, "transition_fab"),
+                    Pair.create(cv, "transition_cardView")).toBundle());
         } else {
             startActivity(intent);
         }
