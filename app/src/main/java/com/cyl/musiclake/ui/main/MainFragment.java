@@ -74,7 +74,7 @@ public class MainFragment extends BaseFragment {
     private void setupViewPager(ViewPager mViewPager) {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), "我的");
-        mAdapter.addFragment(DiscoverFragment.newInstance(), "发现");
+        mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), "发现");
         mAdapter.addFragment(NeteasePlaylistFragment.Companion.newInstance(), "排行榜");
         mAdapter.addFragment(MvFragment.newInstance(), "MV");
 //        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");

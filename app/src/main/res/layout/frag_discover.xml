@@ -4,7 +4,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -12,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_8"
-        android:background="@color/white"
         android:orientation="vertical">
 
 
@@ -162,6 +160,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
@@ -169,55 +168,73 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:drawableEnd="@drawable/ic_more"
                     android:text="@string/charts_netease"
                     android:textColor="@color/black" />
+
 
                 <TextView
                     android:id="@+id/catTag1Tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:padding="10dp"
                     android:text="@string/cate_huayu"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/sp_12" />
 
                 <View
-                    android:layout_width="@dimen/dp_0.5"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/dp_4"
-                    android:layout_marginTop="@dimen/dp_4"
-                    android:background="#EEEEEE" />
+                    android:layout_width="@dimen/dp_1"
+                    android:layout_height="@dimen/dp_20"
+                    android:background="@color/divider_line" />
 
                 <TextView
                     android:id="@+id/catTag2Tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:padding="10dp"
                     android:text="@string/cate_liuxing"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/sp_12" />
 
                 <View
-                    android:layout_width="@dimen/dp_0.5"
-                    android:layout_height="match_parent"
-                    android:background="#EEEEEE" />
-
+                    android:layout_width="@dimen/dp_1"
+                    android:layout_height="@dimen/dp_20"
+                    android:background="@color/divider_line" />
 
                 <TextView
                     android:id="@+id/catTag3Tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:padding="10dp"
                     android:text="@string/cate_gufeng"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/sp_12" />
 
+
+                <TextView
+                    android:id="@+id/cateTagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8"
+                    android:background="@drawable/btn_more_bg"
+                    android:drawableEnd="@drawable/ic_navigate_next"
+                    android:gravity="center"
+                    android:text="@string/cate_all"
+                    android:textColor="@color/colorAccent" />
+
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/divider_line" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/wangChartsRv"

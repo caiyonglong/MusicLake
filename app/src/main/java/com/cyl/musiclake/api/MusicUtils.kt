@@ -164,7 +164,7 @@ object MusicUtils {
             music.type = Constants.NETEASE
             music.album = it.album.name
             music.albumId = it.album.id.toString()
-            music.isCp = (it.cp != 0)
+//            music.isCp = (it.cp != 0)
             if (it.artists != null) {
                 var artistIds = it.artists?.get(0)?.id.toString()
                 var artistNames = it.artists?.get(0)?.name

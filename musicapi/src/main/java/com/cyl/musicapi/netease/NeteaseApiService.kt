@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface NeteaseApiService {
 
     //    @Headers({"referer: http://music.163.com"})
-    @GET("top/playlist/highquality")
+    @GET("top/playlist")
     fun getTopPlaylist(@Query("cat") cat: String? = null, @Query("limit") limit: Int): Observable<NeteasePlaylist>
 
     @GET("/playlist/detail")

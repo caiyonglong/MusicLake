@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="@dimen/dp_56"
+    android:background="@color/translucent_white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatCheckedTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_8"
+        android:background="@drawable/btn_more_bg"
+        android:padding="@dimen/dp_8"
+        android:text="@string/cate_select"
+        android:textColor="@color/black" />
+
+
+
+    <android.support.v7.widget.AppCompatCheckedTextView
+        android:id="@+id/cateAllTagTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_8"
+        android:background="@drawable/btn_more_bg"
+        android:padding="@dimen/dp_8"
+        android:text="@string/cate_all"
+        android:textColor="@color/black" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cateTagRcv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8" />
+
+</LinearLayout>

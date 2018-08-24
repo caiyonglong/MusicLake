@@ -87,7 +87,7 @@ object NeteaseApiServiceImpl {
     }
 
     /**
-     * 获取歌单歌曲数据
+     * 获取精品歌单歌曲数据
      */
     fun getPlaylistDetail(id: String): Observable<Playlist> {
         return apiService.getPlaylistDetail(id)

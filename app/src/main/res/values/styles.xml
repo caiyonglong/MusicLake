@@ -112,4 +112,11 @@
     <style name="MainActivityTheme" parent="MyThemeBlue">
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+
+    <style name="dialogAnim" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/fragment_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/fragment_slide_down</item>
+    </style>
+
 </resources>

@@ -7,6 +7,11 @@
         <item>音乐湖</item>
 
     </string-array>
+
+    <string-array name="playlist_category">
+        <item>全部</item>
+    </string-array>
+
     <string-array name="player_titles">
 
         <item>播放列表</item>
@@ -39,7 +44,6 @@
     </string-array>
 
     <string-array name="info_music_mode_values">
-
         <item>0</item>
         <item>1</item>
         <item>2</item>

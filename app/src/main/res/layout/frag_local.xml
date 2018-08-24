@@ -124,7 +124,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_1"
-                    android:background="#0f000000" />
+                    android:background="@color/divider_line" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

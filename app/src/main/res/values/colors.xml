@@ -116,5 +116,6 @@
     <color name="progressBackgroundColorLight">#33000000</color>
     <color name="progressBackgroundColorDark">#ffffff</color>
     <color name="colorSelectableItemWhite">#77ffffff</color>
+    <color name="divider_line">#0f000000</color>
 
 </resources>
