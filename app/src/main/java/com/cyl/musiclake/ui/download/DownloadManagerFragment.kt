@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.download
+package com.cyl.musiclake.ui.download
 
 import android.graphics.Color
 import android.os.Bundle
@@ -18,7 +18,6 @@ import java.util.*
 
 class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadContract.View {
     private var mAdapter: TaskItemAdapter? = null
-    private var models: List<TasksManagerModel> = ArrayList()
 
     override fun loadData() {
         mPresenter?.loadDownloading()
@@ -29,7 +28,6 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
     }
 
     override fun initViews() {
-        mSwipeRefreshLayout?.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN)
         TasksManager.onCreate(WeakReference(this))
     }
 
@@ -49,16 +47,13 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
 
     override fun listener() {
         super.listener()
-        mSwipeRefreshLayout?.setOnRefreshListener { mPresenter?.loadDownloading() }
     }
 
     override fun hideLoading() {
         super.hideLoading()
-        mSwipeRefreshLayout?.isRefreshing = false
     }
 
     override fun onLazyLoad() {
-        models = TasksManager.getModelList()
     }
 
     override fun showErrorInfo(msg: String) {
@@ -80,9 +75,10 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.adapter = mAdapter
         } else {
+            mAdapter?.models = list
             mAdapter?.notifyDataSetChanged()
         }
-        if (models.isEmpty()) {
+        if (list.isEmpty()) {
             showEmptyState()
         }
     }

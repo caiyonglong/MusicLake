@@ -6,10 +6,12 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatCheckedTextView
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musicapi.netease.CatListBean
 import com.cyl.musiclake.MusicApp
@@ -29,7 +31,9 @@ import com.google.android.flexbox.JustifyContent
 class AllCategoryFragment : DialogFragment() {
     private var rootView: View? = null
     private val cateTagRcv by lazy { rootView?.findViewById<RecyclerView>(R.id.cateTagRcv) }
-    private val cateAllTagTv by lazy { rootView?.findViewById<AppCompatCheckedTextView>(R.id.cateAllTagTv) }
+    private val cateAllTagTv by lazy { rootView?.findViewById<TextView>(R.id.cateAllTagTv) }
+    private val backIv by lazy { rootView?.findViewById<ImageView>(R.id.backIv) }
+
 
     private var mAdapter: AllCateAdapter? = null
 
@@ -38,12 +42,13 @@ class AllCategoryFragment : DialogFragment() {
     companion object {
         var categoryTags = mutableListOf<String>()
     }
+
     var successListener: ((String) -> Unit?)? = null
 
     override fun onStart() {
         val lp = dialog.window?.attributes
         lp?.width = WindowManager.LayoutParams.MATCH_PARENT
-        lp?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp?.height = WindowManager.LayoutParams.MATCH_PARENT
         lp?.windowAnimations = R.style.dialogAnim
         lp?.gravity = Gravity.BOTTOM
         dialog.window.attributes = lp
@@ -62,13 +67,22 @@ class AllCategoryFragment : DialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         cateAllTagTv?.setOnClickListener {
-            cateAllTagTv?.isChecked
+            context?.let {
+                cateAllTagTv?.setTextColor(ContextCompat.getColor(it, R.color.colorAccent))
+            }
             it?.postDelayed({
                 context?.getString(R.string.cate_all)?.let { it1 -> successListener?.invoke(it1) }
                 dismissAllowingStateLoss()
             }, 300)
         }
-        if (curCateName == cateAllTagTv?.text.toString()) cateAllTagTv?.isChecked
+        backIv?.setOnClickListener {
+            dismissAllowingStateLoss()
+        }
+        if (curCateName == cateAllTagTv?.text.toString()) {
+            context?.let {
+                cateAllTagTv?.setTextColor(ContextCompat.getColor(it, R.color.colorAccent))
+            }
+        }
 
         if (categoryTags.size > 0) {
             initRecyclerView(categoryTags)
@@ -112,7 +126,7 @@ class AllCategoryFragment : DialogFragment() {
 
     private fun initRecyclerView(list: MutableList<String>) {
         if (mAdapter == null) {
-            mAdapter = context?.let { AllCateAdapter(it, categoryTags) }
+            mAdapter = context?.let { AllCateAdapter(it, list) }
             val layoutManager = FlexboxLayoutManager(context)
             layoutManager.flexDirection = FlexDirection.ROW
             layoutManager.justifyContent = JustifyContent.FLEX_START

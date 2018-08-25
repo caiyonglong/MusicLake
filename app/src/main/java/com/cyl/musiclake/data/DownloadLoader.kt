@@ -1,6 +1,8 @@
 package com.cyl.musiclake.data
 
 import android.text.TextUtils
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.R
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.data.download.TasksManagerModel
@@ -39,39 +41,48 @@ object DownloadLoader {
     }
 
     /**
+     * 获取已下载列表
+     */
+    fun getAllDownloadList(): MutableList<TasksManagerModel> {
+        return LitePal.findAll(TasksManagerModel::class.java)
+    }
+
+    /**
      * 是否已在下载列表
      */
-    fun isHasMusic(mid: String): Boolean {
+    fun isHasMusic(mid: String?): Boolean {
         return LitePal.isExist(TasksManagerModel::class.java, "mid = ?", mid)
     }
 
-    fun addTask(mid: String, name: String, url: String, path: String): TasksManagerModel? {
+    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String): TasksManagerModel? {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
             return null
         }
         //判断是否已下载过
         if (isHasMusic(mid)) {
-            ToastUtils.show("下载列表已存在 $name")
+            ToastUtils.show(MusicApp.getAppContext().getString(R.string.download_exits, name))
             return null
         }
         // have to use FileDownloadUtils.generateId to associate TasksManagerModel with FileDownloader
         val id = FileDownloadUtils.generateId(url, path)
         val model = TasksManagerModel()
-        model.id = id
+        model.tid = id
         model.mid = mid
         model.name = name
         model.url = url
         model.path = path
         model.finish = false
-        model.saveOrUpdate("id = ?", id.toString())
+        model.saveOrUpdate("tid = ?", tid.toString())
         return model
     }
 
-    fun updateTask(id: Int) {
-        val model = TasksManagerModel()
+    /**
+     * 更新数据库下载任务状态
+     */
+    fun updateTask(tid: Int) {
+        val model = LitePal.where("tid = ?", tid.toString()).find(TasksManagerModel::class.java).first()
         model.finish = true
-        model.update(id.toLong())
-        model.saveOrUpdate("id = ?", id.toString())
+        model.saveOrUpdate("tid = ?", tid.toString())
     }
 
 }

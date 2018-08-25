@@ -17,7 +17,7 @@ import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.ui.main.MainActivity
-import com.cyl.musiclake.ui.music.download.DownloadFragment
+import com.cyl.musiclake.ui.download.DownloadFragment
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
 import com.cyl.musiclake.ui.music.player.PlayerActivity

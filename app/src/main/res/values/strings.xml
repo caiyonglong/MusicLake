@@ -12,6 +12,7 @@
     <string name="header_author_url">个性标签</string>
     <string name="widget_standard">音乐湖</string>
     <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
+    <string name="warning_network">暂不支持添加本地音乐和百度音乐</string>
     <string name="warning">警告！</string>
     <string name="resource_error">歌曲资源异常</string>
     <string name="prompt_login">请先登录！</string>
@@ -313,5 +314,6 @@
     <string name="about_title">如果你喜欢这个应用，给个Star吧!</string>
     <string name="about_git_hub">源代码(GitHub)</string>
     <string name="about_update">检查更新</string>
+    <string name="download_exits">%1$s已在下载列表中…</string>
 
 </resources>

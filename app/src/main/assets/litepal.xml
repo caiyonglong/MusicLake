@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="musiclake1" />
-    <version value="2" />
+    <version value="3" />
     <list>
         <!--<mapping class="com.cyl.musiclake.bean.Playlist" />-->
         <!--<mapping class="com.cyl.musiclake.bean.Artist" />-->

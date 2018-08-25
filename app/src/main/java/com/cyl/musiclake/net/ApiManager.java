@@ -1,7 +1,9 @@
 package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
@@ -160,6 +162,7 @@ public class ApiManager {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
+
                     @Override
                     public void onNext(T t) {
                         if (result != null) {
@@ -175,7 +178,7 @@ public class ApiManager {
                         } else {
                             if (result != null) {
                                 if (e.getMessage() == null) {
-                                    result.error("");
+                                    result.error(MusicApp.getAppContext().getString(R.string.error_connection));
                                 } else {
                                     result.error(e.getMessage());
                                 }

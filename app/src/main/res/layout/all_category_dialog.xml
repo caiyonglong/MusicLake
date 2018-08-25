@@ -1,41 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="bottom"
     android:layout_marginBottom="@dimen/dp_56"
     android:background="@color/translucent_white"
     android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatCheckedTextView
-        android:layout_width="wrap_content"
+        android:id="@+id/appCompatCheckedTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="@dimen/dp_8"
-        android:background="@drawable/btn_more_bg"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:padding="@dimen/dp_8"
         android:text="@string/cate_select"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/backIv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/backIv"
+        app:layout_constraintTop_toTopOf="@+id/backIv" />
 
-
-
-    <android.support.v7.widget.AppCompatCheckedTextView
-        android:id="@+id/cateAllTagTv"
+    <ImageView
+        android:id="@+id/backIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/dp_8"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintEnd_toStartOf="@+id/appCompatCheckedTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/cateAllTagTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/btn_more_bg"
+        android:gravity="center"
         android:padding="@dimen/dp_8"
         android:text="@string/cate_all"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/cateTagRcv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatCheckedTextView" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cateTagRcv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/dp_16"
-        android:layout_marginEnd="@dimen/dp_8"
-        android:layout_marginStart="@dimen/dp_8" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cateAllTagTv" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

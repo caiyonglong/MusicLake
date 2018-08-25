@@ -1,9 +1,13 @@
-package com.cyl.musiclake.ui.music.download
+package com.cyl.musiclake.ui.download
 
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.data.DownloadLoader
 import com.cyl.musiclake.data.download.TasksManagerModel
+import com.cyl.musiclake.event.DownloadEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -19,12 +23,23 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
 
     override fun attachView(view: DownloadContract.View) {
         super.attachView(view)
+        EventBus.getDefault().register(this)
         RxBus.getInstance().register(TasksManagerModel::class.java)
                 .subscribe {
                     mView?.let { _ ->
-                        loadDownloadMusic()
                     }
                 }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun reloadDownloadMusic(event: DownloadEvent) {
+        loadDownloadMusic()
+        loadDownloading()
+    }
+
+    override fun detachView() {
+        super.detachView()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun loadDownloadMusic() {

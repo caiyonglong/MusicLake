@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.download;
+package com.cyl.musiclake.ui.download;
 
 import android.graphics.Color;
 import android.os.Bundle;

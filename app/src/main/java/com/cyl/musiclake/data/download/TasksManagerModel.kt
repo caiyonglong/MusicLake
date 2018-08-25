@@ -7,7 +7,9 @@ import org.litepal.crud.LitePalSupport
  */
 
 class TasksManagerModel : LitePalSupport() {
+    //LitePal自动递增ID
     var id: Int = 0
+    var tid: Int = 0
     var mid: String? = null
     var name: String? = null
     var url: String? = null

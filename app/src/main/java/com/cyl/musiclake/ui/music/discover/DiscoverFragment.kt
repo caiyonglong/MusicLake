@@ -30,7 +30,7 @@ import java.util.*
  */
 class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
-    private var mBaiduAdapter: TopListAdapter? = null
+//    private var mBaiduAdapter: TopListAdapter? = null
     private var mNeteaseAdapter: TopPlaylistAdapter? = null
     private var mArtistListAdapter: TopArtistListAdapter? = null
     private var mRadioAdapter: BaiduRadioAdapter? = null
@@ -61,13 +61,13 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
     override fun initViews() {
         //初始化列表
-        baiChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
-        //适配器
-        mBaiduAdapter = TopListAdapter(playlist)
-        baiChartsRv?.adapter = mBaiduAdapter
-        baiChartsRv?.isFocusable = false
-        baiChartsRv?.isNestedScrollingEnabled = false
-        mBaiduAdapter?.bindToRecyclerView(baiChartsRv)
+//        baiChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+//        //适配器
+//        mBaiduAdapter = TopListAdapter(playlist)
+//        baiChartsRv?.adapter = mBaiduAdapter
+//        baiChartsRv?.isFocusable = false
+//        baiChartsRv?.isNestedScrollingEnabled = false
+//        mBaiduAdapter?.bindToRecyclerView(baiChartsRv)
 
         wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
         //适配器
@@ -109,7 +109,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             R.id.seeAllRadioTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST)) }
             }
-            R.id.seeAllBaiTv -> activity?.let { NavigationHelper.navigateFragment(it, BaiduPlaylistFragment.newInstance()) }
+//            R.id.seeAllBaiTv -> activity?.let { NavigationHelper.navigateFragment(it, BaiduPlaylistFragment.newInstance()) }
             R.id.catTag1Tv -> {
                 updateCate("华语")
             }
@@ -128,19 +128,19 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun loadData() {
-        mPresenter?.loadBaidu()
+//        mPresenter?.loadBaidu()
         mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
     }
 
     override fun listener() {
-        mBaiduAdapter?.setOnItemClickListener { adapter, view, position ->
-            val playlist = adapter.getItem(position) as Playlist?
-            val intent = Intent(activity, BaiduMusicListActivity::class.java)
-            intent.putExtra(Extras.PLAYLIST, playlist)
-            startActivity(intent)
-        }
+//        mBaiduAdapter?.setOnItemClickListener { adapter, view, position ->
+//            val playlist = adapter.getItem(position) as Playlist?
+//            val intent = Intent(activity, BaiduMusicListActivity::class.java)
+//            intent.putExtra(Extras.PLAYLIST, playlist)
+//            startActivity(intent)
+//        }
 
         mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
             val playlist = adapter.data[position] as Playlist
@@ -158,7 +158,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         cateTagTv.setOnClickListener(this)
         catTag1Tv.setOnClickListener(this)
         catTag2Tv.setOnClickListener(this)
-        seeAllBaiTv.setOnClickListener(this)
+//        seeAllBaiTv.setOnClickListener(this)
         seeAllRadioTv.setOnClickListener(this)
         seeAllArtistTv.setOnClickListener(this)
     }
@@ -172,7 +172,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun showBaiduCharts(charts: List<Playlist>) {
-        mBaiduAdapter?.setNewData(charts)
+//        mBaiduAdapter?.setNewData(charts)
     }
 
     override fun showNeteaseCharts(charts: List<Playlist>) {

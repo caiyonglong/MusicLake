@@ -3,8 +3,8 @@ package com.cyl.musiclake.data.download
 import android.text.TextUtils
 import android.util.SparseArray
 import com.cyl.musiclake.data.DownloadLoader
-import com.cyl.musiclake.ui.music.download.DownloadManagerFragment
-import com.cyl.musiclake.ui.music.download.TaskItemAdapter
+import com.cyl.musiclake.ui.download.DownloadManagerFragment
+import com.cyl.musiclake.ui.download.TaskItemAdapter
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadConnectListener
 import com.liulishuo.filedownloader.FileDownloader
@@ -100,7 +100,7 @@ object TasksManager {
      */
     private fun getById(id: Int): TasksManagerModel? {
         for (model in modelList) {
-            if (model.id == id) {
+            if (model.tid == id) {
                 return model
             }
         }
@@ -134,21 +134,27 @@ object TasksManager {
     }
 
 
-    fun finishTask(id: Int) {
-        DownloadLoader.updateTask(id)
+    /**
+     * @param tid :下载任务唯一ID
+     */
+    fun finishTask(tid: Int) {
+        DownloadLoader.updateTask(tid)
         modelList = DownloadLoader.getDownloadingList()
     }
 
-    fun addTask(id: Int, mid: String, name: String, url: String, path: String): TasksManagerModel? {
-        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
+    /**
+     * @param tid :下载任务唯一ID
+     */
+    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String): TasksManagerModel? {
+        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(mid) || TextUtils.isEmpty(path)) {
             return null
         }
 
-        val model = getById(id)
+        val model = getById(tid)
         if (model != null) {
             return model
         }
-        val newModel = DownloadLoader.addTask(mid, name, url, path)
+        val newModel = DownloadLoader.addTask(tid, mid, name, url, path)
         if (newModel != null) {
             modelList.add(newModel)
         }

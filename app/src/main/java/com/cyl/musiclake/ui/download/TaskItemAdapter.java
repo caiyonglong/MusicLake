@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.download;
+package com.cyl.musiclake.ui.download;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.download.TasksManager;
 import com.cyl.musiclake.data.download.TasksManagerModel;
+import com.cyl.musiclake.event.DownloadEvent;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -23,8 +23,9 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,16 @@ import java.util.List;
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
     private Context mContext;
-    private List<TasksManagerModel> models = new ArrayList<>();
+    private List<TasksManagerModel> models;
+
+
+    public List<TasksManagerModel> getModels() {
+        return models;
+    }
+
+    public void setModels(List<TasksManagerModel> models) {
+        this.models = models;
+    }
 
     public TaskItemAdapter(Context mContext, List<TasksManagerModel> list) {
         this.mContext = mContext;
@@ -86,7 +96,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     public void onBindViewHolder(@NonNull TaskItemViewHolder holder, int position) {
         TasksManagerModel model = models.get(position);
         holder.taskActionBtn.setOnClickListener(taskActionOnClickListener);
-        holder.update(model.getId(), holder.getAdapterPosition());
+        holder.update(model.getTid(), holder.getAdapterPosition());
         holder.taskActionBtn.setTag(holder);
         holder.taskNameTv.setText(model.getName());
 
@@ -95,12 +105,12 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         holder.taskActionBtn.setEnabled(true);
 
         if (TasksManager.INSTANCE.isReady()) {
-            final int status = TasksManager.INSTANCE.getStatus(model.getId(), model.getPath());
+            final int status = TasksManager.INSTANCE.getStatus(model.getTid(), model.getPath());
             if (status == FileDownloadStatus.pending || status == FileDownloadStatus.started ||
                     status == FileDownloadStatus.connected) {
                 // start task, but file not created yet
-                holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getId())
-                        , TasksManager.INSTANCE.getTotal(model.getId()));
+                holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getTid())
+                        , TasksManager.INSTANCE.getTotal(model.getTid()));
             } else if (!new File(model.getPath()).exists() &&
                     !new File(FileDownloadUtils.getTempPath(model.getPath())).exists()) {
                 // not exist file
@@ -111,12 +121,12 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
                 holder.updateDownloaded();
             } else if (status == FileDownloadStatus.progress) {
                 // downloading
-                holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getId())
-                        , TasksManager.INSTANCE.getTotal(model.getId()));
+                holder.updateDownloading(status, TasksManager.INSTANCE.getSoFar(model.getTid())
+                        , TasksManager.INSTANCE.getTotal(model.getTid()));
             } else {
                 // not start
-                holder.updateNotDownloaded(status, TasksManager.INSTANCE.getSoFar(model.getId())
-                        , TasksManager.INSTANCE.getTotal(model.getId()));
+                holder.updateNotDownloaded(status, TasksManager.INSTANCE.getSoFar(model.getTid())
+                        , TasksManager.INSTANCE.getTotal(model.getTid()));
             }
         } else {
             holder.taskStatusTv.setText(R.string.tasks_manager_demo_status_loading);
@@ -162,7 +172,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskPb.setVisibility(View.GONE);
             NavigationHelper.INSTANCE.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
             TasksManager.INSTANCE.finishTask(id);
-            RxBus.getInstance().post(new TasksManagerModel());
+            EventBus.getDefault().post(new DownloadEvent());
         }
 
         public void updateNotDownloaded(final int status, final long sofar, final long total) {
@@ -218,10 +228,10 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskActionBtn.setText(R.string.pause);
         }
 
-        public TextView taskNameTv;
-        public TextView taskStatusTv;
-        public ProgressBar taskPb;
-        public Button taskActionBtn;
+        TextView taskNameTv;
+        TextView taskStatusTv;
+        ProgressBar taskPb;
+        Button taskActionBtn;
 
         private void assignViews() {
             taskNameTv = (TextView) findViewById(R.id.task_name_tv);

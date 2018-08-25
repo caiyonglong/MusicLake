@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
@@ -104,20 +103,20 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     }
 
     override fun listener() {
-        mAdapter!!.setOnItemClickListener { _, view, position ->
+        mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 when {
-                    mPlaylist != null -> PlayManager.play(position, musicList, mPlaylist!!.pid)
-                    mArtist != null -> PlayManager.play(position, musicList, mArtist!!.id.toString())
-                    mAlbum != null -> PlayManager.play(position, musicList, mAlbum!!.id.toString())
+                    mPlaylist != null -> PlayManager.play(position, musicList, mPlaylist?.pid)
+                    mArtist != null -> PlayManager.play(position, musicList, mArtist?.id.toString())
+                    mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.id.toString())
                 }
-                mAdapter!!.notifyDataSetChanged()
+                mAdapter?.notifyDataSetChanged()
                 NavigationHelper.navigateToPlaying(this)
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
             val music = musicList[position]
-            if (mPlaylist != null && mPlaylist!!.type == Playlist.PT_MY) {
+            if (mPlaylist != null && mPlaylist?.type == Playlist.PT_MY) {
                 bottomDialogFragment = BottomDialogFragment.newInstance(music, Constants.OP_PLAYLIST)
                 bottomDialogFragment?.removeMusicListener = this
                 bottomDialogFragment?.position = position
@@ -162,7 +161,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .input("输入歌单名", it.name, false) { dialog, input -> LogUtil.e("=====", input.toString()) }
                             .onPositive { dialog, _ ->
-                                val title = dialog.inputEditText!!.text.toString()
+                                val title = dialog.inputEditText?.text.toString()
                                 if (title == mPlaylist?.name) {
                                     mPresenter?.renamePlaylist(it, title)
                                 }
@@ -210,8 +209,10 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun showPlaylistSongs(songList: MutableList<Music>?) {
         hideLoading()
-        musicList.addAll(songList!!)
-        mAdapter!!.setNewData(musicList)
+        songList?.let {
+            musicList.addAll(songList)
+        }
+        mAdapter?.setNewData(musicList)
         if (coverUrl == null) {
             mPlaylist?.coverUrl?.let {
                 coverUrl = it
@@ -231,7 +232,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun removeMusic(position: Int) {
         musicList.removeAt(position)
-        mAdapter!!.notifyDataSetChanged()
+        mAdapter?.notifyDataSetChanged()
         if (musicList.size == 0) {
             showEmptyState()
         }
@@ -245,8 +246,25 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
      * 移除歌手歌曲
      */
     override fun remove(position: Int, music: Music?) {
-        OnlinePlaylistUtils.disCollectMusic(pid!!, music!!) {
+        OnlinePlaylistUtils.disCollectMusic(pid, music) {
             removeMusic(position)
+        }
+    }
+
+    /**
+     * 点击重试按钮响应事件
+     */
+    override fun retryLoading() {
+        super.retryLoading()
+        showLoading()
+        mPlaylist?.let {
+            mPresenter?.loadPlaylistSongs(it)
+        }
+        mArtist?.let {
+            mPresenter?.loadArtistSongs(it)
+        }
+        mAlbum?.let {
+            mPresenter?.loadAlbumSongs(it)
         }
     }
 

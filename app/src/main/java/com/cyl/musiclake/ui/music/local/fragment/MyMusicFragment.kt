@@ -10,6 +10,7 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.PlaylistLoader
+import com.cyl.musiclake.event.DownloadEvent
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlaylistEvent
@@ -172,6 +173,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
             Constants.PLAYLIST_HISTORY_ID -> mPresenter?.updateHistory()
             Constants.PLAYLIST_DOWNLOAD_ID -> mPresenter?.updateDownload()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateDownloadEvent(event: DownloadEvent) {
+        mPresenter?.updateDownload()
     }
 
 

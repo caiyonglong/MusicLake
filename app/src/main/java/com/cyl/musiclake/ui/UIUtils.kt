@@ -8,7 +8,6 @@ import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.common.Constants
@@ -16,19 +15,19 @@ import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.data.download.TasksManager
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
-import com.cyl.musiclake.ui.music.download.TaskItemAdapter
+import com.cyl.musiclake.ui.download.TaskItemAdapter
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
 import org.greenrobot.eventbus.EventBus
-import org.litepal.util.Const
 
 object UIUtils {
     /**
@@ -157,7 +156,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
             LogUtil.e(javaClass.simpleName, "-----${result.uri}")
             if (!NetworkUtils.isWifiConnected(this@downloadMusic) && SPUtils.getWifiMode()) {
                 MaterialDialog.Builder(this@downloadMusic)
-                        .title(R.string.warning_add_playlist)
+                        .title(R.string.warning)
                         .content(R.string.download_network_tips)
                         .onPositive { _, _ ->
                             addDownloadQueue(result)
@@ -191,13 +190,14 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
  */
 fun Context.addDownloadQueue(result: Music) {
     ToastUtils.show(getString(R.string.popup_download))
+    DaoLitepal.saveOrUpdateMusic(result, false)
     val path = FileUtils.getMusicDir() + result.title + ".mp3"
     val task = FileDownloader.getImpl()
             .create(result.uri)
             .setPath(path)
             .setCallbackProgressTimes(100)
             .setListener(TaskItemAdapter.taskDownloadListener)
-    val model = TasksManager.addTask(task.id, result.mid!!, result.title!!, result.uri!!, path)
+    val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path)
     if (model != null) {
         TasksManager.addTaskForViewHolder(task)
         task.start()
