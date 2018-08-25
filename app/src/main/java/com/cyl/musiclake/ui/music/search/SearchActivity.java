@@ -139,7 +139,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             Music music = searchResults.get(position);
             LogUtil.e(TAG, music.toString());
             PlayManager.playOnline(music);
-            NavigationHelper.INSTANCE.navigateToPlaying(this);
+            NavigationHelper.INSTANCE.navigateToPlaying(this,view.findViewById(R.id.iv_cover));
         });
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override

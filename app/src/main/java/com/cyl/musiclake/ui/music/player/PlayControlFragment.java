@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.event.MetaChangedEvent;
@@ -173,8 +174,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     protected void listener() {
         mSeekBar.setOnSeekBarChangeListener(this);
         topContainer.setOnClickListener(v -> {
-            Intent intent = new Intent(mFragmentComponent.getActivity(), PlayerActivity.class);
-            startActivity(intent);
+            NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(),mIvAlbum);
         });
     }
 

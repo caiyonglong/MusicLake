@@ -44,6 +44,7 @@
             android:layout_marginTop="8dp"
             android:elevation="1dp"
             android:scaleType="centerCrop"
+            android:transitionName="@string/transition_cover"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_title"
             app:layout_constraintStart_toStartOf="parent"

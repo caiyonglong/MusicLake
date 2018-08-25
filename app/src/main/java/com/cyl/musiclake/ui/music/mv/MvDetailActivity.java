@@ -299,7 +299,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             artist.setId(info.getArtistId());
             artist.setType(Constants.NETEASE);
             artist.setName(info.getArtistName());
-            NavigationHelper.INSTANCE.navigateToPlaylist(this, artist);
+            NavigationHelper.INSTANCE.navigateToPlaylist(this, artist,null);
         });
     }
 

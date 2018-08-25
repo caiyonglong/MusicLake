@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.api.MusicApiServiceImpl;
 import com.cyl.musiclake.bean.Music;
@@ -75,7 +76,7 @@ public class FloatLyricViewManager {
      * 加载歌词
      */
     public void loadLyric(Music mPlayingMusic) {
-        resetLyric("");
+        resetLyric(MusicApp.getAppContext().getString(R.string.lyric_loading));
         if (mPlayingMusic != null) {
             mSongName = mPlayingMusic.getTitle();
             Observable<String> observable = MusicApi.INSTANCE.getLyricInfo(mPlayingMusic);
@@ -123,7 +124,7 @@ public class FloatLyricViewManager {
         lyricInfo = info;
         setLyric(lyricInfo);
         for (int i = 0; i < lyricViews.size(); i++) {
-            lyricViews.get(i).reset();
+            lyricViews.get(i).reset(info);
         }
     }
 

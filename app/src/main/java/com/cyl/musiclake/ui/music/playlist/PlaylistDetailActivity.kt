@@ -1,11 +1,16 @@
 package com.cyl.musiclake.ui.music.playlist
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
+import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
@@ -111,7 +116,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                     mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.id.toString())
                 }
                 mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this)
+                NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
@@ -265,26 +270,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
         mAlbum?.let {
             mPresenter?.loadAlbumSongs(it)
-        }
-    }
-
-    companion object {
-        fun newInstance(context: Context, playlist: Playlist) {
-            val intent = Intent(context, PlaylistDetailActivity::class.java)
-            intent.putExtra(Extras.PLAYLIST, playlist)
-            context.startActivity(intent)
-        }
-
-        fun newInstance(context: Context, artist: Artist) {
-            val intent = Intent(context, PlaylistDetailActivity::class.java)
-            intent.putExtra(Extras.ARTIST, artist)
-            context.startActivity(intent)
-        }
-
-        fun newInstance(context: Context, album: Album) {
-            val intent = Intent(context, PlaylistDetailActivity::class.java)
-            intent.putExtra(Extras.ALBUM, album)
-            context.startActivity(intent)
         }
     }
 }

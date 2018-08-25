@@ -122,7 +122,8 @@
     <string name="go">登录</string>
 
     <!-- Transitions -->
-    <string name="transition_avatar">AvatarTransition</string>
+    <string name="transition_cover">CoverTransition</string>
+    <string name="transition_album">AlbumTransition</string>
     <string name="transition_morph_view" translatable="false">morph_view_transition</string>
     <string name="transition_name" translatable="false">square_transition</string>
     <string name="transition_toolbar_name" translatable="false">toolbar_transition</string>
@@ -145,6 +146,7 @@
     <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="unable_to_play_exception">播放异常</string>
     <string name="loading">努力加载中&#8230;</string>
+    <string name="lyric_loading">加载中&#8230;</string>
     <string name="tip_empty_song">空空如也</string>
     <string name="tip_empty_queue">播放队列为空</string>
     <string name="tip_empty_playlist">暂无歌单，点击右上角新建</string>

@@ -86,7 +86,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicList, mPlaylist?.name + mPlaylist?.pid)
                 mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this)
+                NavigationHelper.navigateToPlaying(this,view.findViewById(R.id.iv_cover))
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->

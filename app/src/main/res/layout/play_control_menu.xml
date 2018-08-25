@@ -30,7 +30,8 @@
             android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/dp_8"
-            android:src="@drawable/default_cover" />
+            android:src="@drawable/default_cover"
+            android:transitionName="@string/transition_cover" />
 
         <LinearLayout
             android:layout_width="0dp"

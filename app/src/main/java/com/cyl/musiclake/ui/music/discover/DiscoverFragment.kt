@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Pair
 import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseLazyFragment
@@ -30,7 +31,7 @@ import java.util.*
  */
 class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
-//    private var mBaiduAdapter: TopListAdapter? = null
+    //    private var mBaiduAdapter: TopListAdapter? = null
     private var mNeteaseAdapter: TopPlaylistAdapter? = null
     private var mArtistListAdapter: TopArtistListAdapter? = null
     private var mRadioAdapter: BaiduRadioAdapter? = null
@@ -144,15 +145,17 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
         mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
             val playlist = adapter.data[position] as Playlist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, null)
+            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
         }
 
         mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
             val artist = adapter.data[position] as Artist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist)
+            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
         }
 
-        mRadioAdapter?.setOnItemClickListener { adapter, view, position -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, channels[position], null) }
+        mRadioAdapter?.setOnItemClickListener { _, view, position ->
+            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, channels[position], Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
+        }
 
         catTag3Tv.setOnClickListener(this)
         cateTagTv.setOnClickListener(this)

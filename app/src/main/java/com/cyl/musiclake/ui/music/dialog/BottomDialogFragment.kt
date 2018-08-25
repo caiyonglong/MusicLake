@@ -110,7 +110,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 } else {
                     val artist = music?.let { it1 -> MusicUtils.getArtistInfo(it1) }
                     artist?.let {
-                        NavigationHelper.navigateToPlaylist(mContext, it)
+                        NavigationHelper.navigateToPlaylist(mContext, it,null)
                     }
                 }
             }

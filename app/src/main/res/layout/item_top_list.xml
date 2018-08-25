@@ -14,7 +14,8 @@
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_cover" />
+        android:src="@drawable/default_cover"
+        android:transitionName="@string/transition_album" />
 
     <TextView
         android:id="@+id/title"

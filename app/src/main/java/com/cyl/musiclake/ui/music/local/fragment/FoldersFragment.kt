@@ -94,7 +94,7 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
                 if (view.id != R.id.iv_more) {
                     PlayManager.play(position, songList, Constants.PLAYLIST_DOWNLOAD_ID + curFolderName)
                     mSongAdapter?.notifyDataSetChanged()
-                    NavigationHelper.navigateToPlaying(mFragmentComponent.activity)
+                    NavigationHelper.navigateToPlaying(mFragmentComponent.activity, view.findViewById(R.id.iv_cover))
                 }
             }
             mSongAdapter?.setOnItemChildClickListener { _, _, position -> BottomDialogFragment.newInstance(songList?.get(position)).show(mFragmentComponent.activity as AppCompatActivity) }

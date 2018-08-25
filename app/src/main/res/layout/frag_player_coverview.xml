@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -40,5 +39,6 @@
         android:elevation="10dp"
         android:src="@drawable/default_cover"
         app:civ_border_color="@color/white"
-        tools:targetApi="lollipop" />
+        android:transitionName="@string/transition_cover"
+        />
 </LinearLayout>

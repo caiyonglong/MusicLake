@@ -8,14 +8,16 @@
     android:gravity="center_vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_album"
+        android:id="@+id/ic_cover"
         android:layout_width="@dimen/dp_72"
         android:layout_height="@dimen/dp_72"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:elevation="@dimen/dp_4"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/default_cover"
+        android:transitionName="@string/transition_album"
         app:layout_constraintBottom_toTopOf="@+id/tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

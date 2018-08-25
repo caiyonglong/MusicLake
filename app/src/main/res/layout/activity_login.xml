@@ -7,18 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.my.LoginActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="5dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/item_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,7 +49,7 @@
                         android:layout_marginLeft="40dp"
                         android:layout_marginStart="40dp"
                         android:text="@string/login"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </RelativeLayout>

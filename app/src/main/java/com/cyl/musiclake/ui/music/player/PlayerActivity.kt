@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.SharedElementCallback
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.graphics.Palette
@@ -96,15 +98,15 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         PlayManager.isPlaying().let {
             updatePlayStatus(it)
         }
-        backIv.setOnClickListener {
-            finish()
-        }
         showLyric(FloatLyricViewManager.lyricInfo, true)
         updateMusicType(playingMusic?.type)
     }
 
     override fun listener() {
         super.listener()
+        backIv.setOnClickListener {
+            closeActivity()
+        }
         progressSb.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             }
@@ -387,6 +389,17 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     fun updatePlayStatus(event: StatusChangedEvent) {
         playPauseIv.setLoading(!event.isPrepared)
         updatePlayStatus(event.isPlaying)
+    }
+
+    override fun onBackPressed() {
+        closeActivity()
+    }
+
+
+    private fun closeActivity() {
+        overridePendingTransition(0, 0)
+        ActivityCompat.finishAfterTransition(this)
+        finish()
     }
 
     override fun onDestroy() {

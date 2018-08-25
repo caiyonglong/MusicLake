@@ -119,7 +119,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position);
                 mAdapter.notifyDataSetChanged();
-                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity());
+                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(),view.findViewById(R.id.iv_cover));
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

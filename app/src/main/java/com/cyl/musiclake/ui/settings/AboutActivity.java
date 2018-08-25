@@ -4,8 +4,16 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.support.annotation.ColorRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -35,6 +43,8 @@ public class AboutActivity extends BaseActivity {
     View cardEmailView;
     @BindView(R.id.logoFab)
     FloatingActionButton mLogoFab;
+    @BindView(R.id.shareFab)
+    FloatingActionButton shareFab;
     @BindView(R.id.aboutContainerView)
     View mView;
     ObjectAnimator animator;
@@ -56,7 +66,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.shareFab)
     void toShare() {
-        Tools.INSTANCE.share(this);
+        revealRed();
     }
 
     @OnClick(R.id.cardUpdateView)
@@ -108,5 +118,71 @@ public class AboutActivity extends BaseActivity {
     protected void initInjector() {
 
     }
+
+    private void revealRed() {
+        // 保存最开始的状态的参数
+        final ViewGroup.LayoutParams saveParams = shareFab.getLayoutParams();
+        Transition transition = TransitionInflater.from(this).inflateTransition(R.transition
+                .changebounds_with_arcmotion);
+        transition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                animateRevealColor(mView.findViewById(R.id.ll_layout), R.color.colorAccent);
+                // 动画结束之后，将 红圈再设回以前的参数
+                shareFab.setLayoutParams(saveParams);
+                Tools.INSTANCE.share(AboutActivity.this);
+            }
+
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        });
+        // 保存 每个 View 当前的可见状态(Visibility)。
+        TransitionManager.beginDelayedTransition(mView.findViewById(R.id.ll_layout), transition);
+
+        // 移动红圈到中央
+//        RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams
+//                .WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        layoutParams1.addRule(RelativeLayout.CENTER_IN_PARENT);
+//        cardEmailView.setLayoutParams(layoutParams1);
+    }
+
+    private void animateRevealColor(ViewGroup viewRoot, @ColorRes int color) {
+        int cx = (viewRoot.getLeft() + viewRoot.getRight()) / 2;
+        int cy = (viewRoot.getTop() + viewRoot.getBottom()) / 2;
+        animateRevealColorFromCoordinates(viewRoot, color, cx, cy);
+    }
+
+
+    private void animateRevealColorFromCoordinates(ViewGroup viewRoot, @ColorRes int color, int x, int y) {
+        float finalRadius = (float) Math.hypot(viewRoot.getWidth(), viewRoot.getHeight());
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(viewRoot, x, y, 0, finalRadius);
+        viewRoot.setBackgroundColor(ContextCompat.getColor(this, color));
+        anim.setDuration(1000);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.start();
+    }
+
 
 }

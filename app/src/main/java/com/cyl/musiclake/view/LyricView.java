@@ -394,6 +394,12 @@ public class LyricView extends View {
         }
     }
 
+
+    public void reset(String hintInfo) {
+        mDefaultHint = hintInfo;
+        resetView();
+    }
+
     public void reset() {
         mDefaultHint = getResources().getString(R.string.lyric_default_hint);
         resetView();

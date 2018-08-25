@@ -92,7 +92,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID + path);
                 mAdapter.notifyDataSetChanged();
-                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity());
+                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(),null);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

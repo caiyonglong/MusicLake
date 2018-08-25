@@ -41,7 +41,6 @@ class TopPlaylistAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, Base
             else -> playlist.coverUrl
         }
         CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))
-
         helper.setText(R.id.tv_title, playlist.name)
         helper.setText(R.id.tv_playCount, "播放次数：${playlist.playCount}")
     }
@@ -52,7 +51,7 @@ class PlaylistAdapter(playlists: List<Playlist>) : BaseQuickAdapter<Playlist, Ba
 
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         helper.setText(R.id.tv_name, playlist.name)
-        CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_album))
+        CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.ic_cover))
         helper.setText(R.id.tv_num, playlist.musicList.size.toString() + "首")
     }
 }
