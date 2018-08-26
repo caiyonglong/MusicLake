@@ -11,6 +11,7 @@ import java.io.Serializable
 class Artist : LitePalSupport, Serializable {
     var name: String? = null
     var id: Long = 0
+    var artistId: Long = 0
     var count: Int = 0
     var type: String? = Constants.LOCAL
     var picUrl: String? = null
@@ -25,7 +26,7 @@ class Artist : LitePalSupport, Serializable {
 
     constructor(id: Long, name: String, count: Int) {
         this.name = name
-        this.id = id
+        this.artistId = id
         this.musicSize = count
     }
 }

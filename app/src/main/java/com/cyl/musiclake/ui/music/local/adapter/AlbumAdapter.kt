@@ -27,6 +27,7 @@ class AlbumAdapter(private val albumList: List<Album>) : BaseQuickAdapter<Album,
             album.name?.let {
                 MusicApi.getMusicAlbumPic(album.name.toString(), success = {
                     album.cover = it
+                    album.save()
                     CoverLoader.loadImageView(mContext, it, helper.getView(R.id.album))
                 })
             }

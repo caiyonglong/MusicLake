@@ -10,8 +10,6 @@ interface MyMusicContract {
 
         fun showSongs(songList: MutableList<Music>)
 
-        fun showEmptyView()
-
         fun showPlaylist(playlists: MutableList<Playlist>)
 
         fun showHistory(musicList: MutableList<Music>)

@@ -4,12 +4,12 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
 import android.text.TextUtils
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.data.db.MusicCursorWrapper
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.db.DaoLitepal
+import com.cyl.musiclake.data.db.MusicCursorWrapper
 import com.cyl.musiclake.utils.CoverLoader
 import org.litepal.LitePal
 
@@ -22,18 +22,11 @@ object SongLoader {
      * @return
      */
     fun getAllArtists(): MutableList<Artist> {
-        val sql = "SELECT music.artistid,music.artist,count(music.title) as num FROM music where music.isonline=0 and music.type=\"local\" GROUP BY music.artist"
-        val cursor = LitePal.findBySQL(sql)
-        val results = mutableListOf<Artist>()
-        if (cursor != null && cursor.count > 0) {
-            while (cursor.moveToNext()) {
-                val artist = MusicCursorWrapper(cursor).artists
-                results.add(artist)
-            }
+        val result = DaoLitepal.getAllArtist()
+        if (result.size == 0) {
+            return DaoLitepal.updateArtistList()
         }
-        // 记得关闭游标
-        cursor?.close()
-        return results
+        return result
     }
 
 
@@ -64,20 +57,13 @@ object SongLoader {
      * @return
      */
     fun getAllAlbums(): MutableList<Album> {
-        val sql = "SELECT music.albumid,music.album,music.artistid,music.artist,count(music.title) as num FROM music WHERE music.isonline=0 and music.type=\"local\" GROUP BY music.album"
-        val cursor = LitePal.findBySQL(sql)
-        val results = mutableListOf<Album>()
-        if (cursor != null && cursor.count > 0) {
-            while (cursor.moveToNext()) {
-                val album = MusicCursorWrapper(cursor).album
-                album.saveOrUpdate("name = ?", album.name)
-                results.add(album)
-            }
+        val result = DaoLitepal.getAllAlbum()
+        if (result.size == 0) {
+            return DaoLitepal.updateAlbumList()
         }
-        // 记得关闭游标
-        cursor?.close()
-        return results
+        return result
     }
+
 
     /**
      * Android 扫描获取到的数据
@@ -142,11 +128,15 @@ object SongLoader {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOCAL_ID)
     }
 
-    fun getLocalMusic(context: Context, isLocal: Boolean = false): MutableList<Music> {
+    fun getLocalMusic(context: Context, isReload: Boolean = false): MutableList<Music> {
         val data = getSongsForDB()
-        if (data.size == 0 || isLocal) {
+        if (data.size == 0 || isReload) {
             data.clear()
             val musicLists = getAllLocalSongs(context)
+            if (isReload) {
+                DaoLitepal.updateAlbumList()
+                DaoLitepal.updateArtistList()
+            }
             musicLists.forEach {
                 data.add(it)
             }

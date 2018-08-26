@@ -27,6 +27,7 @@ class ArtistAdapter(private val artistList: List<Artist>) : BaseQuickAdapter<Art
             artist.name?.let {
                 MusicApi.getMusicAlbumPic(artist.name.toString(), success = {
                     artist.picUrl = it
+                    artist.save()
                     CoverLoader.loadImageView(mContext, it, helper.getView(R.id.album))
                 })
             }

@@ -45,7 +45,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
             return
         }
-        val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.id.toString(), 50, 0)
+        val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.artistId.toString(), 50, 0)
         ApiManager.request(observable, object : RequestCallBack<Artist> {
             override fun success(result: Artist) {
                 val musicLists = result.songs
@@ -78,7 +78,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
             return
         }
-        val observable = MusicApiServiceImpl.getAlbumSongs(Constants.NETEASE, album.id.toString(), 30, 0)
+        val observable = MusicApiServiceImpl.getAlbumSongs(Constants.NETEASE, album.albumId.toString(), 30, 0)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
             override fun success(result: MutableList<Music>) {
                 val iterator = result.iterator()

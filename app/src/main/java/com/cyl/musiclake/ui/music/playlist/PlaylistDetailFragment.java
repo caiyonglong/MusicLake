@@ -156,9 +156,9 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                 if (mPlaylist != null) {
                     PlayManager.play(position, musicList, mPlaylist.getPid());
                 } else if (mArtist != null) {
-                    PlayManager.play(position, musicList, String.valueOf(mArtist.getId()));
+                    PlayManager.play(position, musicList, String.valueOf(mArtist.getArtistId()));
                 } else if (mAlbum != null) {
-                    PlayManager.play(position, musicList, String.valueOf(mAlbum.getId()));
+                    PlayManager.play(position, musicList, String.valueOf(mAlbum.getAlbumId()));
                 }
                 mAdapter.notifyDataSetChanged();
             }

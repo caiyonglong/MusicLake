@@ -31,7 +31,7 @@ object NeteaseApiServiceImpl {
                                 val list = mutableListOf<Artist>()
                                 it.list.artists?.forEach {
                                     val playlist = Artist()
-                                    playlist.id = it.id.toLong()
+                                    playlist.artistId = it.id.toLong()
                                     playlist.name = it.name
                                     playlist.picUrl = it.picUrl
                                     playlist.score = it.score

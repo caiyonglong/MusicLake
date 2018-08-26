@@ -296,7 +296,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
 
         mSingerView.setOnClickListener(v -> {
             Artist artist = new Artist();
-            artist.setId(info.getArtistId());
+            artist.setArtistId(info.getArtistId());
             artist.setType(Constants.NETEASE);
             artist.setName(info.getArtistName());
             NavigationHelper.INSTANCE.navigateToPlaylist(this, artist,null);

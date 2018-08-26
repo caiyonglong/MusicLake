@@ -93,13 +93,14 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
     }
 
-    override fun showEmptyView() {
-        showEmptyState()
-    }
-
     override fun showPlaylist(playlists: MutableList<Playlist>) {
         this.playlists = playlists
         mAdapter?.setNewData(playlists)
+        if (playlists.size == 0) {
+            showEmptyState()
+        } else {
+            hideLoading()
+        }
     }
 
     override fun showHistory(musicList: MutableList<Music>) {

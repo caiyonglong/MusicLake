@@ -60,7 +60,7 @@ object NavigationHelper {
 //        transaction.add(R.id.fragment_container, fragment)
 //        transaction.addToBackStack(title).commit()
         val album = Album()
-        album.id = albumID
+        album.albumId = albumID
         album.name = title
         val intent = Intent(context, PlaylistDetailActivity::class.java)
         intent.putExtra(Extras.ALBUM, album)
@@ -87,7 +87,7 @@ object NavigationHelper {
 //        transaction.add(R.id.fragment_container, fragment)
 //        transaction.addToBackStack(title).commit()
         val artist = Artist()
-        artist.id = artistID.toLong()
+        artist.artistId = artistID.toLong()
         artist.name = title
         val intent = Intent(context, PlaylistDetailActivity::class.java)
         intent.putExtra(Extras.ARTIST, artist)

@@ -84,19 +84,13 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
             OnlinePlaylistUtils.getOnlinePlaylist(success = {
                 playlists = OnlinePlaylistUtils.playlists
                 mView?.showPlaylist(playlists)
-                if (playlists.size == 0) {
-                    mView?.showEmptyView()
-                }
             }, fail = {
                 ToastUtils.show(it)
-                mView?.showEmptyView()
+                mView?.showEmptyState()
             })
         } else {
             playlists.clear()
             mView?.showPlaylist(playlists)
-            if (playlists.size == 0) {
-                mView?.showEmptyView()
-            }
         }
     }
 }

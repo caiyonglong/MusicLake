@@ -1,12 +1,7 @@
 package com.cyl.musiclake.data.db
 
-import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.MusicToPlaylist
-import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.SearchHistoryBean
+import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.download.TasksManagerModel
 import org.litepal.LitePal
 
 /**
@@ -162,6 +157,48 @@ object DaoLitepal {
     }
 
     fun searchLocalMusic(info: String): MutableList<Music> {
-        return LitePal.where("type =local and title LIKE ? or artist LIKE ? or album LIKE ?", "%$info%", "%$info%", "%$info%").find(Music::class.java)
+        return LitePal.where("title LIKE ? or artist LIKE ? or album LIKE ?", "%$info%", "%$info%", "%$info%").find(Music::class.java)
+    }
+
+    fun getAllAlbum(): MutableList<Album> {
+        return LitePal.findAll(Album::class.java)
+    }
+
+    fun getAllArtist(): MutableList<Artist> {
+        return LitePal.findAll(Artist::class.java)
+    }
+
+
+    fun updateArtistList(): MutableList<Artist> {
+        val sql = "SELECT music.artistid,music.artist,count(music.title) as num FROM music where music.isonline=0 and music.type=\"local\" GROUP BY music.artist"
+        val cursor = LitePal.findBySQL(sql)
+        val results = mutableListOf<Artist>()
+        if (cursor != null && cursor.count > 0) {
+            while (cursor.moveToNext()) {
+                val artist = MusicCursorWrapper(cursor).artists
+                artist.saveOrUpdate("artistId = ?", artist.artistId.toString())
+                results.add(artist)
+            }
+        }
+        // 记得关闭游标
+        cursor?.close()
+        return results
+    }
+
+
+    fun updateAlbumList(): MutableList<Album> {
+        val sql = "SELECT music.albumid,music.album,music.artistid,music.artist,count(music.title) as num FROM music WHERE music.isonline=0 and music.type=\"local\" GROUP BY music.album"
+        val cursor = LitePal.findBySQL(sql)
+        val results = mutableListOf<Album>()
+        if (cursor != null && cursor.count > 0) {
+            while (cursor.moveToNext()) {
+                val album = MusicCursorWrapper(cursor).album
+                album.saveOrUpdate("albumId = ?", album.albumId)
+                results.add(album)
+            }
+        }
+        // 记得关闭游标
+        cursor?.close()
+        return results
     }
 }

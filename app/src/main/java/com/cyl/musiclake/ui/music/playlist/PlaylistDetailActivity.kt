@@ -81,13 +81,13 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
         mArtist?.let {
             title = it.name
-            pid = it.id.toString()
+            pid = it.artistId.toString()
             coverUrl = it.picUrl
             CoverLoader.loadImageView(context, coverUrl, album_art)
         }
         mAlbum?.let {
             title = it.name
-            pid = it.id.toString()
+            pid = it.albumId.toString()
             coverUrl = it.cover
             CoverLoader.loadImageView(context, coverUrl, album_art)
         }
@@ -112,8 +112,8 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             if (view.id != R.id.iv_more) {
                 when {
                     mPlaylist != null -> PlayManager.play(position, musicList, mPlaylist?.pid)
-                    mArtist != null -> PlayManager.play(position, musicList, mArtist?.id.toString())
-                    mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.id.toString())
+                    mArtist != null -> PlayManager.play(position, musicList, mArtist?.artistId.toString())
+                    mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.albumId.toString())
                 }
                 mAdapter?.notifyDataSetChanged()
                 NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))

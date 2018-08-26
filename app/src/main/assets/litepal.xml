@@ -8,6 +8,8 @@
         <mapping class="com.cyl.musiclake.bean.Music" />
         <mapping class="com.cyl.musiclake.bean.Playlist" />
         <mapping class="com.cyl.musiclake.bean.MusicToPlaylist" />
+        <mapping class="com.cyl.musiclake.bean.Album" />
+        <mapping class="com.cyl.musiclake.bean.Artist" />
         <mapping class="com.cyl.musiclake.bean.SearchHistoryBean" />
         <mapping class="com.cyl.musiclake.download.TasksManagerModel" />
     </list>

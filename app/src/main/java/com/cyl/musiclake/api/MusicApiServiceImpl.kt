@@ -170,7 +170,7 @@ object MusicApiServiceImpl {
                             artist.name = it.data.detail.name
                             artist.picUrl = it.data.detail.cover
                             artist.desc = it.data.detail.desc
-                            artist.id = it.data.detail.id.toLong()
+                            artist.artistId = it.data.detail.id.toLong()
                             result.onNext(artist)
                             result.onComplete()
                         } else {

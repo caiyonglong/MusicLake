@@ -10,7 +10,8 @@ import java.io.Serializable
 
 class Album : LitePalSupport, Serializable {
 
-    var id: String? = null
+    var id: Int = 0
+    var albumId: String? = null
     var name: String? = null
     var artistName: String? = null
     var cover: String? = null
@@ -24,7 +25,7 @@ class Album : LitePalSupport, Serializable {
 
     constructor(id: String, name: String, artistName: String, artistId: Long, count: Int) {
         this.name = name
-        this.id = id
+        this.albumId = id
         this.artistName = artistName
         this.artistId = artistId
         this.count = count
@@ -33,7 +34,7 @@ class Album : LitePalSupport, Serializable {
     override fun toString(): String {
         return "Album{" +
                 "name='" + name + '\''.toString() +
-                ", id=" + id +
+                ", artistId=" + artistId +
                 ", artistName='" + artistName + '\''.toString() +
                 ", artistId=" + artistId +
                 ", count=" + count +
