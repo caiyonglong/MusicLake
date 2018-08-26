@@ -19,8 +19,8 @@ android {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 13
-        versionName "4.1.1"
+        versionCode 14
+        versionName "4.1.2"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
@@ -69,7 +69,7 @@ dependencies {
 
     //RxJava and RxAndroid
     api 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    api 'io.reactivex.rxjava2:rxjava:2.1.14'
+    api 'io.reactivex.rxjava2:rxjava:2.1.17'
     api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
 
     // Retrofit适配RxJava
