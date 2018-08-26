@@ -139,7 +139,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             Music music = searchResults.get(position);
             LogUtil.e(TAG, music.toString());
             PlayManager.playOnline(music);
-            NavigationHelper.INSTANCE.navigateToPlaying(this,view.findViewById(R.id.iv_cover));
+            NavigationHelper.INSTANCE.navigateToPlaying(this, view.findViewById(R.id.iv_cover));
         });
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -157,6 +157,8 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 if (newText.length() == 0) {
                     mPresenter.getSearchHistory();
                     updateHistoryPanel(true);
+                } else {
+                    searchLocal(newText);
                 }
             }
         });
@@ -223,6 +225,24 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     int filterItemCheckedId = -1;
 
+
+    /**
+     * 本地搜索
+     *
+     * @param query
+     */
+    private void searchLocal(String query) {
+        if (query != null && query.length() > 0) {
+            searchResults.clear();
+            queryString = query;
+            updateHistoryPanel(false);
+            if (mPresenter != null) {
+                mPresenter.searchLocal(query);
+            }
+        }
+    }
+
+
     private void search(String query) {
         if (query != null && query.length() > 0) {
             mOffset = 0;
@@ -251,6 +271,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         mAdapter.setNewData(searchResults);
         mAdapter.loadMoreComplete();
         mCurrentCounter = mAdapter.getData().size();
+
+        if (searchResults.size() == 0) {
+            showEmptyView();
+        }
         LogUtil.e("search", mCurrentCounter + "--" + mCurrentCounter + "--" + mOffset);
     }
 

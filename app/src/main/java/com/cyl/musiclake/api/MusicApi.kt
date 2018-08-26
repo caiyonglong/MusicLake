@@ -4,7 +4,10 @@ package com.cyl.musiclake.api
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.net.ApiManager
+import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.utils.FileUtils
+import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 
@@ -88,22 +91,22 @@ object MusicApi {
     /**
      * 加载图片
      */
-//    fun getMusicAlbumPic(info: String, success: (String?) -> Unit, fail: (() -> Unit?)? = null) {
-//        ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<String> {
-//            override fun success(result: String?) {
-//                if (result == null) {
-//                    fail?.invoke()
-//                } else {
-//                    success.invoke(result)
-//                }
-//            }
-//
-//            override fun error(msg: String?) {
-//                LogUtil.e("getMusicAlbumPic", msg)
-//                fail?.invoke()
-//            }
-//        })
-//    }
+    fun getMusicAlbumPic(info: String, success: (String?) -> Unit, fail: (() -> Unit?)? = null) {
+        ApiManager.request(MusicApiServiceImpl.getAlbumUrl(info), object : RequestCallBack<String> {
+            override fun success(result: String?) {
+                if (result == null) {
+                    fail?.invoke()
+                } else {
+                    success.invoke(result)
+                }
+            }
+
+            override fun error(msg: String?) {
+                LogUtil.e("getMusicAlbumPic", msg)
+                fail?.invoke()
+            }
+        })
+    }
 
     /**
      * 根据路径获取本地歌词

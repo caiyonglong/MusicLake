@@ -61,7 +61,6 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
-
     }
 
     @Override
@@ -71,20 +70,6 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
 
     @Override
     protected void listener() {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(() -> {
-                if (mPresenter != null) {
-                    mPresenter.loadArtists("all");
-                }
-            });
-        }
-        mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Artist artist = (Artist) adapter.getItem(position);
-            NavigationHelper.INSTANCE.navigateToArtist(mFragmentComponent.getActivity(),
-                    String.valueOf(artist.getId()),
-                    artist.getName(),
-                    new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
-        });
     }
 
     @Override
@@ -94,21 +79,19 @@ public class ArtistFragment extends BaseLazyFragment<ArtistPresenter> implements
 
     @Override
     public void onLazyLoad() {
-        mPresenter.loadArtists("all");
+        if (mPresenter != null) {
+            mPresenter.loadArtists("all");
+        }
     }
 
     @Override
     public void showLoading() {
         super.showLoading();
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
         super.hideLoading();
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

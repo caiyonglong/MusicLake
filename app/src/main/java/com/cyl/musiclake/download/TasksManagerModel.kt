@@ -1,4 +1,4 @@
-package com.cyl.musiclake.data.download
+package com.cyl.musiclake.download
 
 import org.litepal.crud.LitePalSupport
 

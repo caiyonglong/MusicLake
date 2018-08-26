@@ -150,7 +150,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
         mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
             val artist = adapter.data[position] as Artist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
+            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, null)
         }
 
         mRadioAdapter?.setOnItemClickListener { _, view, position ->

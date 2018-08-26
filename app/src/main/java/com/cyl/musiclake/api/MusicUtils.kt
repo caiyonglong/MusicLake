@@ -2,7 +2,7 @@ package com.cyl.musiclake.api
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import android.net.Uri
 import com.cyl.musicapi.bean.ListItem
 import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.netease.TracksItem
@@ -15,22 +15,13 @@ import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.ToastUtils
+import java.lang.StringBuilder
 
 /**
  * Created by master on 2018/4/7.
  */
 
 object MusicUtils {
-    fun checkDownload(activity: AppCompatActivity, music: Music?) {
-        if (music == null) {
-            ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
-            return
-        }
-        if (music.type == Constants.LOCAL) {
-            ToastUtils.show(MusicApp.getAppContext(), "已经本地音乐!")
-            return
-        }
-    }
 
     /**
      * 分享到QQ
@@ -40,13 +31,17 @@ object MusicUtils {
             ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
             return
         }
-
-        val stringBuilder = activity.getString(R.string.share_content)
-
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(activity.getString(R.string.share_content))
+        stringBuilder.append(activity.getString(R.string.share_song_content, music.artist, music.title))
         val textIntent = Intent(Intent.ACTION_SEND)
         textIntent.type = "text/plain"
-        textIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder)
-        activity.startActivity(Intent.createChooser(textIntent, "分享"))
+        textIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString())
+//        if (music.type == Constants.LOCAL) {
+//            textIntent.type = "video/mp3"
+//            textIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(music.uri))
+//        }
+        activity.startActivity(Intent.createChooser(textIntent, "歌曲分享"))
     }
 
     /**
@@ -58,6 +53,7 @@ object MusicUtils {
         music.title = item.name
         music.type = Constants.NETEASE
         music.album = item.album.name
+        music.isOnline = true
         music.albumId = item.album.id
         music.commentId = item.commentId.toString()
         music.isCp = item.cp
@@ -92,6 +88,7 @@ object MusicUtils {
             music.collectId = it
         }
         music.title = musicInfo.name
+        music.isOnline = true
         music.type = musicInfo.vendor
         music.album = musicInfo.album.name
         music.albumId = musicInfo.album.id
@@ -128,6 +125,7 @@ object MusicUtils {
             }
             music.title = it.name
             music.type = Constants.NETEASE
+            music.isOnline = true
             music.album = it.album.name
             music.albumId = it.album.id
             music.isCp = it.cp
@@ -163,8 +161,8 @@ object MusicUtils {
             music.title = it.name
             music.type = Constants.NETEASE
             music.album = it.album.name
+            music.isOnline = true
             music.albumId = it.album.id.toString()
-//            music.isCp = (it.cp != 0)
             if (it.artists != null) {
                 var artistIds = it.artists?.get(0)?.id.toString()
                 var artistNames = it.artists?.get(0)?.name

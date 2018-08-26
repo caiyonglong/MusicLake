@@ -4,8 +4,9 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
@@ -18,7 +19,6 @@ import com.cyl.musiclake.utils.CoverLoader
  */
 class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList) {
     override fun convert(holder: BaseViewHolder, item: Music) {
-
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
@@ -57,31 +57,14 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
         if (item.coverUri != null) {
             CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         }
-//        MusicApi.getMusicAlbumPic(item.title.toString(), success = {
-//            item.coverUri = it
-//            item.coverBig = it
-//            item.coverSmall = it
-//            notifyItemChanged(holder.adapterPosition)
-//            item.saveAsync()
-//        })
-
-//            ApiManager.request(MusicApi.getMusicAlbumInfo(info), object : RequestCallBack<DoubanMusic> {
-//                override fun success(result: DoubanMusic?) {
-//                    val data = result?.musics
-//                    data?.let {
-//                        if (it.size > 0) {
-//                            url = result.musics?.first()?.image
-//                            item.coverUri = url
-//                            notifyItemChanged(holder.adapterPosition)
-//                            SongLoader.updateMusic(item)
-//                            CoverLoader.loadImageView(mContext, url, holder.getView<ImageView>(R.id.iv_cover))
-//                        }
-//                    }
-//                }
-//
-//                override fun error(msg: String?) {
-//                }
-//            })
-
+        if (item.coverUri.isNullOrEmpty()) {
+            //加载歌曲专辑图
+            item.title?.let {
+                MusicApi.getMusicAlbumPic(item.title.toString(), success = {
+                    item.coverUri = it
+                    CoverLoader.loadImageView(mContext, it, holder.getView(R.id.iv_cover))
+                })
+            }
+        }
     }
 }

@@ -52,7 +52,6 @@ class NeteasePlaylistFragment : BaseFragment<OnlinePlaylistPresenter>(), OnlineP
     }
 
     override fun listener() {
-        swipe_refresh?.setOnRefreshListener { swipe_refresh?.isRefreshing = false }
         mAdapter?.setOnItemClickListener { _, _, position ->
             val intent = Intent()
             if (allPlaylist[position].type == Playlist.PT_BAIDU) {

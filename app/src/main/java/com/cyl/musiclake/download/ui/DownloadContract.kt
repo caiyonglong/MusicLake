@@ -1,9 +1,9 @@
-package com.cyl.musiclake.ui.download
+package com.cyl.musiclake.download.ui
 
 
 import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.data.download.TasksManagerModel
+import com.cyl.musiclake.download.TasksManagerModel
 
 interface DownloadContract {
 

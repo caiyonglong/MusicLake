@@ -21,6 +21,7 @@
             android:layout_height="@dimen/dp_120"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
+            android:transitionName="@string/transition_album"
             android:src="@drawable/default_cover"
             app:layout_constraintBottom_toTopOf="@+id/name"
             app:layout_constraintEnd_toEndOf="parent"

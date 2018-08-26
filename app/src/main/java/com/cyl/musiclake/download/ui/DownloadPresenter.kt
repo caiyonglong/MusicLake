@@ -1,9 +1,9 @@
-package com.cyl.musiclake.ui.download
+package com.cyl.musiclake.download.ui
 
 import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.data.DownloadLoader
-import com.cyl.musiclake.data.download.TasksManagerModel
+import com.cyl.musiclake.download.DownloadLoader
+import com.cyl.musiclake.download.TasksManagerModel
 import com.cyl.musiclake.event.DownloadEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

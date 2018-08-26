@@ -1,13 +1,18 @@
-package com.cyl.musiclake.data
+package com.cyl.musiclake.download
 
 import android.text.TextUtils
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.data.download.TasksManagerModel
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.utils.FileUtils
+import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.Mp3Util
 import com.cyl.musiclake.utils.ToastUtils
 import com.liulishuo.filedownloader.util.FileDownloadUtils
+import org.jaudiotagger.audio.mp3.MP3File
 import org.litepal.LitePal
 
 object DownloadLoader {
@@ -81,8 +86,17 @@ object DownloadLoader {
      */
     fun updateTask(tid: Int) {
         val model = LitePal.where("tid = ?", tid.toString()).find(TasksManagerModel::class.java).first()
+        val music = model.mid?.let { DaoLitepal.getMusicInfo(it)?.first() }
         model.finish = true
         model.saveOrUpdate("tid = ?", tid.toString())
+        //更新mp3文件标签
+        music?.let {
+            model.path?.let { it1 ->
+                LogUtil.e(it1)
+                Mp3Util.updateTagInfo(it1, music)
+                Mp3Util.getTagInfo(it1)
+            }
+        }
+        NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir())
     }
-
 }

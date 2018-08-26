@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.download;
+package com.cyl.musiclake.download.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.data.download.TasksManager;
-import com.cyl.musiclake.data.download.TasksManagerModel;
+import com.cyl.musiclake.download.TasksManager;
+import com.cyl.musiclake.download.TasksManagerModel;
 import com.cyl.musiclake.event.DownloadEvent;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
@@ -170,7 +170,6 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskActionBtn.setText(R.string.delete);
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
-            NavigationHelper.INSTANCE.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir());
             TasksManager.INSTANCE.finishTask(id);
             EventBus.getDefault().post(new DownloadEvent());
         }

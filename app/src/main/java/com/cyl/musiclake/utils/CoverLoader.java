@@ -162,6 +162,7 @@ public class CoverLoader {
      * @param imageView
      */
     public static void loadImageView(Context mContext, String url, ImageView imageView) {
+        if (mContext == null) return;
         GlideApp.with(mContext)
                 .load(url)
                 .error(R.drawable.default_cover)
@@ -171,6 +172,7 @@ public class CoverLoader {
     }
 
     public static void loadImageView(Context mContext, String url, int defaultUrl, ImageView imageView) {
+        if (mContext == null) return;
         GlideApp.with(mContext)
                 .load(url)
                 .error(defaultUrl)
@@ -198,6 +200,7 @@ public class CoverLoader {
      * @param callBack
      */
     public static void loadBitmap(Context mContext, String url, BitmapCallBack callBack) {
+        if (mContext == null) return;
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(url == null ? getCoverUriByRandom() : url)

@@ -99,7 +99,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     override fun showPlaylist(playlists: MutableList<Playlist>) {
         this.playlists = playlists
-        hideLoading()
         mAdapter?.setNewData(playlists)
     }
 

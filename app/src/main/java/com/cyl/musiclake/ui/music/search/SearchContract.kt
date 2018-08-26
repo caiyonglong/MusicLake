@@ -22,6 +22,8 @@ interface SearchContract {
 
         fun search(key: String, filter: SearchEngine.Filter, limit: Int, page: Int)
 
+        fun searchLocal(key: String)
+
         fun getHotSearchInfo()
 
         fun saveQueryInfo(query: String)

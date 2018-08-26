@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -13,17 +12,14 @@ import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlaylistLoader;
-import com.cyl.musiclake.data.download.TasksManager;
+import com.cyl.musiclake.download.TasksManager;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
-import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
-import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -31,7 +27,6 @@ import com.tencent.tauth.Tencent;
 
 import org.litepal.LitePal;
 
-import java.net.Proxy;
 import java.util.List;
 
 public class MusicApp extends Application {

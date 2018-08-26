@@ -4,8 +4,8 @@
 //import android.database.sqlite.SQLiteDatabase;
 //import android.database.sqlite.SQLiteOpenHelper;
 //
-//import com.cyl.musiclake.data.download.TasksManagerDBController;
-//import com.cyl.musiclake.data.download.TasksManagerModel;
+//import com.cyl.musiclake.download.TasksManagerDBController;
+//import com.cyl.musiclake.download.TasksManagerModel;
 //
 ///**
 // * Created by 永龙 on 2016/2/23.

@@ -79,10 +79,10 @@ object MusicApiServiceImpl {
 
 
     /**
-     * 加载图片
+     * 获取豆瓣背景图片
      */
-    fun getMusicAlbumInfo(info: String): Observable<DoubanMusic> {
-        return DoubanApiServiceImpl.getMusicInfo(info)
+    fun getAlbumUrl(info: String): Observable<String> {
+        return DoubanApiServiceImpl.getDoubanPic(info)
     }
 
 

@@ -106,6 +106,10 @@
             android:theme="@style/MainActivityTheme" />
 
         <activity
+            android:name=".ui.music.edit.EditMusicActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.music.local.fragment.LocalMusicActivity"
             android:label="@string/local_music"
             android:screenOrientation="portrait" />

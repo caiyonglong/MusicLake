@@ -7,7 +7,7 @@ import com.cyl.musiclake.di.module.FragmentModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
-import com.cyl.musiclake.ui.download.DownloadManagerFragment;
+import com.cyl.musiclake.download.ui.DownloadManagerFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistFragment;
@@ -24,7 +24,7 @@ import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
 import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
-import com.cyl.musiclake.ui.download.DownloadedFragment;
+import com.cyl.musiclake.download.ui.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
 
 import org.jetbrains.annotations.NotNull;

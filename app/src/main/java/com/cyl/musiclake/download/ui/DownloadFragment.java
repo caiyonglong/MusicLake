@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.download;
+package com.cyl.musiclake.download.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

@@ -18,7 +18,7 @@ import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.player.MusicPlayerService
-import com.cyl.musiclake.ui.download.DownloadFragment
+import com.cyl.musiclake.download.ui.DownloadFragment
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
@@ -181,22 +181,25 @@ object NavigationHelper {
     fun navigateToPlaylist(context: Activity, artist: Artist, transitionViews: Pair<View, String>?) {
         val intent = Intent(context, PlaylistDetailActivity::class.java)
         intent.putExtra(Extras.ARTIST, artist)
-//        if (transitionViews != null) {
-//            val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(context,
-//                    transitionViews.first, transitionViews.second)
-//            ActivityCompat.startActivity(context, intent, compat.toBundle())
-//        } else {
+        if (transitionViews != null) {
+            val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(context,
+                    transitionViews.first, transitionViews.second)
+            ActivityCompat.startActivity(context, intent, compat.toBundle())
+        } else {
             context.startActivity(intent)
-//        }
+        }
     }
 
-    fun navigateToPlaylist(context: Activity, album: Album) {
-        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
-        fragment = PlaylistDetailFragment.newInstance(album)
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
-        transaction.add(R.id.fragment_container, fragment)
-        transaction.addToBackStack(fragment.getTag()).commit()
+    fun navigateToPlaylist(context: Activity, album: Album, transitionViews: Pair<View, String>? = null) {
+        val intent = Intent(context, PlaylistDetailActivity::class.java)
+        intent.putExtra(Extras.ALBUM, album)
+        if (transitionViews != null) {
+            val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(context,
+                    transitionViews.first, transitionViews.second)
+            ActivityCompat.startActivity(context, intent, compat.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
     }
 
 

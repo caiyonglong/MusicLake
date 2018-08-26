@@ -68,20 +68,6 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
 
     @Override
     protected void listener() {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(() -> {
-                if (mPresenter != null) {
-                    mPresenter.loadAlbums("all");
-                }
-            });
-        }
-        mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Album album = (Album) adapter.getItem(position);
-            NavigationHelper.INSTANCE.navigateToAlbum(getActivity(),
-                    album.getId(),
-                    album.getName(),
-                    new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
-        });
     }
 
 
@@ -99,15 +85,11 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
     @Override
     public void showLoading() {
         super.showLoading();
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
         super.hideLoading();
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

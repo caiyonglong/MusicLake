@@ -16,13 +16,13 @@ import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.data.download.TasksManager
+import com.cyl.musiclake.download.TasksManager
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
-import com.cyl.musiclake.ui.download.TaskItemAdapter
+import com.cyl.musiclake.download.ui.TaskItemAdapter
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
@@ -191,7 +191,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
 fun Context.addDownloadQueue(result: Music) {
     ToastUtils.show(getString(R.string.popup_download))
     DaoLitepal.saveOrUpdateMusic(result, false)
-    val path = FileUtils.getMusicDir() + result.title + ".mp3"
+    val path = FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
     val task = FileDownloader.getImpl()
             .create(result.uri)
             .setPath(path)

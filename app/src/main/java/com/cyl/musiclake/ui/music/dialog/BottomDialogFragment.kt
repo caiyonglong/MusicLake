@@ -16,14 +16,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.downloadMusic
+import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
+import org.jetbrains.anko.support.v4.startActivity
 
 class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -100,6 +102,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+
     private fun turnToArtist() {
         activity?.let { it1 ->
             if (music != null && music?.artistId != null && music?.artist != null) {
@@ -110,11 +113,15 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 } else {
                     val artist = music?.let { it1 -> MusicUtils.getArtistInfo(it1) }
                     artist?.let {
-                        NavigationHelper.navigateToPlaylist(mContext, it,null)
+                        NavigationHelper.navigateToPlaylist(mContext, it, null)
                     }
                 }
             }
         }
+    }
+
+    private fun turnToEdit() {
+        startActivity<EditMusicActivity>(Extras.SONG to music)
     }
 
     inner class ItemAdapter(type: Int = 0) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
@@ -123,6 +130,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_add_to_playlist to R.drawable.ic_playlist_add,
                 R.string.popup_album to R.drawable.ic_album,
                 R.string.popup_artist to R.drawable.ic_art_track,
+                R.string.popup_detail_edit to R.drawable.ic_mode_edit,
                 R.string.popup_download to R.drawable.item_download,
                 R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
@@ -133,7 +141,10 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
                 itemData.remove(R.string.popup_delete)
+            } else {
+                itemData.remove(R.string.popup_detail_edit)
             }
+
             if (type == Constants.OP_ONLINE) {
                 itemData.remove(R.string.popup_delete)
             }
@@ -167,6 +178,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                     R.drawable.ic_album -> {
                         turnToAlbum()
                     }
+                    R.drawable.ic_mode_edit -> {
+                        turnToEdit()
+                    }
                     R.drawable.ic_delete -> {
                         removeMusicListener?.remove(this@BottomDialogFragment.position, music)
                     }
@@ -193,6 +207,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             var icon: ImageView = itemView.findViewById(R.id.iv_icon)
         }
     }
+
 }
 
 data class PopupItemBean(val title: String = "", val icon: Int = 0)

@@ -404,6 +404,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
+        coverAnimator = null
         EventBus.getDefault().unregister(this)
     }
 

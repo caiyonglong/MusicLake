@@ -70,6 +70,7 @@ object SongLoader {
         if (cursor != null && cursor.count > 0) {
             while (cursor.moveToNext()) {
                 val album = MusicCursorWrapper(cursor).album
+                album.saveOrUpdate("name = ?", album.name)
                 results.add(album)
             }
         }
@@ -85,7 +86,7 @@ object SongLoader {
      * @param cursor
      * @return
      */
-    private fun getSongsForMedia(context: Context, cursor: Cursor?): List<Music> {
+    private fun getSongsForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
         val results = mutableListOf<Music>()
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -107,7 +108,7 @@ object SongLoader {
                     music.mid = id.toString()
                     music.album = album
                     music.albumId = albumId
-                    music.artist = artist
+                    music.artist = if (artist == "<unknown>") "未知歌手" else artist
                     music.artistId = artistId
                     music.uri = path
                     coverUri?.let { music.coverUri = it }
@@ -191,16 +192,16 @@ object SongLoader {
         DaoLitepal.deleteMusic(music)
     }
 
-    fun getAllLocalSongs(context: Context): List<Music> {
+    fun getAllLocalSongs(context: Context): MutableList<Music> {
         return getSongsForMedia(context, makeSongCursor(context, null, null))
     }
 
-    fun searchSongs(context: Context, searchString: String): List<Music> {
+    fun searchSongs(context: Context, searchString: String): MutableList<Music> {
         return getSongsForMedia(context, makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 arrayOf("%$searchString%", "%$searchString%", "%$searchString%")))
     }
 
-    fun getSongListInFolder(context: Context, path: String): List<Music> {
+    fun getSongListInFolder(context: Context, path: String): MutableList<Music> {
         val whereArgs = arrayOf("$path%")
         return getSongsForMedia(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null))
     }

@@ -1,17 +1,15 @@
-package com.cyl.musiclake.ui.download;
+package com.cyl.musiclake.download.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.data.download.TasksManagerModel;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.download.TasksManagerModel;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -29,8 +27,6 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
 
     private SongAdapter mAdapter;
     private List<Music> musicList = new ArrayList<>();
@@ -44,11 +40,6 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
 
     @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if (mPresenter != null) {
-                mPresenter.loadDownloadMusic();
-            }
-        });
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID);
@@ -73,7 +64,6 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
 
     @Override
     public void initViews() {
-        mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN);
         mAdapter = new SongAdapter(musicList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
@@ -93,15 +83,11 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     @Override
     public void showLoading() {
         super.showLoading();
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
         super.hideLoading();
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

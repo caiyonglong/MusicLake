@@ -1,10 +1,12 @@
 package com.cyl.musiclake.data.db
 
+import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.MusicToPlaylist
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.SearchHistoryBean
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.download.TasksManagerModel
 import org.litepal.LitePal
 
 /**
@@ -66,6 +68,20 @@ object DaoLitepal {
             music.saveOrUpdate("mid = ?", music.mid)
         }
     }
+
+
+    /**
+     * 扫描更新本地歌曲信息，如果
+     */
+//    fun saveOrUpdateLocalMusic(music: Music, isAsync: Boolean = false) {
+//        val downloadInfo = LitePal.where("path = ?", music.uri).find(TasksManagerModel::class.java)
+//        downloadInfo?.size?.let {
+//            if (it > 0) {
+//            } else {
+//                music.saveOrUpdate("mid = ?", music.mid)
+//            }
+//        }
+//    }
 
     fun addToPlaylist(music: Music, pid: String): Boolean {
         saveOrUpdateMusic(music)
@@ -145,4 +161,7 @@ object DaoLitepal {
         LitePal.deleteAll(MusicToPlaylist::class.java, "pid=? and mid=?", pid, mid)
     }
 
+    fun searchLocalMusic(info: String): MutableList<Music> {
+        return LitePal.where("type =local and title LIKE ? or artist LIKE ? or album LIKE ?", "%$info%", "%$info%", "%$info%").find(Music::class.java)
+    }
 }

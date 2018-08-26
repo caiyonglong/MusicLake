@@ -9,6 +9,6 @@
         <mapping class="com.cyl.musiclake.bean.Playlist" />
         <mapping class="com.cyl.musiclake.bean.MusicToPlaylist" />
         <mapping class="com.cyl.musiclake.bean.SearchHistoryBean" />
-        <mapping class="com.cyl.musiclake.data.download.TasksManagerModel" />
+        <mapping class="com.cyl.musiclake.download.TasksManagerModel" />
     </list>
 </litepal>
