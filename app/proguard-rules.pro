@@ -40,6 +40,19 @@
 -keepattributes Signature-keepattributes
 
 
+#EventBus
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+
 # RxJava RxAndroid
 -dontwarn sun.misc.**
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
@@ -75,6 +88,11 @@
 -keep class * extends org.litepal.crud.LitePalSupport {
     *;
 }
--keep class com.cyl.musiclake.api.doupan {
+-dontwarn com.cyl.musiclake.api.doupan.DoubanMusic.**
+-keep class com.cyl.musiclake.api.doupan.DoubanMusic {
     *;
 }
+
+#第三方jar包jaudiotagger
+-dontwarn org.jaudiotagger.**
+-keep class org.jaudiotagger.** {*;}

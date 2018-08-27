@@ -25,7 +25,7 @@ object DoubanApiServiceImpl {
                 .searchMusic("search", params).flatMap {
                     Observable.create(ObservableOnSubscribe<String> { e ->
                         try {
-                            if (it.musics.first() != null) {
+                            if (it.musics?.first() != null) {
                                 e.onNext(it.musics.first().image)
                                 e.onComplete()
                             } else {
