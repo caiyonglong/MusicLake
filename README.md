@@ -7,8 +7,9 @@
 - QQ登录、在线歌单同步
 - 百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式
-- 更多体验请[下载apk](https://github.com/caiyonglong/MusicLake/releases)，欢迎star，尽情提[#issues](https://github.com/caiyonglong/MusicLake/issues)
-
+- 精力有限，需求不饱和都会逐步完善，有兴趣可赏个star静等完善与bug修复，期望的功能也可提issues(https://github.com/caiyonglong/MusicLake/issues)
+- [下载页](https://github.com/caiyonglong/MusicLake/releases)
+- [蒲公英下载](https://www.pgyer.com/ZIWH)
 
 # 更新日志
 
@@ -41,9 +42,6 @@
 - QQ登录、在线歌单同步
 - 百度电台列表，网易云mv排行榜，mv播放评论
 
-# 下载
-[点这下载](https://github.com/caiyonglong/MusicLake/releases)
-[蒲公英下载](https://www.pgyer.com/ZIWH)
 
 # 相关项目|音乐API
 - [PC端](https://github.com/sunzongzheng/music)
