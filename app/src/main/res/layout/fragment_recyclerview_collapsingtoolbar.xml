@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:background="@android:color/white"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/colorPrimary"
             app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -30,7 +30,6 @@
                 android:scaleType="centerCrop"
                 tools:targetApi="lollipop" />
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -39,8 +38,8 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:elevation="5dp"
+                android:layout_height="@dimen/dp_56"
+                app:elevation="5dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -57,13 +56,6 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:clipToPadding="false"
-        android:paddingTop="10dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <include layout="@layout/fragment_recyclerview_notoolbar" />
 
 </android.support.design.widget.CoordinatorLayout>

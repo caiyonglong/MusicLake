@@ -1,7 +1,6 @@
 package com.cyl.musiclake.view.lyric;
 
-import android.util.Log;
-
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
 
 import java.io.BufferedReader;
@@ -44,7 +43,6 @@ public class LyricParseUtils {
      */
     public static LyricInfo setLyricResource(String lyricInfo) {
         if (lyricInfo != null && lyricInfo.length() > 0) {
-//            LogUtil.e("LyricView ", lyricInfo);
             InputStream inputStream = new ByteArrayInputStream(lyricInfo.getBytes());
             return setupLyricResource(inputStream, "utf-8");
         } else {
@@ -61,7 +59,7 @@ public class LyricParseUtils {
         if (inputStream != null) {
             try {
                 LyricInfo lyricInfo = new LyricInfo();
-                lyricInfo.song_lines = new ArrayList<>();
+                lyricInfo.songLines = new ArrayList<>();
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charsetName);
                 BufferedReader reader = new BufferedReader(inputStreamReader);
                 String line = null;
@@ -69,14 +67,14 @@ public class LyricParseUtils {
                     analyzeLyric(lyricInfo, line);
                 }
                 //歌词排序
-                Collections.sort(lyricInfo.song_lines, new sort());
+                Collections.sort(lyricInfo.songLines, new sort());
                 reader.close();
                 inputStream.close();
                 inputStreamReader.close();
                 mLyricInfo = lyricInfo;
             } catch (IOException e) {
                 resetLyricInfo();
-                Log.e("--", "IOException");
+                LogUtil.e("--", "IOException");
                 e.printStackTrace();
             }
         } else {
@@ -120,30 +118,41 @@ public class LyricParseUtils {
         if (line.startsWith("[total:")) {
             return;
         }
-        if (line.startsWith("[0")) {
-            // 歌词内容,需要考虑一行歌词有多个时间戳的情况
-            int lastIndexOfRightBracket = line.lastIndexOf("]");
-            String content = line.substring(lastIndexOfRightBracket + 1, line.length());
-            //去除trc歌词中每个字的时间长
-            content = content.replaceAll("<[0-9]{1,5}>", "");
-            String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
-            String arrTimes[] = times.split("-");
-            for (String temp : arrTimes) {
-                if (temp.trim().length() == 0) {
-                    continue;
-                }
-                /** [02:34.14][01:07.00]当你我不小心又想起她
-                 *
-                 上面的歌词的就可以拆分为下面两句歌词了
-                 [02:34.14]当你我不小心又想起她
-                 [01:07.00]当你我不小心又想起她
-                 */
-                LineInfo lineInfo = new LineInfo();
-                lineInfo.content = content.trim();
-                lineInfo.start = measureStartTimeMillis(temp);
-                lyricInfo.song_lines.add(lineInfo);
+        if (line.startsWith("[0") && line.endsWith("]")) {
+            String test = line.replace("]", "").replaceFirst(", ", "]");
+            if (test.contains("]")) {
+                line = test;
             }
         }
+        try {
+            if (line.startsWith("[0") && !line.endsWith("]")) {
+                // 歌词内容,需要考虑一行歌词有多个时间戳的情况
+                int lastIndexOfRightBracket = line.lastIndexOf("]");
+                String content = line.substring(lastIndexOfRightBracket + 1, line.length());
+                //去除trc歌词中每个字的时间长
+                content = content.replaceAll("<[0-9]{1,5}>", "");
+                String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
+                String arrTimes[] = times.split("-");
+                for (String temp : arrTimes) {
+                    if (temp.trim().length() == 0) {
+                        continue;
+                    }
+                    /** [02:34.14][01:07.00]当你我不小心又想起她
+                     *
+                     上面的歌词的就可以拆分为下面两句歌词了
+                     [02:34.14]当你我不小心又想起她
+                     [01:07.00]当你我不小心又想起她
+                     */
+                    LineInfo lineInfo = new LineInfo();
+                    lineInfo.content = content.trim();
+                    lineInfo.start = measureStartTimeMillis(temp);
+                    lyricInfo.songLines.add(lineInfo);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -166,9 +175,9 @@ public class LyricParseUtils {
      */
     private static void resetLyricInfo() {
         if (mLyricInfo != null) {
-            if (mLyricInfo.song_lines != null) {
-                mLyricInfo.song_lines.clear();
-                mLyricInfo.song_lines = null;
+            if (mLyricInfo.songLines != null) {
+                mLyricInfo.songLines.clear();
+                mLyricInfo.songLines = null;
             }
             mLyricInfo = null;
         }

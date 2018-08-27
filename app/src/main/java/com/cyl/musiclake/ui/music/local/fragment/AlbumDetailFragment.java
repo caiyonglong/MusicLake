@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +15,14 @@ import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
-import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumDetailPresenter;
-import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,8 @@ import butterknife.OnClick;
  * 版本：2.5
  * 专辑
  */
-public class AlbumDetailFragment extends BaseFragment implements AlbumDetailContract.View {
+public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> implements AlbumDetailContract.View {
+
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -46,7 +47,13 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     CollapsingToolbarLayout collapsing_toolbar;
     @BindView(R.id.album_art)
     ImageView album_art;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
 
+    @OnClick(R.id.fab)
+    void onPlayAll() {
+        PlayManager.play(0, musicInfos, albumID);
+    }
 
     String albumID;
     String transitionName;
@@ -54,13 +61,6 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private AlbumDetailPresenter mPresenter;
-
-    @OnClick(R.id.fab)
-    void onPlayAll() {
-        PlayManager.setPlayList(musicInfos);
-        PlayManager.play(0);
-    }
 
     public static AlbumDetailFragment newInstance(String id, String title, String transitionName) {
         Bundle args = new Bundle();
@@ -74,13 +74,13 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
 
     @Override
     protected void loadData() {
+        showLoading();
         mPresenter.loadAlbumSongs(title);
-        mPresenter.loadAlbumArt(albumID);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview_collapsingtoolbar;
+        return R.layout.frag_playlist_detail;
     }
 
     @Override
@@ -88,7 +88,6 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         albumID = getArguments().getString(Extras.ALBUM_ID);
         transitionName = getArguments().getString(Extras.TRANSITIONNAME);
         title = getArguments().getString(Extras.PLAYLIST_NAME);
-        StatusBarUtil.setTranslucentForImageViewInFragment(getActivity(),0,album_art);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (transitionName != null) {
@@ -100,8 +99,6 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
         if (title != null)
             collapsing_toolbar.setTitle(title);
 
-        mPresenter = new AlbumDetailPresenter(getContext());
-        mPresenter.attachView(this);
         setHasOptionsMenu(true);
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -115,11 +112,15 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     }
 
     @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
+    }
+
+    @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.setPlayList(musicInfos);
-                PlayManager.play(position);
+                PlayManager.play(position, musicInfos, albumID);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -127,8 +128,7 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList(musicInfos);
-                        PlayManager.play(position);
+                        PlayManager.play(position, musicInfos, albumID);
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -149,12 +149,12 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
 
     @Override
     public void showLoading() {
-
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-
+        super.hideLoading();
     }
 
     @Override
@@ -166,6 +166,7 @@ public class AlbumDetailFragment extends BaseFragment implements AlbumDetailCont
     public void showAlbumSongs(List<Music> songList) {
         musicInfos = songList;
         mAdapter.setNewData(musicInfos);
+        hideLoading();
     }
 
 

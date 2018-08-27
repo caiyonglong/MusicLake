@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.common.PageAdapter;
+import com.cyl.musiclake.ui.main.PageAdapter;
 
 import butterknife.BindView;
 
@@ -23,7 +23,6 @@ public class LocalMusicFragment extends BaseLazyFragment {
     TabLayout mTabLayout;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
 
     public static LocalMusicFragment newInstance(String flag) {
         Bundle args = new Bundle();
@@ -40,7 +39,7 @@ public class LocalMusicFragment extends BaseLazyFragment {
 
     @Override
     public void initViews() {
-        mToolbar.setTitle("本地歌曲");
+        mToolbar.setTitle(getResources().getString(R.string.local_music));
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
             appCompatActivity.setSupportActionBar(mToolbar);
@@ -48,12 +47,17 @@ public class LocalMusicFragment extends BaseLazyFragment {
         }
     }
 
+    @Override
+    protected void initInjector() {
+
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(SongsFragment.newInstance(), "本地");
+        adapter.addFragment(SongsFragment.Companion.newInstance(), "本地");
         adapter.addFragment(AlbumFragment.newInstance(), "专辑");
         adapter.addFragment(ArtistFragment.newInstance(), "艺术家");
-        adapter.addFragment(FoldersFragment.newInstance(), "文件夹");
+        adapter.addFragment(FoldersFragment.Companion.newInstance(), "文件夹");
         viewPager.setAdapter(adapter);
     }
 

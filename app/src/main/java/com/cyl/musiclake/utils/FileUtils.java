@@ -395,7 +395,7 @@ public class FileUtils {
     public static String readFile(File filePath) {
 
         BufferedReader bufferedReader = null;
-        String fileStr = "";
+        StringBuilder fileStr = new StringBuilder();
         if (!filePath.exists() || filePath.isDirectory()) {
             return null;
         }
@@ -404,7 +404,8 @@ public class FileUtils {
             String tempFileStr = "";
 
             while ((tempFileStr = bufferedReader.readLine()) != null) {
-                fileStr += tempFileStr;
+                fileStr.append(tempFileStr);
+                fileStr.append("\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -418,7 +419,7 @@ public class FileUtils {
                 }
             }
         }
-        return fileStr;
+        return fileStr.toString();
 
     }
 

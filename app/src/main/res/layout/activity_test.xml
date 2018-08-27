@@ -3,16 +3,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     tools:context="com.cyl.musiclake.ui.main.TestActivity">
 
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
-    <Button
-        android:id="@+id/btn_test"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_test1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/charts_netease" />
+
+        <Button
+            android:id="@+id/btn_test2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search" />
+
+        <Button
+            android:id="@+id/btn_test3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/artist_detail" />
+
+        <Button
+            android:id="@+id/btn_test4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="歌词" />
+
+        <Button
+            android:id="@+id/btn_test5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="歌曲评论" />
+
+        <Button
+            android:id="@+id/btn_test6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="歌曲播放地址" />
+
+
+        <Button
+            android:id="@+id/btn_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取用户信息" />
+
+        <Button
+            android:id="@+id/btn_playlist1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取qq批量" />
+
+        <Button
+            android:id="@+id/btn_playlist2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取qq批量" />
+
+        <Button
+            android:id="@+id/btn_playlist3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取netease批量" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tv_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:gravity="center"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
 </LinearLayout>

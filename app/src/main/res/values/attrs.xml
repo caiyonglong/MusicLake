@@ -4,7 +4,7 @@
         <attr name="bg_color" format="color" />
         <attr name="btn_color" format="color" />
         <attr name="gap_width" format="float" />
-        <attr name="border_width" format="float" />
+        <attr name="border_width" format="float|reference" />
         <attr name="space_padding" format="float" />
         <attr name="anim_duration" format="integer" />
         <attr name="anim_direction">
@@ -14,12 +14,20 @@
     </declare-styleable>
 
 
-    <declare-styleable name="LrcView">
+    <declare-styleable name="LyricView">
+        <attr name="hint" format="string" />
+        <attr name="hintColor" format="color" />
+        <attr name="textColor" format="color" />
+        <attr name="highlightColor" format="color" />
         <attr name="textSize" format="dimension" />
-        <attr name="dividerHeight" format="dimension" />
-        <attr name="normalTextColor" format="reference|color" />
-        <attr name="currentTextColor" format="reference|color" />
-        <attr name="animationDuration" format="integer" />
+        <attr name="maxLength" format="dimension" />
+        <attr name="fadeInFadeOut" format="boolean" />
+        <attr name="lineSpace" format="dimension" />
+        <attr name="textAlign">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="MultiViewPager">
@@ -34,14 +42,14 @@
     <!--音乐条目属性-->
     <declare-styleable name="LocalItemView">
         <attr name="tv_name" format="reference|string" />
-        <attr name="iv_icon" format="enum">
-            <enum name="arrow_collapse_down" value="3" />
-            <enum name="heart_outline" value="1" />
-            <enum name="library_music" value="0" />
-            <enum name="timetable" value="2" />
-        </attr>
+        <attr name="iv_icon" format="reference|integer" />
         <attr name="tv_desc" format="reference|string" />
         <attr name="iv_icon_color" format="reference|color" />
+    </declare-styleable>
+    <!--音乐条目属性-->
+    <declare-styleable name="FlipperView">
+        <attr name="fv_radius" format="dimension|reference" />
+        <attr name="fv_color" format="reference|color" />
     </declare-styleable>
 
 </resources>

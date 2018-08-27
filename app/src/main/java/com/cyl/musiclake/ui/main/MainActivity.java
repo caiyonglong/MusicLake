@@ -1,44 +1,63 @@
 package com.cyl.musiclake.ui.main;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.audiofx.AudioEffect;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.source.download.TasksManager;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.LoginEvent;
-import com.cyl.musiclake.event.PlayQueueEvent;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.event.PlaylistEvent;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
-import com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment;
-import com.cyl.musiclake.ui.music.online.activity.SearchActivity;
+import com.cyl.musiclake.ui.music.player.PlayControlFragment;
+import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.ui.settings.AboutActivity;
+import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
-import com.jaeger.library.StatusBarUtil;
-import com.liulishuo.filedownloader.FileDownloader;
+import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.SPUtils;
+import com.cyl.musiclake.utils.ToastUtils;
+import com.cyl.musiclake.utils.Tools;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.tencent.tauth.Tencent;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.UiError;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment.topContainer;
+import static com.cyl.musiclake.ui.UIUtilsKt.logout;
+import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
 
 /**
  * 描述 主要的Activity
@@ -49,7 +68,7 @@ import static com.cyl.musiclake.ui.music.local.fragment.PlayControlFragment.topC
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout mSlidingUpPaneLayout;
+    public SlidingUpPanelLayout mSlidingUpPaneLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
@@ -61,6 +80,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     TextView mNick;
 
     private View headerView;
+    private PlayControlFragment controlFragment;
     private static final String TAG = "MainActivity";
 
     private boolean mIsLogin = false;
@@ -74,17 +94,43 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
+        transparentStatusBar(this);
         //菜单栏的头部控件初始化
         initNavView();
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.setItemIconTintList(null);
-        StatusBarUtil.setTransparentForImageView(this, null);
+        checkLoginStatus();
+    }
 
-        setUserStatusInfo();
-        /**登陆成功重新设置用户新*/
-        RxBus.getInstance().register(LoginEvent.class).subscribe(event -> setUserStatusInfo());
-        RxBus.getInstance().register(PlayQueueEvent.class).subscribe(event -> setPlaylistQueueChange());
+
+    /**
+     * 使状态栏透明
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static void transparentStatusBar(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMetaChangedEvent(MetaChangedEvent event) {
+        updatePlaySongInfo(event.getMusic());
+    }
+
+    private void updatePlaySongInfo(Music music) {
+        if (mSlidingUpPaneLayout == null) return;
+        if (music != null) {
+            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
+            CoverLoader.loadBigImageView(this, music, mImageView);
+        } else {
+            mSlidingUpPaneLayout.setPanelHeight(0);
+            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+        }
     }
 
     private void initNavView() {
@@ -99,11 +145,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void initData() {
         String from = getIntent().getAction();
         if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
+            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
+            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
+        updatePlaySongInfo(PlayManager.getPlayingMusic());
         //加载主fragment
         navigateLibrary.run();
         navigatePlay.run();
+    }
+
+    @Override
+    protected void initInjector() {
     }
 
 
@@ -112,7 +164,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                Log.i(TAG, "onPanelStateChanged " + newState);
+                LogUtil.d(TAG, "onPanelStateChanged " + newState);
                 if (newState == PanelState.EXPANDED) {
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 } else {
@@ -122,16 +174,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
-                topContainer.setAlpha(1 - slideOffset * 2);
-                if (topContainer.getAlpha() < 0) {
-                    topContainer.setVisibility(View.GONE);
-                } else {
-                    topContainer.setVisibility(View.VISIBLE);
-                    mSlidingUpPaneLayout.setTouchEnabled(true);
+                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
+                if (controlFragment.topContainer != null) {
+                    controlFragment.topContainer.setAlpha(1 - slideOffset * 2);
+                    if (controlFragment.topContainer.getAlpha() < 0) {
+                        controlFragment.topContainer.setVisibility(View.GONE);
+                    } else {
+                        controlFragment.topContainer.setVisibility(View.VISIBLE);
+                        mSlidingUpPaneLayout.setTouchEnabled(true);
+                    }
                 }
             }
         });
+
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -172,10 +227,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             .content("您确定要退出或切换其他账号吗？")
                             .positiveText("确定")
                             .onPositive((materialDialog, dialogAction) -> {
-                                UserStatus.clearUserInfo(this);
-                                UserStatus.saveuserstatus(this, false);
-                                Tencent.createInstance(Constants.APP_ID, this).logout(this);
-                                RxBus.getInstance().post(new LoginEvent());
+                                logout();
                             }).negativeText("取消").show();
                 } else {
                     mTargetClass = LoginActivity.class;
@@ -190,8 +242,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     mTargetClass = ShakeActivity.class;
                 }
                 break;
+            case R.id.nav_menu_playQueue:
+                NavigationHelper.INSTANCE.navigatePlayQueue(this);
+                break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
+                break;
+            case R.id.nav_menu_feedback:
+                Tools.INSTANCE.feeback(this);
+                break;
+            case R.id.nav_menu_about:
+                mTargetClass = AboutActivity.class;
+                break;
+            case R.id.nav_menu_equalizer:
+                try {
+                    Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
+                    startActivityForResult(effects, 666);
+                } catch (Exception e) {
+                    ToastUtils.show("设备不支持均衡！");
+                }
                 break;
             case R.id.nav_menu_exit:
                 mTargetClass = null;
@@ -213,17 +283,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTargetClass = null;
     }
 
-
     private Runnable navigateLibrary = () -> {
         Fragment fragment = MainFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
 
     };
+
     private Runnable navigatePlay = () -> {
-        Fragment fragment = PlayControlFragment.newInstance();
+        controlFragment = PlayControlFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.controls_container, fragment).commit();
+        transaction.replace(R.id.controls_container, controlFragment).commit();
     };
 
 
@@ -278,20 +348,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-    @Override
-    protected void onDestroy() {
-        //结束下载任务
-        TasksManager.getImpl().onDestroy();
-        FileDownloader.getImpl().pauseAll();
-        super.onDestroy();
-    }
-
     private void setPlaylistQueueChange() {
-        if (PlayManager.getPlayList().size() == 0) {
-            mSlidingUpPaneLayout.setTouchEnabled(false);
-        } else {
-            mSlidingUpPaneLayout.setTouchEnabled(true);
-        }
+//        if (PlayManager.getPlayList().size() == 0) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.HIDDEN);
+//        } else if (PlayManager.getPlayList().size() >= 0 && mSlidingUpPaneLayout.getPanelState() == PanelState.HIDDEN) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
+//        }
     }
 
     /**
@@ -303,14 +365,68 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             String url = UserStatus.getUserInfo(this).getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(UserStatus.getUserInfo(this).getNick());
-            mNick.setText("音乐湖");
-            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("注销登录").setIcon(R.drawable.ic_exit);
+            mNick.setText(getResources().getString(R.string.app_name));
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
+                    .setIcon(R.drawable.ic_exit);
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
-            mName.setText("音乐湖");
-            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle("点我登录");
-            mNick.setText("未登录?去登录/注册吧!");
+            mName.setText(getResources().getString(R.string.app_name));
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
+            mNick.setText(getResources().getString(R.string.login_hint));
         }
     }
 
+    /**
+     * 登陆成功重新设置用户新
+     *
+     * @param event
+     */
+    @Subscribe
+    public void updateUserInfo(LoginEvent event) {
+        setUserStatusInfo();
+    }
+
+    /**
+     * 更新歌单
+     *
+     * @param event
+     */
+    @Subscribe
+    public void updatePlaylist(PlaylistEvent event) {
+        if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID)) {
+            setPlaylistQueueChange();
+        } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
+            Music music = PlayManager.getPlayingMusic();
+            if (music != null && music.isLove()) {
+                controlFragment.mIvLove.setImageResource(R.drawable.item_favorite_love);
+            } else if (music != null && !music.isLove()) {
+                controlFragment.mIvLove.setImageResource(R.drawable.item_favorite);
+            }
+        }
+    }
+
+    /**
+     * 检查QQ登录状态
+     */
+    private void checkLoginStatus() {
+        String token = SPUtils.getAnyByKey(SPUtils.QQ_ACCESS_TOKEN, "");
+        String openId = SPUtils.getAnyByKey(SPUtils.QQ_OPEN_ID, "");
+        if (token.length() > 0 && openId.length() > 0) {
+            updateLoginToken(token, openId);
+        } else {
+            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 }

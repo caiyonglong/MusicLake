@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.my;
 
-import android.content.Context;
-
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 
@@ -11,31 +10,22 @@ import com.cyl.musiclake.ui.my.user.UserStatus;
 
 public class UserModel implements UserContract.Model {
 
-    private Context mContext;
-
-    public UserModel(Context context) {
-        mContext = context;
+    public UserModel() {
     }
 
     @Override
     public void savaInfo(User userInfo) {
         //保存用户信息
-        UserStatus.savaUserInfo(mContext, userInfo);
-        UserStatus.saveuserstatus(mContext, true);
+        UserStatus.saveUserInfo(MusicApp.getAppContext(), userInfo);
     }
 
     @Override
     public User getUserInfo() {
-        if (UserStatus.getstatus(mContext)) {
-            return UserStatus.getUserInfo(mContext);
-        } else {
-            return null;
-        }
+        return UserStatus.getUserInfo(MusicApp.getAppContext());
     }
 
     @Override
     public void cleanInfo() {
-        UserStatus.clearUserInfo(mContext);
-        UserStatus.saveuserstatus(mContext, false);
+        UserStatus.clearUserInfo(MusicApp.getAppContext());
     }
 }

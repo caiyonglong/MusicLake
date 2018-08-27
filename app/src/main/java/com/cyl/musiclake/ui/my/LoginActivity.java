@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +20,8 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ import butterknife.OnClick;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class LoginActivity extends BaseActivity implements LoginContract.View {
+public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View {
 
     @BindView(R.id.cv)
     CardView cv;
@@ -51,8 +52,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    LoginPresenter mPresenter;
-
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_login;
@@ -64,11 +63,21 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Override
     protected void initData() {
-        setToolbarTitle("用户登录");
         usernameWrapper.setHint("用户名");
         passwordWrapper.setHint("密码");
-        mPresenter = new LoginPresenter();
-        mPresenter.attachView(this);
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
+        }
+    }
+
+    @Override
+    protected String setToolbarTitle() {
+        return "用户登录";
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
 
@@ -109,7 +118,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(Constants.USER_EMAIL, username);
                     params.put(Constants.PASSWORD, password);
-//                    login(params);
                 }
             });
         }
@@ -121,9 +129,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         if (SystemUtils.isLollipop()) {
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
                     this,
-                    Pair.create((View) register, "transition_next"),
-                    Pair.create((View) fab, "transition_fab"),
-                    Pair.create((View) cv, "transition_cardView")).toBundle());
+                    Pair.create(register, "transition_next"),
+                    Pair.create(fab, "transition_fab"),
+                    Pair.create(cv, "transition_cardView")).toBundle());
         } else {
             startActivity(intent);
         }
@@ -164,7 +172,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Override
     public void success(User user) {
-        RxBus.getInstance().post(new LoginEvent());
+        EventBus.getDefault().post(new LoginEvent(true, user));
         finish();
     }
 }

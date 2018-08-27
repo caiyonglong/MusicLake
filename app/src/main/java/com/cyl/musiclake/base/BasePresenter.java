@@ -1,11 +1,37 @@
 package com.cyl.musiclake.base;
 
 
-public interface BasePresenter<T extends BaseView> {
+import java.util.ArrayList;
+import java.util.List;
 
-    void attachView(T view);
+import io.reactivex.disposables.Disposable;
 
-    void subscribe();
+/**
+ * des : MVP模式 基类P层
+ * author   : master
+ * update     : 2018/5/19
+ */
 
-    void unsubscribe();
+public class BasePresenter<T extends BaseContract.BaseView> implements BaseContract.BasePresenter<T> {
+
+    protected T mView;
+    protected List<Disposable> disposables;
+
+    @Override
+    public void attachView(T view) {
+        this.mView = view;
+        disposables = new ArrayList<>();
+    }
+
+    @Override
+    public void detachView() {
+        if (mView != null) {
+            mView = null;
+        }
+        for (Disposable dis : disposables) {
+            dis.dispose();
+        }
+        disposables.clear();
+    }
+
 }

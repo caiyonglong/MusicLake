@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoDragView="@+id/controls_container"
-    sothree:umanoOverlay="false"
-    sothree:umanoPanelHeight="55dp"
+    sothree:umanoFadeColor="@android:color/transparent"
+    sothree:umanoPanelHeight="56dp"
     sothree:umanoShadowHeight="5dp">
 
     <FrameLayout
@@ -17,9 +16,7 @@
 
     <FrameLayout
         android:id="@+id/controls_container"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="250dp" />
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-

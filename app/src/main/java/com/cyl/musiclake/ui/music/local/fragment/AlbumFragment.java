@@ -1,19 +1,16 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.NavigateUtil;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumsContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumPresenter;
@@ -29,19 +26,11 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.View {
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements AlbumsContract.View {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
-    @BindView(R.id.loading)
-    LinearLayout loading;
     private AlbumAdapter mAdapter;
     private List<Album> albumList = new ArrayList<>();
-    private AlbumPresenter mPresenter;
-
 
     public static AlbumFragment newInstance() {
 
@@ -66,27 +55,19 @@ public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.Vi
      */
     @Override
     public void initViews() {
-        mPresenter = new AlbumPresenter(getContext());
-        mPresenter.attachView(this);
-
         mAdapter = new AlbumAdapter(albumList);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
 
     @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
+    }
+
+    @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadAlbums("all");
-        });
-        mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Album album = (Album) adapter.getItem(position);
-            NavigateUtil.navigateToAlbum(getActivity(),
-                    album.getId(),
-                    album.getName(),
-                    new Pair<View, String>(view.findViewById(R.id.album), Constants.TRANSTITION_ALBUM));
-        });
     }
 
 
@@ -103,14 +84,12 @@ public class AlbumFragment extends BaseLazyFragment implements AlbumsContract.Vi
 
     @Override
     public void showLoading() {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(true);
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
+        super.hideLoading();
     }
 
     @Override

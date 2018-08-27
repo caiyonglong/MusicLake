@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="zh-cmn-Hans">
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
+    <!-- require dsbridge init js -->
+    <script type="text/javascript" src="dist/dsbridge.js"></script>
+    <script type="text/javascript" src="dist/app.native.js"></script>
+</head>
+
+<body>
+<script>
+        dsBridge.registerAsyn("asyn", {
+            tag:"asyn",
+            //搜索全部功能
+            searchSong: function (keyword,limit,offset, responseCallback) {
+                musicApi.searchSong(keyword,offset).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //搜索netease功能
+            searchNeteaseSong: function (keyword,limit,offset, responseCallback) {
+                musicApi.netease.searchSong(keyword,offset).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //搜索xiami功能
+            searchXiamiSong: function (keyword,limit,offset, responseCallback) {
+                musicApi.xiami.searchSong(keyword,offset).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //搜索qq
+            searchQQSong: function (keyword,limit,offset, responseCallback) {
+                musicApi.qq.searchSong(keyword,offset).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 获取歌曲详情
+            getSongDetail: function (vendor,id, responseCallback) {
+                musicApi.getSongDetail(vendor,id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 批量获取歌曲详情
+            getBatchSongDetail: function (vendor,ids, responseCallback) {
+                musicApi.getBatchSongDetail(vendor,ids).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //获取歌曲url
+            getSongUrl: function (vendor,id, responseCallback) {
+                musicApi.getSongUrl(vendor,id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            //获取歌词
+            getLyric: function (vendor,id, responseCallback) {
+                musicApi.getLyric(vendor,id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 获取排行榜（网易云）
+            getTopList: function (id, responseCallback) {
+                musicApi.getTopList(id).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            // 获取歌曲评论
+            getComment: function (vendor, id, offset, limit, responseCallback) {
+                musicApi.getComment(vendor, id, offset, limit).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            getArtistSongs:function( vendor, id, offset, limit,responseCallback) {
+                musicApi.getArtistSongs(vendor, id, offset, limit).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            getAlbumSongs:function( vendor, id, offset, limit,responseCallback) {
+                musicApi.getAlbumSongs(vendor, id, offset, limit).then(function (data) {
+                    responseCallback(data)
+                })
+            }
+        })
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+
+</html>

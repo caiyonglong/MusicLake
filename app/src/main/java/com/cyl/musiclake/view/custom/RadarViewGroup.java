@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +163,7 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
             }
             scanAngleList.put(j, 0f);
         }
-        Log.e("datalength:",dataLength+"++++++++++++++++>>>>");
+        LogUtil.e("datalength:",dataLength+"++++++++++++++++>>>>");
         //根据数据源信息动态添加CircleView1
         for (int i = 0; i < dataLength; i++) {
             CircleView circleView = new CircleView(getContext());

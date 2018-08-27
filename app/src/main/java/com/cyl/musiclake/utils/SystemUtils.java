@@ -54,7 +54,7 @@ public class SystemUtils {
      * @return
      */
     public static boolean isOpenFloatWindow() {
-        return isOpenSystemWindow() && isOpenUsageAccess();
+        return isOpenSystemWindow();
     }
 
     /**

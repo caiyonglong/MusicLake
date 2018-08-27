@@ -1,15 +1,26 @@
 package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.event.LoginEvent;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -118,13 +129,6 @@ public class ApiManager {
     }
 
     private ApiManager() {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Constants.BASE_URL)
-//                .client(getOkHttpClient())
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 使用RxJava作为回调适配器
-//                .addConverterFactory(MyGsonConverterFactory.create(gson)) // 使用Gson作为数据转换器
-//                .build();
-//        apiService = retrofit.create(ApiManagerService.class);
     }
 
     private static Gson gson = new GsonBuilder()
@@ -141,8 +145,53 @@ public class ApiManager {
     public <T> T create(Class<T> clazz, String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .client(getOkHttpClient())
-                .addConverterFactory(MyGsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
+                .addConverterFactory(MyGsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
         return retrofit.create(clazz);
     }
+
+
+    /**
+     * 发送网络请求
+     */
+    public static <T> void request(Observable<T> service, RequestCallBack<T> result) {
+        service.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<T>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(T t) {
+                        if (result != null) {
+                            result.success(t);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtil.e("ApiManager ", "Throwable==" + e.getMessage());
+                        if (e.getMessage() != null && e.getMessage().contains("401")) {
+                            EventBus.getDefault().post(new LoginEvent(false, null));
+                        } else {
+                            if (result != null) {
+                                if (e.getMessage() == null) {
+                                    result.error(MusicApp.getAppContext().getString(R.string.error_connection));
+                                } else {
+                                    result.error(e.getMessage());
+                                }
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 }

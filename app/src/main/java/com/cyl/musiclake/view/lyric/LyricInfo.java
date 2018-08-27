@@ -10,19 +10,19 @@ import java.util.List;
 
 public class LyricInfo {
 
-    List<LineInfo> song_lines;
+    public List<LineInfo> songLines;
 
-    String song_artist;  // 歌手
-    String song_title;  // 标题
-    String song_album;  // 专辑
+    public String song_artist;  // 歌手
+    public String song_title;  // 标题
+    public String song_album;  // 专辑
     long song_offset;  // 偏移量
 
-    public List<LineInfo> getSong_lines() {
-        return song_lines;
+    public List<LineInfo> getSongLines() {
+        return songLines;
     }
 
-    public void setSong_lines(List<LineInfo> song_lines) {
-        this.song_lines = song_lines;
+    public void setsongLines(List<LineInfo> songLines) {
+        this.songLines = songLines;
     }
 
     public String getSong_artist() {
@@ -58,10 +58,10 @@ public class LyricInfo {
     }
 
 
-    static class LineInfo {
-        String content;  // 歌词内容
-        int line;  // 歌词内容
-        long start;  // 开始时间
+    public static class LineInfo {
+        public String content;  // 歌词内容
+        public int line;  // 歌词内容
+        public long start;  // 开始时间
 
         public String getContent() {
             return content;
@@ -84,7 +84,7 @@ public class LyricInfo {
     @Override
     public String toString() {
         return "LyricInfo{" +
-                "song_lines=" + song_lines +
+                "songLines=" + songLines +
                 ", song_artist='" + song_artist + '\'' +
                 ", song_title='" + song_title + '\'' +
                 ", song_album='" + song_album + '\'' +

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,18 +13,11 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_tv_source"
+            android:background="@drawable/bg_button"
             android:paddingBottom="2dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -47,5 +39,6 @@
         android:elevation="10dp"
         android:src="@drawable/default_cover"
         app:civ_border_color="@color/white"
-        tools:targetApi="lollipop" />
+        android:transitionName="@string/transition_cover"
+        />
 </LinearLayout>

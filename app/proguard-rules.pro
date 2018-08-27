@@ -28,13 +28,31 @@
 -dontwarn javax.annotation.**
 -dontwarn javax.inject.**
 # OkHttp3
--dontwarn okhttp3.logging.**
--keep class okhttp3.internal.**{*;}
+-dontwarn okhttp3.**
 -dontwarn okio.**
+-dontwarn javax.annotation.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
 # Retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
 -keepattributes Signature-keepattributes
+
+
+#EventBus
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+
 # RxJava RxAndroid
 -dontwarn sun.misc.**
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
@@ -58,3 +76,23 @@
 }
 -dontwarn com.just.agentweb.**
 -keepclassmembers class com.just.agentweb.sample.common.AndroidInterface{ *; }
+#litepal
+-keep class org.litepal.** {
+    *;
+}
+
+-keep class * extends org.litepal.crud.DataSupport {
+    *;
+}
+
+-keep class * extends org.litepal.crud.LitePalSupport {
+    *;
+}
+-dontwarn com.cyl.musiclake.api.doupan.DoubanMusic.**
+-keep class com.cyl.musiclake.api.doupan.DoubanMusic {
+    *;
+}
+
+#第三方jar包jaudiotagger
+-dontwarn org.jaudiotagger.**
+-keep class org.jaudiotagger.** {*;}

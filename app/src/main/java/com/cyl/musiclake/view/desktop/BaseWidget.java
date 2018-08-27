@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.widget.RemoteViews;
 
-import com.cyl.musiclake.service.MusicPlayerService;
+import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.utils.LogUtil;
 
 

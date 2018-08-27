@@ -14,6 +14,9 @@ public class Extras {
     public static final String BILLBOARD_ALBUM = "billboard_album";
 
     public static final String ALBUM = "album";
+    public static final String SONG_NAME = "song_name";
+    public static final String PLAY_STATUS = "play_status";
+    public static final String SONG = "song";
 
     public static final String SECRET_ID = "secret_id";
 
@@ -31,7 +34,12 @@ public class Extras {
     public static final String ALBUM_ID = "album_id";
     public static final String ARTIST_ID = "artist_id";
     public static final String PLAYLIST_ID = "playlist_id";
+    public static final String PLAYLIST_TYPE = "playlist_type";
     public static final String PLAYLIST = "playlist";
+    public static final String ARTIST = "artist";
+
+    public static final String MV_TITLE = "mv_title";
+    public static final String MV_ID = "mv_mid";
 
 
     //返回值 playlistDetail
@@ -50,5 +58,8 @@ public class Extras {
     public static final String PLAY_HISTORY = "history";
     public static final String FOLDER_PATH = "folder_path";
     public static final String FOLDER_NAME = "folder_name";
+
+
+    public static final int REQUEST_CODE_EIDT_SONG = 200;
 
 }

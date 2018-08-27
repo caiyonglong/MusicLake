@@ -1,10 +1,9 @@
 package com.cyl.musiclake.api.qq;
 
 import android.util.Base64;
-import android.util.Log;
 
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
@@ -49,9 +48,9 @@ public class QQApiServiceImpl {
                     for (int i = 0; i < songList.size(); i++) {
                         QQApiModel.DataBean.SongBean.ListBean song = songList.get(i);
                         Music music = new Music();
-                        music.setType(Music.Type.QQ);
+                        music.setType(Constants.QQ);
                         music.setOnline(true);
-                        music.setId(song.getSongmid());
+                        music.setMid(song.getSongmid());
                         music.setTitle(song.getSongname());
                         String artists = song.getSinger().get(0).getName();
                         String artistIds = song.getSinger().get(0).getId() + "";
@@ -65,7 +64,7 @@ public class QQApiServiceImpl {
                         music.setAlbumId(String.valueOf(song.getAlbumid()));
                         music.setDuration(song.getPubtime());
                         //qq音乐播放地址前缀,代表音乐品质 M500一般,M800高
-                        music.setPrefix(song.getSize128() != 0 ? "M500" : "M800");
+//                        music.setPrefix(song.getSize128() != 0 ? "M500" : "M800");
                         String cover = "https://y.gtimg.cn/music/photo_new/T002R300x300M000" + song.getAlbummid() + ".jpg";
                         String coverBig = "https://y.gtimg.cn/music/photo_new/T002R500x500M000" + song.getAlbummid() + ".jpg";
                         String coverSmall = "https://y.gtimg.cn/music/photo_new/T002R150x150M000" + song.getAlbummid() + ".jpg";
@@ -88,7 +87,7 @@ public class QQApiServiceImpl {
                     String key = qqApiKey.getKey();
                     String url = Constants.BASE_URL_QQ_MUSIC_URL +
                             "M500" + music.getId() + ".mp3?vkey=" + key + "&guid=" + guid + "&fromtag=30";
-                    Log.e(TAG, url);
+                    LogUtil.e(TAG, url);
                     music.setUri(url);
                     return Observable.fromArray(music);
                 });

@@ -6,8 +6,32 @@
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_search_white_18dp"
         android:orderInCategory="1"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always"
-        android:title="@string/search"/>
-
+        android:title="@string/search"
+        app:showAsAction="always"/>
+    <!--<item-->
+        <!--android:id="@+id/menu_search"-->
+        <!--android:icon="@drawable/ic_filter_list_white_24dp"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/search"-->
+        <!--app:showAsAction="always">-->
+        <!--<menu>-->
+            <!--<group-->
+                <!--android:id="@+id/search_filter_group"-->
+                <!--android:checkableBehavior="single">-->
+                <!--<item-->
+                    <!--android:id="@+id/menu_filter_all"-->
+                    <!--android:checked="true"-->
+                    <!--android:title="@string/all" />-->
+                <!--<item-->
+                    <!--android:id="@+id/menu_filter_qq"-->
+                    <!--android:title="@string/qq" />-->
+                <!--<item-->
+                    <!--android:id="@+id/menu_filter_xiami"-->
+                    <!--android:title="@string/xiami" />-->
+                <!--<item-->
+                    <!--android:id="@+id/menu_filter_netease"-->
+                    <!--android:title="@string/netease" />-->
+            <!--</group>-->
+        <!--</menu>-->
+    <!--</item>-->
 </menu>

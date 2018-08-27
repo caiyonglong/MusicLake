@@ -1,21 +1,20 @@
 package com.cyl.musiclake.ui.music.local.contract;
 
 import com.cyl.musiclake.bean.Album;
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
+import com.cyl.musiclake.base.BaseContract;
 
 import java.util.List;
 
 public interface AlbumsContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
 
         void showAlbums(List<Album> albumList);
 
         void showEmptyView();
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BaseContract.BasePresenter<View> {
 
         void loadAlbums(String action);
 

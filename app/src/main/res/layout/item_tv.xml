@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_8"
+    android:id="@+id/tvTitle"
+    android:background="@drawable/btn_normal"
+    android:padding="@dimen/dp_8"
+    android:textColor="@color/white"
+    tools:text="Helloworld">
+
+</TextView>

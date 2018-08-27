@@ -15,11 +15,11 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.ArtistSongContract;
-import com.cyl.musiclake.ui.music.local.dialog.AddPlaylistDialog;
-import com.cyl.musiclake.ui.music.local.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
+import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.presenter.ArtistSongsPresenter;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * 版本：2.5
  * 专辑
  */
-public class ArtistSongsFragment extends BaseFragment implements ArtistSongContract.View {
+public class ArtistSongsFragment extends BaseFragment<ArtistSongsPresenter> implements ArtistSongContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -51,13 +51,10 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
     private SongAdapter mAdapter;
     private List<Music> musicInfos = new ArrayList<>();
-    private ArtistSongsPresenter mPresenter;
-
 
     @OnClick(R.id.fab)
     void onPlayAll() {
-        PlayManager.setPlayList(musicInfos);
-        PlayManager.play(0);
+        PlayManager.play(0, musicInfos, String.valueOf(artistID));
     }
 
     public static ArtistSongsFragment newInstance(String id, String title, String transitionName) {
@@ -78,7 +75,7 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_recyclerview_collapsingtoolbar;
+        return R.layout.frag_playlist_detail;
     }
 
     @Override
@@ -95,9 +92,6 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
         if (title != null)
             collapsing_toolbar.setTitle(title);
-
-        mPresenter = new ArtistSongsPresenter(getContext());
-        mPresenter.attachView(this);
         setHasOptionsMenu(true);
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -110,14 +104,18 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
 
+    @Override
+    protected void initInjector() {
+        mFragmentComponent.inject(this);
+    }
+
     @SuppressWarnings({"unchecked", "varargs"})
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 List<Music> musicList = adapter.getData();
-                PlayManager.setPlayList(musicList);
-                PlayManager.play(position);
+                PlayManager.play(position,musicList, String.valueOf(artistID));
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -125,8 +123,8 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.setPlayList((List<Music>) adapter.getData());
-                        PlayManager.play(position);
+                        List<Music> musicList = adapter.getData();
+                        PlayManager.play(position,musicList, String.valueOf(artistID));
                         break;
                     case R.id.popup_song_detail:
                         ShowDetailDialog.newInstance((Music) adapter.getItem(position))
@@ -147,12 +145,12 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
 
     @Override
     public void showLoading() {
-
+        super.showLoading();
     }
 
     @Override
     public void hideLoading() {
-
+        super.hideLoading();
     }
 
     @Override
@@ -164,6 +162,7 @@ public class ArtistSongsFragment extends BaseFragment implements ArtistSongContr
     public void showSongs(List<Music> songList) {
         musicInfos = songList;
         mAdapter.setNewData(songList);
+        hideLoading();
     }
 
     @Override

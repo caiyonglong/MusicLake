@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.cyl.musiclake.service.PlayManager;
+import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
 
 public class LyricTextView extends View {
@@ -112,16 +112,16 @@ public class LyricTextView extends View {
                     (getHeight() + height) / 2, mHighLightPaint);
 
         } else {
-            LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + mLyricInfo.song_lines.size());
+            LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + mLyricInfo.songLines.size());
 
-            if (mLyricInfo != null && mLyricInfo.song_lines != null && mLyricInfo.song_lines.size() > 0) {
-                mStartMillis = mLyricInfo.song_lines.get(mCurrentPlayLine).start;
-                if (mCurrentPlayLine >= mLyricInfo.song_lines.size() - 1) {
+            if (mLyricInfo != null && mLyricInfo.songLines != null && mLyricInfo.songLines.size() > 0) {
+                mStartMillis = mLyricInfo.songLines.get(mCurrentPlayLine).start;
+                if (mCurrentPlayLine >= mLyricInfo.songLines.size() - 1) {
                     mEndMillis = PlayManager.getDuration();
                 } else {
-                    mEndMillis = mLyricInfo.song_lines.get(mCurrentPlayLine + 1).start;
+                    mEndMillis = mLyricInfo.songLines.get(mCurrentPlayLine + 1).start;
                 }
-                content = mLyricInfo.song_lines.get(mCurrentPlayLine).content;
+                content = mLyricInfo.songLines.get(mCurrentPlayLine).content;
                 LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + content.length());
 
                 if (content.length() > 0 && mEndMillis > mStartMillis) {
@@ -139,7 +139,7 @@ public class LyricTextView extends View {
                     canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
                             (getHeight() + height) / 2, mHighLightPaint);
                 } else if (mCurrentPlayLine > 0) {
-                    content = mLyricInfo.getSong_lines().get(mCurrentPlayLine - 1).content;
+                    content = mLyricInfo.getSongLines().get(mCurrentPlayLine - 1).content;
                     float tipTextWidth = mTextPaint.measureText(content);
                     Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
                     int height = (int) Math.ceil(fm.descent - fm.top) + 2;
@@ -186,8 +186,8 @@ public class LyricTextView extends View {
         if (lyricInfo != null) {
             mLyricInfo = lyricInfo;
             hasLyric = true;
-            mLineCount = mLyricInfo.song_lines.size();
-            LogUtil.e(TAG, mLineCount + "===" + mLyricInfo.song_lines.toString());
+            mLineCount = mLyricInfo.songLines.size();
+            LogUtil.e(TAG, mLineCount + "===" + mLyricInfo.songLines.toString());
         } else {
             hasLyric = false;
             mDefaultHint = "音乐湖，暂无歌词";
@@ -216,7 +216,7 @@ public class LyricTextView extends View {
     private void scrollToCurrentTimeMillis(long time) {
         int position = 0;
         for (int i = 0, size = mLineCount; i < size; i++) {
-            LyricInfo.LineInfo lineInfo = mLyricInfo.song_lines.get(i);
+            LyricInfo.LineInfo lineInfo = mLyricInfo.songLines.get(i);
             if (lineInfo != null && lineInfo.start > time) {
                 position = i;
                 break;

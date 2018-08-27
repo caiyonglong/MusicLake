@@ -7,6 +7,31 @@ import android.os.Environment;
  */
 public class Constants {
 
+    //歌曲操作区分
+    public static final int OP_LOCAL = 0; //没有歌曲下载、删除、修改(后续会有)、添加到歌单
+    public static final int OP_ONLINE = 1; //没有歌曲删除、修改、添加到歌单
+    public static final int OP_PLAYLIST = 2;//修改(后续会有)、添加到歌单
+
+    //歌曲类型
+    public static final String LOCAL = "local";
+    public static final String QQ = "qq";
+    public static final String XIAMI = "xiami";
+    public static final String BAIDU = "baidu";
+    public static final String NETEASE = "netease";
+
+    //特殊歌单类型
+    public static final String PLAYLIST_LOVE_ID = "love";
+    public static final String PLAYLIST_HISTORY_ID = "history";
+    public static final String PLAYLIST_LOCAL_ID = "local";
+    public static final String PLAYLIST_QUEUE_ID = "queue";
+    public static final String PLAYLIST_DOWNLOAD_ID = "download";
+    //在线歌单
+    public static final String PLAYLIST_CUSTOM_ID = "custom";
+    //百度电台列表
+    public static final String BAIDU_RADIO_LIST = "baidu_radio_list";
+    public static final String NETEASE_ARITIST_LIST = "netease_artist_list";
+
+
     //QQ APP_ID
     public static final String APP_ID = "101454823";
 
@@ -147,31 +172,45 @@ public class Constants {
     /**
      * 百度音乐Api*************************************************
      */
-    public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/v1/restserver/ting?";
+    public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/";
     public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
     public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
+    public static final String METHOD_SEARCH_SUGGESTION = "baidu.ting.search.suggestion";
     public static final String METHOD_MUSIC_INFO = "baidu.ting.song.getInfos";
     public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";
+    public static final String METHOD_SEARCH_MERGE = "baidu.ting.search.merge";
 
     public static final String PARAM_METHOD = "method";
     public static final String PARAM_TYPE = "type";
     public static final String PARAM_SIZE = "size";
-    public static final String PARAM_PAGESIZE = "page_size";
+    public static final String PARAM_PAGE_SIZE = "page_size";
+    public static final String PARAM_PAGE_NO = "page_no";
     public static final String PARAM_OFFSET = "offset";
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
     public static final String PARAM_QUERY = "query";
+
+    public static final String URL_GET_SONG_INFO = "http://music.baidu.com/data/music/links?songIds=";
 
 
     /**
      * 在线歌单接口Api*************************************************
      */
 
-    public static final String BASE_PLAYER_URL = "https://player-node.zzsun.cc/";
-//    public static final String BASE_NETEASE_URL = "http://192.168.123.44:3000";
+    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc";
+    public static final String BASE_TEST_PLAYER_URL = "https://player-test.zzsun.cc/";
+    //    public static final String BASE_NETEASE_URL = "http://192.168.123.44:3000";
     public static final String BASE_NETEASE_URL = "https://netease.api.zzsun.cc/";
-//    public static final String BASE_NETEASE_URL = "http://musicapi.leanapp.cn/";
+    //    public static final String BASE_NETEASE_URL = "http://musicapi.leanapp.cn/";
     //bugly app_id
     public static final String BUG_APP_ID = "fd892b37ea";
+
+    /**
+     * 关于的GitHub地址
+     */
+    public static final String ABOUT_MUSIC_LAKE = "https://github.com/caiyonglong/MusicLake";
+    public static final String ABOUT_MUSIC_LAKE_ISSUES = "https://github.com/caiyonglong/MusicLake/issues/new";
+    public static final String ABOUT_MUSIC_LAKE_URL = "https://github.com/caiyonglong/MusicLake/blob/develop/README.md";
+
 }

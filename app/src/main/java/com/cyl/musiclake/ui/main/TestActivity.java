@@ -1,41 +1,102 @@
 package com.cyl.musiclake.ui.main;
 
-import android.content.DialogInterface;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.Button;
+import android.widget.TextView;
 
+import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.player.PlayManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class TestActivity extends BaseActivity {
+    BaseApiImpl searchApi;
+    @BindView(R.id.tv_show)
+    TextView resultTv;
+    @BindView(R.id.tv_status)
+    TextView statusTv;
 
-    @BindView(R.id.btn_test)
-    Button btnTest;
-
-    @BindView(R.id.webview)
-    WebView mWebView;
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @OnClick(R.id.btn_test)
+    @OnClick(R.id.btn_test1)
     void test() {
-        String ooo = "dasd";
-        Log.e("tt", "data");
-        // 通过Handler发送消息
-        mWebView.post(() -> {
+        searchApi.getTopList("1", result -> {
+            statusTv.setText("getTopList");
+            resultTv.setText(result.toString());
+            return null;
+        });
+    }
 
-            // 调用javascript的callJS()方法
-            mWebView.loadUrl("javascript:callJS()");
-//            mWebView.loadUrl("javascript:searchSong('周杰伦')");
+    @OnClick(R.id.btn_test2)
+    void test2() {
+        searchApi.searchSong("薛之谦", 10, 0, result -> {
+            statusTv.setText("searchSong");
+            resultTv.setText(result.toString());
+            return null;
+        });
+    }
+
+    @OnClick(R.id.btn_test3)
+    void test3() {
+        searchApi.getSongDetail("qq", "001Qu4I30eVFYb", result -> {
+            statusTv.setText("songDetail");
+            resultTv.setText(result.toString());
+            return null;
+        }, null);
+    }
+
+    @OnClick(R.id.btn_test4)
+    void test4() {
+        searchApi.getLyricInfo("qq", "001Qu4I30eVFYb", result -> {
+            statusTv.setText("getLyricInfo");
+            resultTv.setText(result.toString());
+            return null;
+        });
+    }
+
+    @OnClick(R.id.btn_test5)
+    void test5() {
+        Music music = PlayManager.getPlayingMusic();
+        if (music != null) {
+            String type = music.getType();
+            String mid = music.getMid();
+//            searchApi.getComment(type, mid, songComment -> {
+//                statusTv.setText("getComment");
+//                resultTv.setText(songComment.toString());
+//                return null;
+//            });
+        }
+    }
+
+    @OnClick(R.id.btn_test6)
+    void test6() {
+        Music music = PlayManager.getPlayingMusic();
+        if (music != null) {
+            String type = music.getType();
+            String mid = music.getMid();
+            searchApi.getSongUrl(type, mid, result -> {
+                statusTv.setText("getSongUrl");
+                resultTv.setText(result.toString());
+                return null;
+            }, null);
+        }
+    }
+
+    @OnClick(R.id.btn_playlist2)
+    void get() {
+        searchApi.getBatchSongDetail("qq", new String[]{"001Qu4I30eVFYb"}, result -> {
+            statusTv.setText("qq");
+            resultTv.setText(result.toString());
+            return null;
+        });
+    }
+
+    @OnClick(R.id.btn_playlist3)
+    void get1() {
+        searchApi.getBatchSongDetail("netease", new String[]{"559647510", "437608504"}, result -> {
+            statusTv.setText("netease[559647510,437608504]");
+            resultTv.setText(result.toString());
+            return null;
         });
     }
 
@@ -46,46 +107,16 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        WebSettings webSettings = mWebView.getSettings();
-
-        // 设置与Js交互的权限
-        webSettings.setJavaScriptEnabled(true);
-        // 设置允许JS弹窗
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setAllowUniversalAccessFromFileURLs(true);
-        webSettings.setDomStorageEnabled(true);
-
-        // 先载入JS代码
-        // 格式规定为:file:///android_asset/文件名.html
-        mWebView.loadUrl("file:///android_asset/app.html");
-
-        // 由于设置了弹窗检验调用结果,所以需要支持js对话框
-        // webview只是载体，内容的渲染需要使用webviewChromClient类去实现
-        // 通过设置WebChromeClient对象处理JavaScript的对话框
-        //设置响应js 的Alert()函数
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-                AlertDialog.Builder b = new AlertDialog.Builder(TestActivity.this);
-                b.setTitle("Alert");
-                b.setMessage(message);
-                b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-                });
-                b.setCancelable(false);
-                b.create().show();
-                return true;
-            }
-
-        });
 
     }
 
     @Override
     protected void initData() {
+        searchApi = BaseApiImpl.INSTANCE.getInstance(this);
+    }
+
+    @Override
+    protected void initInjector() {
 
     }
 

@@ -1,15 +1,43 @@
 <resources>
     <string name="app_name">音乐湖</string>
-    <string name="near_people">分享人资料</string>
-    <string name="detail_position">位置详情</string>
-
-    <string name="toolbar_title">音乐湖</string>
-    <string name="action_settings">设置</string>
+    <string name="sure">确定</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>
-    <string name="header_author_name">登录音乐湖</string>
+    <!--欢迎界面-->
+    <string name="permission_hint">软件必须获取相关权限</string>
+    <!--主界面-->
+    <string name="login_hint">点我登录</string>
+    <string name="logout_hint">注销登录</string>
+    <string name="action_settings">设置</string>
     <string name="header_author_url">个性标签</string>
+    <string name="widget_standard">音乐湖</string>
+    <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
+    <string name="warning_network">暂不支持添加本地音乐和百度音乐</string>
+    <string name="warning">警告！</string>
+    <string name="resource_error">歌曲资源异常</string>
+    <string name="prompt_login">请先登录！</string>
+    <string name="title_common">通用</string>
+    <string name="title_function">功能</string>
+    <string name="playlist_queue">播放队列</string>
+    <string name="playlist_manager">歌单管理</string>
+    <string name="settings">设置</string>
+    <string name="exit">退出程序</string>
 
+    <!--本地音乐-->
+    <string name="item_local">本地歌曲</string>
+    <string name="item_history">播放历史</string>
+    <string name="item_favorite">我的收藏</string>
+    <string name="item_download">我的下载</string>
+    <string name="local_music">本地歌曲</string>
+
+    <string name="song_num">%1$d 首</string>
+    <string name="default_num">0 首</string>
+    <string name="random_play">随机播放</string>
+    <string name="random_play_num">随机播放(%1$d首)</string>
+
+
+    <string name="near_people">分享人资料</string>
+    <string name="detail_position">位置详情</string>
     <string name="plusone">+1</string>
     <string name="item_clicked" translatable="false">item clicked！</string>
     <string name="item_longclicked" translatable="false">item long clicked！</string>
@@ -29,6 +57,7 @@
     <string name="error_invalid_password">密码异常</string>
     <string name="error_incorrect_password">密码错误</string>
     <string name="error_field_required">学号和密码不能为空</string>
+    <string name="search_lyric">在线搜词</string>
     <string name="action_search">在线搜歌</string>
 
     <!-- 定位-->
@@ -37,9 +66,7 @@
     <string name="gpsrotate">旋转</string>
 
     <!--设置-->
-
     <string name="no_result">对不起，没有搜索到相关数据！</string>
-
 
     <string name="title_activity_settings">设置</string>
     <string name="info_common_settings">通用设置</string>
@@ -95,7 +122,8 @@
     <string name="go">登录</string>
 
     <!-- Transitions -->
-    <string name="transition_avatar">AvatarTransition</string>
+    <string name="transition_cover">CoverTransition</string>
+    <string name="transition_album">AlbumTransition</string>
     <string name="transition_morph_view" translatable="false">morph_view_transition</string>
     <string name="transition_name" translatable="false">square_transition</string>
     <string name="transition_toolbar_name" translatable="false">toolbar_transition</string>
@@ -117,13 +145,16 @@
     <string name="now_play">正在播放</string>
     <string name="unable_to_play">网络不给力,请检查网络!</string>
     <string name="unable_to_play_exception">播放异常</string>
-    <string name="loading">努力加载中...</string>
-    <string name="tip_empty_song">暂无音乐</string>
+    <string name="loading">努力加载中&#8230;</string>
+    <string name="lyric_loading">加载中&#8230;</string>
+    <string name="tip_empty_song">空空如也</string>
     <string name="tip_empty_queue">播放队列为空</string>
     <string name="tip_empty_playlist">暂无歌单，点击右上角新建</string>
     <string name="recent_update">最近更新：%s</string>
 
     <string name="search">搜索</string>
+    <string name="search_history">搜索历史</string>
+    <string name="search_hot">热门搜索</string>
     <string name="search_tips">歌手、歌名</string>
 
     <string name="create_playlist">新建歌单</string>
@@ -133,25 +164,24 @@
 
     <string name="error_connection">网络连接异常，请稍后重试！</string>
     <string name="secret_num">~~ 动态 %1$d ~~</string>
-    <string name="sure">确定</string>
     <string name="error_playing_track">播放出错</string>
     <string name="folders">文件夹</string>
-    <string name="play_time">00:00</string>
+    <string name="play_time">--:--</string>
     <string name="play_no_resource">无音乐</string>
     <string name="play_mode">%1$s("%2$d")</string>
     <string name="play_mode_random">随机播放</string>
     <string name="play_mode_repeat">单曲播放</string>
-    <string name="play_mode_loop">循环播放</string>
+    <string name="play_mode_loop">顺序播放</string>
 
 
     <string name="delete">删除</string>
     <string name="pause">暂停</string>
     <string name="start">开始</string>
-    <string name="tasks_manager_demo_status_loading">加载中...</string>
+    <string name="tasks_manager_demo_status_loading">加载中&#8230;</string>
     <string name="tasks_manager_demo_status_pending">队列中</string>
     <string name="tasks_manager_demo_status_started">开始下载</string>
     <string name="tasks_manager_demo_status_connected">已连接上</string>
-    <string name="tasks_manager_demo_status_progress">下载中...</string>
+    <string name="tasks_manager_demo_status_progress">下载中&#8230;</string>
     <string name="tasks_manager_demo_status_downloading" formatted="false">已下载%d %%</string>
     <string name="tasks_manager_demo_status_error">出错</string>
     <string name="tasks_manager_demo_status_paused">暂停</string>
@@ -165,6 +195,7 @@
     <string name="setting_lyric_des">点击请求悬浮窗权限</string>
     <string name="setting_timing">定时关闭</string>
     <string name="setting_timing_summary">定时关闭</string>
+    <string name="count_down_time">定时关闭播放</string>
 
     <!--about-->
     <string name="title_about">关于音乐湖</string>
@@ -174,23 +205,126 @@
     <string name="about_version">软件版本号</string>
     <string name="about_project">项目地址</string>
     <string name="about_feedback">意见反馈</string>
-    <string name="about_software">关于软件</string>
+    <string name="about_software"><u>关于软件</u></string>
     <string name="about_project_url">https://github.com/caiyonglong/MusicLake</string>
     <string name="share_title">分享</string>
     <string name="browser_title">使用系统浏览器打开</string>
     <string name="share_article_url"><![CDATA[<string name=\"share_article_url\">%1$s分享【%2$s】：%3$s</string>]]></string>
     <string name="artist_detail">查看详情</string>
     <string name="title_test">测试</string>
+
+    <!--歌单-->
     <string name="playlist_name">歌单名</string>
+    <string name="playlist_online">我的歌单</string>
     <string name="playlist_creator">创建者</string>
+    <string name="playlist_rename">重命名歌单</string>
+
 
     <!-- 在线音乐-->
     <string name="playlist_num">%1$s("%2$d")</string>
+    <string name="charts_baidu">百度排行榜</string>
+    <string name="charts_netease">网友精选碟</string>
+    <string name="cate_huayu">华语</string>
+    <string name="cate_gufeng">古风</string>
+    <string name="cate_select">选择分类</string>
+    <string name="cate_all">全部</string>
+    <string name="cate_liuxing">流行</string>
+    <string name="see_all">查看全部</string>
+    <string name="radio">电台列表</string>
+    <string name="hot_artist">热门歌手</string>
+    <string name="genes">流派</string>
+    <string name="radio_list">电台</string>
 
-    <string name="widget_standard">音乐湖</string>
-    <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
-    <string name="resource_error">歌曲资源异常</string>
-    <string name="prompt_login">请先登录！</string>
 
+    <!--通知栏-->
+    <string name="notification_description">通知栏播放控制</string>
+    <string name="notification_channel_id">music_lake_01</string>
+    <string name="song_title">歌曲名</string>
+    <string name="song_artist">歌手名</string>
+    <string name="search_no_results">没有结果</string>
+    <string name="all">所有</string>
+    <string name="qq">qq音乐</string>
+    <string name="xiami">虾米音乐</string>
+    <string name="netease">网易云音乐</string>
+
+    <string name="res_baidu">百度</string>
+    <string name="res_qq">QQ</string>
+    <string name="res_wangyi">网易云</string>
+    <string name="res_xiami">虾米</string>
+    <string name="res_local">本地</string>
+
+    <string name="equalizer">均衡器</string>
+    <string name="artist_tips">歌手 - 专辑</string>
+    <string name="song">歌曲</string>
+    <string name="lyric_default_hint">暂无歌词</string>
+    <string name="add_to_playlist">增加到歌单</string>
+    <string name="share_content">\"我正在使用 音乐湖 听音乐，我觉得很不错，推荐给你用下，链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
+    <string name="share_song_content">\n\n我分享的歌曲是 %1$s 的 %2$s"</string>
+    <string name="feedback_content">==============我正在使用 音乐湖 听音乐==============\n\n Android 版本号: %1$s \n\n 手机型号： %2$s %3$s \n\n反馈问题：\n "</string>
+    <string name="retry">重试</string>
+    <string name="general_error">网络错误</string>
+    <string name="qq_login_tips">QQ登录</string>
+    <string name="login_tips">登录后，可以使用在线同步歌单，Android端、PC端都可使用！</string>
+
+
+    <string name="popup_song_detail">歌曲详情</string>
+    <string name="popup_play_next">下一首播放</string>
+    <string name="popup_add_to_playlist">添加到歌单</string>
+    <string name="popup_detail">查看歌曲信息</string>
+    <string name="popup_download">下载歌曲</string>
+    <string name="popup_delete">删除</string>
+    <string name="popup_detail_edit">编辑歌曲信息</string>
+    <string name="popup_artist">查看歌手</string>
+    <string name="popup_album">查看专辑</string>
+    <string name="popup_share">分享</string>
+
+    <string name="download_add_success">下载任务添加成功</string>
+    <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
+    <string name="download_error">下载地址异常</string>
+    <string name="playlist_delete_success">歌单已删除</string>
+    <string name="play_count">播放：%1$d</string>
+    <string name="publish_time">发布时间：%1$s</string>
+    <string name="play_count_tint">播放</string>
+    <string name="like_count">收藏次数：%1$d</string>
+    <string name="like_count_tint">收藏次数</string>
+    <string name="mv_detail">描述</string>
+    <string name="mv_hot_comment">推荐评论</string>
+    <string name="mv_comment">最新评论</string>
+    <string name="title_activity_player">PlayerActivity</string>
+    <string name="playlist_queue_clear">清空播放队列?</string>
+    <string name="menu_rename">重命名</string>
+    <string name="menu_delete_playlist">删除歌单</string>
+    <string name="menu_other">其他</string>
+    <string name="menu_feature">功能</string>
+    <!--歌词-->
+    <string name="loading_lyric">歌词加载中…</string>
+    <string name="lyric_format">字体样式</string>
+    <string name="lyric_format_color">歌词颜色</string>
+    <string name="lyric_format_size">字体大小</string>
+    <string name="lyric_preview">预览：</string>
+    <string name="lyric_use">应用</string>
+    <string name="lyric_search_result">歌词搜索结果</string>
+    <string name="lyric_search_error">没有搜索到 %1$s 相关歌词</string>
+    <string name="lyric_search_apply">歌词修改成功</string>
+    <string name="love">收藏</string>
+    <string name="song_resource">音乐来源</string>
+    <string name="download_complete">已下载</string>
+    <string name="download_processing">正在下载</string>
+    <string name="download_content">是否将 %1$s 添加到下载队列</string>
+    <string name="dd">暂无歌词</string>
+    <string name="recently_update">最近更新：%1$s</string>
+    <string name="float_settings">请在设置中，打开悬浮窗设置</string>
+    <string name="about_card1_message">嗨! 欢迎使用音乐湖！</string>
+    <string name="about_title">如果你喜欢这个应用，给个Star吧!</string>
+    <string name="about_git_hub">源代码(GitHub)</string>
+    <string name="about_update">检查更新</string>
+    <string name="download_exits">%1$s已在下载列表中…</string>
+
+    <!--编辑TAG-->
+    <string name="tag_title">编辑音乐标签</string>
+    <string name="tag_edit_tips">是否修改歌曲信息？</string>
+    <string name="tag_edit_error">修改歌曲信息失败</string>
+    <string name="tag_edit_success">成功更新歌曲信息！</string>
+    <string name="save">保存</string>
 
 </resources>

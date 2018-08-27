@@ -1,21 +1,22 @@
 package com.cyl.musiclake.ui.music.online.contract;
 
 
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseView;
-import com.cyl.musiclake.api.baidu.BaiduMusicList;
+import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.bean.Playlist;
 
 import java.util.List;
 
 public interface OnlinePlaylistContract {
 
-    interface View extends BaseView {
+    interface View extends BaseContract.BaseView {
         void showErrorInfo(String msg);
 
-        void showOnlineSongs(List<BaiduMusicList.Billboard> artistInfo);
+        void showCharts(List<Playlist> charts);
     }
 
-    interface Presenter extends BasePresenter<View> {
-        void loadOnlinePlaylist();
+    interface Presenter extends BaseContract.BasePresenter<View> {
+        void loadBaiDuPlaylist();
+
+        void loadTopList();
     }
 }

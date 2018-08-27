@@ -4,16 +4,16 @@
     <item
         android:id="@+id/action_delete_playlist"
         android:icon="@drawable/ic_delete"
-        android:title="删除歌单"
+        android:title="@string/menu_delete_playlist"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_rename_playlist"
         android:icon="@drawable/ic_mode_edit"
-        android:title="重命名"
+        android:title="@string/menu_rename"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_share_white"
-        android:title="分享"
-        app:showAsAction="ifRoom" />
+    <!--<item-->
+        <!--android:id="@+id/action_share"-->
+        <!--android:icon="@drawable/ic_share_white"-->
+        <!--android:title="@string/share_title"-->
+        <!--app:showAsAction="ifRoom" />-->
 </menu>

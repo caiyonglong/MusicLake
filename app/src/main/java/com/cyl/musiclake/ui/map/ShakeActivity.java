@@ -10,8 +10,7 @@ import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import com.cyl.musiclake.utils.LogUtil;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,10 +18,10 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.service.MusicPlayerService;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.player.MusicPlayerService;
+import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.utils.ShakeManager;
 
 import java.util.ArrayList;
@@ -35,30 +34,24 @@ import butterknife.BindView;
 /**
  * Created by 永龙 on 2016/3/22.
  */
-public class ShakeActivity extends BaseActivity implements NearContract.View {
+public class ShakeActivity extends BaseActivity<NearPresenter> implements NearContract.View {
 
     @BindView(R.id.shake)
     ImageView imgBackground;
     @BindView(R.id.shake_result)
     RecyclerView shake_result;
-    public List<Location> mydatas = new ArrayList<>();
-
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private LocationAdapter mAdapter;
-
     private MusicPlayerService mService;
 
-    private static MaterialDialog mProgressDialog;
+    private MaterialDialog mProgressDialog;
     private static String user_id;
-
     private SensorManager sensorManager;
     private Vibrator vibrator;
     private VibrationEffect effect;
 
     private final String TAG = "ShakeSensorActivity";
 
-    private NearPresenter mPresenter;
 
     long secondTime = 0;
     long firstTime = 0;
@@ -78,27 +71,25 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void initData() {
-        mPresenter = new NearPresenter();
-        mPresenter.attachView(this);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         effect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-
-        mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         shake_result.setLayoutManager(mLayoutManager);
+    }
 
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
     @Override
     protected void listener() {
-        ShakeManager.with(this).startShakeListener(new ShakeManager.ISensor() {
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onSensorChange(float force) {
-                if (force > 14) {
-                    secondTime = System.currentTimeMillis();
-                    mHandler.postDelayed(jump, 200);
+        ShakeManager.with(this).startShakeListener(force -> {
+            if (force > 14) {
+                secondTime = System.currentTimeMillis();
+                mHandler.postDelayed(jump, 200);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(effect);
                 }
             }
@@ -108,16 +99,16 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
     private boolean isRequest = false;
 
     private void init() {
-        Log.e(TAG, secondTime + "+++++" + firstTime + "摇一摇动画结束");
+        LogUtil.e(TAG, secondTime + "+++++" + firstTime + "摇一摇动画结束");
         if (secondTime - firstTime > 700) {
             firstTime = secondTime;
-            Log.e(TAG, "正在搜索");
+            LogUtil.e(TAG, "正在搜索");
             showLoading("正在搜索......");
             if (!isRequest) {
-                getdata();
+                getData();
             }
         } else if (secondTime - firstTime > 500) {
-            Log.e(TAG, "正在搜索");
+            LogUtil.e(TAG, "正在搜索");
             showLoading("能不能缓一缓,我都受不了了！");
             hideLoading();
         }
@@ -134,7 +125,7 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getdata() {
+    private void getData() {
         isRequest = true;
         Map<String, String> params = new HashMap<String, String>();
         params.put(Constants.FUNC, Constants.SONG_ADD);
@@ -200,7 +191,7 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
             float x = values[0]; // x轴方向的重力加速度，向右为正
             float y = values[1]; // y轴方向的重力加速度，向前为正
             float z = values[2]; // z轴方向的重力加速度，向上为正
-//            Log.i(TAG, "x轴方向的重力加速度" + x + "；y轴方向的重力加速度" + y + "；z轴方向的重力加速度" + z);
+//            LogUtil.d(TAG, "x轴方向的重力加速度" + x + "；y轴方向的重力加速度" + y + "；z轴方向的重力加速度" + z);
             // 一般在这三个方向的重力加速度达到40就达到了摇晃手机的状态。
             int medumValue = 19;// 三星 i9250怎么晃都不会超过20，没办法，只设置19了
             if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) {
@@ -232,10 +223,6 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
 
     }
 
-    @Override
-    public void updateView() {
-
-    }
 
     @Override
     public void showLoading(String msg) {
@@ -248,8 +235,4 @@ public class ShakeActivity extends BaseActivity implements NearContract.View {
         mProgressDialog.show();
     }
 
-    @Override
-    public void showLocations(List<Location> locationList) {
-
-    }
 }

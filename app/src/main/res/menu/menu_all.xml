@@ -2,26 +2,46 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_login_status"
-            android:icon="@drawable/ic_exit" />
 
-        <!--<item-->
-        <!--android:id="@+id/nav_menu_near"-->
-        <!--android:icon="@mipmap/icon_near"-->
-        <!--android:title="附近" />-->
-
-        <item android:title="通用">
+        <item android:title="@string/menu_feature">
             <menu>
                 <item
-                    android:id="@+id/nav_menu_setting"
-                    android:icon="@mipmap/icon_setting"
-                    android:title="设置" />
+                    android:id="@+id/nav_login_status"
+                    android:icon="@drawable/ic_exit"
+                    android:title="@string/login" />
+
                 <item
-                    android:id="@+id/nav_menu_exit"
-                    android:icon="@mipmap/icon_exit"
-                    android:title="退出程序" />
+                    android:id="@+id/nav_menu_playQueue"
+                    android:icon="@drawable/ic_playlist_play"
+                    android:title="@string/playlist_queue" />
+                <item
+                    android:id="@+id/nav_menu_equalizer"
+                    android:icon="@drawable/ic_equalizer_black"
+                    android:title="@string/equalizer" />
             </menu>
         </item>
     </group>
+
+
+    <item android:title="@string/menu_other">
+        <menu>
+            <item
+                android:id="@+id/nav_menu_about"
+                android:icon="@drawable/ic_about"
+                android:title="@string/pref_title_about" />
+            <item
+                android:id="@+id/nav_menu_feedback"
+                android:icon="@drawable/ic_feedback"
+                android:title="@string/about_feedback" />
+            <item
+                android:id="@+id/nav_menu_setting"
+                android:icon="@mipmap/icon_setting"
+                android:title="@string/settings" />
+            <item
+                android:id="@+id/nav_menu_exit"
+                android:icon="@mipmap/icon_exit"
+                android:title="@string/exit" />
+        </menu>
+    </item>
+
 </menu>

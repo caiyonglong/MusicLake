@@ -1,19 +1,20 @@
 package com.cyl.musiclake.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-
-import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
-import net.steamcrafted.materialiconlib.MaterialIconView;
 
 
 /**
@@ -21,12 +22,11 @@ import net.steamcrafted.materialiconlib.MaterialIconView;
  */
 
 public class LocalItemView extends LinearLayout {
-    private MaterialIconView mIcon, mPlay;
+    private ImageView mIcon, mPlay;
     private TextView mName;
     private TextView mDesc;
-    private View mView;
-    private int icon_color;
     private Context mContext;
+    private int position;
 
     public LocalItemView(Context context) {
         super(context, null);
@@ -46,14 +46,14 @@ public class LocalItemView extends LinearLayout {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.LocalItemView);
         String name = ta.getString(R.styleable.LocalItemView_tv_name);
         String desc = ta.getString(R.styleable.LocalItemView_tv_desc);
-        int icon = ta.getInt(R.styleable.LocalItemView_iv_icon, 0);
-        icon_color = ta.getColor(R.styleable.LocalItemView_iv_icon_color, Color.BLACK);
+        Drawable drawable = ta.getDrawable(R.styleable.LocalItemView_iv_icon);
+        ColorStateList mDrawableTintList = ta.getColorStateList(R.styleable.LocalItemView_iv_icon_color);
         ta.recycle();
 
         mContext = context;
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        mView = inflater.inflate(R.layout.item_layout_view, this, true);
+        View mView = inflater.inflate(R.layout.item_layout_view, this, true);
         mIcon = mView.findViewById(R.id.iv_icon);
         mPlay = mView.findViewById(R.id.iv_play);
         mName = mView.findViewById(R.id.tv_name);
@@ -61,31 +61,27 @@ public class LocalItemView extends LinearLayout {
 
         mName.setText(name);
         mDesc.setText(desc);
-        mIcon.setColor(icon_color);
-        if (icon == 0) {
-            mIcon.setIcon(MaterialDrawableBuilder.IconValue.LIBRARY_MUSIC);
-        } else if (icon == 1) {
-            mIcon.setIcon(MaterialDrawableBuilder.IconValue.HEART_OUTLINE);
-        } else if (icon == 2) {
-            mIcon.setIcon(MaterialDrawableBuilder.IconValue.TIMETABLE);
-        } else if (icon == 3) {
-            mIcon.setIcon(MaterialDrawableBuilder.IconValue.ARROW_COLLAPSE_DOWN);
+        mIcon.setImageDrawable(drawable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mIcon.setImageTintList(mDrawableTintList);
+            mIcon.setImageTintMode(PorterDuff.Mode.SRC_ATOP);
         }
 
         mPlay.setOnClickListener(view -> {
             if (listener != null) {
-                listener.click(view);
+                listener.click(view, position);
             }
         });
         mView.setOnClickListener(view -> {
             if (listener != null) {
-                listener.click(view);
+                listener.click(view, position);
             }
         });
     }
 
-    public void setSongsNum(int num) {
-        mDesc.setText(num + " 首");
+    public void setSongsNum(int num, int position) {
+        this.position = position;
+        mDesc.setText(getResources().getString(R.string.song_num, num));
     }
 
     private OnItemClickListener listener;
@@ -95,7 +91,6 @@ public class LocalItemView extends LinearLayout {
     }
 
     public interface OnItemClickListener {
-        void click(View view);
+        void click(View view, int position);
     }
-
 }

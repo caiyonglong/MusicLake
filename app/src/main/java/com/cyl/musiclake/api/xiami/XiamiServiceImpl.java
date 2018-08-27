@@ -50,9 +50,9 @@ public class XiamiServiceImpl {
                     for (int i = 0; i < songs.size(); i++) {
                         XiamiModel.DataBean.SongsBean song = songs.get(i);
                         Music music = new Music();
-                        music.setType(Music.Type.XIAMI);
+                        music.setType(Constants.XIAMI);
                         music.setOnline(true);
-                        music.setId(String.valueOf(song.getSong_id()));
+                        music.setMid(String.valueOf(song.getSong_id()));
                         music.setTitle(song.getSong_name());
                         music.setArtist(song.getArtist_name());
                         music.setArtistId(String.valueOf(song.getArtist_id()));
@@ -65,7 +65,7 @@ public class XiamiServiceImpl {
                         music.setCoverUri(cover);
                         music.setCoverBig(coverBig);
                         music.setCoverSmall(coverSmall);
-                        music.setLrcPath(song.getLyric());
+                        music.setLyric(song.getLyric());
                         musicList.add(music);
                     }
                     LogUtil.e("search", page + "--" + limit + "xiami :" + musicList.size());
@@ -90,9 +90,9 @@ public class XiamiServiceImpl {
                     for (int i = 0; i < songs.size(); i++) {
                         XiamiModel.DataBean.SongsBean song = songs.get(i);
                         Music music = new Music();
-                        music.setType(Music.Type.XIAMI);
+                        music.setType(Constants.XIAMI);
                         music.setOnline(true);
-                        music.setId(String.valueOf(song.getSong_id()));
+                        music.setMid(String.valueOf(song.getSong_id()));
                         music.setTitle(song.getSong_name());
                         music.setArtist(song.getArtist_name());
                         music.setArtistId(String.valueOf(song.getArtist_id()));
@@ -105,7 +105,7 @@ public class XiamiServiceImpl {
                         music.setCoverUri(cover);
                         music.setCoverBig(coverBig);
                         music.setCoverSmall(coverSmall);
-                        music.setLrcPath(song.getLyric());
+                        music.setLyric(song.getLyric());
                         musicList.add(music);
                     }
                     LogUtil.e("search", "xiami :" + musicList.size());
@@ -119,7 +119,7 @@ public class XiamiServiceImpl {
         //本地歌词路径
         String mLyricPath = FileUtils.getLrcDir() + music.getTitle() + "-" + music.getArtist() + ".lrc";
         //网络歌词
-        String mLyricUrl = music.getLrcPath();
+        String mLyricUrl = music.getLyric();
         if (FileUtils.exists(mLyricPath)) {
             return Observable.create(emitter -> {
                 try {

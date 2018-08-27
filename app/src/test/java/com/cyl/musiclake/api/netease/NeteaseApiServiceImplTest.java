@@ -230,21 +230,21 @@ public class NeteaseApiServiceImplTest {
         list.add("云音乐嘻哈榜");
         Map<String, String> maps = new HashMap<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            try {
-                Observable<NeteaseList> qqApiModel
-                        = MusicApi.getTopList(i);
-                int finalI = i;
-
-                qqApiModel.subscribe(qqApi -> {
-                    maps.put(list.get(finalI), qqApi.getCoverImgUrl());
-                });
-            } catch (Exception e) {
-
-            }
-        }
-        for (int i = 0; i < maps.size(); i++) {
-            System.out.println(maps.get(list.get(i)));
-        }
+//        for (int i = 0; i < list.size(); i++) {
+//            try {
+//                Observable<NeteaseList> qqApiModel
+//                        = MusicApi.getTopList(i);
+//                int finalI = i;
+//
+//                qqApiModel.subscribe(qqApi -> {
+//                    maps.put(list.get(finalI), qqApi.getCoverImgUrl());
+//                });
+//            } catch (Exception e) {
+//
+//            }
+//        }
+//        for (int i = 0; i < maps.size(); i++) {
+//            System.out.println(maps.get(list.get(i)));
+//        }
     }
 }

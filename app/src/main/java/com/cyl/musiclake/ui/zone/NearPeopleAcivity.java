@@ -87,6 +87,10 @@ public class NearPeopleAcivity extends BaseActivity {
     }
 
     @Override
+    protected void initInjector() {
+    }
+
+    @Override
     protected void listener() {
 
     }
@@ -124,11 +128,11 @@ public class NearPeopleAcivity extends BaseActivity {
 //                });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mdatas.clear();
-        user_secret_num.setText(getString(R.string.secret_num, 0));
-        MyAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mdatas.clear();
+//        user_secret_num.setText(getString(R.string.secret_num, 0));
+//        MyAdapter.notifyDataSetChanged();
+//    }
 }

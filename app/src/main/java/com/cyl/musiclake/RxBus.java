@@ -42,4 +42,8 @@ public class RxBus {
     public <T> Flowable<T> register(Class<T> clz) {
         return mBus.ofType(clz);
     }
+
+    public void unregister() {
+        mBus.onComplete();
+    }
 }

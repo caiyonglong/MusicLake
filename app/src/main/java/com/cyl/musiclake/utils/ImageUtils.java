@@ -381,7 +381,7 @@ public class ImageUtils {
         options.inSampleSize = inSampleSize;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         byte[] imageInByte = stream.toByteArray();
         ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
         Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);
@@ -389,7 +389,7 @@ public class ImageUtils {
         final Allocation input = Allocation.createFromBitmap(rs, blurTemplate);
         final Allocation output = Allocation.createTyped(rs, input.getType());
         final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        script.setRadius(25f);
+        script.setRadius(10f);
         script.setInput(input);
         script.forEach(output);
         output.copyTo(blurTemplate);

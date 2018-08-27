@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/top_container"
     android:layout_width="match_parent"
     android:layout_height="57dp"
     android:layout_gravity="top"
     android:background="@color/white"
-    android:elevation="5dp"
-    tools:targetApi="lollipop">
+    android:elevation="5dp">
 
     <ProgressBar
         android:id="@+id/song_progress_normal"
@@ -24,20 +22,16 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="2dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/album"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/default_cover"
-            android:contentDescription="@string/album"
-            android:scaleType="fitXY"
-            tools:ignore="RtlHardcoded" />
+            android:layout_margin="@dimen/dp_8"
+            android:src="@drawable/default_cover"
+            android:transitionName="@string/transition_cover" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -75,9 +69,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             app:anim_duration="300"
-            app:bg_color="#ffffff"
+            app:bg_color="@color/translucent"
             app:btn_color="@color/colorPrimary"
             app:gap_width="10" />
 
@@ -88,7 +82,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_marginEnd="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/play_next"
             android:scaleType="fitXY"
             android:src="@drawable/ic_skip_next_black_18dp" />

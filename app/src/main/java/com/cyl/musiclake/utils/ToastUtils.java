@@ -10,17 +10,27 @@ import com.cyl.musiclake.MusicApp;
  * 提示工具类
  */
 public class ToastUtils {
+    private static Toast toast;
 
     public static void show(Context context, String info) {
-        Toast.makeText(context, info, Toast.LENGTH_SHORT).show();
+        if (toast != null)
+            toast.cancel();
+        toast = Toast.makeText(context, info, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public static void show(String info) {
-        Toast.makeText(MusicApp.getAppContext(), info, Toast.LENGTH_SHORT).show();
+        if (toast != null)
+            toast.cancel();
+        toast = Toast.makeText(MusicApp.getAppContext(), info, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 
     public static void show(Context context, int info) {
-        Toast.makeText(context, info + "", Toast.LENGTH_SHORT).show();
+        if (toast != null)
+            toast.cancel();
+        toast = Toast.makeText(context, info + "", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

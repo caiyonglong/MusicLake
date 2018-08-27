@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,7 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * 用户中心
  */
-public class UserCenterActivity extends BaseActivity implements UserContract.View {
+public class UserCenterActivity extends BaseActivity<UserPresenter> implements UserContract.View{
 
     @BindView(R.id.header_img)
     CircleImageView header_img;
@@ -63,7 +62,6 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
     @OnClick(R.id.logout)
     void logout() {
         mPresenter.logout();
-        mPresenter.subscribe();
         finish();
     }
 
@@ -82,8 +80,6 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
     private String photoSaveName;//图pian名
     private String path;//图片全路径
     private User mUserInfo;//图片全路径
-
-    private UserPresenter mPresenter;
 
     @Override
     protected int getLayoutResID() {
@@ -113,9 +109,12 @@ public class UserCenterActivity extends BaseActivity implements UserContract.Vie
 
     @Override
     protected void initData() {
-        mPresenter = new UserPresenter();
-        mPresenter.attachView(this);
         mPresenter.getUserInfo();
+    }
+
+    @Override
+    protected void initInjector() {
+        mActivityComponent.inject(this);
     }
 
 
