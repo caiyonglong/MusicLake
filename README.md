@@ -43,6 +43,7 @@
 
 # 下载
 [点这下载](https://github.com/caiyonglong/MusicLake/releases)
+[蒲公英下载](https://www.pgyer.com/ZIWH)
 
 # 相关项目|音乐API
 - [PC端](https://github.com/sunzongzheng/music)
