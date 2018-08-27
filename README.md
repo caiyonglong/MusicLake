@@ -7,7 +7,7 @@
 - QQ登录、在线歌单同步
 - 百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式
-- 精力有限，需求不饱和都会逐步完善，有兴趣可赏个star静等完善与bug修复，期望的功能也可提issues(https://github.com/caiyonglong/MusicLake/issues)
+- 精力有限，需求不饱和都会逐步完善，有兴趣可赏个star静等完善与bug修复，期望的功能也可提[issues](https://github.com/caiyonglong/MusicLake/issues)
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [蒲公英下载](https://www.pgyer.com/ZIWH)
 
