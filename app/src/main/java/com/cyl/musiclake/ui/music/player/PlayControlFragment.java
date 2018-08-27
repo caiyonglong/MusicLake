@@ -100,8 +100,8 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     private Palette mPalette;
     private Palette.Swatch mSwatch;
     private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
-    public ObjectAnimator operatingAnim;
-    public long currentPlayTime = 0;
+    private ObjectAnimator coverAnimator;
+    private long currentPlayTime = 0;
 
     @OnClick(R.id.skip_next)
     void next() {
@@ -174,7 +174,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     protected void listener() {
         mSeekBar.setOnSeekBarChangeListener(this);
         topContainer.setOnClickListener(v -> {
-            NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(),mIvAlbum);
+            NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(), mIvAlbum);
         });
     }
 
@@ -212,11 +212,11 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
      * 旋转动画
      */
     public void initAlbumPic(View view) {
-        operatingAnim = ObjectAnimator.ofFloat(view, "rotation", 0, 359);
-        operatingAnim.setDuration(20 * 1000);
-        operatingAnim.setRepeatCount(-1);
-        operatingAnim.setRepeatMode(ObjectAnimator.RESTART);
-        operatingAnim.setInterpolator(mLinearInterpolator);
+        coverAnimator = ObjectAnimator.ofFloat(view, "rotation", 0, 359);
+        coverAnimator.setDuration(20 * 1000);
+        coverAnimator.setRepeatCount(-1);
+        coverAnimator.setRepeatMode(ObjectAnimator.RESTART);
+        coverAnimator.setInterpolator(mLinearInterpolator);
     }
 
 
@@ -291,8 +291,8 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @Override
     public void onPause() {
         super.onPause();
-        if (operatingAnim != null) {
-            operatingAnim.pause();
+        if (coverAnimator != null) {
+            coverAnimator.pause();
         }
     }
 
@@ -301,13 +301,13 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
 
-        if (operatingAnim != null) {
+        if (coverAnimator != null) {
             if (PlayManager.isPlaying()) {
-                operatingAnim.setCurrentPlayTime(currentPlayTime);
-                operatingAnim.start();
+                coverAnimator.setCurrentPlayTime(currentPlayTime);
+                coverAnimator.start();
             } else {
-                operatingAnim.cancel();
-                currentPlayTime = operatingAnim.getCurrentPlayTime();
+                coverAnimator.cancel();
+                currentPlayTime = coverAnimator.getCurrentPlayTime();
             }
         }
     }
@@ -327,15 +327,15 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
             mPlayPause.pause();
             mPlayOrPause.pause();
         }
-        if (operatingAnim != null) {
+        if (coverAnimator != null) {
             if (isPlaying) {
-                if (operatingAnim.isStarted()) {
-                    operatingAnim.resume();
+                if (coverAnimator.isStarted()) {
+                    coverAnimator.resume();
                 } else {
-                    operatingAnim.start();
+                    coverAnimator.start();
                 }
             } else {
-                operatingAnim.pause();
+                coverAnimator.pause();
             }
         }
     }
@@ -400,8 +400,8 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @Override
     public void onStart() {
         super.onStart();
-        if (operatingAnim != null && operatingAnim.isPaused()) {
-            operatingAnim.resume();
+        if (coverAnimator != null && coverAnimator.isPaused()) {
+            coverAnimator.resume();
         }
     }
 
@@ -415,6 +415,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     public void onDestroy() {
         super.onDestroy();
         topContainer = null;
+        coverAnimator = null;
         EventBus.getDefault().unregister(this);
     }
 

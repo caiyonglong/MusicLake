@@ -63,10 +63,8 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                     }
 
                     override fun error(msg: String) {
-
                         //登录失败
                         mView?.hideLoading()
-
                         mView?.showErrorInfo(msg)
                     }
                 }

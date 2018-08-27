@@ -2,23 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_login_status"
-            android:icon="@drawable/ic_exit"
-            android:title="@string/login" />
 
-        <item
-            android:id="@+id/nav_menu_playQueue"
-            android:icon="@drawable/ic_playlist_play"
-            android:title="@string/playlist_queue" />
-        <item
-            android:id="@+id/nav_menu_equalizer"
-            android:icon="@drawable/ic_equalizer_black"
-            android:title="@string/equalizer" />
+        <item android:title="@string/menu_feature">
+            <menu>
+                <item
+                    android:id="@+id/nav_login_status"
+                    android:icon="@drawable/ic_exit"
+                    android:title="@string/login" />
 
+                <item
+                    android:id="@+id/nav_menu_playQueue"
+                    android:icon="@drawable/ic_playlist_play"
+                    android:title="@string/playlist_queue" />
+                <item
+                    android:id="@+id/nav_menu_equalizer"
+                    android:icon="@drawable/ic_equalizer_black"
+                    android:title="@string/equalizer" />
+            </menu>
+        </item>
     </group>
+
+
     <item android:title="@string/menu_other">
-        <group>
+        <menu>
             <item
                 android:id="@+id/nav_menu_about"
                 android:icon="@drawable/ic_about"
@@ -35,7 +41,7 @@
                 android:id="@+id/nav_menu_exit"
                 android:icon="@mipmap/icon_exit"
                 android:title="@string/exit" />
-        </group>
+        </menu>
     </item>
 
 </menu>

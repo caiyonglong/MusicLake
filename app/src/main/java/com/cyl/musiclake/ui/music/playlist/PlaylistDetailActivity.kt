@@ -167,7 +167,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                             .input("输入歌单名", it.name, false) { dialog, input -> LogUtil.e("=====", input.toString()) }
                             .onPositive { dialog, _ ->
                                 val title = dialog.inputEditText?.text.toString()
-                                if (title == mPlaylist?.name) {
+                                if (title != mPlaylist?.name) {
                                     mPresenter?.renamePlaylist(it, title)
                                 }
                             }

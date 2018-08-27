@@ -295,6 +295,7 @@
     <string name="menu_rename">重命名</string>
     <string name="menu_delete_playlist">删除歌单</string>
     <string name="menu_other">其他</string>
+    <string name="menu_feature">功能</string>
     <!--歌词-->
     <string name="loading_lyric">歌词加载中…</string>
     <string name="lyric_format">字体样式</string>
