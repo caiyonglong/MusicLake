@@ -1,7 +1,6 @@
 language: android        #语言说明
 jdk: oraclejdk8          #jdk版本
-sudo: required           #权限要求
-env:                 #环境变量
+sudo: false           #权限要求
 global:
 - ANDROID_API=27
 - EMULATOR_API=21
@@ -20,31 +19,25 @@ components:
 # Additional components
 - extra-google-m2repository
 - extra-android-m2repository        # 配置design 库 
-# - addon-google_apis-google-19       # 配置google play services
 - sys-img-armeabi-v7a-android-$ANDROID_API
 - sys-img-armeabi-v7a-android-$EMULATOR_API
-
-# Specify at least one system image,
-# if you need to run emulator(s) during your tests
-#- sys-img-armeabi-v7a-android-26
-#- sys-img-armeabi-v7a-android-17
-
-# Support Library
 - extra-android-m2repository
 - extra-android-support
+
+before_install:
+  - chmod +x gradlew
+
+script:
+  - ./gradlew assembleRelease
 
 before_cache:
  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
 cache:
  directories:
  - $HOME/.gradle/caches/
  - $HOME/.gradle/wrapper/
 
-script:
-  # 生成 APK
-  - ./gradlew assembleRelease
 # 部署
 deploy:
   # 部署到GitHub Release。
