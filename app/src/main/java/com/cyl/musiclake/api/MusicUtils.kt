@@ -83,10 +83,6 @@ object MusicUtils {
             music.mid = it
             music.collectId = it
         }
-        musicInfo.id?.let {
-            music.mid = it
-            music.collectId = it
-        }
         music.title = musicInfo.name
         music.isOnline = true
         music.type = musicInfo.vendor

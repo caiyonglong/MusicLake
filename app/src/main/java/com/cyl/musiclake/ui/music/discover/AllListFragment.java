@@ -27,8 +27,6 @@ public class AllListFragment extends BaseFragment {
     private static final String TAG = "NeteasePlaylistFragment";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     //适配器
     private ArtistListAdapter mArtistAdapter;
     private PlaylistAdapter mPlaylistAdapter;
@@ -97,6 +95,5 @@ public class AllListFragment extends BaseFragment {
 
     @Override
     protected void listener() {
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mSwipeRefreshLayout.setRefreshing(false));
     }
 }
