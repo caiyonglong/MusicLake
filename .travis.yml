@@ -1,61 +1,48 @@
-language: android        #语言说明
-jdk: oraclejdk8          #jdk版本
-sudo: false           #权限要求
+language: android
+jdk: oraclejdk8
+sudo: false
 global:
 - ANDROID_API=27
 - EMULATOR_API=21
 - ANDROID_BUILD_TOOLS=27.0.3
-- ADB_INSTALL_TIMEOUT=5 # minutes
-android:             #Android 环境要求
+- ADB_INSTALL_TIMEOUT=5
+android:
 components:
 - tools
 - platform-tools
-# The BuildTools version used by your project
 - build-tools-$ANDROID_BUILD_TOOLS
-# The SDK version used to compile your project
 - android-$ANDROID_API
 - android-$EMULATOR_API
-
-# Additional components
 - extra-google-m2repository
-- extra-android-m2repository        # 配置design 库 
+- extra-android-m2repository
 - sys-img-armeabi-v7a-android-$ANDROID_API
 - sys-img-armeabi-v7a-android-$EMULATOR_API
 - extra-android-m2repository
 - extra-android-support
-
 licenses:
-- 'android-sdk-preview-license-.+'
-- 'android-sdk-license-.+'
-- 'google-gdk-license-.+'
-
+- android-sdk-preview-license-.+
+- android-sdk-license-.+
+- google-gdk-license-.+
 before_install:
-  - chmod +x gradlew
-
+- chmod +x gradlew
 script:
-  - ./gradlew assembleRelease
-
+- "./gradlew assembleRelease"
 before_cache:
- - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
- - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
- directories:
- - $HOME/.gradle/caches/
- - $HOME/.gradle/wrapper/
-
-# 部署
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 deploy:
-  # 部署到GitHub Release。
-  # 除此之外，Travis CI还支持发布到fir.im、AWS、Google App Engine等
   provider: releases
-  # Github oauth token
-  api_key: ${GH_TOKEN}
-  # 部署文件路径；对于Android就部署生成的 apk 文件
-  file:
-    - app/build/outputs/apk/release/*
-  # 避免 Travis CI在部署之前清空生成的APK文件
+  api_key:
+    secure: VQCGcgZ/AbFTrWP/o/MzfnBtzZEZHkeCXh2F2UYQU0WSgMiP+JzymsR2vezxvFGmAqLRZTouAD3VnHZxfKHkQ4BNwD6gKjyNWnb3U7FRcsy65JP7qvTe9mFME6lO+HUcWPbKZLA+H8vk+FR6QHpBBCYilmXxTJC+oKFe1nlKVOlFZbuSlIF5QthE/hbHIq39SO0SQa5+ZP5o6VAWcK2QjDNL+G6Bhx14MccBhJONSoEauMagsCkv1RbR8/fm2IVjBvh6GVTm+po+ZO21AahjPaaKApgLBo0MFIzpNvDmBfhdJY0MYPEmUELWF/ki9CMx6KA7ZyTXOhwos3HTRh0bjL8q94tyJRKgQki52hvz25HEJMqkEUnvcUezS+kxByRGgENnbZ/gDh1Gi20g++/hwuYfEevdkigtKkjjaf+Q10JINlomRsK9pNk9Sb0CC5Qw1UdQoTEVeXq2E8Craxvdj1DZB2Zg1hst2DGUw4JcgYlokYLsGbt5WdWAU6vOJy0JFNQNwz9YERODRRWSoYckhhwnOEblsFeLBoEaoU5Msz0KlXQ66zbJoUKtHD42yARQnlBI/6oShVpuw9kTcG7fiUDp9pxwhPr5UQy/BM6oClYtBXXAgCaiTdSNQRQYneu2M/5qlaYeI9JLtBxZKYFzm6B6EVGCxzLd+nq1cr2W9AA=
+  file: app/build/outputs/apk/release/*
   skip_cleanup: true
-  # 发布时机
   on:
-    # tags设置为true表示只有在有tag的情况下才部署
     tags: true
+    api_key: ${GH_TOKEN}
+    repo: caiyonglong/MusicLake
+    branch: develop
+
