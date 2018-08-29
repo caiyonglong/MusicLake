@@ -3,7 +3,6 @@ package com.cyl.musiclake.net;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
@@ -175,6 +174,7 @@ public class ApiManager {
                         LogUtil.e("ApiManager ", "Throwable==" + e.getMessage());
                         if (e.getMessage() != null && e.getMessage().contains("401")) {
                             EventBus.getDefault().post(new LoginEvent(false, null));
+                            result.error(MusicApp.getAppContext().getString(R.string.error_connection));
                         } else {
                             if (result != null) {
                                 if (e.getMessage() == null) {

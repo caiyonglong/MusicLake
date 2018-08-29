@@ -78,7 +78,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
             return
         }
-        val observable = MusicApiServiceImpl.getAlbumSongs(Constants.NETEASE, album.albumId.toString(), 30, 0)
+        val observable = MusicApiServiceImpl.getAlbumSongs(album.type.toString(), album.albumId.toString())
         ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
             override fun success(result: MutableList<Music>) {
                 val iterator = result.iterator()

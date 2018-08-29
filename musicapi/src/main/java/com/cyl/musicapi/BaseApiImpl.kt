@@ -179,4 +179,19 @@ object BaseApiImpl {
             }
         }
     }
+
+    /**
+     * 获取专辑详情
+     * id，专辑ID
+     */
+    fun getAlbumDetail(vendor: String, id: String, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("asyn.getAlbumDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+            try {
+                val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                e.message?.let { fail?.invoke(it) }
+            }
+        }
+    }
 }

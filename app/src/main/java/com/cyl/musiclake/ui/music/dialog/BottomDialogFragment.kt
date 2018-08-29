@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
@@ -93,13 +94,11 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun turnToAlbum() {
-        activity?.let { it1 ->
-            if (music != null && music?.albumId != null && music?.album != null) {
-                NavigationHelper.navigateToAlbum(it1,
-                        music?.albumId!!,
-                        music?.album!!, null)
-            }
-        }
+            val album = Album()
+            album.albumId = music?.albumId
+            album.name = music?.album
+            album.type = music?.type
+            NavigationHelper.navigateToPlaylist(mContext, album, null)
     }
 
 

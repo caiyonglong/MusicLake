@@ -95,10 +95,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         radioRsv?.isNestedScrollingEnabled = false
         mRadioAdapter?.bindToRecyclerView(radioRsv)
 
-        discoverContainerView.setOnScrollChangeListener { view: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            LogUtil.e("NestedScrollView", "$scrollY -----${wangChartsRv.layoutManager.height}-- ${wangChartsRv.height}")
-            LogUtil.e("NestedScrollView", "$scrollY -----${discoverContainerView.layoutParams.height}-- ${discoverContainerView.height}")
-        }
 
     }
 
@@ -150,7 +146,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
         mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
             val artist = adapter.data[position] as Artist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, null)
+            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
         }
 
         mRadioAdapter?.setOnItemClickListener { _, view, position ->

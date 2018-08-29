@@ -84,6 +84,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private int mCurrentCounter = 10;
     private int limit = 10;
     private int mOffset = 0;
+    private boolean isSearchOnline = false;
 
 
     @Override
@@ -157,15 +158,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 if (newText.length() == 0) {
                     mPresenter.getSearchHistory();
                     updateHistoryPanel(true);
-                } else {
+                } else if (!isSearchOnline) {
                     searchLocal(newText);
                 }
             }
         });
 
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
-            LogUtil.d(TAG, "onEditorAction() called with: v = [" + v + "], actionId = [" + actionId + "], event = [" + event + "]");
             if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getAction() == EditorInfo.IME_ACTION_SEARCH)) {
+                isSearchOnline = true;
                 search(searchEditText.getText().toString());
                 return true;
             }
@@ -204,6 +205,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 finish();
                 break;
             case R.id.menu_search:
+                isSearchOnline = true;
                 queryString = searchEditText.getText().toString().trim();
                 search(queryString);
                 break;
@@ -219,6 +221,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         item.setChecked(true);
 
         if (!TextUtils.isEmpty(queryString)) {
+            isSearchOnline = true;
             search(queryString);
         }
     }
@@ -245,7 +248,9 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     private void search(String query) {
         if (query != null && query.length() > 0) {
+            showLoading();
             mOffset = 0;
+
             searchResults.clear();
             queryString = query;
             updateHistoryPanel(false);
@@ -270,10 +275,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         searchResults.addAll(list);
         mAdapter.setNewData(searchResults);
         mAdapter.loadMoreComplete();
+        isSearchOnline = false;
         mCurrentCounter = mAdapter.getData().size();
-
         if (searchResults.size() == 0) {
-            showEmptyView();
+            showEmptyState();
         }
         LogUtil.e("search", mCurrentCounter + "--" + mCurrentCounter + "--" + mOffset);
     }
@@ -296,6 +301,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             });
             hotSearchAdapter.setOnItemChildClickListener((adapter, view, position) -> {
                 if (view.getId() == R.id.titleTv) {
+                    isSearchOnline = true;
                     searchEditText.setText(result.get(position).getTitle());
                     searchEditText.setSelection(result.get(position).getTitle().length());
                     search(result.get(position).getTitle());
@@ -321,6 +327,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             });
             historyAdapter.setOnItemChildClickListener((adapter, view, position) -> {
                 if (view.getId() == R.id.history_search) {
+                    isSearchOnline = true;
                     searchEditText.setText(suggestions.get(position).getTitle());
                     searchEditText.setSelection(suggestions.get(position).getTitle().length());
                     search(suggestions.get(position).getTitle());
@@ -335,10 +342,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         }
     }
 
-    @Override
-    public void showEmptyView() {
-        mAdapter.setEmptyView(R.layout.view_song_empty);
-    }
+//    @Override
+//    public void showEmptyView() {
+//        mAdapter.setEmptyView(R.layout.view_song_empty);
+//    }
 
     private void updateHistoryPanel(boolean isShow) {
         if (isShow) {

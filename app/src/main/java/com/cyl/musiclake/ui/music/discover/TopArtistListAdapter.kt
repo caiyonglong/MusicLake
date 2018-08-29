@@ -18,7 +18,7 @@ class TopArtistListAdapter(list: List<Artist>) : BaseQuickAdapter<Artist, BaseVi
         if (artist.name == null)
             return
         helper.setText(R.id.tv_name, artist.name)
-        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, 90), helper.getView(R.id.ic_cover))
+        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, 90), helper.getView(R.id.iv_cover))
     }
 }
 
@@ -26,6 +26,6 @@ class ArtistListAdapter(artistList: MutableList<Artist>) : BaseQuickAdapter<Arti
 
     override fun convert(helper: BaseViewHolder, artist: Artist) {
         helper.setText(R.id.tv_name, artist.name)
-        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, 90), helper.getView(R.id.ic_cover))
+        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, 90), helper.getView(R.id.iv_cover))
     }
 }

@@ -185,10 +185,10 @@ object MusicApiServiceImpl {
      * 获取专辑单曲
      *
      */
-    fun getAlbumSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 20): Observable<MutableList<Music>> {
+    fun getAlbumSongs(vendor: String, id: String): Observable<MutableList<Music>> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getAlbumSongs(vendor, id, offset, limit, {
+                    .getAlbumDetail(vendor, id, {
                         if (it.status) {
                             val musicList = arrayListOf<Music>()
                             it.data.songs.forEach {

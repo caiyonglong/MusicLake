@@ -15,7 +15,6 @@ interface SearchContract {
         fun showHotSearchInfo(list: MutableList<HotSearchBean>)
         fun showSearchHistory(list: MutableList<SearchHistoryBean>)
 
-        fun showEmptyView()
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {
