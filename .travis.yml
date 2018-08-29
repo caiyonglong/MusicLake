@@ -1,0 +1,63 @@
+language: android        #语言说明
+jdk: oraclejdk8          #jdk版本
+sudo: required           #权限要求
+env:                 #环境变量
+global:
+- ANDROID_API=27
+- EMULATOR_API=21
+- ANDROID_BUILD_TOOLS=27.0.3
+- ADB_INSTALL_TIMEOUT=5 # minutes
+android:             #Android 环境要求
+components:
+- tools
+- platform-tools
+# The BuildTools version used by your project
+- build-tools-$ANDROID_BUILD_TOOLS
+# The SDK version used to compile your project
+- android-$ANDROID_API
+- android-$EMULATOR_API
+
+# Additional components
+- extra-google-m2repository
+- extra-android-m2repository        # 配置design 库 
+# - addon-google_apis-google-19       # 配置google play services
+- sys-img-armeabi-v7a-android-$ANDROID_API
+- sys-img-armeabi-v7a-android-$EMULATOR_API
+
+# Specify at least one system image,
+# if you need to run emulator(s) during your tests
+#- sys-img-armeabi-v7a-android-26
+#- sys-img-armeabi-v7a-android-17
+
+# Support Library
+- extra-android-m2repository
+- extra-android-support
+
+before_cache:
+ - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+ - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+ directories:
+ - $HOME/.gradle/caches/
+ - $HOME/.gradle/wrapper/
+
+script:
+  # 生成 APK
+  - ./gradlew assembleRelease
+# 部署
+deploy:
+  # 部署到GitHub Release。
+  # 除此之外，Travis CI还支持发布到fir.im、AWS、Google App Engine等
+  provider: releases
+  # Github oauth token
+  api_key: ${GH_TOKEN}
+  # 部署文件路径；对于Android就部署生成的 apk 文件
+  file:
+    - app/build/outputs/apk/release/*
+  # 避免 Travis CI在部署之前清空生成的APK文件
+  skip_cleanup: true
+  # 发布时机
+  on:
+    # tags设置为true表示只有在有tag的情况下才部署
+    tags: true
