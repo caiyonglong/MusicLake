@@ -166,7 +166,7 @@ object BaseApiImpl {
     }
 
     /**
-     * 获取专辑单曲
+     * 获取歌单信息
      * id，专辑ID
      */
     fun getAlbumSongs(vendor: String, id: String, offset: Int, limit: Int, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {

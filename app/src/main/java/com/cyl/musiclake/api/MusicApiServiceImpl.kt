@@ -6,10 +6,10 @@ import com.cyl.musicapi.bean.NeteaseComment
 import com.cyl.musicapi.bean.SongCommentData
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
-import com.cyl.musiclake.api.doupan.DoubanMusic
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import com.cyl.musiclake.utils.FileUtils
@@ -195,6 +195,33 @@ object MusicApiServiceImpl {
                                 musicList.add(MusicUtils.getSearchMusic(it, vendor))
                             }
                             result.onNext(musicList)
+                            result.onComplete()
+                        } else {
+                            result.onError(Throwable(""))
+                        }
+                    }, {})
+        }
+    }
+
+    /**
+     * 获取专辑单曲
+     *
+     */
+    fun getPlaylistSongs(vendor: String, id: String, offset: Int, limit: Int): Observable<Playlist> {
+        return create { result ->
+            BaseApiImpl.getInstance(MusicApp.mContext)
+                    .getAlbumSongs(vendor, id, offset, limit, {
+                        if (it.status) {
+                            val playlist = Playlist()
+                            playlist.type = Playlist.PT_MY
+                            playlist.name = it.data.detail.name
+                            playlist.des = it.data.detail.desc
+                            playlist.coverUrl = it.data.detail.cover
+                            playlist.pid = it.data.detail.id
+                            it.data.songs.forEach {
+                                playlist.musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                            }
+                            result.onNext(playlist)
                             result.onComplete()
                         } else {
                             result.onError(Throwable(""))

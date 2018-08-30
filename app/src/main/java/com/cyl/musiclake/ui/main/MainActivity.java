@@ -33,6 +33,7 @@ import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
+import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
@@ -244,6 +245,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_playQueue:
                 NavigationHelper.INSTANCE.navigatePlayQueue(this);
+                break;
+            case R.id.nav_menu_import:
+                mTargetClass = ImportPlaylistActivity.class;
                 break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;

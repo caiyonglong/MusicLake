@@ -59,7 +59,11 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     override fun initData() {
         showLoading()
         mPlaylist?.let {
-            mPresenter?.loadPlaylistSongs(it)
+            if (it.musicList.size > 0) {
+                showPlaylistSongs(it.musicList)
+            } else {
+                mPresenter?.loadPlaylistSongs(it)
+            }
         }
         mArtist?.let {
             mPresenter?.loadArtistSongs(it)
@@ -263,7 +267,12 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         super.retryLoading()
         showLoading()
         mPlaylist?.let {
-            mPresenter?.loadPlaylistSongs(it)
+            if (it.musicList.size > 0) {
+                showPlaylistSongs(it.musicList)
+            } else {
+                mPresenter?.loadPlaylistSongs(it)
+            }
+
         }
         mArtist?.let {
             mPresenter?.loadArtistSongs(it)

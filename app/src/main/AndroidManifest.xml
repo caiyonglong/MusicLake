@@ -30,7 +30,6 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-
     <application
         android:name=".MusicApp"
         android:allowBackup="true"
@@ -104,7 +103,6 @@
             android:label="@string/playlist_name"
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
-
         <activity
             android:name=".ui.music.edit.EditMusicActivity"
             android:label="@string/app_name"
@@ -177,6 +175,7 @@
                 <action android:name="com.cyl.music_lake.metachanged" />
                 <action android:name="com.cyl.music_lake.play_state" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_standard" />
@@ -199,6 +198,7 @@
             android:name=".ui.music.player.PlayerActivity"
             android:launchMode="singleTask"
             android:theme="@style/MainActivityTheme" />
+        <activity android:name=".ui.music.importplaylist.ImportPlaylistActivity"></activity>
     </application>
 
 </manifest>

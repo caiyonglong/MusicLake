@@ -326,5 +326,6 @@
     <string name="tag_edit_error">修改歌曲信息失败</string>
     <string name="tag_edit_success">成功更新歌曲信息！</string>
     <string name="save">保存</string>
+    <string name="import_playlist">导入外部歌单</string>
 
 </resources>

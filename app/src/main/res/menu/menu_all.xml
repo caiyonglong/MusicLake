@@ -18,6 +18,10 @@
                     android:id="@+id/nav_menu_equalizer"
                     android:icon="@drawable/ic_equalizer_black"
                     android:title="@string/equalizer" />
+                <item
+                    android:id="@+id/nav_menu_import"
+                    android:icon="@drawable/ic_equalizer_black"
+                    android:title="@string/import_playlist" />
             </menu>
         </item>
     </group>

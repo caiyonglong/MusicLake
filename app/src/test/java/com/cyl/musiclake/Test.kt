@@ -69,7 +69,7 @@ class Test {
             val songName = file.iD3v2Tag.frameMap["TIT2"].toString()
             val singer = file.iD3v2Tag.frameMap["TPE1"].toString()
             val album = file.iD3v2Tag.frameMap["TALB"].toString()
-            println("TIT2"+songName)
+            println("TIT2" + songName)
             println(singer)
             println(album)
         } catch (e: IOException) {
@@ -129,5 +129,40 @@ class Test {
         }
         return file
     }
+
+    /**
+     * 根据分享链接获取歌单Id
+     */
+    private fun getPlaylistId(link: String) {
+        when {
+            link.contains("http://music.163.com") -> {
+                val len = link.lastIndexOf("playlist/") + "playlist/".length
+                val id = link.substring(len, len + link.substring(len).indexOf("/"))
+                println(id)
+            }
+            link.contains("http://y.qq.com") -> {
+                val len = link.lastIndexOf("id=") + "id=".length
+                val id = link.substring(len, len + link.substring(len).indexOf("&"))
+                println(id)
+            }
+            link.contains("https://www.xiami.com") -> {
+                val len = link.lastIndexOf("collect/") + "collect/".length
+                val id = link.substring(len, link.indexOf("?"))
+                println(id)
+            }
+            else -> {
+                println(link)
+            }
+        }
+    }
+
+
+    @org.junit.Test
+    fun testPlaylistId() {
+        getPlaylistId("http://y.qq.com/w/taoge.html?hostuin=620426128&id=2836774592&appshare=android_qq")
+        getPlaylistId("分享 caiyonglong0 的歌单《ty》https://www.xiami.com/collect/362253676?_uxid=92641C646EB643521932E8DCE5A164E5 (分享自@虾米音乐)")
+        getPlaylistId("分享Aphasia_L创建的歌单「华语｜我是成年人 但还是好想哭」: http://music.163.com/playlist/2342878641/36193129/?userid=61615691 (来自@网易云音乐)")
+    }
+
 
 }
