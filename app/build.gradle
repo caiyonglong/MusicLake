@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 repositories {
     mavenCentral()
 }
@@ -84,13 +84,13 @@ dependencies {
 
     //黄油刀
     api 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //对话框
     api 'com.afollestad.material-dialogs:core:0.9.5.0'
     api 'com.afollestad.material-dialogs:commons:0.9.5.0'
     api 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
     api 'com.sothree.slidinguppanel:library:3.4.0'
     api 'com.liulishuo.filedownloader:library:1.7.4'
     api 'com.github.florent37:shapeofview:1.0.4'
@@ -119,7 +119,7 @@ dependencies {
 
     //Eventbus
     api 'org.greenrobot:eventbus:3.1.1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    kapt 'com.google.dagger:dagger-compiler:2.11'
     api project(':musicapi')
 
     //    implementation files('libs/jaudiotagger-2.2.6-SNAPSHOT.jar')
