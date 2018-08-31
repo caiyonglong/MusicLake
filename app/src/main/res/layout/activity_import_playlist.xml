@@ -83,17 +83,32 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/importPlaylistBtn"
+        android:id="@+id/syncBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/app_yellow_dark"
+        android:text="同步"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/importBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlistInputView" />
+
+    <Button
+        android:id="@+id/importBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/app_yellow_dark"
         android:text="导入"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/syncBtn"
         app:layout_constraintTop_toBottomOf="@+id/playlistInputView" />
-
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -109,7 +124,7 @@
         app:layout_constraintBottom_toTopOf="@+id/resultRsv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/importPlaylistBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/syncBtn" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/resultRsv"
@@ -119,7 +134,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/importPlaylistBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/syncBtn" />
 
 
 </android.support.constraint.ConstraintLayout>

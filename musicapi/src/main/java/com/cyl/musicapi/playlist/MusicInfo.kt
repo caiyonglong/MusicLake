@@ -38,3 +38,15 @@ data class MusicInfo(@SerializedName("id")
                      @SerializedName("cp")
                      val cp: Boolean = false)
 
+data class CollectBatchBean(@SerializedName("ids")
+                            val ids: List<String>? = null,
+                            @SerializedName("vendor")
+                            val vendor: String? = null)
+
+data class CollectBatch2Bean(@SerializedName("collects")
+                             val collects: MutableList<CollectDetail>? = null)
+
+data class CollectDetail(@SerializedName("id")
+                         val id: String,
+                         @SerializedName("vendor")
+                         val vendor: String)

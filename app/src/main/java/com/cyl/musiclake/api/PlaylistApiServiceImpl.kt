@@ -1,9 +1,6 @@
 package com.cyl.musiclake.api
 
-import com.cyl.musicapi.playlist.ErrorInfo
-import com.cyl.musicapi.playlist.MusicInfo
-import com.cyl.musicapi.playlist.PlaylistApiService
-import com.cyl.musicapi.playlist.PlaylistInfo
+import com.cyl.musicapi.playlist.*
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
@@ -23,7 +20,7 @@ import io.reactivex.ObservableOnSubscribe
 object PlaylistApiServiceImpl {
     private val TAG = "PlaylistApiServiceImpl"
     private val playlistApiService: PlaylistApiService
-        get() = ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL)
+        get() = ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_TEST_PLAYER_URL)
 
     private val token: String?
         get() = UserStatus.getUserInfo(MusicApp.getAppContext())?.token
@@ -162,8 +159,68 @@ object PlaylistApiServiceImpl {
      */
     fun collectMusic(pid: String, music: Music): Observable<String>? {
         val musicInfo = MusicUtils.getMusicInfo(music)
-//        LogUtil.e(Gson().toJson(musicInfo).toString())
         return playlistApiService.collectMusic(token, pid, musicInfo)
+                .flatMap { it ->
+                    val json = it.string()
+                    Observable.create(ObservableOnSubscribe<String> {
+                        if (json == "{}") {
+                            it.onNext("收藏成功")
+                            it.onComplete()
+                        } else {
+                            try {
+                                val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
+                                it.onNext(errorInfo.msg)
+                                it.onComplete()
+                            } catch (e: Throwable) {
+                                it.onError(Throwable(e.message))
+                            }
+                        }
+                    })
+                }
+    }
+
+    /**
+     * 批量收藏歌曲（同一歌单）
+     * 调用接口成功返回{}
+     * 调用接口失败返回{"msg":""}
+     */
+    fun collectBatchMusic(pid: String, vendor: String, musics: MutableList<Music>?): Observable<String>? {
+        val ids = mutableListOf<String>()
+        musics?.forEach {
+            ids.add(it.mid.toString())
+        }
+        return playlistApiService.collectBatchMusic(token, pid, CollectBatchBean(ids = ids, vendor = vendor))
+                .flatMap { it ->
+                    val json = it.string()
+                    Observable.create(ObservableOnSubscribe<String> {
+                        if (json == "{}") {
+                            it.onNext("收藏成功")
+                            it.onComplete()
+                        } else {
+                            try {
+                                val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
+                                it.onNext(errorInfo.msg)
+                                it.onComplete()
+                            } catch (e: Throwable) {
+                                it.onError(Throwable(e.message))
+                            }
+                        }
+                    })
+                }
+    }
+
+
+    /**
+     * 批量收藏歌曲（不同歌单）
+     * 调用接口成功返回{}
+     * 调用接口失败返回{"msg":""}
+     */
+    fun collectBatch2Music(pid: String, musicList: MutableList<Music>?): Observable<String>? {
+        val collects = mutableListOf<CollectDetail>()
+        musicList?.forEach {
+            it.type?.let { it1 -> it.mid?.let { it2 -> CollectDetail(it2, it1) } }?.let { it2 -> collects.add(it2) }
+        }
+        return playlistApiService.collectBatch2Music(token, pid, CollectBatch2Bean(collects))
                 .flatMap { it ->
                     val json = it.string()
                     Observable.create(ObservableOnSubscribe<String> {

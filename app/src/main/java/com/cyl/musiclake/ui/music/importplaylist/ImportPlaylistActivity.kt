@@ -1,20 +1,23 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.webkit.WebView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApiServiceImpl
+import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.ToastUtils
@@ -25,6 +28,9 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     var mWebView: WebView? = null
     var mAdapter: SongAdapter? = null
+    var name: String? = null
+    var vendor: String? = null
+    var musicList = mutableListOf<Music>()
 
     override fun getLayoutResID(): Int {
         return R.layout.activity_import_playlist
@@ -44,10 +50,30 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     override fun listener() {
         super.listener()
-        importPlaylistBtn.setOnClickListener {
+        syncBtn.setOnClickListener {
             showLoading(true)
             val playlistLink = playlistInputView.editText?.text.toString()
             getPlaylistId(playlistLink)
+        }
+        importBtn.setOnClickListener {
+            if (name == null) {
+                return@setOnClickListener
+            }
+            if (vendor == null) {
+                return@setOnClickListener
+            }
+            if (musicList.size == 0) return@setOnClickListener
+            MaterialDialog.Builder(this)
+                    .title("导入到歌单")
+                    .content(name.toString())
+                    .positiveText("确定")
+                    .negativeText("取消")
+                    .onPositive { dialog, which ->
+                        OnlinePlaylistUtils.createPlaylist(name.toString(), success = {
+                            it.pid?.let { it1 -> PlaylistApiServiceImpl.collectBatchMusic(it1, vendor.toString(), musicList) }
+                        })
+                    }.build()
+
         }
     }
 
@@ -75,6 +101,8 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     }
 
     private fun importMusic(vendor: String, url: String) {
+        this.vendor = vendor
+        this.name = vendor + url
         val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, url, 1, 20)
         ApiManager.request(observable, object : RequestCallBack<Playlist> {
             override fun success(result: Playlist) {
@@ -95,6 +123,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     fun showResultAdapter(result: Playlist) {
         mAdapter = SongAdapter(result.musicList)
+        this.musicList = result.musicList
         resultRsv.adapter = mAdapter
         resultRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mAdapter?.bindToRecyclerView(resultRsv)
@@ -107,7 +136,8 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            BottomDialogFragment.newInstance(result.musicList[position]).show(this@ImportPlaylistActivity) }
+            BottomDialogFragment.newInstance(result.musicList[position]).show(this@ImportPlaylistActivity)
+        }
 
     }
 

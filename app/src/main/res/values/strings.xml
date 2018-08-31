@@ -7,6 +7,7 @@
     <string name="permission_hint">软件必须获取相关权限</string>
     <!--主界面-->
     <string name="login_hint">点我登录</string>
+    <string name="un_login_tips">暂未登录</string>
     <string name="logout_hint">注销登录</string>
     <string name="action_settings">设置</string>
     <string name="header_author_url">个性标签</string>

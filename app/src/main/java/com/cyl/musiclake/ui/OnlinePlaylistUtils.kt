@@ -155,6 +155,30 @@ object OnlinePlaylistUtils {
         })
     }
 
+    /**
+     * 新建歌单
+     */
+    fun createPlaylist(name: String, success: (Playlist) -> Unit) {
+        val mIsLogin = UserStatus.getstatus(MusicApp.getAppContext())
+        if (mIsLogin) {
+            ApiManager.request(
+                    PlaylistApiServiceImpl.createPlaylist(name),
+                    object : RequestCallBack<Playlist> {
+                        override fun success(result: Playlist) {
+                            success.invoke(result)
+                            EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                        }
+
+                        override fun error(msg: String) {
+                            ToastUtils.show(msg)
+                        }
+                    }
+            )
+        } else {
+            ToastUtils.show(MusicApp.getAppContext().getString(R.string.un_login_tips))
+        }
+    }
+
     fun disCollectMusic(pid: String?, music: Music?, success: () -> Unit) {
         if (pid == null) return
         if (music == null) return

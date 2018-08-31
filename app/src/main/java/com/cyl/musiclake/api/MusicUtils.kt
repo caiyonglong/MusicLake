@@ -250,6 +250,7 @@ object MusicUtils {
         return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.mid, music.isCp)
     }
 
+
     /**
      * 获取歌手名
      */

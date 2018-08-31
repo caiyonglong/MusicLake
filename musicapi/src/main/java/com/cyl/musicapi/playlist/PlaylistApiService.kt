@@ -75,6 +75,30 @@ interface PlaylistApiService {
     fun collectMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Body musicInfo: MusicInfo): Observable<ResponseBody>
 
     /**
+     *  批量收藏歌曲(相同同音乐源)
+     *
+     * @param token
+     * @param ids        歌单ids
+     * @param musicInfo 歌曲信息
+     * @return
+     */
+    @POST("playlist/{id}/batch")
+    @Headers("Content-Type: application/json")
+    fun collectBatchMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Body data: Any): Observable<ResponseBody>
+
+    /**
+     * 批量收藏歌曲(不同音乐源)
+     *
+     * @param token
+     * @param ids        歌单ids
+     * @param musicInfo 歌曲信息
+     * @return
+     */
+    @POST("playlist/{id}/batch2")
+    @Headers("Content-Type: application/json")
+    fun collectBatch2Music(@Header("accesstoken") token: String?, @Path("id") id: String, @Body data: Any): Observable<ResponseBody>
+
+    /**
      * 取消收藏歌曲
      *
      * @param token 秘钥
@@ -91,7 +115,7 @@ interface PlaylistApiService {
      * @return
      */
     @GET("auth/qq/android")
-    fun getUserInfo(@Query("access_token") token: String,
+    fun getUserInfo(@Query("access_token") token: String?,
                     @Query("openid") openid: String): Observable<UserInfo>
 
     /**
