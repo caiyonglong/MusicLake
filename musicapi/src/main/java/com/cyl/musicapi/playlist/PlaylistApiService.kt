@@ -17,7 +17,7 @@ interface PlaylistApiService {
      * @return
      */
     @GET("playlist")
-    fun getOnlinePlaylist(@Header("accesstoken") token: String): Observable<ResponseBody>
+    fun getOnlinePlaylist(@Header("accesstoken") token: String?): Observable<ResponseBody>
 
     /**
      * 获取歌单数据
@@ -27,7 +27,7 @@ interface PlaylistApiService {
      * @return
      */
     @GET("playlist/{id}")
-    fun getMusicList(@Header("accesstoken") token: String, @Path("id") id: String): Observable<ResponseBody>
+    fun getMusicList(@Header("accesstoken") token: String?, @Path("id") id: String): Observable<ResponseBody>
 
     /**
      * 删除歌单
@@ -37,7 +37,7 @@ interface PlaylistApiService {
      * @return
      */
     @DELETE("playlist")
-    fun deleteMusic(@Header("accesstoken") token: String, @Query("id") id: String): Observable<ResponseBody>
+    fun deleteMusic(@Header("accesstoken") token: String?, @Query("id") id: String): Observable<ResponseBody>
 
 
     /**
@@ -50,7 +50,7 @@ interface PlaylistApiService {
      */
     @PUT("playlist/{id}")
     @Headers("Content-Type: application/json")
-    fun renameMusic(@Header("accesstoken") token: String, @Path("id") id: String, @Body playlist: PlaylistInfo): Observable<ResponseBody>
+    fun renameMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Body playlist: PlaylistInfo): Observable<ResponseBody>
 
     /**
      * 新建歌单
@@ -60,7 +60,7 @@ interface PlaylistApiService {
      */
     @POST("playlist")
     @Headers("Content-Type: application/json")
-    fun createPlaylist(@Header("accesstoken") token: String, @Body playlist: PlaylistInfo): Observable<ResponseBody>
+    fun createPlaylist(@Header("accesstoken") token: String?, @Body playlist: PlaylistInfo): Observable<ResponseBody>
 
     /**
      * 收藏歌曲
@@ -72,7 +72,7 @@ interface PlaylistApiService {
      */
     @POST("playlist/{id}")
     @Headers("Content-Type: application/json")
-    fun collectMusic(@Header("accesstoken") token: String, @Path("id") id: String, @Body musicInfo: MusicInfo): Observable<ResponseBody>
+    fun collectMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Body musicInfo: MusicInfo): Observable<ResponseBody>
 
     /**
      * 取消收藏歌曲
@@ -81,7 +81,7 @@ interface PlaylistApiService {
      * @return
      */
     @DELETE("playlist/{id}")
-    fun disCollectMusic(@Header("accesstoken") token: String, @Path("id") id: String, @Query("id") songid: String): Observable<ResponseBody>
+    fun disCollectMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Query("id") songid: String): Observable<ResponseBody>
 
     /**
      * 获取用户信息
@@ -93,6 +93,15 @@ interface PlaylistApiService {
     @GET("auth/qq/android")
     fun getUserInfo(@Query("access_token") token: String,
                     @Query("openid") openid: String): Observable<UserInfo>
+
+    /**
+     * 验证用户登录状态是否过期
+     *
+     * @param token
+     * @return
+     */
+    @GET("user")
+    fun checkLoginStatus(@Header("accesstoken") token: String?): Observable<UserInfo>
 
     /**
      * 获取网易云排行榜

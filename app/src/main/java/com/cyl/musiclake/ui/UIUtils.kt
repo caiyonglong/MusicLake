@@ -10,19 +10,19 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.download.TasksManager
+import com.cyl.musiclake.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
-import com.cyl.musiclake.download.ui.TaskItemAdapter
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
@@ -207,18 +207,16 @@ fun Context.addDownloadQueue(result: Music) {
 /**
  * 更新用户Token(主要用于在线歌单)
  */
-fun updateLoginToken(accessToken: String, openId: String) {
-    ApiManager.request(PlaylistApiServiceImpl.login(accessToken, openId),
+fun updateLoginToken() {
+    ApiManager.request(PlaylistApiServiceImpl.checkLoginStatus(),
             object : RequestCallBack<User> {
                 override fun success(result: User?) {
-                    if (result != null) {
-                        //保存用户信息
-                        UserStatus.saveUserInfo(MusicApp.getAppContext(), result)
-                    }
                     EventBus.getDefault().post(LoginEvent(true, result))
                 }
 
                 override fun error(msg: String) {
+                    ToastUtils.show(msg)
+                    EventBus.getDefault().post(LoginEvent(false, null))
                 }
             }
     )

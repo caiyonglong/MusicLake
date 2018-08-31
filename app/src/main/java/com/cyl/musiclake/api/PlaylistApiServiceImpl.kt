@@ -25,8 +25,8 @@ object PlaylistApiServiceImpl {
     private val playlistApiService: PlaylistApiService
         get() = ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL)
 
-    private val token: String
-        get() = UserStatus.getUserInfo(MusicApp.getAppContext()).token
+    private val token: String?
+        get() = UserStatus.getUserInfo(MusicApp.getAppContext())?.token
 
     /**
      * 获取全部歌单
@@ -222,6 +222,28 @@ object PlaylistApiServiceImpl {
                             it.onComplete()
                         } else {
                             it.onError(Throwable("登录异常"))
+                        }
+                    })
+                }
+    }
+
+
+    /**
+     * 获取用户信息，如果token有效，则代表登录有效，反之无效
+     */
+    fun checkLoginStatus(): Observable<User> {
+        return playlistApiService.checkLoginStatus(token)
+                .flatMap { data ->
+                    val user = User()
+                    user.nick = data.nickname
+                    user.name = data.nickname
+                    user.avatar = data.avatar
+                    Observable.create(ObservableOnSubscribe<User> {
+                        if (user.name != null) {
+                            it.onNext(user)
+                            it.onComplete()
+                        } else {
+                            it.onError(Throwable(""))
                         }
                     })
                 }

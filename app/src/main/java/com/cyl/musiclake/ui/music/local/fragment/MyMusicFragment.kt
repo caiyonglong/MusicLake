@@ -78,7 +78,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     override fun loadData() {
         mPresenter?.loadSongs()
-        mPresenter?.loadPlaylist()
+//        mPresenter?.loadPlaylist()
     }
 
 

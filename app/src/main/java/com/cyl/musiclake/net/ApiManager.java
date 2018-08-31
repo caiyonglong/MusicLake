@@ -4,15 +4,17 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
 import com.cyl.musiclake.event.LoginEvent;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -26,6 +28,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.HttpException;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -171,10 +174,19 @@ public class ApiManager {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.e("ApiManager ", "Throwable==" + e.getMessage());
-                        if (e.getMessage() != null && e.getMessage().contains("401")) {
-                            EventBus.getDefault().post(new LoginEvent(false, null));
-                            result.error(MusicApp.getAppContext().getString(R.string.error_connection));
+                        if (e instanceof HttpException) {
+                            try {
+                                String string = ((HttpException) e).response().errorBody().string();
+                                if (string != null) {
+                                    JSONObject jsonObject = new JSONObject(string);
+                                    String error = jsonObject.getString("msg");
+                                    result.error(error);
+                                } else {
+                                    result.error("未知错误");
+                                }
+                            } catch (IOException | JSONException e1) {
+                                e1.printStackTrace();
+                            }
                         } else {
                             if (result != null) {
                                 if (e.getMessage() == null) {

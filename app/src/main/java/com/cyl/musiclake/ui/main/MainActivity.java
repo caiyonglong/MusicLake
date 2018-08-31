@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
@@ -42,13 +41,10 @@ import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.UiError;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -363,8 +359,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * 设置用户状态信息
      */
-    private void setUserStatusInfo() {
-        mIsLogin = UserStatus.getstatus(this);
+    private void setUserStatusInfo(Boolean isLogin) {
+        mIsLogin = isLogin;
         if (mIsLogin) {
             String url = UserStatus.getUserInfo(this).getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
@@ -387,7 +383,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Subscribe
     public void updateUserInfo(LoginEvent event) {
-        setUserStatusInfo();
+        setUserStatusInfo(event.getStatus());
     }
 
     /**
@@ -413,13 +409,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * 检查QQ登录状态
      */
     private void checkLoginStatus() {
-        String token = SPUtils.getAnyByKey(SPUtils.QQ_ACCESS_TOKEN, "");
-        String openId = SPUtils.getAnyByKey(SPUtils.QQ_OPEN_ID, "");
-        if (token.length() > 0 && openId.length() > 0) {
-            updateLoginToken(token, openId);
-        } else {
-            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
-        }
+        updateLoginToken();
+//            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
     }
 
     @Override
