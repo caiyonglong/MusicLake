@@ -54,7 +54,7 @@ public class CreatePlaylistDialog extends DialogFragment {
                 .title("新建歌单")
                 .positiveText("确定")
                 .negativeText("取消")
-                .inputRangeRes(2, 10, R.color.red)
+                .inputRangeRes(2, 20, R.color.red)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input("输入歌单名", "", false, (dialog, input) -> LogUtil.e(TAG, input.toString()))
                 .onPositive((dialog, which) -> {

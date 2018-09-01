@@ -187,23 +187,16 @@ object PlaylistApiServiceImpl {
     fun collectBatchMusic(pid: String, vendor: String, musics: MutableList<Music>?): Observable<String>? {
         val ids = mutableListOf<String>()
         musics?.forEach {
-            ids.add(it.mid.toString())
+            if (!it.isCp) {
+                ids.add(it.mid.toString())
+            }
         }
         return playlistApiService.collectBatchMusic(token, pid, CollectBatchBean(ids = ids, vendor = vendor))
-                .flatMap { it ->
-                    val json = it.string()
+                .flatMap { result ->
                     Observable.create(ObservableOnSubscribe<String> {
-                        if (json == "{}") {
+                        if (result.failedList != null) {
                             it.onNext("收藏成功")
                             it.onComplete()
-                        } else {
-                            try {
-                                val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
-                                it.onNext(errorInfo.msg)
-                                it.onComplete()
-                            } catch (e: Throwable) {
-                                it.onError(Throwable(e.message))
-                            }
                         }
                     })
                 }
@@ -221,20 +214,11 @@ object PlaylistApiServiceImpl {
             it.type?.let { it1 -> it.mid?.let { it2 -> CollectDetail(it2, it1) } }?.let { it2 -> collects.add(it2) }
         }
         return playlistApiService.collectBatch2Music(token, pid, CollectBatch2Bean(collects))
-                .flatMap { it ->
-                    val json = it.string()
+                .flatMap { result ->
                     Observable.create(ObservableOnSubscribe<String> {
-                        if (json == "{}") {
+                        if (result.failedList != null) {
                             it.onNext("收藏成功")
                             it.onComplete()
-                        } else {
-                            try {
-                                val errorInfo = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)
-                                it.onNext(errorInfo.msg)
-                                it.onComplete()
-                            } catch (e: Throwable) {
-                                it.onError(Throwable(e.message))
-                            }
                         }
                     })
                 }

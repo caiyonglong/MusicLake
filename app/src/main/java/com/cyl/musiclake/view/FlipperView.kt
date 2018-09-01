@@ -90,20 +90,12 @@ class FlipperView : View {
 
             canvas?.drawCircle(centerX, centerY, radius + widths[i].toFloat(), mCirclePaint)
 
-            Log.e("draw ", "--" + widths[i].toFloat() + "--" + i)
-
             if (widths[i] < maxLength - radius) {
                 alphas[i] = (200 - (200f / (maxLength - radius) * widths[i])).toInt()
                 widths[i] = widths[i] + 1
             }
 
         }
-//        Log.e("draw widths", "--" + widths[widths.size - 1].toFloat() + "--" + (centerX - radius).toInt())
-//        if (widths[widths.size - 1] == (maxLength - radius).toInt() / 10) {
-//            widths.add(0)
-//            alphas.add(200)
-//            colors.add(getColorInt())
-//        }
 
         if (widths.size >= maxLength - radius) {
             widths.removeAt(0)
@@ -144,6 +136,16 @@ class FlipperView : View {
         //距离圆形最远距离
         maxLength = Math.sqrt(Math.pow(centerX.toDouble(), 2.0) + Math.pow(centerY.toDouble(), 2.0)).toFloat()
 
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        isStartAnim = true
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        isStartAnim = false
     }
 
 }

@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.view.View
 import android.webkit.WebView
 import com.afollestad.materialdialogs.MaterialDialog
@@ -14,6 +15,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
@@ -22,11 +24,11 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_import_playlist.*
+import org.greenrobot.eventbus.EventBus
 
 
 class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
-    var mWebView: WebView? = null
     var mAdapter: SongAdapter? = null
     var name: String? = null
     var vendor: String? = null
@@ -37,12 +39,9 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     }
 
     override fun initView() {
-
     }
 
     override fun initData() {
-        mWebView = WebView(this)
-
     }
 
     override fun initInjector() {
@@ -57,22 +56,41 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         }
         importBtn.setOnClickListener {
             if (name == null) {
+                ToastUtils.show("请先同步获取歌曲！")
                 return@setOnClickListener
             }
             if (vendor == null) {
+                ToastUtils.show("请先同步获取歌曲！")
                 return@setOnClickListener
             }
             if (musicList.size == 0) return@setOnClickListener
             MaterialDialog.Builder(this)
-                    .title("导入到歌单")
-                    .content(name.toString())
+                    .title("是否将${musicList.size}首歌导入到歌单")
                     .positiveText("确定")
                     .negativeText("取消")
-                    .onPositive { dialog, which ->
-                        OnlinePlaylistUtils.createPlaylist(name.toString(), success = {
-                            it.pid?.let { it1 -> PlaylistApiServiceImpl.collectBatchMusic(it1, vendor.toString(), musicList) }
+                    .inputRangeRes(2, 20, R.color.red)
+                    .input("请输入歌单名", name.toString(), false) { _, _ -> }
+                    .onPositive { dialog1, _ ->
+                        val title = dialog1.inputEditText?.text.toString()
+                        OnlinePlaylistUtils.createPlaylist(title, success = {
+                            it.pid?.let { it1 ->
+                                ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(it1, vendor.toString(), musicList), object : RequestCallBack<String> {
+                                    override fun success(result: String?) {
+                                        this@ImportPlaylistActivity.finish()
+                                        ToastUtils.show(result)
+                                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                                    }
+
+                                    override fun error(msg: String?) {
+                                        ToastUtils.show(msg)
+                                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                                    }
+
+                                })
+                            }
                         })
                     }.build()
+                    .show()
 
         }
     }
@@ -95,18 +113,24 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 importMusic("xiami", id)
             }
             else -> {
-                ToastUtils.show("分享链接异常，解析失败！")
+                ToastUtils.show("请输入有效的链接！")
             }
         }
     }
 
     private fun importMusic(vendor: String, url: String) {
         this.vendor = vendor
-        this.name = vendor + url
         val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, url, 1, 20)
         ApiManager.request(observable, object : RequestCallBack<Playlist> {
             override fun success(result: Playlist) {
                 showLoading(false)
+                musicList.clear()
+                result.musicList?.forEach {
+                    if (!it.isCp) {
+                        musicList.add(it)
+                    }
+                }
+                result.musicList = musicList
                 showResultAdapter(result)
             }
 
@@ -123,7 +147,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     fun showResultAdapter(result: Playlist) {
         mAdapter = SongAdapter(result.musicList)
-        this.musicList = result.musicList
+        this.name = result.name
         resultRsv.adapter = mAdapter
         resultRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mAdapter?.bindToRecyclerView(resultRsv)

@@ -27,7 +27,6 @@ object BaseApiImpl {
 
     fun initWebView(context: Context) {
         try {
-
             mWebView = DWebView(context)
             mWebView?.addJavascriptObject(object : Any() {
                 @JavascriptInterface

@@ -38,17 +38,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/import_playlist_tips_tv" />
 
-    <TextView
+    <LinearLayout
         android:id="@+id/textView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:text="打开歌单页，先点击“分享按钮”，再点击“复制链接”，然后回到音乐湖"
-        android:textColor="@color/black"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/import_playlist_tips_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/import_playlist_tips_tv">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打开QQ音乐、网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/import_playlist_tips_tv" />
+    </LinearLayout>
 
 
     <TextView
@@ -134,7 +143,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/syncBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/importBtn" />
 
 
 </android.support.constraint.ConstraintLayout>

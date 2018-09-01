@@ -84,7 +84,7 @@ interface PlaylistApiService {
      */
     @POST("playlist/{id}/batch")
     @Headers("Content-Type: application/json")
-    fun collectBatchMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Body data: Any): Observable<ResponseBody>
+    fun collectBatchMusic(@Header("accesstoken") token: String?, @Path("id") id: String, @Body data: Any): Observable<CollectResult>
 
     /**
      * 批量收藏歌曲(不同音乐源)
@@ -96,7 +96,7 @@ interface PlaylistApiService {
      */
     @POST("playlist/{id}/batch2")
     @Headers("Content-Type: application/json")
-    fun collectBatch2Music(@Header("accesstoken") token: String?, @Path("id") id: String, @Body data: Any): Observable<ResponseBody>
+    fun collectBatch2Music(@Header("accesstoken") token: String?, @Path("id") id: String, @Body data: Any): Observable<CollectResult>
 
     /**
      * 取消收藏歌曲

@@ -166,7 +166,6 @@ object OnlinePlaylistUtils {
                     object : RequestCallBack<Playlist> {
                         override fun success(result: Playlist) {
                             success.invoke(result)
-                            EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
                         }
 
                         override fun error(msg: String) {

@@ -50,3 +50,8 @@ data class CollectDetail(@SerializedName("id")
                          val id: String,
                          @SerializedName("vendor")
                          val vendor: String)
+
+data class CollectResult(@SerializedName("failedList")
+                         val failedList: List<String>?)
+
+

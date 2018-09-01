@@ -60,10 +60,10 @@ public class AjaxHandler {
                 String key = (String) iterator.next();
                 String value = headers.getString(key);
                 String lKey = key.toLowerCase();
-                if (lKey.equals("cookie")) {
-                    // Here you can use CookieJar to manage cookie in a unified way with you native code.
-                    continue;
-                }
+//                if (lKey.equals("cookie")) {
+//                    // Here you can use CookieJar to manage cookie in a unified way with you native code.
+//                    continue;
+//                }
                 if (lKey.toLowerCase().equals("content-type")) {
                     contentType = value;
                 }
@@ -104,7 +104,6 @@ public class AjaxHandler {
                     responseData.put("statusCode", response.code());
                     responseData.put("statusMessage", response.message());
                     Map<String, List<String>> responseHeaders = response.headers().toMultimap();
-//                    responseHeaders.remove(null);
                     responseData.put("headers", responseHeaders);
                     handler.complete(new JSONObject(responseData).toString());
                 }
