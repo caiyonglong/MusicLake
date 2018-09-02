@@ -1,9 +1,7 @@
 package com.cyl.musiclake.ui.music.discover
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
@@ -13,14 +11,9 @@ import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity
-import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
-import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_discover.*
-import java.util.*
 
 
 /**
@@ -31,13 +24,12 @@ import java.util.*
  */
 class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
-    //    private var mBaiduAdapter: TopListAdapter? = null
     private var mNeteaseAdapter: TopPlaylistAdapter? = null
     private var mArtistListAdapter: TopArtistListAdapter? = null
     private var mRadioAdapter: BaiduRadioAdapter? = null
-    private val playlist = ArrayList<Playlist>()
-    private val artists = ArrayList<Artist>()
-    private var channels: List<Playlist> = ArrayList()
+    private var playlist = mutableListOf<Playlist>()
+    private var artists = mutableListOf<Artist>()
+    private var channels = mutableListOf<Playlist>()
 
     fun toCatTagAll() {
         AllCategoryFragment().apply {
@@ -61,15 +53,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun initViews() {
-        //初始化列表
-//        baiChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
-//        //适配器
-//        mBaiduAdapter = TopListAdapter(playlist)
-//        baiChartsRv?.adapter = mBaiduAdapter
-//        baiChartsRv?.isFocusable = false
-//        baiChartsRv?.isNestedScrollingEnabled = false
-//        mBaiduAdapter?.bindToRecyclerView(baiChartsRv)
-
         wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
         //适配器
         mNeteaseAdapter = TopPlaylistAdapter(playlist)
@@ -95,18 +78,16 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         radioRsv?.isNestedScrollingEnabled = false
         mRadioAdapter?.bindToRecyclerView(radioRsv)
 
-
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.seeAllArtistTv -> {
-                activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.NETEASE_ARITIST_LIST)) }
+                activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.NETEASE_ARITIST_LIST, artists, channels)) }
             }
             R.id.seeAllRadioTv -> {
-                activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST)) }
+                activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST, artists, channels)) }
             }
-//            R.id.seeAllBaiTv -> activity?.let { NavigationHelper.navigateFragment(it, BaiduPlaylistFragment.newInstance()) }
             R.id.catTag1Tv -> {
                 updateCate("华语")
             }
@@ -125,20 +106,9 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun loadData() {
-//        mPresenter?.loadBaidu()
-        mPresenter?.loadNetease("全部")
-        mPresenter?.loadArtists()
-        mPresenter?.loadRaios()
     }
 
     override fun listener() {
-//        mBaiduAdapter?.setOnItemClickListener { adapter, view, position ->
-//            val playlist = adapter.getItem(position) as Playlist?
-//            val intent = Intent(activity, BaiduMusicListActivity::class.java)
-//            intent.putExtra(Extras.PLAYLIST, playlist)
-//            startActivity(intent)
-//        }
-
         mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
             val playlist = adapter.data[position] as Playlist
             NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
@@ -157,39 +127,44 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         cateTagTv.setOnClickListener(this)
         catTag1Tv.setOnClickListener(this)
         catTag2Tv.setOnClickListener(this)
-//        seeAllBaiTv.setOnClickListener(this)
         seeAllRadioTv.setOnClickListener(this)
         seeAllArtistTv.setOnClickListener(this)
     }
 
     override fun onLazyLoad() {
-
+        showLoading()
+        mPresenter?.loadNetease("全部")
+        mPresenter?.loadArtists()
+        mPresenter?.loadRaios()
     }
 
     override fun showEmptyView() {
-
     }
 
-    override fun showBaiduCharts(charts: List<Playlist>) {
-//        mBaiduAdapter?.setNewData(charts)
+    override fun showBaiduCharts(charts: MutableList<Playlist>) {
     }
 
-    override fun showNeteaseCharts(charts: List<Playlist>) {
+    override fun showNeteaseCharts(charts: MutableList<Playlist>) {
+        hideLoading()
+        playlistView.visibility = View.VISIBLE
         mNeteaseAdapter?.setNewData(charts)
     }
 
-    override fun showArtistCharts(charts: List<Artist>) {
+    override fun showArtistCharts(charts: MutableList<Artist>) {
+        hideLoading()
+        artistView.visibility = View.VISIBLE
+        this.artists = charts
         mArtistListAdapter?.setNewData(charts)
     }
 
-    override fun showRadioChannels(channels: List<Playlist>) {
+    override fun showRadioChannels(channels: MutableList<Playlist>) {
+        hideLoading()
+        radioView.visibility = View.VISIBLE
         this.channels = channels
         mRadioAdapter?.setNewData(channels)
     }
 
     companion object {
-
-        private val TAG = "FoundFragment"
 
         fun newInstance(): DiscoverFragment {
             val args = Bundle()

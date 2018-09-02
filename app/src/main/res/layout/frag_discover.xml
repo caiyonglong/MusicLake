@@ -11,88 +11,14 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/cateTagView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_8"
-            android:alpha="0"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:text="@string/charts_netease"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/catTag11Tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:padding="10dp"
-                android:text="@string/cate_huayu"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/sp_12" />
-
-            <View
-                android:layout_width="@dimen/dp_1"
-                android:layout_height="@dimen/dp_20"
-                android:background="@color/divider_line" />
-
-            <TextView
-                android:id="@+id/catTag12Tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:padding="10dp"
-                android:text="@string/cate_liuxing"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/sp_12" />
-
-            <View
-                android:layout_width="@dimen/dp_1"
-                android:layout_height="@dimen/dp_20"
-                android:background="@color/divider_line" />
-
-            <TextView
-                android:id="@+id/catTag13Tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:padding="10dp"
-                android:text="@string/cate_gufeng"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/sp_12" />
-
-
-            <TextView
-                android:id="@+id/cateTag10Tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_8"
-                android:layout_marginStart="@dimen/dp_8"
-                android:background="@drawable/btn_more_bg"
-                android:drawableEnd="@drawable/ic_navigate_next"
-                android:gravity="center"
-                android:paddingBottom="@dimen/dp_2"
-                android:paddingEnd="@dimen/dp_8"
-                android:paddingStart="@dimen/dp_8"
-                android:paddingTop="@dimen/dp_2"
-                android:text="@string/cate_all"
-                android:textColor="@color/colorAccent" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/artistView"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -134,6 +60,8 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/radioView"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
@@ -221,6 +149,8 @@
             <!--</LinearLayout>-->
 
             <LinearLayout
+                android:id="@+id/playlistView"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
@@ -320,6 +250,7 @@
 
         </LinearLayout>
 
+        <include layout="@layout/item_loading" />
     </FrameLayout>
 
 

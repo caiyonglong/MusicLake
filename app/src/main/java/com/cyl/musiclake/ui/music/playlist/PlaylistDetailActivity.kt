@@ -75,7 +75,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun setToolbarTitle(): String? {
         mPlaylist = intent.getParcelableExtra(Extras.PLAYLIST)
-        mArtist = intent.getSerializableExtra(Extras.ARTIST) as Artist?
+        mArtist = intent.getParcelableExtra(Extras.ARTIST)
         mAlbum = intent.getSerializableExtra(Extras.ALBUM) as Album?
         mPlaylist?.let {
             title = it.name

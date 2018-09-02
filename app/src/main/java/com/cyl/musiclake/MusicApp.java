@@ -21,6 +21,7 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.tauth.Tencent;
@@ -56,6 +57,7 @@ public class MusicApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LeakCanary.install(this);
         sInstance = this;
         mContext = this;
         initApplicationComponent();

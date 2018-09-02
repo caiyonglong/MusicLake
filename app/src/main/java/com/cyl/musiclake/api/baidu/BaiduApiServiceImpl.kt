@@ -23,7 +23,7 @@ object BaiduApiServiceImpl {
     //    http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.0.7.1&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2
 
     //获取榜单
-    fun getOnlinePlaylist(): Observable<List<Playlist>> {
+    fun getOnlinePlaylist(): Observable<MutableList<Playlist>> {
         val params = HashMap<String, String>()
         params[Constants.PARAM_METHOD] = Constants.METHOD_CATEGORY
         params["operator"] = "1"
@@ -52,7 +52,7 @@ object BaiduApiServiceImpl {
                 playlist.type
                 playlists.add(playlist)
             }
-            Observable.create(ObservableOnSubscribe<List<Playlist>> {
+            Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {
                 it.onNext(playlists)
                 it.onComplete()
             })

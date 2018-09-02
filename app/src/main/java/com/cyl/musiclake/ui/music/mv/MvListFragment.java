@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class MvListFragment extends BaseFragment<MvListPresenter> implements MvListContract.View {
+public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements MvListContract.View {
 
     private static final String TAG = "BaiduPlaylistFragment";
     @BindView(R.id.recyclerView)
@@ -81,14 +82,7 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
 
     @Override
     protected void loadData() {
-        showLoading();
-        mvList.clear();
-        if (mvType.equals("rank")) {
-            mPresenter.loadMv(0);
-        } else {
-            mAdapter.setEnableLoadMore(false);
-            mPresenter.loadRecentMv(30);
-        }
+
     }
 
     @Override
@@ -116,6 +110,18 @@ public class MvListFragment extends BaseFragment<MvListPresenter> implements MvL
     @Override
     public void hideLoading() {
         super.hideLoading();
+    }
+
+    @Override
+    public void onLazyLoad() {
+        showLoading();
+        mvList.clear();
+        if (mvType.equals("rank")) {
+            mPresenter.loadMv(0);
+        } else {
+            mAdapter.setEnableLoadMore(false);
+            mPresenter.loadRecentMv(30);
+        }
     }
 
 

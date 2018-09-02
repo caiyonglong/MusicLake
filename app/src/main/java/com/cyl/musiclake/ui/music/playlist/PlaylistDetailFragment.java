@@ -86,7 +86,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public static PlaylistDetailFragment newInstance(Artist artist) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable(Extras.ARTIST, artist);
+        args.putParcelable(Extras.ARTIST, artist);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,8 +107,8 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     @Override
     public void initViews() {
         rootView.setFitsSystemWindows(true);
-        mPlaylist = (Playlist) getArguments().getParcelable(Extras.PLAYLIST);
-        mArtist = (Artist) getArguments().getSerializable(Extras.ARTIST);
+        mPlaylist = getArguments() != null ? getArguments().getParcelable(Extras.PLAYLIST) : null;
+        mArtist = getArguments() != null ? getArguments().getParcelable(Extras.ARTIST) : null;
         mAlbum = (Album) getArguments().getSerializable(Extras.ALBUM);
 
         if (mPlaylist != null) title = mPlaylist.getName();

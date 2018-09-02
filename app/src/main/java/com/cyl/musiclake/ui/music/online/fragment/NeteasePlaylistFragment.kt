@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseFragment
+import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity
@@ -20,7 +21,8 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class NeteasePlaylistFragment : BaseFragment<OnlinePlaylistPresenter>(), OnlinePlaylistContract.View {
+class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), OnlinePlaylistContract.View {
+
     //适配器
     private var mAdapter: OnlineAdapter? = null
     private var allPlaylist = mutableListOf<Playlist>()
@@ -45,10 +47,13 @@ class NeteasePlaylistFragment : BaseFragment<OnlinePlaylistPresenter>(), OnlineP
         mFragmentComponent.inject(this)
     }
 
-
-    override fun loadData() {
+    override fun onLazyLoad() {
         mPresenter?.loadTopList()
         mPresenter?.loadBaiDuPlaylist()
+    }
+
+
+    override fun loadData() {
     }
 
     override fun listener() {

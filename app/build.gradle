@@ -24,10 +24,10 @@ android {
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
-//        ndk {
+        ndk {
             //设置支持的SO库架构
-//            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-//        }
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -121,6 +121,12 @@ dependencies {
     api 'org.greenrobot:eventbus:3.1.1'
     kapt 'com.google.dagger:dagger-compiler:2.11'
     api project(':musicapi')
+
+    //leakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+    // Optional, if you use support library fragments:
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
 
     //    implementation files('libs/jaudiotagger-2.2.6-SNAPSHOT.jar')
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')

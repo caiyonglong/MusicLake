@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.discover;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -9,17 +10,20 @@ import android.view.View;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
 /**
  * 功能：在线排行榜
- * 作者：yonglong on 2016/8/11 18:14
  * 邮箱：643872807@qq.com
- * 版本：2.5
+ * 版本：4.1.3
  */
 public class AllListFragment extends BaseFragment {
 
@@ -31,19 +35,25 @@ public class AllListFragment extends BaseFragment {
     private PlaylistAdapter mPlaylistAdapter;
 
     private String type;
+    private List<Artist> artistList = new ArrayList<>();
+    private List<Playlist> playlistList = new ArrayList<>();
 
     @Override
     protected String getToolBarTitle() {
-        type = getArguments().getString(Extras.PLAYLIST, Constants.NETEASE_ARITIST_LIST);
+        type = getArguments().getString(Extras.PLAYLIST_TYPE, Constants.NETEASE_ARITIST_LIST);
+        artistList = getArguments().getParcelableArrayList(Extras.ARTIST);
+        playlistList = getArguments().getParcelableArrayList(Extras.PLAYLIST);
         if (type.equals(Constants.NETEASE_ARITIST_LIST))
             return getString(R.string.hot_artist);
         else
             return getString(R.string.radio);
     }
 
-    public static AllListFragment newInstance(String type) {
+    public static AllListFragment newInstance(String type, List<Artist> artists,List<Playlist> playlists) {
         Bundle args = new Bundle();
-        args.putString(Extras.PLAYLIST, type);
+        args.putString(Extras.PLAYLIST_TYPE, type);
+        args.putParcelableArrayList(Extras.ARTIST, (ArrayList<? extends Parcelable>) artists);
+        args.putParcelableArrayList(Extras.PLAYLIST, (ArrayList<? extends Parcelable>) playlists);
         AllListFragment fragment = new AllListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -56,7 +66,9 @@ public class AllListFragment extends BaseFragment {
 
     @Override
     public void initViews() {
-        type = getArguments().getString(Extras.PLAYLIST, Constants.NETEASE_ARITIST_LIST);
+        type = getArguments().getString(Extras.PLAYLIST_TYPE, Constants.NETEASE_ARITIST_LIST);
+        artistList = getArguments().getParcelableArrayList(Extras.ARTIST);
+        playlistList = getArguments().getParcelableArrayList(Extras.PLAYLIST);
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -72,7 +84,7 @@ public class AllListFragment extends BaseFragment {
     protected void loadData() {
         if (type.equals(Constants.NETEASE_ARITIST_LIST)) {
             //适配器
-            mArtistAdapter = new ArtistListAdapter(DiscoverPresenter.Companion.getArtistList());
+            mArtistAdapter = new ArtistListAdapter(artistList);
             mRecyclerView.setAdapter(mArtistAdapter);
             mArtistAdapter.bindToRecyclerView(mRecyclerView);
 
@@ -82,12 +94,12 @@ public class AllListFragment extends BaseFragment {
             });
         } else if (type.equals(Constants.BAIDU_RADIO_LIST)) {
             //适配器
-            mPlaylistAdapter = new PlaylistAdapter(DiscoverPresenter.Companion.getRadioList());
+            mPlaylistAdapter = new PlaylistAdapter(playlistList);
             mRecyclerView.setAdapter(mArtistAdapter);
             mPlaylistAdapter.bindToRecyclerView(mRecyclerView);
 
             mPlaylistAdapter.setOnItemClickListener((adapter, view, position) -> {
-                NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), DiscoverPresenter.Companion.getRadioList().get(position), null);
+                NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), playlistList.get(position), null);
             });
         }
     }

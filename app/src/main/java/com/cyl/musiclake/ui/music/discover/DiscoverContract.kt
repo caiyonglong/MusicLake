@@ -10,13 +10,13 @@ interface DiscoverContract {
     interface View : BaseContract.BaseView {
         fun showEmptyView()
 
-        fun showBaiduCharts(charts: List<Playlist>)
+        fun showBaiduCharts(charts: MutableList<Playlist>)
 
-        fun showNeteaseCharts(charts: List<Playlist>)
+        fun showNeteaseCharts(charts: MutableList<Playlist>)
 
-        fun showArtistCharts(charts: List<Artist>)
+        fun showArtistCharts(charts: MutableList<Artist>)
 
-        fun showRadioChannels(channels: List<Playlist>)
+        fun showRadioChannels(channels: MutableList<Playlist>)
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {

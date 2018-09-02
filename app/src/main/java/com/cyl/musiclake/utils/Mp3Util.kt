@@ -40,49 +40,53 @@ object Mp3Util {
     }
 
     private fun saveInfo(file: MP3File, title: String? = null, artist: String? = null, album: String? = null): MP3File {
-        title?.let {
-            if (file.iD3v2Tag.getFrame("TIT2") != null) {
-                val frame1 = file.iD3v2Tag.getFrame("TIT2") as AbstractID3v2Frame
-                val body1 = frame1.body as FrameBodyTIT2
-                body1.text = it
-                file.iD3v2Tag.setFrame("TIT2", mutableListOf(frame1))
-            } else {
-                val bodyTIT2 = FrameBodyTIT2()
-                val frame1 = file.iD3v2Tag.createFrame(bodyTIT2.identifier)
-                bodyTIT2.text = it
-                frame1.body = bodyTIT2
-                file.iD3v2Tag.setFrame(bodyTIT2.identifier, mutableListOf(frame1))
+        try {
+            title?.let {
+                if (file.iD3v2Tag.getFrame("TIT2") != null) {
+                    val frame1 = file.iD3v2Tag.getFrame("TIT2") as AbstractID3v2Frame
+                    val body1 = frame1.body as FrameBodyTIT2
+                    body1.text = it
+                    file.iD3v2Tag.setFrame("TIT2", mutableListOf(frame1))
+                } else {
+                    val bodyTIT2 = FrameBodyTIT2()
+                    val frame1 = file.iD3v2Tag.createFrame(bodyTIT2.identifier)
+                    bodyTIT2.text = it
+                    frame1.body = bodyTIT2
+                    file.iD3v2Tag.setFrame(bodyTIT2.identifier, mutableListOf(frame1))
+                }
             }
-        }
 
-        artist?.let {
-            if (file.iD3v2Tag.getFrame("TPE1") != null) {
-                val frame2 = file.iD3v2Tag.getFrame("TPE1") as AbstractID3v2Frame
-                val body2 = frame2.body as FrameBodyTPE1
-                body2.text = it
-                file.iD3v2Tag.setFrame("TPE1", mutableListOf(frame2))
-            } else {
-                val bodyTPE1 = FrameBodyTPE1()
-                val frame1 = file.iD3v2Tag.createFrame(bodyTPE1.identifier)
-                bodyTPE1.text = it
-                frame1.body = bodyTPE1
-                file.iD3v2Tag.setFrame(bodyTPE1.identifier, mutableListOf(frame1))
+            artist?.let {
+                if (file.iD3v2Tag.getFrame("TPE1") != null) {
+                    val frame2 = file.iD3v2Tag.getFrame("TPE1") as AbstractID3v2Frame
+                    val body2 = frame2.body as FrameBodyTPE1
+                    body2.text = it
+                    file.iD3v2Tag.setFrame("TPE1", mutableListOf(frame2))
+                } else {
+                    val bodyTPE1 = FrameBodyTPE1()
+                    val frame1 = file.iD3v2Tag.createFrame(bodyTPE1.identifier)
+                    bodyTPE1.text = it
+                    frame1.body = bodyTPE1
+                    file.iD3v2Tag.setFrame(bodyTPE1.identifier, mutableListOf(frame1))
+                }
             }
-        }
 
-        album?.let {
-            if (file.iD3v2Tag.getFrame("TALB") != null) {
-                val frame3 = file.iD3v2Tag.getFrame("TALB") as AbstractID3v2Frame
-                val body3 = frame3.body as FrameBodyTALB
-                body3.text = it
-                file.iD3v2Tag.setFrame("TALB", mutableListOf(frame3))
-            } else {
-                val bodyTALB = FrameBodyTALB()
-                val frame1 = file.iD3v2Tag.createFrame(bodyTALB.identifier)
-                bodyTALB.text = it
-                frame1.body = bodyTALB
-                file.iD3v2Tag.setFrame(bodyTALB.identifier, mutableListOf(frame1))
+            album?.let {
+                if (file.iD3v2Tag.getFrame("TALB") != null) {
+                    val frame3 = file.iD3v2Tag.getFrame("TALB") as AbstractID3v2Frame
+                    val body3 = frame3.body as FrameBodyTALB
+                    body3.text = it
+                    file.iD3v2Tag.setFrame("TALB", mutableListOf(frame3))
+                } else {
+                    val bodyTALB = FrameBodyTALB()
+                    val frame1 = file.iD3v2Tag.createFrame(bodyTALB.identifier)
+                    bodyTALB.text = it
+                    frame1.body = bodyTALB
+                    file.iD3v2Tag.setFrame(bodyTALB.identifier, mutableListOf(frame1))
+                }
             }
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
         return file
     }

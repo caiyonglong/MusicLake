@@ -18,14 +18,9 @@ import javax.inject.Inject
 class DiscoverPresenter @Inject
 constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Presenter {
 
-    companion object {
-        var artistList = mutableListOf<Artist>()
-        var radioList = mutableListOf<Playlist>()
-    }
-
     override fun loadBaidu() {
-        ApiManager.request(BaiduApiServiceImpl.getOnlinePlaylist(), object : RequestCallBack<List<Playlist>> {
-            override fun success(result: List<Playlist>) {
+        ApiManager.request(BaiduApiServiceImpl.getOnlinePlaylist(), object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
                 mView?.showBaiduCharts(result)
             }
 
@@ -54,7 +49,6 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
     override fun loadArtists() {
         ApiManager.request(NeteaseApiServiceImpl.getTopArtists(30, 0), object : RequestCallBack<MutableList<Artist>> {
             override fun success(result: MutableList<Artist>) {
-                artistList = result
                 mView?.showArtistCharts(result)
             }
 
@@ -68,7 +62,6 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
         val observable = BaiduApiServiceImpl.getRadioChannel()
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
-                radioList = result
                 mView?.showRadioChannels(result)
             }
 
