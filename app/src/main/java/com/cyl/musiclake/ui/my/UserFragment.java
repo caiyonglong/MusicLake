@@ -42,7 +42,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void loadData() {
-        if (UserStatus.getstatus(getActivity())) {
+        if (UserStatus.getLoginStatus(getActivity())) {
 
             user = UserStatus.getUserInfo(getActivity());
             if (user.getNick() == null || user.getNick().length() <= 0) {
@@ -98,7 +98,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
 
     private void logout() {
         UserStatus.clearUserInfo(getActivity());
-        UserStatus.saveuserstatus(getActivity(), false);
+        UserStatus.saveLoginStatus(getActivity(), false);
         getActivity().finish();
     }
 }

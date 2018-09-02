@@ -20,6 +20,7 @@ import com.cyl.musiclake.ui.music.local.contract.MyMusicContract
 import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity
+import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.frag_local.*
@@ -61,7 +62,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mAdapter?.setOnItemClickListener { adapter, view, position -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlists[position], null) }
 
         playlistAddIv.setOnClickListener {
-            if (UserStatus.getstatus(mFragmentComponent.activity)) {
+            if (UserStatus.getLoginStatus(mFragmentComponent.activity)) {
                 val dialog = CreatePlaylistDialog.newInstance()
                 dialog.show(childFragmentManager, TAG_CREATE)
             } else {
@@ -78,7 +79,9 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     override fun loadData() {
         mPresenter?.loadSongs()
-//        mPresenter?.loadPlaylist()
+        if (UserStatus.getLoginStatus(context) && UserStatus.getTokenStatus()) {
+            mPresenter?.loadPlaylist()
+        }
     }
 
 

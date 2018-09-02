@@ -79,7 +79,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     }
 
     override fun loadPlaylist() {
-        val mIsLogin = UserStatus.getstatus(MusicApp.getAppContext())
+        val mIsLogin = UserStatus.getLoginStatus(MusicApp.getAppContext())
         if (mIsLogin) {
             OnlinePlaylistUtils.getOnlinePlaylist(success = {
                 playlists = OnlinePlaylistUtils.playlists

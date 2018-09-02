@@ -8,7 +8,6 @@ import android.text.InputType;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.bean.Music;
@@ -77,7 +76,7 @@ public class CreatePlaylistDialog extends DialogFragment {
     }
 
     private void createPlaylist(String name) {
-        boolean mIsLogin = UserStatus.getstatus(getContext());
+        boolean mIsLogin = UserStatus.getLoginStatus(getContext());
         if (mIsLogin) {
             ApiManager.request(
                     PlaylistApiServiceImpl.INSTANCE.createPlaylist(name),

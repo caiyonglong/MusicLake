@@ -48,6 +48,9 @@ public class Constants {
     public static final String USER_EMAIL = "email";
     //用户登录密码
     public static final String PASSWORD = "password";
+    public static final String TOKEN = "token";
+    public static final String TOKEN_TIME = "token_time";
+    public static final String LOGIN_STATUS = "login_status";
     //用户名
     public static final String USERNAME = "username";
     //性别

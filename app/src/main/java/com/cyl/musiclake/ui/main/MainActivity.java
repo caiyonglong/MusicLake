@@ -409,8 +409,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * 检查QQ登录状态
      */
     private void checkLoginStatus() {
-        updateLoginToken();
-//            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
+        if (UserStatus.getLoginStatus(this) && !UserStatus.getTokenStatus()) {
+            updateLoginToken();
+        }
     }
 
     @Override

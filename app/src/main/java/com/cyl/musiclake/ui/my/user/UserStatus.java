@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.utils.SPUtils;
 
 /**
  * Created by 永龙 on 2015/12/22.
@@ -14,7 +15,7 @@ public class UserStatus {
         SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(Constants.USER_ID, userInfo.getId());
-        editor.putString(Constants.PASSWORD, userInfo.getToken());
+        editor.putString(Constants.TOKEN, userInfo.getToken());
         editor.putString(Constants.USERNAME, userInfo.getName());
         editor.putString(Constants.USER_SEX, userInfo.getSex());
         editor.putString(Constants.USER_COLLEGE, userInfo.getCollege());
@@ -28,17 +29,17 @@ public class UserStatus {
         editor.putInt(Constants.SECRET, userInfo.getSecret());
 
         editor.apply();
-        saveuserstatus(context, true);
+        saveLoginStatus(context, true);
     }
 
     //从data.xml文件中取出个人信息
     public static User getUserInfo(Context context) {
-        if (!getstatus(context)) return null;
+        if (!getLoginStatus(context)) return null;
         SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         User user = new User();
         user.setId(sp.getString(Constants.USER_ID, null));
         user.setName(sp.getString(Constants.USERNAME, null));
-        user.setToken(sp.getString(Constants.PASSWORD, null));
+        user.setToken(sp.getString(Constants.TOKEN, null));
         user.setSex(sp.getString(Constants.USER_SEX, null));
         user.setCollege(sp.getString(Constants.USER_COLLEGE, null));
         user.setMajor(sp.getString(Constants.USER_MAJOR, null));
@@ -57,20 +58,24 @@ public class UserStatus {
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
-        saveuserstatus(context, false);
+        saveLoginStatus(context, false);
     }
 
     //登录状态、
-    public static void saveuserstatus(Context context, boolean status) {
-        SharedPreferences sp = context.getSharedPreferences("status", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("status", status);
-        editor.apply();
+    public static void saveLoginStatus(Context context, boolean status) {
+        SPUtils.putAnyCommit(Constants.LOGIN_STATUS, status);
+        SPUtils.putAnyCommit(Constants.TOKEN_TIME, System.currentTimeMillis());
     }
 
-    public static boolean getstatus(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("status", Context.MODE_PRIVATE);
-        return sp.getBoolean("status", false);
+    public static boolean getLoginStatus(Context context) {
+        long time = SPUtils.getAnyByKey(Constants.TOKEN_TIME, 0);
+        return SPUtils.getAnyByKey(Constants.LOGIN_STATUS, false);
+    }
+
+    public static boolean getTokenStatus() {
+        long time = SPUtils.getAnyByKey(Constants.TOKEN_TIME, 0);
+        boolean tokenLegal = System.currentTimeMillis() - time < 7 * 24 * 60 * 60 * 1000;
+        return tokenLegal;
     }
 
 }

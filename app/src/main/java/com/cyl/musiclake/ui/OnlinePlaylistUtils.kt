@@ -98,7 +98,7 @@ object OnlinePlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.resource_error))
             return
         }
-        if (!UserStatus.getstatus(activity)) {
+        if (!UserStatus.getLoginStatus(activity)) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
@@ -128,7 +128,7 @@ object OnlinePlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
             return
         }
-        if (!UserStatus.getstatus(activity)) {
+        if (!UserStatus.getLoginStatus(activity)) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
@@ -231,7 +231,7 @@ object OnlinePlaylistUtils {
      * 新建歌单
      */
     fun createPlaylist(name: String, success: (Playlist) -> Unit) {
-        val mIsLogin = UserStatus.getstatus(MusicApp.getAppContext())
+        val mIsLogin = UserStatus.getLoginStatus(MusicApp.getAppContext())
         if (mIsLogin) {
             ApiManager.request(
                     PlaylistApiServiceImpl.createPlaylist(name),

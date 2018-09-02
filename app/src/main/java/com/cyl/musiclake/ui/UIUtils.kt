@@ -276,7 +276,7 @@ fun updateLoginToken() {
  */
 fun logout() {
     UserStatus.clearUserInfo(MusicApp.getAppContext())
-    UserStatus.saveuserstatus(MusicApp.getAppContext(), false)
+    UserStatus.saveLoginStatus(MusicApp.getAppContext(), false)
     SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, "")
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
     MusicApp.mTencent.logout(MusicApp.getAppContext())
