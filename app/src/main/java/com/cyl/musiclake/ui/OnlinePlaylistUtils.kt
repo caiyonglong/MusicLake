@@ -68,7 +68,7 @@ object OnlinePlaylistUtils {
     /**
      * 获取在线歌单
      */
-    fun getOnlinePlaylist(success: () -> Unit, fail: (String) -> Unit) {
+    fun getOnlinePlaylist(success: (MutableList<Playlist>) -> Unit, fail: (String) -> Unit) {
         ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 playlists.clear()
@@ -78,7 +78,7 @@ object OnlinePlaylistUtils {
                     playlists.add(it)
                     getPlaylistMusic(it) { result ->
                         Collections.replaceAll(playlists, it, result)
-                        success.invoke()
+                        success.invoke(playlists)
                     }
                 }
             }
@@ -86,6 +86,32 @@ object OnlinePlaylistUtils {
             override fun error(msg: String) {
                 fail.invoke(msg)
             }
+        })
+    }
+
+    /**
+     * 获取在线歌单
+     */
+    fun addToPlaylist(activity: AppCompatActivity?, musics: MutableList<Music>?) {
+        if (activity == null) return
+        if (musics == null) {
+            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.resource_error))
+            return
+        }
+        if (!UserStatus.getstatus(activity)) {
+            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
+            return
+        }
+        musics.forEach {
+            if (it.type == Constants.LOCAL || it.type == Constants.BAIDU) {
+                ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
+                return
+            }
+        }
+        getOnlinePlaylist(success = {
+            showSelectDialog(activity, it, musicList = musics)
+        }, fail = {
+            ToastUtils.show(it)
         })
     }
 
@@ -106,33 +132,41 @@ object OnlinePlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
-        ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
-            override fun success(result: MutableList<Playlist>) {
-                showSelectDialog(activity, result, music)
-            }
-
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
-            }
+        getOnlinePlaylist(success = {
+            showSelectDialog(activity, it, music)
+        }, fail = {
+            ToastUtils.show(it)
         })
     }
 
     /**
      * 显示歌列表
      */
-    private fun showSelectDialog(activity: AppCompatActivity?, playlists: MutableList<Playlist>, music: Music?) {
+    private fun showSelectDialog(activity: AppCompatActivity, playlists: MutableList<Playlist>, music: Music? = null, musicList: MutableList<Music>? = null) {
         val items = mutableListOf<String>()
         playlists.forEach {
             it.name?.let { it1 -> items.add(it1) }
         }
-        MaterialDialog.Builder(activity!!)
+        MaterialDialog.Builder(activity)
                 .title(R.string.add_to_playlist)
                 .items(items)
                 .itemsCallback { _, _, which, _ ->
                     if (playlists[which].pid == null) {
-                        playlists[which].id.let { collectMusic(it.toString(), music) }
+                        playlists[which].id.let {
+                            if (musicList != null) {
+                                collectBatch2Music(it.toString(), musicList)
+                            } else {
+                                collectMusic(it.toString(), music)
+                            }
+                        }
                     } else {
-                        playlists[which].pid?.let { collectMusic(it, music) }
+                        playlists[which].pid?.let {
+                            if (musicList != null) {
+                                collectBatch2Music(it, musicList)
+                            } else {
+                                collectMusic(it, music)
+                            }
+                        }
                     }
                 }
                 .build().show()
@@ -144,6 +178,44 @@ object OnlinePlaylistUtils {
      */
     private fun collectMusic(pid: String, music: Music?) {
         ApiManager.request(PlaylistApiServiceImpl.collectMusic(pid, music!!), object : RequestCallBack<String> {
+            override fun success(result: String) {
+                ToastUtils.show(result)
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+            }
+
+            override fun error(msg: String) {
+                ToastUtils.show(msg)
+            }
+        })
+    }
+
+
+    /**
+     * 歌曲批量添加到在线歌单，同类型
+     * 目前支持网易，虾米，qq
+     */
+    fun collectBatchMusic(pid: String, vendor: String, musicList: MutableList<Music>?, success: (() -> Unit)? = null) {
+        ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(pid, vendor, musicList), object : RequestCallBack<String> {
+            override fun success(result: String?) {
+                ToastUtils.show(result)
+                success?.invoke()
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+            }
+
+            override fun error(msg: String?) {
+                ToastUtils.show(msg)
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+            }
+
+        })
+    }
+
+    /**
+     * 歌曲批量添加到在线歌单，不同类型
+     * 目前支持网易，虾米，qq
+     */
+    private fun collectBatch2Music(pid: String, musicList: MutableList<Music>?) {
+        ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(pid, musicList), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
                 EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))

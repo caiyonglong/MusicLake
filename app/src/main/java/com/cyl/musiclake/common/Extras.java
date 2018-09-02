@@ -1,5 +1,7 @@
 package com.cyl.musiclake.common;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * 作者：yonglong on 2016/9/24 10:57
  * 邮箱：643872807@qq.com
@@ -17,6 +19,7 @@ public class Extras {
     public static final String SONG_NAME = "song_name";
     public static final String PLAY_STATUS = "play_status";
     public static final String SONG = "song";
+    public static final String SONG_LIST = "song_list";
 
     public static final String SECRET_ID = "secret_id";
 

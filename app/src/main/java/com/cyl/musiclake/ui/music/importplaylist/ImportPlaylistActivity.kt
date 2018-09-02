@@ -38,6 +38,10 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         return R.layout.activity_import_playlist
     }
 
+    override fun setToolbarTitle(): String {
+        return getString(R.string.import_playlist)
+    }
+
     override fun initView() {
     }
 
@@ -74,18 +78,8 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                         val title = dialog1.inputEditText?.text.toString()
                         OnlinePlaylistUtils.createPlaylist(title, success = {
                             it.pid?.let { it1 ->
-                                ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(it1, vendor.toString(), musicList), object : RequestCallBack<String> {
-                                    override fun success(result: String?) {
-                                        this@ImportPlaylistActivity.finish()
-                                        ToastUtils.show(result)
-                                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
-                                    }
-
-                                    override fun error(msg: String?) {
-                                        ToastUtils.show(msg)
-                                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
-                                    }
-
+                                OnlinePlaylistUtils.collectBatchMusic(it1, vendor.toString(), musicList, success = {
+                                    this@ImportPlaylistActivity.finish()
                                 })
                             }
                         })
@@ -96,25 +90,29 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     }
 
     private fun getPlaylistId(link: String) {
-        when {
-            link.contains("http://music.163.com") -> {
-                val len = link.lastIndexOf("playlist/") + "playlist/".length
-                val id = link.substring(len, len + link.substring(len).indexOf("/"))
-                importMusic("netease", id)
+        try {
+            when {
+                link.contains("http://music.163.com") -> {
+                    val len = link.lastIndexOf("playlist/") + "playlist/".length
+                    val id = link.substring(len, len + link.substring(len).indexOf("/"))
+                    importMusic("netease", id)
+                }
+                link.contains("http://y.qq.com") -> {
+                    val len = link.lastIndexOf("id=") + "id=".length
+                    val id = link.substring(len, len + link.substring(len).indexOf("&"))
+                    importMusic("qq", id)
+                }
+                link.contains("https://www.xiami.com") -> {
+                    val len = link.lastIndexOf("collect/") + "collect/".length
+                    val id = link.substring(len, link.indexOf("?"))
+                    importMusic("xiami", id)
+                }
+                else -> {
+                    ToastUtils.show("请输入有效的链接！")
+                }
             }
-            link.contains("http://y.qq.com") -> {
-                val len = link.lastIndexOf("id=") + "id=".length
-                val id = link.substring(len, len + link.substring(len).indexOf("&"))
-                importMusic("qq", id)
-            }
-            link.contains("https://www.xiami.com") -> {
-                val len = link.lastIndexOf("collect/") + "collect/".length
-                val id = link.substring(len, link.indexOf("?"))
-                importMusic("xiami", id)
-            }
-            else -> {
-                ToastUtils.show("请输入有效的链接！")
-            }
+        } catch (e: Throwable) {
+            ToastUtils.show("请输入有效的链接！")
         }
     }
 

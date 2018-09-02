@@ -7,5 +7,4 @@ import com.cyl.musiclake.common.Constants
  * version  : 2018/3/1
  * function :
  */
-
 class PlaylistEvent(var type: String? = Constants.PLAYLIST_CUSTOM_ID)

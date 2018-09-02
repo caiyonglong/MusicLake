@@ -131,7 +131,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_artist to R.drawable.ic_art_track,
                 R.string.popup_detail_edit to R.drawable.ic_mode_edit,
                 R.string.popup_download to R.drawable.item_download,
-                R.string.popup_delete to R.drawable.ic_delete,
+//                R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
 

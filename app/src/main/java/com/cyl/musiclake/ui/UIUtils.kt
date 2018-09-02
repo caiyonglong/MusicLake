@@ -185,23 +185,72 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
     })
 }
 
+fun AppCompatActivity.downloadBatchMusic(musicList: MutableList<Music>?) {
+    musicList?.forEach {
+        if (it.type == Constants.LOCAL) {
+            musicList.remove(it)
+        }
+    }
+    if (musicList == null || musicList.size == 0) {
+        ToastUtils.show(MusicApp.getAppContext(), "请选择需要下载的在线音乐!")
+        return
+    }
+    if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
+        MaterialDialog.Builder(this@downloadBatchMusic)
+                .title(R.string.warning)
+                .content(R.string.download_network_tips)
+                .onPositive { _, _ ->
+                    musicList.forEach {
+                        addDownloadQueue(it, true)
+                    }
+                    ToastUtils.show(getString(R.string.download_add_success))
+                }
+                .positiveText("确定")
+                .negativeText("取消")
+                .show()
+    } else {
+        musicList.forEach {
+            addDownloadQueue(it, true)
+        }
+        ToastUtils.show(getString(R.string.download_add_success))
+    }
+}
+
+
 /**
  * 增加到增加到下载队列
  */
-fun Context.addDownloadQueue(result: Music) {
-    ToastUtils.show(getString(R.string.popup_download))
-    DaoLitepal.saveOrUpdateMusic(result, false)
-    val path = FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
-    val task = FileDownloader.getImpl()
-            .create(result.uri)
-            .setPath(path)
-            .setCallbackProgressTimes(100)
-            .setListener(TaskItemAdapter.taskDownloadListener)
-    val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path)
-    if (model != null) {
-        TasksManager.addTaskForViewHolder(task)
-        task.start()
-    }
+fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false) {
+    ApiManager.request(MusicApi.getMusicInfo(result), object : RequestCallBack<Music> {
+        override fun success(result: Music) {
+            LogUtil.e(javaClass.simpleName, "-----${result.uri}")
+
+            if (result.uri == null) {
+                ToastUtils.show(this@addDownloadQueue, "${result.title} 下载地址异常！")
+                return
+            }
+            if (!isBatch) {
+                ToastUtils.show(getString(R.string.download_add_success))
+            }
+            DaoLitepal.saveOrUpdateMusic(result, false)
+            val path = FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
+            val task = FileDownloader.getImpl()
+                    .create(result.uri)
+                    .setPath(path)
+                    .setCallbackProgressTimes(100)
+                    .setListener(TaskItemAdapter.taskDownloadListener)
+            val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path)
+            if (model != null) {
+                TasksManager.addTaskForViewHolder(task)
+                task.start()
+            }
+        }
+
+        override fun error(msg: String) {
+            ToastUtils.show(msg)
+        }
+    })
+
 }
 
 /**

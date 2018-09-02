@@ -57,7 +57,7 @@ public class MusicApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
         sInstance = this;
         mContext = this;
         initApplicationComponent();

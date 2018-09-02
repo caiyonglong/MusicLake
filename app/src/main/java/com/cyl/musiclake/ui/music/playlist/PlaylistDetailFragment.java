@@ -16,7 +16,6 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
@@ -30,6 +29,8 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
+import com.cyl.musiclake.ui.music.edit.EditSongListContract;
+import com.cyl.musiclake.ui.music.edit.EditSongListPresenter;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;

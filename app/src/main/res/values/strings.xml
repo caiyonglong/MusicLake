@@ -21,6 +21,7 @@
     <string name="title_function">功能</string>
     <string name="playlist_queue">播放队列</string>
     <string name="playlist_manager">歌单管理</string>
+    <string name="title_batch_operate">批量操作</string>
     <string name="settings">设置</string>
     <string name="exit">退出程序</string>
 
@@ -279,6 +280,7 @@
     <string name="popup_album">查看专辑</string>
     <string name="popup_share">分享</string>
 
+    <string name="download_batch">批量下载</string>
     <string name="download_add_success">下载任务添加成功</string>
     <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
     <string name="download_error">下载地址异常</string>
@@ -328,5 +330,7 @@
     <string name="tag_edit_success">成功更新歌曲信息！</string>
     <string name="save">保存</string>
     <string name="import_playlist">导入外部歌单</string>
+    <string name="all_select">全选</string>
+    <string name="all_un_select">全不选</string>
 
 </resources>

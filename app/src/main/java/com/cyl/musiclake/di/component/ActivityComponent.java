@@ -7,6 +7,8 @@ import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
+import com.cyl.musiclake.ui.music.edit.EditMusicActivity;
+import com.cyl.musiclake.ui.music.edit.EditSongListActivity;
 import com.cyl.musiclake.ui.music.mv.MvDetailActivity;
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.online.activity.BasePlaylistActivity;
@@ -54,4 +56,6 @@ public interface ActivityComponent {
     void inject(@NotNull PlayerActivity playerActivity);
 
     void inject(PlaylistDetailActivity playlistDetailActivity);
+
+    void inject(EditSongListActivity editMusicActivity);
 }

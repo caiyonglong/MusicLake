@@ -99,6 +99,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.music.edit.EditSongListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.music.playlist.PlaylistDetailActivity"
             android:label="@string/playlist_name"
             android:screenOrientation="portrait"

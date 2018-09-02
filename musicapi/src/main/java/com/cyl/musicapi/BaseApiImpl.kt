@@ -1,15 +1,14 @@
 package com.cyl.musicapi
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import com.cyl.musicapi.bean.*
 import com.google.gson.Gson
 import org.json.JSONObject
 import wendu.dsbridge.CompletionHandler
 import wendu.dsbridge.DWebView
+
 
 /**
  * Created by master on 2018/5/15.
@@ -30,7 +29,7 @@ object BaseApiImpl {
             mWebView = DWebView(context)
             mWebView?.addJavascriptObject(object : Any() {
                 @JavascriptInterface
-                fun onAjaxRequest(requestData: Any, handler: CompletionHandler<*>) {
+                fun onAjaxRequest(requestData: Any, handler: CompletionHandler<String>) {
                     AjaxHandler.onAjaxRequest(requestData as JSONObject, handler)
                 }
             }, null)

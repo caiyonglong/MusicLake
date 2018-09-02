@@ -1,16 +1,9 @@
 package com.cyl.musiclake.ui.music.playlist
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
-import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
@@ -27,6 +20,7 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.deletePlaylist
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
+import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
@@ -34,6 +28,7 @@ import com.cyl.musiclake.view.ItemDecoration
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -179,6 +174,9 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                             .negativeText(R.string.cancel)
                             .show()
                 }
+            }
+            R.id.action_batch -> {
+                startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
             }
         }
         return super.onOptionsItemSelected(item)

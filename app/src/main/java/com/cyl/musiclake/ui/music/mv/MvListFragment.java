@@ -89,7 +89,9 @@ public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements
     protected void retryLoading() {
         super.retryLoading();
         mvList.clear();
-        mPresenter.loadMv(0);
+        if (mPresenter != null) {
+            mPresenter.loadMv(0);
+        }
     }
 
     @Override
