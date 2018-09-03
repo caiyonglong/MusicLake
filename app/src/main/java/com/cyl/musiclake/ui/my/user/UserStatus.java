@@ -68,14 +68,12 @@ public class UserStatus {
     }
 
     public static boolean getLoginStatus(Context context) {
-        long time = SPUtils.getAnyByKey(Constants.TOKEN_TIME, 0);
         return SPUtils.getAnyByKey(Constants.LOGIN_STATUS, false);
     }
 
     public static boolean getTokenStatus() {
-        long time = SPUtils.getAnyByKey(Constants.TOKEN_TIME, 0);
-        boolean tokenLegal = System.currentTimeMillis() - time < 7 * 24 * 60 * 60 * 1000;
-        return tokenLegal;
+        long time = SPUtils.getAnyByKey(Constants.TOKEN_TIME, 0L);
+        return (System.currentTimeMillis() - time < 7 * 24 * 60 * 60 * 1000);
     }
 
 }
