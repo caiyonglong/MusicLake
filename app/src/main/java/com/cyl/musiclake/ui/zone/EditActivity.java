@@ -69,7 +69,7 @@ public class EditActivity extends BaseActivity {
                 ToastUtils.show(this, "不能发送空");
                 return true;
             }
-            User user = UserStatus.getUserInfo(this);
+            User user = UserStatus.getUserInfo();
             user_id = user.getId();
             if (user_id == null || user_id.length() == 0) {
                 ToastUtils.show(this, "请登录");

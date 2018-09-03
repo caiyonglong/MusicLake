@@ -91,7 +91,7 @@ object UIUtils {
                 override fun onAnimationEnd(animation: Animator?) {
                     music?.let {
                         it.isLove = SongLoader.updateFavoriteSong(it)
-                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID))
+                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID,null))
                     }
                 }
 
@@ -275,8 +275,8 @@ fun updateLoginToken() {
  * 注销登录
  */
 fun logout() {
-    UserStatus.clearUserInfo(MusicApp.getAppContext())
-    UserStatus.saveLoginStatus(MusicApp.getAppContext(), false)
+    UserStatus.clearUserInfo()
+    UserStatus.saveLoginStatus( false)
     SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, "")
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
     MusicApp.mTencent.logout(MusicApp.getAppContext())

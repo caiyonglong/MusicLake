@@ -145,7 +145,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                             PlayHistoryLoader.clearPlayHistory()
                             mAdapter?.notifyDataSetChanged()
                             showEmptyState()
-                            EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_HISTORY_ID))
+                            EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_HISTORY_ID, it))
                         } else if (mPresenter != null) {
                             OnlinePlaylistUtils.deletePlaylist(it) { _ ->
                                 onBackPress()
@@ -163,7 +163,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                             .negativeText(R.string.cancel)
                             .inputRangeRes(2, 10, R.color.red)
                             .inputType(InputType.TYPE_CLASS_TEXT)
-                            .input("输入歌单名", it.name, false) { dialog, input -> LogUtil.e("=====", input.toString()) }
+                            .input(getString(R.string.input_playlist), it.name, false) { _, input -> LogUtil.e("=====", input.toString()) }
                             .onPositive { dialog, _ ->
                                 val title = dialog.inputEditText?.text.toString()
                                 if (title != mPlaylist?.name) {

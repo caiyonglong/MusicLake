@@ -36,7 +36,7 @@ object OnlinePlaylistUtils {
             override fun success(result: String) {
                 success.invoke(result)
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
             }
 
             override fun error(msg: String) {
@@ -68,7 +68,7 @@ object OnlinePlaylistUtils {
     /**
      * 获取在线歌单
      */
-    fun getOnlinePlaylist(success: (MutableList<Playlist>) -> Unit, fail: (String) -> Unit) {
+    fun getOnlinePlaylist(isLoadSong: Boolean = false, success: (MutableList<Playlist>) -> Unit, fail: (String) -> Unit) {
         ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 playlists.clear()
@@ -76,8 +76,12 @@ object OnlinePlaylistUtils {
                     it.pid = it.id.toString()
                     it.type = Playlist.PT_MY
                     playlists.add(it)
-                    getPlaylistMusic(it) { result ->
-                        Collections.replaceAll(playlists, it, result)
+                    if (isLoadSong) {
+                        getPlaylistMusic(it) { result ->
+                            Collections.replaceAll(playlists, it, result)
+                            success.invoke(playlists)
+                        }
+                    } else {
                         success.invoke(playlists)
                     }
                 }
@@ -98,7 +102,7 @@ object OnlinePlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.resource_error))
             return
         }
-        if (!UserStatus.getLoginStatus(activity)) {
+        if (!UserStatus.getLoginStatus()) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
@@ -128,7 +132,7 @@ object OnlinePlaylistUtils {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
             return
         }
-        if (!UserStatus.getLoginStatus(activity)) {
+        if (!UserStatus.getLoginStatus()) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
@@ -152,21 +156,12 @@ object OnlinePlaylistUtils {
                 .items(items)
                 .itemsCallback { _, _, which, _ ->
                     if (playlists[which].pid == null) {
-                        playlists[which].id.let {
-                            if (musicList != null) {
-                                collectBatch2Music(it.toString(), musicList)
-                            } else {
-                                collectMusic(it.toString(), music)
-                            }
-                        }
+                        playlists[which].pid = playlists[which].id.toString()
+                    }
+                    if (musicList != null) {
+                        collectBatch2Music(playlists[which], musicList)
                     } else {
-                        playlists[which].pid?.let {
-                            if (musicList != null) {
-                                collectBatch2Music(it, musicList)
-                            } else {
-                                collectMusic(it, music)
-                            }
-                        }
+                        collectMusic(playlists[which], music)
                     }
                 }
                 .build().show()
@@ -176,11 +171,11 @@ object OnlinePlaylistUtils {
      * 歌曲添加到在线歌单，同步
      * 目前支持网易，虾米，qq
      */
-    private fun collectMusic(pid: String, music: Music?) {
-        ApiManager.request(PlaylistApiServiceImpl.collectMusic(pid, music!!), object : RequestCallBack<String> {
+    private fun collectMusic(playlist: Playlist, music: Music?) {
+        ApiManager.request(PlaylistApiServiceImpl.collectMusic(playlist.pid.toString(), music!!), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
             }
 
             override fun error(msg: String) {
@@ -189,22 +184,21 @@ object OnlinePlaylistUtils {
         })
     }
 
-
     /**
      * 歌曲批量添加到在线歌单，同类型
      * 目前支持网易，虾米，qq
      */
-    fun collectBatchMusic(pid: String, vendor: String, musicList: MutableList<Music>?, success: (() -> Unit)? = null) {
-        ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(pid, vendor, musicList), object : RequestCallBack<String> {
+    fun collectBatchMusic(playlist: Playlist, vendor: String, musicList: MutableList<Music>?, success: (() -> Unit)? = null) {
+        ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(playlist.pid.toString(), vendor, musicList), object : RequestCallBack<String> {
             override fun success(result: String?) {
                 ToastUtils.show(result)
                 success?.invoke()
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
             }
 
             override fun error(msg: String?) {
                 ToastUtils.show(msg)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
             }
 
         })
@@ -214,11 +208,11 @@ object OnlinePlaylistUtils {
      * 歌曲批量添加到在线歌单，不同类型
      * 目前支持网易，虾米，qq
      */
-    private fun collectBatch2Music(pid: String, musicList: MutableList<Music>?) {
-        ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(pid, musicList), object : RequestCallBack<String> {
+    private fun collectBatch2Music(playlist: Playlist, musicList: MutableList<Music>?) {
+        ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(playlist.pid.toString(), musicList), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
             }
 
             override fun error(msg: String) {
@@ -231,7 +225,7 @@ object OnlinePlaylistUtils {
      * 新建歌单
      */
     fun createPlaylist(name: String, success: (Playlist) -> Unit) {
-        val mIsLogin = UserStatus.getLoginStatus(MusicApp.getAppContext())
+        val mIsLogin = UserStatus.getLoginStatus()
         if (mIsLogin) {
             ApiManager.request(
                     PlaylistApiServiceImpl.createPlaylist(name),
@@ -250,6 +244,9 @@ object OnlinePlaylistUtils {
         }
     }
 
+    /**
+     * 取消收藏
+     */
     fun disCollectMusic(pid: String?, music: Music?, success: () -> Unit) {
         if (pid == null) return
         if (music == null) return

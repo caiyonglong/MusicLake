@@ -60,8 +60,8 @@ public class CommentActivity extends BaseActivity {
     public void send() {
 
         String userid = "";
-        if (UserStatus.getLoginStatus(this)) {
-            user_id = UserStatus.getUserInfo(this).getId();
+        if (UserStatus.getLoginStatus()) {
+            user_id = UserStatus.getUserInfo().getId();
         } else {
             ToastUtils.show(this, "请登录！");
             return;
@@ -76,8 +76,8 @@ public class CommentActivity extends BaseActivity {
 
     @OnClick(R.id.id_cardview)
     void tonear() {
-        if (UserStatus.getLoginStatus(this)) {
-            if (!UserStatus.getUserInfo(this).getId().equals(secret.getUser_id())) {
+        if (UserStatus.getLoginStatus()) {
+            if (!UserStatus.getUserInfo().getId().equals(secret.getUser_id())) {
                 Intent intent = new Intent(this, NearPeopleAcivity.class);
                 intent.putExtra("userinfo", secret.getUser());
                 startActivity(intent);
@@ -90,8 +90,8 @@ public class CommentActivity extends BaseActivity {
     @OnClick(R.id.item_love)
     void love() {
         String userid = "";
-        if (UserStatus.getLoginStatus(this)) {
-            userid = UserStatus.getUserInfo(this).getId();
+        if (UserStatus.getLoginStatus()) {
+            userid = UserStatus.getUserInfo().getId();
         } else {
             ToastUtils.show(this, "请登录！");
             return;

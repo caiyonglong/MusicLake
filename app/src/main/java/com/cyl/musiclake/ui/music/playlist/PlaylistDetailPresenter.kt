@@ -184,7 +184,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView.success(1)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID,playlist))
                 ToastUtils.show(result)
             }
 

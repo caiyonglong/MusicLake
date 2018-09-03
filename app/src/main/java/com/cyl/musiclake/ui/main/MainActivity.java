@@ -36,6 +36,7 @@ import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
+import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
@@ -359,12 +360,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * 设置用户状态信息
      */
-    private void setUserStatusInfo(Boolean isLogin) {
+    private void setUserStatusInfo(Boolean isLogin, User user) {
         mIsLogin = isLogin;
-        if (mIsLogin) {
-            String url = UserStatus.getUserInfo(this).getAvatar();
+        if (mIsLogin && user != null) {
+            String url = user.getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
-            mName.setText(UserStatus.getUserInfo(this).getNick());
+            mName.setText(user.getNick());
             mNick.setText(getResources().getString(R.string.app_name));
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
@@ -383,7 +384,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Subscribe
     public void updateUserInfo(LoginEvent event) {
-        setUserStatusInfo(event.getStatus());
+        setUserStatusInfo(event.getStatus(), event.getUser());
     }
 
     /**
@@ -409,8 +410,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * 检查QQ登录状态
      */
     private void checkLoginStatus() {
-        if (UserStatus.getLoginStatus(this) && !UserStatus.getTokenStatus()) {
+        if (UserStatus.getLoginStatus() && !UserStatus.getTokenStatus()) {
             updateLoginToken();
+        } else if (UserStatus.getLoginStatus()) {
+            updateUserInfo(new LoginEvent(true, UserStatus.getUserInfo()));
         }
     }
 

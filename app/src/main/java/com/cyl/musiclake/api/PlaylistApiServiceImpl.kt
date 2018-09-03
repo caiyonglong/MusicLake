@@ -23,7 +23,7 @@ object PlaylistApiServiceImpl {
         get() = ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL)
 
     private val token: String?
-        get() = UserStatus.getUserInfo(MusicApp.getAppContext())?.token
+        get() = UserStatus.getUserInfo()?.token
 
     /**
      * 获取全部歌单

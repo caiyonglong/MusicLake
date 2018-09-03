@@ -34,7 +34,7 @@ public class AddPlaylistDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Music music = getArguments().getParcelable("music");
         if (music.getType() == Constants.LOCAL) {
-            return showInfoDialog("增加到歌单", "暂不支持添加本地歌曲到在线歌单");
+            return showInfoDialog(getString(R.string.add_to_playlist), getString(R.string.add_un_support_local));
         }
         return null;
     }
@@ -42,10 +42,10 @@ public class AddPlaylistDialog extends DialogFragment {
 
     public MaterialDialog showInfoDialog(String title, String msg) {
         if (title.isEmpty()) {
-            title = "提示";
+            title = getString(R.string.prompt);
         }
         if (msg.isEmpty()) {
-            msg = "加载中";
+            msg = getString(R.string.loading);
         }
         return new MaterialDialog.Builder(getActivity())
                 .title(title)

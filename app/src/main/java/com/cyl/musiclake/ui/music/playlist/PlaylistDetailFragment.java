@@ -17,20 +17,18 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.bean.Album;
+import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.data.PlayHistoryLoader;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.bean.Album;
-import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
-import com.cyl.musiclake.ui.music.edit.EditSongListContract;
-import com.cyl.musiclake.ui.music.edit.EditSongListPresenter;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -184,7 +182,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                         PlayHistoryLoader.INSTANCE.clearPlayHistory();
                         mAdapter.notifyDataSetChanged();
                         showEmptyState();
-                        EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID));
+                        EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID, mPlaylist));
                     } else if (mPresenter != null) {
                         OnlinePlaylistUtils.INSTANCE.deletePlaylist(mPlaylist, result -> {
                             onBackPress();

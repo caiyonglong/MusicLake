@@ -1,13 +1,10 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
 import android.support.v7.widget.LinearLayoutManager
-import android.text.InputType
 import android.view.View
-import android.webkit.WebView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApiServiceImpl
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.base.BasePresenter
@@ -15,7 +12,6 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
@@ -24,9 +20,9 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_import_playlist.*
-import org.greenrobot.eventbus.EventBus
 
 
+@Suppress("UNUSED_ANONYMOUS_PARAMETER")
 class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
     var mAdapter: SongAdapter? = null
@@ -70,15 +66,15 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             if (musicList.size == 0) return@setOnClickListener
             MaterialDialog.Builder(this)
                     .title("是否将${musicList.size}首歌导入到歌单")
-                    .positiveText("确定")
-                    .negativeText("取消")
+                    .positiveText(R.string.sure)
+                    .negativeText(R.string.cancel)
                     .inputRangeRes(2, 20, R.color.red)
-                    .input("请输入歌单名", name.toString(), false) { _, _ -> }
+                    .input(getString(R.string.input_playlist), name.toString(), false) { _, _ -> }
                     .onPositive { dialog1, _ ->
                         val title = dialog1.inputEditText?.text.toString()
                         OnlinePlaylistUtils.createPlaylist(title, success = {
-                            it.pid?.let { it1 ->
-                                OnlinePlaylistUtils.collectBatchMusic(it1, vendor.toString(), musicList, success = {
+                            it.pid?.let { _ ->
+                                OnlinePlaylistUtils.collectBatchMusic(it, vendor.toString(), musicList, success = {
                                     this@ImportPlaylistActivity.finish()
                                 })
                             }

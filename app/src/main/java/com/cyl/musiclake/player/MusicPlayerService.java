@@ -944,7 +944,7 @@ public class MusicPlayerService extends Service {
                 break;
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
-                EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID));
+                EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID,null));
                 break;
 //            case PLAY_STATE_LOADING_CHANGED:
 //                EventBus.getDefault().post(new StatusChangedEvent(false, isPlaying()));

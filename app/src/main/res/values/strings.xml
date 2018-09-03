@@ -13,6 +13,7 @@
     <string name="header_author_url">个性标签</string>
     <string name="widget_standard">音乐湖</string>
     <string name="warning_add_playlist">暂不支持添加本地音乐和百度音乐</string>
+    <string name="add_un_support_local">暂不支持添加本地歌曲到在线歌单</string>
     <string name="warning_network">暂不支持添加本地音乐和百度音乐</string>
     <string name="warning">警告！</string>
     <string name="resource_error">歌曲资源异常</string>
@@ -332,5 +333,8 @@
     <string name="import_playlist">导入外部歌单</string>
     <string name="all_select">全选</string>
     <string name="all_un_select">全不选</string>
+    <string name="input_playlist">输入歌单名</string>
+    <string name="create_playlist_success">歌单新建成功</string>
+    <string name="prompt">提示</string>
 
 </resources>

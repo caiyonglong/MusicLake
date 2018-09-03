@@ -256,7 +256,7 @@ public class UserCenterActivity extends BaseActivity<UserPresenter> implements U
 //                startActivityForResult(intent2, IMAGE_COMPLETE);
                 break;
             case IMAGE_COMPLETE:
-                final String userId = UserStatus.getUserInfo(this).getId();
+                final String userId = UserStatus.getUserInfo().getId();
                 path = FileUtils.getImageDir() + mUserInfo.getId() + ".png";
                 //上传图片
                 mPresenter.uploadHeader(userId, path);

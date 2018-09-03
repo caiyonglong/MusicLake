@@ -59,10 +59,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
     override fun listener() {
-        mAdapter?.setOnItemClickListener { adapter, view, position -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlists[position], null) }
+        mAdapter?.setOnItemClickListener { _, _, position ->  }
 
         playlistAddIv.setOnClickListener {
-            if (UserStatus.getLoginStatus(mFragmentComponent.activity)) {
+            if (UserStatus.getLoginStatus()) {
                 val dialog = CreatePlaylistDialog.newInstance()
                 dialog.show(childFragmentManager, TAG_CREATE)
             } else {
@@ -79,7 +79,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     override fun loadData() {
         mPresenter?.loadSongs()
-        if (UserStatus.getLoginStatus(context) && UserStatus.getTokenStatus()) {
+        if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
             mPresenter?.loadPlaylist()
         }
     }
@@ -171,7 +171,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlaylistChangedEvent(event: PlaylistEvent) {
         when (event.type) {
-            Constants.PLAYLIST_CUSTOM_ID -> mPresenter?.loadPlaylist()
+            Constants.PLAYLIST_CUSTOM_ID -> mPresenter?.loadPlaylist(event.playlist)
             Constants.PLAYLIST_LOVE_ID -> mPresenter?.updateFavorite()
             Constants.PLAYLIST_HISTORY_ID -> mPresenter?.updateHistory()
             Constants.PLAYLIST_DOWNLOAD_ID -> mPresenter?.updateDownload()

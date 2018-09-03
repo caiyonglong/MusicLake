@@ -50,41 +50,29 @@ public class CreatePlaylistDialog extends DialogFragment {
 
         final Music music = getArguments().getParcelable(TAG_MUSIC);
         return new MaterialDialog.Builder(getActivity())
-                .title("新建歌单")
-                .positiveText("确定")
-                .negativeText("取消")
+                .title(R.string.create_playlist)
+                .positiveText(R.string.sure)
+                .negativeText(R.string.cancel)
                 .inputRangeRes(2, 20, R.color.red)
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("输入歌单名", "", false, (dialog, input) -> LogUtil.e(TAG, input.toString()))
+                .input(R.string.input_playlist, R.string.playlist_name, false, (dialog, input) -> LogUtil.e(TAG, input.toString()))
                 .onPositive((dialog, which) -> {
                     String title = dialog.getInputEditText().getText().toString();
                     createPlaylist(title);
-//                    long pid = PlaylistLoader.createPlaylist(getActivity(), title);
-//                    if (pid != -1) {
-//                        if (music != null) {
-//                            PlaylistLoader.addToPlaylist(getActivity(), String.valueOf(pid), music.getId());
-//                            RxBus.getInstance().post(new PlaylistInfo());
-//                            ToastUtils.show(getActivity(), "添加成功");
-//                        } else {
-//                            ToastUtils.show(getActivity(), "新建歌单 " + title);
-//                        }
-//                    } else {
-//                        ToastUtils.show(getActivity(), "创建失败" + title);
-//                    }
                     LogUtil.d(TAG, title);
                 }).build();
     }
 
     private void createPlaylist(String name) {
-        boolean mIsLogin = UserStatus.getLoginStatus(getContext());
+        boolean mIsLogin = UserStatus.getLoginStatus();
         if (mIsLogin) {
             ApiManager.request(
                     PlaylistApiServiceImpl.INSTANCE.createPlaylist(name),
                     new RequestCallBack<Playlist>() {
                         @Override
                         public void success(Playlist result) {
-                            ToastUtils.show("歌单新建成功");
-                            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID));
+                            ToastUtils.show(getString(R.string.create_playlist_success));
+                            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID,null));
                         }
 
                         @Override

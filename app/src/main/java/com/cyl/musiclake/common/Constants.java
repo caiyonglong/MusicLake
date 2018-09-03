@@ -26,7 +26,7 @@ public class Constants {
     public static final String PLAYLIST_QUEUE_ID = "queue";
     public static final String PLAYLIST_DOWNLOAD_ID = "download";
     //在线歌单
-    public static final String PLAYLIST_CUSTOM_ID = "custom";
+    public static final String PLAYLIST_CUSTOM_ID = "custom_online";
     //百度电台列表
     public static final String BAIDU_RADIO_LIST = "baidu_radio_list";
     public static final String NETEASE_ARITIST_LIST = "netease_artist_list";

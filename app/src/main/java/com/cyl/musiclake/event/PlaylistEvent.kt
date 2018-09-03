@@ -1,5 +1,6 @@
 package com.cyl.musiclake.event
 
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 
 /**
@@ -7,4 +8,4 @@ import com.cyl.musiclake.common.Constants
  * version  : 2018/3/1
  * function :
  */
-class PlaylistEvent(var type: String? = Constants.PLAYLIST_CUSTOM_ID)
+class PlaylistEvent(var type: String? = Constants.PLAYLIST_CUSTOM_ID, val playlist: Playlist? = null)

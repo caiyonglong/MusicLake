@@ -110,8 +110,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             newHolder.item_love.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (UserStatus.getLoginStatus(mContext)) {
-                        changeAgree(dynamic.getSecret_id(), UserStatus.getUserInfo(mContext).getId(), position);
+                    if (UserStatus.getLoginStatus()) {
+                        changeAgree(dynamic.getSecret_id(), UserStatus.getUserInfo().getId(), position);
                     } else {
                         ToastUtils.show(mContext, "请先登录！");
                     }
@@ -120,7 +120,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             newHolder.rl_user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (UserStatus.getLoginStatus(mContext)) {
+                    if (UserStatus.getLoginStatus()) {
 //                        if (!UserStatus.getUserInfo(mContext).getUser_id().equals(dynamic.getUser_id())) {
 //                            Intent intent = new Intent(mContext, NearPeopleAcivity.class);
 //                            intent.putExtra("userinfo", dynamic.getUser());

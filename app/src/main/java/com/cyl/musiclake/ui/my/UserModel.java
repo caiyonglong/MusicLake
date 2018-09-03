@@ -16,16 +16,16 @@ public class UserModel implements UserContract.Model {
     @Override
     public void savaInfo(User userInfo) {
         //保存用户信息
-        UserStatus.saveUserInfo(MusicApp.getAppContext(), userInfo);
+        UserStatus.saveUserInfo( userInfo);
     }
 
     @Override
     public User getUserInfo() {
-        return UserStatus.getUserInfo(MusicApp.getAppContext());
+        return UserStatus.getUserInfo();
     }
 
     @Override
     public void cleanInfo() {
-        UserStatus.clearUserInfo(MusicApp.getAppContext());
+        UserStatus.clearUserInfo();
     }
 }

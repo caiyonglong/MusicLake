@@ -1,11 +1,10 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.download.DownloadLoader
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.download.DownloadLoader
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -78,14 +77,15 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         updateDownload()
     }
 
-    override fun loadPlaylist() {
-        val mIsLogin = UserStatus.getLoginStatus(MusicApp.getAppContext())
+    override fun loadPlaylist(playlist: Playlist?) {
+        val mIsLogin = UserStatus.getLoginStatus()
         if (mIsLogin) {
-            OnlinePlaylistUtils.getOnlinePlaylist(success = {
+            OnlinePlaylistUtils.getOnlinePlaylist(isLoadSong = true, success = {
                 playlists = OnlinePlaylistUtils.playlists
                 mView?.showPlaylist(playlists)
             }, fail = {
                 ToastUtils.show(it)
+                mView?.showPlaylist(playlists)
                 mView?.showEmptyState()
             })
         } else {

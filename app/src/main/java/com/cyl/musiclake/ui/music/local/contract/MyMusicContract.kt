@@ -23,6 +23,6 @@ interface MyMusicContract {
     interface Presenter : BaseContract.BasePresenter<View> {
         fun loadSongs()
 
-        fun loadPlaylist()
+        fun loadPlaylist(playlist: Playlist? = null)
     }
 }

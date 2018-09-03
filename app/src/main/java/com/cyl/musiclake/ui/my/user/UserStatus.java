@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.my.user;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.SPUtils;
 
@@ -11,8 +12,8 @@ import com.cyl.musiclake.utils.SPUtils;
  */
 public class UserStatus {
     //保存个人信息到user.xml文件中
-    public static void saveUserInfo(Context context, User userInfo) {
-        SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+    public static void saveUserInfo(User userInfo) {
+        SharedPreferences sp = MusicApp.getAppContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(Constants.USER_ID, userInfo.getId());
         editor.putString(Constants.TOKEN, userInfo.getToken());
@@ -27,15 +28,16 @@ public class UserStatus {
         editor.putString(Constants.PHONE, userInfo.getPhone());
         editor.putString(Constants.NICK, userInfo.getNick());
         editor.putInt(Constants.SECRET, userInfo.getSecret());
+        editor.putLong(Constants.TOKEN_TIME, System.currentTimeMillis());
 
         editor.apply();
-        saveLoginStatus(context, true);
+        saveLoginStatus(true);
     }
 
     //从data.xml文件中取出个人信息
-    public static User getUserInfo(Context context) {
-        if (!getLoginStatus(context)) return null;
-        SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+    public static User getUserInfo() {
+        if (!getLoginStatus()) return null;
+        SharedPreferences sp = MusicApp.getAppContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         User user = new User();
         user.setId(sp.getString(Constants.USER_ID, null));
         user.setName(sp.getString(Constants.USERNAME, null));
@@ -53,26 +55,26 @@ public class UserStatus {
     }
 
     //从data.xml文件中清空个人信息
-    public static void clearUserInfo(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+    public static void clearUserInfo() {
+        SharedPreferences sp = MusicApp.getAppContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
-        saveLoginStatus(context, false);
+        saveLoginStatus(false);
     }
 
     //登录状态、
-    public static void saveLoginStatus(Context context, boolean status) {
+    public static void saveLoginStatus(boolean status) {
         SPUtils.putAnyCommit(Constants.LOGIN_STATUS, status);
-        SPUtils.putAnyCommit(Constants.TOKEN_TIME, System.currentTimeMillis());
     }
 
-    public static boolean getLoginStatus(Context context) {
+    public static boolean getLoginStatus() {
         return SPUtils.getAnyByKey(Constants.LOGIN_STATUS, false);
     }
 
     public static boolean getTokenStatus() {
-        long time = SPUtils.getAnyByKey(Constants.TOKEN_TIME, 0L);
+        SharedPreferences sp = MusicApp.getAppContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        long time = sp.getLong(Constants.TOKEN_TIME, 0L);
         return (System.currentTimeMillis() - time < 7 * 24 * 60 * 60 * 1000);
     }
 
