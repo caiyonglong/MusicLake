@@ -12,6 +12,7 @@ import com.cyl.musiclake.api.PlaylistApiServiceImpl;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.event.MyPlaylistEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
@@ -72,7 +73,7 @@ public class CreatePlaylistDialog extends DialogFragment {
                         @Override
                         public void success(Playlist result) {
                             ToastUtils.show(getString(R.string.create_playlist_success));
-                            EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID,null));
+                            EventBus.getDefault().post(new MyPlaylistEvent(Constants.PLAYLIST_ADD, null));
                         }
 
                         @Override

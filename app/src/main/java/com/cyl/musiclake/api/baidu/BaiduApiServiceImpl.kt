@@ -35,7 +35,7 @@ object BaiduApiServiceImpl {
                 val playlist = Playlist()
                 playlist.name = item.name
                 playlist.des = item.comment
-                playlist.type = Playlist.PT_BAIDU
+                playlist.type = Constants.PLAYLIST_BD_ID
                 playlist.pid = item.type.toString()
                 playlist.coverUrl = item.picS192
                 val musicList = mutableListOf<Music>()
@@ -49,7 +49,6 @@ object BaiduApiServiceImpl {
                     musicList.add(music)
                 }
                 playlist.musicList = musicList
-                playlist.type
                 playlists.add(playlist)
             }
             Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {
@@ -237,7 +236,7 @@ object BaiduApiServiceImpl {
                                         playlist.pid = it.chName
                                         playlist.coverUrl = it.thumb
                                         playlist.des = it.cateSname
-                                        playlist.type = Playlist.PT_BAIDU
+                                        playlist.type = Constants.PLAYLIST_BD_ID
                                         result.add(playlist)
                                     }
                                 }

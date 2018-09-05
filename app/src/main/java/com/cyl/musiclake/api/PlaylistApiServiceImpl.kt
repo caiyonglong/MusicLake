@@ -1,7 +1,6 @@
 package com.cyl.musiclake.api
 
 import com.cyl.musicapi.playlist.*
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
@@ -39,7 +38,7 @@ object PlaylistApiServiceImpl {
                         val playlist = Playlist()
                         playlist.id = playlistInfo.id
                         playlist.name = playlistInfo.name
-                        playlist.type = Playlist.PT_MY
+                        playlist.type = Constants.PLAYLIST_CUSTOM_ID
                         result.add(playlist)
                     }
                     Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {
@@ -164,7 +163,7 @@ object PlaylistApiServiceImpl {
                     val json = it.string()
                     Observable.create(ObservableOnSubscribe<String> {
                         if (json == "{}") {
-                            it.onNext("收藏成功")
+                            it.onNext("添加成功")
                             it.onComplete()
                         } else {
                             try {
@@ -195,8 +194,10 @@ object PlaylistApiServiceImpl {
                 .flatMap { result ->
                     Observable.create(ObservableOnSubscribe<String> {
                         if (result.failedList != null) {
-                            it.onNext("收藏成功")
+                            it.onNext("${musics!!.size - result.failedList!!.size}首添加成功,${result.failedList!!.size}首添加失败！")
                             it.onComplete()
+                        } else {
+                            it.onError(Throwable("添加失败"))
                         }
                     })
                 }
@@ -217,8 +218,10 @@ object PlaylistApiServiceImpl {
                 .flatMap { result ->
                     Observable.create(ObservableOnSubscribe<String> {
                         if (result.failedList != null) {
-                            it.onNext("收藏成功")
+                            it.onNext("${musicList!!.size - result.failedList!!.size}首添加成功,${result.failedList!!.size}首添加失败！")
                             it.onComplete()
+                        } else {
+                            it.onError(Throwable("添加失败"))
                         }
                     })
                 }
@@ -304,7 +307,7 @@ object PlaylistApiServiceImpl {
                         playlist.des = it.description
                         playlist.pid = it.id
                         playlist.name = it.name
-                        playlist.type = Playlist.PT_NETEASE
+                        playlist.type = Constants.PLAYLIST_WY_ID
                         playlist.playCount = it.playCount
                         playlist.musicList = MusicUtils.getMusicList(it.list)
                         list.add(playlist)

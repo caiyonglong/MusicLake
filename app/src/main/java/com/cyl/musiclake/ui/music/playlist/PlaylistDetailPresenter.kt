@@ -12,10 +12,9 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.event.PlaylistEvent
+import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
-import com.cyl.musiclake.ui.music.edit.EditSongListContract
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
@@ -104,7 +103,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
     override fun loadPlaylistSongs(playlist: Playlist) {
         when {
-            playlist.type == Playlist.PT_LOCAL -> doAsync {
+            playlist.type == Constants.PLAYLIST_BD_ID -> doAsync {
                 val data = playlist.pid?.let { PlaylistLoader.getMusicForPlaylist(it, playlist.order) }
                 uiThread {
                     if (data != null && data.isNotEmpty()) {
@@ -114,7 +113,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                     }
                 }
             }
-            playlist.type == Playlist.PT_BAIDU -> {
+            playlist.type == Constants.PLAYLIST_BD_ID -> {
                 ApiManager.request(BaiduApiServiceImpl.getRadioChannelInfo(playlist), object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)
@@ -133,7 +132,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 })
 
             }
-            playlist.type == Playlist.PT_NETEASE -> {
+            playlist.type == Constants.PLAYLIST_WY_ID -> {
                 ApiManager.request(playlist.pid?.let { NeteaseApiServiceImpl.getPlaylistDetail(it) }, object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)
@@ -184,7 +183,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView.success(1)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID,playlist))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_RENAME, playlist))
                 ToastUtils.show(result)
             }
 
@@ -198,18 +197,6 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(PlaylistApiServiceImpl.disCollectMusic(pid, music), object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView?.removeMusic(position)
-            }
-
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
-            }
-        })
-    }
-
-    fun getBatchSongDetail(vendor: String, ids: Array<String>) {
-        ApiManager.request(MusicApiServiceImpl.getBatchMusic(vendor, ids), object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
-                mView.showPlaylistSongs(result)
             }
 
             override fun error(msg: String) {

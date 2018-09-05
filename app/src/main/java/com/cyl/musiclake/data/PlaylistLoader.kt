@@ -39,23 +39,13 @@ object PlaylistLoader {
      * @param name
      * @return
      */
-    fun createPlaylist(name: String, type: Int = 0): Boolean {
-        val playlist = Playlist()
-        playlist.pid = System.currentTimeMillis().toString()
-        playlist.date = System.currentTimeMillis()
-        playlist.updateDate = System.currentTimeMillis()
-        playlist.name = name
-        playlist.type = type
-        return DaoLitepal.saveOrUpdatePlaylist(playlist)
-    }
-
     fun createDefaultPlaylist(pid: String, name: String): Boolean {
         val playlist = Playlist()
         playlist.pid = pid
         playlist.date = System.currentTimeMillis()
         playlist.updateDate = System.currentTimeMillis()
         playlist.name = name
-        playlist.type = Playlist.PT_LOCAL
+        playlist.type = pid
         if (pid != Constants.PLAYLIST_QUEUE_ID)
             playlist.order = "updateDate desc"
         return DaoLitepal.saveOrUpdatePlaylist(playlist)

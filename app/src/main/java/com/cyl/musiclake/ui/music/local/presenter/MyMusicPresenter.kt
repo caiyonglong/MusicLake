@@ -80,14 +80,25 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     override fun loadPlaylist(playlist: Playlist?) {
         val mIsLogin = UserStatus.getLoginStatus()
         if (mIsLogin) {
-            OnlinePlaylistUtils.getOnlinePlaylist(isLoadSong = true, success = {
-                playlists = OnlinePlaylistUtils.playlists
-                mView?.showPlaylist(playlists)
-            }, fail = {
-                ToastUtils.show(it)
-                mView?.showPlaylist(playlists)
-                mView?.showEmptyState()
-            })
+            if (playlist == null) {
+                OnlinePlaylistUtils.getOnlinePlaylist(success = {
+                    playlists = OnlinePlaylistUtils.playlists
+                    mView?.showPlaylist(playlists)
+                }, fail = {
+                    ToastUtils.show(it)
+                    mView?.showPlaylist(playlists)
+                    mView?.showEmptyState()
+                })
+            } else {
+                OnlinePlaylistUtils.getPlaylistMusic(playlist) {
+                    for (i in 0 until playlists.size) {
+                        if (playlists[i].pid == it.pid) {
+                            playlists[i] = it
+                        }
+                    }
+                    mView?.showPlaylist(playlists)
+                }
+            }
         } else {
             playlists.clear()
             mView?.showPlaylist(playlists)

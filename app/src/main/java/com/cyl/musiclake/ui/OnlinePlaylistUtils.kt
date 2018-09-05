@@ -8,7 +8,7 @@ import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.event.PlaylistEvent
+import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -36,7 +36,7 @@ object OnlinePlaylistUtils {
             override fun success(result: String) {
                 success.invoke(result)
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_DELETE, playlist))
             }
 
             override fun error(msg: String) {
@@ -68,23 +68,22 @@ object OnlinePlaylistUtils {
     /**
      * 获取在线歌单
      */
-    fun getOnlinePlaylist(isLoadSong: Boolean = false, success: (MutableList<Playlist>) -> Unit, fail: (String) -> Unit) {
+    fun getOnlinePlaylist(success: (MutableList<Playlist>) -> Unit, fail: (String) -> Unit) {
         ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 playlists.clear()
                 result.forEach {
                     it.pid = it.id.toString()
-                    it.type = Playlist.PT_MY
+                    it.type = Constants.PLAYLIST_CUSTOM_ID
                     playlists.add(it)
-                    if (isLoadSong) {
-                        getPlaylistMusic(it) { result ->
-                            Collections.replaceAll(playlists, it, result)
-                            success.invoke(playlists)
-                        }
-                    } else {
-                        success.invoke(playlists)
-                    }
+//                    if (isLoadSong) {
+//                        getPlaylistMusic(it) { result ->
+//                            Collections.replaceAll(playlists, it, result)
+//                            success.invoke(playlists)
+//                        }
+//                    }
                 }
+                success.invoke(playlists)
             }
 
             override fun error(msg: String) {
@@ -94,16 +93,16 @@ object OnlinePlaylistUtils {
     }
 
     /**
-     * 获取在线歌单
+     * 批量歌曲添加到在线歌单
      */
     fun addToPlaylist(activity: AppCompatActivity?, musics: MutableList<Music>?) {
         if (activity == null) return
-        if (musics == null) {
-            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.resource_error))
-            return
-        }
         if (!UserStatus.getLoginStatus()) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
+            return
+        }
+        if (musics == null || musics.size == 0) {
+            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.no_song_to_add))
             return
         }
         musics.forEach {
@@ -175,7 +174,7 @@ object OnlinePlaylistUtils {
         ApiManager.request(PlaylistApiServiceImpl.collectMusic(playlist.pid.toString(), music!!), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
 
             override fun error(msg: String) {
@@ -193,12 +192,11 @@ object OnlinePlaylistUtils {
             override fun success(result: String?) {
                 ToastUtils.show(result)
                 success?.invoke()
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
 
             override fun error(msg: String?) {
                 ToastUtils.show(msg)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
             }
 
         })
@@ -212,7 +210,7 @@ object OnlinePlaylistUtils {
         ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(playlist.pid.toString(), musicList), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID, playlist))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
 
             override fun error(msg: String) {
@@ -253,7 +251,7 @@ object OnlinePlaylistUtils {
         ApiManager.request(PlaylistApiServiceImpl.disCollectMusic(pid, music), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_CUSTOM_ID))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE))
                 success.invoke()
             }
 

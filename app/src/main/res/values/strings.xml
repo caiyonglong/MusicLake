@@ -17,6 +17,7 @@
     <string name="warning_network">暂不支持添加本地音乐和百度音乐</string>
     <string name="warning">警告！</string>
     <string name="resource_error">歌曲资源异常</string>
+    <string name="no_song_to_add">请选择需要添加的歌曲!</string>
     <string name="prompt_login">请先登录！</string>
     <string name="title_common">通用</string>
     <string name="title_function">功能</string>

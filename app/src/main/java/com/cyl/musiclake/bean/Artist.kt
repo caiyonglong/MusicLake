@@ -13,7 +13,7 @@ import java.io.Serializable
 class Artist() : LitePalSupport(), Parcelable {
     var name: String? = null
     var id: Long = 0
-    var artistId: Long = 0
+    var artistId: String?=null
     var count: Int = 0
     var type: String? = Constants.LOCAL
     var picUrl: String? = null
@@ -27,7 +27,7 @@ class Artist() : LitePalSupport(), Parcelable {
     constructor(parcel: Parcel) : this() {
         name = parcel.readString()
         id = parcel.readLong()
-        artistId = parcel.readLong()
+        artistId = parcel.readString()
         count = parcel.readInt()
         type = parcel.readString()
         picUrl = parcel.readString()
@@ -39,14 +39,14 @@ class Artist() : LitePalSupport(), Parcelable {
 
     constructor(id: Long, name: String, count: Int) : this() {
         this.name = name
-        this.artistId = id
+        this.artistId = id.toString()
         this.musicSize = count
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeLong(id)
-        parcel.writeLong(artistId)
+        parcel.writeString(artistId)
         parcel.writeInt(count)
         parcel.writeString(type)
         parcel.writeString(picUrl)

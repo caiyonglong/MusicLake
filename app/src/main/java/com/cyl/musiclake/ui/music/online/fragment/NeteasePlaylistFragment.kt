@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseFragment
 import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.music.online.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.online.activity.NeteasePlaylistActivity
@@ -59,7 +59,7 @@ class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Onl
     override fun listener() {
         mAdapter?.setOnItemClickListener { _, _, position ->
             val intent = Intent()
-            if (allPlaylist[position].type == Playlist.PT_BAIDU) {
+            if (allPlaylist[position].type == Constants.PLAYLIST_BD_ID) {
                 intent.setClass(activity, BaiduMusicListActivity::class.java)
                 intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
             } else {

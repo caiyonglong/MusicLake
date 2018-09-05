@@ -120,7 +120,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
             val music = musicList[position]
-            if (mPlaylist != null && mPlaylist?.type == Playlist.PT_MY) {
+            if (mPlaylist != null && mPlaylist?.type == Constants.PLAYLIST_CUSTOM_ID) {
                 bottomDialogFragment = BottomDialogFragment.newInstance(music, Constants.OP_PLAYLIST)
                 bottomDialogFragment?.removeMusicListener = this
                 bottomDialogFragment?.position = position
@@ -203,7 +203,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                     menu.removeItem(R.id.action_delete_playlist)
                 }
             }
-            if (it.type == Playlist.PT_BAIDU) {
+            if (it.type == Constants.PLAYLIST_BD_ID) {
                 //百度电台
                 menu.removeItem(R.id.action_rename_playlist)
                 menu.removeItem(R.id.action_delete_playlist)

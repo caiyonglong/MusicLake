@@ -31,7 +31,7 @@ object NeteaseApiServiceImpl {
                                 val list = mutableListOf<Artist>()
                                 it.list.artists?.forEach {
                                     val playlist = Artist()
-                                    playlist.artistId = it.id.toLong()
+                                    playlist.artistId = it.id.toString()
                                     playlist.name = it.name
                                     playlist.picUrl = it.picUrl
                                     playlist.score = it.score
@@ -71,7 +71,7 @@ object NeteaseApiServiceImpl {
                                     playlist.date = it.createTime
                                     playlist.updateDate = it.updateTime
                                     playlist.playCount = it.playCount.toLong()
-                                    playlist.type = Playlist.PT_NETEASE
+                                    playlist.type = Constants.PLAYLIST_WY_ID
                                     list.add(playlist)
                                 }
                                 e.onNext(list)
@@ -104,7 +104,7 @@ object NeteaseApiServiceImpl {
                                     playlist.date = it.createTime
                                     playlist.updateDate = it.updateTime
                                     playlist.playCount = it.playCount.toLong()
-                                    playlist.type = Playlist.PT_NETEASE
+                                    playlist.type = Constants.PLAYLIST_WY_ID
                                     playlist.musicList = MusicUtils.getNeteaseMusicList(it.tracks)
                                     e.onNext(playlist)
                                 }

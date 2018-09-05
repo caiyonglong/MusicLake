@@ -17,6 +17,7 @@ import android.widget.TextView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
@@ -94,11 +95,11 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun turnToAlbum() {
-            val album = Album()
-            album.albumId = music?.albumId
-            album.name = music?.album
-            album.type = music?.type
-            NavigationHelper.navigateToPlaylist(mContext, album, null)
+        val album = Album()
+        album.albumId = music?.albumId
+        album.name = music?.album
+        album.type = music?.type
+        NavigationHelper.navigateToPlaylist(mContext, album, null)
     }
 
 
@@ -106,9 +107,12 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         activity?.let { it1 ->
             if (music != null && music?.artistId != null && music?.artist != null) {
                 if (music!!.type == Constants.LOCAL) {
-                    NavigationHelper.navigateToArtist(it1,
-                            music?.artistId!!,
-                            music?.artist!!, null)
+
+                    val artist = Artist()
+                    artist.artistId = music?.artistId
+                    artist.name = music?.album
+                    artist.type = music?.type
+                    NavigationHelper.navigateToPlaylist(it1, artist, null)
                 } else {
                     val artist = music?.let { it1 -> MusicUtils.getArtistInfo(it1) }
                     artist?.let {

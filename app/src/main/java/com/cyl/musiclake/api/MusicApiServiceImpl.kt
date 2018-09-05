@@ -170,7 +170,7 @@ object MusicApiServiceImpl {
                             artist.name = it.data.detail.name
                             artist.picUrl = it.data.detail.cover
                             artist.desc = it.data.detail.desc
-                            artist.artistId = it.data.detail.id.toLong()
+                            artist.artistId = it.data.detail.id
                             result.onNext(artist)
                             result.onComplete()
                         } else {
@@ -213,7 +213,7 @@ object MusicApiServiceImpl {
                     .getAlbumSongs(vendor, id, offset, limit, {
                         if (it.status) {
                             val playlist = Playlist()
-                            playlist.type = Playlist.PT_MY
+                            playlist.type = Constants.PLAYLIST_CUSTOM_ID
                             playlist.name = it.data.detail.name
                             playlist.des = it.data.detail.desc
                             playlist.coverUrl = it.data.detail.cover

@@ -3,6 +3,7 @@ package com.cyl.musiclake.bean
 import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
+import com.cyl.musiclake.common.Constants
 import org.litepal.crud.LitePalSupport
 
 @SuppressLint("ParcelCreator")
@@ -13,8 +14,6 @@ import org.litepal.crud.LitePalSupport
  * 版本：2.5
  */
 class Playlist() : LitePalSupport(), Parcelable {
-
-
     var id: Long = 0
     //歌单id
     var pid: String? = null
@@ -32,8 +31,9 @@ class Playlist() : LitePalSupport(), Parcelable {
     var order: String? = null
     //封面
     var coverUrl: String? = null
-    //类型 0：本地歌单 1：在线同步歌单 2：百度音乐电台 3:网易云歌单 4:百度排行榜
-    var type: Int = 0
+    //类型:本地歌单、在线同步歌单、百度音乐电台、网易云歌单、百度排行榜
+    var type: String = Constants.PLAYLIST_LOCAL_ID
+
     var playCount: Long = 0
 
 
@@ -50,7 +50,7 @@ class Playlist() : LitePalSupport(), Parcelable {
         des = parcel.readString()
         order = parcel.readString()
         coverUrl = parcel.readString()
-        type = parcel.readInt()
+        type = parcel.readString()
     }
 
 
@@ -73,7 +73,7 @@ class Playlist() : LitePalSupport(), Parcelable {
         parcel.writeString(des)
         parcel.writeString(order)
         parcel.writeString(coverUrl)
-        parcel.writeInt(type)
+        parcel.writeString(type)
     }
 
     override fun describeContents(): Int {
@@ -81,10 +81,6 @@ class Playlist() : LitePalSupport(), Parcelable {
     }
 
     companion object CREATOR : Parcelable.Creator<Playlist> {
-        const val PT_LOCAL = 0
-        const val PT_MY = 1
-        const val PT_BAIDU = 2
-        const val PT_NETEASE = 3
         override fun createFromParcel(parcel: Parcel): Playlist {
             return Playlist(parcel)
         }

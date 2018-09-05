@@ -10,30 +10,25 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.PlaylistLoader
-import com.cyl.musiclake.event.DownloadEvent
-import com.cyl.musiclake.event.LoginEvent
-import com.cyl.musiclake.event.MetaChangedEvent
-import com.cyl.musiclake.event.PlaylistEvent
+import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract
 import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity
-import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.frag_local.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 /**
  * Created by Monkey on 2015/6/29.
  */
 class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
-    private var playlists: List<Playlist> = ArrayList()
+    private var playlists = mutableListOf<Playlist>()
     private var mAdapter: PlaylistAdapter? = null
 
     override fun getLayoutId(): Int {
@@ -59,7 +54,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
     override fun listener() {
-        mAdapter?.setOnItemClickListener { _, _, position ->  }
+        mAdapter?.setOnItemClickListener { _, _, position -> }
 
         playlistAddIv.setOnClickListener {
             if (UserStatus.getLoginStatus()) {
@@ -171,10 +166,33 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlaylistChangedEvent(event: PlaylistEvent) {
         when (event.type) {
-            Constants.PLAYLIST_CUSTOM_ID -> mPresenter?.loadPlaylist(event.playlist)
+            Constants.PLAYLIST_CUSTOM_ID -> mPresenter?.loadPlaylist()
             Constants.PLAYLIST_LOVE_ID -> mPresenter?.updateFavorite()
             Constants.PLAYLIST_HISTORY_ID -> mPresenter?.updateHistory()
             Constants.PLAYLIST_DOWNLOAD_ID -> mPresenter?.updateDownload()
+        }
+    }
+
+    /**
+     * 更新在线歌单
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPlaylistChangedEvent(event: MyPlaylistEvent) {
+        when (event.operate) {
+            Constants.PLAYLIST_ADD -> mPresenter?.loadPlaylist()
+            Constants.PLAYLIST_DELETE -> {
+                playlists.forEach { playlist ->
+                    event.playlist?.let {
+                        if (it.pid == playlist.pid) {
+                            playlists.remove(event.playlist)
+                            return@forEach
+                        }
+                    }
+                }
+                mAdapter?.setNewData(playlists)
+            }
+            Constants.PLAYLIST_UPDATE -> mPresenter?.loadPlaylist(event.playlist)
+            Constants.PLAYLIST_RENAME -> mPresenter?.loadPlaylist(event.playlist)
         }
     }
 

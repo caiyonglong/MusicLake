@@ -1,10 +1,7 @@
 package com.cyl.musiclake.ui.music.online.activity
 
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,9 +10,11 @@ import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
+import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.online.PlaylistContract
 import com.cyl.musiclake.ui.music.online.PlaylistPresenter
@@ -23,6 +22,7 @@ import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.SizeUtils
 import kotlinx.android.synthetic.main.activity_online_playlist.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
@@ -86,7 +86,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicList, mPlaylist?.name + mPlaylist?.pid)
                 mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this,view.findViewById(R.id.iv_cover))
+                NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
@@ -106,20 +106,19 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mIvBackground = mViewHeader?.findViewById(R.id.coverBgIv)
     }
 
-    override fun showLoading() {
-        super.showLoading()
-    }
-
-    override fun hideLoading() {
-        super.hideLoading()
-    }
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
+            R.id.action_batch -> {
+                startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_playlist, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun showHeaderInfo(playlist: Playlist?) {
@@ -156,8 +155,4 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mAdapter?.loadMoreComplete()
     }
 
-    companion object {
-
-        private val TAG = "BaiduMusicListActivity"
-    }
 }

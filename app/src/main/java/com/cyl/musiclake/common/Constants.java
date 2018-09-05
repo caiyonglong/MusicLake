@@ -6,7 +6,6 @@ import android.os.Environment;
  * Created by yonglong on 2016/5/8.
  */
 public class Constants {
-
     //歌曲操作区分
     public static final int OP_LOCAL = 0; //没有歌曲下载、删除、修改(后续会有)、添加到歌单
     public static final int OP_ONLINE = 1; //没有歌曲删除、修改、添加到歌单
@@ -25,12 +24,25 @@ public class Constants {
     public static final String PLAYLIST_LOCAL_ID = "local";
     public static final String PLAYLIST_QUEUE_ID = "queue";
     public static final String PLAYLIST_DOWNLOAD_ID = "download";
+    //百度歌单
+    public static final String PLAYLIST_BD_ID = "playlist_bd";
+    //网易云歌单
+    public static final String PLAYLIST_WY_ID = "playlist_wy";
+    //QQ歌单
+    public static final String PLAYLIST_QQ_ID = "playlist_qq";
+    //虾米歌单
+    public static final String PLAYLIST_XIA_MI_ID = "playlist_xm";
     //在线歌单
     public static final String PLAYLIST_CUSTOM_ID = "custom_online";
     //百度电台列表
     public static final String BAIDU_RADIO_LIST = "baidu_radio_list";
     public static final String NETEASE_ARITIST_LIST = "netease_artist_list";
 
+    //歌单操作
+    public static final int PLAYLIST_ADD = 0;
+    public static final int PLAYLIST_DELETE = 1;
+    public static final int PLAYLIST_UPDATE = 2;
+    public static final int PLAYLIST_RENAME = 3;
 
     //QQ APP_ID
     public static final String APP_ID = "101454823";
@@ -135,20 +147,6 @@ public class Constants {
 
     public static final String PLAY_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
             "method=baidu.ting.song.play&songid=877578";
-
-
-    /**
-     * 本地保存地址
-     */
-    public static final String LOCALPATH = "/mnt/sdcard/hkmusic/";
-    /**
-     * 下载的线程数量
-     */
-    public static final int THREADCOUNT = 3;
-    /**
-     * 下载管理广播的action
-     */
-    public static final String DOWNLOADMANAGEACTION = "com.cyl.multithreadeddownload.DownloadActivity";
 
 
     public static final String DOWNLOAD_FILENAME = "hkmusic.apk";

@@ -1,12 +1,10 @@
 package com.cyl.musiclake.common
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
@@ -17,15 +15,14 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.download.ui.DownloadFragment
+import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
 import com.cyl.musiclake.ui.music.player.PlayerActivity
 import com.cyl.musiclake.ui.music.playlist.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
-import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import java.io.File
@@ -36,65 +33,6 @@ import java.io.File
  */
 
 object NavigationHelper {
-
-    /**
-     * 跳转到专辑
-     */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    fun navigateToAlbum(context: Activity, albumID: String, title: String, transitionViews: Pair<View, String>?) {
-
-//        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-//        val fragment: Fragment
-//
-//        if (transitionViews != null) {
-//            val changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform)
-//            transaction.addSharedElement(transitionViews.first, transitionViews.second)
-//            fragment = AlbumDetailFragment.newInstance(albumID, title, transitionViews.second)
-//            fragment.setSharedElementEnterTransition(changeImage)
-//        } else {
-//            transaction.setCustomAnimations(R.anim.activity_fade_in,
-//                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out)
-//            fragment = AlbumDetailFragment.newInstance(albumID, title, null)
-//        }
-//        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
-//        transaction.add(R.id.fragment_container, fragment)
-//        transaction.addToBackStack(title).commit()
-        val album = Album()
-        album.albumId = albumID
-        album.name = title
-        val intent = Intent(context, PlaylistDetailActivity::class.java)
-        intent.putExtra(Extras.ALBUM, album)
-        context.startActivity(intent)
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    fun navigateToArtist(context: Activity, artistID: String, title: String, transitionViews: Pair<View, String>?) {
-//        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-//        val fragment: Fragment
-//
-//        if (transitionViews != null) {
-//            val changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform)
-//            transaction.addSharedElement(transitionViews.first, transitionViews.second)
-//            fragment = ArtistSongsFragment.newInstance(artistID, title, transitionViews.second)
-//            fragment.setSharedElementEnterTransition(changeImage)
-//        } else {
-//            transaction.setCustomAnimations(R.anim.activity_fade_in,
-//                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out)
-//            fragment = ArtistSongsFragment.newInstance(artistID, title, null)
-//        }
-//        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
-//        transaction.add(R.id.fragment_container, fragment)
-//        transaction.addToBackStack(title).commit()
-        val artist = Artist()
-        artist.artistId = artistID.toLong()
-        artist.name = title
-        val intent = Intent(context, PlaylistDetailActivity::class.java)
-        intent.putExtra(Extras.ARTIST, artist)
-        context.startActivity(intent)
-    }
-
-
     fun navigateToLocalMusic(context: Activity, transitionViews: Pair<View, String>?) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment: Fragment

@@ -262,7 +262,7 @@ object MusicUtils {
             for (i in artistNames.indices) {
                 val artist = Artist()
                 artistIds?.get(i)?.let {
-                    artist.artistId = it.toLong()
+                    artist.artistId = it
                     artist.name = artistNames[i]
                     artist.type = music.type
                     artists.add(artist)
