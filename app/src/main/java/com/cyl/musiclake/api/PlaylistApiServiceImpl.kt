@@ -60,7 +60,6 @@ object PlaylistApiServiceImpl {
         return playlistApiService.getMusicList(token, pid)
                 .flatMap { it ->
                     val json = it.string()
-
                     val data = Gson().fromJson<MutableList<MusicInfo>>(json, object : TypeToken<MutableList<MusicInfo>>() {
                     }.type)
                     val musicList = mutableListOf<Music>()

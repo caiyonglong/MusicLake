@@ -120,16 +120,16 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
             val music = musicList[position]
-            if (mPlaylist != null && mPlaylist?.type == Constants.PLAYLIST_CUSTOM_ID) {
-                bottomDialogFragment = BottomDialogFragment.newInstance(music, Constants.OP_PLAYLIST)
-                bottomDialogFragment?.removeMusicListener = this
-                bottomDialogFragment?.position = position
-                bottomDialogFragment?.show(this)
-            } else {
-                bottomDialogFragment = BottomDialogFragment.newInstance(music, Constants.OP_ONLINE)
-                bottomDialogFragment?.position = position
-                bottomDialogFragment?.show(this)
-            }
+//            if (mPlaylist != null && mPlaylist?.type == Constants.PLAYLIST_CUSTOM_ID) {
+            bottomDialogFragment = BottomDialogFragment.newInstance(musicList[position], mPlaylist?.type)
+            bottomDialogFragment?.removeMusicListener = this
+            bottomDialogFragment?.position = position
+            bottomDialogFragment?.show(this)
+//            } else {
+//                bottomDialogFragment = BottomDialogFragment.newInstance(music, mPlaylist?.type)
+//                bottomDialogFragment?.position = position
+//                bottomDialogFragment?.show(this)
+//            }
         }
     }
 
@@ -239,7 +239,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun removeMusic(position: Int) {
         musicList.removeAt(position)
-        mAdapter?.notifyDataSetChanged()
+        mAdapter?.notifyItemRemoved(position)
         if (musicList.size == 0) {
             showEmptyState()
         }

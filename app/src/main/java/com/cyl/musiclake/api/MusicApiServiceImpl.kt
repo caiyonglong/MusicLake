@@ -136,10 +136,10 @@ object MusicApiServiceImpl {
      * 获取歌曲url信息
      *
      */
-    fun getMusicComment(vendor: String, mid: String): Observable<SongCommentData<NeteaseComment>> {
+    fun <T> getMusicComment(vendor: String, mid: String): Observable<SongCommentData<T>> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getComment(vendor, mid, {
+                    .getComment<T>(vendor, mid, {
                         if (it.status) {
                             result.onNext(it)
                             result.onComplete()

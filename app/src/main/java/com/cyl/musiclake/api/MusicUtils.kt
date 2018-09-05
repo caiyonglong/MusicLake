@@ -81,8 +81,8 @@ object MusicUtils {
         val music = Music()
         musicInfo.songId?.let {
             music.mid = it
-            music.collectId = it
         }
+        music.collectId = musicInfo.id
         music.title = musicInfo.name
         music.isOnline = true
         music.type = musicInfo.vendor

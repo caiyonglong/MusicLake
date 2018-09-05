@@ -38,7 +38,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
         }
         CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
             mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, MusicApp.getAppContext(), 12))
-            mView.setPlayingBitmap(bitmap)
+            mView?.setPlayingBitmap(bitmap)
         }
     }
 }

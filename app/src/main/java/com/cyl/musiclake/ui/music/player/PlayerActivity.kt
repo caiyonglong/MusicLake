@@ -18,15 +18,21 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import com.cyl.musicapi.bean.NeteaseComment
+import com.cyl.musicapi.bean.SongCommentData
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
+import com.cyl.musiclake.net.ApiManager
+import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
@@ -34,11 +40,9 @@ import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
+import com.cyl.musiclake.ui.music.playlist.PlaylistDetailPresenter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
-import com.cyl.musiclake.utils.ColorUtil
-import com.cyl.musiclake.utils.FormatUtil
-import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.SPUtils
+import com.cyl.musiclake.utils.*
 import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
@@ -125,7 +129,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         playPauseIv.setOnClickListener {
             PlayManager.playPause()
         }
-
     }
 
     override fun initInjector() {

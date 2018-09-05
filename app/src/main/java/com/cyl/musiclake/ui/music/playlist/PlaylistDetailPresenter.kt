@@ -183,20 +183,9 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 mView.success(1)
+                playlist.name = title
                 EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_RENAME, playlist))
                 ToastUtils.show(result)
-            }
-
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
-            }
-        })
-    }
-
-    override fun disCollectMusic(pid: String, position: Int, music: Music) {
-        ApiManager.request(PlaylistApiServiceImpl.disCollectMusic(pid, music), object : RequestCallBack<String> {
-            override fun success(result: String) {
-                mView?.removeMusic(position)
             }
 
             override fun error(msg: String) {

@@ -175,7 +175,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = searchResults.get(position);
-            BottomDialogFragment.Companion.newInstance(music, Constants.OP_ONLINE).show(this);
+            BottomDialogFragment.Companion.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(this);
         });
         mAdapter.setOnLoadMoreListener(() -> resultListRcv.postDelayed(() -> {
             if (mCurrentCounter == 0) {

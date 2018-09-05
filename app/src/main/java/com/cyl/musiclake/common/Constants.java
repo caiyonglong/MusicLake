@@ -34,6 +34,8 @@ public class Constants {
     public static final String PLAYLIST_XIA_MI_ID = "playlist_xm";
     //在线歌单
     public static final String PLAYLIST_CUSTOM_ID = "custom_online";
+    public static final String PLAYLIST_SEARCH_ID = "playlist_search";
+    public static final String PLAYLIST_IMPORT_ID = "playlist_import";
     //百度电台列表
     public static final String BAIDU_RADIO_LIST = "baidu_radio_list";
     public static final String NETEASE_ARITIST_LIST = "netease_artist_list";

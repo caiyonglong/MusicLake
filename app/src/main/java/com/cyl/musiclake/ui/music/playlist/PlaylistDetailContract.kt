@@ -31,7 +31,5 @@ interface PlaylistDetailContract {
         fun deletePlaylist(playlist: Playlist)
 
         fun renamePlaylist(playlist: Playlist, title: String)
-
-        fun disCollectMusic(pid: String, position: Int, music: Music)
     }
 }

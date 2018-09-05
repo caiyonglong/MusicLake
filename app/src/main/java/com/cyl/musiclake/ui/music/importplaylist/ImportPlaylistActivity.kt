@@ -20,6 +20,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_import_playlist.*
+import org.litepal.util.Const
 
 
 @Suppress("UNUSED_ANONYMOUS_PARAMETER")
@@ -154,7 +155,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            BottomDialogFragment.newInstance(result.musicList[position]).show(this@ImportPlaylistActivity)
+            BottomDialogFragment.newInstance(result.musicList[position],Constants.PLAYLIST_IMPORT_ID).show(this@ImportPlaylistActivity)
         }
 
     }

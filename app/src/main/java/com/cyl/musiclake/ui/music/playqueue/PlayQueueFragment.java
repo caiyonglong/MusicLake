@@ -19,6 +19,7 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.player.PlayManager;
@@ -119,12 +120,12 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position);
                 mAdapter.notifyDataSetChanged();
-                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(),view.findViewById(R.id.iv_cover));
+                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(), view.findViewById(R.id.iv_cover));
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = musicInfos.get(position);
-            BottomDialogFragment.Companion.newInstance(music)
+            BottomDialogFragment.Companion.newInstance(music, Constants.PLAYLIST_QUEUE_ID)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }

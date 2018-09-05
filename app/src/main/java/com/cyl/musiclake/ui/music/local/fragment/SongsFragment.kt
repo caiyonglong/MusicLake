@@ -62,7 +62,7 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         }
         mAdapter?.setOnItemChildClickListener { adapter, _, position ->
             val music = adapter.getItem(position) as Music?
-            BottomDialogFragment.newInstance(music, Constants.OP_LOCAL)
+            BottomDialogFragment.newInstance(music, Constants.PLAYLIST_LOCAL_ID)
                     .show(mFragmentComponent.activity as AppCompatActivity)
         }
     }

@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.utils.CoverLoader
 
 /**
@@ -24,5 +25,10 @@ class PlaylistAdapter(playlists: List<Playlist>) : BaseQuickAdapter<Playlist, Ba
         helper.itemView.setOnClickListener {
             NavigationHelper.navigateToPlaylist(mContext as AppCompatActivity, playlist, null)
         }
+
+        OnlinePlaylistUtils.getPlaylistMusic(playlist, success = {
+            helper.setText(R.id.tv_num, it.musicList.size.toString() + "首")
+            CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
+        })
     }
 }

@@ -398,10 +398,18 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (coverAnimator != null && coverAnimator.isPaused()) {
+    public void onResume() {
+        super.onResume();
+        if (coverAnimator != null && coverAnimator.isPaused() && PlayManager.isPlaying()) {
             coverAnimator.resume();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (coverAnimator != null && coverAnimator.isRunning()) {
+            coverAnimator.pause();
         }
     }
 

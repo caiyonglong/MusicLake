@@ -181,18 +181,31 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         when (event.operate) {
             Constants.PLAYLIST_ADD -> mPresenter?.loadPlaylist()
             Constants.PLAYLIST_DELETE -> {
-                playlists.forEach { playlist ->
-                    event.playlist?.let {
-                        if (it.pid == playlist.pid) {
-                            playlists.remove(event.playlist)
-                            return@forEach
-                        }
+                for (i in 0 until playlists.size) {
+                    if (playlists[i].pid == event.playlist?.pid) {
+                        playlists.removeAt(i)
+                        mAdapter?.notifyItemRemoved(i)
+                        return
                     }
                 }
-                mAdapter?.setNewData(playlists)
             }
-            Constants.PLAYLIST_UPDATE -> mPresenter?.loadPlaylist(event.playlist)
-            Constants.PLAYLIST_RENAME -> mPresenter?.loadPlaylist(event.playlist)
+            Constants.PLAYLIST_UPDATE -> {
+                for (i in 0 until playlists.size) {
+                    if (playlists[i].pid == event.playlist?.pid) {
+                        mAdapter?.notifyItemChanged(i)
+                        return
+                    }
+                }
+            }
+            Constants.PLAYLIST_RENAME -> {
+                for (i in 0 until playlists.size) {
+                    if (playlists[i].pid == event.playlist?.pid) {
+                        playlists[i].name = event.playlist?.name
+                        mAdapter?.notifyItemChanged(i)
+                        return
+                    }
+                }
+            }
         }
     }
 

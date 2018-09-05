@@ -28,6 +28,7 @@ import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
 import org.jetbrains.anko.support.v4.startActivity
+import org.litepal.util.Const
 
 class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -37,7 +38,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     private val subTitleTv by lazy { mRootView.findViewById<TextView>(R.id.subTitleTv) }
 
     var mAdapter: ItemAdapter? = null
-    var type: Int = 0
+    var type: String = Constants.PLAYLIST_LOCAL_ID
 
     var removeMusicListener: RemoveMusicListener? = null
     var position: Int = 0
@@ -57,12 +58,12 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             return fragment
         }
 
-        fun newInstance(music: Music?, type: Int): BottomDialogFragment {
+        fun newInstance(music: Music?, type: String?): BottomDialogFragment {
             val args = Bundle()
             this.music = music
             val fragment = BottomDialogFragment()
             fragment.arguments = args
-            args.putInt(Extras.PLAYLIST_TYPE, type)
+            args.putString(Extras.PLAYLIST_TYPE, type)
             return fragment
         }
     }
@@ -86,7 +87,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     private fun initItems() {
         titleTv.text = music?.title
         subTitleTv.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
-        arguments?.getInt(Extras.PLAYLIST_TYPE, 0)?.let {
+        arguments?.getString(Extras.PLAYLIST_TYPE, Constants.PLAYLIST_LOCAL_ID)?.let {
             type = it
         }
         mAdapter = ItemAdapter(type)
@@ -127,7 +128,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         startActivity<EditMusicActivity>(Extras.SONG to music)
     }
 
-    inner class ItemAdapter(type: Int = 0) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+    inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
         private var itemData = mutableMapOf(
                 R.string.popup_play_next to R.drawable.ic_queue_play_next,
                 R.string.popup_add_to_playlist to R.drawable.ic_playlist_add,
@@ -135,7 +136,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_artist to R.drawable.ic_art_track,
                 R.string.popup_detail_edit to R.drawable.ic_mode_edit,
                 R.string.popup_download to R.drawable.item_download,
-//                R.string.popup_delete to R.drawable.ic_delete,
+                R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
 
@@ -143,12 +144,12 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             if (music?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
-                itemData.remove(R.string.popup_delete)
+//                itemData.remove(R.string.popup_delete)
             } else {
                 itemData.remove(R.string.popup_detail_edit)
             }
 
-            if (type == Constants.OP_ONLINE) {
+            if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID) {
                 itemData.remove(R.string.popup_delete)
             }
 

@@ -91,7 +91,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
             val music = musicList[position]
-            BottomDialogFragment.newInstance(music, Constants.OP_ONLINE).show(this)
+            BottomDialogFragment.newInstance(music, mPlaylist?.type).show(this)
         }
     }
 

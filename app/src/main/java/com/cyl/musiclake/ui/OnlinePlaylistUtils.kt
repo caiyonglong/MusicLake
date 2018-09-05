@@ -251,7 +251,7 @@ object OnlinePlaylistUtils {
         ApiManager.request(PlaylistApiServiceImpl.disCollectMusic(pid, music), object : RequestCallBack<String> {
             override fun success(result: String) {
                 ToastUtils.show(result)
-                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, Playlist().apply { this.pid = pid }))
                 success.invoke()
             }
 

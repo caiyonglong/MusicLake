@@ -129,11 +129,22 @@ object BaseApiImpl {
         }
     }
 
-    fun getComment(vendor: String, id: String, success: (result: SongCommentData<NeteaseComment>) -> Unit, fail: ((String) -> Unit)? = null) {
+    fun <T> getComment(vendor: String, id: String, success: (result: SongCommentData<T>) -> Unit, fail: ((String) -> Unit)? = null) {
         mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 10)) { retValue: JSONObject ->
-            val result =
-                    gson.fromJson<SongCommentData<NeteaseComment>>(retValue.toString(), SongCommentData::class.java)
-            success.invoke(result)
+            if (retValue["status"] as Boolean) {
+                if (retValue.getJSONArray("comments")?.getJSONObject(0)?.getJSONObject("user") != null) {
+                    val data = gson.fromJson<SongCommentData<T>>(retValue.toString(), SongCommentData::class.java)
+                    success.invoke(data)
+                } else if (retValue.getJSONArray("comments")?.getJSONObject(0)?.getJSONObject("avatarurl") != null) {
+                    val data = gson.fromJson<SongCommentData<T>>(retValue.toString(), SongCommentData::class.java)
+                    success.invoke(data)
+                } else if (retValue.getJSONArray("comments")?.getJSONObject(0)?.getJSONObject("avatar") != null) {
+                    val data = gson.fromJson<SongCommentData<T>>(retValue.toString(), SongCommentData::class.java)
+                    success.invoke(data)
+                }
+            } else {
+                fail?.invoke("请求失败")
+            }
         }
     }
 

@@ -8,7 +8,6 @@ data class SongCommentData<T>(@SerializedName("data")
                               @SerializedName("status")
                               val status: Boolean = false)
 
-
 data class User(@SerializedName("avatarUrl")
                 val avatarUrl: String = "",
                 @SerializedName("nickname")
@@ -39,6 +38,42 @@ data class QQComment(@SerializedName("avatarurl")
                      val uin: String = "")
 
 
+data class XiamoComment(@SerializedName("author")
+                        val author: Boolean = false,
+                        @SerializedName("isDelete")
+                        val isDelete: Boolean = false,
+                        @SerializedName("nickName")
+                        val nickName: String = "",
+                        @SerializedName("isReport")
+                        val isReport: Boolean = false,
+                        @SerializedName("isLiked")
+                        val isLiked: Boolean = false,
+                        @SerializedName("topFlag")
+                        val topFlag: Int = 0,
+                        @SerializedName("avatar")
+                        val avatar: String = "",
+                        @SerializedName("gmtCreate")
+                        val gmtCreate: Long = 0,
+                        @SerializedName("message")
+                        val message: String = "",
+                        @SerializedName("userId")
+                        val userId: Int = 0,
+                        @SerializedName("isOfficial")
+                        val isOfficial: Int = 0,
+                        @SerializedName("objectType")
+                        val objectType: Int = 0,
+                        @SerializedName("visits")
+                        val visits: Int = 0,
+                        @SerializedName("commentId")
+                        val commentId: Int = 0,
+                        @SerializedName("isHot")
+                        val isHot: Boolean = false,
+                        @SerializedName("objectId")
+                        val objectId: Int = 0,
+                        @SerializedName("likes")
+                        val likes: Int = 0)
+
+
 data class NeteaseComment(@SerializedName("beReplied")
                           val beReplied: List<BeRepliedItem>?,
                           @SerializedName("commentId")
@@ -49,16 +84,6 @@ data class NeteaseComment(@SerializedName("beReplied")
                           val user: User,
                           @SerializedName("content")
                           val content: String = "")
-
-class SongComment {
-    var avatarUrl: String = ""
-    var nickname: String = ""
-    var commentId: String = ""
-    var content: String = ""
-    var type: String = ""
-    var time: Int = 0
-    var userId: String = ""
-}
 
 
 data class CommentData<T>(@SerializedName("total")
