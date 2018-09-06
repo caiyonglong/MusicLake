@@ -72,17 +72,7 @@ object OnlinePlaylistUtils {
         ApiManager.request(PlaylistApiServiceImpl.getPlaylist(), object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 playlists.clear()
-                result.forEach {
-                    it.pid = it.id.toString()
-                    it.type = Constants.PLAYLIST_CUSTOM_ID
-                    playlists.add(it)
-//                    if (isLoadSong) {
-//                        getPlaylistMusic(it) { result ->
-//                            Collections.replaceAll(playlists, it, result)
-//                            success.invoke(playlists)
-//                        }
-//                    }
-                }
+                playlists.addAll(result)
                 success.invoke(playlists)
             }
 

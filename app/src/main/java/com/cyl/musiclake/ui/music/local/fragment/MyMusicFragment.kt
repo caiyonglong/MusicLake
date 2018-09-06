@@ -96,9 +96,8 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mAdapter?.setNewData(playlists)
         if (playlists.size == 0) {
             showEmptyState()
-        } else {
-            hideLoading()
         }
+        hideLoading()
     }
 
     override fun showHistory(musicList: MutableList<Music>) {
@@ -189,14 +188,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                     }
                 }
             }
-            Constants.PLAYLIST_UPDATE -> {
-                for (i in 0 until playlists.size) {
-                    if (playlists[i].pid == event.playlist?.pid) {
-                        mAdapter?.notifyItemChanged(i)
-                        return
-                    }
-                }
-            }
+            Constants.PLAYLIST_UPDATE -> mPresenter?.loadPlaylist()
             Constants.PLAYLIST_RENAME -> {
                 for (i in 0 until playlists.size) {
                     if (playlists[i].pid == event.playlist?.pid) {

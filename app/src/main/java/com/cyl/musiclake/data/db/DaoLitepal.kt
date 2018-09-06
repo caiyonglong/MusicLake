@@ -86,13 +86,13 @@ object DaoLitepal {
             val mtp = MusicToPlaylist()
             mtp.mid = music.mid
             mtp.pid = pid
-            mtp.count = 1
+            mtp.total = 1
             mtp.createDate = System.currentTimeMillis()
             mtp.updateDate = System.currentTimeMillis()
             mtp.save()
         } else {
             val mtp = MusicToPlaylist()
-            mtp.count++
+            mtp.total++
             mtp.updateDate = System.currentTimeMillis()
             mtp.saveOrUpdate("mid = ? and pid =?", music.mid, pid)
         }

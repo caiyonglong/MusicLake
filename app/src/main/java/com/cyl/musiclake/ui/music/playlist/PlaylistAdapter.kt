@@ -19,16 +19,11 @@ class PlaylistAdapter(playlists: List<Playlist>) : BaseQuickAdapter<Playlist, Ba
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         helper.setText(R.id.tv_name, playlist.name)
         CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
-        helper.setText(R.id.tv_num, playlist.musicList.size.toString() + "首")
+        helper.setText(R.id.tv_num, "${playlist.total}首")
         helper.setVisible(R.id.tv_num, true)
 
         helper.itemView.setOnClickListener {
             NavigationHelper.navigateToPlaylist(mContext as AppCompatActivity, playlist, null)
         }
-
-        OnlinePlaylistUtils.getPlaylistMusic(playlist, success = {
-            helper.setText(R.id.tv_num, it.musicList.size.toString() + "首")
-            CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
-        })
     }
 }

@@ -20,7 +20,7 @@ class Playlist() : LitePalSupport(), Parcelable {
     //歌单名
     var name: String? = null
     //歌曲数量
-    var count: Long = 0
+    var total: Long = 0
     //更新日期
     var updateDate: Long = 0
     //创建日期
@@ -44,7 +44,8 @@ class Playlist() : LitePalSupport(), Parcelable {
         id = parcel.readLong()
         pid = parcel.readString()
         name = parcel.readString()
-        count = parcel.readLong()
+        total = parcel.readLong()
+        playCount = parcel.readLong()
         updateDate = parcel.readLong()
         date = parcel.readLong()
         des = parcel.readString()
@@ -60,16 +61,17 @@ class Playlist() : LitePalSupport(), Parcelable {
     }
 
     override fun toString(): String {
-        return "Playlist(id=$id, name=$name, count=$count, updateDate=$updateDate, date=$date, des=$des, order=$order, coverUrl=$coverUrl, type=$type, musicList=$musicList)"
+        return "Playlist(id=$id, name=$name, total=$total, updateDate=$updateDate, date=$date, des=$des, order=$order, coverUrl=$coverUrl, type=$type, musicList=$musicList)"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
         parcel.writeString(pid)
         parcel.writeString(name)
-        parcel.writeLong(count)
+        parcel.writeLong(total)
         parcel.writeLong(updateDate)
         parcel.writeLong(date)
+        parcel.writeLong(playCount)
         parcel.writeString(des)
         parcel.writeString(order)
         parcel.writeString(coverUrl)
@@ -97,7 +99,7 @@ class MusicToPlaylist : LitePalSupport() {
     var id: Long = 0
     var pid: String? = null
     var mid: String? = null
-    var count: Long = 0
+    var total: Long = 0
     var updateDate: Long = 0
     var createDate: Long = 0
 }

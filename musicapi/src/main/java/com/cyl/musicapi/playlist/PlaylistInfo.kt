@@ -14,6 +14,8 @@ data class PlaylistInfo(
         val playCount: Long = 0,
         @SerializedName("id")
         val id: String = "",
+        @SerializedName("total")
+        val total: Int = 0,
         @SerializedName("list")
         val list: MutableList<MusicInfo>? = null)
 

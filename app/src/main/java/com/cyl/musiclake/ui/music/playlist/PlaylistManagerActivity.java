@@ -4,7 +4,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.CheckBox;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
@@ -14,9 +13,7 @@ import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -33,13 +30,10 @@ public class PlaylistManagerActivity extends BaseActivity {
     private PlaylistEditAdapter mAdapter;
     private List<Playlist> playlists = OnlinePlaylistUtils.INSTANCE.getPlaylists();
 
-    public Map<String, Playlist> checkedMap = new HashMap<>();
-
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_playlist_edit;
     }
-
 
     @Override
     protected String setToolbarTitle() {
@@ -81,16 +75,6 @@ public class PlaylistManagerActivity extends BaseActivity {
 
             }
         });
-        mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            CheckBox cb = view.findViewById(R.id.cb_playlist);
-            cb.setChecked(!cb.isChecked());
-            Playlist item = playlists.get(position);
-            if (cb.isChecked()) {
-                checkedMap.put(String.valueOf(item.getId()), item);
-            } else {
-                checkedMap.remove(String.valueOf(item.getId()));
-            }
-        });
     }
 
     @Override
@@ -102,15 +86,6 @@ public class PlaylistManagerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-//        PlaylistModel.Companion.loadAllPlaylist(playlists -> {
-//            this.playlists = playlists;
-//        playlists =
-//        mAdapter.setNewData(playlists);
-//            return null;
-//        }, error -> {
-//            ToastUtils.show(error);
-//            return null;
-//        });
     }
 
     @Override
@@ -123,13 +98,15 @@ public class PlaylistManagerActivity extends BaseActivity {
                 .title("提示")
                 .content("是否删除歌单？")
                 .onPositive((dialog, which) -> {
-                    for (String key : checkedMap.keySet()) {
-                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(checkedMap.get(key), s -> {
-                            playlists.remove(checkedMap.get(key));
+                    for (String key : mAdapter.getCheckedMap().keySet()) {
+                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(mAdapter.getCheckedMap().get(key), s -> {
+                            playlists.remove(mAdapter.getCheckedMap().get(key));
                             mAdapter.setNewData(playlists);
                             return null;
                         });
                     }
+                    mAdapter.getCheckedMap().clear();
+                    finish();
                 })
                 .positiveText("确定")
                 .negativeText("取消")

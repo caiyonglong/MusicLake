@@ -7,20 +7,20 @@ import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.PlaylistApiServiceImpl;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.event.MyPlaylistEvent;
-import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.net.ApiManager;
-import com.cyl.musiclake.net.RequestCallBack;
-import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * 作者：yonglong on 2016/9/14 15:56
@@ -65,23 +65,13 @@ public class CreatePlaylistDialog extends DialogFragment {
     }
 
     private void createPlaylist(String name) {
-        boolean mIsLogin = UserStatus.getLoginStatus();
-        if (mIsLogin) {
-            ApiManager.request(
-                    PlaylistApiServiceImpl.INSTANCE.createPlaylist(name),
-                    new RequestCallBack<Playlist>() {
-                        @Override
-                        public void success(Playlist result) {
-                            ToastUtils.show(getString(R.string.create_playlist_success));
-                            EventBus.getDefault().post(new MyPlaylistEvent(Constants.PLAYLIST_ADD, null));
-                        }
-
-                        @Override
-                        public void error(String msg) {
-                            ToastUtils.show(msg);
-                        }
-                    }
-            );
-        }
+        OnlinePlaylistUtils.INSTANCE.createPlaylist(name, new Function1<Playlist, Unit>() {
+            @Override
+            public Unit invoke(Playlist playlist) {
+                ToastUtils.show(MusicApp.getAppContext().getString(R.string.create_playlist_success));
+                EventBus.getDefault().post(new MyPlaylistEvent(Constants.PLAYLIST_ADD, null));
+                return null;
+            }
+        });
     }
 }

@@ -101,7 +101,8 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 }
                 link.contains("https://www.xiami.com") -> {
                     val len = link.lastIndexOf("collect/") + "collect/".length
-                    val id = link.substring(len, link.indexOf("?"))
+                    val end = if (link.indexOf("?") == -1) link.indexOf("(") else link.indexOf("?")
+                    val id = link.substring(len, end)
                     importMusic("xiami", id)
                 }
                 else -> {
@@ -155,7 +156,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            BottomDialogFragment.newInstance(result.musicList[position],Constants.PLAYLIST_IMPORT_ID).show(this@ImportPlaylistActivity)
+            BottomDialogFragment.newInstance(result.musicList[position], Constants.PLAYLIST_IMPORT_ID).show(this@ImportPlaylistActivity)
         }
 
     }

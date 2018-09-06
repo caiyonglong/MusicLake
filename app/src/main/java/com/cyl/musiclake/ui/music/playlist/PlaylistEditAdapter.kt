@@ -13,10 +13,22 @@ import com.cyl.musiclake.utils.ConvertUtils
  * 版本：2.5
  */
 class PlaylistEditAdapter(list: MutableList<Playlist>) : BaseItemDraggableAdapter<Playlist, BaseViewHolder>(R.layout.item_playlist_edit, list) {
-
+    /**
+     * 选中列表
+     */
+    var checkedMap = mutableMapOf<String, Playlist>()
 
     override fun convert(holder: BaseViewHolder, item: Playlist) {
         holder.setText(R.id.tv_name, ConvertUtils.getTitle(item.name))
-        holder.getView<CheckBox>(R.id.cb_playlist).isChecked = (mContext as PlaylistManagerActivity).checkedMap.containsKey(item.id.toString())
+        holder.getView<CheckBox>(R.id.cb_playlist).isChecked = checkedMap.containsKey(item.pid.toString())
+
+        holder.itemView.setOnClickListener {
+            if (checkedMap.containsKey(item.pid.toString())) {
+                checkedMap.remove(item.pid.toString())
+            } else {
+                checkedMap[item.pid.toString()] = item
+            }
+            notifyItemChanged(holder.adapterPosition)
+        }
     }
 }

@@ -31,13 +31,15 @@ object PlaylistApiServiceImpl {
         return playlistApiService.getOnlinePlaylist(token)
                 .flatMap { it ->
                     val json = it.string()
-                    val data = Gson().fromJson<List<Playlist>>(json, object : TypeToken<List<Playlist>>() {
+                    val data = Gson().fromJson<MutableList<PlaylistInfo>>(json, object : TypeToken<MutableList<PlaylistInfo>>() {
                     }.type)
                     val result = mutableListOf<Playlist>()
                     for (playlistInfo in data) {
                         val playlist = Playlist()
-                        playlist.id = playlistInfo.id
+                        playlist.pid = playlistInfo.id
                         playlist.name = playlistInfo.name
+                        playlist.total = playlistInfo.total.toLong()
+                        playlist.coverUrl = playlistInfo.cover
                         playlist.type = Constants.PLAYLIST_CUSTOM_ID
                         result.add(playlist)
                     }

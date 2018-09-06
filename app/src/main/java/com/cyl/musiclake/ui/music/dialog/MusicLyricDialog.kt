@@ -23,6 +23,7 @@ import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import com.rtugeek.android.colorseekbar.ColorSeekBar
+import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.support.v4.toast
 
 /**
