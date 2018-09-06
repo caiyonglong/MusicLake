@@ -102,8 +102,11 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
 
     override fun loadPlaylistSongs(playlist: Playlist) {
-        when {
-            playlist.type == Constants.PLAYLIST_BD_ID -> doAsync {
+        when (playlist.type) {
+            Constants.PLAYLIST_LOCAL_ID,
+            Constants.PLAYLIST_HISTORY_ID,
+            Constants.PLAYLIST_LOVE_ID,
+            Constants.PLAYLIST_QUEUE_ID -> doAsync {
                 val data = playlist.pid?.let { PlaylistLoader.getMusicForPlaylist(it, playlist.order) }
                 uiThread {
                     if (data != null && data.isNotEmpty()) {
@@ -113,7 +116,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                     }
                 }
             }
-            playlist.type == Constants.PLAYLIST_BD_ID -> {
+            Constants.PLAYLIST_BD_ID -> {
                 ApiManager.request(BaiduApiServiceImpl.getRadioChannelInfo(playlist), object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)
@@ -132,7 +135,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 })
 
             }
-            playlist.type == Constants.PLAYLIST_WY_ID -> {
+            Constants.PLAYLIST_WY_ID -> {
                 ApiManager.request(playlist.pid?.let { NeteaseApiServiceImpl.getPlaylistDetail(it) }, object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)

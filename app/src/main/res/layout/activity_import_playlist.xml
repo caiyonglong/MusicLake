@@ -48,15 +48,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/import_playlist_tips_tv">
+        <!--android:text="@string/import_playlist_tips"-->
 
         <TextView
+            android:id="@+id/import_tips_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="打开QQ音乐、网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!"
+            android:text="@string/import_playlist_tips"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView2"
             app:layout_constraintTop_toBottomOf="@+id/import_playlist_tips_tv" />
+
     </LinearLayout>
 
 
@@ -99,7 +102,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/app_yellow_dark"
-        android:text="同步"
+        android:text="@string/async_songs"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/importBtn"
         app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +116,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/app_yellow_dark"
-        android:text="导入"
+        android:text="@string/import_playlist_song"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/syncBtn"

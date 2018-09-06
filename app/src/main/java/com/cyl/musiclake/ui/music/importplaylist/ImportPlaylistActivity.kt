@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
@@ -12,12 +13,14 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
+import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_import_playlist.*
 import org.litepal.util.Const
@@ -96,27 +99,29 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 }
                 link.contains("http://y.qq.com") -> {
                     val len = link.lastIndexOf("id=") + "id=".length
-                    val id = link.substring(len, len + link.substring(len).indexOf("&"))
+                    val id = link.substring(len, len + link.substring(len).indexOf("&")).trim()
                     importMusic("qq", id)
                 }
                 link.contains("https://www.xiami.com") -> {
                     val len = link.lastIndexOf("collect/") + "collect/".length
                     val end = if (link.indexOf("?") == -1) link.indexOf("(") else link.indexOf("?")
-                    val id = link.substring(len, end)
+                    val id = link.substring(len, end).trim()
                     importMusic("xiami", id)
                 }
                 else -> {
+                    showLoading(false)
                     ToastUtils.show("请输入有效的链接！")
                 }
             }
         } catch (e: Throwable) {
+            showLoading(false)
             ToastUtils.show("请输入有效的链接！")
         }
     }
 
-    private fun importMusic(vendor: String, url: String) {
+    private fun importMusic(vendor: String, pid: String) {
         this.vendor = vendor
-        val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, url, 1, 20)
+        val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, pid, 1, 50)
         ApiManager.request(observable, object : RequestCallBack<Playlist> {
             override fun success(result: Playlist) {
                 showLoading(false)
