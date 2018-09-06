@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_album"
+        app:layout_constraintTop_toBottomOf="@+id/iv_cover"
         tools:text="歌手" />
 </android.support.constraint.ConstraintLayout>
 

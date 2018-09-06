@@ -28,6 +28,7 @@ import com.tencent.bugly.beta.Beta;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.cyl.musiclake.common.Constants.ABOUT_MUSIC_LAKE_ISSUES;
 import static com.cyl.musiclake.common.Constants.ABOUT_MUSIC_LAKE_URL;
 
 /**
@@ -61,7 +62,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.cardEmailView)
     void toFeedback() {
-        Tools.INSTANCE.feeback(this);
+        Tools.INSTANCE.openBrowser(this, ABOUT_MUSIC_LAKE_ISSUES);
     }
 
     @OnClick(R.id.shareFab)

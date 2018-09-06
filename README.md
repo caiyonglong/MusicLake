@@ -8,10 +8,19 @@
 - 百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式
 - 精力有限，需求不饱和都会逐步完善，有兴趣可赏个star静等完善与bug修复，期望的功能也可提[issues](https://github.com/caiyonglong/MusicLake/issues)
+- [PC端](https://github.com/sunzongzheng/music)
+- [版本计划](https://github.com/caiyonglong/MusicLake/projects)
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [蒲公英下载](https://www.pgyer.com/ZIWH)
 
 # 更新日志
+
+## v4.1.4
+- 支持导入外部歌单（网易云、qq、虾米）
+- 支持批量添加在线歌曲到歌单、批量下载
+- 优化歌单操作、播放页增加歌曲操作
+- 主页懒加载
+- 修复一些bugs
 
 ## v4.1.3
 - 修复在线歌单歌曲播放音频不一致的问
@@ -48,9 +57,9 @@
 
 
 # 相关项目|音乐API
-- [PC端](https://github.com/sunzongzheng/music)
 - [音乐API](https://github.com/sunzongzheng/musicApi)
-- [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+- [云歌单API](https://github.com/sunzongzheng/player-be)
+- [网易云API](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 # 第三方库
 

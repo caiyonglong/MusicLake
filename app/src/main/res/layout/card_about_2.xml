@@ -48,11 +48,11 @@
                 android:src="@drawable/ic_about_email" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
-                android:text="@string/about_feedback"
+                android:text="@string/about_feedback_more"
                 android:textStyle="italic" />
         </LinearLayout>
 
@@ -71,7 +71,7 @@
                 android:src="@drawable/ic_github" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
@@ -94,7 +94,7 @@
                 android:src="@drawable/ic_about_update" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"

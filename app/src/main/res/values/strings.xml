@@ -341,5 +341,6 @@
     <string name="import_playlist_song">导入到歌单</string>
     <string name="import_playlist_tips">打开QQ音乐(不支持短连接)、网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!</string>
     <string name="song_operate">歌曲操作</string>
+    <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
 
 </resources>
