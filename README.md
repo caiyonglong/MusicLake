@@ -1,4 +1,4 @@
-# MusicLake[![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
+# MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
 - Android 音乐播放器
 - 本地音乐播放，百度音乐，QQ音乐、虾米音乐、网易云音乐等网络音乐播放
 - 支持在线歌曲下载

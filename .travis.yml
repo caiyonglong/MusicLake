@@ -15,19 +15,10 @@ android:
     - android-sdk-preview-license-.+
     - android-sdk-license-.+
     - google-gdk-license-.+
-script:
-- "./gradlew assembleRelease"
-after_script:
-- set -e
-- $HOME/pgyer_upload.sh "$HOME/app/build/outputs/apk/release/*"
-  "f674b7dba2269c40c973c2367670e91c"
-- rm $HOME/pgyer_upload.sh
 before_install:
 - chmod +x gradlew
-- cd $HOME
-- wget -c https://raw.githubusercontent.com/Pgyer/TravisFile/master/pgyer_upload.sh
- -O pgyer_upload.sh
-- chmod +x pgyer_upload.sh
+script:
+- "./gradlew assembleRelease"
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -44,7 +35,6 @@ deploy:
   on:
     tags: true
     all_branches: true
-
 
 
 
