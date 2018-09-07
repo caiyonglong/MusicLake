@@ -284,7 +284,7 @@
 
     <string name="download_batch">批量下载</string>
     <string name="download_add_success">下载任务添加成功</string>
-    <string name="download_network_tips">正在使用数据流量，是否继续下载？</string>
+    <string name="download_network_tips">正在使用数据流量，是否继续？</string>
     <string name="download_error">下载地址异常</string>
     <string name="playlist_delete_success">歌单已删除</string>
     <string name="play_count">播放：%1$d</string>
@@ -342,5 +342,8 @@
     <string name="import_playlist_tips">打开QQ音乐(不支持短连接)、网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!</string>
     <string name="song_operate">歌曲操作</string>
     <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
+    <string name="download_local_error">不能下载本地音乐!</string>
+    <string name="download_empty_error">请选择需要下载的歌曲!</string>
+    <string name="download_network_error">网络异常，请检查数据是否连接！</string>
 
 </resources>

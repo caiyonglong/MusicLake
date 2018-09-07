@@ -143,7 +143,6 @@ public class MusicPlayerService extends Service {
     public PowerManager.WakeLock mWakeLock;
     private PowerManager powerManager;
 
-
     public Music mPlayingMusic = null;
     private List<Music> mPlayQueue = new ArrayList<>();
     private List<Integer> mHistoryPos = new ArrayList<>();
@@ -545,7 +544,7 @@ public class MusicPlayerService extends Service {
      */
     private void playCurrentAndNext() {
         synchronized (this) {
-            if (mPlayingPos > mPlayQueue.size() || mPlayingPos < 0) {
+            if (mPlayingPos >= mPlayQueue.size() || mPlayingPos < 0) {
                 return;
             }
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
@@ -922,6 +921,17 @@ public class MusicPlayerService extends Service {
         return 0;
     }
 
+    /**
+     * 是否准备播放
+     *
+     * @return
+     */
+    public boolean isPrepared() {
+        if (mPlayer != null) {
+            return mPlayer.isPrepared();
+        }
+        return false;
+    }
 
     /**
      * 发送更新广播
@@ -940,11 +950,11 @@ public class MusicPlayerService extends Service {
             case PLAY_STATE_CHANGED:
                 updateWidget(PLAY_STATE_CHANGED);
                 mediaSessionManager.updatePlaybackState();
-                EventBus.getDefault().post(new StatusChangedEvent(mPlayer.isPrepared(), isPlaying()));
+                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying()));
                 break;
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
-                EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID,null));
+                EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID, null));
                 break;
 //            case PLAY_STATE_LOADING_CHANGED:
 //                EventBus.getDefault().post(new StatusChangedEvent(false, isPlaying()));

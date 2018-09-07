@@ -26,7 +26,7 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <include
-                    android:id="@+id/toolbar_search_container"
+                    android:id="@+id/searchToolbarContainer"
                     layout="@layout/toolbar_search_layout"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -45,7 +45,7 @@
 
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/resultListRcv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -85,7 +85,7 @@
 
 
     <LinearLayout
-        android:id="@+id/history_panel"
+        android:id="@+id/historyPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -130,6 +130,7 @@
 
             <ImageView
                 android:id="@+id/clearAllIv"
+                android:onClick="clearAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_delete"
@@ -140,7 +141,7 @@
 
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/suggestions_list"
+            android:id="@+id/historyRcv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.di.component.DaggerFragmentComponent;
 import com.cyl.musiclake.di.component.FragmentComponent;
 import com.cyl.musiclake.di.module.FragmentModule;
@@ -139,7 +140,7 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
      */
     private void initFragmentComponent() {
         mFragmentComponent = DaggerFragmentComponent.builder()
-                .applicationComponent(((MusicApp) getActivity().getApplication()).getApplicationComponent())
+                .applicationComponent(MusicApp.getInstance().getApplicationComponent())
                 .fragmentModule(new FragmentModule(this))
                 .build();
     }

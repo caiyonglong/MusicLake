@@ -135,8 +135,8 @@ public class CoverLoader {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
-                        if (callBack != null) {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        if (callBack != null && resource != null) {
                             callBack.showBitmap(resource);
                         }
                     }
@@ -218,7 +218,7 @@ public class CoverLoader {
 
 
     public static Drawable createBlurredImageFromBitmap(Bitmap bitmap) {
-        return ImageUtils.createBlurredImageFromBitmap(bitmap, MusicApp.getAppContext(), 12);
+        return ImageUtils.createBlurredImageFromBitmap(bitmap, 12);
     }
 
 }

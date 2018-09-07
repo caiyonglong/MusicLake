@@ -6,7 +6,7 @@
     android:background="@color/colorPrimary">
 
     <EditText
-        android:id="@+id/toolbar_search_edit_text"
+        android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
@@ -35,6 +35,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="right|center_vertical"
+        android:onClick="clearQuery"
         tools:ignore="RtlHardcoded">
 
         <View

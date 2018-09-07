@@ -297,7 +297,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     }
 
     @Override
-    public void setPlayingBitmap(@Nullable Bitmap albumArt) {
+    public void setPlayingBitmap( Bitmap albumArt) {
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
 

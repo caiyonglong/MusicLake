@@ -38,7 +38,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     //是否已经初始化
     private boolean mIsPrepared = false;
 
-    public MusicPlayerEngine(final MusicPlayerService service) {
+    MusicPlayerEngine(final MusicPlayerService service) {
         mService = new WeakReference<>(service);
         mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
     }

@@ -104,7 +104,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
      */
     private void initActivityComponent() {
         mActivityComponent = DaggerActivityComponent.builder()
-                .applicationComponent(((MusicApp) getApplication()).getApplicationComponent())
+                .applicationComponent(MusicApp.getInstance().getApplicationComponent())
                 .activityModule(new ActivityModule(this))
                 .build();
     }

@@ -91,7 +91,7 @@ object TasksManager {
      * 根据位置获取
      */
     operator fun get(position: Int): TasksManagerModel {
-        return modelList[position]
+            return modelList[position]
     }
 
     /**

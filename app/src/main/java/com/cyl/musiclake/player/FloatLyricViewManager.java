@@ -173,7 +173,6 @@ public class FloatLyricViewManager {
      */
     private void createFloatLyricView(Context context) {
         try {
-
             WindowManager windowManager = getWindowManager(context);
             Point size = new Point();
             //获取屏幕宽高

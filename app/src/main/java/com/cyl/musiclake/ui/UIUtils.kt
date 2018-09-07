@@ -91,7 +91,7 @@ object UIUtils {
                 override fun onAnimationEnd(animation: Animator?) {
                     music?.let {
                         it.isLove = SongLoader.updateFavoriteSong(it)
-                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID,null))
+                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID, null))
                     }
                 }
 
@@ -144,39 +144,39 @@ fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) ->
  */
 fun AppCompatActivity.downloadMusic(music: Music?) {
     if (music == null) {
-        ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
+        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
         return
     }
     if (music.type == Constants.LOCAL) {
-        ToastUtils.show(MusicApp.getAppContext(), "已经本地音乐!")
+        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_local_error))
         return
     }
     ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
         override fun success(result: Music) {
             LogUtil.e(javaClass.simpleName, "-----${result.uri}")
-            if (!NetworkUtils.isWifiConnected(this@downloadMusic) && SPUtils.getWifiMode()) {
-                MaterialDialog.Builder(this@downloadMusic)
-                        .title(R.string.warning)
-                        .content(R.string.download_network_tips)
-                        .onPositive { _, _ ->
-                            addDownloadQueue(result)
-                        }
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .show()
-            } else if (result.uri != null && result.uri?.startsWith("http")!!) {
+            /**
+             * 当前activity 销毁时 不显示
+             */
+            if (this@downloadMusic.isDestroyed || this@downloadMusic.isFinishing) return
+            if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
+                showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
+                    addDownloadQueue(result)
+                }
+                return
+            }
+            if (result.uri != null && result.uri?.startsWith("http")!!) {
                 MaterialDialog.Builder(this@downloadMusic)
                         .title(R.string.popup_download)
                         .content(R.string.download_content, music.title)
                         .onPositive { _, _ ->
                             addDownloadQueue(result)
                         }
-                        .positiveText("确定")
-                        .negativeText("取消")
+                        .positiveText(R.string.sure)
+                        .negativeText(R.string.cancel)
                         .show()
-            } else {
-                ToastUtils.show(this@downloadMusic, "下载地址异常！")
+                return
             }
+            ToastUtils.show(getString(R.string.download_error))
         }
 
         override fun error(msg: String) {
@@ -185,6 +185,9 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
     })
 }
 
+/**
+ * 批量下载
+ */
 fun AppCompatActivity.downloadBatchMusic(musicList: MutableList<Music>?) {
     musicList?.forEach {
         if (it.type == Constants.LOCAL) {
@@ -192,28 +195,40 @@ fun AppCompatActivity.downloadBatchMusic(musicList: MutableList<Music>?) {
         }
     }
     if (musicList == null || musicList.size == 0) {
-        ToastUtils.show(MusicApp.getAppContext(), "请选择需要下载的在线音乐!")
+        showTipsDialog(this@downloadBatchMusic, R.string.download_empty_error)
         return
     }
+
     if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
-        MaterialDialog.Builder(this@downloadBatchMusic)
-                .title(R.string.warning)
-                .content(R.string.download_network_tips)
-                .onPositive { _, _ ->
-                    musicList.forEach {
-                        addDownloadQueue(it, true)
-                    }
-                    ToastUtils.show(getString(R.string.download_add_success))
-                }
-                .positiveText("确定")
-                .negativeText("取消")
-                .show()
+        showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
+            musicList.forEach {
+                addDownloadQueue(it, true)
+            }
+            ToastUtils.show(getString(R.string.download_add_success))
+        }
     } else {
         musicList.forEach {
             addDownloadQueue(it, true)
         }
         ToastUtils.show(getString(R.string.download_add_success))
     }
+}
+
+/**
+ * 对话框显示tip
+ */
+fun showTipsDialog(context: AppCompatActivity, content: Int, success: (() -> Unit)? = null) {
+    if (context.isDestroyed || context.isFinishing) return
+
+    MaterialDialog.Builder(context)
+            .title(R.string.warning)
+            .content(content)
+            .onPositive { _, _ ->
+                success?.invoke()
+            }
+            .positiveText(R.string.sure)
+            .negativeText(R.string.cancel)
+            .show()
 }
 
 
@@ -276,7 +291,7 @@ fun updateLoginToken() {
  */
 fun logout() {
     UserStatus.clearUserInfo()
-    UserStatus.saveLoginStatus( false)
+    UserStatus.saveLoginStatus(false)
     SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, "")
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
     MusicApp.mTencent.logout(MusicApp.getAppContext())

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.player
 
 import android.support.v7.graphics.Palette
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.MusicPlayerService
@@ -37,7 +36,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
             Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
         }
         CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
-            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, MusicApp.getAppContext(), 12))
+            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, 12))
             mView?.setPlayingBitmap(bitmap)
         }
     }

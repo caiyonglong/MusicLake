@@ -1,6 +1,5 @@
 package com.cyl.musiclake.player.playqueue
 
-import com.cyl.musiclake.RxBus
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.utils.SPUtils
 import org.greenrobot.eventbus.EventBus

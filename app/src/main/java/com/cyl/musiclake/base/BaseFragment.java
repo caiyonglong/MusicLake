@@ -158,7 +158,7 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
      */
     private void initFragmentComponent() {
         mFragmentComponent = DaggerFragmentComponent.builder()
-                .applicationComponent(((MusicApp) getActivity().getApplication()).getApplicationComponent())
+                .applicationComponent(MusicApp.getInstance().getApplicationComponent())
                 .fragmentModule(new FragmentModule(this))
                 .build();
     }
