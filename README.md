@@ -1,5 +1,5 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
-- Android 音乐播放器
+- Android 音乐播放器 （最低支持Android版本5.0）
 - 本地音乐播放，百度音乐，QQ音乐、虾米音乐、网易云音乐等网络音乐播放
 - 支持在线歌曲下载
 - 歌词播放、桌面歌词、桌面小控件
