@@ -87,44 +87,48 @@ public class LyricParseUtils {
      * 逐行解析歌词内容
      */
     private static void analyzeLyric(LyricInfo lyricInfo, String line) {
-        int index = line.indexOf("]");
-        if (line.startsWith("[offset:")) {
-            // 时间偏移量
-            String string = line.substring(8, index).trim();
-            lyricInfo.song_offset = Long.parseLong(string);
-            return;
-        }
-        if (line.startsWith("[ti:")) {
-            // title 标题
-            String string = line.substring(4, index).trim();
-            lyricInfo.song_title = string;
-            return;
-        }
-        if (line.startsWith("[ar:")) {
-            // artist 作者
-            String string = line.substring(4, index).trim();
-            lyricInfo.song_artist = string;
-            return;
-        }
-        if (line.startsWith("[al:")) {
-            // album 所属专辑
-            String string = line.substring(4, index).trim();
-            lyricInfo.song_album = string;
-            return;
-        }
-        if (line.startsWith("[by:")) {
-            return;
-        }
-        if (line.startsWith("[total:")) {
-            return;
-        }
-        if (line.startsWith("[0") && line.endsWith("]")) {
-            String test = line.replace("]", "").replaceFirst(", ", "]");
-            if (test.contains("]")) {
-                line = test;
-            }
-        }
         try {
+            int index = line.indexOf("]");
+            if (line.startsWith("[offset:")) {
+                // 时间偏移量
+                String string = line.substring(8, index).trim();
+                if (string.isEmpty()) return;
+                lyricInfo.song_offset = Long.parseLong(string);
+                return;
+            }
+            if (line.startsWith("[ti:")) {
+                // title 标题
+                String string = line.substring(4, index).trim();
+                if (string.isEmpty()) return;
+                lyricInfo.song_title = string;
+                return;
+            }
+            if (line.startsWith("[ar:")) {
+                // artist 作者
+                String string = line.substring(4, index).trim();
+                if (string.isEmpty()) return;
+                lyricInfo.song_artist = string;
+                return;
+            }
+            if (line.startsWith("[al:")) {
+                // album 所属专辑
+                String string = line.substring(4, index).trim();
+                if (string.isEmpty()) return;
+                lyricInfo.song_album = string;
+                return;
+            }
+            if (line.startsWith("[by:")) {
+                return;
+            }
+            if (line.startsWith("[total:")) {
+                return;
+            }
+            if (line.startsWith("[0") && line.endsWith("]")) {
+                String test = line.replace("]", "").replaceFirst(", ", "]");
+                if (test.contains("]")) {
+                    line = test;
+                }
+            }
             if (line.startsWith("[0") && !line.endsWith("]")) {
                 // 歌词内容,需要考虑一行歌词有多个时间戳的情况
                 int lastIndexOfRightBracket = line.lastIndexOf("]");

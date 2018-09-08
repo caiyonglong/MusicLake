@@ -48,20 +48,17 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     }
 
-
     override fun initInjector() {
         mFragmentComponent.inject(this)
     }
 
     override fun listener() {
-        mAdapter?.setOnItemClickListener { _, _, position -> }
-
         playlistAddIv.setOnClickListener {
             if (UserStatus.getLoginStatus()) {
                 val dialog = CreatePlaylistDialog.newInstance()
                 dialog.show(childFragmentManager, TAG_CREATE)
             } else {
-                ToastUtils.show("请登录")
+                ToastUtils.show(getString(R.string.prompt_login))
             }
         }
         playlistManagerIv.setOnClickListener {
@@ -96,6 +93,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mAdapter?.setNewData(playlists)
         if (playlists.size == 0) {
             showEmptyState()
+            mAdapter?.setEmptyView(R.layout.view_playlist_empty)
         }
         hideLoading()
     }

@@ -12,6 +12,7 @@ import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.text.InputType;
 
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.LogUtil;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -26,6 +27,7 @@ import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
+import com.cyl.musiclake.utils.rom.FloatUtil;
 import com.tencent.bugly.beta.Beta;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -225,14 +227,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      */
     private void checkLyricPermission() {
         try {
-            if (!SystemUtils.isOpenSystemWindow() && SystemUtils.isMarshmallow()) {
-                ToastUtils.show(getActivity(), "请手动打开显示悬浮窗权限");
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-                startActivityForResult(intent, 100);
+            if (!SystemUtils.isOpenFloatWindow()) {
+                ToastUtils.show(getString(R.string.float_window_manual_open));
+                SystemUtils.applySystemWindow();
+                mLyricCheckBox.setChecked(true);
             } else {
                 mLyricCheckBox.setChecked(true);
-                ToastUtils.show(getActivity(), "显示悬浮窗权限已开通");
+                ToastUtils.show(getString(R.string.float_window_is_ready));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,11 +253,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100) {
-            if (SystemUtils.isOpenSystemWindow()) {
+        if (requestCode == Constants.REQUEST_CODE_FLOAT_WINDOW) {
+            if (SystemUtils.isOpenFloatWindow()) {
                 checkLyricPermission();
             } else {
-                ToastUtils.show(MusicApp.getAppContext(), "悬浮窗权限已被拒绝！");
+                ToastUtils.show(MusicApp.getAppContext(), getString(R.string.float_window_is_refused));
             }
         }
     }

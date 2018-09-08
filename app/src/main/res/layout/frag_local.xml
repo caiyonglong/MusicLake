@@ -164,7 +164,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_marginTop="50dp"
-                        android:visibility="gone"
                         tools:visibility="visible" />
 
                 </RelativeLayout>

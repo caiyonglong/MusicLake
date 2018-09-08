@@ -136,6 +136,12 @@ public class Constants {
 
     public static final String FORMAT = "json";
 
+
+    /**
+     * 悬浮窗权限requestCode
+     */
+    public static final int REQUEST_CODE_FLOAT_WINDOW = 0x123;
+
     //在线音乐
     public static final String FILENAME_MP3 = ".mp3";
     public static final String FILENAME_LRC = ".lrc";

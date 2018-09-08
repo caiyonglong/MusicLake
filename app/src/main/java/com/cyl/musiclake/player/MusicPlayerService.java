@@ -1307,22 +1307,11 @@ public class MusicPlayerService extends Service {
      * 开启歌词
      */
     private void startFloatLyric() {
-        if (SystemUtils.isOpenSystemWindow()) {
+        if (SystemUtils.isOpenFloatWindow()) {
             showLyric = !showLyric;
             showDesktopLyric(showLyric);
         } else {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                    intent.setData(Uri.parse("package:" + MusicApp.getAppContext().getPackageName()));
-                    MusicApp.getAppContext().startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ToastUtils.show(getString(R.string.float_settings));
-                }
-            } else {
-                ToastUtils.show(getString(R.string.float_settings));
-            }
+            SystemUtils.applySystemWindow();
         }
     }
 

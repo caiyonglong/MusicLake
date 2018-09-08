@@ -173,7 +173,7 @@ public class FloatLyricViewManager {
      */
     private void createFloatLyricView(Context context) {
         try {
-            WindowManager windowManager = getWindowManager(context);
+            WindowManager windowManager = getWindowManager();
             Point size = new Point();
             //获取屏幕宽高
             windowManager.getDefaultDisplay().getSize(size);
@@ -208,10 +208,14 @@ public class FloatLyricViewManager {
      * @param context 必须为应用程序的Context.
      */
     public void removeFloatLyricView(Context context) {
-        if (mFloatLyricView != null) {
-            WindowManager windowManager = getWindowManager(context);
-            windowManager.removeView(mFloatLyricView);
-            mFloatLyricView = null;
+        try {
+            if (mFloatLyricView != null) {
+                WindowManager windowManager = getWindowManager();
+                windowManager.removeView(mFloatLyricView);
+                mFloatLyricView = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -253,12 +257,11 @@ public class FloatLyricViewManager {
     /**
      * 如果WindowManager还未创建，则创建一个新的WindowManager返回。否则返回当前已创建的WindowManager。
      *
-     * @param context 必须为应用程序的Context.
      * @return WindowManager的实例，用于控制在屏幕上添加或移除悬浮窗。
      */
-    private static WindowManager getWindowManager(Context context) {
+    private static WindowManager getWindowManager() {
         if (mWindowManager == null) {
-            mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            mWindowManager = (WindowManager) MusicApp.getAppContext().getSystemService(Context.WINDOW_SERVICE);
         }
         return mWindowManager;
     }

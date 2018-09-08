@@ -19,8 +19,6 @@ import javax.inject.Inject
 
 class MyMusicPresenter @Inject
 constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter {
-    private var playlists = mutableListOf<Playlist>()
-
     /**
      * 更新播放历史
      */
@@ -81,15 +79,14 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         val mIsLogin = UserStatus.getLoginStatus()
         if (mIsLogin) {
             OnlinePlaylistUtils.getOnlinePlaylist(success = {
-                playlists = OnlinePlaylistUtils.playlists
-                mView?.showPlaylist(playlists)
+                mView?.showPlaylist(OnlinePlaylistUtils.playlists)
             }, fail = {
                 ToastUtils.show(it)
-                mView?.showPlaylist(playlists)
+                mView?.showPlaylist(OnlinePlaylistUtils.playlists)
             })
         } else {
-            playlists.clear()
-            mView?.showPlaylist(playlists)
+            OnlinePlaylistUtils.playlists.clear()
+            mView?.showPlaylist(OnlinePlaylistUtils.playlists)
         }
     }
 }

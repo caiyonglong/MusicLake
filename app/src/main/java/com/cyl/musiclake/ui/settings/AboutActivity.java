@@ -112,7 +112,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mVersion.setText(String.format("版本号v%s", BuildConfig.VERSION_NAME));
+        mVersion.setText(String.format("版本号 v%s", BuildConfig.VERSION_NAME));
     }
 
     @Override

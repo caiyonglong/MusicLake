@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.utils.rom.FloatUtil;
 
 import java.util.List;
 
@@ -48,26 +49,23 @@ public class SystemUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
-    /**
-     * 判断是否打开悬浮窗权限&&“有权查看使用权限的应用”这个选项
-     *
-     * @return
-     */
-    public static boolean isOpenFloatWindow() {
-        return isOpenSystemWindow();
-    }
 
     /**
      * 判断是否打开“悬浮窗权限”
      *
      * @return
      */
-    public static boolean isOpenSystemWindow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return Settings.canDrawOverlays(MusicApp.getAppContext());
-        } else {
-            return true;
-        }
+    public static boolean isOpenFloatWindow() {
+        return FloatUtil.INSTANCE.checkPermission(MusicApp.getAppContext());
+    }
+
+    /**
+     * 检查申请打开“悬浮窗权限”
+     *
+     * @return
+     */
+    public static void applySystemWindow() {
+        FloatUtil.INSTANCE.applyOrShowFloatWindow(MusicApp.getAppContext());
     }
 
 

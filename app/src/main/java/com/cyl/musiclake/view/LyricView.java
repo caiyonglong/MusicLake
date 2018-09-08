@@ -331,20 +331,20 @@ public class LyricView extends View {
     public void setLyricFile(File file, String charsetName) {
         if (file != null && file.exists()) {
             mLyricInfo = LyricParseUtils.setLyricResource(file);
-            if (mLyricInfo != null && mLyricInfo.getSongLines() != null)
+            if (mLyricInfo != null && mLyricInfo.getSongLines() != null) {
                 mLineCount = mLyricInfo.getSongLines().size();
+                for (int i = 0; i < mLineCount; i++) {
 
-            for (int i = 0; i < mLyricInfo.songLines.size(); i++) {
+                    StaticLayout staticLayout = new StaticLayout(mLyricInfo.songLines.get(i).content, mTextPaint,
+                            (int) getRawSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MAX_LENGTH),
+                            Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
-                StaticLayout staticLayout = new StaticLayout(mLyricInfo.songLines.get(i).content, mTextPaint,
-                        (int) getRawSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MAX_LENGTH),
-                        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-                if (staticLayout.getLineCount() > 1) {
-                    mEnableLineFeed = true;
-                    mExtraHeight = mExtraHeight + (staticLayout.getLineCount() - 1) * mTextHeight;
+                    if (staticLayout.getLineCount() > 1) {
+                        mEnableLineFeed = true;
+                        mExtraHeight = mExtraHeight + (staticLayout.getLineCount() - 1) * mTextHeight;
+                    }
+                    mLineFeedRecord.add(i, mExtraHeight);
                 }
-                mLineFeedRecord.add(i, mExtraHeight);
             }
         } else {
             invalidateView();

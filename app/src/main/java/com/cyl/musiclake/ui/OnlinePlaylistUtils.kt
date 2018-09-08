@@ -22,7 +22,6 @@ import java.util.*
  */
 
 object OnlinePlaylistUtils {
-
     /**
      * 保存当前歌单列表
      */
