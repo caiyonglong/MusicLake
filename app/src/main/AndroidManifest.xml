@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cyl.musiclake">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -32,13 +33,14 @@
 
     <application
         android:name=".MusicApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyThemeBlue">
+        android:theme="@style/MyThemeBlue"
+        tools:replace="android:allowBackup">
         <activity
             android:name=".ui.main.WelcomeActivity"
             android:screenOrientation="portrait"
@@ -68,6 +70,10 @@
             android:name=".ui.zone.NearPeopleAcivity"
             android:label="@string/near_people"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.music.comment.SongCommentActivity"
+            android:label="@string/song_comment_title"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.online.activity.BaiduMusicListActivity"
@@ -150,7 +156,8 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -201,8 +208,11 @@
         <activity
             android:name=".ui.music.player.PlayerActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
-        <activity android:name=".ui.music.importplaylist.ImportPlaylistActivity"></activity>
+        <activity
+            android:name=".ui.music.importplaylist.ImportPlaylistActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

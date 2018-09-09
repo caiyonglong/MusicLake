@@ -4,7 +4,7 @@ package com.cyl.musicapi.bean
 import com.google.gson.annotations.SerializedName
 
 data class SongCommentData<T>(@SerializedName("data")
-                              val data: CommentData<T>,
+                              val data: CommentData<T>?,
                               @SerializedName("status")
                               val status: Boolean = false)
 
@@ -16,6 +16,16 @@ data class User(@SerializedName("avatarUrl")
                 val remarkName: String? = null,
                 @SerializedName("userId")
                 val userId: String = "")
+
+class SongComment() {
+    var userId: String = ""
+    var avatarUrl: String = ""
+    var nick: String = ""
+    var commentId: String = ""
+    var content: String = ""
+    var time: Long = 0
+    var type: String = ""
+}
 
 
 data class QQComment(@SerializedName("avatarurl")
@@ -33,12 +43,12 @@ data class QQComment(@SerializedName("avatarurl")
                      @SerializedName("rootcommentnick")
                      val rootcommentnick: String = "",
                      @SerializedName("time")
-                     val time: Int = 0,
+                     val time: Long = 0,
                      @SerializedName("uin")
                      val uin: String = "")
 
 
-data class XiamoComment(@SerializedName("author")
+data class XiamiComment(@SerializedName("author")
                         val author: Boolean = false,
                         @SerializedName("isDelete")
                         val isDelete: Boolean = false,

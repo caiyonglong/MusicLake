@@ -352,5 +352,7 @@
     <string name="album_title">专辑</string>
     <string name="artist_title">艺术家</string>
     <string name="folder_title">文件夹</string>
+    <string name="song_comment_title">歌曲评论</string>
+    <string name="song_comment_new">最新评论</string>
 
 </resources>

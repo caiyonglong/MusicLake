@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +22,7 @@ import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
@@ -32,6 +32,7 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.downloadMusic
+import com.cyl.musiclake.ui.music.comment.SongCommentActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
@@ -47,6 +48,7 @@ import kotlinx.android.synthetic.main.activity_player.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
@@ -70,6 +72,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         music?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
+        //隐藏显示歌曲评论
+        songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
+
         coverAnimator?.start()
     }
 
@@ -178,6 +183,13 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     /**
+     * 添加到歌單
+     */
+    fun showSongComment(view: View?) {
+        startActivity<SongCommentActivity>(Extras.SONG to playingMusic)
+    }
+
+    /**
      * 分享歌曲
      */
     fun shareMusic(view: View?) {
@@ -213,7 +225,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var mSwatch: Palette.Swatch? = null
 
     override fun setPalette(palette: Palette?) {
-
         mPalette = palette
         mSwatch = ColorUtil.getMostPopulousSwatch(palette)
 

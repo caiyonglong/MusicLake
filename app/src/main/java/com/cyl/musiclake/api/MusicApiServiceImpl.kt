@@ -2,8 +2,7 @@ package com.cyl.musiclake.api
 
 
 import com.cyl.musicapi.BaseApiImpl
-import com.cyl.musicapi.bean.NeteaseComment
-import com.cyl.musicapi.bean.SongCommentData
+import com.cyl.musicapi.bean.*
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.bean.Artist
@@ -16,6 +15,7 @@ import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable
 import io.reactivex.Observable.create
+import org.litepal.util.Const
 
 /**
  * Author   : D22434
@@ -136,17 +136,84 @@ object MusicApiServiceImpl {
      * 获取歌曲url信息
      *
      */
-    fun <T> getMusicComment(vendor: String, mid: String): Observable<SongCommentData<T>> {
-        return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getComment<T>(vendor, mid, {
-                        if (it.status) {
-                            result.onNext(it)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(""))
-                        }
-                    }, {})
+    fun getMusicComment(vendor: String, mid: String): Observable<MutableList<SongComment>>? {
+        return when (vendor) {
+            Constants.NETEASE -> create { result ->
+                BaseApiImpl.getInstance(MusicApp.mContext)
+                        .getComment(vendor, mid, {
+                            it as SongCommentData<NeteaseComment>
+                            if (it.status) {
+                                val comments = mutableListOf<SongComment>()
+                                it.data?.comments?.forEach {
+                                    val songComment = SongComment().apply {
+                                        avatarUrl = it.user.avatarUrl
+                                        nick = it.user.nickname
+                                        commentId = it.commentId.toString()
+                                        time = it.time
+                                        userId = it.user.userId
+                                        content = it.content
+                                        type = Constants.NETEASE
+                                    }
+                                    comments.add(songComment)
+                                }
+                                result.onNext(comments)
+                                result.onComplete()
+                            } else {
+                                result.onError(Throwable(""))
+                            }
+                        }, {})
+            }
+            Constants.QQ -> create { result ->
+                BaseApiImpl.getInstance(MusicApp.mContext)
+                        .getComment(vendor, mid, {
+                            it as SongCommentData<QQComment>
+                            if (it.status) {
+                                val comments = mutableListOf<SongComment>()
+                                it.data?.comments?.forEach {
+                                    val songComment = SongComment().apply {
+                                        avatarUrl = it.avatarurl
+                                        nick = it.nick
+                                        commentId = it.rootcommentid
+                                        time = it.time * 1000
+                                        userId = it.uin
+                                        content = it.rootcommentcontent
+                                        type = Constants.QQ
+                                    }
+                                    comments.add(songComment)
+                                }
+                                result.onNext(comments)
+                                result.onComplete()
+                            } else {
+                                result.onError(Throwable(""))
+                            }
+                        }, {})
+            }
+            Constants.XIAMI -> create { result ->
+                BaseApiImpl.getInstance(MusicApp.mContext)
+                        .getComment(vendor, mid, {
+                            it as SongCommentData<XiamiComment>
+                            if (it.status) {
+                                val comments = mutableListOf<SongComment>()
+                                it.data?.comments?.forEach {
+                                    val songComment = SongComment().apply {
+                                        avatarUrl = it.avatar
+                                        nick = it.nickName
+                                        commentId = it.commentId.toString()
+                                        time = it.gmtCreate
+                                        userId = it.userId.toString()
+                                        content = it.message
+                                        type = Constants.XIAMI
+                                    }
+                                    comments.add(songComment)
+                                }
+                                result.onNext(comments)
+                                result.onComplete()
+                            } else {
+                                result.onError(Throwable(""))
+                            }
+                        }, {})
+            }
+            else -> null
         }
     }
 

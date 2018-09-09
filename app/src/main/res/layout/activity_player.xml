@@ -337,6 +337,20 @@
                     app:materialIconSize="24dp"
                     tools:targetApi="lollipop" />
 
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    android:id="@+id/songCommentTv"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:onClick="showSongComment"
+                    app:materialIcon="comment_multiple_outline"
+                    app:materialIconColor="@color/white"
+                    app:materialIconSize="24dp"
+                    tools:targetApi="lollipop" />
+
             </LinearLayout>
 
         </LinearLayout>

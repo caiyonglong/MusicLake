@@ -72,7 +72,7 @@ object FormatUtil {
         return when {
             duration < 60 * 1000 -> "${duration / 1000}秒前"
             duration < 60 * 1000 * 60 -> "${duration / 1000 / 60}分钟前"
-            duration < 60 * 1000 * 24 -> "${duration / 1000 / 60 / 24}小时前"
+            duration < 60 * 1000 * 60 * 24 -> "${duration / 1000 / 60 / 60}小时前"
             else -> {
                 val dfs = SimpleDateFormat("yyyy年MM月dd日")
                 val date = dfs.format(Date(time))

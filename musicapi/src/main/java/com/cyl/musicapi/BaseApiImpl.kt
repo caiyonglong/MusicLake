@@ -5,6 +5,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import com.cyl.musicapi.bean.*
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import wendu.dsbridge.CompletionHandler
 import wendu.dsbridge.DWebView
@@ -129,18 +130,27 @@ object BaseApiImpl {
         }
     }
 
-    fun <T> getComment(vendor: String, id: String, success: (result: SongCommentData<T>) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 10)) { retValue: JSONObject ->
+    fun getComment(vendor: String, id: String, success: (result: Any) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 50)) { retValue: JSONObject ->
             if (retValue["status"] as Boolean) {
-                if (retValue.getJSONArray("comments")?.getJSONObject(0)?.getJSONObject("user") != null) {
-                    val data = gson.fromJson<SongCommentData<T>>(retValue.toString(), SongCommentData::class.java)
-                    success.invoke(data)
-                } else if (retValue.getJSONArray("comments")?.getJSONObject(0)?.getJSONObject("avatarurl") != null) {
-                    val data = gson.fromJson<SongCommentData<T>>(retValue.toString(), SongCommentData::class.java)
-                    success.invoke(data)
-                } else if (retValue.getJSONArray("comments")?.getJSONObject(0)?.getJSONObject("avatar") != null) {
-                    val data = gson.fromJson<SongCommentData<T>>(retValue.toString(), SongCommentData::class.java)
-                    success.invoke(data)
+                println(retValue.toString())
+                val rr =retValue.getJSONObject("data").getJSONArray("comments")?.getJSONObject(0)
+                rr?.let {
+                    if (rr.has("user")){
+                        val objectType = object : TypeToken<SongCommentData<NeteaseComment>>() {}.type
+                        val data = gson.fromJson<SongCommentData<NeteaseComment>>(retValue.toString(), objectType)
+                        success.invoke(data)
+                    }
+                    if (rr.has("avatarurl")){
+                        val objectType = object : TypeToken<SongCommentData<QQComment>>() {}.type
+                        val data = gson.fromJson<SongCommentData<QQComment>>(retValue.toString(), objectType)
+                        success.invoke(data)
+                    }
+                    if (rr.has("avatar")){
+                        val objectType = object : TypeToken<SongCommentData<XiamiComment>>() {}.type
+                        val data = gson.fromJson<SongCommentData<XiamiComment>>(retValue.toString(), objectType)
+                        success.invoke(data)
+                    }
                 }
             } else {
                 fail?.invoke("请求失败")

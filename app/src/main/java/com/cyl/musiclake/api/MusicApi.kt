@@ -1,9 +1,10 @@
 package com.cyl.musiclake.api
 
 
+import com.cyl.musicapi.bean.SongComment
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.utils.FileUtils
@@ -81,12 +82,32 @@ object MusicApi {
         }
     }
 
+
     /**
-     * 加载图片
+     * 搜索歌曲评论
      */
-//    fun getMusicAlbumInfo(info: String): Observable<String> {
-//        return BaiduApiServiceImpl.getSearchPicInfo(info)
-//    }
+    fun getMusicCommentInfo(music: Music, success: (MutableList<SongComment>?) -> Unit, fail: (() -> Unit?)? = null) {
+        if (music.type == null || music.mid == null) {
+            fail?.invoke()
+            return
+        }
+        val observable = MusicApiServiceImpl.getMusicComment(music.type!!, music.mid!!)
+        if (observable == null) {
+            fail?.invoke()
+            return
+        }
+        ApiManager.request(observable, object : RequestCallBack<MutableList<SongComment>> {
+            override fun success(result: MutableList<SongComment>?) {
+                success.invoke(result)
+            }
+
+            override fun error(msg: String?) {
+                LogUtil.e("getMusicAlbumPic", msg)
+                fail?.invoke()
+            }
+        })
+    }
+
 
     /**
      * 加载图片
