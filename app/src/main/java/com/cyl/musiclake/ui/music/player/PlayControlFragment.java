@@ -181,7 +181,9 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @Override
     protected void loadData() {
         Music music = PlayManager.getPlayingMusic();
-        mPresenter.updateNowPlaying(music);
+        if (mPresenter != null) {
+            mPresenter.updateNowPlaying(music, true);
+        }
         initAlbumPic(mIvAlbum);
     }
 
@@ -297,7 +299,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     }
 
     @Override
-    public void setPlayingBitmap( Bitmap albumArt) {
+    public void setPlayingBitmap(Bitmap albumArt) {
         //设置图片资源
         mIvAlbum.setImageBitmap(albumArt);
 
@@ -313,7 +315,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     }
 
     @Override
-    public void setPlayingBg(@Nullable Drawable albumArt) {
+    public void setPlayingBg(Drawable albumArt, Boolean isInit) {
         //加载背景图过度
         TransitionAnimationUtils.startChangeAnimation(ivPlayingBg, albumArt);
     }
@@ -386,7 +388,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMetaChangedEvent(MetaChangedEvent event) {
         if (mPresenter != null) {
-            mPresenter.updateNowPlaying(event.getMusic());
+            mPresenter.updateNowPlaying(event.getMusic(), false);
         }
     }
 

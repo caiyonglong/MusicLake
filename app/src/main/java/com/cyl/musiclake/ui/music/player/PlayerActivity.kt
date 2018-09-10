@@ -52,6 +52,7 @@ import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
+
     private var playingMusic: Music? = null
     private var coverView: View? = null
     private var lyricView: View? = null
@@ -98,7 +99,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     override fun initData() {
         setupViewPager(viewPager)
         initAlbumPic(coverView?.findViewById(R.id.civ_cover))
-        mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic())
+        mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic(), true)
         //初始加載歌詞
         //更新播放状态
         PlayManager.isPlaying().let {
@@ -204,9 +205,13 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         coverView?.findViewById<ImageView>(R.id.civ_cover)?.setImageBitmap(albumArt)
     }
 
-    override fun setPlayingBg(albumArt: Drawable?) {
-        //加载背景图过度
-        TransitionAnimationUtils.startChangeAnimation(playingBgIv, albumArt)
+    override fun setPlayingBg(albumArt: Drawable?, isInit: Boolean?) {
+        if (isInit != null && isInit) {
+            playingBgIv.setImageDrawable(albumArt)
+        } else {
+            //加载背景图过度
+            TransitionAnimationUtils.startChangeAnimation(playingBgIv, albumArt)
+        }
     }
 
     override fun updatePlayStatus(isPlaying: Boolean) {

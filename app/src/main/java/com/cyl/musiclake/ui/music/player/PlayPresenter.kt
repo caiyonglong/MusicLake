@@ -30,14 +30,14 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
         MusicPlayerService.removeProgressListener(this)
     }
 
-    override fun updateNowPlaying(music: Music?) {
+    override fun updateNowPlaying(music: Music?, isInit: Boolean?) {
         mView?.showNowPlaying(music)
         CoverLoader.loadImageViewByMusic(mView?.context, music) { bitmap ->
             Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
         }
         CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
-            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap, 12))
-            mView?.setPlayingBitmap(bitmap)
+            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap,  12), isInit)
+            mView.setPlayingBitmap(bitmap)
         }
     }
 }

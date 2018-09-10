@@ -21,7 +21,7 @@ object PlaylistApiServiceImpl {
     private val playlistApiService: PlaylistApiService
         get() = ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL)
 
-    private val token: String?
+    val token: String?
         get() = UserStatus.getUserInfo()?.token
 
     /**

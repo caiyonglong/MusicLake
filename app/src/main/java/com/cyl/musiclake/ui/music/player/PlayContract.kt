@@ -14,7 +14,7 @@ interface PlayContract {
 
         fun setPlayingBitmap(albumArt: Bitmap?)
 
-        fun setPlayingBg(albumArt: Drawable?)
+        fun setPlayingBg(albumArt: Drawable?, isInit: Boolean? = false)
 
         fun setPalette(palette: Palette?)
 
@@ -31,6 +31,6 @@ interface PlayContract {
 
     interface Presenter : BaseContract.BasePresenter<View> {
 
-        fun updateNowPlaying(music: Music?)
+        fun updateNowPlaying(music: Music?, isInit: Boolean? = false)
     }
 }

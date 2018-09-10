@@ -31,6 +31,7 @@ import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
@@ -137,6 +138,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvatarIcon = headerView.findViewById(R.id.header_face);
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
+
+        SocketManager socketManager = new SocketManager();
+        socketManager.initSocket();
+        headerView.setOnClickListener(v -> socketManager.connectSocket());
+
+
     }
 
     @Override
