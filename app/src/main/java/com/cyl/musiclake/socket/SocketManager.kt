@@ -1,16 +1,22 @@
 package com.cyl.musiclake.socket
 
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
-import com.cyl.musiclake.bean.LoginSocket
+import com.cyl.musiclake.bean.MessageEvent
+import com.cyl.musiclake.bean.SocketOnlineEvent
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import com.github.nkzawa.engineio.client.Transport
 import com.github.nkzawa.engineio.client.transports.PollingXHR
 import com.github.nkzawa.socketio.client.IO
+import com.github.nkzawa.socketio.client.Manager
 import com.github.nkzawa.socketio.client.Socket
-import com.github.nkzawa.thread.EventThread
 import com.google.gson.Gson
-
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import java.io.PrintWriter
 
 /**
  * Des    : 实时在线socket统计
@@ -19,38 +25,66 @@ import com.google.gson.Gson
  */
 class SocketManager {
 
+    val MESSAGE_BROADCAST = "broadcast"
+    var realTimeUserNum = 0
     lateinit var socket: Socket
 
     fun initSocket() {
         val opts = IO.Options()
         opts.transports = arrayOf(PollingXHR.NAME)
-        socket = IO.socket(Constants.BASE_PLAYER_URL,opts)
-//        socket.on(PollingXHR.Request.EVENT_REQUEST_HEADERS) { args ->
-//            socket.emit(Transport.EVENT_REQUEST_HEADERS, args[0])
-//        }.on(PollingXHR.Request.EVENT_RESPONSE_HEADERS) { args ->
-//            EventThread.exec {
-//                socket.emit(Transport.EVENT_RESPONSE_HEADERS, args[0])
-//            }
-//        }
+        socket = IO.socket(Constants.BASE_PLAYER_URL, opts)
+        socket.io().on(Manager.EVENT_TRANSPORT) { args ->
+            val transport = args[0] as Transport
+            transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
+                val headers = args[0] as MutableMap<String, String>
+                // modify request headers
+                headers["accesstoken"] = PlaylistApiServiceImpl.token ?: ""
+            }
+            transport.on(Transport.EVENT_RESPONSE_HEADERS) { args ->
+                val headers = args[0] as MutableMap<String, String>
+                // access response headers
+                val cookie = headers["Set-Cookie"]?.get(0)
+            }
+        }
         socket.on(Socket.EVENT_CONNECT) {
-            socket.emit(Transport.EVENT_REQUEST_HEADERS, Gson().toJson(LoginSocket(PlaylistApiServiceImpl.token)))
-            socket.emit("broadcast", "test")
             LogUtil.e("连接成功！")
-            LogUtil.e("broadcast：test")
         }.on("online total") { num ->
-            LogUtil.e("当前在线人数：$num")
+            LogUtil.e("当前在线人数：${num[0].toString()}")
+            realTimeUserNum = num[0] as Int
+            EventBus.getDefault().post(SocketOnlineEvent(num = realTimeUserNum))
         }.on(Socket.EVENT_DISCONNECT) {
             LogUtil.e("已断开连接")
         }.on(Socket.EVENT_ERROR) { error ->
             LogUtil.e("连接错误：$error")
+        }.on(MESSAGE_BROADCAST) { broadcast ->
+            try {
+                val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
+                EventBus.getDefault().post(message)
+                LogUtil.e("收到消息：${message.toString()}")
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
         }
         LogUtil.e("初始化、建立连接！")
         socket.connect()
     }
 
-    fun connectSocket() {
-        socket.connect()
+    /**
+     * 发送消息
+     */
+    fun sendSocketMessage(msg: String) {
+        if (msg.isEmpty()) return
+        if (!UserStatus.getLoginStatus()) {
+            ToastUtils.show("请登录")
+            return
+        }
 
+        val message = MessageEvent().apply {
+            content = msg
+            name = UserStatus.getUserInfo().name
+            avatar = UserStatus.getUserInfo().avatar
+        }
+        socket.emit(MESSAGE_BROADCAST, Gson().toJson(message))
     }
 
 }

@@ -22,6 +22,10 @@
                     android:id="@+id/nav_menu_import"
                     android:icon="@drawable/ic_import_playlist"
                     android:title="@string/import_playlist" />
+                <item
+                    android:id="@+id/nav_menu_edit"
+                    android:icon="@drawable/ic_import_playlist"
+                    android:title="@string/send_message" />
             </menu>
         </item>
     </group>

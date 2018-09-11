@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.MessageEvent;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
@@ -41,6 +43,7 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
+import com.cyl.musiclake.ui.zone.EditActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -86,6 +89,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     Class<?> mTargetClass = null;
 
+    public static SocketManager socketManager;
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_main;
@@ -121,6 +126,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         updatePlaySongInfo(event.getMusic());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Snackbar.make(mNavigationView, "收到来自 " + event.getName() + " 的消息：" + event.getContent(), Snackbar.LENGTH_LONG).show();
+    }
+
     private void updatePlaySongInfo(Music music) {
         if (mSlidingUpPaneLayout == null) return;
         if (music != null) {
@@ -139,11 +149,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mName = headerView.findViewById(R.id.header_name);
         mNick = headerView.findViewById(R.id.header_nick);
 
-        SocketManager socketManager = new SocketManager();
+        socketManager = new SocketManager();
         socketManager.initSocket();
-        headerView.setOnClickListener(v -> socketManager.connectSocket());
-
-
     }
 
     @Override
@@ -255,6 +262,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
+                break;
+            case R.id.nav_menu_edit:
+                mTargetClass = EditActivity.class;
                 break;
             case R.id.nav_menu_feedback:
                 Tools.INSTANCE.feeback(this);

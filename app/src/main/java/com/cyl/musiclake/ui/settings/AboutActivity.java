@@ -4,7 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.MainThread;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.transition.Transition;
@@ -21,9 +24,17 @@ import android.widget.TextView;
 import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.bean.SocketOnlineEvent;
+import com.cyl.musiclake.event.PlayModeEvent;
+import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.Tools;
 import com.cyl.musiclake.view.FlipperView;
+import com.squareup.haha.perflib.Main;
 import com.tencent.bugly.beta.Beta;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -35,30 +46,31 @@ import static com.cyl.musiclake.common.Constants.ABOUT_MUSIC_LAKE_URL;
  * Created by lw on 2018/2/12.
  */
 public class AboutActivity extends BaseActivity {
-
-    @BindView(R.id.flipperView)
-    FlipperView flipperView;
+//    @BindView(R.id.flipperView)
+//    FlipperView flipperView;
     @BindView(R.id.tv_about_version)
     TextView mVersion;
     @BindView(R.id.cardEmailView)
     View cardEmailView;
-    @BindView(R.id.logoFab)
-    FloatingActionButton mLogoFab;
+//    @BindView(R.id.logoFab)
+//    FloatingActionButton mLogoFab;
     @BindView(R.id.shareFab)
     FloatingActionButton shareFab;
+    @BindView(R.id.realTimeUserTv)
+    TextView mRealTimeUserTv;
     @BindView(R.id.aboutContainerView)
     View mView;
-    ObjectAnimator animator;
+//    ObjectAnimator animator;
 
     @OnClick(R.id.cardGithubView)
     void introduce() {
         Tools.INSTANCE.openBrowser(this, ABOUT_MUSIC_LAKE_URL);
     }
 
-    @OnClick(R.id.logoFab)
-    void toFlipper() {
-        flipperView.setOnClick();
-    }
+//    @OnClick(R.id.logoFab)
+//    void toFlipper() {
+//        flipperView.setOnClick();
+//    }
 
     @OnClick(R.id.cardEmailView)
     void toFeedback() {
@@ -84,35 +96,43 @@ public class AboutActivity extends BaseActivity {
     protected void initView() {
         Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show);
         mView.startAnimation(animation1);
-
-        animator = ObjectAnimator.ofFloat(mLogoFab, "scaleX", 1.1f, 0.9f);
-        animator.setRepeatCount(-1);
-        animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.setDuration(800);
-        animator.addUpdateListener(animation -> {
-            float x = (float) animation.getAnimatedValue();
-            mLogoFab.setScaleY(x);
-        });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                super.onAnimationRepeat(animation);
-                flipperView.setOnClick();
-            }
-        });
-        animator.start();
+//
+//        animator = ObjectAnimator.ofFloat(mLogoFab, "scaleX", 1.1f, 0.9f);
+//        animator.setRepeatCount(-1);
+//        animator.setRepeatMode(ValueAnimator.RESTART);
+//        animator.setDuration(800);
+//        animator.addUpdateListener(animation -> {
+//            float x = (float) animation.getAnimatedValue();
+//            mLogoFab.setScaleY(x);
+//        });
+//        animator.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//                super.onAnimationRepeat(animation);
+//                flipperView.setOnClick();
+//            }
+//        });
+//        animator.start();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        animator.cancel();
+        EventBus.getDefault().unregister(this);
+//        animator.cancel();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void initData() {
         mVersion.setText(String.format("版本号 v%s", BuildConfig.VERSION_NAME));
+        mRealTimeUserTv.setText(String.valueOf(MainActivity.socketManager.getRealTimeUserNum()));
     }
 
     @Override
@@ -185,5 +205,9 @@ public class AboutActivity extends BaseActivity {
         anim.start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRealTimeEvent(SocketOnlineEvent event) {
+        mRealTimeUserTv.setText(String.valueOf(event.getNum()));
+    }
 
 }

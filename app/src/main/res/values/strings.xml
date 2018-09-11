@@ -354,5 +354,7 @@
     <string name="folder_title">文件夹</string>
     <string name="song_comment_title">歌曲评论</string>
     <string name="song_comment_new">最新评论</string>
+    <string name="real_time_user">实时在线人数</string>
+    <string name="send_message">发送消息</string>
 
 </resources>

@@ -136,6 +136,7 @@ dependencies {
 
     //    implementation files('libs/jaudiotagger-2.2.6-SNAPSHOT.jar')
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')
+
     api 'com.github.nkzawa:socket.io-client:0.3.0'
 
 //    compile ('io.socket:socket.io-client:1.0.0') {

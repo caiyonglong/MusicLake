@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -65,14 +66,8 @@ public class EditActivity extends BaseActivity {
             return true;
         } else if (id == R.id.menu_send) {
             content = mEditText.getText().toString().trim();
-            if (content.length() == 0 || content == null) {
+            if (content.length() == 0) {
                 ToastUtils.show(this, "不能发送空");
-                return true;
-            }
-            User user = UserStatus.getUserInfo();
-            user_id = user.getId();
-            if (user_id == null || user_id.length() == 0) {
-                ToastUtils.show(this, "请登录");
                 return true;
             }
             sendSecret(user_id, content);
@@ -82,6 +77,7 @@ public class EditActivity extends BaseActivity {
     }
 
     private void sendSecret(String user_id, String comment) {
+        MainActivity.socketManager.sendSocketMessage(comment);
 //        OkHttpUtils.post().url(Constants.DEFAULT_URL)
 //                .addParams(Constants.FUNC, Constants.SECRET_ADD)
 //                .addParams(Constants.USER_ID, user_id)
