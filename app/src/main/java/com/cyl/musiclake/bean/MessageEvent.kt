@@ -1,11 +1,13 @@
 package com.cyl.musiclake.bean
 
+import com.cyl.musicapi.playlist.UserInfo
+
 /**
  * Created by cyl on 2018/9/11.
  * 发送消息
  */
 class MessageEvent {
-    var avatar: String? = null
-    var name: String? = null
-    var content: String? = null
+    val userInfo: UserInfo? = null
+    val datetime: String = ""
+    val message: String = ""
 }

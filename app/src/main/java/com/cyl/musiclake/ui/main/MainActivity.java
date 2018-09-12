@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        Snackbar.make(mImageView, "收到来自 " + event.getName() + " 的消息：" + event.getContent(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(mImageView, "收到来自 " + event.getUserInfo().getNickname() + " 的消息：" + event.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 
     private void updatePlaySongInfo(Music music) {

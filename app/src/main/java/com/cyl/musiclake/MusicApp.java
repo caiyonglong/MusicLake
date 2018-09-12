@@ -2,7 +2,6 @@ package com.cyl.musiclake;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -12,25 +11,29 @@ import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.data.PlaylistLoader;
-import com.cyl.musiclake.download.TasksManager;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
+import com.cyl.musiclake.download.TasksManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.tauth.Tencent;
+import com.tencent.tinker.loader.app.TinkerApplication;
+import com.tencent.tinker.loader.shareutil.ShareConstants;
 
 import org.litepal.LitePal;
 
 import java.util.List;
 
-public class MusicApp extends Application {
+/**
+ * tinker热更新需要
+ */
+public class MusicApp extends TinkerApplication {
     @SuppressLint("StaticFieldLeak")
     private static MusicApp sInstance;
     private PlayManager.ServiceToken mToken;
@@ -44,6 +47,11 @@ public class MusicApp extends Application {
 
     private ApplicationComponent mApplicationComponent;
     public Point screenSize = new Point();
+
+    public MusicApp() {
+        super(ShareConstants.TINKER_ENABLE_ALL, "com.cyl.musiclake.MusicAppLike",
+                "com.tencent.tinker.loader.TinkerLoader", false);
+    }
 
     public static synchronized MusicApp getInstance() {
         return sInstance;

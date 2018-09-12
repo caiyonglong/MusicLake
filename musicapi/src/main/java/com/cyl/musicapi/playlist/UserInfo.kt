@@ -8,6 +8,6 @@ data class UserInfo(@SerializedName("nickname")
                     @SerializedName("avatar")
                     val avatar: String = "",
                     @SerializedName("token")
-                    val token: String = "")
-
-
+                    val token: String = "",
+                    @SerializedName("id")
+                    val id: Int = 0)
