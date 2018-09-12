@@ -8,7 +8,7 @@
     <!--主界面-->
     <string name="login_hint">点我登录</string>
     <string name="un_login_tips">暂未登录</string>
-    <string name="logout_hint">注销登录</string>
+    <string name="logout_hint">退出登录/关闭</string>
     <string name="action_settings">设置</string>
     <string name="header_author_url">个性标签</string>
     <string name="widget_standard">音乐湖</string>
@@ -25,7 +25,7 @@
     <string name="playlist_manager">歌单管理</string>
     <string name="title_batch_operate">批量操作</string>
     <string name="settings">设置</string>
-    <string name="exit">退出程序</string>
+    <string name="exit">关闭</string>
 
     <!--本地音乐-->
     <string name="item_local">本地歌曲</string>
@@ -208,7 +208,7 @@
     <string name="about_des">描述</string>
     <string name="about_version">软件版本号</string>
     <string name="about_project">项目地址</string>
-    <string name="about_feedback">意见反馈</string>
+    <string name="about_feedback">帮助与反馈</string>
     <string name="about_software"><u>关于软件</u></string>
     <string name="about_project_url">https://github.com/caiyonglong/MusicLake</string>
     <string name="share_title">分享</string>
@@ -299,7 +299,7 @@
     <string name="playlist_queue_clear">清空播放队列?</string>
     <string name="menu_rename">重命名</string>
     <string name="menu_delete_playlist">删除歌单</string>
-    <string name="menu_other">其他</string>
+    <string name="menu_other">通用</string>
     <string name="menu_feature">功能</string>
     <!--歌词-->
     <string name="loading_lyric">歌词加载中…</string>

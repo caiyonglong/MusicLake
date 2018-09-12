@@ -167,7 +167,6 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             holder.textView.text = data[position].title
             holder.icon.setImageResource(data[position].icon)
             holder.icon.setColorFilter(Color.parseColor("#0091EA"))
-
             holder.itemView.setOnClickListener {
                 when (data[position].icon) {
                     R.drawable.ic_queue_play_next -> PlayManager.nextPlay(music)

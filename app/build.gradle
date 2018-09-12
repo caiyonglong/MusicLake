@@ -139,6 +139,10 @@ dependencies {
 
     api 'com.github.nkzawa:socket.io-client:0.3.0'
 
+    //进度条
+    api 'com.xw.repo:bubbleseekbar:3.19'
+
+
 //    compile ('io.socket:socket.io-client:1.0.0') {
 //        // excluding org.json which is provided by Android
 //        exclude group: 'org.json', module: 'json'

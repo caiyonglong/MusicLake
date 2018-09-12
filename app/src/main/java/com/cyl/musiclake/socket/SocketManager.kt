@@ -17,6 +17,8 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.PrintWriter
+import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
 
 /**
  * Des    : 实时在线socket统计
@@ -58,7 +60,7 @@ class SocketManager {
             LogUtil.e("连接错误：$error")
         }.on(MESSAGE_BROADCAST) { broadcast ->
             try {
-                val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
+                val message = Gson().fromJson(toUtf8(broadcast[0].toString()), MessageEvent::class.java)
                 EventBus.getDefault().post(message)
                 LogUtil.e("收到消息：${message.toString()}")
             } catch (e: Throwable) {
@@ -84,7 +86,19 @@ class SocketManager {
             name = UserStatus.getUserInfo().name
             avatar = UserStatus.getUserInfo().avatar
         }
-        socket.emit(MESSAGE_BROADCAST, Gson().toJson(message))
+        socket.emit(MESSAGE_BROADCAST, toUtf8(Gson().toJson(message)))
+    }
+
+    fun toUtf8(str: String): String? {
+        var result: String? = null
+        try {
+            result = String(str.toByteArray(charset("UTF-8")), charset("UTF-8"))
+        } catch (e: UnsupportedEncodingException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+        }
+
+        return result
     }
 
 }
