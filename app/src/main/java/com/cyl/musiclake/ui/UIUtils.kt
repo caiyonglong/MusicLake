@@ -151,38 +151,40 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_local_error))
         return
     }
-    ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
-        override fun success(result: Music) {
-            LogUtil.e(javaClass.simpleName, "-----${result.uri}")
-            /**
-             * 当前activity 销毁时 不显示
-             */
-            if (this@downloadMusic.isDestroyed || this@downloadMusic.isFinishing) return
-            if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
-                showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
-                    addDownloadQueue(result)
-                }
-                return
-            }
-            if (result.uri != null && result.uri?.startsWith("http")!!) {
-                MaterialDialog.Builder(this@downloadMusic)
-                        .title(R.string.popup_download)
-                        .content(R.string.download_content, music.title)
-                        .onPositive { _, _ ->
-                            addDownloadQueue(result)
-                        }
-                        .positiveText(R.string.sure)
-                        .negativeText(R.string.cancel)
-                        .show()
-                return
-            }
-            ToastUtils.show(getString(R.string.download_error))
-        }
-
-        override fun error(msg: String) {
-            ToastUtils.show(msg)
-        }
-    })
+    ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
+    return
+//    ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
+//        override fun success(result: Music) {
+//            LogUtil.e(javaClass.simpleName, "-----${result.uri}")
+//            /**
+//             * 当前activity 销毁时 不显示
+//             */
+//            if (this@downloadMusic.isDestroyed || this@downloadMusic.isFinishing) return
+//            if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
+//                showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
+//                    addDownloadQueue(result)
+//                }
+//                return
+//            }
+//            if (result.uri != null && result.uri?.startsWith("http")!!) {
+//                MaterialDialog.Builder(this@downloadMusic)
+//                        .title(R.string.popup_download)
+//                        .content(R.string.download_content, music.title)
+//                        .onPositive { _, _ ->
+//                            addDownloadQueue(result)
+//                        }
+//                        .positiveText(R.string.sure)
+//                        .negativeText(R.string.cancel)
+//                        .show()
+//                return
+//            }
+//            ToastUtils.show(getString(R.string.download_error))
+//        }
+//
+//        override fun error(msg: String) {
+//            ToastUtils.show(msg)
+//        }
+//    })
 }
 
 /**
@@ -194,24 +196,26 @@ fun AppCompatActivity.downloadBatchMusic(musicList: MutableList<Music>?) {
             musicList.remove(it)
         }
     }
-    if (musicList == null || musicList.size == 0) {
-        showTipsDialog(this@downloadBatchMusic, R.string.download_empty_error)
-        return
-    }
-
-    if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
-        showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
-            musicList.forEach {
-                addDownloadQueue(it, true)
-            }
-            ToastUtils.show(getString(R.string.download_add_success))
-        }
-    } else {
-        musicList.forEach {
-            addDownloadQueue(it, true)
-        }
-        ToastUtils.show(getString(R.string.download_add_success))
-    }
+    ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
+    return
+//    if (musicList == null || musicList.size == 0) {
+//        showTipsDialog(this@downloadBatchMusic, R.string.download_empty_error)
+//        return
+//    }
+//
+//    if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
+//        showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
+//            musicList.forEach {
+//                addDownloadQueue(it, true)
+//            }
+//            ToastUtils.show(getString(R.string.download_add_success))
+//        }
+//    } else {
+//        musicList.forEach {
+//            addDownloadQueue(it, true)
+//        }
+//        ToastUtils.show(getString(R.string.download_add_success))
+//    }
 }
 
 /**

@@ -1,7 +1,13 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
+
+# 免责声明
+- 音乐湖只用作个人学习研究，禁止用于商业及非法用途，如产生法律纠纷与本人无关
+- 音乐api来自于github，非官方版api，本软件不提供任何音频存储服务，如需下载音频，请支持正版！。
+- 音乐版权归各网站所有，本站不承担任何法律责任和连带责任。如果已经涉及到您的版权，请速与本站管理员联系，我们将第一时间为你处理。
+
+# 功能版本
 - Android 音乐播放器 （最低支持Android版本5.0）
-- 本地音乐播放，百度音乐，QQ音乐、虾米音乐、网易云音乐等网络音乐播放
-- 支持在线歌曲下载
+- 本地音乐播放，百度音乐，QQ音乐、虾米音乐、网易云音乐等网络音乐在线播放
 - 歌词播放、桌面歌词、桌面小控件
 - 通知栏控制、线控播放、音频焦点控制
 - QQ登录、在线歌单同步
@@ -13,6 +19,13 @@
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [蒲公英下载](https://www.pgyer.com/ZIWH)
 
+# 下一版本计划（预计9.16）
+- 增加在线用户弹幕功能
+- 增加热更新
+- 优化侧边栏功能显示
+- 移除歌曲下载功能
+- 修复已知bug
+
 # 更新日志
 
 ## v4.1.5
@@ -21,7 +34,7 @@
 
 ## v4.1.4
 - 支持导入外部歌单（网易云、qq、虾米。分享链接格式需要注意，例如qq不支持短连接解析，有些歌单没有复制链接按钮，需要分享给qq好友后，复制分享后的链接，链接形式<http://y.qq.com/...id=1158454608&...> ）
-- 支持批量添加在线歌曲到歌单、批量下载
+- 支持批量添加在线歌曲到歌单
 - 优化歌单操作、播放页增加歌曲操作
 - 主页懒加载
 - 修复一些bugs
@@ -63,7 +76,8 @@
 # 相关项目|音乐API
 - [音乐API](https://github.com/sunzongzheng/musicApi)
 - [云歌单API](https://github.com/sunzongzheng/player-be)
-- [网易云API](https://github.com/Binaryify/NeteaseCloudMusicApi)
+- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+
 
 # 第三方库
 

@@ -288,9 +288,10 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
-
                     android:gravity="center"
+
                     android:onClick="downloadMusic"
+                    android:visibility="gone"
                     app:materialIcon="arrow_collapse_down"
                     app:materialIconColor="@color/white"
                     app:materialIconSize="24dp"

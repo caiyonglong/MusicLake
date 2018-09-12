@@ -28,7 +28,6 @@ import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
 import org.jetbrains.anko.support.v4.startActivity
-import org.litepal.util.Const
 
 class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -135,7 +134,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_album to R.drawable.ic_album,
                 R.string.popup_artist to R.drawable.ic_art_track,
                 R.string.popup_detail_edit to R.drawable.ic_mode_edit,
-                R.string.popup_download to R.drawable.item_download,
+//                R.string.popup_download to R.drawable.item_download,
                 R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
