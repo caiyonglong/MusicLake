@@ -1,12 +1,8 @@
 package com.cyl.musiclake.ui.settings;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -25,11 +21,8 @@ import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
-import com.cyl.musiclake.event.PlayModeEvent;
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.Tools;
-import com.cyl.musiclake.view.FlipperView;
-import com.squareup.haha.perflib.Main;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,13 +39,13 @@ import static com.cyl.musiclake.common.Constants.ABOUT_MUSIC_LAKE_URL;
  * Created by lw on 2018/2/12.
  */
 public class AboutActivity extends BaseActivity {
-//    @BindView(R.id.flipperView)
+    //    @BindView(R.id.flipperView)
 //    FlipperView flipperView;
     @BindView(R.id.tv_about_version)
     TextView mVersion;
     @BindView(R.id.cardEmailView)
     View cardEmailView;
-//    @BindView(R.id.logoFab)
+    //    @BindView(R.id.logoFab)
 //    FloatingActionButton mLogoFab;
     @BindView(R.id.shareFab)
     FloatingActionButton shareFab;
