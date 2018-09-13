@@ -7,12 +7,11 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
-import com.github.nkzawa.engineio.client.Transport
-import com.github.nkzawa.engineio.client.transports.PollingXHR
-import com.github.nkzawa.socketio.client.IO
-import com.github.nkzawa.socketio.client.Manager
-import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
+import io.socket.client.IO
+import io.socket.client.Manager
+import io.socket.client.Socket
+import io.socket.engineio.client.Transport
 import org.greenrobot.eventbus.EventBus
 import java.io.UnsupportedEncodingException
 
@@ -28,43 +27,50 @@ class SocketManager {
     lateinit var socket: Socket
 
     fun initSocket() {
-        val opts = IO.Options()
-        opts.transports = arrayOf(PollingXHR.NAME)
-        socket = IO.socket(Constants.BASE_PLAYER_URL, opts)
-        socket.io().on(Manager.EVENT_TRANSPORT) { args ->
-            val transport = args[0] as Transport
-            transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
-                val headers = args[0] as MutableMap<String, String>
-                // modify request headers
-                headers["accesstoken"] = PlaylistApiServiceImpl.token ?: ""
+        try {
+
+            val opts = IO.Options()
+            opts.forceNew = true
+            opts.multiplex = false
+//        opts.transports = arrayOf(PollingXHR.NAME)
+            socket = IO.socket(Constants.BASE_PLAYER_URL, opts)
+            socket.io().on(Manager.EVENT_TRANSPORT) { args ->
+                val transport = args[0] as Transport
+                transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
+                    val headers = args[0] as MutableMap<String, List<String>>
+                    // modify request headers
+                    headers["accesstoken"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
+                }
+                transport.on(Transport.EVENT_RESPONSE_HEADERS) { args ->
+                    //                val headers = args[0] as MutableMap<String, String>
+//                 access response headers
+//                val cookie = headers["Set-Cookie"]?.get(0)
+                }
             }
-            transport.on(Transport.EVENT_RESPONSE_HEADERS) { args ->
-                val headers = args[0] as MutableMap<String, String>
-                // access response headers
-                val cookie = headers["Set-Cookie"]?.get(0)
+            socket.on(Socket.EVENT_CONNECT) {
+                LogUtil.e("连接成功！")
+            }.on("online total") { num ->
+                LogUtil.e("当前在线人数：${num[0].toString()}")
+                realTimeUserNum = num[0] as Int
+                EventBus.getDefault().post(SocketOnlineEvent(num = realTimeUserNum))
+            }.on(Socket.EVENT_DISCONNECT) {
+                LogUtil.e("已断开连接")
+            }.on(Socket.EVENT_ERROR) { error ->
+                LogUtil.e("连接错误：$error")
+            }.on(MESSAGE_BROADCAST) { broadcast ->
+                try {
+                    val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
+                    EventBus.getDefault().post(message)
+                    LogUtil.e("收到消息：${broadcast[0].toString()}")
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
             }
+            LogUtil.e("初始化、建立连接！")
+            socket.connect()
+        } catch (e: Throwable) {
+
         }
-        socket.on(Socket.EVENT_CONNECT) {
-            LogUtil.e("连接成功！")
-        }.on("online total") { num ->
-            LogUtil.e("当前在线人数：${num[0].toString()}")
-            realTimeUserNum = num[0] as Int
-            EventBus.getDefault().post(SocketOnlineEvent(num = realTimeUserNum))
-        }.on(Socket.EVENT_DISCONNECT) {
-            LogUtil.e("已断开连接")
-        }.on(Socket.EVENT_ERROR) { error ->
-            LogUtil.e("连接错误：$error")
-        }.on(MESSAGE_BROADCAST) { broadcast ->
-            try {
-                val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
-                EventBus.getDefault().post(message)
-                LogUtil.e("收到消息：${message.toString()}")
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
-        }
-        LogUtil.e("初始化、建立连接！")
-        socket.connect()
     }
 
     /**

@@ -136,8 +136,11 @@ dependencies {
     //    implementation files('libs/jaudiotagger-2.2.6-SNAPSHOT.jar')
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')
 
-    api 'com.github.nkzawa:socket.io-client:0.3.0'
-
+//    api 'com.github.nkzawa:socket.io-client:0.3.0'
+    api ('io.socket:socket.io-client:1.0.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
     //进度条
     api 'com.xw.repo:bubbleseekbar:3.19'
 
@@ -149,4 +152,12 @@ dependencies {
     api 'com.tencent.tinker:tinker-android-lib:1.9.6'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     api 'com.tencent.bugly:nativecrashreport:3.3.1'
+
+//    api "com.mikepenz:materialdrawer:6.1.0-rc01"
+
+//required support lib modules
+//    implementation "androidx.appcompat:appcompat:1.0.0-rc02"
+//    implementation "androidx.recyclerview:recyclerview:1.0.0-rc02"
+//    implementation "androidx.annotation:annotation:1.0.0-rc02"
+//    implementation "com.google.android.material:material:1.0.0-rc02"
 }

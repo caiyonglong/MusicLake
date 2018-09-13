@@ -10,4 +10,7 @@ class MessageEvent {
     val userInfo: UserInfo? = null
     val datetime: String = ""
     val message: String = ""
+    override fun toString(): String {
+        return "MessageEvent(userInfo=$userInfo, datetime='$datetime', message='$message')"
+    }
 }
