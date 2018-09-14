@@ -33,6 +33,9 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.cyl.musiclake.R;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
@@ -62,16 +65,7 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  */
 public class MyNavigationView extends ScrimInsetsFrameLayout {
 
-    private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
-    private static final int[] DISABLED_STATE_SET = {-android.R.attr.state_enabled};
-
-    private static final int PRESENTER_NAVIGATION_VIEW_ID = 1;
-
-
-    OnNavigationItemSelectedListener mListener;
     private int mMaxWidth;
-
-    private MenuInflater mMenuInflater;
 
     public MyNavigationView(Context context) {
         this(context, null);
@@ -84,36 +78,13 @@ public class MyNavigationView extends ScrimInsetsFrameLayout {
     @SuppressLint("RestrictedApi")
     public MyNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        init();
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState state = new SavedState(superState);
-        state.menuState = new Bundle();
-        return state;
+    private void init() {
+        View.inflate(getContext(), R.layout.header_nav, this);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Parcelable savedState) {
-        if (!(savedState instanceof SavedState)) {
-            super.onRestoreInstanceState(savedState);
-            return;
-        }
-        SavedState state = (SavedState) savedState;
-        super.onRestoreInstanceState(state.getSuperState());
-    }
-
-    /**
-     * Set a listener that will be notified when a menu item is selected.
-     *
-     * @param listener The listener to notify
-     */
-    public void setNavigationItemSelectedListener(
-            @Nullable OnNavigationItemSelectedListener listener) {
-        mListener = listener;
-    }
 
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
@@ -142,82 +113,5 @@ public class MyNavigationView extends ScrimInsetsFrameLayout {
     }
 
 
-    private ColorStateList createDefaultColorStateList(int baseColorThemeAttr) {
-        final TypedValue value = new TypedValue();
-        if (!getContext().getTheme().resolveAttribute(baseColorThemeAttr, value, true)) {
-            return null;
-        }
-        ColorStateList baseColor = AppCompatResources.getColorStateList(
-                getContext(), value.resourceId);
-        if (!getContext().getTheme().resolveAttribute(
-                android.support.v7.appcompat.R.attr.colorPrimary, value, true)) {
-            return null;
-        }
-        int colorPrimary = value.data;
-        int defaultColor = baseColor.getDefaultColor();
-        return new ColorStateList(new int[][]{
-                DISABLED_STATE_SET,
-                CHECKED_STATE_SET,
-                EMPTY_STATE_SET
-        }, new int[]{
-                baseColor.getColorForState(DISABLED_STATE_SET, defaultColor),
-                colorPrimary,
-                defaultColor
-        });
-    }
-
-    /**
-     * Listener for handling events on navigation items.
-     */
-    public interface OnNavigationItemSelectedListener {
-
-        /**
-         * Called when an item in the navigation menu is selected.
-         *
-         * @param item The selected item
-         * @return true to display the item as the selected item
-         */
-        public boolean onNavigationItemSelected(@NonNull MenuItem item);
-    }
-
-    /**
-     * User interface state that is stored by NavigationView for implementing
-     * onSaveInstanceState().
-     */
-    public static class SavedState extends AbsSavedState {
-        public Bundle menuState;
-
-        public SavedState(Parcel in, ClassLoader loader) {
-            super(in, loader);
-            menuState = in.readBundle(loader);
-        }
-
-        public SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            super.writeToParcel(dest, flags);
-            dest.writeBundle(menuState);
-        }
-
-        public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                return new SavedState(in, loader);
-            }
-
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in, null);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-    }
 
 }

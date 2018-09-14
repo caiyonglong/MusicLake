@@ -357,5 +357,8 @@
     <string name="song_comment_new">最新评论</string>
     <string name="real_time_user">实时在线人数</string>
     <string name="send_message">发送消息</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="message_center">消息中心</string>
+    <string name="send">发送</string>
 
 </resources>

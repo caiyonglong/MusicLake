@@ -21,11 +21,13 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.di.component.ActivityComponent;
 import com.cyl.musiclake.di.component.DaggerActivityComponent;
 import com.cyl.musiclake.di.module.ActivityModule;
+import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
@@ -87,6 +88,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);
         setContentView(getLayoutResID());
         mHandler = new Handler();
@@ -149,6 +151,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (unbinder != null) {
             unbinder.unbind();
         }
@@ -250,6 +253,10 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
         mService = null;
+    }
+
+    @Subscribe
+    public void onDefaultEvent(MetaChangedEvent event) {
     }
 
 }

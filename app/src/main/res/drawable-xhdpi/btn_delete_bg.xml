@@ -13,7 +13,6 @@
 
         <shape>
             <solid android:color="@color/white" />
-
             <size android:width="3dp" android:height="1dp" />
 
         </shape>

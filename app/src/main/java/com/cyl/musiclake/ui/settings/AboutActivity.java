@@ -108,20 +108,6 @@ public class AboutActivity extends BaseActivity {
 //        animator.start();
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-//        animator.cancel();
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
-
     @Override
     protected void initData() {
         mVersion.setText(String.format("版本号 v%s", BuildConfig.VERSION_NAME));

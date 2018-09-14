@@ -1,9 +1,11 @@
 package com.cyl.musiclake.socket
 
+import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.bean.SocketOnlineEvent
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.ui.chat.ChatActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
@@ -13,7 +15,6 @@ import io.socket.client.Manager
 import io.socket.client.Socket
 import io.socket.engineio.client.Transport
 import org.greenrobot.eventbus.EventBus
-import java.io.UnsupportedEncodingException
 
 /**
  * Des    : 实时在线socket统计
@@ -23,6 +24,8 @@ import java.io.UnsupportedEncodingException
 class SocketManager {
 
     val MESSAGE_BROADCAST = "broadcast"
+    val MESSAGE_ONLINE_TOTAL = "online total"
+    val MESSAGE_ONLINE_USERS = "online users"
     var realTimeUserNum = 0
     lateinit var socket: Socket
 
@@ -49,10 +52,14 @@ class SocketManager {
             }
             socket.on(Socket.EVENT_CONNECT) {
                 LogUtil.e("连接成功！")
-            }.on("online total") { num ->
+            }.on(MESSAGE_ONLINE_TOTAL) { num ->
                 LogUtil.e("当前在线人数：${num[0].toString()}")
                 realTimeUserNum = num[0] as Int
                 EventBus.getDefault().post(SocketOnlineEvent(num = realTimeUserNum))
+            }.on(MESSAGE_ONLINE_USERS) { num ->
+//                val data = Gson().fromJson<MutableList<UserInfo>>(num.toString(), UserInfo::class.java)
+//                saveUserInfo(data)
+//                LogUtil.e("当前在线信息：${data.size}")
             }.on(Socket.EVENT_DISCONNECT) {
                 LogUtil.e("已断开连接")
             }.on(Socket.EVENT_ERROR) { error ->
@@ -61,6 +68,7 @@ class SocketManager {
                 try {
                     val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
                     EventBus.getDefault().post(message)
+                    receiveSocketMessage(message)
                     LogUtil.e("收到消息：${broadcast[0].toString()}")
                 } catch (e: Throwable) {
                     e.printStackTrace()
@@ -85,16 +93,20 @@ class SocketManager {
         socket.emit(MESSAGE_BROADCAST, msg)
     }
 
-    fun toUtf8(str: String): String? {
-        var result: String? = null
-        try {
-            result = String(str.toByteArray(charset("UTF-8")), charset("UTF-8"))
-        } catch (e: UnsupportedEncodingException) {
-            // TODO Auto-generated catch block
-            e.printStackTrace()
-        }
+    /**
+     * 接收消息
+     */
+    private fun receiveSocketMessage(msg: MessageEvent) {
+        ChatActivity.messages.add(msg)
+    }
 
-        return result
+    /**
+     * 保存用户信息
+     */
+    private fun saveUserInfo(userInfo: MutableList<UserInfo>?) {
+        userInfo?.let {
+            ChatActivity.users = it
+        }
     }
 
 }

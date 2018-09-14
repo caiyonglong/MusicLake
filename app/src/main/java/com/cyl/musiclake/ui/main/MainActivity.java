@@ -38,6 +38,7 @@ import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
+import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.player.PlayControlFragment;
@@ -438,9 +439,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param event
      */
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateOnlineInfo(SocketOnlineEvent event) {
-
         mOnlineNumTv.setText(String.valueOf(event.getNum()));
     }
 
@@ -475,18 +475,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.nav_menu_shake:
@@ -502,11 +490,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.user_login_tv:
                 mTargetClass = LoginActivity.class;
                 break;
+            case R.id.nav_menu_online:
+                mTargetClass = ChatActivity.class;
+                break;
             case R.id.nav_menu_import:
                 mTargetClass = ImportPlaylistActivity.class;
-                break;
-            case R.id.nav_menu_online:
-                sendSecret();
                 break;
             case R.id.nav_menu_setting:
                 mTargetClass = SettingsActivity.class;
@@ -546,24 +534,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
         mDrawerLayout.closeDrawers();
-    }
-
-
-    private void sendSecret() {
-        new MaterialDialog.Builder(this)
-                .title("重命名歌单")
-                .positiveText("确定")
-                .negativeText("取消")
-                .inputRangeRes(2, 10, R.color.red)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("输入需要发送的消息", "", false, (dialog, input) -> LogUtil.e("=====", input.toString()))
-                .onPositive((dialog, which) -> {
-                    String title = dialog.getInputEditText().getText().toString();
-                    MainActivity.socketManager.sendSocketMessage(title);
-                })
-                .positiveText("确定")
-                .negativeText("取消")
-                .show();
     }
 
     private List<String> list = new ArrayList<String>() {{

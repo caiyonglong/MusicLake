@@ -30,8 +30,8 @@
     <!-- 定位包、导航包需要的额外权限（注：基础权限也需要） -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
-    <uses-permission android:name="android.permission.READ_LOGS"
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -212,13 +212,14 @@
         <activity
             android:name=".ui.music.importplaylist.ImportPlaylistActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
-
-
+        <activity
+            android:name=".ui.chat.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:theme="@style/MyThemeBlue"></activity>
     </application>
 
 </manifest>
