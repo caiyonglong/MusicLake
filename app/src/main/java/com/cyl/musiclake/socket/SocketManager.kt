@@ -5,6 +5,7 @@ import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.bean.SocketOnlineEvent
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.ui.chat.ChatActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
@@ -12,9 +13,17 @@ import com.cyl.musiclake.utils.ToastUtils
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.client.Manager
+import io.socket.client.Manager.EVENT_ERROR
+import io.socket.client.Manager.EVENT_TRANSPORT
 import io.socket.client.Socket
+import io.socket.client.Socket.EVENT_DISCONNECT
 import io.socket.engineio.client.Transport
+import io.socket.engineio.client.transports.PollingXHR
+import io.socket.engineio.client.transports.WebSocket
+import okhttp3.OkHttpClient
 import org.greenrobot.eventbus.EventBus
+import org.json.JSONArray
+import java.util.concurrent.TimeUnit
 
 /**
  * Des    : 实时在线socket统计
@@ -22,60 +31,28 @@ import org.greenrobot.eventbus.EventBus
  * Date   : 2018/9/10 .
  */
 class SocketManager {
-
     val MESSAGE_BROADCAST = "broadcast"
     val MESSAGE_ONLINE_TOTAL = "online total"
     val MESSAGE_ONLINE_USERS = "online users"
-    var realTimeUserNum = 0
+    var realUsersNum = 0
     lateinit var socket: Socket
 
     fun initSocket() {
         try {
-
             val opts = IO.Options()
+            val okHttpClient = OkHttpClient().newBuilder().pingInterval(15, TimeUnit.SECONDS).retryOnConnectionFailure(true).build()
             opts.forceNew = true
-            opts.multiplex = false
-//        opts.transports = arrayOf(PollingXHR.NAME)
-            socket = IO.socket(Constants.BASE_PLAYER_URL, opts)
-            socket.io().on(Manager.EVENT_TRANSPORT) { args ->
-                val transport = args[0] as Transport
-                transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
-                    val headers = args[0] as MutableMap<String, List<String>>
-                    // modify request headers
-                    headers["accesstoken"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
-                }
-                transport.on(Transport.EVENT_RESPONSE_HEADERS) { args ->
-                    //                val headers = args[0] as MutableMap<String, String>
-//                 access response headers
-//                val cookie = headers["Set-Cookie"]?.get(0)
-                }
-            }
-            socket.on(Socket.EVENT_CONNECT) {
-                LogUtil.e("连接成功！")
-            }.on(MESSAGE_ONLINE_TOTAL) { num ->
-                LogUtil.e("当前在线人数：${num[0].toString()}")
-                realTimeUserNum = num[0] as Int
-                EventBus.getDefault().post(SocketOnlineEvent(num = realTimeUserNum))
-            }.on(MESSAGE_ONLINE_USERS) { num ->
-//                val data = Gson().fromJson<MutableList<UserInfo>>(num.toString(), UserInfo::class.java)
-//                saveUserInfo(data)
-//                LogUtil.e("当前在线信息：${data.size}")
-            }.on(Socket.EVENT_DISCONNECT) {
-                LogUtil.e("已断开连接")
-            }.on(Socket.EVENT_ERROR) { error ->
-                LogUtil.e("连接错误：$error")
-            }.on(MESSAGE_BROADCAST) { broadcast ->
-                try {
-                    val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
-                    EventBus.getDefault().post(message)
-                    receiveSocketMessage(message)
-                    LogUtil.e("收到消息：${broadcast[0].toString()}")
-                } catch (e: Throwable) {
-                    e.printStackTrace()
-                }
-            }
+            opts.reconnectionDelay = 30000
+            opts.reconnectionDelayMax = 20
+            opts.reconnectionAttempts = 5
+            opts.randomizationFactor = 1.0
+            opts.timeout = 60 * 1000
+            opts.webSocketFactory = okHttpClient
+            opts.callFactory = okHttpClient
+            opts.timestampRequests = true
+            opts.transports = arrayOf(WebSocket.NAME)
+            socket = IO.socket("http://39.108.214.63:15003", opts)
             LogUtil.e("初始化、建立连接！")
-            socket.connect()
         } catch (e: Throwable) {
 
         }
@@ -101,12 +78,90 @@ class SocketManager {
     }
 
     /**
+     * 建立连接
+     */
+    private fun connect() {
+        socket.io().on(Manager.EVENT_TRANSPORT) { args ->
+            val transport = args[0] as Transport
+            transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
+                val headers = args[0] as MutableMap<String, List<String>>
+                // modify request headers
+                headers["accesstoken"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
+            }
+            transport.on(Transport.EVENT_RESPONSE_HEADERS) { args ->
+            }
+        }
+        socket.on(Socket.EVENT_CONNECT) {
+            LogUtil.e("连接成功！")
+        }.on(MESSAGE_ONLINE_TOTAL) { num ->
+            LogUtil.e("当前在线人数：${num[0] ?: 0}")
+            realUsersNum = (num[0] ?: 0).toString().toInt()
+            EventBus.getDefault().post(SocketOnlineEvent(num = realUsersNum))
+        }.on(MESSAGE_ONLINE_USERS) { result ->
+            val data = result[0] as JSONArray
+            val users = mutableListOf<UserInfo>()
+            for (i in 0 until data.length()) {
+                val user = UserInfo(
+                        id = data.getJSONObject(i).getInt("id"),
+                        nickname = data.getJSONObject(i).getString("nickname"),
+                        avatar = data.getJSONObject(i).getString("avatar")
+                )
+                users.add(user)
+            }
+            saveUserInfo(users)
+        }.on(Socket.EVENT_DISCONNECT) {
+            LogUtil.e("已断开连接")
+        }.on(Socket.EVENT_ERROR) { error ->
+            LogUtil.e("连接错误：$error")
+        }.on(MESSAGE_BROADCAST) { broadcast ->
+            try {
+                val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
+                EventBus.getDefault().post(message)
+                receiveSocketMessage(message)
+                LogUtil.e("收到消息：${broadcast[0].toString()}")
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+        socket.connect()
+    }
+
+    /**
+     * 断开链接
+     */
+    private fun disconnect() {
+        socket.disconnect()
+        socket.off(EVENT_TRANSPORT)
+        socket.off(MESSAGE_BROADCAST)
+        socket.off(MESSAGE_ONLINE_TOTAL)
+        socket.off(MESSAGE_ONLINE_USERS)
+        socket.off(EVENT_ERROR)
+        socket.off(EVENT_DISCONNECT)
+        saveUserInfo(null)
+        EventBus.getDefault().post(SocketOnlineEvent(0))
+    }
+
+    /**
+     * 开关
+     */
+    fun toggleSocket(open: Boolean) {
+        if (open) {
+            connect()
+        } else {
+            disconnect()
+        }
+    }
+
+    /**
      * 保存用户信息
      */
     private fun saveUserInfo(userInfo: MutableList<UserInfo>?) {
         userInfo?.let {
             ChatActivity.users = it
+            EventBus.getDefault().post(ChatUserEvent(it))
+        }
+        if (userInfo == null) {
+            EventBus.getDefault().post(ChatUserEvent(mutableListOf()))
         }
     }
-
 }

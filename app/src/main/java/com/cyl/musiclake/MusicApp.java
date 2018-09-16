@@ -16,6 +16,7 @@ import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.download.TasksManager;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -42,6 +43,13 @@ public class MusicApp extends TinkerApplication {
 
     //QQ第三方登录
     public static Tencent mTencent;
+
+    //socket
+    public static SocketManager socketManager;
+    /**
+     * socket是否打开
+     */
+    public static Boolean isOpenSocket = false;
 
     public static List<HotSearchBean> hotSearchList;
 
@@ -86,6 +94,9 @@ public class MusicApp extends TinkerApplication {
 
     private void initLogin() {
         mTencent = Tencent.createInstance(Constants.APP_ID, MusicApp.getAppContext());
+        //初始化socket
+        socketManager = new SocketManager();
+        socketManager.initSocket();
     }
 
     /**
@@ -183,6 +194,9 @@ public class MusicApp extends TinkerApplication {
                 Activitycount--;
                 if (Activitycount == 0) {
                     LogUtil.d(">>>>>>>>>>>>>>>>>>>APP 关闭");
+                    if (socketManager != null) {
+                        socketManager.toggleSocket(false);
+                    }
                 }
             }
         });

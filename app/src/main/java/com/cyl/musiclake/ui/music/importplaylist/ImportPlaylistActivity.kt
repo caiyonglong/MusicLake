@@ -121,7 +121,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     private fun importMusic(vendor: String, pid: String) {
         this.vendor = vendor
-        val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, pid, 1, 50)
+        val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, pid)
         ApiManager.request(observable, object : RequestCallBack<Playlist> {
             override fun success(result: Playlist) {
                 showLoading(false)

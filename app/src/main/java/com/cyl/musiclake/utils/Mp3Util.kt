@@ -1,7 +1,6 @@
 package com.cyl.musiclake.utils
 
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.data.db.DaoLitepal
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
@@ -112,6 +111,8 @@ object Mp3Util {
         } catch (e: ReadOnlyFileException) {
             e.printStackTrace()
         } catch (e: InvalidAudioFrameException) {
+            e.printStackTrace()
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
     }

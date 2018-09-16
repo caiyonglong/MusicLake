@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
 
@@ -23,9 +24,16 @@
                     android:icon="@drawable/ic_import_playlist"
                     android:title="@string/import_playlist" />
                 <item
-                    android:id="@+id/nav_menu_edit"
-                    android:icon="@drawable/ic_import_playlist"
-                    android:title="@string/send_message" />
+                    android:id="@+id/nav_menu_online_num"
+                    android:icon="@drawable/ic_supervisor_account"
+                    android:title="@string/real_time_user"
+                    app:actionLayout="@layout/item_red_spot" />
+
+                <item
+                    android:id="@+id/nav_menu_count_down"
+                    android:icon="@drawable/ic_timer_black"
+                    android:title="@string/count_down_time"
+                    app:actionLayout="@layout/item_count_down_toggle" />
             </menu>
         </item>
     </group>

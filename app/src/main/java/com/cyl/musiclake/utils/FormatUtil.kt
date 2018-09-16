@@ -1,5 +1,6 @@
 package com.cyl.musiclake.utils
 
+import android.annotation.SuppressLint
 import java.io.UnsupportedEncodingException
 import java.text.DecimalFormat
 import java.text.ParseException
@@ -60,7 +61,6 @@ object FormatUtil {
         }
     }
 
-
     /**
      * 格式化时间
      *
@@ -77,6 +77,28 @@ object FormatUtil {
                 val dfs = SimpleDateFormat("yyyy年MM月dd日")
                 val date = dfs.format(Date(time))
                 date
+            }
+        }
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+            /**
+     * 格式化时间
+     *
+     * @param time 时间值 (00:00 -23:59:59)
+     * @return 时间
+     */
+    fun formatDate(time: String): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val parse = dateFormat.parse(time)
+        val duration = System.currentTimeMillis() - parse.time
+        return when {
+            duration < 60 * 1000 -> "${duration / 1000}秒前"
+            duration < 60 * 1000 * 60 -> "${duration / 1000 / 60}分钟前"
+            duration < 60 * 1000 * 60 * 24 -> "${duration / 1000 / 60 / 60}小时前"
+            else -> {
+                time
             }
         }
     }

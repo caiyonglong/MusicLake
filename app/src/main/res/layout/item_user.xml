@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<de.hdodenhof.circleimageview.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/user_avatar"
+    android:layout_width="@dimen/dp_48"
+    android:layout_height="@dimen/dp_48"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
+    android:padding="@dimen/dp_8"
+    android:src="@mipmap/ic_launcher_round">
+
+</de.hdodenhof.circleimageview.CircleImageView>

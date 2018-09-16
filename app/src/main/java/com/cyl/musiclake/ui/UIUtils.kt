@@ -4,7 +4,9 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
+import android.text.InputType
 import android.widget.ImageView
+import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -23,6 +25,7 @@ import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
+import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
@@ -300,4 +303,54 @@ fun logout() {
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
     MusicApp.mTencent.logout(MusicApp.getAppContext())
     EventBus.getDefault().post(LoginEvent(false, null))
+}
+
+/**
+ * 倒计时弹窗
+ */
+fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
+    if (this is MainActivity && (this.isDestroyed || this.isFinishing)) {
+        return
+    }
+    MaterialDialog.Builder(this)
+            .title("定时关闭")
+            .items(CountDownUtils.selectItems)
+            .itemsCallbackSingleChoice(CountDownUtils.selectID) { dialog, _, which, _ ->
+                CountDownUtils.selectID = which
+                when (which) {
+                    0 -> {
+                        CountDownUtils.totalTime = 0
+                        CountDownUtils.stopCountDown()
+                    }
+                    5 -> {
+                        dialog.cancel()
+                        MaterialDialog.Builder(this)
+                                .title(getString(R.string.custom_count_down_time))
+                                .inputType(InputType.TYPE_CLASS_NUMBER)//可以输入的类型-电话号码
+                                .input(getString(R.string.count_down_minutes), "") { dialog1, input ->
+                                    val time = (input ?: 0).toString().toInt()
+                                    dialog1.getActionButton(DialogAction.POSITIVE).isEnabled = time <= 24 * 60
+                                }
+                                .inputRange(1, 4)
+                                .onPositive { dialog12, _ ->
+                                    val time = (dialog12.inputEditText?.text
+                                            ?: 0).toString().toInt()
+                                    if (time == 0 || time > 24 * 60) {
+                                        ToastUtils.show(getString(R.string.down_time_more))
+                                    } else {
+                                        CountDownUtils.starCountDownByTime(time)
+                                    }
+                                }.show()
+                    }
+                    else -> {
+                        CountDownUtils.starCountDownById(which)
+                    }
+                }
+                false
+            }
+            .dismissListener {
+                dismissListener.invoke(CountDownUtils.isCountDowning)
+            }
+            .build()
+            .show()
 }

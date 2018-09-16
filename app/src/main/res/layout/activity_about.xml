@@ -23,44 +23,6 @@
 
             <include layout="@layout/card_about_2" />
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dp_8"
-                android:orientation="vertical"
-                app:cardBackgroundColor="@color/translucent"
-                app:cardCornerRadius="@dimen/dp_2"
-                app:cardElevation="@dimen/dp_2">
-
-                <RelativeLayout
-                    android:id="@+id/centerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_200"
-                    android:gravity="center">
-
-                    <!--<com.cyl.musiclake.view.FlipperView-->
-                        <!--android:id="@+id/flipperView"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_centerInParent="true"-->
-                        <!--app:fv_color="@color/colorAccent"-->
-                        <!--app:fv_radius="@dimen/dp_56" />-->
-
-                    <!--<FrameLayout-->
-                        <!--android:layout_width="@dimen/dp_120"-->
-                        <!--android:layout_height="@dimen/dp_120"-->
-                        <!--android:layout_centerInParent="true">-->
-
-                        <!--<android.support.design.widget.FloatingActionButton-->
-                            <!--android:id="@+id/logoFab"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:layout_margin="@dimen/dp_16"-->
-                            <!--android:src="@drawable/ic_logo_big" />-->
-                    <!--</FrameLayout>-->
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

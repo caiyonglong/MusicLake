@@ -134,19 +134,19 @@ object BaseApiImpl {
         mWebView?.callHandler("asyn.getComment", arrayOf(vendor, id, 1, 50)) { retValue: JSONObject ->
             if (retValue["status"] as Boolean) {
                 println(retValue.toString())
-                val rr =retValue.getJSONObject("data").getJSONArray("comments")?.getJSONObject(0)
+                val rr = retValue.getJSONObject("data").getJSONArray("comments")?.getJSONObject(0)
                 rr?.let {
-                    if (rr.has("user")){
+                    if (rr.has("user")) {
                         val objectType = object : TypeToken<SongCommentData<NeteaseComment>>() {}.type
                         val data = gson.fromJson<SongCommentData<NeteaseComment>>(retValue.toString(), objectType)
                         success.invoke(data)
                     }
-                    if (rr.has("avatarurl")){
+                    if (rr.has("avatarurl")) {
                         val objectType = object : TypeToken<SongCommentData<QQComment>>() {}.type
                         val data = gson.fromJson<SongCommentData<QQComment>>(retValue.toString(), objectType)
                         success.invoke(data)
                     }
-                    if (rr.has("avatar")){
+                    if (rr.has("avatar")) {
                         val objectType = object : TypeToken<SongCommentData<XiamiComment>>() {}.type
                         val data = gson.fromJson<SongCommentData<XiamiComment>>(retValue.toString(), objectType)
                         success.invoke(data)
@@ -188,8 +188,8 @@ object BaseApiImpl {
      * 获取歌单信息
      * id，专辑ID
      */
-    fun getAlbumSongs(vendor: String, id: String, offset: Int, limit: Int, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("asyn.getAlbumSongs", arrayOf<Any>(vendor, id, offset, limit)) { retValue: JSONObject ->
+    fun getAlbumSongs(vendor: String, id: String, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("asyn.getAlbumSongs", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
                 success.invoke(result)

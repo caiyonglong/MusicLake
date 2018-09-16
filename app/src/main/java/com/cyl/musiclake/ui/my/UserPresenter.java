@@ -1,14 +1,10 @@
 package com.cyl.musiclake.ui.my;
 
 
-import android.content.Context;
-
-import com.cyl.musiclake.MusicApp;
-import com.cyl.musiclake.RxBus;
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.api.ApiModel;
+import com.cyl.musiclake.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.Map;
@@ -36,10 +32,6 @@ public class UserPresenter extends BasePresenter<UserContract.View> implements U
     public void attachView(UserContract.View view) {
         super.attachView(view);
         userModel = new UserModel();
-        RxBus.getInstance().register(User.class)
-                .subscribe(playlist -> {
-                    mView.updateView(userModel.getUserInfo());
-                });
     }
 
     @Override

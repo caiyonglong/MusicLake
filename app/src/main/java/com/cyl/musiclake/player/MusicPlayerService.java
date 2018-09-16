@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -23,7 +22,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.app.NotificationCompat;
@@ -33,9 +31,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.api.MusicApi;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
@@ -44,7 +40,6 @@ import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.data.PlayQueueLoader;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.event.ScheduleTaskEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
@@ -131,7 +126,6 @@ public class MusicPlayerService extends Service {
     public static final int VOLUME_FADE_DOWN = 13; //音频焦点改变
     public static final int VOLUME_FADE_UP = 14; //音频焦点改变
 
-    public static final int SCHEDULE_TASK = 15; //定时关闭改变
 
     private final int NOTIFICATION_ID = 0x123;
     private long mNotificationPostTime = 0;
@@ -170,7 +164,6 @@ public class MusicPlayerService extends Service {
     //暂时失去焦点，会再次回去音频焦点
     private boolean mPausedByTransientLossOfFocus = false;
 
-    public static boolean mShutdownScheduled = false;
     public static int totalTime = 0;
 
     boolean mServiceInUse = false;
@@ -243,7 +236,7 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_WENT_TO_NEXT: //mplayer播放完毕切换到下一首
 //                        service.setAndRecordPlayPos(service.mNextPlayPos);
-                        mMainHandler.post(service::next);
+                        mMainHandler.post(() -> service.next(true));
 //                        service.updateCursor(service.mPlayQueue.get(service.mPlayPos).mId);
 //                        service.bumpSongCount(); //更新歌曲的播放次数
                         break;
@@ -252,12 +245,12 @@ public class MusicPlayerService extends Service {
                             service.seekTo(0);
                             mMainHandler.post(service::play);
                         } else {
-                            mMainHandler.post(service::next);
+                            mMainHandler.post(() -> service.next(true));
                         }
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
                         LogUtil.e(TAG, msg.obj + "---");
-                        mMainHandler.post(service::next);
+                        mMainHandler.post(() -> service.next(true));
                         break;
                     case RELEASE_WAKELOCK://释放电源锁
                         service.mWakeLock.release();
@@ -299,20 +292,6 @@ public class MusicPlayerService extends Service {
                                 }
                                 break;
                             default:
-                        }
-                        break;
-                    case SCHEDULE_TASK:
-                        LogUtil.e(TAG, "定时任务：" + time);
-                        if (time == 0) {
-                            service.stopSelf();
-                            releaseServiceUiAndStop();
-                            System.exit(0);
-                        } else if (time == 10000) {
-                            time = time - 1000;
-                            ToastUtils.show("10秒后将自动关闭应用");
-                        } else {
-                            time = time - 1000;
-                            RxBus.getInstance().post(new ScheduleTaskEvent());
                         }
                         break;
                 }
@@ -465,40 +444,6 @@ public class MusicPlayerService extends Service {
         return START_NOT_STICKY;
     }
 
-    private Timer timer;
-    private TimerTask task;
-    public static long time;
-
-    /**
-     * 开启定时
-     *
-     * @param totalTime 总时间 分钟单位
-     */
-    private void startRemind(int totalTime) {
-        time = totalTime * 1000 * 60;
-        if (timer == null) {
-            timer = new Timer();
-        }
-        if (task != null) {
-            task.cancel();
-        }
-        if (time == 0) return;
-        mShutdownScheduled = true;
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                if (mShutdownScheduled) {
-                    Message message = Message.obtain();
-                    message.what = SCHEDULE_TASK;
-                    mHandler.sendMessage(message);
-                }
-            }
-        };
-        timer.schedule(task, 0, 1000);
-    }
-
-
     /**
      * 绑定Service
      *
@@ -518,9 +463,9 @@ public class MusicPlayerService extends Service {
     /**
      * 下一首
      */
-    public void next() {
+    public void next(Boolean isAuto) {
         synchronized (this) {
-            mPlayingPos = getNextPosition();
+            mPlayingPos = getNextPosition(isAuto);
             LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
@@ -620,7 +565,7 @@ public class MusicPlayerService extends Service {
      *
      * @return
      */
-    private int getNextPosition() {
+    private int getNextPosition(Boolean isAuto) {
         int playModeId = PlayQueueManager.INSTANCE.getPlayModeId();
         if (mPlayQueue == null || mPlayQueue.isEmpty()) {
             return -1;
@@ -628,18 +573,20 @@ public class MusicPlayerService extends Service {
         if (mPlayQueue.size() == 1) {
             return 0;
         }
-        if (playModeId == PlayQueueManager.PLAY_MODE_REPEAT) {
+        if (playModeId == PlayQueueManager.PLAY_MODE_REPEAT && isAuto) {
             if (mPlayingPos < 0) {
                 return 0;
+            } else {
+                return mPlayingPos;
             }
-        } else if (playModeId == PlayQueueManager.PLAY_MODE_LOOP) {
+        } else if (playModeId == PlayQueueManager.PLAY_MODE_RANDOM) {
+            return new Random().nextInt(mPlayQueue.size());
+        } else {
             if (mPlayingPos == mPlayQueue.size() - 1) {
                 return 0;
             } else if (mPlayingPos < mPlayQueue.size() - 1) {
                 return mPlayingPos + 1;
             }
-        } else if (playModeId == PlayQueueManager.PLAY_MODE_RANDOM) {
-            return new Random().nextInt(mPlayQueue.size());
         }
         return mPlayingPos;
     }
@@ -661,15 +608,15 @@ public class MusicPlayerService extends Service {
             if (mPlayingPos < 0) {
                 return 0;
             }
-        } else if (playModeId == PlayQueueManager.PLAY_MODE_LOOP) {
+        } else if (playModeId == PlayQueueManager.PLAY_MODE_RANDOM) {
+            mPlayingPos = new Random().nextInt(mPlayQueue.size());
+            return new Random().nextInt(mPlayQueue.size());
+        } else {
             if (mPlayingPos == 0) {
                 return mPlayQueue.size() - 1;
             } else if (mPlayingPos > 0) {
                 return mPlayingPos - 1;
             }
-        } else if (playModeId == PlayQueueManager.PLAY_MODE_RANDOM) {
-            mPlayingPos = new Random().nextInt(mPlayQueue.size());
-            return new Random().nextInt(mPlayQueue.size());
         }
         return mPlayingPos;
     }
@@ -681,7 +628,7 @@ public class MusicPlayerService extends Service {
      */
     public void playMusic(int position) {
         if (position >= mPlayQueue.size() || position == -1) {
-            mPlayingPos = getNextPosition();
+            mPlayingPos = getNextPosition(true);
         } else {
             mPlayingPos = position;
         }
@@ -1268,7 +1215,7 @@ public class MusicPlayerService extends Service {
             LogUtil.d(TAG, "handleCommandIntent: action = " + action + ", command = " + command);
 
         if (CMD_NEXT.equals(command) || ACTION_NEXT.equals(action)) {
-            next();
+            next(false);
         } else if (CMD_PREVIOUS.equals(command) || ACTION_PREV.equals(action)) {
             prev();
         } else if (CMD_TOGGLE_PAUSE.equals(command) || PLAY_STATE_CHANGED.equals(action)
@@ -1296,10 +1243,6 @@ public class MusicPlayerService extends Service {
             System.exit(0);
             stop(true);
             stopSelf();
-        } else if (SCHEDULE_CHANGED.equals(action)) {
-            totalTime = intent.getIntExtra("time", 0);
-            LogUtil.e(TAG, SCHEDULE_CHANGED + "----" + totalTime);
-            startRemind(totalTime);
         }
     }
 

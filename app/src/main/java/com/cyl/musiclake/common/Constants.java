@@ -137,6 +137,10 @@ public class Constants {
     public static final String FORMAT = "json";
 
 
+    public static final String TOGGLE_SOCKET = "toggle_socket";
+
+
+
     /**
      * 悬浮窗权限requestCode
      */

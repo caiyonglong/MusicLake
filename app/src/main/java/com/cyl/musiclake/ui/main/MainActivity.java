@@ -6,17 +6,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.InputType;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,11 +29,12 @@ import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.socket.SocketManager;
+import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
@@ -48,21 +45,16 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
+import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.xw.repo.BubbleSeekBar;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -76,23 +68,20 @@ import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
  * @author yonglong
  * @date 2016/8/3
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.sliding_layout)
     public SlidingUpPanelLayout mSlidingUpPaneLayout;
-    //    @BindView(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_menu_count_down_switch)
     Switch mSwitchCountDown;
-    @BindView(R.id.bubbleSeekBar)
-    BubbleSeekBar mBubbleSeekBar;
+    TextView mSwitchCountDownTv;
 
     public ImageView mImageView;
     CircleImageView mAvatarIcon;
     TextView mName;
-    TextView mExitTv;
     TextView mLoginTv;
     TextView mOnlineNumTv;
 
@@ -104,7 +93,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     Class<?> mTargetClass = null;
 
-    public static SocketManager socketManager;
 
     @Override
     protected int getLayoutResID() {
@@ -116,9 +104,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         transparentStatusBar(this);
         //菜单栏的头部控件初始化
         initNavView();
-//        mNavigationView.setNavigationItemSelectedListener(this);
-//        mNavigationView.setItemIconTintList(null);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setItemIconTintList(null);
+        disableNavigationViewScrollbars(mNavigationView);
         checkLoginStatus();
+        initCountDownView();
     }
 
 
@@ -143,7 +133,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        Snackbar.make(mImageView, "收到来自 " + event.getUserInfo().getNickname() + " 的消息：" + event.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 
     private void updatePlaySongInfo(Music music) {
@@ -158,27 +147,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initNavView() {
-        mImageView = findViewById(R.id.header_bg);
-        mAvatarIcon = findViewById(R.id.header_face);
-        mName = findViewById(R.id.header_name);
-        mOnlineNumTv = findViewById(R.id.nav_menu_online_num);
-        mLoginTv = findViewById(R.id.user_login_tv);
-        mExitTv = findViewById(R.id.nav_menu_exit_tv);
-
-        mOnlineNumTv.setText("0");
-        findViewById(R.id.nav_menu_about).setOnClickListener(this);
-        findViewById(R.id.nav_menu_equalizer).setOnClickListener(this);
-        findViewById(R.id.nav_menu_playQueue).setOnClickListener(this);
-        findViewById(R.id.nav_menu_feedback).setOnClickListener(this);
-        findViewById(R.id.user_login_tv).setOnClickListener(this);
-        findViewById(R.id.nav_menu_exit).setOnClickListener(this);
-        findViewById(R.id.nav_menu_import).setOnClickListener(this);
-        findViewById(R.id.nav_menu_setting).setOnClickListener(this);
-        findViewById(R.id.nav_menu_online).setOnClickListener(this);
-
-        socketManager = new SocketManager();
-        socketManager.initSocket();
-        initCountDownView();
+        View mHeaderView = mNavigationView.getHeaderView(0);
+        mImageView = mHeaderView.findViewById(R.id.header_bg);
+        mAvatarIcon = mHeaderView.findViewById(R.id.header_face);
+        mName = mHeaderView.findViewById(R.id.header_name);
+        mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
     }
 
     @Override
@@ -251,72 +224,72 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-//    /**
-//     * 菜单条目点击事件
-//     *
-//     * @param item
-//     * @return
-//     */
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.nav_login_status:
-//                if (mIsLogin) {
-//                    new MaterialDialog.Builder(this)
-//                            .title("音乐湖")
-//                            .content("您确定要退出或切换其他账号吗？")
-//                            .positiveText("确定")
-//                            .onPositive((materialDialog, dialogAction) -> {
-//                                logout();
-//                            }).negativeText("取消").show();
-//                } else {
-//                    mTargetClass = LoginActivity.class;
-//                }
-//                mDrawerLayout.closeDrawers();
-//                break;
-//            case R.id.nav_menu_shake:
-//                item.setChecked(true);
-//                if (!mIsLogin) {
-//                    mTargetClass = LoginActivity.class;
-//                } else {
-//                    mTargetClass = ShakeActivity.class;
-//                }
-//                break;
-//            case R.id.nav_menu_playQueue:
-//                NavigationHelper.INSTANCE.navigatePlayQueue(this);
-//                break;
-//            case R.id.nav_menu_import:
-//                mTargetClass = ImportPlaylistActivity.class;
-//                break;
-//            case R.id.nav_menu_setting:
-//                mTargetClass = SettingsActivity.class;
-//                break;
-////            case R.id.nav_menu_edit:
-////                mTargetClass = EditActivity.class;
-////                break;
-//            case R.id.nav_menu_feedback:
-//                Tools.INSTANCE.feeback(this);
-//                break;
-//            case R.id.nav_menu_about:
-//                mTargetClass = AboutActivity.class;
-//                break;
-//            case R.id.nav_menu_equalizer:
-//                try {
-//                    Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-//                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
-//                    startActivityForResult(effects, 666);
-//                } catch (Exception e) {
-//                    ToastUtils.show("设备不支持均衡！");
-//                }
-//                break;
-//            case R.id.nav_menu_exit:
-//                mTargetClass = null;
-//                finish();
-//                break;
-//        }
-//        mDrawerLayout.closeDrawers();
-//        return false;
-//    }
+    /**
+     * 菜单条目点击事件
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_login_status:
+                if (mIsLogin) {
+                    new MaterialDialog.Builder(this)
+                            .title("音乐湖")
+                            .content("您确定要退出或切换其他账号吗？")
+                            .positiveText("确定")
+                            .onPositive((materialDialog, dialogAction) -> {
+                                logout();
+                            }).negativeText("取消").show();
+                } else {
+                    mTargetClass = LoginActivity.class;
+                }
+                mDrawerLayout.closeDrawers();
+                break;
+            case R.id.nav_menu_shake:
+                item.setChecked(true);
+                if (!mIsLogin) {
+                    mTargetClass = LoginActivity.class;
+                } else {
+                    mTargetClass = ShakeActivity.class;
+                }
+                break;
+            case R.id.nav_menu_playQueue:
+                NavigationHelper.INSTANCE.navigatePlayQueue(this);
+                break;
+            case R.id.nav_menu_import:
+                mTargetClass = ImportPlaylistActivity.class;
+                break;
+            case R.id.nav_menu_setting:
+                mTargetClass = SettingsActivity.class;
+                break;
+            case R.id.nav_menu_online_num:
+                mTargetClass = ChatActivity.class;
+                break;
+            case R.id.nav_menu_feedback:
+                Tools.INSTANCE.feeback(this);
+                break;
+            case R.id.nav_menu_about:
+                mTargetClass = AboutActivity.class;
+                break;
+            case R.id.nav_menu_equalizer:
+                try {
+                    Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
+                    startActivityForResult(effects, 666);
+                } catch (Exception e) {
+                    ToastUtils.show("设备不支持均衡！");
+                }
+                break;
+            case R.id.nav_menu_exit:
+                mTargetClass = null;
+                finish();
+                break;
+        }
+        mDrawerLayout.closeDrawers();
+        return false;
+    }
 
     /**
      * 跳转Activity
@@ -411,16 +384,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             String url = user.getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
-            mExitTv.setText(getString(R.string.logout_hint));
+//            mExitTv.setText(getString(R.string.logout_hint));
             mLoginTv.setVisibility(View.GONE);
-//            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
-//                    .setIcon(R.drawable.ic_exit);
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
+                    .setIcon(R.drawable.ic_exit);
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
-            mExitTv.setText(getString(R.string.exit));
             mLoginTv.setVisibility(View.VISIBLE);
-//            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint));
+
+            mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint))
+                    .setIcon(R.drawable.ic_exit);
+
+            mNavigationView.getMenu().removeItem(R.id.nav_menu_online_num);
         }
     }
 
@@ -429,7 +405,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param event
      */
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginEvent event) {
         setUserStatusInfo(event.getStatus(), event.getUser());
     }
@@ -441,7 +417,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateOnlineInfo(SocketOnlineEvent event) {
-        mOnlineNumTv.setText(String.valueOf(event.getNum()));
+        if (mOnlineNumTv != null) {
+            mOnlineNumTv.setText(String.valueOf(event.getNum()));
+        }
     }
 
     /**
@@ -449,7 +427,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param event
      */
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void updatePlaylist(PlaylistEvent event) {
         if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID)) {
             setPlaylistQueueChange();
@@ -474,110 +452,61 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.nav_menu_shake:
-                if (!mIsLogin) {
-                    mTargetClass = LoginActivity.class;
-                } else {
-                    mTargetClass = ShakeActivity.class;
-                }
-                break;
-            case R.id.nav_menu_playQueue:
-                NavigationHelper.INSTANCE.navigatePlayQueue(this);
-                break;
-            case R.id.user_login_tv:
-                mTargetClass = LoginActivity.class;
-                break;
-            case R.id.nav_menu_online:
-                mTargetClass = ChatActivity.class;
-                break;
-            case R.id.nav_menu_import:
-                mTargetClass = ImportPlaylistActivity.class;
-                break;
-            case R.id.nav_menu_setting:
-                mTargetClass = SettingsActivity.class;
-                break;
-//            case R.id.nav_menu_edit:
-//                mTargetClass = EditActivity.class;
-//                break;
-            case R.id.nav_menu_feedback:
-                Tools.INSTANCE.feeback(this);
-                break;
-            case R.id.nav_menu_about:
-                mTargetClass = AboutActivity.class;
-                break;
-            case R.id.nav_menu_equalizer:
-                try {
-                    Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
-                    startActivityForResult(effects, 666);
-                } catch (Exception e) {
-                    ToastUtils.show("设备不支持均衡！");
-                }
-                break;
-            case R.id.nav_menu_exit:
-                if (mIsLogin) {
-                    mDrawerLayout.closeDrawers();
-                    new MaterialDialog.Builder(this)
-                            .title("音乐湖")
-                            .content("您确定要退出或切换其他账号吗？")
-                            .positiveText("确定")
-                            .onPositive((materialDialog, dialogAction) -> {
-                                logout();
-                            }).negativeText("取消").show();
-                } else {
-                    mTargetClass = null;
-                    finish();
-                }
-                break;
+    /**
+     * 去掉navigationView的滚动条
+     *
+     * @param navigationView
+     */
+    public static void disableNavigationViewScrollbars(NavigationView navigationView) {
+        if (navigationView != null) {
+            NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
+            if (navigationMenuView != null) {
+                navigationMenuView.setVerticalScrollBarEnabled(false);
+            }
         }
-        mDrawerLayout.closeDrawers();
     }
 
-    private List<String> list = new ArrayList<String>() {{
-        add("15分钟");
-        add("30分钟");
-        add("45分钟");
-        add("60分钟");
-        add("自定义");
-    }};
+    /**
+     * 更新歌单
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void finishCountDown(CountDownEvent event) {
+        if (event.isStop()) {
+            mSwitchCountDown.setChecked(false);
+            mSwitchCountDownTv.setVisibility(View.GONE);
+        } else {
+            mSwitchCountDown.setChecked(true);
+            mSwitchCountDownTv.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void initCountDownView() {
-        mSwitchCountDown.setChecked(mIsCountDown);
+        View numItem = mNavigationView.getMenu().findItem(R.id.nav_menu_online_num).getActionView();
+        mOnlineNumTv = numItem.findViewById(R.id.msg_num_tv);
+        mOnlineNumTv.setText("0");
+
+        View item = mNavigationView.getMenu().findItem(R.id.nav_menu_count_down).getActionView();
+        mSwitchCountDown = item.findViewById(R.id.count_down_switch);
+        mSwitchCountDownTv = item.findViewById(R.id.count_down_tv);
         mSwitchCountDown.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                mBubbleSeekBar.setVisibility(View.VISIBLE);
+
+                CountDownUtils.INSTANCE.setTextViewListener(mSwitchCountDownTv);
+                UIUtilsKt.showCountDown(this, checked -> {
+                    mSwitchCountDown.setChecked(checked);
+                    if (checked) {
+                        mSwitchCountDownTv.setVisibility(View.VISIBLE);
+                    } else {
+                        mSwitchCountDownTv.setVisibility(View.GONE);
+                    }
+                    return null;
+                });
             } else {
-                mBubbleSeekBar.setVisibility(View.GONE);
-            }
-        });
-
-        mBubbleSeekBar.setCustomSectionTextArray((sectionCount, array) -> {
-            array.clear();
-            array.put(0, "15分钟");
-            array.put(1, "30分钟");
-            array.put(2, "45分钟");
-            array.put(3, "60分钟");
-            array.put(4, "自定义");
-            return array;
-        });
-
-        mBubbleSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
-            @Override
-            public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
-                ;
-            }
-
-            @Override
-            public void getProgressOnActionUp(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
-
-            }
-
-            @Override
-            public void getProgressOnFinally(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
-                ToastUtils.show(list.get(progress));
+                mSwitchCountDownTv.setVisibility(View.GONE);
+                CountDownUtils.INSTANCE.removeTextViewListener(mSwitchCountDownTv);
             }
         });
     }

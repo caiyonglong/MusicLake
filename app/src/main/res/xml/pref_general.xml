@@ -12,8 +12,9 @@
             android:title="@string/setting_lyric" />
 
         <SwitchPreference
-            android:key="key_timing"
-            android:title="@string/setting_timing" />
+            android:key="key_socket"
+            android:summary="默认开启，如果影响到运行速度请关闭！"
+            android:title="实时统计" />
 
         <SwitchPreference
             android:defaultValue="true"

@@ -358,7 +358,14 @@
     <string name="real_time_user">实时在线人数</string>
     <string name="send_message">发送消息</string>
     <string name="title_activity_chat">ChatActivity</string>
-    <string name="message_center">消息中心</string>
+    <string name="message_center">实时聊天室</string>
+    <string name="online_users">在线人数</string>
     <string name="send">发送</string>
+    <string name="custom_count_down_time">自定义时间</string>
+    <string name="count_down_minutes">分钟（不能大于24小时）</string>
+    <string name="down_time_more">自定义关闭时间超出上限，最大为24小时</string>
+    <string name="chat_open">打开</string>
+    <string name="chat_close">关闭</string>
+    <string name="clear_msg">清除消息记录</string>
 
 </resources>

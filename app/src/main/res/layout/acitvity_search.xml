@@ -130,11 +130,10 @@
 
             <ImageView
                 android:id="@+id/clearAllIv"
-                android:onClick="clearAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_delete"
-                android:text="@string/search_history"
+                android:contentDescription="@string/search_history"
                 android:tint="@color/black" />
 
         </LinearLayout>

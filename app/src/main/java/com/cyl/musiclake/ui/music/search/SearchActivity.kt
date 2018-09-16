@@ -54,17 +54,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
     internal var filterItemCheckedId = -1
 
-    fun clearAll(view: View) {
-        DaoLitepal.clearAllSearch()
-        searchHistory.clear()
-        historyAdapter?.setNewData(searchHistory)
-    }
-
-    fun clearQuery(view: View) {
-        queryString = ""
-        searchEditText.setText("")
-    }
-
     override fun getLayoutResID(): Int {
         return R.layout.acitvity_search
     }
@@ -108,7 +97,20 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         mActivityComponent.inject(this)
     }
 
+    /**
+     * 监听事件
+     */
     override fun listener() {
+        clearAllIv.setOnClickListener {
+            DaoLitepal.clearAllSearch()
+            searchHistory.clear()
+            historyAdapter?.setNewData(searchHistory)
+        }
+        clearSearchIv.setOnClickListener {
+            queryString = ""
+            searchEditText.setText("")
+            clearSearchIv.visibility = View.GONE
+        }
         mAdapter.setOnItemClickListener { _, view, position ->
             if (searchResults.size <= position) return@setOnItemClickListener
 
@@ -124,9 +126,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
             override fun afterTextChanged(s: Editable) {
                 val newText = searchEditText.text.toString()
+                clearSearchIv.visibility = View.VISIBLE
                 if (newText.isEmpty()) {
                     mPresenter?.getSearchHistory()
                     updateHistoryPanel(true)
+                    clearSearchIv.visibility = View.GONE
                 } else if (!isSearchOnline) {
                     searchLocal(newText)
                 }

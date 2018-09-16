@@ -70,32 +70,9 @@ public class EditActivity extends BaseActivity {
                 ToastUtils.show(this, "不能发送空");
                 return true;
             }
-            sendSecret(user_id, content);
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void sendSecret(String user_id, String comment) {
-        MainActivity.socketManager.sendSocketMessage(comment);
-//        OkHttpUtils.post().url(Constants.DEFAULT_URL)
-//                .addParams(Constants.FUNC, Constants.SECRET_ADD)
-//                .addParams(Constants.USER_ID, user_id)
-//                .addParams(Constants.CONTENT, comment)
-//                .build()
-//                .execute(new StatusCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//                        ToastUtils.show(EditActivity.this,"网络错误，请检查连接!");
-//                    }
-//
-//                    @Override
-//                    public void onResponse(StatusInfo response) {
-//                        ToastUtils.show(EditActivity.this,response.getMessage());
-//                        LogUtil.e("re",response.getStatus()+response.getMessage());
-//                        finish();
-//                    }
-//                });
     }
 
 }

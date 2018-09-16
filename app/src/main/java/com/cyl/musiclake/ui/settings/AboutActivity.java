@@ -1,9 +1,7 @@
 package com.cyl.musiclake.ui.settings;
 
 import android.animation.Animator;
-import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.transition.Transition;
@@ -18,14 +16,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.cyl.musiclake.BuildConfig;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
-import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.utils.Tools;
 import com.tencent.bugly.beta.Beta;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -60,10 +58,9 @@ public class AboutActivity extends BaseActivity {
         Tools.INSTANCE.openBrowser(this, ABOUT_MUSIC_LAKE_URL);
     }
 
-//    @OnClick(R.id.logoFab)
-//    void toFlipper() {
-//        flipperView.setOnClick();
-//    }
+    @OnClick(R.id.onlineUserView)
+    void toFlipper() {
+    }
 
     @OnClick(R.id.cardEmailView)
     void toFeedback() {
@@ -89,29 +86,12 @@ public class AboutActivity extends BaseActivity {
     protected void initView() {
         Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show);
         mView.startAnimation(animation1);
-//
-//        animator = ObjectAnimator.ofFloat(mLogoFab, "scaleX", 1.1f, 0.9f);
-//        animator.setRepeatCount(-1);
-//        animator.setRepeatMode(ValueAnimator.RESTART);
-//        animator.setDuration(800);
-//        animator.addUpdateListener(animation -> {
-//            float x = (float) animation.getAnimatedValue();
-//            mLogoFab.setScaleY(x);
-//        });
-//        animator.addListener(new AnimatorListenerAdapter() {
-//            @Override
-//            public void onAnimationRepeat(Animator animation) {
-//                super.onAnimationRepeat(animation);
-//                flipperView.setOnClick();
-//            }
-//        });
-//        animator.start();
     }
 
     @Override
     protected void initData() {
         mVersion.setText(String.format("版本号 v%s", BuildConfig.VERSION_NAME));
-        mRealTimeUserTv.setText(String.valueOf(MainActivity.socketManager.getRealTimeUserNum()));
+        mRealTimeUserTv.setText(String.valueOf(MusicApp.socketManager.getRealUsersNum()));
     }
 
     @Override

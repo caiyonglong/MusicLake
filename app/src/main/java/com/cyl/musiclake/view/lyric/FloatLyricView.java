@@ -291,7 +291,7 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
                 setPlayStatus(MusicPlayerService.getInstance().isPlaying());
                 break;
             case R.id.btn_next:
-                MusicPlayerService.getInstance().next();
+                MusicPlayerService.getInstance().next(false);
                 break;
             case R.id.btn_settings:
                 isHiddenSettings = !isHiddenSettings;

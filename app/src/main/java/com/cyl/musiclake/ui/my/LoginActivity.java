@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.RxBus;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.event.LoginEvent;

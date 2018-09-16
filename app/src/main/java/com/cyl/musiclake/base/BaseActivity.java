@@ -28,6 +28,7 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +256,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         mService = null;
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDefaultEvent(MetaChangedEvent event) {
     }
 

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-repositories {
-    mavenCentral()
-}
 apply plugin: 'kotlin-android-extensions'
 // 依赖插件脚本
 apply from: 'tinker-support.gradle'
 
+repositories {
+    mavenCentral()
+}
 android {
     signingConfigs {
         release {
@@ -57,6 +57,10 @@ android {
         }
     }
     compileSdkVersion 27
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -96,8 +100,9 @@ dependencies {
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //对话框
-    api 'com.afollestad.material-dialogs:core:0.9.5.0'
-    api 'com.afollestad.material-dialogs:commons:0.9.5.0'
+    api 'com.afollestad.material-dialogs:core:0.9.6.0'
+    api 'com.afollestad.material-dialogs:commons:0.9.6.0'
+
     api 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
     api 'com.sothree.slidinguppanel:library:3.4.0'
@@ -106,8 +111,6 @@ dependencies {
     api 'com.github.rtugeek:ColorSeekBar:1.6.2'
     api 'com.just.agentweb:agentweb:4.0.2'
     api 'com.blankj:utilcode:1.15.1'
-
-
     api 'com.jaeger.statusbaruitl:library:1.3.5'
     api 'org.litepal.android:core:2.0.0'
 
@@ -130,34 +133,45 @@ dependencies {
     //leakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
 
     //    implementation files('libs/jaudiotagger-2.2.6-SNAPSHOT.jar')
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')
 
-//    api 'com.github.nkzawa:socket.io-client:0.3.0'
+//        api 'com.github.nkzawa:socket.io-client:0.3.0'
     api('io.socket:socket.io-client:1.0.0') {
-        // excluding org.json which is provided by Android
+//         excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
+
     //进度条
     api 'com.xw.repo:bubbleseekbar:3.19'
+    api 'com.android.support:multidex:1.0.3'
 
-    api "com.android.support:multidex:1.0.3" // 多dex配置
+    // 多dex配置
+
     //注释掉原有bugly的仓库
+
     //compile 'com.tencent.bugly:crashreport:latest.release'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.3.4
     api 'com.tencent.bugly:crashreport_upgrade:1.3.5'
+
     // 指定tinker依赖版本（注：应用升级1.3.5版本起，不再内置tinker）
     api 'com.tencent.tinker:tinker-android-lib:1.9.6'
+
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     api 'com.tencent.bugly:nativecrashreport:3.3.1'
 
-//    api "com.mikepenz:materialdrawer:6.1.0-rc01"
+    //    api "com.mikepenz:materialdrawer:6.1.0-rc01"
 
-//required support lib modules
-//    implementation "androidx.appcompat:appcompat:1.0.0-rc02"
-//    implementation "androidx.recyclerview:recyclerview:1.0.0-rc02"
-//    implementation "androidx.annotation:annotation:1.0.0-rc02"
-//    implementation "com.google.android.material:material:1.0.0-rc02"
+    //required support lib modules
+
+    //    implementation "androidx.appcompat:appcompat:1.0.0-rc02"
+
+    //    implementation "androidx.recyclerview:recyclerview:1.0.0-rc02"
+
+    //    implementation "androidx.annotation:annotation:1.0.0-rc02"
+
+    //    implementation "com.google.android.material:material:1.0.0-rc02"
 }

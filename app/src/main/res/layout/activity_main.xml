@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,13 +9,17 @@
 
     <include layout="@layout/include_main" />
 
-
-    <include
+    <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        layout="@layout/header_nav"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fadeScrollbars="true"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="true"
+        android:overScrollMode="always"
+        android:scrollbars="none"
+        app:headerLayout="@layout/header_nav_simple"
+        app:insetForeground="#00000000"
+        app:itemTextColor="@color/selector_nav_menu_textcolor"
+        app:menu="@menu/menu_all" />
 </android.support.v4.widget.DrawerLayout>

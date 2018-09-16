@@ -274,10 +274,10 @@ object MusicApiServiceImpl {
      * 获取专辑单曲
      *
      */
-    fun getPlaylistSongs(vendor: String, id: String, offset: Int, limit: Int): Observable<Playlist> {
+    fun getPlaylistSongs(vendor: String, id: String): Observable<Playlist> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getAlbumSongs(vendor, id, offset, limit, {
+                    .getAlbumSongs(vendor, id,{
                         if (it.status) {
                             val playlist = Playlist()
                             playlist.type = Constants.PLAYLIST_CUSTOM_ID

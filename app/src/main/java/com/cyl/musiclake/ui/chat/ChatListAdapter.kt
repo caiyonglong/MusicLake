@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.chat
 
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.utils.CoverLoader
@@ -18,6 +19,14 @@ class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent,
         helper.setText(R.id.tv_comment_time, item.datetime)
         helper.setText(R.id.tv_comment_content, item.message)
         CoverLoader.loadImageView(mContext, item.userInfo?.avatar, helper.getView(R.id.civ_cover))
+    }
+
+}
+
+class OnlineUserListAdapter(list: List<UserInfo>) : BaseQuickAdapter<UserInfo, BaseViewHolder>(R.layout.item_user, list) {
+
+    override fun convert(helper: BaseViewHolder, item: UserInfo) {
+        CoverLoader.loadImageView(mContext, item.avatar, helper.getView(R.id.user_avatar))
     }
 
 }
