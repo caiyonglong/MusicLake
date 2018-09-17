@@ -343,7 +343,7 @@
     <string name="song_operate">歌曲操作</string>
     <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
     <string name="download_local_error">不能下载本地音乐!</string>
-    <string name="download_ban">不支持下载，请下载正版歌曲!</string>
+    <string name="download_ban">因版权问题，暂不支持下载</string>
     <string name="download_empty_error">请选择需要下载的歌曲!</string>
     <string name="download_network_error">网络异常，请检查数据是否连接！</string>
     <string name="float_window_manual_open">请手动打开显示悬浮窗权限</string>

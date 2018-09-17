@@ -2,7 +2,6 @@ package com.cyl.musiclake.api
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import com.cyl.musicapi.bean.ListItem
 import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.netease.TracksItem
@@ -79,8 +78,12 @@ object MusicUtils {
      */
     fun getMusic(musicInfo: MusicInfo): Music {
         val music = Music()
-        musicInfo.songId?.let {
-            music.mid = it
+        if (musicInfo.songId != null) {
+            music.mid = musicInfo.songId
+            music.commentId = musicInfo.songId
+        } else if (musicInfo.id != null) {
+            music.mid = musicInfo.id
+            music.commentId = musicInfo.id
         }
         music.collectId = musicInfo.id
         music.title = musicInfo.name
@@ -90,6 +93,7 @@ object MusicUtils {
         music.albumId = musicInfo.album.id
         music.commentId = musicInfo.commentId
         music.isCp = musicInfo.cp
+        music.isDl = musicInfo.dl
 
         if (musicInfo.artists != null) {
             var artistIds = musicInfo.artists?.get(0)?.id
@@ -125,6 +129,7 @@ object MusicUtils {
             music.album = it.album.name
             music.albumId = it.album.id
             music.isCp = it.cp
+            music.isDl = it.dl
             if (it.artists != null) {
                 var artistIds = it.artists?.get(0)?.id
                 var artistNames = it.artists?.get(0)?.name
@@ -193,6 +198,7 @@ object MusicUtils {
         music.albumId = song.album.id
         music.commentId = song.commentId
         music.isCp = song.cp
+        music.isDl = song.dl
 
         if (song.artists != null) {
             var artistIds = song.artists?.get(0)?.id
@@ -247,7 +253,7 @@ object MusicUtils {
             }
         }
         val album = Album(music.albumId, music.album, music.coverUri)
-        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.mid, music.isCp)
+        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.mid, music.isCp, music.isDl)
     }
 
 

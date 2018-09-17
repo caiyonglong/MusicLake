@@ -138,6 +138,7 @@ class SocketManager {
         socket.off(EVENT_ERROR)
         socket.off(EVENT_DISCONNECT)
         saveUserInfo(null)
+        realUsersNum = 0
         EventBus.getDefault().post(SocketOnlineEvent(0))
     }
 

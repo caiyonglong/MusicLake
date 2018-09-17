@@ -1,12 +1,13 @@
 package com.cyl.musicapi.bean
 
 
+import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.annotations.SerializedName
 
 data class Qq(@SerializedName("total")
               val total: String = "",
               @SerializedName("songs")
-              val songs: List<SongsItem>?,
+              val songs: List<MusicInfo>?,
               @SerializedName("keyword")
               val keyword: String = "")
 
@@ -20,7 +21,7 @@ data class SearchData(@SerializedName("data")
 data class Xiami(@SerializedName("total")
                  val total: String = "",
                  @SerializedName("songs")
-                 val songs: List<SongsItem>?)
+                 val songs: List<MusicInfo>?)
 
 
 data class ArtistsItem(@SerializedName("name")
@@ -40,7 +41,7 @@ data class Album(@SerializedName("cover")
 data class Netease(@SerializedName("total")
                    val total: String = "",
                    @SerializedName("songs")
-                   val songs: List<SongsItem>?)
+                   val songs: List<MusicInfo>?)
 
 
 data class Data(@SerializedName("qq")
@@ -62,16 +63,18 @@ data class SongsItem(@SerializedName("artists")
                      @SerializedName("id")
                      val id: String = "",
                      @SerializedName("cp")
-                     val cp: Boolean = false)
+                     val cp: Boolean = false,
+                     @SerializedName("dl")
+                     val dl: Boolean = false)
 
 
 data class SongDetail(@SerializedName("data")
-                      val data: SongsItem,
+                      val data: MusicInfo,
                       @SerializedName("status")
                       val status: Boolean = false)
 
 data class BatchSongDetail(@SerializedName("data")
-                           val data: List<SongsItem>,
+                           val data: List<MusicInfo>,
                            @SerializedName("status")
                            val status: Boolean = false,
                            @SerializedName("msg")

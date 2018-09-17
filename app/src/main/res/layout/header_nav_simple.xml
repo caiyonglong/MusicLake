@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_200">
+        android:layout_height="225dp">
 
         <ImageView
             android:id="@+id/header_bg"
@@ -33,7 +33,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_margin="@dimen/dp_8"
-                android:elevation="@dimen/dp_4"
+                android:elevation="@dimen/dp_1"
                 android:src="@drawable/ic_account_circle" />
 
 
@@ -61,7 +61,8 @@
                 android:paddingStart="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_4"
                 android:text="@string/login"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
 
         </LinearLayout>
 

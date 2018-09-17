@@ -1,6 +1,7 @@
 package com.cyl.musicapi.bean
 
 
+import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.annotations.SerializedName
 
 data class ArtistSongsData(@SerializedName("data")
@@ -11,7 +12,7 @@ data class ArtistSongsData(@SerializedName("data")
 data class ArtistSongs(@SerializedName("detail")
                        val detail: ArtistItem,
                        @SerializedName("songs")
-                       val songs: List<SongsItem>)
+                       val songs: List<MusicInfo>)
 
 
 data class ArtistItem(@SerializedName("name")

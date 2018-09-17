@@ -32,9 +32,11 @@ data class MusicInfo(@SerializedName("id")
                      @SerializedName("album")
                      val album: Album,
                      @SerializedName("vendor")
-                     val vendor: String? = "",
+                     var vendor: String? = "",
                      @SerializedName("commentId")
                      val commentId: String? = "",
+                     @SerializedName("dl")
+                     val dl: Boolean = false,
                      @SerializedName("cp")
                      val cp: Boolean = false)
 

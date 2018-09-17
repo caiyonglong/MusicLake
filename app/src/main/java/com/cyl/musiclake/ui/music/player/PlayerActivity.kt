@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
@@ -45,13 +44,11 @@ import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
-
 
     private var playingMusic: Music? = null
     private var coverView: View? = null
@@ -436,4 +433,16 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         coverAnimator = null
     }
 
+
+    public override fun onResume() {
+        super.onResume()
+        if (coverAnimator != null && coverAnimator?.isPaused!! && PlayManager.isPlaying()) {
+            coverAnimator?.resume()
+        }
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        coverAnimator?.pause()
+    }
 }

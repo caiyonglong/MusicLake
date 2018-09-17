@@ -134,7 +134,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_album to R.drawable.ic_album,
                 R.string.popup_artist to R.drawable.ic_art_track,
                 R.string.popup_detail_edit to R.drawable.ic_mode_edit,
-//                R.string.popup_download to R.drawable.item_download,
+                R.string.popup_download to R.drawable.item_download,
                 R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
@@ -143,9 +143,13 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             if (music?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
-//                itemData.remove(R.string.popup_delete)
+                itemData.remove(R.string.popup_delete)
             } else {
                 itemData.remove(R.string.popup_detail_edit)
+            }
+
+            if (music?.isDl == true || music?.isCp == true) {
+                itemData.remove(R.string.popup_delete)
             }
 
             if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID) {

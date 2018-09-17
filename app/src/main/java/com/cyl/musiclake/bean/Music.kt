@@ -55,6 +55,8 @@ class Music() : LitePalSupport(), Parcelable {
     var date: Long = 0
     //在线歌曲是否限制播放，false 可以播放
     var isCp: Boolean = false
+    //在线歌曲是否付费歌曲，false 不能下载
+    var isDl: Boolean = false
     //歌曲评论Id
     var commentId: String? = null
     //收藏id
@@ -83,12 +85,13 @@ class Music() : LitePalSupport(), Parcelable {
         year = parcel.readString()
         date = parcel.readLong()
         isCp = parcel.readByte() != 0.toByte()
+        isDl = parcel.readByte() != 0.toByte()
         commentId = parcel.readString()
         collectId = parcel.readString()
     }
 
     override fun toString(): String {
-        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp, commentId=$commentId, collectId=$collectId)"
+        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp,isDl=$isDl, collectId=$collectId)"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -114,6 +117,7 @@ class Music() : LitePalSupport(), Parcelable {
         parcel.writeString(year)
         parcel.writeLong(date)
         parcel.writeByte(if (isCp) 1 else 0)
+        parcel.writeByte(if (isDl) 1 else 0)
         parcel.writeString(commentId)
         parcel.writeString(collectId)
     }

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
 import android.support.v7.widget.LinearLayoutManager
-import android.text.InputType
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
@@ -13,17 +12,14 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_import_playlist.*
-import org.litepal.util.Const
 
 
 @Suppress("UNUSED_ANONYMOUS_PARAMETER")
@@ -126,7 +122,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             override fun success(result: Playlist) {
                 showLoading(false)
                 musicList.clear()
-                result.musicList?.forEach {
+                result.musicList.forEach {
                     if (!it.isCp) {
                         musicList.add(it)
                     }

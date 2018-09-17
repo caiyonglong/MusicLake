@@ -66,5 +66,9 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
                 })
             }
         }
+        if (item.isCp) {
+            holder.getView<View>(R.id.isCpView).visibility = View.VISIBLE
+            holder.getView<View>(R.id.isCpView).setOnClickListener { }
+        }
     }
 }

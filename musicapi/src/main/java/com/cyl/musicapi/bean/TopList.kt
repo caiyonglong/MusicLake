@@ -1,7 +1,6 @@
 package com.cyl.musicapi.bean
 
 
-import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.annotations.SerializedName
 
 data class NeteaseBean(@SerializedName("data")

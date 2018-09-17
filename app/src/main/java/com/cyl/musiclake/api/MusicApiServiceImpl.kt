@@ -43,19 +43,22 @@ object MusicApiServiceImpl {
                             if (type == ANY || type == NETEASE)
                                 it.data.netease.songs?.forEach {
                                     if (!it.cp) {
-                                        musicList.add(MusicUtils.getSearchMusic(it, Constants.NETEASE))
+                                        it.vendor = Constants.NETEASE
+                                        musicList.add(MusicUtils.getMusic(it))
                                     }
                                 }
                             if (type == ANY || type == QQ)
                                 it.data.qq.songs?.forEach {
                                     if (!it.cp) {
-                                        musicList.add(MusicUtils.getSearchMusic(it, Constants.QQ))
+                                        it.vendor = Constants.QQ
+                                        musicList.add(MusicUtils.getMusic(it))
                                     }
                                 }
                             if (type == ANY || type == XIAMI)
                                 it.data.xiami.songs?.forEach {
                                     if (!it.cp) {
-                                        musicList.add(MusicUtils.getSearchMusic(it, Constants.XIAMI))
+                                        it.vendor = Constants.XIAMI
+                                        musicList.add(MusicUtils.getMusic(it))
                                     }
                                 }
                             result.onNext(musicList)
@@ -98,7 +101,8 @@ object MusicApiServiceImpl {
                         if (it.status) {
                             val songList = it.data
                             songList.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                                it.vendor = vendor
+                                musicList.add(MusicUtils.getMusic(it))
                             }
                             result.onNext(musicList)
                             result.onComplete()
@@ -229,8 +233,10 @@ object MusicApiServiceImpl {
                         if (it.status) {
                             val musicList = arrayListOf<Music>()
                             it.data.songs.forEach {
-                                if (!it.cp)
-                                    musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                                if (!it.cp) {
+                                    it.vendor = vendor
+                                    musicList.add(MusicUtils.getMusic(it))
+                                }
                             }
                             val artist = Artist()
                             artist.songs = musicList
@@ -259,7 +265,8 @@ object MusicApiServiceImpl {
                         if (it.status) {
                             val musicList = arrayListOf<Music>()
                             it.data.songs.forEach {
-                                musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                                it.vendor = vendor
+                                musicList.add(MusicUtils.getMusic(it))
                             }
                             result.onNext(musicList)
                             result.onComplete()
@@ -277,7 +284,7 @@ object MusicApiServiceImpl {
     fun getPlaylistSongs(vendor: String, id: String): Observable<Playlist> {
         return create { result ->
             BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getAlbumSongs(vendor, id,{
+                    .getAlbumSongs(vendor, id, {
                         if (it.status) {
                             val playlist = Playlist()
                             playlist.type = Constants.PLAYLIST_CUSTOM_ID
@@ -286,7 +293,8 @@ object MusicApiServiceImpl {
                             playlist.coverUrl = it.data.detail.cover
                             playlist.pid = it.data.detail.id
                             it.data.songs.forEach {
-                                playlist.musicList.add(MusicUtils.getSearchMusic(it, vendor))
+                                it.vendor = vendor
+                                playlist.musicList.add(MusicUtils.getMusic(it))
                             }
                             result.onNext(playlist)
                             result.onComplete()
@@ -302,34 +310,39 @@ object MusicApiServiceImpl {
      * 获取歌词
      *
      */
-    fun getLyricInfo(music: Music): Observable<String> {
-        val mLyricPath = FileUtils.getLrcDir() + "${music.title}-${music.artist}" + ".lrc"
-        val vendor = music.type!!
-        val mid = music.mid!!
-        //网络歌词
-        return if (FileUtils.exists(mLyricPath)) {
-            MusicApi.getLocalLyricInfo(mLyricPath)
-        } else create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getLyricInfo(vendor, mid) {
-                        if (it.status) {
-                            val url = it.data
-                            val lyric = StringBuilder()
-                            url.forEach {
-                                lyric.append(it)
-                                lyric.append("\n")
-                            }
-                            //保存文件
-                            val save = FileUtils.writeText(mLyricPath, lyric.toString())
-                            LogUtil.e("保存网络歌词：$save")
-                            Observable.fromArray(lyric)
+    fun getLyricInfo(music: Music): Observable<String>? {
+        try {
+            val mLyricPath = FileUtils.getLrcDir() + "${music.title}-${music.artist}" + ".lrc"
+            val vendor = music.type!!
+            val mid = music.mid!!
+            //网络歌词
+            return if (FileUtils.exists(mLyricPath)) {
+                MusicApi.getLocalLyricInfo(mLyricPath)
+            } else create { result ->
+                BaseApiImpl.getInstance(MusicApp.mContext)
+                        .getLyricInfo(vendor, mid) {
+                            if (it.status) {
+                                val url = it.data
+                                val lyric = StringBuilder()
+                                url.forEach {
+                                    lyric.append(it)
+                                    lyric.append("\n")
+                                }
+                                //保存文件
+                                val save = FileUtils.writeText(mLyricPath, lyric.toString())
+                                LogUtil.e("保存网络歌词：$save")
+                                Observable.fromArray(lyric)
 
-                            result.onNext(lyric.toString())
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(""))
+                                result.onNext(lyric.toString())
+                                result.onComplete()
+                            } else {
+                                result.onError(Throwable(""))
+                            }
                         }
-                    }
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            return null
         }
     }
 

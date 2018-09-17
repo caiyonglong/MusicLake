@@ -7,6 +7,8 @@ import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.playback.PlayProgressListener
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ImageUtils
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 
@@ -36,8 +38,13 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
             Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
         }
         CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
-            mView?.setPlayingBg(ImageUtils.createBlurredImageFromBitmap(bitmap,  12), isInit)
-            mView.setPlayingBitmap(bitmap)
+            doAsync {
+                val blur = ImageUtils.createBlurredImageFromBitmap(bitmap, 12)
+                uiThread {
+                    mView?.setPlayingBg(blur, isInit)
+                    mView?.setPlayingBitmap(bitmap)
+                }
+            }
         }
     }
 }

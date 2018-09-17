@@ -81,8 +81,8 @@
                     responseCallback(data)
                 })
             },
-            getAlbumSongs:function( vendor, id, offset, limit,responseCallback) {
-                musicApi.getAlbumSongs(vendor, id, offset, limit).then(function (data) {
+            getAlbumSongs:function( vendor, id,responseCallback) {
+                musicApi.getAlbumSongs(vendor, id).then(function (data) {
                     responseCallback(data)
                 })
             },
