@@ -19,7 +19,7 @@
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [蒲公英下载](https://www.pgyer.com/ZIWH)
 
-# 下一版本计划（预计9.16）
+# 下一版本计划
 - 增加在线用户弹幕功能
 - 增加热更新
 - 优化侧边栏功能显示

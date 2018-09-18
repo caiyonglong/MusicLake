@@ -1,10 +1,11 @@
 package com.cyl.musiclake.socket
 
 import com.cyl.musicapi.playlist.UserInfo
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.R
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.bean.SocketOnlineEvent
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.ui.chat.ChatActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -18,7 +19,6 @@ import io.socket.client.Manager.EVENT_TRANSPORT
 import io.socket.client.Socket
 import io.socket.client.Socket.EVENT_DISCONNECT
 import io.socket.engineio.client.Transport
-import io.socket.engineio.client.transports.PollingXHR
 import io.socket.engineio.client.transports.WebSocket
 import okhttp3.OkHttpClient
 import org.greenrobot.eventbus.EventBus
@@ -65,6 +65,10 @@ class SocketManager {
         if (msg.isEmpty()) return
         if (!UserStatus.getLoginStatus()) {
             ToastUtils.show("请登录")
+            return
+        }
+        if (!MusicApp.isOpenSocket) {
+            ToastUtils.show(MusicApp.getAppContext().getString(R.string.open_socket_tips))
             return
         }
         socket.emit(MESSAGE_BROADCAST, msg)
@@ -162,6 +166,7 @@ class SocketManager {
             EventBus.getDefault().post(ChatUserEvent(it))
         }
         if (userInfo == null) {
+            ChatActivity.users.clear()
             EventBus.getDefault().post(ChatUserEvent(mutableListOf()))
         }
     }

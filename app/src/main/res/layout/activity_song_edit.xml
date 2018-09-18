@@ -62,8 +62,7 @@
             android:lineSpacingExtra="2sp"
             android:text="@string/download_batch"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_12"
-            android:visibility="gone" />
+            android:textSize="@dimen/sp_12"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

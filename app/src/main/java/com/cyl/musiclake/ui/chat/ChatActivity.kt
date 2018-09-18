@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
+import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -50,7 +51,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         messageRsv.adapter = mAdapter
         mAdapter?.bindToRecyclerView(messageRsv)
-
+        0
         mUserAdapter = OnlineUserListAdapter(users)
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
@@ -90,15 +91,22 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
             messages.clear()
             curPosition = 0
             mAdapter?.notifyDataSetChanged()
+            mAdapter?.setEmptyView(R.layout.view_song_empty)
+        } else if (item?.itemId == R.id.action_about) {
+            MaterialDialog.Builder(this)
+                    .title(R.string.prompt)
+                    .content(R.string.about_music_lake)
+                    .positiveText(R.string.sure)
+                    .show()
         }
         return super.onOptionsItemSelected(item)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateMessage(msg: MessageEvent) {
-        mAdapter?.notifyItemRangeInserted(curPosition, messages.size - curPosition)
         curPosition = messages.size
-        messageRsv?.smoothScrollToPosition(messages.size)
+        mAdapter?.setNewData(messages)
+        messageRsv?.smoothScrollToPosition(curPosition)
         if (curPosition == 0) {
             mAdapter?.setEmptyView(R.layout.view_song_empty)
         }

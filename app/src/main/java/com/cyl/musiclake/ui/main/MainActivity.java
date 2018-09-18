@@ -22,6 +22,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
 import com.cyl.musiclake.bean.MessageEvent;
@@ -129,10 +130,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMetaChangedEvent(MetaChangedEvent event) {
         updatePlaySongInfo(event.getMusic());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
     }
 
     private void updatePlaySongInfo(Music music) {
@@ -487,13 +484,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         View numItem = mNavigationView.getMenu().findItem(R.id.nav_menu_online_num).getActionView();
         mOnlineNumTv = numItem.findViewById(R.id.msg_num_tv);
         mOnlineNumTv.setText("0");
+        MusicApp.socketManager.toggleSocket(MusicApp.isOpenSocket);
 
         View item = mNavigationView.getMenu().findItem(R.id.nav_menu_count_down).getActionView();
         mSwitchCountDown = item.findViewById(R.id.count_down_switch);
         mSwitchCountDownTv = item.findViewById(R.id.count_down_tv);
         mSwitchCountDown.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-
                 CountDownUtils.INSTANCE.setTextViewListener(mSwitchCountDownTv);
                 UIUtilsKt.showCountDown(this, checked -> {
                     mSwitchCountDown.setChecked(checked);

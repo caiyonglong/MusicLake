@@ -344,8 +344,13 @@
     <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
     <string name="download_local_error">不能下载本地音乐!</string>
     <string name="download_ban">因版权问题，暂不支持下载</string>
-    <string name="download_empty_error">请选择需要下载的歌曲!</string>
+    <string name="download_ban_some">%1$d首歌曲因版权问题，暂不支持下载，是否继续下载其余%2$s首歌曲？</string>
+    <string name="download_empty_error">下载歌曲0首，请选择可下载的歌曲!</string>
+    <string name="download_list_tips">已自动过滤掉版权歌曲，可下载歌曲%1$s首，是否继续?</string>
+    <string name="download_list_empty_tips">已自动过滤掉版权歌曲，可下载歌曲0首</string>
     <string name="download_network_error">网络异常，请检查数据是否连接！</string>
+    <string name="delete_local_song_empty">请选择需要删除的本地音乐!</string>
+    <string name="delete_local_song_warning">是否继续删除!</string>
     <string name="float_window_manual_open">请手动打开显示悬浮窗权限</string>
     <string name="float_window_is_ready">显示悬浮窗权限已开通</string>
     <string name="float_window_is_refused">悬浮窗权限已被拒绝！</string>
@@ -367,5 +372,7 @@
     <string name="chat_open">打开</string>
     <string name="chat_close">关闭</string>
     <string name="clear_msg">清除消息记录</string>
+    <string name="about_music_lake">实时统计功能用于实时统计MusicLake的在线人数，登录后你可以在这里发送实时消息，也可以看到实时在线的人数，所有的消息都会在关闭当前应用时自动清空，也可以手动清空！</string>
+    <string name="open_socket_tips">请在右上角开启实时统计功能！</string>
 
 </resources>

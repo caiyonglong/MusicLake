@@ -49,7 +49,7 @@ public class MusicApp extends TinkerApplication {
     /**
      * socket是否打开
      */
-    public static Boolean isOpenSocket = false;
+    public static Boolean isOpenSocket = true;
 
     public static List<HotSearchBean> hotSearchList;
 

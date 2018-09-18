@@ -6,6 +6,7 @@ import android.view.MenuItem
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.downloadBatchMusic
@@ -56,7 +57,9 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
         downloadTv.setOnClickListener {
             val selectMusic = mutableListOf<Music>()
             mAdapter?.checkedMap?.forEach {
-                selectMusic.add(it.value)
+                if (it.value.isDl && it.value.type != Constants.LOCAL) {
+                    selectMusic.add(it.value)
+                }
             }
             downloadBatchMusic(selectMusic)
         }

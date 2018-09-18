@@ -103,8 +103,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         TasksManager.INSTANCE.updateViewHolder(holder.id, holder);
 
         holder.taskActionBtn.setEnabled(true);
-
-        if (TasksManager.INSTANCE.isReady()) {
+        if (FileDownloader.getImpl().isServiceConnected()) {
             final int status = TasksManager.INSTANCE.getStatus(model.getTid(), model.getPath());
             if (status == FileDownloadStatus.pending || status == FileDownloadStatus.started ||
                     status == FileDownloadStatus.connected) {

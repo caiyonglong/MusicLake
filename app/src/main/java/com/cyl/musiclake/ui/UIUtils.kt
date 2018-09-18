@@ -154,7 +154,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_local_error))
         return
     }
-    if (music.type != Constants.LOCAL) {
+    if (!music.isDl) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
         return
     }
@@ -195,32 +195,61 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
 /**
  * 批量下载
  */
-fun AppCompatActivity.downloadBatchMusic(musicList: MutableList<Music>?) {
-    musicList?.forEach {
-        if (it.type == Constants.LOCAL) {
-            musicList.remove(it)
+fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
+    val tips = if (downloadList.size == 0) {
+        getString(R.string.download_list_empty_tips)
+    } else {
+        getString(R.string.download_list_tips, downloadList.size.toString())
+    }
+    showTipsDialog(this@downloadBatchMusic, tips)
+    if (downloadList.size == 0) {
+        return
+    }
+
+    if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
+        showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
+            downloadList.forEach {
+                addDownloadQueue(it, true)
+            }
+            ToastUtils.show(getString(R.string.download_add_success))
+        }
+    } else {
+        downloadList.forEach {
+            addDownloadQueue(it, true)
+        }
+        ToastUtils.show(getString(R.string.download_add_success))
+    }
+}
+
+/**
+ * 批量删除歌曲
+ */
+fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>) {
+    if (deleteList.size == 0) {
+        showTipsDialog(this@deleteLocalMusic, R.string.delete_local_song_empty)
+        return
+    }
+    showTipsDialog(this@deleteLocalMusic, R.string.delete_local_song_warning) {
+        deleteList.forEach {
         }
     }
-    ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
-    return
-//    if (musicList == null || musicList.size == 0) {
-//        showTipsDialog(this@downloadBatchMusic, R.string.download_empty_error)
-//        return
-//    }
-//
-//    if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
-//        showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
-//            musicList.forEach {
-//                addDownloadQueue(it, true)
-//            }
-//            ToastUtils.show(getString(R.string.download_add_success))
-//        }
-//    } else {
-//        musicList.forEach {
-//            addDownloadQueue(it, true)
-//        }
-//        ToastUtils.show(getString(R.string.download_add_success))
-//    }
+}
+
+
+/**
+ * 提示对话框显示tip
+ */
+fun showTipsDialog(context: AppCompatActivity, content: String, success: (() -> Unit)? = null) {
+    if (context.isDestroyed || context.isFinishing) return
+    MaterialDialog.Builder(context)
+            .title(R.string.warning)
+            .content(content)
+            .onPositive { _, _ ->
+                success?.invoke()
+            }
+            .positiveText(R.string.sure)
+            .negativeText(R.string.cancel)
+            .show()
 }
 
 /**
@@ -228,7 +257,6 @@ fun AppCompatActivity.downloadBatchMusic(musicList: MutableList<Music>?) {
  */
 fun showTipsDialog(context: AppCompatActivity, content: Int, success: (() -> Unit)? = null) {
     if (context.isDestroyed || context.isFinishing) return
-
     MaterialDialog.Builder(context)
             .title(R.string.warning)
             .content(content)

@@ -56,7 +56,7 @@ class Music() : LitePalSupport(), Parcelable {
     //在线歌曲是否限制播放，false 可以播放
     var isCp: Boolean = false
     //在线歌曲是否付费歌曲，false 不能下载
-    var isDl: Boolean = false
+    var isDl: Boolean = true
     //歌曲评论Id
     var commentId: String? = null
     //收藏id
