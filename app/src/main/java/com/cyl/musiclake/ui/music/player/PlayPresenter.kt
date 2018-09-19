@@ -19,7 +19,7 @@ import javax.inject.Inject
 class PlayPresenter @Inject
 constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, PlayProgressListener {
     override fun onProgressUpdate(position: Long, duration: Long) {
-        mView.updateProgress(position, duration)
+        mView?.updateProgress(position, duration)
     }
 
     override fun attachView(view: PlayContract.View) {

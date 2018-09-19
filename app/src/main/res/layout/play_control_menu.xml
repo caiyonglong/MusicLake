@@ -69,7 +69,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             app:anim_duration="300"
             app:bg_color="@color/translucent"
             app:btn_color="@color/colorPrimary"

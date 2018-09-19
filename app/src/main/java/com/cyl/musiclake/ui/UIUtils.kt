@@ -31,6 +31,9 @@ import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import org.litepal.LitePal
 
 object UIUtils {
     /**
@@ -192,6 +195,29 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
     })
 }
 
+
+/**
+ * 下载歌曲
+ */
+fun AppCompatActivity.deleteMusic(music: Music?) {
+    if (music == null) {
+        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
+        return
+    }
+    if (music.type != Constants.LOCAL) {
+        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.delete_local_song_error))
+        return
+    }
+    doAsync {
+        val result = FileUtils.delFile(music.uri)
+        uiThread {
+            if (result) {
+                ToastUtils.show(getString(R.string.delete_song_success))
+            }
+        }
+    }
+}
+
 /**
  * 批量下载
  */
@@ -201,23 +227,23 @@ fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
     } else {
         getString(R.string.download_list_tips, downloadList.size.toString())
     }
-    showTipsDialog(this@downloadBatchMusic, tips)
-    if (downloadList.size == 0) {
-        return
-    }
-
-    if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
-        showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
+    showTipsDialog(this@downloadBatchMusic, tips) {
+        if (downloadList.size == 0) {
+            return@showTipsDialog
+        }
+        if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
+            showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
+                downloadList.forEach {
+                    addDownloadQueue(it, true)
+                }
+                ToastUtils.show(getString(R.string.download_add_success))
+            }
+        } else {
             downloadList.forEach {
                 addDownloadQueue(it, true)
             }
             ToastUtils.show(getString(R.string.download_add_success))
         }
-    } else {
-        downloadList.forEach {
-            addDownloadQueue(it, true)
-        }
-        ToastUtils.show(getString(R.string.download_add_success))
     }
 }
 
@@ -242,7 +268,7 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>) {
 fun showTipsDialog(context: AppCompatActivity, content: String, success: (() -> Unit)? = null) {
     if (context.isDestroyed || context.isFinishing) return
     MaterialDialog.Builder(context)
-            .title(R.string.warning)
+            .title(R.string.prompt)
             .content(content)
             .onPositive { _, _ ->
                 success?.invoke()

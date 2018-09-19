@@ -347,10 +347,12 @@
     <string name="download_ban_some">%1$d首歌曲因版权问题，暂不支持下载，是否继续下载其余%2$s首歌曲？</string>
     <string name="download_empty_error">下载歌曲0首，请选择可下载的歌曲!</string>
     <string name="download_list_tips">已自动过滤掉版权歌曲，可下载歌曲%1$s首，是否继续?</string>
-    <string name="download_list_empty_tips">已自动过滤掉版权歌曲，可下载歌曲0首</string>
+    <string name="download_list_empty_tips">已自动过滤掉版权歌曲，当前无可下载歌曲</string>
     <string name="download_network_error">网络异常，请检查数据是否连接！</string>
     <string name="delete_local_song_empty">请选择需要删除的本地音乐!</string>
     <string name="delete_local_song_warning">是否继续删除!</string>
+    <string name="delete_local_song_error">只能删除本地歌曲</string>
+    <string name="delete_song_success">删除成功</string>
     <string name="float_window_manual_open">请手动打开显示悬浮窗权限</string>
     <string name="float_window_is_ready">显示悬浮窗权限已开通</string>
     <string name="float_window_is_refused">悬浮窗权限已被拒绝！</string>
