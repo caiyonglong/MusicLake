@@ -144,7 +144,7 @@ public class CoverLoader {
     }
 
     public static void loadBigImageView(Context mContext, Music music, ImageView imageView) {
-        if (music == null) return;
+        if (music == null || imageView == null) return;
         String url = getCoverUriByMusic(music, true);
         GlideApp.with(mContext)
                 .asBitmap()

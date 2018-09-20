@@ -3,6 +3,7 @@ package com.cyl.musiclake.player;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -184,6 +185,12 @@ public class FloatLyricViewManager {
                 if (mFloatLyricViewParams == null) {
                     mFloatLyricViewParams = new WindowManager.LayoutParams();
                     mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                    } else {
+                        mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                    }
+
                     mFloatLyricViewParams.format = PixelFormat.RGBA_8888;
                     mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                             | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;

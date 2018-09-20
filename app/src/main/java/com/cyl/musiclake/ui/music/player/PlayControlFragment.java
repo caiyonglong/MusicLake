@@ -31,6 +31,7 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.ColorUtil;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.PlayPauseView;
@@ -300,8 +301,6 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
     @Override
     public void setPlayingBitmap(Bitmap albumArt) {
-        //设置图片资源
-        mIvAlbum.setImageBitmap(albumArt);
 
         if (coverAnimator != null) {
             if (PlayManager.isPlaying()) {
@@ -367,6 +366,8 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
             mTvArtist.setText(music.getArtist());
             mTvArtistAlbum.setText(music.getArtist());
+
+            CoverLoader.loadImageView(getContext(),music.getCoverUri(),mIvAlbum);
 
             //更新收藏状态
             if (music.isLove()) {

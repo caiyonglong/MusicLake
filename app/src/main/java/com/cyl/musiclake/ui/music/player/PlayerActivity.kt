@@ -36,10 +36,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
-import com.cyl.musiclake.utils.ColorUtil
-import com.cyl.musiclake.utils.FormatUtil
-import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.SPUtils
+import com.cyl.musiclake.utils.*
 import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
@@ -64,7 +61,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //更新标题
         titleIv.text = music?.title
         subTitleTv.text = music?.artist
-
+        //更新图片
+        CoverLoader.loadBigImageView(this, music, coverView?.findViewById<ImageView>(R.id.civ_cover))
+        //更新类型
         updateMusicType(playingMusic?.type)
         //更新收藏状态
         music?.isLove?.let {
@@ -73,6 +72,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //隐藏显示歌曲评论
         songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
 
+        coverAnimator?.cancel()
         coverAnimator?.start()
     }
 
@@ -306,12 +306,14 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun updateProgress(progress: Long, max: Long) {
-        progressSb.progress = progress.toInt()
-        progressSb.max = max.toInt()
-        progressTv.text = FormatUtil.formatTime(progress)
-        durationTv.text = FormatUtil.formatTime(max)
+        if (!isPause) {
+            progressSb.progress = progress.toInt()
+            progressSb.max = max.toInt()
+            progressTv.text = FormatUtil.formatTime(progress)
+            durationTv.text = FormatUtil.formatTime(max)
 
-        mLyricView?.setCurrentTimeMillis(progress)
+            mLyricView?.setCurrentTimeMillis(progress)
+        }
     }
 
     private fun setupViewPager(viewPager: MultiTouchViewPager) {
@@ -430,6 +432,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
+        coverAnimator?.cancel()
         coverAnimator = null
     }
 

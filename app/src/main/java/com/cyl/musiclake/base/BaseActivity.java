@@ -83,6 +83,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     protected Handler mHandler;
     private Unbinder unbinder;
     private PlayManager.ServiceToken mToken;
+    public Boolean isPause = true;
 
     private List<Disposable> disposables = new ArrayList<>();
 
@@ -240,8 +241,15 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+        isPause = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isPause = true;
     }
 
     @Override
