@@ -115,14 +115,11 @@ class SocketManager {
             saveUserInfo(users)
         }.on(Socket.EVENT_RECONNECT) {
             LogUtil.e("重连")
-        }.on(Socket.EVENT_DISCONNECT)
-        {
+        }.on(Socket.EVENT_DISCONNECT) {
             LogUtil.e("已断开连接")
-        }.on(Socket.EVENT_ERROR)
-        { error ->
+        }.on(Socket.EVENT_ERROR) { error ->
             LogUtil.e("连接错误：$error")
-        }.on(MESSAGE_BROADCAST)
-        { broadcast ->
+        }.on(MESSAGE_BROADCAST) { broadcast ->
             try {
                 val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
                 EventBus.getDefault().post(message)

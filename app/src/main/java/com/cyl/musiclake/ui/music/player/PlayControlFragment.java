@@ -223,48 +223,48 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     }
 
 
-    @Override
-    public void setPalette(Palette palette) {
-        mPalette = palette;
-        mSwatch = ColorUtil.getMostPopulousSwatch(palette);
-
-        int paletteColor;
-        if (mSwatch != null) {
-            paletteColor = mSwatch.getRgb();
-            int artistColor = mSwatch.getTitleTextColor();
-            mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-            mTvArtistAlbum.setTextColor(artistColor);
-        } else {
-            mSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
-            if (mSwatch != null) {
-                paletteColor = mSwatch.getRgb();
-                int artistColor = mSwatch.getTitleTextColor();
-                mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-                mTvArtistAlbum.setTextColor(artistColor);
-            } else {
-                paletteColor = Color.WHITE;
-                mTvName.setTextColor(ContextCompat.getColor(getContext(), android.R.color.primary_text_light));
-                mTvArtistAlbum.setTextColor(ContextCompat.getColor(getContext(), android.R.color.secondary_text_light));
-            }
-        }
-        //set icon color
-        int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
-//        int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
-//        StatusBarUtil.setColor(getActivity(), statusBarColor);
-//        mLrcView.setHighLightTextColor(statusBarColor);
-//        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
-//        tv_time.setTextColor(blackWhiteColor);
-//        mTvArtistAlbum.setTextColor(blackWhiteColor);
-//        tv_duration.setTextColor(blackWhiteColor);
-//        mLrcView.setHintColor(blackWhiteColor);
-//        mBtnNext.setEnabled(true);
-//        mBtnNext.setcolo(blackWhiteColor);
-        skip_prev.setColor(blackWhiteColor);
-        skip_next.setColor(blackWhiteColor);
-        skip_queue.setColor(blackWhiteColor);
-        mPlayOrPause.setBtnColor(blackWhiteColor);
-        mPlayOrPause.setEnabled(true);
-    }
+//    @Override
+//    public void setPalette(Palette palette) {
+//        mPalette = palette;
+//        mSwatch = ColorUtil.getMostPopulousSwatch(palette);
+//
+//        int paletteColor;
+//        if (mSwatch != null) {
+//            paletteColor = mSwatch.getRgb();
+//            int artistColor = mSwatch.getTitleTextColor();
+//            mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
+//            mTvArtistAlbum.setTextColor(artistColor);
+//        } else {
+//            mSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
+//            if (mSwatch != null) {
+//                paletteColor = mSwatch.getRgb();
+//                int artistColor = mSwatch.getTitleTextColor();
+//                mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
+//                mTvArtistAlbum.setTextColor(artistColor);
+//            } else {
+//                paletteColor = Color.WHITE;
+//                mTvName.setTextColor(ContextCompat.getColor(getContext(), android.R.color.primary_text_light));
+//                mTvArtistAlbum.setTextColor(ContextCompat.getColor(getContext(), android.R.color.secondary_text_light));
+//            }
+//        }
+//        //set icon color
+//        int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
+////        int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
+////        StatusBarUtil.setColor(getActivity(), statusBarColor);
+////        mLrcView.setHighLightTextColor(statusBarColor);
+////        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
+////        tv_time.setTextColor(blackWhiteColor);
+////        mTvArtistAlbum.setTextColor(blackWhiteColor);
+////        tv_duration.setTextColor(blackWhiteColor);
+////        mLrcView.setHintColor(blackWhiteColor);
+////        mBtnNext.setEnabled(true);
+////        mBtnNext.setcolo(blackWhiteColor);
+//        skip_prev.setColor(blackWhiteColor);
+//        skip_next.setColor(blackWhiteColor);
+//        skip_queue.setColor(blackWhiteColor);
+//        mPlayOrPause.setBtnColor(blackWhiteColor);
+//        mPlayOrPause.setEnabled(true);
+//    }
 
     @Override
     public void showLyric(String lyricInfo, boolean isFilePath) {

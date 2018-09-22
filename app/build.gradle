@@ -22,8 +22,8 @@ android {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 17
-        versionName "4.1.5"
+        versionCode 18
+        versionName "4.1.6"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
@@ -51,9 +51,9 @@ android {
     }
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            def time = new Date().format("yyyy-MM-dd HHmmss", TimeZone.getTimeZone("GMT+08"))
+            def time = new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+08"))
             //这里修改apk文件名
-            outputFileName = "app-music_lake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
+            outputFileName = "musicLake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
         }
     }
     compileSdkVersion 27
@@ -89,7 +89,8 @@ dependencies {
     api "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    api 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
+//    api 'com.github.wendux:DSBridge-Android:3.0-SNAPSHOT'
+    api 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
 
     //rxpermissions 6.0权限管理
     api 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'

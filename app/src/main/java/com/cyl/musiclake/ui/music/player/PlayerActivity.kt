@@ -226,47 +226,47 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var mPalette: Palette? = null
     private var mSwatch: Palette.Swatch? = null
 
-    override fun setPalette(palette: Palette?) {
-        mPalette = palette
-        mSwatch = ColorUtil.getMostPopulousSwatch(palette)
-
-        val paletteColor: Int
-        if (mSwatch != null) {
-            paletteColor = mSwatch?.rgb!!
-            val artistColor = mSwatch!!.titleTextColor
-            titleIv.setTextColor(ColorUtil.getOpaqueColor(artistColor))
-            subTitleTv.setTextColor(artistColor)
-        } else {
-            mSwatch = palette?.mutedSwatch ?: palette?.vibrantSwatch
-            if (mSwatch != null) {
-                paletteColor = mSwatch!!.rgb
-                val artistColor = mSwatch!!.titleTextColor
-                titleIv.setTextColor(ColorUtil.getOpaqueColor(artistColor))
-                subTitleTv.setTextColor(artistColor)
-            } else {
-                paletteColor = Color.WHITE
-                titleIv.setTextColor(ContextCompat.getColor(context!!, android.R.color.primary_text_light))
-                subTitleTv.setTextColor(ContextCompat.getColor(context!!, android.R.color.secondary_text_light))
-            }
-        }
-        //set icon color
-        val blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor)
-//        val statusBarColor = ColorUtil.getStatusBarColor(paletteColor)
-
-        progressTv.setTextColor(blackWhiteColor)
-        durationTv.setTextColor(blackWhiteColor)
-        playModeIv.setColorFilter(blackWhiteColor)
-        prevPlayIv.setColor(blackWhiteColor)
-        nextPlayIv.setColor(blackWhiteColor)
-        operateSongIv.setColorFilter(blackWhiteColor)
-        searchLyricIv.setColorFilter(blackWhiteColor)
-        backIv.setColorFilter(blackWhiteColor)
-        playQueueIv.setColor(blackWhiteColor)
-        downloadIv.setColor(blackWhiteColor)
-        shareIv.setColor(blackWhiteColor)
-        playlistAddIv.setColor(blackWhiteColor)
-        playPauseIv.btnColor = blackWhiteColor
-    }
+//    override fun setPalette(palette: Palette?) {
+//        mPalette = palette
+//        mSwatch = ColorUtil.getMostPopulousSwatch(palette)
+//
+//        val paletteColor: Int
+//        if (mSwatch != null) {
+//            paletteColor = mSwatch?.rgb!!
+//            val artistColor = mSwatch!!.titleTextColor
+//            titleIv.setTextColor(ColorUtil.getOpaqueColor(artistColor))
+//            subTitleTv.setTextColor(artistColor)
+//        } else {
+//            mSwatch = palette?.mutedSwatch ?: palette?.vibrantSwatch
+//            if (mSwatch != null) {
+//                paletteColor = mSwatch!!.rgb
+//                val artistColor = mSwatch!!.titleTextColor
+//                titleIv.setTextColor(ColorUtil.getOpaqueColor(artistColor))
+//                subTitleTv.setTextColor(artistColor)
+//            } else {
+//                paletteColor = Color.WHITE
+//                titleIv.setTextColor(ContextCompat.getColor(context!!, android.R.color.primary_text_light))
+//                subTitleTv.setTextColor(ContextCompat.getColor(context!!, android.R.color.secondary_text_light))
+//            }
+//        }
+//        //set icon color
+//        val blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor)
+////        val statusBarColor = ColorUtil.getStatusBarColor(paletteColor)
+//
+//        progressTv.setTextColor(blackWhiteColor)
+//        durationTv.setTextColor(blackWhiteColor)
+//        playModeIv.setColorFilter(blackWhiteColor)
+//        prevPlayIv.setColor(blackWhiteColor)
+//        nextPlayIv.setColor(blackWhiteColor)
+//        operateSongIv.setColorFilter(blackWhiteColor)
+//        searchLyricIv.setColorFilter(blackWhiteColor)
+//        backIv.setColorFilter(blackWhiteColor)
+//        playQueueIv.setColor(blackWhiteColor)
+//        downloadIv.setColor(blackWhiteColor)
+//        shareIv.setColor(blackWhiteColor)
+//        playlistAddIv.setColor(blackWhiteColor)
+//        playPauseIv.btnColor = blackWhiteColor
+//    }
 
     override fun showLyric(lyric: String?, init: Boolean) {
         if (init) {

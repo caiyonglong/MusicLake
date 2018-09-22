@@ -16,7 +16,7 @@ interface PlayContract {
 
         fun setPlayingBg(albumArt: Drawable?, isInit: Boolean? = false)
 
-        fun setPalette(palette: Palette?)
+//        fun setPalette(palette: Palette?)
 
         fun showLyric(lyric: String?, init: Boolean)
 

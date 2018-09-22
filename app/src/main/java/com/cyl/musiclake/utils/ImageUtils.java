@@ -375,7 +375,9 @@ public class ImageUtils {
         return bitmap;
     }
 
-
+    /**
+     * @param inSampleSize 图片像素的 1/n*n
+     */
     public static Drawable createBlurredImageFromBitmap(Bitmap bitmap, int inSampleSize) {
 
         RenderScript rs = RenderScript.create(MusicApp.getAppContext());
@@ -383,7 +385,7 @@ public class ImageUtils {
         options.inSampleSize = inSampleSize;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] imageInByte = stream.toByteArray();
         ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
         Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);
@@ -391,7 +393,7 @@ public class ImageUtils {
         final Allocation input = Allocation.createFromBitmap(rs, blurTemplate);
         final Allocation output = Allocation.createTyped(rs, input.getType());
         final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        script.setRadius(10f);
+        script.setRadius(15f);
         script.setInput(input);
         script.forEach(output);
         output.copyTo(blurTemplate);

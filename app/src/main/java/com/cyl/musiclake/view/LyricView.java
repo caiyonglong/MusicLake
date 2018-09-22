@@ -735,8 +735,13 @@ public class LyricView extends View {
             for (int i = 0, size = mLineCount; i < size; i++) {
                 LineInfo lineInfo = mLyricInfo.songLines.get(i);
                 if (lineInfo != null && lineInfo.start >= time) {
-                    position = i;
-                    break;
+                    if (i + 1 < mLyricInfo.songLines.size() && lineInfo.start == mLyricInfo.songLines.get(i + 1).start) {
+                        position = i - 1;
+                        break;
+                    } else {
+                        position = i;
+                        break;
+                    }
                 }
                 if (i == mLineCount - 1) {
                     position = mLineCount;

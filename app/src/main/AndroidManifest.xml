@@ -34,7 +34,7 @@
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
     <application
         android:name=".MusicApp"
         android:allowBackup="false"

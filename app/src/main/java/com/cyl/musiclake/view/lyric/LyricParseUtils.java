@@ -151,6 +151,7 @@ public class LyricParseUtils {
                     lineInfo.content = content.trim();
                     lineInfo.start = measureStartTimeMillis(temp);
                     lyricInfo.songLines.add(lineInfo);
+
                 }
             }
         } catch (Exception e) {

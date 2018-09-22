@@ -39,7 +39,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
                 val blur = ImageUtils.createBlurredImageFromBitmap(bitmap, 12)
                 uiThread {
                     mView?.setPlayingBg(blur, isInit)
-                    Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
+//                    Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
                 }
             }
         }

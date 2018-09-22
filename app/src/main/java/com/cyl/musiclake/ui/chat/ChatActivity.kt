@@ -34,7 +34,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return getString(R.string.message_center)
+        return "音乐湖交流区"
     }
 
     override fun getLayoutResID(): Int {
@@ -51,7 +51,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         messageRsv.adapter = mAdapter
         mAdapter?.bindToRecyclerView(messageRsv)
-        0
         mUserAdapter = OnlineUserListAdapter(users)
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter

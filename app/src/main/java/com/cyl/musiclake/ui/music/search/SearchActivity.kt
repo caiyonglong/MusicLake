@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.HotSearchBean
@@ -150,20 +151,19 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             val music = searchResults[position]
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(this)
         }
-        mAdapter.setOnLoadMoreListener({
-            resultListRcv.postDelayed({
-                if (mCurrentCounter == 0) {
-                    //数据全部加载完毕
-                    mAdapter.loadMoreEnd()
-                } else {
-                    mOffset++
-                    //成功获取更多数据
-                    queryString?.let { mPresenter?.search(it, filter, limit, mOffset) }
-                }
-            }, 1000)
-        }, resultListRcv)
+    }
 
-
+    val listener = BaseQuickAdapter.RequestLoadMoreListener {
+        resultListRcv.postDelayed({
+            if (mCurrentCounter == 0) {
+                //数据全部加载完毕
+                mAdapter.loadMoreEnd()
+            } else {
+                mOffset++
+                //成功获取更多数据
+                queryString?.let { mPresenter?.search(it, filter, limit, mOffset) }
+            }
+        }, 1000)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -206,6 +206,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             queryString = query
             updateHistoryPanel(false)
             mPresenter?.searchLocal(query)
+            mAdapter.setOnLoadMoreListener(null, resultListRcv)
         }
     }
 
@@ -219,6 +220,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             updateHistoryPanel(false)
             mPresenter?.saveQueryInfo(query)
             mPresenter?.search(query, filter, limit, mOffset)
+            mAdapter.setOnLoadMoreListener(listener, resultListRcv)
         }
     }
 

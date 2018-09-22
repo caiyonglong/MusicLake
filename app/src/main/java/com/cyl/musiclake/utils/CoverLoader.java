@@ -218,7 +218,7 @@ public class CoverLoader {
 
 
     public static Drawable createBlurredImageFromBitmap(Bitmap bitmap) {
-        return ImageUtils.createBlurredImageFromBitmap(bitmap, 12);
+        return ImageUtils.createBlurredImageFromBitmap(bitmap, 4);
     }
 
 }

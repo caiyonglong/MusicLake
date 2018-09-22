@@ -119,10 +119,10 @@ object BaseApiImpl {
         }
     }
 
-    fun getLyricInfo(vendor: String, id: String, success: (result: LyricInfo) -> Unit) {
+    fun getLyricInfo(vendor: String, id: String, success: (result: LyricData) -> Unit) {
         mWebView?.callHandler("asyn.getLyric", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
-                val result = gson.fromJson<LyricInfo>(retValue.toString(), LyricInfo::class.java)
+                val result = gson.fromJson<LyricData>(retValue.toString(), LyricData::class.java)
                 success.invoke(result)
             } catch (e: Throwable) {
                 Log.e("getTopList", e.message)

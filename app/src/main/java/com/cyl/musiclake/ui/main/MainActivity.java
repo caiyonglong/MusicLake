@@ -309,7 +309,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Runnable navigatePlay = () -> {
         controlFragment = PlayControlFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.controls_container, controlFragment).commit();
+        transaction.replace(R.id.controls_container, controlFragment).commitAllowingStateLoss();
     };
 
 
