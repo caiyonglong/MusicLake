@@ -73,12 +73,12 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
 
 
     /**
-     * 实现QQ第三方登录
+     * 实现QQ第三方登录onActivityResultonActivityResult
      */
     override fun loginByQQ(activity: Activity) {
         mView.showLoading()
         //QQ第三方登录
-        MusicApp.mTencent.login(activity, "all", loginListener)
+        MusicApp.mTencent.login(activity, "all", loginListener,true)
         loginListener = object : IUiListener {
             override fun onComplete(o: Any) {
                 mView?.hideLoading()

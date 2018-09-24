@@ -69,8 +69,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
 
     fun show(context: AppCompatActivity) {
         mContext = context
-        val ft = context.supportFragmentManager
-        show(ft, javaClass.simpleName)
+        val ft = context.supportFragmentManager.beginTransaction()
+        ft.add(this, tag)
+        ft.commitAllowingStateLoss()
     }
 
     private var mBehavior: BottomSheetBehavior<*>? = null
@@ -107,10 +108,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         activity?.let { it1 ->
             if (music != null && music?.artistId != null && music?.artist != null) {
                 if (music!!.type == Constants.LOCAL) {
-
                     val artist = Artist()
                     artist.artistId = music?.artistId
-                    artist.name = music?.album
+                    artist.name = music?.artist
                     artist.type = music?.type
                     NavigationHelper.navigateToPlaylist(it1, artist, null)
                 } else {

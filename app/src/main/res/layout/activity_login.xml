@@ -134,7 +134,7 @@
             android:layout_marginBottom="13dp"
             android:elevation="5dp"
             android:transitionName="loginFab"
-            app:fab_colorNormal="@color/grean"
+            app:fab_colorNormal="@color/green"
             app:fab_colorPressed="@color/lightGreen"
             app:fab_icon="@drawable/qq_login"
             app:fab_size="normal" />

@@ -152,7 +152,7 @@
             android:elevation="5dp"
             android:transitionName="transition_fab"
             app:fabSize="normal"
-            app:fab_colorNormal="@color/grean"
+            app:fab_colorNormal="@color/green"
             app:fab_colorPressed="@color/lightGreen"
             app:fab_icon="@drawable/ic_clear" />
 

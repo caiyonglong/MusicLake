@@ -19,6 +19,7 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.UpdateUtils;
+import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.tencent.bugly.Bugly;
@@ -43,6 +44,8 @@ public class MusicApp extends TinkerApplication {
 
     //QQ第三方登录
     public static Tencent mTencent;
+
+    public static Gson GSON;
 
     //socket
     public static SocketManager socketManager;
@@ -83,6 +86,7 @@ public class MusicApp extends TinkerApplication {
         initBugly();
         initLogin();
         initDB();
+        GSON = new Gson();
         registerListener();
         initFileDownload();
         BaseApiImpl.INSTANCE.initWebView(this);

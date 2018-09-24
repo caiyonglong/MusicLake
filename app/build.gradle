@@ -89,7 +89,8 @@ dependencies {
     api "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
-//    api 'com.github.wendux:DSBridge-Android:3.0-SNAPSHOT'
+
+    //    api 'com.github.wendux:DSBridge-Android:3.0-SNAPSHOT'
     api 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
 
     //rxpermissions 6.0权限管理
@@ -103,7 +104,6 @@ dependencies {
     //对话框
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
-
     api 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
     api 'com.sothree.slidinguppanel:library:3.4.0'
@@ -141,7 +141,7 @@ dependencies {
     //    implementation files('libs/jaudiotagger-2.2.6-SNAPSHOT.jar')
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')
 
-//        api 'com.github.nkzawa:socket.io-client:0.3.0'
+    //        api 'com.github.nkzawa:socket.io-client:0.3.0'
     api('io.socket:socket.io-client:1.0.0') {
 //         excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
@@ -175,4 +175,5 @@ dependencies {
     //    implementation "androidx.annotation:annotation:1.0.0-rc02"
 
     //    implementation "com.google.android.material:material:1.0.0-rc02"
+    implementation files('libs/open_sdk_r6019_lite.jar')
 }

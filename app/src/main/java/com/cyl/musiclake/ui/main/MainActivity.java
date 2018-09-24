@@ -381,7 +381,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             String url = user.getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
-//            mExitTv.setText(getString(R.string.logout_hint));
             mLoginTv.setVisibility(View.GONE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
@@ -404,6 +403,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginEvent event) {
+        MusicApp.socketManager.toggleSocket(true);
         setUserStatusInfo(event.getStatus(), event.getUser());
     }
 
@@ -484,7 +484,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         View numItem = mNavigationView.getMenu().findItem(R.id.nav_menu_online_num).getActionView();
         mOnlineNumTv = numItem.findViewById(R.id.msg_num_tv);
         mOnlineNumTv.setText("0");
-        MusicApp.socketManager.toggleSocket(MusicApp.isOpenSocket);
 
         View item = mNavigationView.getMenu().findItem(R.id.nav_menu_count_down).getActionView();
         mSwitchCountDown = item.findViewById(R.id.count_down_switch);

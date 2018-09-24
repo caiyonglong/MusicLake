@@ -76,7 +76,7 @@
     <color name="lightBlue">#03a9f4</color>
     <color name="cyan">#00bcd4</color>
     <color name="teal">#009688</color>
-    <color name="grean">#259b24</color>
+    <color name="green">#259b24</color>
     <color name="lightGreen">#8bc34a</color>
     <color name="lime">#cddc39</color>
     <color name="yellow">#ffed3b</color>
@@ -91,7 +91,7 @@
     <!-- Google Apps Color -->
     <color name="app_blue">#4285F4</color>
     <color name="app_blue_dark">#3367D6</color>
-    <color name="app_green">#0F9D58</color>
+    <color name="app_green">#05b962</color>
     <color name="app_green_dark">#0B8043</color>
     <color name="app_yellow">#F4B400</color>
     <color name="app_yellow_dark">#F09300</color>
@@ -117,5 +117,8 @@
     <color name="progressBackgroundColorDark">#ffffff</color>
     <color name="colorSelectableItemWhite">#77ffffff</color>
     <color name="divider_line">#0f000000</color>
+
+
+    <color name="chatBackgroundColor">#dcdcdc</color>
 
 </resources>

@@ -39,7 +39,7 @@
     <TextView
         android:id="@+id/tv_comment_time"
         android:layout_width="0dp"
-        android:layout_height="13dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/dp_16"
@@ -50,13 +50,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_comment_user"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="20:38" />
+        tools:text="分享歌曲" />
+
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,22 +67,25 @@
             android:id="@+id/tv_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_16"
             android:background="@drawable/bg_edit"
-            android:padding="@dimen/dp_8"
+            android:padding="8dp"
+            android:visibility="gone"
             android:textColor="@color/black"
             android:textSize="14sp"
-            tools:text="testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" />
+            tools:text="lk" />
 
         <include
             android:id="@+id/include_music"
             layout="@layout/item_play_queue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_8"
+            android:layout_margin="@dimen/dp_8"
             android:padding="@dimen/dp_8"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="14sp" />
+
     </LinearLayout>
 
 

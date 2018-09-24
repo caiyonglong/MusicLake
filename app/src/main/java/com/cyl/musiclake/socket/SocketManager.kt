@@ -153,8 +153,11 @@ class SocketManager {
      */
     fun toggleSocket(open: Boolean) {
         if (open) {
+            MusicApp.isOpenSocket = true
+            disconnect()
             connect()
         } else {
+            MusicApp.isOpenSocket = false
             disconnect()
         }
     }

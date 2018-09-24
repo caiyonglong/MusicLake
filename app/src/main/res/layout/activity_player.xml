@@ -38,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_16"
                 android:contentDescription="@string/search_lyric"
-                android:src="@drawable/ic_arrow_back" />
+                android:src="@drawable/ic_arrow_back"
+                android:tint="@color/white" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -84,7 +85,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/song_operate"
-                    android:src="@drawable/ic_more" />
+                    android:src="@drawable/ic_more"
+                    android:tint="@color/white" />
 
                 <ImageView
                     android:id="@+id/searchLyricIv"

@@ -1,19 +1,25 @@
 package com.cyl.musiclake.ui.chat
 
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.event.ChatUserEvent
+import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
 import org.greenrobot.eventbus.Subscribe
@@ -28,13 +34,13 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         var users = mutableListOf<UserInfo>()
     }
 
-    var curPosition = 0
-    var curUserNums = 0
+    private var curPosition = 0
+    private var nums = 0
     var mAdapter: ChatListAdapter? = null
-    var mUserAdapter: OnlineUserListAdapter? = null
+    private var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return "音乐湖交流区"
+        return getString(R.string.title_activity_chat)
     }
 
     override fun getLayoutResID(): Int {
@@ -42,7 +48,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun initView() {
-        toggleSocket.isChecked = MusicApp.isOpenSocket
     }
 
     override fun initData() {
@@ -50,7 +55,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         mAdapter = ChatListAdapter(messages)
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         messageRsv.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(messageRsv)
         mUserAdapter = OnlineUserListAdapter(users)
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
@@ -63,20 +67,69 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     override fun listener() {
         super.listener()
         fab?.setOnClickListener {
-            fab.visibility = View.GONE
+            fab.hide()
             cardView.visibility = View.VISIBLE
             val animationShow = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show)
             cardView.animation = animationShow
             animationShow.start()
         }
         sendBtn.setOnClickListener {
-            val content = messageInputView?.text.toString()
+            sendMessage()
+        }
+        messageInputView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s?.length == 0) {
+                    addIv.visibility = View.VISIBLE
+                    sendBtn.visibility = View.GONE
+                } else {
+                    addIv.visibility = View.GONE
+                    sendBtn.visibility = View.VISIBLE
+                }
+            }
+        })
+        addIv.setOnClickListener {
+            MaterialDialog.Builder(this)
+                    .items("分享当前正在播放歌曲")
+                    .itemsCallback { _, _, _, _ ->
+                        sendMusicMessage()
+                    }
+                    .show()
+        }
+        messageInputView.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendMessage()
+            }
+            true
+        }
+    }
+
+    /**
+     * 发送消息
+     */
+    private fun sendMessage() {
+        val content = messageInputView?.text.toString()
+        if (content.isNotEmpty()) {
             MusicApp.socketManager.sendSocketMessage(content)
             messageInputView?.setText("")
         }
-        toggleSocket.setOnCheckedChangeListener { _, isChecked ->
-            MusicApp.isOpenSocket = isChecked
-            MusicApp.socketManager.toggleSocket(isChecked)
+    }
+
+    /**
+     * 发送消息(当前正在播放的音乐)
+     */
+    private fun sendMusicMessage() {
+        val music = PlayManager.getPlayingMusic()
+        if (music?.mid != null) {
+            val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
+            MusicApp.socketManager.sendSocketMessage(message)
+        } else {
+            ToastUtils.show(getString(R.string.playing_empty))
         }
     }
 
@@ -90,7 +143,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
             messages.clear()
             curPosition = 0
             mAdapter?.notifyDataSetChanged()
-            mAdapter?.setEmptyView(R.layout.view_song_empty)
         } else if (item?.itemId == R.id.action_about) {
             MaterialDialog.Builder(this)
                     .title(R.string.prompt)
@@ -106,16 +158,15 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         curPosition = messages.size
         mAdapter?.setNewData(messages)
         messageRsv?.smoothScrollToPosition(curPosition)
-        if (curPosition == 0) {
-            mAdapter?.setEmptyView(R.layout.view_song_empty)
-        }
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateUserInfo(chatUsers: ChatUserEvent) {
-        curUserNums = chatUsers.users.size
+        nums = chatUsers.users.size
         mUserAdapter?.setNewData(users)
-        usersRsv.visibility = if (curUserNums == 0) View.GONE else View.VISIBLE
+        usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
+
+        updateTitle(getString(R.string.chat_title, users.size))
     }
 }

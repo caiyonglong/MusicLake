@@ -126,6 +126,19 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         }
     }
 
+    /**
+     * 更新title
+     *
+     * @param title
+     */
+    protected void updateTitle(String title) {
+        if (hasToolbar() && mToolbar != null) {
+            if (setToolbarTitle() != null)
+                mToolbar.setTitle(title);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
     protected abstract int getLayoutResID();
 
