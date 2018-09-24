@@ -16,7 +16,8 @@ class Album : LitePalSupport, Serializable {
     var artistName: String? = null
     var cover: String? = null
     var type: String? = Constants.LOCAL
-    var artistId: Long = 0
+    var artistId: String? = null
+    var info: String? = null
     var count: Int = 0
 
     var songs = mutableListOf<Music>()
@@ -27,7 +28,7 @@ class Album : LitePalSupport, Serializable {
         this.name = name
         this.albumId = id
         this.artistName = artistName
-        this.artistId = artistId
+        this.artistId = artistId.toString()
         this.count = count
     }
 

@@ -2,9 +2,11 @@ package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
 import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.bean.Album
+import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
@@ -82,9 +84,10 @@ object BaiduApiServiceImpl {
                         music.artist = songInfo.artistName
                         music.artistId = songInfo.tingUid
                         music.title = songInfo.title
+                        music.isOnline = true
                         music.coverSmall = songInfo.picSmall
                         music.coverUri = songInfo.picBig
-                        music.coverBig = songInfo.picRadio
+                        music.coverBig = songInfo.picBig.split("@")[0]
                         musicList.add(music)
                     }
                     Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
@@ -170,11 +173,12 @@ object BaiduApiServiceImpl {
                         music.lyric = songInfo.lrcLink
                         music.coverSmall = songInfo.songPicSmall
                         music.coverUri = songInfo.songPicBig
-                        music.coverBig = MusicUtils.getAlbumPic(songInfo.songPicRadio.split("@")[0], Constants.BAIDU, 300)
+                        music.coverBig = songInfo.songPicRadio.split("@")[0]
 
                     }
                     Observable.create(ObservableOnSubscribe<Music> { e ->
                         if (music.uri != null) {
+                            music.save()
                             e.onNext(music)
                             e.onComplete()
                         } else {
@@ -268,7 +272,7 @@ object BaiduApiServiceImpl {
                                 music.mid = it.songid
                                 music.coverUri = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 150)
                                 music.coverSmall = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 90)
-                                music.coverBig = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 300)
+                                music.coverBig = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 500)
                                 songs.add(music)
                             }
                         }
@@ -285,4 +289,81 @@ object BaiduApiServiceImpl {
                 }
     }
 
+    fun getArtistSongList(artistId: String, offset: Int): Observable<Artist> {
+        val params = mutableMapOf(
+                Constants.PARAM_TING_UID to artistId,
+                Constants.PARAM_OFFSET to offset,
+                Constants.PARAM_LIMIT to 20
+        )
+        return apiService.getArtistSongList(params)
+                .flatMap {
+                    val artist = Artist()
+                    val songs = mutableListOf<Music>()
+                    if (it.errorCode == 22000) {
+                        it.songList?.forEach {
+                            val music = Music()
+                            music.type = Constants.BAIDU
+                            music.title = it.title
+                            music.artist = it.artistName
+                            music.artistId = it.tingUid
+                            music.album = it.albumTitle
+                            music.albumId = it.albumId
+                            music.isOnline = true
+                            music.mid = it.songId
+                            music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 150)
+                            music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 90)
+                            music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 500)
+                            songs.add(music)
+                        }
+                        artist.count = it.songNums
+                        artist.songs = songs
+                    }
+                    Observable.create(ObservableOnSubscribe<Artist> { e ->
+                        try {
+                            e.onNext(artist)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
+                }
+    }
+
+    fun getAlbumSongList(albumId: String): Observable<Album> {
+        return apiService.getAlbumSongList(albumId)
+                .flatMap {
+                    val album = Album()
+                    val songs = mutableListOf<Music>()
+                    it.songlist?.forEach {
+                        val music = Music()
+                        music.type = Constants.BAIDU
+                        music.title = it.title
+                        music.artist = it.artistName
+                        music.artistId = it.tingUid
+                        music.album = it.albumTitle
+                        music.albumId = it.albumId
+                        music.isOnline = true
+                        music.mid = it.songId
+                        music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 150)
+                        music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 90)
+                        music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 500)
+                        songs.add(music)
+                    }
+                    album.count = it.songlist?.size ?: 0
+                    album.albumId = it.albumInfo.albumId
+                    album.name = it.albumInfo.title
+                    album.artistId = it.albumInfo.artistTingUid
+                    album.artistName = it.albumInfo.author
+                    album.info = it.albumInfo.info
+                    album.songs = songs
+                    Observable.create(ObservableOnSubscribe<Album> { e ->
+                        try {
+                            e.onNext(album)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
+                }
+    }
 }

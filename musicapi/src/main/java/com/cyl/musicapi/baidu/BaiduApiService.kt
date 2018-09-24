@@ -2,12 +2,7 @@ package com.cyl.musicapi.baidu
 
 import io.reactivex.Observable
 import okhttp3.ResponseBody
-import retrofit2.http.GET
-import retrofit2.http.HeaderMap
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
-import retrofit2.http.Streaming
-import retrofit2.http.Url
+import retrofit2.http.*
 
 /**
  * Created by yonglong on 2018/1/21.
@@ -47,4 +42,16 @@ interface BaiduApiService {
     @Streaming
     @GET
     fun downloadFile(@Url downloadUrl: String, @HeaderMap params: Map<String, String>): Observable<ResponseBody>
+
+    /**
+     * 获取专辑信息
+     */
+    @GET("/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.album.getAlbumInfo&format=json")
+    fun getAlbumSongList(@Query("album_id") albumId: String): Observable<AlbumSongList>
+
+    /**
+     * 获取歌手歌曲信息
+     */
+    @GET("/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.artist.getSongList&format=json")
+    fun getArtistSongList(@QueryMap params: MutableMap<String, Any>): Observable<ArtistMusicList>
 }

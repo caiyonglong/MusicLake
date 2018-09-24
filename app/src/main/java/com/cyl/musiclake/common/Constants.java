@@ -200,8 +200,10 @@ public class Constants {
     public static final String PARAM_PAGE_SIZE = "page_size";
     public static final String PARAM_PAGE_NO = "page_no";
     public static final String PARAM_OFFSET = "offset";
+    public static final String PARAM_LIMIT = "limit";
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
+    public static final String PARAM_ALBUM_ID = "album_id";
     public static final String PARAM_QUERY = "query";
 
     public static final String URL_GET_SONG_INFO = "http://music.baidu.com/data/music/links?songIds=";

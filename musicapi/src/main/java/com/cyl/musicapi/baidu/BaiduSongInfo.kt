@@ -15,6 +15,8 @@ data class SongItem(@SerializedName("songName")
                         val albumId: Int = 0,
                         @SerializedName("artistId")
                         val artistId: String = "",
+                        @SerializedName("ting_uid")
+                        val tingUid: String = "",
                         @SerializedName("source")
                         val source: String = "",
                         @SerializedName("songPicBig")

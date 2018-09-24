@@ -56,8 +56,8 @@ object MusicApi {
         return when (music.type) {
             Constants.BAIDU -> BaiduApiServiceImpl.getTingSongInfo(music).flatMap { result ->
                 Observable.create(ObservableOnSubscribe<Music> {
-                    music.lyric = result.lyric
-                    music.uri = result.uri
+                    music.uri =result.uri
+                    music.lyric =result.lyric
                     if (music.uri != null) {
                         it.onNext(music)
                         it.onComplete()

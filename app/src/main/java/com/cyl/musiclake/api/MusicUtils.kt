@@ -264,7 +264,7 @@ object MusicUtils {
         val artistIds = music.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artistNames = music.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artists = mutableListOf<Artist>()
-        if (artistNames != null) {
+        if (artistNames != null && artistIds?.size ?: 0 == artistNames.size) {
             for (i in artistNames.indices) {
                 val artist = Artist()
                 artistIds?.get(i)?.let {

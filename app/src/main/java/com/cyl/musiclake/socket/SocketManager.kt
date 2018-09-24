@@ -14,16 +14,14 @@ import com.cyl.musiclake.utils.ToastUtils
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.client.Manager
-import io.socket.client.Manager.EVENT_ERROR
-import io.socket.client.Manager.EVENT_TRANSPORT
 import io.socket.client.Socket
 import io.socket.client.Socket.EVENT_DISCONNECT
+import io.socket.client.Socket.EVENT_ERROR
+import io.socket.engineio.client.Socket.EVENT_TRANSPORT
 import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.WebSocket
-import okhttp3.OkHttpClient
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
-import java.util.concurrent.TimeUnit
 
 /**
  * Des    : 实时在线socket统计
@@ -34,22 +32,21 @@ class SocketManager {
     val MESSAGE_BROADCAST = "broadcast"
     val MESSAGE_ONLINE_TOTAL = "online total"
     val MESSAGE_ONLINE_USERS = "online users"
+    val MESSAGE_SOME_JOIN = "someone join"
+    val MESSAGE_SOME_LEAVE = "someone leave"
     var realUsersNum = 0
     lateinit var socket: Socket
 
     fun initSocket() {
         try {
             val opts = IO.Options()
-            val okHttpClient = OkHttpClient().newBuilder().pingInterval(15, TimeUnit.SECONDS).retryOnConnectionFailure(true).build()
+            opts.forceNew = true
             opts.forceNew = true
             opts.reconnectionDelay = 30000
             opts.reconnectionDelayMax = 20
             opts.reconnectionAttempts = 5
             opts.randomizationFactor = 1.0
             opts.timeout = 60 * 1000
-            opts.webSocketFactory = okHttpClient
-            opts.callFactory = okHttpClient
-            opts.timestampRequests = true
             opts.transports = arrayOf(WebSocket.NAME)
             socket = IO.socket("http://39.108.214.63:15003", opts)
             LogUtil.e("初始化、建立连接！")
@@ -92,7 +89,7 @@ class SocketManager {
                 // modify request headers
                 headers["accesstoken"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
             }
-            transport.on(Transport.EVENT_RESPONSE_HEADERS) { args ->
+            transport.on(Transport.EVENT_RESPONSE_HEADERS) {
             }
         }
         socket.on(Socket.EVENT_CONNECT) {
@@ -128,6 +125,10 @@ class SocketManager {
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
+        }.on(MESSAGE_SOME_JOIN) {
+
+        }.on(MESSAGE_SOME_LEAVE) {
+
         }
         socket.connect()
     }
@@ -143,6 +144,8 @@ class SocketManager {
         socket.off(MESSAGE_ONLINE_USERS)
         socket.off(EVENT_ERROR)
         socket.off(EVENT_DISCONNECT)
+        socket.off(MESSAGE_SOME_JOIN)
+        socket.off(MESSAGE_SOME_LEAVE)
         saveUserInfo(null)
         realUsersNum = 0
         EventBus.getDefault().post(SocketOnlineEvent(0))
@@ -154,7 +157,6 @@ class SocketManager {
     fun toggleSocket(open: Boolean) {
         if (open) {
             MusicApp.isOpenSocket = true
-            disconnect()
             connect()
         } else {
             MusicApp.isOpenSocket = false

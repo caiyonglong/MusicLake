@@ -58,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
+                android:visibility="gone"
                 tools:text="最近更新：2016-01-03" />
 
             <TextView

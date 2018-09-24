@@ -18,7 +18,7 @@ data class SongListItem(@SerializedName("piao_id")
                         @SerializedName("del_status")
                         val delStatus: String = "",
                         @SerializedName("album_1000_1000")
-                        val album: String = "",
+                        val pic1000: String = "",
                         @SerializedName("korean_bb_song")
                         val koreanBbSong: String = "",
                         @SerializedName("title")
@@ -122,4 +122,93 @@ data class BaiduMusicList(@SerializedName("song_list")
                           @SerializedName("billboard")
                           val billboard: Billboard)
 
+
+data class ArtistMusicList(@SerializedName("songlist")
+                           val songList: List<SongListItem>?,
+                           @SerializedName("error_code")
+                           val errorCode: Int = 0,
+                           @SerializedName("havemore")
+                           val haveMore: Int = 0,
+                           @SerializedName("songnums")
+                           val songNums: Int = 0)
+
+
+data class AlbumSongList(@SerializedName("is_collect")
+                         val isCollect: Int = 0,
+                         @SerializedName("share_pic")
+                         val sharePic: String = "",
+                         @SerializedName("albumInfo")
+                         val albumInfo: AlbumDetailInfo,
+                         @SerializedName("share_title")
+                         val shareTitle: String = "",
+                         @SerializedName("songlist")
+                         val songlist: List<SongListItem>?)
+
+
+data class AlbumDetailInfo(@SerializedName("comment_num")
+                           val commentNum: Int = 0,
+                           @SerializedName("country")
+                           val country: String = "",
+                           @SerializedName("pic_s1000")
+                           val picS: String = "",
+                           @SerializedName("resource_type_ext")
+                           val resourceTypeExt: String = "",
+                           @SerializedName("gender")
+                           val gender: String = "",
+                           @SerializedName("language")
+                           val language: String = "",
+                           @SerializedName("collect_num")
+                           val collectNum: Int = 0,
+                           @SerializedName("title")
+                           val title: String = "",
+                           @SerializedName("hot")
+                           val hot: String = "",
+                           @SerializedName("pic_big")
+                           val picBig: String = "",
+                           @SerializedName("listen_num")
+                           val listenNum: String = "",
+                           @SerializedName("price")
+                           val price: String = "",
+                           @SerializedName("favorites_num")
+                           val favoritesNum: Int = 0,
+                           @SerializedName("info")
+                           val info: String = "",
+                           @SerializedName("share_num")
+                           val shareNum: Int = 0,
+                           @SerializedName("area")
+                           val area: String = "",
+                           @SerializedName("ai_presale_flag")
+                           val aiPresaleFlag: String = "",
+                           @SerializedName("pic_radio")
+                           val picRadio: String = "",
+                           @SerializedName("my_num")
+                           val myNum: Int = 0,
+                           @SerializedName("author")
+                           val author: String = "",
+                           @SerializedName("pic_s500")
+                           val picS5: String = "",
+                           @SerializedName("all_artist_id")
+                           val allArtistId: String = "",
+                           @SerializedName("buy_url")
+                           val buyUrl: String = "",
+                           @SerializedName("pic_small")
+                           val picSmall: String = "",
+                           @SerializedName("publishcompany")
+                           val publishcompany: String = "",
+                           @SerializedName("all_artist_ting_uid")
+                           val allArtistTingUid: String = "",
+                           @SerializedName("artist_id")
+                           val artistId: String = "",
+                           @SerializedName("song_sale")
+                           val songSale: Int = 0,
+                           @SerializedName("songs_total")
+                           val songsTotal: String = "",
+                           @SerializedName("publishtime")
+                           val publishtime: String = "",
+                           @SerializedName("recommend_num")
+                           val recommendNum: Int = 0,
+                           @SerializedName("artist_ting_uid")
+                           val artistTingUid: String = "",
+                           @SerializedName("album_id")
+                           val albumId: String = "")
 

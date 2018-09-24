@@ -44,6 +44,20 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 }
             }
             return
+        } else if (artist.type == Constants.BAIDU) {
+            val observable = BaiduApiServiceImpl.getArtistSongList(artist.artistId.toString(), 0)
+            ApiManager.request(observable, object : RequestCallBack<Artist> {
+                override fun success(result: Artist) {
+                    mView?.showPlaylistSongs(result.songs)
+                }
+
+                override fun error(msg: String) {
+                    LogUtil.e(TAG, msg)
+                    mView?.showError(msg, true)
+                    ToastUtils.show(msg)
+                }
+            })
+            return
         }
         val observable = MusicApiServiceImpl.getArtistSongs(artist.type!!, artist.artistId.toString(), 50, 0)
         ApiManager.request(observable, object : RequestCallBack<Artist> {
@@ -76,6 +90,23 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                     mView.showPlaylistSongs(data)
                 }
             }
+            return
+        } else if (album.albumId == null) {
+            mView?.showPlaylistSongs(null)
+            return
+        } else if (album.type == Constants.BAIDU) {
+            val observable = BaiduApiServiceImpl.getAlbumSongList(album.albumId.toString())
+            ApiManager.request(observable, object : RequestCallBack<Album> {
+                override fun success(result: Album) {
+                    mView?.showPlaylistSongs(result.songs)
+                }
+
+                override fun error(msg: String) {
+                    LogUtil.e(TAG, msg)
+                    mView?.showError(msg, true)
+                    ToastUtils.show(msg)
+                }
+            })
             return
         }
         val observable = MusicApiServiceImpl.getAlbumSongs(album.type.toString(), album.albumId.toString())

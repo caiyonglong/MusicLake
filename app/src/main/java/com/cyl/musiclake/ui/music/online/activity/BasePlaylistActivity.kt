@@ -101,7 +101,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mViewHeader?.layoutParams = params
         mIvCover = mViewHeader?.findViewById(R.id.iv_cover)
         mTvTitle = mViewHeader?.findViewById(R.id.tv_title)
-        mTvDate = mViewHeader?.findViewById(R.id.tv_update_date)
+//        mTvDate = mViewHeader?.findViewById(R.id.tv_update_date)
         mTvDesc = mViewHeader?.findViewById(R.id.tv_comment)
         mIvBackground = mViewHeader?.findViewById(R.id.coverBgIv)
     }
