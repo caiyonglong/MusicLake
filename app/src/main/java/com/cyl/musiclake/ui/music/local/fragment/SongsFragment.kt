@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.local.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -8,13 +7,16 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
+import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import kotlinx.android.synthetic.main.header_local_list.*
+import org.jetbrains.anko.support.v4.startActivity
 import java.util.*
 
 /**
@@ -63,7 +65,15 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         mAdapter?.setOnItemChildClickListener { adapter, _, position ->
             val music = adapter.getItem(position) as Music?
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_LOCAL_ID)
+                    .apply {
+                        removeSuccessListener = {
+                            this@SongsFragment.mAdapter?.notifyItemRemoved(position)
+                        }
+                    }
                     .show(mFragmentComponent.activity as AppCompatActivity)
+        }
+        menuIv.setOnClickListener {
+            startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
         }
     }
 

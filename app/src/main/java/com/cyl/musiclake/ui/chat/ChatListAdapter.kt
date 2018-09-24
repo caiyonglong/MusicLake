@@ -32,6 +32,7 @@ class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent,
         holder.setText(R.id.tv_comment_user, item.userInfo?.nickname ?: "")
         holder.setText(R.id.tv_comment_time, item.datetime)
         holder.setText(R.id.tv_comment_content, item.message)
+        holder.getView<TextView>(R.id.tv_comment_content).setTextIsSelectable(true)
         CoverLoader.loadImageView(mContext, item.userInfo?.avatar, holder.getView(R.id.civ_cover))
         try {
             item.music = MusicApp.GSON.fromJson(item.message, MusicInfo::class.java)

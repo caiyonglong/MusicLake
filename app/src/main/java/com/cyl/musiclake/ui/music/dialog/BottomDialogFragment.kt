@@ -14,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.bean.Album
@@ -22,12 +24,16 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
+import com.cyl.musiclake.utils.ToastUtils
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.uiThread
 
 class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -38,13 +44,12 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
 
     var mAdapter: ItemAdapter? = null
     var type: String = Constants.PLAYLIST_LOCAL_ID
+    /**
+     * 歌单id
+     */
+    var pid: String = Constants.PLAYLIST_LOCAL_ID
 
-    var removeMusicListener: RemoveMusicListener? = null
-    var position: Int = 0
-
-    interface RemoveMusicListener {
-        fun remove(position: Int, music: Music?)
-    }
+    var removeSuccessListener: ((music: Music?) -> Unit)? = null
 
     companion object {
         var music: Music? = null
@@ -127,6 +132,35 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         startActivity<EditMusicActivity>(Extras.SONG to music)
     }
 
+    private fun turnToDelete(music: Music?) {
+        if (music?.type == Constants.LOCAL) {
+            activity?.let {
+                if (it.isFinishing || it.isDestroyed) return
+                MaterialDialog.Builder(it)
+                        .title(R.string.prompt)
+                        .content(R.string.delete_local_song)
+                        .positiveText(R.string.sure)
+                        .negativeText(R.string.cancel)
+                        .onPositive { _, _ ->
+                            doAsync {
+                                SongLoader.removeSong(music)
+                                uiThread {
+                                    ToastUtils.show(MusicApp.getAppContext().getString(R.string.delete_song_success))
+                                    removeSuccessListener?.invoke(music)
+                                }
+                            }
+                        }.show()
+            }
+        } else {
+            OnlinePlaylistUtils.disCollectMusic(pid, music) {
+                removeSuccessListener?.invoke(music)
+            }
+        }
+    }
+
+    /**
+     * 下拉列表适配器
+     */
     inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
         private var itemData = mutableMapOf(
                 R.string.popup_play_next to R.drawable.ic_queue_play_next,
@@ -143,17 +177,15 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             if (music?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
-                itemData.remove(R.string.popup_delete)
             } else {
                 itemData.remove(R.string.popup_detail_edit)
-            }
+                if (music?.isDl == false) {
+                    itemData.remove(R.string.popup_download)
+                }
 
-            if (music?.isDl == true || music?.isCp == true) {
-                itemData.remove(R.string.popup_delete)
-            }
-
-            if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID) {
-                itemData.remove(R.string.popup_delete)
+                if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID) {
+                    itemData.remove(R.string.popup_delete)
+                }
             }
 
             itemData.forEach {
@@ -188,7 +220,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                         turnToEdit()
                     }
                     R.drawable.ic_delete -> {
-                        removeMusicListener?.remove(this@BottomDialogFragment.position, music)
+                        turnToDelete(music)
                     }
                     R.drawable.item_download -> {
                         if (music?.type != Constants.LOCAL) {

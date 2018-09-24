@@ -47,6 +47,7 @@ import com.cyl.musiclake.player.playback.PlayProgressListener;
 import com.cyl.musiclake.player.playqueue.PlayQueueManager;
 import com.cyl.musiclake.ui.music.player.PlayerActivity;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
@@ -130,6 +131,12 @@ public class MusicPlayerService extends Service {
     private final int NOTIFICATION_ID = 0x123;
     private long mNotificationPostTime = 0;
     private int mServiceStartId = -1;
+
+    /**
+     * 错误次数，超过最大错误次数，自动停止播放
+     */
+    private int playErrorTimes = 0;
+    private int MAX_ERROR_TIMES = 5;
 
     private static final boolean DEBUG = true;
 
@@ -503,6 +510,7 @@ public class MusicPlayerService extends Service {
                         mPlayingMusic = result;
                         saveHistory();
                         isMusicPlaying = true;
+                        playErrorTimes = 0;
                         mPlayer.setDataSource(mPlayingMusic.getUri());
                     }
 
@@ -515,10 +523,13 @@ public class MusicPlayerService extends Service {
             saveHistory();
             mHistoryPos.add(mPlayingPos);
             isMusicPlaying = true;
-
-
             if (mPlayingMusic.getUri() != null) {
-                mPlayer.setDataSource(mPlayingMusic.getUri());
+                if (!mPlayingMusic.getUri().startsWith(Constants.IS_URL_HEADER) && !FileUtils.exists(mPlayingMusic.getUri())) {
+                    isAbnormalPlay();
+                } else {
+                    playErrorTimes = 0;
+                    mPlayer.setDataSource(mPlayingMusic.getUri());
+                }
             }
 
             mediaSessionManager.updateMetaData(mPlayingMusic);
@@ -538,6 +549,19 @@ public class MusicPlayerService extends Service {
                 isMusicPlaying = true;
 //                notifyChange(PLAY_STATE_CHANGED);
             }
+        }
+    }
+
+    /**
+     * 异常播放，自动切换下一首
+     */
+    private void isAbnormalPlay() {
+        if (playErrorTimes > MAX_ERROR_TIMES) {
+            pause();
+        } else {
+            playErrorTimes++;
+            ToastUtils.show("播放地址异常，自动切换下一首");
+            next(false);
         }
     }
 

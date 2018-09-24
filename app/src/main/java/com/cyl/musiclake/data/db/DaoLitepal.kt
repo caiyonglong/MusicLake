@@ -2,6 +2,8 @@ package com.cyl.musiclake.data.db
 
 import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.download.TasksManagerModel
+import com.cyl.musiclake.utils.FileUtils
 import org.litepal.LitePal
 
 /**
@@ -103,13 +105,23 @@ object DaoLitepal {
         return playlist.saveOrUpdate("pid = ?", playlist.pid)
     }
 
+    /**
+     * 删除本地歌曲（Music、MusicToPlaylist）
+     */
     fun deleteMusic(music: Music) {
-        LitePal.delete(Music::class.java, music.id)
+        val path = FileUtils.getMusicDir() + music.artist + " - " + music.title + ".mp3"
+        if (FileUtils.exists(path)) {
+            FileUtils.delFile(path)
+        }
+        if (FileUtils.exists(music.uri)) {
+            FileUtils.delFile(music.uri)
+        }
+        LitePal.deleteAll(Music::class.java, "mid=?", music.mid)
+        LitePal.deleteAll(TasksManagerModel::class.java, "mid=?", music.mid)
         LitePal.deleteAll(MusicToPlaylist::class.java, "mid=?", music.mid)
     }
 
     fun deletePlaylist(playlist: Playlist) {
-        LitePal.delete(Music::class.java, playlist.id)
         LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", playlist.pid)
     }
 
@@ -201,4 +213,5 @@ object DaoLitepal {
         cursor?.close()
         return results
     }
+
 }

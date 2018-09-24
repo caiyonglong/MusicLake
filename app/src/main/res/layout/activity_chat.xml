@@ -71,7 +71,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_edit"
             android:imeOptions="actionSend"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:padding="@dimen/dp_8"
             android:textColor="#2fa881"
             android:textSize="16sp" />

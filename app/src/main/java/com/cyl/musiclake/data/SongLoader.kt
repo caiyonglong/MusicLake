@@ -29,7 +29,6 @@ object SongLoader {
         return result
     }
 
-
     /**
      * 获取艺术家所有歌曲
      *
@@ -180,6 +179,12 @@ object SongLoader {
      */
     fun removeSong(music: Music) {
         DaoLitepal.deleteMusic(music)
+    }
+
+    fun removeMusicList(musicList: MutableList<Music>) {
+        musicList.forEach {
+            removeSong(it)
+        }
     }
 
     fun getAllLocalSongs(context: Context): MutableList<Music> {

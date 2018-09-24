@@ -120,6 +120,8 @@ public class Constants {
     //歌单
     public static final String PLAYLIST_ID = "playlist";
 
+    public static final String IS_URL_HEADER = "http";
+
 
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";

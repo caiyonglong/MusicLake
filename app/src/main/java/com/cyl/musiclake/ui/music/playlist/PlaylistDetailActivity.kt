@@ -15,6 +15,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.PlayHistoryLoader
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
@@ -35,7 +36,7 @@ import org.jetbrains.anko.startActivity
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), PlaylistDetailContract.View, BottomDialogFragment.RemoveMusicListener {
+class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), PlaylistDetailContract.View {
     private var mAdapter: SongAdapter? = null
     private val musicList = mutableListOf<Music>()
     private var mPlaylist: Playlist? = null
@@ -119,17 +120,11 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            val music = musicList[position]
-//            if (mPlaylist != null && mPlaylist?.type == Constants.PLAYLIST_CUSTOM_ID) {
             bottomDialogFragment = BottomDialogFragment.newInstance(musicList[position], mPlaylist?.type)
-            bottomDialogFragment?.removeMusicListener = this
-            bottomDialogFragment?.position = position
+            bottomDialogFragment?.removeSuccessListener = {
+                removeMusic(position)
+            }
             bottomDialogFragment?.show(this)
-//            } else {
-//                bottomDialogFragment = BottomDialogFragment.newInstance(music, mPlaylist?.type)
-//                bottomDialogFragment?.position = position
-//                bottomDialogFragment?.show(this)
-//            }
         }
     }
 
@@ -247,15 +242,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun success(type: Int) {
         onBackPress()
-    }
-
-    /**
-     * 移除歌手歌曲
-     */
-    override fun remove(position: Int, music: Music?) {
-        OnlinePlaylistUtils.disCollectMusic(pid, music) {
-            removeMusic(position)
-        }
     }
 
     /**

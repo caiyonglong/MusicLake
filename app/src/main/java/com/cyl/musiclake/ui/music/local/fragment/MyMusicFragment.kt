@@ -163,6 +163,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlaylistChangedEvent(event: PlaylistEvent) {
         when (event.type) {
+            Constants.PLAYLIST_LOCAL_ID -> mPresenter?.loadSongs()
             Constants.PLAYLIST_CUSTOM_ID -> mPresenter?.loadPlaylist()
             Constants.PLAYLIST_LOVE_ID -> mPresenter?.updateFavorite()
             Constants.PLAYLIST_HISTORY_ID -> mPresenter?.updateHistory()

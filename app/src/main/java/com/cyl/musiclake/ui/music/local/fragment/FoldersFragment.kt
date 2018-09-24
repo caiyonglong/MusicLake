@@ -9,15 +9,18 @@ import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.FolderInfo
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
+import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract
 import com.cyl.musiclake.ui.music.local.presenter.FoldersPresenter
 import kotlinx.android.synthetic.main.frag_local_song.*
 import kotlinx.android.synthetic.main.header_local_list.*
+import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * Created by D22434 on 2018/1/8.
@@ -45,6 +48,9 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     }
 
     override fun listener() {
+        menuIv.setOnClickListener {
+            startActivity<EditSongListActivity>(Extras.SONG_LIST to songList)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -97,7 +103,14 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
                     NavigationHelper.navigateToPlaying(mFragmentComponent.activity, view.findViewById(R.id.iv_cover))
                 }
             }
-            mSongAdapter?.setOnItemChildClickListener { _, _, position -> BottomDialogFragment.newInstance(songList?.get(position)).show(mFragmentComponent.activity as AppCompatActivity) }
+            mSongAdapter?.setOnItemChildClickListener { _, _, position ->
+                BottomDialogFragment.newInstance(songList[position]).apply {
+                    removeSuccessListener = {
+                        this@FoldersFragment.mAdapter?.notifyItemRemoved(position)
+                    }
+                }.show(mFragmentComponent.activity as AppCompatActivity)
+
+            }
         } else {
             recyclerView?.adapter = mSongAdapter
             mSongAdapter?.setNewData(songList)
@@ -108,10 +121,12 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
         if (isFolderMode) {
             songNumTv.text = "..."
             reloadIv.visibility = View.GONE
+            menuIv.visibility = View.GONE
         } else {
             curFolderName = curFolder
             songNumTv.text = curFolder
             reloadIv.visibility = View.VISIBLE
+            menuIv.visibility = View.VISIBLE
         }
     }
 
@@ -121,20 +136,13 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     private fun initHeader() {
         songNumTv.text = "..."
         reloadIv.visibility = View.GONE
+        menuIv.visibility = View.GONE
         iconIv.setImageResource(R.drawable.ic_folder)
         reloadIv.setImageResource(R.drawable.ic_arrow_back)
         reloadIv.setOnClickListener {
             reloadIv.visibility = View.GONE
             showFolders(folderInfos)
         }
-    }
-
-    override fun showLoading() {
-        super.showLoading()
-    }
-
-    override fun hideLoading() {
-        super.hideLoading()
     }
 
     companion object {

@@ -250,13 +250,23 @@ fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
 /**
  * 批量删除歌曲
  */
-fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>) {
+fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: (() -> Unit)? = null) {
     if (deleteList.size == 0) {
         showTipsDialog(this@deleteLocalMusic, R.string.delete_local_song_empty)
         return
     }
-    showTipsDialog(this@deleteLocalMusic, R.string.delete_local_song_warning) {
-        deleteList.forEach {
+    val tips = if (deleteList.size == 0) {
+        getString(R.string.delete_local_song_empty)
+    } else {
+        getString(R.string.delete_local_song_list, deleteList.size)
+    }
+    showTipsDialog(this@deleteLocalMusic, tips) {
+        doAsync {
+            SongLoader.removeMusicList(deleteList)
+            uiThread {
+                ToastUtils.show(getString(R.string.delete_song_success))
+                success?.invoke()
+            }
         }
     }
 }

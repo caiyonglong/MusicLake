@@ -23,7 +23,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 18
-        versionName "4.1.6"
+        versionName "4.1.6.pre"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8

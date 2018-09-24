@@ -68,6 +68,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         }
     }
 
+
     override fun loadSongs() {
         updateLocal()
         updateHistory()

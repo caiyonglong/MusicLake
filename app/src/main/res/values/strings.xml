@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">音乐湖</string>
+    <string name="app_name">MusicLake</string>
     <string name="sure">确定</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>
@@ -262,8 +262,9 @@
     <string name="song">歌曲</string>
     <string name="lyric_default_hint">暂无歌词</string>
     <string name="add_to_playlist">增加到歌单</string>
-    <string name="share_content">\"我正在使用 音乐湖 听音乐，我觉得很不错，推荐给你用下，链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
+    <string name="share_content">\"我正在使用 MusicLake 听音乐，我觉得很不错哦，推荐给你用一下，下载链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
     <string name="share_song_content">\n\n我分享的歌曲是 %1$s 的 %2$s"</string>
+    <string name="share_local_song">我正在听 %1$s的%2$s，喜欢的可以搜索一下哦!</string>
     <string name="feedback_content">==============我正在使用 音乐湖 听音乐==============\n\n Android 版本号: %1$s \n\n 手机型号： %2$s %3$s \n\n反馈问题：\n "</string>
     <string name="retry">重试</string>
     <string name="general_error">网络错误</string>
@@ -350,7 +351,9 @@
     <string name="download_list_empty_tips">已自动过滤掉版权歌曲，当前无可下载歌曲</string>
     <string name="download_network_error">网络异常，请检查数据是否连接！</string>
     <string name="delete_local_song_empty">请选择需要删除的本地音乐!</string>
+    <string name="delete_local_song">是否确定删除当前本地歌曲?</string>
     <string name="delete_local_song_warning">是否继续删除!</string>
+    <string name="delete_local_song_list">是否删除选中的%1$d首歌曲？</string>
     <string name="delete_local_song_error">只能删除本地歌曲</string>
     <string name="delete_song_success">删除成功</string>
     <string name="float_window_manual_open">请手动打开显示悬浮窗权限</string>

@@ -34,7 +34,8 @@
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+
     <application
         android:name=".MusicApp"
         android:allowBackup="false"
@@ -219,7 +220,13 @@
         <activity
             android:name=".ui.chat.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/MyThemeBlue"></activity>
+            android:theme="@style/MyThemeBlue">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

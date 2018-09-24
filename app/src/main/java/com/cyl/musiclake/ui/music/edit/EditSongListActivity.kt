@@ -3,14 +3,18 @@ package com.cyl.musiclake.ui.music.edit
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.deleteLocalMusic
 import com.cyl.musiclake.ui.downloadBatchMusic
 import kotlinx.android.synthetic.main.activity_song_edit.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Des    : 歌曲批量操作
@@ -39,6 +43,12 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
     override fun initData() {
         musicList = intent.getParcelableArrayListExtra(Extras.SONG_LIST)
         mAdapter?.setNewData(musicList)
+        musicList.forEach {
+            if (it.type == Constants.LOCAL) {
+                deleteTv.visibility = View.VISIBLE
+                return@forEach
+            }
+        }
     }
 
     override fun initInjector() {
@@ -62,6 +72,19 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
                 }
             }
             downloadBatchMusic(selectMusic)
+        }
+        deleteTv.setOnClickListener {
+            val selectMusic = mutableListOf<Music>()
+            mAdapter?.checkedMap?.forEach {
+                if (it.value.type == Constants.LOCAL) {
+                    selectMusic.add(it.value)
+                }
+            }
+            deleteLocalMusic(selectMusic) {
+                musicList.removeAll(selectMusic)
+                mAdapter?.notifyDataSetChanged()
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
+            }
         }
     }
 

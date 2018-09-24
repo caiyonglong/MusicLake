@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.chat
 
+import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +18,7 @@ import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.MessageEvent
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ToastUtils
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+
 
 /**
  * 消息中心，收发消息
@@ -48,9 +51,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun initView() {
-    }
 
-    override fun initData() {
         curPosition = messages.size
         mAdapter = ChatListAdapter(messages)
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -59,6 +60,24 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
         mUserAdapter?.bindToRecyclerView(usersRsv)
+
+    }
+
+    override fun initData() {
+        if (Intent.ACTION_SEND == intent.action && intent.type != null) {
+            if ("text/plain" == intent.type) {
+                dealTextMessage(intent)
+            }
+        }
+    }
+
+    /**
+     * 处理接收分享的信息
+     */
+    private fun dealTextMessage(intent: Intent?) {
+        val title = intent?.getStringExtra(Intent.EXTRA_TEXT)
+        messageInputView?.setText(title)
+        showInputContainer()
     }
 
     override fun initInjector() {
@@ -67,11 +86,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     override fun listener() {
         super.listener()
         fab?.setOnClickListener {
-            fab.hide()
-            cardView.visibility = View.VISIBLE
-            val animationShow = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show)
-            cardView.animation = animationShow
-            animationShow.start()
+            showInputContainer()
         }
         sendBtn.setOnClickListener {
             sendMessage()
@@ -109,6 +124,14 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         }
     }
 
+    private fun showInputContainer() {
+        fab.hide()
+        cardView.visibility = View.VISIBLE
+        val animationShow = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show)
+        cardView.animation = animationShow
+        animationShow.start()
+    }
+
     /**
      * 发送消息
      */
@@ -125,11 +148,16 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
      */
     private fun sendMusicMessage() {
         val music = PlayManager.getPlayingMusic()
-        if (music?.mid != null) {
-            val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
-            MusicApp.socketManager.sendSocketMessage(message)
-        } else {
-            ToastUtils.show(getString(R.string.playing_empty))
+        when {
+            music.type == Constants.LOCAL -> {
+                val message = getString(R.string.share_local_song, music.artist, music.title)
+                MusicApp.socketManager.sendSocketMessage(message)
+            }
+            music?.mid != null -> {
+                val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
+                MusicApp.socketManager.sendSocketMessage(message)
+            }
+            else -> ToastUtils.show(getString(R.string.playing_empty))
         }
     }
 

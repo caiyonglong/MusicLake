@@ -57,6 +57,13 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
 
     override fun initView() {
         initHeaderView()
+        mAdapter = SongAdapter(musicList)
+        mAdapter?.setEnableLoadMore(setEnableMore())
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        recyclerView?.layoutManager = layoutManager
+        recyclerView?.adapter = mAdapter
+        mAdapter?.bindToRecyclerView(recyclerView)
     }
 
     override fun setToolbarTitle(): String? {
@@ -66,13 +73,6 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     abstract fun setEnableMore(): Boolean
 
     override fun initData() {
-        mAdapter = SongAdapter(musicList)
-        mAdapter?.setEnableLoadMore(setEnableMore())
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        recyclerView?.layoutManager = layoutManager
-        recyclerView?.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
         showHeaderInfo(getmPlaylist())
     }
 

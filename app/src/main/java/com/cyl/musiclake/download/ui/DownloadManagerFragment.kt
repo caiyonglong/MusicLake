@@ -34,8 +34,12 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
     }
 
     fun postNotifyDataChanged() {
-        mFragmentComponent?.activity?.runOnUiThread {
-            mAdapter?.notifyDataSetChanged()
+        try {
+            mFragmentComponent?.activity?.runOnUiThread {
+                mAdapter?.notifyDataSetChanged()
+            }
+        } catch (e: Throwable) {
+
         }
     }
 

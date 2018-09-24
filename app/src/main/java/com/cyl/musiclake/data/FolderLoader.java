@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.bean.FolderInfo;
+import com.cyl.musiclake.common.NavigationHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class FolderLoader {
 
         final String selection = "duration>60000 AND is_music=1 AND title != '' " + " ) " + " group by ( "
                 + MediaStore.Files.FileColumns.PARENT;
-
         return Observable.create(subscriber -> {
             Cursor cursor = context.getContentResolver().query(
                     MediaStore.Files.getContentUri("external"), projection, selection, null, null);
@@ -39,7 +40,6 @@ public class FolderLoader {
             if (cursor != null) {
                 int index_data = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
                 int index_num_of_songs = cursor.getColumnIndex(num_of_songs);
-
                 while (cursor.moveToNext()) {
 
                     // 获取每个目录下的歌曲数量
@@ -50,6 +50,8 @@ public class FolderLoader {
 
                     // 获取文件所属文件夹的路径，如/storage/sdcard0/MIUI/music
                     String folderpath = filepath.substring(0, filepath.lastIndexOf(File.separator));
+                    //刷新文件夹
+                    NavigationHelper.INSTANCE.scanFileAsync(MusicApp.mContext, folderpath);
 
                     // 获取文件所属文件夹的名称，如music
                     String foldername = folderpath.substring(folderpath.lastIndexOf(File.separator) + 1);
