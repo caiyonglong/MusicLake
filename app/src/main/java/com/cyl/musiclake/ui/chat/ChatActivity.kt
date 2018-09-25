@@ -21,6 +21,7 @@ import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
@@ -43,7 +44,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     private var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return getString(R.string.title_activity_chat)
+        return getString(R.string.chat_title, users.size)
     }
 
     override fun getLayoutResID(): Int {
@@ -51,7 +52,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun initView() {
-
         curPosition = messages.size
         mAdapter = ChatListAdapter(messages)
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -138,7 +138,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     private fun sendMessage() {
         val content = messageInputView?.text.toString()
         if (content.isNotEmpty()) {
-            MusicApp.socketManager.sendSocketMessage(content)
+            MusicApp.socketManager.sendSocketMessage(content, SocketManager.MESSAGE_BROADCAST)
             messageInputView?.setText("")
         }
     }
@@ -151,11 +151,11 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         when {
             music.type == Constants.LOCAL -> {
                 val message = getString(R.string.share_local_song, music.artist, music.title)
-                MusicApp.socketManager.sendSocketMessage(message)
+                MusicApp.socketManager.sendSocketMessage(message,SocketManager.MESSAGE_BROADCAST)
             }
             music?.mid != null -> {
                 val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
-                MusicApp.socketManager.sendSocketMessage(message)
+                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_SHARE)
             }
             else -> ToastUtils.show(getString(R.string.playing_empty))
         }

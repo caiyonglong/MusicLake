@@ -29,11 +29,15 @@ import org.json.JSONArray
  * Date   : 2018/9/10 .
  */
 class SocketManager {
-    val MESSAGE_BROADCAST = "broadcast"
-    val MESSAGE_ONLINE_TOTAL = "online total"
-    val MESSAGE_ONLINE_USERS = "online users"
-    val MESSAGE_SOME_JOIN = "someone join"
-    val MESSAGE_SOME_LEAVE = "someone leave"
+    companion object {
+        val MESSAGE_BROADCAST = "broadcast"
+        val MESSAGE_SHARE = "share"
+        val MESSAGE_ONLINE_TOTAL = "online total"
+        val MESSAGE_ONLINE_USERS = "online users"
+        val MESSAGE_SOME_JOIN = "someone join"
+        val MESSAGE_SOME_LEAVE = "someone leave"
+    }
+
     var realUsersNum = 0
     lateinit var socket: Socket
 
@@ -58,7 +62,7 @@ class SocketManager {
     /**
      * 发送消息
      */
-    fun sendSocketMessage(msg: String) {
+    fun sendSocketMessage(msg: String, event: String) {
         if (msg.isEmpty()) return
         if (!UserStatus.getLoginStatus()) {
             ToastUtils.show("请登录")
@@ -68,8 +72,9 @@ class SocketManager {
             ToastUtils.show(MusicApp.getAppContext().getString(R.string.open_socket_tips))
             return
         }
-        socket.emit(MESSAGE_BROADCAST, msg)
+        socket.emit(event, msg)
     }
+
 
     /**
      * 接收消息
@@ -121,7 +126,7 @@ class SocketManager {
                 val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
                 EventBus.getDefault().post(message)
                 receiveSocketMessage(message)
-                LogUtil.e("收到消息：${broadcast[0].toString()}")
+                LogUtil.e("收到消息：${broadcast[0]}")
             } catch (e: Throwable) {
                 e.printStackTrace()
             }

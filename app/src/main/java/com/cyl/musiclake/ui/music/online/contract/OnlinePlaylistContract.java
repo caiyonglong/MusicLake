@@ -16,7 +16,7 @@ public interface OnlinePlaylistContract {
 
     interface Presenter extends BaseContract.BasePresenter<View> {
         void loadBaiDuPlaylist();
-
         void loadTopList();
+        void loadQQList();
     }
 }

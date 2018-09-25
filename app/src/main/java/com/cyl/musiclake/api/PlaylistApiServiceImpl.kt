@@ -294,6 +294,13 @@ object PlaylistApiServiceImpl {
                 }
     }
 
+    /**
+     * 获取榜单详情
+     */
+    fun getRankDetailInfo(ids: IntArray, limit: Int, type: String?): Observable<MutableList<Playlist>> {
+        return if (type == Constants.PLAYLIST_WY_ID) getNeteaseRank(ids, limit)
+        else getQQRank(limit, ids)
+    }
 
     /**
      * 网易云排行榜
@@ -310,7 +317,32 @@ object PlaylistApiServiceImpl {
                         playlist.name = it.name
                         playlist.type = Constants.PLAYLIST_WY_ID
                         playlist.playCount = it.playCount
-                        playlist.musicList = MusicUtils.getMusicList(it.list)
+                        playlist.musicList = MusicUtils.getMusicList(it.list, Constants.NETEASE)
+                        list.add(playlist)
+                    }
+                    Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {
+                        it.onNext(list)
+                        it.onComplete()
+                    })
+                }
+    }
+
+    /**
+     * 网易云排行榜
+     */
+    fun getQQRank(limit: Int, ids: IntArray? = null): Observable<MutableList<Playlist>> {
+        return playlistApiService.getQQRank(limit, ids)
+                .flatMap { data ->
+                    val list = mutableListOf<Playlist>()
+                    data.forEach {
+                        val playlist = Playlist()
+                        playlist.coverUrl = it.cover
+                        playlist.des = it.description
+                        playlist.pid = it.id
+                        playlist.name = it.name
+                        playlist.type = Constants.PLAYLIST_QQ_ID
+                        playlist.playCount = it.playCount
+                        playlist.musicList = MusicUtils.getMusicList(it.list, Constants.QQ)
                         list.add(playlist)
                     }
                     Observable.create(ObservableOnSubscribe<MutableList<Playlist>> {

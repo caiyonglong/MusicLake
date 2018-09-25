@@ -50,6 +50,7 @@ class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Onl
     override fun onLazyLoad() {
         mPresenter?.loadTopList()
         mPresenter?.loadBaiDuPlaylist()
+        mPresenter?.loadQQList()
     }
 
 
@@ -62,7 +63,10 @@ class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Onl
             if (allPlaylist[position].type == Constants.PLAYLIST_BD_ID) {
                 intent.setClass(activity, BaiduMusicListActivity::class.java)
                 intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
-            } else {
+            } else if (allPlaylist[position].type == Constants.PLAYLIST_WY_ID) {
+                intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
+            } else if (allPlaylist[position].type == Constants.PLAYLIST_QQ_ID) {
                 intent.setClass(activity, NeteasePlaylistActivity::class.java)
                 intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
             }

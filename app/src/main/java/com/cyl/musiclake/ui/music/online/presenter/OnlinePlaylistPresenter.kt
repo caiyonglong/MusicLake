@@ -1,27 +1,17 @@
 package com.cyl.musiclake.ui.music.online.presenter
 
-import android.content.Context
-
-import com.cyl.musicapi.BaseApiImpl
-import com.cyl.musicapi.bean.ListItem
-import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.music.online.contract.OnlinePlaylistContract
-
-import java.util.ArrayList
-
-import javax.inject.Inject
-
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * Created by D22434 on 2018/1/4.
@@ -29,6 +19,18 @@ import io.reactivex.schedulers.Schedulers
 
 class OnlinePlaylistPresenter @Inject
 constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistContract.Presenter {
+    override fun loadQQList() {
+        val observable = PlaylistApiServiceImpl.getQQRank(3)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showCharts(result)
+            }
+
+            override fun error(msg: String) {
+                mView.hideLoading()
+            }
+        })
+    }
 
     override fun loadBaiDuPlaylist() {
         BaiduApiServiceImpl.getOnlinePlaylist()

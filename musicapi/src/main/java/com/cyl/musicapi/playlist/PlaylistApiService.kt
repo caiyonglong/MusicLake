@@ -137,5 +137,15 @@ interface PlaylistApiService {
     @GET("music/netease/rank")
     fun getNeteaseRank(@Query("ids[]") ids: IntArray, @Query("limit") limit: Int): Observable<MutableList<PlaylistInfo>>
 
+    /**
+     * 获取网易云排行榜
+     *
+     * @param token
+     * @param openid
+     * @return
+     */
+    @GET("music/qq/rank")
+    fun getQQRank(@Query("limit") limit: Int, @Query("ids[]") ids: IntArray? = null): Observable<MutableList<PlaylistInfo>>
+
 
 }

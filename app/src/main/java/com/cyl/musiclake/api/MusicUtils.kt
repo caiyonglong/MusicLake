@@ -115,7 +115,7 @@ object MusicUtils {
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体(即可)
      * (网易云歌曲)
      */
-    fun getMusicList(musicInfo: MutableList<MusicInfo>?): MutableList<Music> {
+    fun getMusicList(musicInfo: MutableList<MusicInfo>?, type: String): MutableList<Music> {
         val musicList = mutableListOf<Music>()
         musicInfo?.forEach {
             val music = Music()
@@ -124,7 +124,7 @@ object MusicUtils {
                 music.commentId = id
             }
             music.title = it.name
-            music.type = Constants.NETEASE
+            music.type = type
             music.isOnline = true
             music.album = it.album.name
             music.albumId = it.album.id

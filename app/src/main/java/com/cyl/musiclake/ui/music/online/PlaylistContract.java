@@ -20,7 +20,7 @@ public interface PlaylistContract {
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
-        void loadPlaylist(String idx, Context context);
+        void loadPlaylist(String idx, String type);
 
         void loadMorePlaylist(String tag, Context context);
 

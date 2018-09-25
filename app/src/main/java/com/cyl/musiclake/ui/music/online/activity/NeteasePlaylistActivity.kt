@@ -14,19 +14,20 @@ class NeteasePlaylistActivity : BasePlaylistActivity() {
     override fun setEnableMore(): Boolean {
         return false
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (mPlaylist == null) {
             mPlaylist = intent.getParcelableExtra(Extras.PLAYLIST)
         }
         mPlaylist?.pid?.let {
-            mPresenter?.loadPlaylist(it, this)
+            mPresenter?.loadPlaylist(it, mPlaylist?.type)
         }
     }
 
     override fun retryLoading() {
         super.retryLoading()
-        mPlaylist?.pid?.let { mPresenter?.loadPlaylist(it, this) }
+        mPlaylist?.pid?.let { mPresenter?.loadPlaylist(it, mPlaylist?.type) }
     }
 
     override fun getToolBarTitle(): String? {

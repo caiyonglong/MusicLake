@@ -379,7 +379,7 @@
     <string name="chat_close">关闭</string>
     <string name="clear_msg">清除消息记录</string>
     <string name="about_music_lake">实时统计功能用于实时统计MusicLake的在线人数，登录后你可以在这里发送实时消息，也可以看到实时在线的人数，所有的消息都会在退出应用时自动清空，也可以手动清空！</string>
-    <string name="open_socket_tips">请在右上角开启实时统计功能！</string>
+    <string name="open_socket_tips">请在设置中开启实时统计功能！</string>
     <string name="playing_empty">暂无播放任何歌曲</string>
 
 </resources>
