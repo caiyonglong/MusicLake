@@ -297,7 +297,7 @@ object PlaylistApiServiceImpl {
     /**
      * 获取榜单详情
      */
-    fun getRankDetailInfo(ids: IntArray, limit: Int, type: String?): Observable<MutableList<Playlist>> {
+    fun getRankDetailInfo(ids: IntArray, limit: Int? = null, type: String?): Observable<MutableList<Playlist>> {
         return if (type == Constants.PLAYLIST_WY_ID) getNeteaseRank(ids, limit)
         else getQQRank(limit, ids)
     }
@@ -305,7 +305,7 @@ object PlaylistApiServiceImpl {
     /**
      * 网易云排行榜
      */
-    fun getNeteaseRank(ids: IntArray, limit: Int): Observable<MutableList<Playlist>> {
+    fun getNeteaseRank(ids: IntArray, limit: Int? = null): Observable<MutableList<Playlist>> {
         return playlistApiService.getNeteaseRank(ids, limit)
                 .flatMap { data ->
                     val list = mutableListOf<Playlist>()
@@ -330,7 +330,7 @@ object PlaylistApiServiceImpl {
     /**
      * 网易云排行榜
      */
-    fun getQQRank(limit: Int, ids: IntArray? = null): Observable<MutableList<Playlist>> {
+    fun getQQRank(limit: Int? = null, ids: IntArray? = null): Observable<MutableList<Playlist>> {
         return playlistApiService.getQQRank(limit, ids)
                 .flatMap { data ->
                     val list = mutableListOf<Playlist>()

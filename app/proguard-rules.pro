@@ -102,3 +102,6 @@
 # tinker混淆规则
 -dontwarn com.tencent.tinker.**
 -keep class com.tencent.tinker.** { *; }
+#x5内核
+-dontwarn com.tencent.smtt.**
+-keep class com.tencent.smtt.** { *; }

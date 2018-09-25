@@ -135,7 +135,7 @@ interface PlaylistApiService {
      * @return
      */
     @GET("music/netease/rank")
-    fun getNeteaseRank(@Query("ids[]") ids: IntArray, @Query("limit") limit: Int): Observable<MutableList<PlaylistInfo>>
+    fun getNeteaseRank(@Query("ids[]") ids: IntArray, @Query("limit") limit: Int? = null): Observable<MutableList<PlaylistInfo>>
 
     /**
      * 获取网易云排行榜
@@ -145,7 +145,7 @@ interface PlaylistApiService {
      * @return
      */
     @GET("music/qq/rank")
-    fun getQQRank(@Query("limit") limit: Int, @Query("ids[]") ids: IntArray? = null): Observable<MutableList<PlaylistInfo>>
+    fun getQQRank(@Query("limit") limit: Int? = null, @Query("ids[]") ids: IntArray? = null): Observable<MutableList<PlaylistInfo>>
 
 
 }

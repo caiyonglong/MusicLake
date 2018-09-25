@@ -171,7 +171,7 @@ object SongLoader {
      * 添加歌曲
      */
     fun updateMusic(music: Music) {
-        DaoLitepal.saveOrUpdateMusic(music, true)
+        DaoLitepal.saveOrUpdateMusic(music)
     }
 
     /**

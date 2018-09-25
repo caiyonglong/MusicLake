@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.hdodenhof.circleimageview.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/user_avatar"
-    android:layout_width="@dimen/dp_48"
-    android:layout_height="@dimen/dp_48"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackgroundBorderless"
-    android:padding="@dimen/dp_8"
-    android:src="@mipmap/ic_launcher_round">
+    android:orientation="vertical"
+    android:padding="@dimen/dp_4">
 
-</de.hdodenhof.circleimageview.CircleImageView>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
+        android:layout_gravity="center"
+        android:padding="@dimen/dp_8"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/delete"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone" />
+
+</LinearLayout>

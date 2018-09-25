@@ -250,6 +250,27 @@ fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
 /**
  * 批量删除歌曲
  */
+fun AppCompatActivity.deleteSingleMusic(music: Music?, success: (() -> Unit)? = null) {
+    if (this.isFinishing || this.isDestroyed) return
+    if (music == null) {
+        showTipsDialog(this@deleteSingleMusic, R.string.delete_local_song_empty)
+        return
+    }
+    showTipsDialog(this@deleteSingleMusic, R.string.delete_local_song) {
+        doAsync {
+            SongLoader.removeSong(music)
+            uiThread {
+                ToastUtils.show(MusicApp.getAppContext().getString(R.string.delete_song_success))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
+                success?.invoke()
+            }
+        }
+    }
+}
+
+/**
+ * 批量删除歌曲
+ */
 fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: (() -> Unit)? = null) {
     if (deleteList.size == 0) {
         showTipsDialog(this@deleteLocalMusic, R.string.delete_local_song_empty)
@@ -265,6 +286,7 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: 
             SongLoader.removeMusicList(deleteList)
             uiThread {
                 ToastUtils.show(getString(R.string.delete_song_success))
+                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
                 success?.invoke()
             }
         }
@@ -320,7 +342,7 @@ fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false) {
             if (!isBatch) {
                 ToastUtils.show(getString(R.string.download_add_success))
             }
-            DaoLitepal.saveOrUpdateMusic(result, false)
+            DaoLitepal.saveOrUpdateMusic(result)
             val path = FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
             val task = FileDownloader.getImpl()
                     .create(result.uri)

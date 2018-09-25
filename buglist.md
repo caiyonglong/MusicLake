@@ -33,6 +33,7 @@ Retrofit retrofit = new Retrofit.Builder()
 不得已，最后尝试重写GSON转换器。遇到一个大坑那就是ResponseBody //ResponseData中的流只能使用一次，我们先将流中的数据读出在byte数组中。这个方法中已经关闭了ResponseBody,所以不需要再关闭了  
 
 5、Observable<T> 转换成 Observable<S> 
+
 ```
 //lamba表达式
 Observable.flatMap(T -> {
@@ -166,4 +167,9 @@ E/MediaPlayer: next player is not prepared
    
          height = size.y;
    
-    
+ 20、Warning: com.tencent.smtt.export.external.DexLoader: can't find referenced class dalvik.system.VMStack
+ 混淆问题
+ ```
+ -dontwarn com.tencent.smtt.**
+ -keep class com.tencent.smtt.** { *; }
+```

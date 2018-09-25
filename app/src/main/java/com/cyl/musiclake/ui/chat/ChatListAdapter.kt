@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.chat
 
 import android.view.View
 import android.widget.TextView
-import com.afollestad.materialdialogs.MaterialDialog
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.playlist.MusicInfo
@@ -182,12 +181,22 @@ class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent,
 
 
 class OnlineUserListAdapter(list: List<UserInfo>) : BaseQuickAdapter<UserInfo, BaseViewHolder>(R.layout.item_user, list) {
+    private var isSetOnClick = false
     override fun convert(helper: BaseViewHolder, item: UserInfo) {
         CoverLoader.loadImageView(mContext, item.avatar, helper.getView(R.id.user_avatar))
+        helper.setText(R.id.user_name, item.nickname)
         helper.itemView.setOnClickListener {
-            MaterialDialog.Builder(mContext)
-                    .title(item.nickname)
-                    .show()
+            if (isSetOnClick) return@setOnClickListener
+            isSetOnClick = true
+            helper.getView<TextView>(R.id.user_name).visibility = View.VISIBLE
+            helper.getView<TextView>(R.id.user_name).scaleX = 0f
+            helper.getView<TextView>(R.id.user_name).scaleY = 0f
+            helper.getView<TextView>(R.id.user_name).animate().scaleY(1f).scaleX(1f).setDuration(300).start()
+            helper.getView<TextView>(R.id.user_name).postDelayed({
+                helper.getView<TextView>(R.id.user_name).animate().scaleY(0f).scaleX(0f).setDuration(300).start()
+                isSetOnClick = false
+                helper.getView<TextView>(R.id.user_name).postDelayed({ helper.getView<TextView>(R.id.user_name).visibility = View.GONE }, 300)
+            }, 3000)
         }
     }
 

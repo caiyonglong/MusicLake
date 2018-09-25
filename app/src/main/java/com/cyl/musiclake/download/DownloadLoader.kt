@@ -7,6 +7,7 @@ import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Mp3Util
@@ -29,10 +30,14 @@ object DownloadLoader {
                 DaoLitepal.getMusicInfo(it1)
             }
             music?.forEach { origin ->
-                if (origin.uri == null || origin.uri?.startsWith("http:")!!) {
+                if (origin.uri != null || origin.uri?.startsWith("http:")!!) {
                     origin.uri = it.path
+                    origin.isOnline = false
                 }
-                musicList.add(origin)
+                SongLoader.updateMusic(music = origin)
+            }
+            if (music?.size ?: 0 > 0) {
+                musicList.add(music?.first()!!)
             }
         }
         return musicList

@@ -69,6 +69,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         music?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
+        //更新下载状态
+        music?.isDl?.let {
+            downloadIv.visibility = if (it) View.VISIBLE else View.GONE
+        }
         //隐藏显示歌曲评论
         songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
 
@@ -136,7 +140,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         operateSongIv.setOnClickListener {
             BottomDialogFragment.newInstance(playingMusic)
                     .show(this)
-
         }
     }
 

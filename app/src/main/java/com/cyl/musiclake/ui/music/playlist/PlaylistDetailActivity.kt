@@ -120,7 +120,11 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            bottomDialogFragment = BottomDialogFragment.newInstance(musicList[position], mPlaylist?.type)
+            bottomDialogFragment = BottomDialogFragment.newInstance(musicList[position], mPlaylist?.type).apply {
+                mPlaylist?.pid?.let {
+                    pid = it
+                }
+            }
             bottomDialogFragment?.removeSuccessListener = {
                 removeMusic(position)
             }

@@ -63,7 +63,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             player.setOnBufferingUpdateListener(this);
             player.setOnErrorListener(this);
             player.setOnCompletionListener(this);
-        } catch (final IOException | IllegalArgumentException todo) {
+        } catch (Exception todo) {
             return false;
         }
         return true;

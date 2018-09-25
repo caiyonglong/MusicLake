@@ -83,7 +83,6 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
             deleteLocalMusic(selectMusic) {
                 musicList.removeAll(selectMusic)
                 mAdapter?.notifyDataSetChanged()
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
             }
         }
     }

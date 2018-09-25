@@ -7,6 +7,7 @@ import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
@@ -178,7 +179,7 @@ object BaiduApiServiceImpl {
                     }
                     Observable.create(ObservableOnSubscribe<Music> { e ->
                         if (music.uri != null) {
-                            music.save()
+                            SongLoader.updateMusic(music)
                             e.onNext(music)
                             e.onComplete()
                         } else {

@@ -148,8 +148,8 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         setHasOptionsMenu(true);
         initToolBar();
         initViews();
-        listener();
         loadData();
+        listener();
     }
 
 

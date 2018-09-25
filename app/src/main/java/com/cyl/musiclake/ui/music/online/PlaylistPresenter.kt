@@ -37,7 +37,7 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
 
     override fun loadPlaylist(idx: String, type: String?) {
         mView?.showLoading()
-        val observable = PlaylistApiServiceImpl.getRankDetailInfo(intArrayOf(idx.toInt()), 200, type)
+        val observable = PlaylistApiServiceImpl.getRankDetailInfo(intArrayOf(idx.toInt()), null, type)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.hideLoading()

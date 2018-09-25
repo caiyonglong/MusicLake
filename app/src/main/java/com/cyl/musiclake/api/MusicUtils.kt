@@ -140,9 +140,9 @@ object MusicUtils {
                 music.artist = artistNames
                 music.artistId = artistIds
             }
-            music.coverUri = getAlbumPic(it.album.cover, it.vendor, 150)
+            music.coverUri = getAlbumPic(it.album.cover, type, 150)
             music.coverBig = it.album.cover
-            music.coverSmall = getAlbumPic(it.album.cover, it.vendor, 90)
+            music.coverSmall = getAlbumPic(it.album.cover, type, 90)
             if (!it.cp) {
                 musicList.add(music)
             }

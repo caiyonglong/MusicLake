@@ -14,8 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.afollestad.materialdialogs.MaterialDialog
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.bean.Album
@@ -24,16 +22,13 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
-import com.cyl.musiclake.utils.ToastUtils
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.uiThread
 
 class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -133,23 +128,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun turnToDelete(music: Music?) {
-        if (music?.type == Constants.LOCAL) {
-            activity?.let {
-                if (it.isFinishing || it.isDestroyed) return
-                MaterialDialog.Builder(it)
-                        .title(R.string.prompt)
-                        .content(R.string.delete_local_song)
-                        .positiveText(R.string.sure)
-                        .negativeText(R.string.cancel)
-                        .onPositive { _, _ ->
-                            doAsync {
-                                SongLoader.removeSong(music)
-                                uiThread {
-                                    ToastUtils.show(MusicApp.getAppContext().getString(R.string.delete_song_success))
-                                    removeSuccessListener?.invoke(music)
-                                }
-                            }
-                        }.show()
+        if (music?.type == Constants.LOCAL || music?.isOnline == false) {
+            (activity as AppCompatActivity?)?.deleteSingleMusic(music) {
+                removeSuccessListener?.invoke(music)
             }
         } else {
             OnlinePlaylistUtils.disCollectMusic(pid, music) {
@@ -179,11 +160,11 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 itemData.remove(R.string.popup_add_to_playlist)
             } else {
                 itemData.remove(R.string.popup_detail_edit)
-                if (music?.isDl == false) {
+                if (music?.isDl == false || music?.isOnline == false) {
                     itemData.remove(R.string.popup_download)
                 }
 
-                if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID) {
+                if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true) {
                     itemData.remove(R.string.popup_delete)
                 }
             }

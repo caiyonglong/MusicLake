@@ -34,7 +34,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
      * 加载网易排行榜（0歌曲）
      */
     override fun loadNetease(tag: String) {
-        val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 20)
+        val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 30)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showNeteaseCharts(result)
