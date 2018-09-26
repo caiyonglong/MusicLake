@@ -44,7 +44,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     private var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return getString(R.string.chat_title, users.size)
+        return getString(R.string.chat_title)
     }
 
     override fun getLayoutResID(): Int {
@@ -60,7 +60,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
         mUserAdapter?.bindToRecyclerView(usersRsv)
-
+        onlineUserTv.text =getString(R.string.online_users, users.size)
     }
 
     override fun initData() {
@@ -77,7 +77,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     private fun dealTextMessage(intent: Intent?) {
         val title = intent?.getStringExtra(Intent.EXTRA_TEXT)
         messageInputView?.setText(title)
-        showInputContainer()
     }
 
     override fun initInjector() {
@@ -85,9 +84,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
     override fun listener() {
         super.listener()
-        fab?.setOnClickListener {
-            showInputContainer()
-        }
         sendBtn.setOnClickListener {
             sendMessage()
         }
@@ -124,13 +120,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         }
     }
 
-    private fun showInputContainer() {
-        fab.hide()
-        cardView.visibility = View.VISIBLE
-        val animationShow = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show)
-        cardView.animation = animationShow
-        animationShow.start()
-    }
 
     /**
      * 发送消息
@@ -194,7 +183,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         nums = chatUsers.users.size
         mUserAdapter?.setNewData(users)
         usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
-
-        updateTitle(getString(R.string.chat_title, users.size))
+        onlineUserTv.text =getString(R.string.online_users, users.size)
     }
 }

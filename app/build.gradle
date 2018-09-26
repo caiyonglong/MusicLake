@@ -163,5 +163,6 @@ dependencies {
 
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     api 'com.tencent.bugly:nativecrashreport:3.3.1'
-
+    //微博
+    api 'com.sina.weibo.sdk:core:4.3.0:openDefaultRelease@aar'
 }

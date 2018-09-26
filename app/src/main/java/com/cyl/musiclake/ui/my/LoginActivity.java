@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
@@ -18,6 +19,12 @@ import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.auth.AccessTokenKeeper;
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WbConnectErrorMessage;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,6 +58,18 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+    private static final String TAG = "weibosdk";
+    /** 显示认证后的信息，如 AccessToken */
+    /**
+     * 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能
+     */
+    private Oauth2AccessToken mAccessToken;
+    /**
+     * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
+     */
+    private SsoHandler mSsoHandler;
+
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_login;
@@ -67,6 +86,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
+        mSsoHandler = new SsoHandler(LoginActivity.this);
     }
 
     @Override
@@ -122,6 +142,11 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         }
     }
 
+    @OnClick(R.id.wbLogin)
+    public void wbLogin() {
+        mSsoHandler.authorize(new SelfWbAuthListener());
+    }
+
     @OnClick(R.id.register)
     public void tofab() {
         final Intent intent = new Intent(this, RegisterActivity.class);
@@ -150,7 +175,13 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mPresenter != null) {
+            mPresenter.onActivityResult(requestCode, resultCode, data);
+        }
+        if (mSsoHandler != null) {
+            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
     }
 
 
@@ -174,4 +205,39 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         EventBus.getDefault().post(new LoginEvent(true, user));
         finish();
     }
+
+    private class SelfWbAuthListener implements com.sina.weibo.sdk.auth.WbAuthListener {
+        @Override
+        public void onSuccess(final Oauth2AccessToken token) {
+            LoginActivity.this.runOnUiThread(() -> {
+                mAccessToken = token;
+                if (mAccessToken.isSessionValid()) {
+                    // 显示 Token
+                    updateTokenView(false);
+                    // 保存 Token 到 SharedPreferences
+                    AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
+                    Toast.makeText(LoginActivity.this,
+                            R.string.weibosdk_demo_toast_auth_success, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void cancel() {
+            Toast.makeText(LoginActivity.this,
+                    R.string.weibosdk_demo_toast_auth_canceled, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onFailure(WbConnectErrorMessage errorMessage) {
+            Toast.makeText(LoginActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void updateTokenView(boolean b) {
+        if (mPresenter != null) {
+            mPresenter.loginServer(mAccessToken.getToken(), mAccessToken.getUid(),Constants.WEIBO);
+        }
+    }
+
 }

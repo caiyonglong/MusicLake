@@ -387,7 +387,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
-            mLoginTv.setVisibility(View.VISIBLE);
+            mLoginTv.setVisibility(View.GONE);
 
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint))
                     .setIcon(R.drawable.ic_exit);

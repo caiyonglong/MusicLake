@@ -30,10 +30,14 @@ import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
+import com.sina.weibo.sdk.WbSdk
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.litepal.LitePal
+import com.sina.weibo.sdk.auth.Oauth2AccessToken
+import com.sina.weibo.sdk.auth.AccessTokenKeeper
+
 
 object UIUtils {
     /**
@@ -390,6 +394,7 @@ fun logout() {
     SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, "")
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
     MusicApp.mTencent.logout(MusicApp.getAppContext())
+    AccessTokenKeeper.clear(MusicApp.getAppContext())
     EventBus.getDefault().post(LoginEvent(false, null))
 }
 

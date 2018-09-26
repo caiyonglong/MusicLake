@@ -105,3 +105,5 @@
 #x5内核
 -dontwarn com.tencent.smtt.**
 -keep class com.tencent.smtt.** { *; }
+
+-keep class com.sina.weibo.sdk.** { *; }

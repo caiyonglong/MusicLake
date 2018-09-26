@@ -46,20 +46,21 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
         mView?.showLoading()
     }
 
-    private fun getPrivateToken() {
-        ApiManager.request(
-                PlaylistApiServiceImpl.login(MusicApp.mTencent.accessToken, MusicApp.mTencent.openId),
+    /**
+     * 请求后台登录接口
+     */
+    fun loginServer(accessToken: String, uid: String, method: String) {
+        val observable = PlaylistApiServiceImpl.login(accessToken, uid, method)
+        ApiManager.request(observable,
                 object : RequestCallBack<User> {
                     override fun success(result: User?) {
                         if (result != null) {
-                            val newUserInfo = userModel!!.userInfo
-                            newUserInfo!!.token = result.token
-                            userModel?.savaInfo(newUserInfo)
+                            userModel?.savaInfo(result)
                         }
                         //登录成功
                         mView?.hideLoading()
                         //登录成功
-                        mView?.success(userModel!!.userInfo)
+                        mView?.success(userModel?.userInfo)
                     }
 
                     override fun error(msg: String) {
@@ -78,7 +79,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     override fun loginByQQ(activity: Activity) {
         mView.showLoading()
         //QQ第三方登录
-        MusicApp.mTencent.login(activity, "all", loginListener,true)
+        MusicApp.mTencent.login(activity, "all", loginListener, true)
         loginListener = object : IUiListener {
             override fun onComplete(o: Any) {
                 mView?.hideLoading()
@@ -140,7 +141,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                                 userInfo.nick = nickName
                                 //保存用户信息
                                 userModel!!.savaInfo(userInfo)
-                                getPrivateToken()
+                                loginServer(MusicApp.mTencent.accessToken, MusicApp.mTencent.openId, Constants.QQ)
                             } catch (e: JSONException) {
                                 ToastUtils.show("网络异常，请稍后重试！")
                                 e.printStackTrace()

@@ -253,23 +253,24 @@ object PlaylistApiServiceImpl {
     /**
      * 用户登录
      */
-    fun login(token: String, openid: String): Observable<User> {
-        return playlistApiService.getUserInfo(token, openid)
-                .flatMap { data ->
-                    val user = User()
-                    user.nick = data.nickname
-                    user.name = data.nickname
-                    user.avatar = data.avatar
-                    user.token = data.token
-                    Observable.create(ObservableOnSubscribe<User> {
-                        if (!user.token.isEmpty()) {
-                            it.onNext(user)
-                            it.onComplete()
-                        } else {
-                            it.onError(Throwable("登录异常"))
-                        }
-                    })
+    fun login(token: String, openid: String, method: String): Observable<User> {
+        val observable = if (method == Constants.QQ) playlistApiService.loginByQQ(token, openid)
+        else playlistApiService.loginByWeiBo(token, openid)
+        return observable.flatMap { data ->
+            val user = User()
+            user.nick = data.nickname
+            user.name = data.nickname
+            user.avatar = data.avatar
+            user.token = data.token
+            Observable.create(ObservableOnSubscribe<User> {
+                if (!user.token.isEmpty()) {
+                    it.onNext(user)
+                    it.onComplete()
+                } else {
+                    it.onError(Throwable("登录异常"))
                 }
+            })
+        }
     }
 
 

@@ -22,6 +22,8 @@ import com.cyl.musiclake.utils.UpdateUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.tauth.Tencent;
@@ -97,6 +99,9 @@ public class MusicApp extends TinkerApplication {
     }
 
     private void initLogin() {
+        //创建微博实例
+        WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
+        //腾讯
         mTencent = Tencent.createInstance(Constants.APP_ID, MusicApp.getAppContext());
         //初始化socket
         socketManager = new SocketManager();

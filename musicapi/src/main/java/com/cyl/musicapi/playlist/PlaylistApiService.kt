@@ -115,8 +115,20 @@ interface PlaylistApiService {
      * @return
      */
     @GET("auth/qq/android")
-    fun getUserInfo(@Query("access_token") token: String?,
-                    @Query("openid") openid: String): Observable<UserInfo>
+    fun loginByQQ(@Query("access_token") token: String?,
+                  @Query("openid") openid: String): Observable<UserInfo>
+
+
+    /**
+     * 获取用户信息
+     *
+     * @param token
+     * @param openid
+     * @return
+     */
+    @GET("auth/weibo/android")
+    fun loginByWeiBo(@Query("access_token") token: String?,
+                     @Query("uid") openid: String): Observable<UserInfo>
 
     /**
      * 验证用户登录状态是否过期

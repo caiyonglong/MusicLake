@@ -368,9 +368,9 @@
     <string name="real_time_user">实时在线人数</string>
     <string name="send_message">发送消息</string>
     <string name="title_activity_chat">音乐社区</string>
-    <string name="chat_title">音乐社区(%1$d)</string>
+    <string name="chat_title">音乐社区</string>
     <string name="message_center">实时聊天室</string>
-    <string name="online_users">在线人数</string>
+    <string name="online_users">已登录用户(%1$d)</string>
     <string name="send">发送</string>
     <string name="custom_count_down_time">自定义时间</string>
     <string name="count_down_minutes">分钟（不能大于24小时）</string>
@@ -381,5 +381,8 @@
     <string name="about_music_lake">实时统计功能用于实时统计MusicLake的在线人数，登录后你可以在这里发送实时消息，也可以看到实时在线的人数，所有的消息都会在退出应用时自动清空，也可以手动清空！</string>
     <string name="open_socket_tips">请在设置中开启实时统计功能！</string>
     <string name="playing_empty">暂无播放任何歌曲</string>
+    <string name="weibo_login">微博登录</string>
+    <string name="weibosdk_demo_toast_auth_success">微博登录成功</string>
+    <string name="weibosdk_demo_toast_auth_canceled">登录已取消</string>
 
 </resources>

@@ -77,6 +77,7 @@
 
         <include
             android:id="@+id/include_music"
+            android:visibility="gone"
             layout="@layout/item_play_queue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

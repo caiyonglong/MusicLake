@@ -3,8 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackgroundBorderless"
-    android:orientation="vertical"
-    android:padding="@dimen/dp_4">
+    android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_avatar"
@@ -19,6 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:layout_marginStart="@dimen/dp_4"
         android:text="@string/delete"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"

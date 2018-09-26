@@ -11,6 +11,7 @@ public class Constants {
     public static final int OP_ONLINE = 1; //没有歌曲删除、修改、添加到歌单
     public static final int OP_PLAYLIST = 2;//修改(后续会有)、添加到歌单
 
+    public static final String WEIBO = "weibo";
     //歌曲类型
     public static final String LOCAL = "local";
     public static final String QQ = "qq";
@@ -142,7 +143,6 @@ public class Constants {
     public static final String TOGGLE_SOCKET = "toggle_socket";
 
 
-
     /**
      * 悬浮窗权限requestCode
      */
@@ -229,5 +229,23 @@ public class Constants {
     public static final String ABOUT_MUSIC_LAKE = "https://github.com/caiyonglong/MusicLake";
     public static final String ABOUT_MUSIC_LAKE_ISSUES = "https://github.com/caiyonglong/MusicLake/issues/new";
     public static final String ABOUT_MUSIC_LAKE_URL = "https://github.com/caiyonglong/MusicLake/blob/develop/README.md";
+
+
+    /**
+     * 当前 DEMO 应用的 APP_KEY，第三方应用应该使用自己的 APP_KEY 替换该 APP_KEY
+     */
+    public static final String APP_KEY = "3338754271";
+
+    /**
+     * 当前 DEMO 应用的回调页，第三方应用可以使用自己的回调页。
+     * 建议使用默认回调页：https://api.weibo.com/oauth2/default.html
+     */
+    public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+
+    /**
+     * WeiboSDKDemo 应用对应的权限，第三方开发者一般不需要这么多，可直接设置成空即可。
+     * 详情请查看 Demo 中对应的注释。
+     */
+    public static final String SCOPE ="";
 
 }
