@@ -18,8 +18,7 @@ import io.reactivex.ObservableOnSubscribe
 
 object PlaylistApiServiceImpl {
     private val TAG = "PlaylistApiServiceImpl"
-    private val playlistApiService: PlaylistApiService
-        get() = ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL)
+    private val playlistApiService by lazy { ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL) }
 
     val token: String?
         get() = UserStatus.getUserInfo()?.token

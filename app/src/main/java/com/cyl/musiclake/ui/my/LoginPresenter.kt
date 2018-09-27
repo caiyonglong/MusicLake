@@ -127,12 +127,6 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                                 val nickName = info.getString("nickname")//获取用户昵称
                                 val iconUrl = info.getString("figureurl_qq_2")//获取用户头像的url
                                 val gender = info.getString("gender")//获取用户性别
-                                //                            Map<String, String> params = new HashMap<String, String>();
-                                //                            params.put(Constants.PARAM_METHOD, "qq");
-                                //                            params.put(Constants.USERNAME, nickName);
-                                //                            params.put(Constants.USER_SEX, gender);
-                                //                            params.put(Constants.USER_IMG, iconUrl);
-                                //                            params.put(Constants.USER_ID, mTencent.getOpenId());
                                 val userInfo = User()
                                 userInfo.id = MusicApp.mTencent.openId
                                 userInfo.avatar = iconUrl

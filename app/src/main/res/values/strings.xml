@@ -384,5 +384,7 @@
     <string name="weibo_login">微博登录</string>
     <string name="weibosdk_demo_toast_auth_success">微博登录成功</string>
     <string name="weibosdk_demo_toast_auth_canceled">登录已取消</string>
+    <string name="user_join">下线</string>
+    <string name="user_leave">上线</string>
 
 </resources>

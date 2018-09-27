@@ -378,6 +378,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void setUserStatusInfo(Boolean isLogin, User user) {
         mIsLogin = isLogin;
         if (mIsLogin && user != null) {
+            MusicApp.socketManager.toggleSocket(true);
             String url = user.getAvatar();
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
@@ -385,6 +386,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
         } else {
+            MusicApp.socketManager.toggleSocket(false);
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mLoginTv.setVisibility(View.GONE);
@@ -403,7 +405,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginEvent event) {
-        MusicApp.socketManager.toggleSocket(true);
         setUserStatusInfo(event.getStatus(), event.getUser());
     }
 

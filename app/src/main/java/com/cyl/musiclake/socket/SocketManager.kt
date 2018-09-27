@@ -40,19 +40,16 @@ class SocketManager {
 
     var realUsersNum = 0
     lateinit var socket: Socket
+    var socketListeners = mutableListOf<SocketListener>()
 
     fun initSocket() {
         try {
             val opts = IO.Options()
             opts.forceNew = true
-            opts.forceNew = true
-            opts.reconnectionDelay = 30000
-            opts.reconnectionDelayMax = 20
-            opts.reconnectionAttempts = 5
-            opts.randomizationFactor = 1.0
-            opts.timeout = 60 * 1000
+            opts.timeout = 50 * 1000
             opts.transports = arrayOf(WebSocket.NAME)
             socket = IO.socket("http://39.108.214.63:15003", opts)
+            buildSocket()
             LogUtil.e("初始化、建立连接！")
         } catch (e: Throwable) {
 
@@ -86,12 +83,13 @@ class SocketManager {
     /**
      * 建立连接
      */
-    private fun connect() {
+    private fun buildSocket() {
         socket.io().on(Manager.EVENT_TRANSPORT) { args ->
             val transport = args[0] as Transport
             transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
                 val headers = args[0] as MutableMap<String, List<String>>
                 // modify request headers
+                LogUtil.e("请求头：" + PlaylistApiServiceImpl.token.toString())
                 headers["accesstoken"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
             }
             transport.on(Transport.EVENT_RESPONSE_HEADERS) {
@@ -120,7 +118,10 @@ class SocketManager {
         }.on(Socket.EVENT_DISCONNECT) {
             LogUtil.e("已断开连接")
         }.on(Socket.EVENT_ERROR) { error ->
-            LogUtil.e("连接错误：$error")
+            LogUtil.e("连接错误：${error[0].toString()}")
+            socketListeners.forEach {
+                it.onError(error[0].toString())
+            }
         }.on(MESSAGE_BROADCAST) { broadcast ->
             try {
                 val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
@@ -130,12 +131,27 @@ class SocketManager {
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
-        }.on(MESSAGE_SOME_JOIN) {
-
-        }.on(MESSAGE_SOME_LEAVE) {
-
+        }.on(MESSAGE_SOME_JOIN) { user ->
+            try {
+                val userInfo = Gson().fromJson(user[0].toString(), UserInfo::class.java)
+                LogUtil.e("上线：${user[0]}")
+                socketListeners.forEach {
+                    it.onJoinEvent(userInfo)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }.on(MESSAGE_SOME_LEAVE) { user ->
+            try {
+                val userInfo = Gson().fromJson(user[0].toString(), UserInfo::class.java)
+                LogUtil.e("下线：${user[0]}")
+                socketListeners.forEach {
+                    it.onLeaveEvent(userInfo)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
         }
-        socket.connect()
     }
 
     /**
@@ -160,13 +176,30 @@ class SocketManager {
      * 开关
      */
     fun toggleSocket(open: Boolean) {
-        if (open) {
-            MusicApp.isOpenSocket = true
-            connect()
+        if (MusicApp.isOpenSocket) {
+            if (open) {
+                socket.open()
+            } else {
+                socket.close()
+            }
         } else {
-            MusicApp.isOpenSocket = false
+            //关闭socket，默认一直打开，直到在设置中关闭socket
             disconnect()
         }
+    }
+
+    /**
+     * 增加监听
+     */
+    fun addSocketListener(listener: SocketListener) {
+        socketListeners.add(listener)
+    }
+
+    /**
+     * 移除监听
+     */
+    fun removeSocketListener(listener: SocketListener) {
+        socketListeners.remove(listener)
     }
 
     /**

@@ -53,6 +53,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
     <include
         android:id="@+id/include6"
         layout="@layout/content_chat"

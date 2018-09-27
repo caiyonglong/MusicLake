@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.chat
 
+import android.animation.Animator
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -7,7 +8,6 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musicapi.playlist.UserInfo
@@ -21,7 +21,9 @@ import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
+import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
@@ -60,7 +62,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
         mUserAdapter?.bindToRecyclerView(usersRsv)
-        onlineUserTv.text =getString(R.string.online_users, users.size)
+        onlineUserTv.text = getString(R.string.online_users, users.size)
     }
 
     override fun initData() {
@@ -80,6 +82,50 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun initInjector() {
+    }
+
+    /**
+     * socket监听事件
+     */
+    val listener = object : SocketListener {
+        override fun onLeaveEvent(user: UserInfo) {
+            runOnUiThread {
+                updateUserStatus(user, true)
+            }
+        }
+
+        override fun onJoinEvent(user: UserInfo) {
+            runOnUiThread {
+                updateUserStatus(user, false)
+            }
+        }
+
+        override fun onError(msg: String) {
+        }
+    }
+
+
+    fun updateUserStatus(userInfo: UserInfo, isLeave: Boolean) {
+        userNameTv?.text = userInfo.nickname
+        userStatusTv?.text = if (isLeave) getString(R.string.user_join) else getString(R.string.user_leave)
+        CoverLoader.loadImageView(this, userInfo.avatar, userCoverIv)
+        promptView?.animate()?.cancel()
+        promptView?.visibility = View.VISIBLE
+        promptView?.animate()?.setListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                promptView?.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })?.setDuration(3000)?.start()
     }
 
     override fun listener() {
@@ -118,6 +164,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
             }
             true
         }
+        MusicApp.socketManager.addSocketListener(listener)
     }
 
 
@@ -138,9 +185,9 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     private fun sendMusicMessage() {
         val music = PlayManager.getPlayingMusic()
         when {
-            music.type == Constants.LOCAL -> {
+            music?.type == Constants.LOCAL -> {
                 val message = getString(R.string.share_local_song, music.artist, music.title)
-                MusicApp.socketManager.sendSocketMessage(message,SocketManager.MESSAGE_BROADCAST)
+                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_BROADCAST)
             }
             music?.mid != null -> {
                 val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
@@ -170,6 +217,11 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MusicApp.socketManager.removeSocketListener(listener)
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateMessage(msg: MessageEvent) {
         curPosition = messages.size
@@ -183,6 +235,6 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         nums = chatUsers.users.size
         mUserAdapter?.setNewData(users)
         usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
-        onlineUserTv.text =getString(R.string.online_users, users.size)
+        onlineUserTv.text = getString(R.string.online_users, users.size)
     }
 }
