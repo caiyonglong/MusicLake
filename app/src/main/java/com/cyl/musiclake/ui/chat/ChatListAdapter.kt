@@ -31,6 +31,7 @@ class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent,
         holder.getView<TextView>(R.id.tv_comment_content).setTextIsSelectable(true)
         CoverLoader.loadImageView(mContext, item.userInfo?.avatar, holder.getView(R.id.civ_cover))
         if (item.type == SocketManager.MESSAGE_BROADCAST) {
+            holder.getView<View>(R.id.tv_comment_content).visibility = View.VISIBLE
             holder.getView<View>(R.id.include_music).visibility = View.GONE
         } else if (item.type == SocketManager.MESSAGE_SHARE) {
             try {

@@ -26,6 +26,8 @@ public class WelcomeActivity extends BaseActivity {
     private final String[] mPermissionList = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
+            //获取电话状态
+            Manifest.permission.READ_PHONE_STATE,
     };
 
     @Override

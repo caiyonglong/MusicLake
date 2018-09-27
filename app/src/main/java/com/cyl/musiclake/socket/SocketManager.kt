@@ -6,6 +6,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageEvent
 import com.cyl.musiclake.bean.SocketOnlineEvent
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.ui.chat.ChatActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -48,7 +49,7 @@ class SocketManager {
             opts.forceNew = true
             opts.timeout = 50 * 1000
             opts.transports = arrayOf(WebSocket.NAME)
-            socket = IO.socket("http://39.108.214.63:15003", opts)
+            socket = IO.socket(Constants.SOCKET_URL, opts)
             buildSocket()
             LogUtil.e("初始化、建立连接！")
         } catch (e: Throwable) {

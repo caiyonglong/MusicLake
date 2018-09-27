@@ -2,6 +2,8 @@ package com.cyl.musiclake.common;
 
 import android.os.Environment;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by yonglong on 2016/5/8.
  */
@@ -246,6 +248,8 @@ public class Constants {
      * WeiboSDKDemo 应用对应的权限，第三方开发者一般不需要这么多，可直接设置成空即可。
      * 详情请查看 Demo 中对应的注释。
      */
-    public static final String SCOPE ="";
+    public static final String SCOPE = "";
 
+//    public static final String SOCKET_URL = "http://39.108.214.63:15003";
+    public static final String SOCKET_URL = "https://socket.zzsun.cc";
 }
