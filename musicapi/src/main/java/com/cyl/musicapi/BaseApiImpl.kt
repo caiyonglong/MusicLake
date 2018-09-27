@@ -21,10 +21,6 @@ object BaseApiImpl {
     private val gson = Gson()
     var mWebView: DWebView? = null
 
-    fun getInstance(context: Context): BaseApiImpl {
-        return this
-    }
-
     fun initWebView(context: Context) {
         try {
             mWebView = DWebView(context)
@@ -39,7 +35,6 @@ object BaseApiImpl {
 
         }
     }
-
 
     /**
      * 搜索

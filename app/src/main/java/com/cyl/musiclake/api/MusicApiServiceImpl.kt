@@ -3,7 +3,6 @@ package com.cyl.musiclake.api
 
 import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musicapi.bean.*
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -35,37 +34,36 @@ object MusicApiServiceImpl {
      */
     fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
-                    .searchSong(key, limit, page) {
-                        val musicList = mutableListOf<Music>()
-                        if (it.status) {
-                            if (type == ANY || type == NETEASE)
-                                it.data.netease.songs?.forEach {
-                                    if (!it.cp) {
-                                        it.vendor = Constants.NETEASE
-                                        musicList.add(MusicUtils.getMusic(it))
-                                    }
-                                }
-                            if (type == ANY || type == QQ)
-                                it.data.qq.songs?.forEach {
-                                    if (!it.cp) {
-                                        it.vendor = Constants.QQ
-                                        musicList.add(MusicUtils.getMusic(it))
-                                    }
-                                }
-                            if (type == ANY || type == XIAMI)
-                                it.data.xiami.songs?.forEach {
-                                    if (!it.cp) {
-                                        it.vendor = Constants.XIAMI
-                                        musicList.add(MusicUtils.getMusic(it))
-                                    }
-                                }
-                            result.onNext(musicList)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable("service error"))
+            BaseApiImpl.searchSong(key, limit, page) {
+                val musicList = mutableListOf<Music>()
+                if (it.status) {
+                    if (type == ANY || type == NETEASE)
+                        it.data.netease.songs?.forEach {
+                            if (!it.cp) {
+                                it.vendor = Constants.NETEASE
+                                musicList.add(MusicUtils.getMusic(it))
+                            }
                         }
-                    }
+                    if (type == ANY || type == QQ)
+                        it.data.qq.songs?.forEach {
+                            if (!it.cp) {
+                                it.vendor = Constants.QQ
+                                musicList.add(MusicUtils.getMusic(it))
+                            }
+                        }
+                    if (type == ANY || type == XIAMI)
+                        it.data.xiami.songs?.forEach {
+                            if (!it.cp) {
+                                it.vendor = Constants.XIAMI
+                                musicList.add(MusicUtils.getMusic(it))
+                            }
+                        }
+                    result.onNext(musicList)
+                    result.onComplete()
+                } else {
+                    result.onError(Throwable("service error"))
+                }
+            }
         }
     }
 
@@ -94,21 +92,20 @@ object MusicApiServiceImpl {
      */
     fun getBatchMusic(vendor: String, ids: Array<String>): Observable<MutableList<Music>> {
         return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
-                    .getBatchSongDetail(vendor, ids) {
-                        val musicList = mutableListOf<Music>()
-                        if (it.status) {
-                            val songList = it.data
-                            songList.forEach {
-                                it.vendor = vendor
-                                musicList.add(MusicUtils.getMusic(it))
-                            }
-                            result.onNext(musicList)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(it.msg))
-                        }
+            BaseApiImpl.getBatchSongDetail(vendor, ids) {
+                val musicList = mutableListOf<Music>()
+                if (it.status) {
+                    val songList = it.data
+                    songList.forEach {
+                        it.vendor = vendor
+                        musicList.add(MusicUtils.getMusic(it))
                     }
+                    result.onNext(musicList)
+                    result.onComplete()
+                } else {
+                    result.onError(Throwable(it.msg))
+                }
+            }
         }
     }
 
@@ -118,7 +115,7 @@ object MusicApiServiceImpl {
      */
     fun getMusicUrl(vendor: String, mid: String): Observable<String> {
         return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
+            BaseApiImpl
                     .getSongUrl(vendor, mid, {
                         if (it.status) {
                             val url =
@@ -142,32 +139,31 @@ object MusicApiServiceImpl {
     fun getMusicComment(vendor: String, mid: String): Observable<MutableList<SongComment>>? {
         return when (vendor) {
             Constants.NETEASE -> create { result ->
-                BaseApiImpl.getInstance(MusicApp.mContext)
-                        .getComment(vendor, mid, {
-                            it as SongCommentData<NeteaseComment>
-                            if (it.status) {
-                                val comments = mutableListOf<SongComment>()
-                                it.data?.comments?.forEach {
-                                    val songComment = SongComment().apply {
-                                        avatarUrl = it.user.avatarUrl
-                                        nick = it.user.nickname
-                                        commentId = it.commentId.toString()
-                                        time = it.time
-                                        userId = it.user.userId
-                                        content = it.content
-                                        type = Constants.NETEASE
-                                    }
-                                    comments.add(songComment)
-                                }
-                                result.onNext(comments)
-                                result.onComplete()
-                            } else {
-                                result.onError(Throwable(""))
+                BaseApiImpl.getComment(vendor, mid, {
+                    it as SongCommentData<NeteaseComment>
+                    if (it.status) {
+                        val comments = mutableListOf<SongComment>()
+                        it.data?.comments?.forEach {
+                            val songComment = SongComment().apply {
+                                avatarUrl = it.user.avatarUrl
+                                nick = it.user.nickname
+                                commentId = it.commentId.toString()
+                                time = it.time
+                                userId = it.user.userId
+                                content = it.content
+                                type = Constants.NETEASE
                             }
-                        }, {})
+                            comments.add(songComment)
+                        }
+                        result.onNext(comments)
+                        result.onComplete()
+                    } else {
+                        result.onError(Throwable(""))
+                    }
+                }, {})
             }
             Constants.QQ -> create { result ->
-                BaseApiImpl.getInstance(MusicApp.mContext)
+                BaseApiImpl
                         .getComment(vendor, mid, {
                             it as SongCommentData<QQComment>
                             if (it.status) {
@@ -192,7 +188,7 @@ object MusicApiServiceImpl {
                         }, {})
             }
             Constants.XIAMI -> create { result ->
-                BaseApiImpl.getInstance(MusicApp.mContext)
+                BaseApiImpl
                         .getComment(vendor, mid, {
                             it as SongCommentData<XiamiComment>
                             if (it.status) {
@@ -227,7 +223,7 @@ object MusicApiServiceImpl {
      */
     fun getArtistSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 20): Observable<Artist> {
         return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
+            BaseApiImpl
                     .getArtistSongs(vendor, id, offset, limit, {
                         if (it.status) {
                             val musicList = arrayListOf<Music>()
@@ -259,7 +255,7 @@ object MusicApiServiceImpl {
      */
     fun getAlbumSongs(vendor: String, id: String): Observable<MutableList<Music>> {
         return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
+            BaseApiImpl
                     .getAlbumDetail(vendor, id, {
                         if (it.status) {
                             val musicList = arrayListOf<Music>()
@@ -282,7 +278,7 @@ object MusicApiServiceImpl {
      */
     fun getPlaylistSongs(vendor: String, id: String): Observable<Playlist> {
         return create { result ->
-            BaseApiImpl.getInstance(MusicApp.mContext)
+            BaseApiImpl
                     .getAlbumSongs(vendor, id, {
                         if (it.status) {
                             val playlist = Playlist()
@@ -318,8 +314,7 @@ object MusicApiServiceImpl {
             return if (FileUtils.exists(mLyricPath)) {
                 MusicApi.getLocalLyricInfo(mLyricPath)
             } else create { result ->
-                BaseApiImpl.getInstance(MusicApp.mContext)
-                        .getLyricInfo(vendor, mid) {
+                BaseApiImpl.getLyricInfo(vendor, mid) {
                             if (it.status) {
                                 val lyricInfo = it.data.lyric
                                 val lyric = StringBuilder()

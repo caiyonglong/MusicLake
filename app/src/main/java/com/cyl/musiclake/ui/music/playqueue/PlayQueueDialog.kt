@@ -21,6 +21,7 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.UIUtils
 import com.trello.rxlifecycle2.LifecycleTransformer
+import org.jetbrains.anko.support.v4.dip
 import java.util.*
 
 class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
@@ -41,23 +42,23 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         dialog.setCanceledOnTouchOutside(true)
         val window = dialog.window
 
-        val params = window!!.attributes
-        params.gravity = Gravity.BOTTOM
-        params.width = WindowManager.LayoutParams.MATCH_PARENT
-        params.height = MusicApp.getInstance().screenSize.y / 7 * 4
+        val params = window?.attributes
+        params?.gravity = Gravity.BOTTOM
+        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        params?.height = MusicApp.getInstance().screenSize.y / 7 * 4
         window.attributes = params
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        mBehavior!!.peekHeight = params.height
+        mBehavior?.peekHeight = params?.height ?: dip(200)
         //默认全屏展开
-        mBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
+        mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPresenter = PlayQueuePresenter()
-        mPresenter!!.attachView(this)
+        mPresenter?.attachView(this)
         mAdapter = QueueAdapter(musicList)
     }
 
@@ -71,11 +72,11 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
-        mAdapter!!.bindToRecyclerView(recyclerView)
+        mAdapter?.bindToRecyclerView(recyclerView)
         recyclerView.scrollToPosition(PlayManager.getCurrentPosition())
         initListener()
         dialog.setContentView(view)
-        mPresenter!!.loadSongs()
+        mPresenter?.loadSongs()
         mBehavior = BottomSheetBehavior.from(view.parent as View)
         return dialog
     }
@@ -101,20 +102,20 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
                     .title(R.string.playlist_queue_clear)
                     .positiveText(R.string.sure)
                     .negativeText(R.string.cancel)
-                    .onPositive { dialog, which ->
-                        mPresenter!!.clearQueue()
+                    .onPositive { _, _ ->
+                        mPresenter?.clearQueue()
                         dismiss()
                     }
                     .onNegative { dialog, which -> dialog.dismiss() }
                     .show()
         }
-        mAdapter!!.setOnItemClickListener { adapter, view, position ->
+        mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_love && view.id != R.id.iv_more) {
                 PlayManager.play(position)
-                mAdapter!!.notifyDataSetChanged()
+                mAdapter?.notifyDataSetChanged()
             }
         }
-        mAdapter!!.setOnItemChildClickListener { adapter, view, position ->
+        mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             when (view.id) {
                 R.id.iv_more -> {
                     PlayManager.removeFromQueue(position)
@@ -122,7 +123,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
                     if (musicList.size == 0)
                         dismiss()
                     else
-                        mAdapter!!.setNewData(musicList)
+                        mAdapter?.setNewData(musicList)
                 }
             }
         }
@@ -162,7 +163,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun onDetach() {
         super.onDetach()
-        mPresenter!!.detachView()
+        mPresenter?.detachView()
     }
 
     override fun <T> bindToLife(): LifecycleTransformer<T>? {
@@ -172,14 +173,13 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     override fun showSongs(songs: List<Music>) {
         musicList = songs
         updatePlayMode()
-        mAdapter!!.setNewData(songs)
+        mAdapter?.setNewData(songs)
         //滚动到正在播放的位置
         recyclerView.scrollToPosition(PlayManager.position())
-    }
 
-    override fun showEmptyView() {
-        mAdapter!!.setNewData(null)
-        mAdapter!!.setEmptyView(R.layout.view_queue_empty)
+        if (songs.isEmpty()) {
+            mAdapter?.setEmptyView(R.layout.view_queue_empty)
+        }
     }
 
     companion object {

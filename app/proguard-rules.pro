@@ -16,6 +16,15 @@
 #   public *;
 #}
 
+-dontpreverify
+-flattenpackagehierarchy
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
+-useuniqueclassmembernames
+-ignorewarnings
+
 #bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
@@ -107,3 +116,5 @@
 -keep class com.tencent.smtt.** { *; }
 
 -keep class com.sina.weibo.sdk.** { *; }
+
+-keepattributes EnclosingMethod

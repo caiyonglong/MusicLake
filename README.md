@@ -109,5 +109,8 @@
 <img src="screenshots/preview10.png" width="225" height="400"/>
 <img src="screenshots/preview11.png" width="225" height="400"/>
 <img src="screenshots/preview12.png" width="225" height="400"/>
+<img src="screenshots/preview13.png" width="225" height="400"/>
+<img src="screenshots/preview14.png" width="225" height="400"/>
 <img src="screenshots/preview15.png" width="225" height="400"/>
+<img src="screenshots/preview16.png" width="225" height="400"/>
 </p>

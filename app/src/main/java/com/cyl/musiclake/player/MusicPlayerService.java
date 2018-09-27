@@ -838,21 +838,25 @@ public class MusicPlayerService extends Service {
      * 获取正在播放的歌曲[本地|网络]
      */
     public void removeFromQueue(int position) {
-        LogUtil.e(TAG, position + "---" + mPlayingPos + "---" + mPlayQueue.size());
-        if (position == mPlayingPos) {
-            mPlayQueue.remove(position);
-            if (mPlayQueue.size() == 0) {
-                clearQueue();
-            } else {
-                playMusic(position);
+        try {
+            LogUtil.e(TAG, position + "---" + mPlayingPos + "---" + mPlayQueue.size());
+            if (position == mPlayingPos) {
+                mPlayQueue.remove(position);
+                if (mPlayQueue.size() == 0) {
+                    clearQueue();
+                } else {
+                    playMusic(position);
+                }
+            } else if (position > mPlayingPos) {
+                mPlayQueue.remove(position);
+            } else if (position < mPlayingPos) {
+                mPlayQueue.remove(position);
+                mPlayingPos = mPlayingPos - 1;
             }
-        } else if (position > mPlayingPos) {
-            mPlayQueue.remove(position);
-        } else if (position < mPlayingPos) {
-            mPlayQueue.remove(position);
-            mPlayingPos = mPlayingPos - 1;
+            notifyChange(PLAY_QUEUE_CLEAR);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        notifyChange(PLAY_QUEUE_CLEAR);
     }
 
     /**

@@ -32,16 +32,11 @@ public class PlayQueuePresenter extends BasePresenter<PlayQueueContract.View> im
     @Override
     public void loadSongs() {
         List<Music> musicList = PlayManager.getPlayList();
-        if (musicList.size() > 0) {
-            mView.showSongs(musicList);
-        } else {
-            mView.showEmptyView();
-        }
+        mView.showSongs(musicList);
     }
 
     @Override
     public void clearQueue() {
         PlayManager.clearQueue();
-        mView.showEmptyView();
     }
 }

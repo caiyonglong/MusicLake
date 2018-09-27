@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.view.WindowManager;
 
 import com.cyl.musicapi.BaseApiImpl;
@@ -211,5 +212,10 @@ public class MusicApp extends TinkerApplication {
         });
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
 }

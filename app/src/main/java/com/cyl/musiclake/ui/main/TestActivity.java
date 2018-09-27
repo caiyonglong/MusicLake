@@ -112,7 +112,6 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        searchApi = BaseApiImpl.INSTANCE.getInstance(this);
     }
 
     @Override
