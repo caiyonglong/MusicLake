@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.search
 
+import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
@@ -10,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
@@ -24,6 +26,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.AnimationUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.Tools
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
@@ -53,7 +56,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
     internal var filter: SearchEngine.Filter = SearchEngine.Filter.ANY
 
-    internal var filterItemCheckedId = -1
+    private var filterItemCheckedId = -1
 
     override fun getLayoutResID(): Int {
         return R.layout.acitvity_search
@@ -143,6 +146,8 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
                 isSearchOnline = true
                 search(searchEditText.text.toString())
                 return@setOnEditorActionListener true
+            } else if (event.keyCode == KeyEvent.KEYCODE_BACK) {
+                searchEditText.clearFocus()
             }
             false
         }
@@ -210,13 +215,17 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         }
     }
 
-
+    /**
+     * 在线搜索
+     */
     private fun search(query: String?) {
         if (query != null && query.isNotEmpty()) {
             showLoading()
             mOffset = 0
             searchResults.clear()
             queryString = query
+            searchEditText.clearFocus()
+            Tools.hideInputView(searchEditText)
             updateHistoryPanel(false)
             mPresenter?.saveQueryInfo(query)
             mPresenter?.search(query, filter, limit, mOffset)
@@ -293,6 +302,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Tools.hideInputView(searchEditText)
+    }
+
     private fun updateHistoryPanel(isShow: Boolean) {
         if (isShow) {
             resultListRcv.visibility = View.GONE
@@ -301,10 +315,5 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             resultListRcv.visibility = View.VISIBLE
             historyPanel.visibility = View.GONE
         }
-    }
-
-    companion object {
-
-        private val TAG = "SearchActivity"
     }
 }

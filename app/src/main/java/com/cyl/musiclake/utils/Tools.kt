@@ -3,6 +3,9 @@ package com.cyl.musiclake.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 
@@ -48,5 +51,11 @@ object Tools {
         context?.startActivity(intent)
     }
 
-
+    /**
+     * 强制隐藏输入法
+     */
+    fun hideInputView(view: View) {
+        val inputMethodManager = MusicApp.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 }
