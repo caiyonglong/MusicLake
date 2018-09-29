@@ -47,6 +47,7 @@ object BaseApiImpl {
                 val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
                 success.invoke(result)
             } catch (e: Throwable) {
+                e.printStackTrace()
             }
         }
 //        when (type) {

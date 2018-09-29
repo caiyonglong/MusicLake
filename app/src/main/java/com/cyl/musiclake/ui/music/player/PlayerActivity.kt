@@ -62,7 +62,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         titleIv.text = music?.title
         subTitleTv.text = music?.artist
         //更新图片
-        CoverLoader.loadBigImageView(this, music, coverView?.findViewById<ImageView>(R.id.civ_cover))
+//        CoverLoader.loadBigImageView(this, music, coverView?.findViewById<ImageView>(R.id.civ_cover))
         //更新类型
         updateMusicType(playingMusic?.type)
         //更新收藏状态
@@ -194,7 +194,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * 分享歌曲
      */
     fun shareMusic(view: View?) {
-        MusicUtils.qqShare(this, PlayManager.getPlayingMusic())
+        Tools.qqShare(this, PlayManager.getPlayingMusic())
     }
 
     fun downloadMusic(view: View?) {

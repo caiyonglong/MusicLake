@@ -39,9 +39,9 @@ data class Album(@SerializedName("cover")
 
 
 data class Netease(@SerializedName("total")
-                   val total: String = "",
+                   val total: Int? = 0,
                    @SerializedName("songs")
-                   val songs: List<MusicInfo>?)
+                   val songs: List<MusicInfo>? = null)
 
 
 data class Data(@SerializedName("qq")

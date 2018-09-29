@@ -1267,10 +1267,10 @@ public class MusicPlayerService extends Service {
         } else if (ACTION_LYRIC.equals(action)) {
             startFloatLyric();
         } else if (ACTION_CLOSE.equals(action)) {
-            releaseServiceUiAndStop();
-            System.exit(0);
             stop(true);
             stopSelf();
+            releaseServiceUiAndStop();
+            System.exit(0);
         }
     }
 

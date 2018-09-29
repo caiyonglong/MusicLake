@@ -121,8 +121,6 @@ class SocketManager {
             try {
                 LogUtil.e("收到消息：${broadcast[0]}")
                 val message = Gson().fromJson(broadcast[0].toString(), MessageInfoBean::class.java)
-                message.userInfo?.save()
-                message.save()
                 socketListeners.forEach {
                     it.onMessage(message)
                 }

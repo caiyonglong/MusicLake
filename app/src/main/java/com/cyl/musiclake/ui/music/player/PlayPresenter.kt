@@ -35,11 +35,11 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
     override fun updateNowPlaying(music: Music?, isInit: Boolean?) {
         mView?.showNowPlaying(music)
         CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
+            mView?.setPlayingBitmap(bitmap)
             doAsync {
                 val blur = ImageUtils.createBlurredImageFromBitmap(bitmap, 12)
                 uiThread {
                     mView?.setPlayingBg(blur, isInit)
-//                    Palette.Builder(bitmap).generate { palette -> mView?.setPalette(palette) }
                 }
             }
         }

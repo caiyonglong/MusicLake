@@ -20,6 +20,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.GlideApp;
+import com.cyl.musiclake.api.MusicUtils;
 import com.cyl.musiclake.bean.Music;
 
 import java.io.ByteArrayInputStream;
@@ -127,7 +128,7 @@ public class CoverLoader {
      */
     public static void loadBigImageView(Context mContext, Music music, BitmapCallBack callBack) {
         if (music == null) return;
-        String url = getCoverUriByMusic(music, true);
+        String url = MusicUtils.INSTANCE.getAlbumPic(music.getCoverUri(), music.getType(), MusicUtils.INSTANCE.getPIC_SIZE_BIG());
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(url == null ? R.drawable.music_five : url)

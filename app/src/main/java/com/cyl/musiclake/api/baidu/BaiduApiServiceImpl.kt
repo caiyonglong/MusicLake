@@ -89,9 +89,9 @@ object BaiduApiServiceImpl {
                         music.artistId = songInfo.tingUid
                         music.title = songInfo.title
                         music.isOnline = true
-                        music.coverSmall = songInfo.picSmall
-                        music.coverUri = songInfo.picBig
-                        music.coverBig = songInfo.picBig.split("@")[0]
+                        music.coverUri = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_NORMAL)
+                        music.coverSmall = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_SMALL)
+                        music.coverBig = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
                         musicList.add(music)
                     }
                     Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
@@ -175,9 +175,9 @@ object BaiduApiServiceImpl {
                         music.uri = songInfo.songLink
                         music.fileSize = songInfo.size.toLong()
                         music.lyric = songInfo.lrcLink
-                        music.coverSmall = songInfo.songPicSmall
-                        music.coverUri = songInfo.songPicBig
-                        music.coverBig = songInfo.songPicRadio.split("@")[0]
+                        music.coverSmall = MusicUtils.getAlbumPic(songInfo.songPicSmall,Constants.BAIDU,MusicUtils.PIC_SIZE_SMALL)
+                        music.coverUri = MusicUtils.getAlbumPic(songInfo.songPicSmall,Constants.BAIDU,MusicUtils.PIC_SIZE_NORMAL)
+                        music.coverBig = MusicUtils.getAlbumPic(songInfo.songPicSmall,Constants.BAIDU,MusicUtils.PIC_SIZE_BIG)
 
                     }
                     Observable.create(ObservableOnSubscribe<Music> { e ->
@@ -274,9 +274,9 @@ object BaiduApiServiceImpl {
                                 music.artist = it.artist
                                 music.artistId = it.artistId
                                 music.mid = it.songid
-                                music.coverUri = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, PIC_SIZE_NORMAL)
-                                music.coverSmall = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, PIC_SIZE_SMALL)
-                                music.coverBig = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, PIC_SIZE_BIG)
+                                music.coverUri = MusicUtils.getAlbumPic(it.thumb, Constants.BAIDU, PIC_SIZE_NORMAL)
+                                music.coverSmall = MusicUtils.getAlbumPic(it.thumb, Constants.BAIDU, PIC_SIZE_SMALL)
+                                music.coverBig = MusicUtils.getAlbumPic(it.thumb, Constants.BAIDU, PIC_SIZE_BIG)
                                 songs.add(music)
                             }
                         }
@@ -314,9 +314,9 @@ object BaiduApiServiceImpl {
                             music.albumId = it.albumId
                             music.isOnline = true
                             music.mid = it.songId
-                            music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_NORMAL)
-                            music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_SMALL)
-                            music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_BIG)
+                            music.coverUri = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_NORMAL)
+                            music.coverSmall = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_SMALL)
+                            music.coverBig = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
                             songs.add(music)
                         }
                         artist.count = it.songNums
@@ -348,9 +348,9 @@ object BaiduApiServiceImpl {
                         music.albumId = it.albumId
                         music.isOnline = true
                         music.mid = it.songId
-                        music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_NORMAL)
-                        music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_SMALL)
-                        music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_BIG)
+                        music.coverUri = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_NORMAL)
+                        music.coverSmall = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_SMALL)
+                        music.coverBig = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
                         songs.add(music)
                     }
                     album.count = it.songlist?.size ?: 0

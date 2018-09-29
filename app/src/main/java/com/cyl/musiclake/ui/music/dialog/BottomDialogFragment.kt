@@ -28,6 +28,7 @@ import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
+import com.cyl.musiclake.utils.Tools
 import org.jetbrains.anko.support.v4.startActivity
 
 class BottomDialogFragment : BottomSheetDialogFragment() {
@@ -209,7 +210,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                         }
                     }
                     R.drawable.ic_share_black -> {
-                        MusicUtils.qqShare(mContext, PlayManager.getPlayingMusic())
+                        Tools.qqShare(mContext, PlayManager.getPlayingMusic())
                     }
                 }
                 mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN

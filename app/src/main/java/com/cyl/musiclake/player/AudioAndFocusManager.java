@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.media.session.MediaSession;
 
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SystemUtils;
@@ -23,6 +24,7 @@ public class AudioAndFocusManager {
     private AudioManager mAudioManager;
     private ComponentName mediaButtonReceiverComponent;
     private PendingIntent mPendingIntent;
+    private MediaSession mediaSession;
     private MusicPlayerService.MusicPlayerHandler mHandler;
 
 
@@ -37,20 +39,19 @@ public class AudioAndFocusManager {
      * @param mContext
      */
     private void initAudioManager(Context mContext) {
-
+        mediaSession = new MediaSession(mContext, "AudioAndFocusManager");
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mediaButtonReceiverComponent = new ComponentName(mContext.getPackageName(),
                 MediaButtonIntentReceiver.class.getName());
         mContext.getPackageManager().setComponentEnabledSetting(mediaButtonReceiverComponent,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
         mAudioManager.registerMediaButtonEventReceiver(mediaButtonReceiverComponent);
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setComponent(mediaButtonReceiverComponent);
         mPendingIntent = PendingIntent.getBroadcast(mContext, 0,
                 mediaButtonIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-
+        mediaSession.setMediaButtonReceiver(mPendingIntent);
     }
 
     /**

@@ -1,14 +1,16 @@
 package com.cyl.musiclake.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.cyl.musiclake.BuildConfig
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.bean.Music
+import java.lang.StringBuilder
 
 
 /**
@@ -30,6 +32,27 @@ object Tools {
         intent.putExtra(Intent.EXTRA_TEXT, content)
         context?.startActivity(Intent.createChooser(intent,
                 context.getString(R.string.about_feedback)))
+    }
+
+    /**
+     * 分享到QQ
+     */
+    fun qqShare(activity: Activity, music: Music?) {
+        if (music == null) {
+            ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
+            return
+        }
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(activity.getString(R.string.share_content))
+        stringBuilder.append(activity.getString(R.string.share_song_content, music.artist, music.title))
+        val textIntent = Intent(Intent.ACTION_SEND)
+        textIntent.type = "text/plain"
+        textIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString())
+//        if (music.type == Constants.LOCAL) {
+//            textIntent.type = "video/mp3"
+//            textIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(music.uri))
+//        }
+        activity.startActivity(Intent.createChooser(textIntent, "歌曲分享"))
     }
 
     /**

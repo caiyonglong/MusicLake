@@ -1,47 +1,20 @@
 package com.cyl.musiclake.api
 
-import android.app.Activity
-import android.content.Intent
 import com.cyl.musicapi.bean.ListItem
 import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.netease.TracksItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
-import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.utils.ToastUtils
-import java.lang.StringBuilder
 
 /**
  * Created by master on 2018/4/7.
  */
 
 object MusicUtils {
-
-    /**
-     * 分享到QQ
-     */
-    fun qqShare(activity: Activity, music: Music?) {
-        if (music == null) {
-            ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
-            return
-        }
-        val stringBuilder = StringBuilder()
-        stringBuilder.append(activity.getString(R.string.share_content))
-        stringBuilder.append(activity.getString(R.string.share_song_content, music.artist, music.title))
-        val textIntent = Intent(Intent.ACTION_SEND)
-        textIntent.type = "text/plain"
-        textIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString())
-//        if (music.type == Constants.LOCAL) {
-//            textIntent.type = "video/mp3"
-//            textIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(music.uri))
-//        }
-        activity.startActivity(Intent.createChooser(textIntent, "歌曲分享"))
-    }
 
     /**
      * 在线歌曲实体类转化成本地歌曲实体
@@ -224,40 +197,48 @@ object MusicUtils {
      * 根据不同的歌曲类型生成不同的图片
      * @param size
      */
+    /**
+     * 根据不同的歌曲类型生成不同的图片
+     * @param size
+     */
     fun getAlbumPic(url: String?, type: String?, size: Int): String? {
+        println(url)
         return when (type) {
             Constants.QQ -> {
                 when (size) {
-                    PIC_SIZE_SMALL -> {
-                        url?.replace("300x300", "90x90")
+                    MusicUtils.PIC_SIZE_SMALL -> {
+                        url?.replace("150x150", "90x90")
                     }
-                    PIC_SIZE_NORMAL -> {
-                        url?.replace("300x300", "150x150")
+                    MusicUtils.PIC_SIZE_NORMAL -> {
+                        url?.replace("150x150", "150x150")
                     }
                     else -> {
-                        url
+                        url?.replace("150x150", "300x300")
                     }
                 }
             }
             Constants.XIAMI -> {
+                val tmp = url?.split("@")?.get(0) ?: url
                 when (size) {
-                    PIC_SIZE_SMALL -> "$url@1e_1c_100Q_90w_90h"
-                    PIC_SIZE_NORMAL -> "$url@1e_1c_100Q_150w_150h"
-                    else -> "$url@1e_1c_100Q_300w_300h"
+                    MusicUtils.PIC_SIZE_SMALL -> "$tmp@1e_1c_100Q_90w_90h"
+                    MusicUtils.PIC_SIZE_NORMAL -> "$tmp@1e_1c_100Q_150w_150h"
+                    else -> "$tmp@1e_1c_100Q_450w_450h"
                 }
             }
             Constants.NETEASE -> {
+                val temp = url?.split("?")?.get(0) ?: url
                 when (size) {
-                    PIC_SIZE_SMALL -> "$url?param=90y90"
-                    PIC_SIZE_NORMAL -> "$url?param=150y150"
-                    else -> "$url?param=450y450"
+                    MusicUtils.PIC_SIZE_SMALL -> "$temp?param=90y90"
+                    MusicUtils.PIC_SIZE_NORMAL -> "$temp?param=150y150"
+                    else -> "$temp?param=450y450"
                 }
             }
             Constants.BAIDU -> {
+                val tmp = url?.split("@")?.get(0) ?: url
                 when (size) {
-                    PIC_SIZE_SMALL -> "$url?@s_1,w_90,h_90"
-                    PIC_SIZE_NORMAL -> "$url?@s_1,w_150,h_150"
-                    else -> "$url?@s_1,w_300,h_300"
+                    MusicUtils.PIC_SIZE_SMALL -> "$tmp@s_1,w_90,h_90"
+                    MusicUtils.PIC_SIZE_NORMAL -> "$tmp@s_1,w_150,h_150"
+                    else -> "$tmp@s_1,w_450,h_450"
                 }
             }
             else -> {

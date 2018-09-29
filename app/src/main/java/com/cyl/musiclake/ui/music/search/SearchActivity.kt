@@ -146,8 +146,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
                 isSearchOnline = true
                 search(searchEditText.text.toString())
                 return@setOnEditorActionListener true
-            } else if (event.keyCode == KeyEvent.KEYCODE_BACK) {
-                searchEditText.clearFocus()
             }
             false
         }
