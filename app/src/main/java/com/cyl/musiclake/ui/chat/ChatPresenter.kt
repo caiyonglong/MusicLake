@@ -1,6 +1,15 @@
 package com.cyl.musiclake.ui.chat
 
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.socket.SocketManager
+import com.cyl.musiclake.utils.ToastUtils
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
@@ -10,15 +19,56 @@ import javax.inject.Inject
  */
 class ChatPresenter @Inject
 constructor() : BasePresenter<ChatContract.View>(), ChatContract.Presenter {
-    override fun deleteMessages() {
-        val data = model.deleteAllMessages()
-    }
 
     val model by lazy { ChatModel() }
+    override fun deleteMessages() {
+        doAsync {
+            val data = model.deleteAllMessages()
+            uiThread {
+                mView?.deleteSuccessful()
+            }
+        }
+    }
 
-    override fun loadMessages() {
-        val data = model.loadHistoryMessages()
-        mView?.showMessages(data)
+    /**
+     * 加载云消息,默认加载云消息
+     */
+    override fun loadMessages(start: String?, end: String?) {
+        model.getChatHistory(start, end, success = {
+            it?.let { it1 -> mView?.showHistortMessages(it1) }
+        }, fail = {
+            ToastUtils.show(it)
+        })
+    }
+
+    /**
+     * 加载本地消息
+     */
+    override fun loadLocalMessages() {
+        doAsync {
+            val data = model.loadHistoryMessages()
+            uiThread {
+                mView?.showMessages(data)
+            }
+        }
+    }
+
+    /**
+     * 发送正在播放的音乐
+     */
+    override fun sendMusicMessage() {
+        val music = PlayManager.getPlayingMusic()
+        when {
+            music?.type == Constants.LOCAL -> {
+                val message = MusicApp.getAppContext().getString(R.string.share_local_song, music.artist, music.title)
+                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_BROADCAST)
+            }
+            music?.mid != null -> {
+                val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
+                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_SHARE)
+            }
+            else -> ToastUtils.show(MusicApp.getAppContext().getString(R.string.playing_empty))
+        }
     }
 
 }

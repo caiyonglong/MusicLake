@@ -1,6 +1,7 @@
 package com.cyl.musiclake.player.playqueue
 
 import com.cyl.musiclake.event.PlayModeEvent
+import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.SPUtils
 import org.greenrobot.eventbus.EventBus
 
@@ -44,5 +45,4 @@ object PlayQueueManager {
     fun getPlayMode(): String {
         return playingMode[playingModeId]
     }
-
 }

@@ -250,7 +250,7 @@ object MusicUtils {
                 when (size) {
                     PIC_SIZE_SMALL -> "$url?param=90y90"
                     PIC_SIZE_NORMAL -> "$url?param=150y150"
-                    else -> "$url?param=150y450"
+                    else -> "$url?param=450y450"
                 }
             }
             Constants.BAIDU -> {

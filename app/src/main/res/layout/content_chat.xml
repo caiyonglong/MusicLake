@@ -36,7 +36,7 @@
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/dp_8"/>
+                android:layout_margin="@dimen/dp_8" />
 
             <TextView
                 android:id="@+id/userNameTv"
@@ -60,15 +60,17 @@
     </android.support.v7.widget.CardView>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/messageRsv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingBottom="@dimen/dp_56"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/promptView" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/messageRsv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="@dimen/dp_56"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/promptView" />
+
+
 
     <include layout="@layout/item_loading" />
 

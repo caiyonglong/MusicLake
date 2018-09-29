@@ -1,6 +1,7 @@
-package com.cyl.musicapi.playlist
+package com.cyl.musiclake.api
 
 
+import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.annotations.SerializedName
 
 data class PlaylistInfo(

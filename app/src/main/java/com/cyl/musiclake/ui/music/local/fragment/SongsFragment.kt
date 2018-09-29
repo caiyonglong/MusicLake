@@ -83,7 +83,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
 
     private fun initHeaderView() {
-        iconIv
         reloadIv?.setOnClickListener { v ->
             showLoading()
             mPresenter?.loadSongs(true)

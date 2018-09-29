@@ -12,16 +12,14 @@ import android.view.inputmethod.EditorInfo
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.utils.CoverLoader
-import com.cyl.musiclake.utils.ToastUtils
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
 
@@ -30,7 +28,6 @@ import kotlinx.android.synthetic.main.content_chat.*
  * 消息中心，收发消息
  */
 class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
-
 
     private var messages = mutableListOf<MessageInfoBean>()
     private var nums = 0
@@ -49,6 +46,10 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         mAdapter = ChatListAdapter(messages)
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         messageRsv.adapter = mAdapter
+//        mAdapter?.isUpFetchEnable = true
+//        mAdapter?.setUpFetchListener {
+//        }
+        //用户头像列表
         mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
@@ -71,12 +72,6 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     private fun dealTextMessage(intent: Intent?) {
         val title = intent?.getStringExtra(Intent.EXTRA_TEXT)
         messageInputView?.setText(title)
-    }
-
-    override fun showMessages(msgList: MutableList<MessageInfoBean>) {
-        messages = msgList
-        mAdapter?.setNewData(messages)
-        messageRsv?.smoothScrollToPosition(messages.size)
     }
 
     override fun initInjector() {
@@ -121,6 +116,9 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         }
     }
 
+    /**
+     * 更新用户状态（上下线）
+     */
     fun updateUserStatus(userInfo: UserInfoBean, isLeave: Boolean) {
         userNameTv?.text = userInfo.nickname
         userStatusTv?.text = if (isLeave) getString(R.string.user_join) else getString(R.string.user_leave)
@@ -144,6 +142,9 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         })?.setDuration(3000)?.start()
     }
 
+    /**
+     * 设置监听
+     */
     override fun listener() {
         super.listener()
         sendBtn.setOnClickListener {
@@ -185,7 +186,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
 
     /**
-     * 发送消息
+     * 发送消息（普通）
      */
     private fun sendMessage() {
         val content = messageInputView?.text.toString()
@@ -199,18 +200,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
      * 发送消息(当前正在播放的音乐)
      */
     private fun sendMusicMessage() {
-        val music = PlayManager.getPlayingMusic()
-        when {
-            music?.type == Constants.LOCAL -> {
-                val message = getString(R.string.share_local_song, music.artist, music.title)
-                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_BROADCAST)
-            }
-            music?.mid != null -> {
-                val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
-                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_SHARE)
-            }
-            else -> ToastUtils.show(getString(R.string.playing_empty))
-        }
+        mPresenter?.sendMusicMessage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -220,9 +210,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_clear_msg) {
-            messages.clear()
             mPresenter?.deleteMessages()
-            mAdapter?.notifyDataSetChanged()
         } else if (item?.itemId == R.id.action_about) {
             MaterialDialog.Builder(this)
                     .title(R.string.prompt)
@@ -231,6 +219,29 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
                     .show()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    /**
+     * 显示消息
+     */
+    override fun showMessages(msgList: MutableList<MessageInfoBean>) {
+        messages = msgList
+        mAdapter?.setNewData(messages)
+        messageRsv?.smoothScrollToPosition(messages.size)
+    }
+
+    override fun showHistortMessages(msgList: MutableList<MessageInfoBean>) {
+        LogUtil.e("showHistortMessages")
+        messages.addAll(0, msgList)
+        mAdapter?.notifyDataSetChanged()
+        messageRsv?.smoothScrollToPosition(msgList.size)
+    }
+
+    override fun deleteSuccessful() {
+        messages.clear()
+        mAdapter?.notifyDataSetChanged()
+        showEmptyState()
     }
 
     override fun onDestroy() {

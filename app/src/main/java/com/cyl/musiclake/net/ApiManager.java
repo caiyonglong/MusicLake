@@ -3,19 +3,18 @@ package com.cyl.musiclake.net;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
-import com.cyl.musiclake.event.LoginEvent;
+import com.cyl.musiclake.ui.my.user.User;
+import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -91,8 +90,16 @@ public class ApiManager {
      */
     private static final Interceptor mLoggingInterceptor = chain -> {
         Request request = chain.request();
-        Response response = chain.proceed(request);
-        return response;
+        User user = UserStatus.getUserInfo();
+        if (user != null && user.getToken() != null) {
+            LogUtil.e("accesstoken 不为空" + user.getToken());
+            request.newBuilder()
+                    .addHeader("accesstoken", user.getToken())
+                    .build();
+        } else {
+            request.newBuilder().build();
+        }
+        return chain.proceed(request);
     };
 
 
@@ -105,16 +112,14 @@ public class ApiManager {
         if (mOkHttpClient == null) {
             synchronized (ApiManager.class) {
                 Cache cache = new Cache(new File(MusicApp.getAppContext().getCacheDir(), "HttpCache"), 1024 * 1024 * 100);
-                if (mOkHttpClient == null) {
-                    mOkHttpClient = new OkHttpClient.Builder()
-                            .cache(cache)
-                            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-                            .addInterceptor(mRewriteCacheControlInterceptor)
-//                            .addInterceptor(mLoggingInterceptor)
-                            .build();
-                }
+                if (mOkHttpClient == null) mOkHttpClient = new OkHttpClient.Builder()
+                        .cache(cache)
+                        .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                        .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                        .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                        .addInterceptor(mRewriteCacheControlInterceptor)
+                        .addInterceptor(mLoggingInterceptor)
+                        .build();
             }
         }
         return mOkHttpClient;

@@ -1,6 +1,12 @@
 package com.cyl.musiclake.ui.chat
 
+import com.cyl.musiclake.api.PlaylistApiService
+import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageInfoBean
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.net.ApiManager
+import com.cyl.musiclake.net.RequestCallBack
+import io.reactivex.Observable
 import org.litepal.LitePal
 import org.litepal.crud.LitePalSupport
 
@@ -10,7 +16,8 @@ import org.litepal.crud.LitePalSupport
  * Author : master.
  * Date   : 2018/9/27 .
  */
-class ChatModel() {
+class ChatModel {
+
 
     //获取MessageInfoBean
     fun loadHistoryMessages(): MutableList<MessageInfoBean> {
@@ -20,5 +27,21 @@ class ChatModel() {
     //获取MessageInfoBean
     fun deleteAllMessages(): Int {
         return LitePal.deleteAll(MessageInfoBean::class.java)
+    }
+
+    /**
+     * 获取历史聊天记录
+     *
+     */
+    fun getChatHistory(start: String? = null, end: String? = null, success: (MutableList<MessageInfoBean>?) -> Unit?, fail: (String?) -> Unit?) {
+        ApiManager.request(PlaylistApiServiceImpl.playlistApiService.getChatHistory(PlaylistApiServiceImpl.token, start, end), object : RequestCallBack<MutableList<MessageInfoBean>> {
+            override fun success(result: MutableList<MessageInfoBean>?) {
+                success.invoke(result)
+            }
+
+            override fun error(msg: String?) {
+                fail.invoke(msg)
+            }
+        })
     }
 }
