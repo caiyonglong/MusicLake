@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_about"
-        android:title="@string/title_about"
+        android:title="@string/title_about_chat"
         app:showAsAction="collapseActionView" />
 
     <item

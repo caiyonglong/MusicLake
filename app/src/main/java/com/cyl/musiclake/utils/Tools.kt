@@ -3,6 +3,7 @@ package com.cyl.musiclake.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.cyl.musiclake.BuildConfig
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.cyl.musiclake.MusicApp
@@ -11,7 +12,7 @@ import com.cyl.musiclake.common.Constants
 
 
 /**
- * Des    :
+ * Des    : 分享、反馈工具类
  * Author : master.
  * Date   : 2018/5/19 .
  */
@@ -25,7 +26,7 @@ object Tools {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:caiyonglong@live.com")
         intent.putExtra(Intent.EXTRA_SUBJECT, "用户反馈")
-        val content = context?.resources?.getString(R.string.feedback_content, android.os.Build.VERSION.RELEASE, android.os.Build.BRAND, android.os.Build.MODEL)
+        val content = context?.resources?.getString(R.string.feedback_content, android.os.Build.VERSION.RELEASE, android.os.Build.BRAND, android.os.Build.MODEL, "${BuildConfig.VERSION_CODE}-v${BuildConfig.VERSION_NAME}")
         intent.putExtra(Intent.EXTRA_TEXT, content)
         context?.startActivity(Intent.createChooser(intent,
                 context.getString(R.string.about_feedback)))
@@ -40,7 +41,6 @@ object Tools {
         intent.type = "text/plain"
         context?.startActivity(Intent.createChooser(intent, context.getString(R.string.share_title)))
     }
-
 
     /**
      *分享链接

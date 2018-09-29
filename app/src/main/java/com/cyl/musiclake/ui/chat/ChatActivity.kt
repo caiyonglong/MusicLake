@@ -10,16 +10,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.afollestad.materialdialogs.MaterialDialog
-import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
-import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.bean.MessageEvent
+import com.cyl.musiclake.bean.MessageInfoBean
+import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.event.ChatUserEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
@@ -27,22 +24,17 @@ import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 /**
  * 消息中心，收发消息
  */
-class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
-    companion object {
-        var messages = mutableListOf<MessageEvent>()
-        var users = mutableListOf<UserInfo>()
-    }
+class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
-    private var curPosition = 0
+
+    private var messages = mutableListOf<MessageInfoBean>()
     private var nums = 0
-    var mAdapter: ChatListAdapter? = null
+    private var mAdapter: ChatListAdapter? = null
     private var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
@@ -54,20 +46,20 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun initView() {
-        curPosition = messages.size
         mAdapter = ChatListAdapter(messages)
         messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         messageRsv.adapter = mAdapter
-        mUserAdapter = OnlineUserListAdapter(users)
+        mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         usersRsv.adapter = mUserAdapter
         mUserAdapter?.bindToRecyclerView(usersRsv)
-        onlineUserTv.text = getString(R.string.online_users, users.size)
+        onlineUserTv.text = getString(R.string.online_users, MusicApp.socketManager.onlineUsers.size)
     }
 
     override fun initData() {
+        mPresenter?.loadMessages()
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
-            if ("text/plain" == intent.type) {
+            if (Constants.TEXT_PLAIN == intent.type) {
                 dealTextMessage(intent)
             }
         }
@@ -81,20 +73,45 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         messageInputView?.setText(title)
     }
 
+    override fun showMessages(msgList: MutableList<MessageInfoBean>) {
+        messages = msgList
+        mAdapter?.setNewData(messages)
+        messageRsv?.smoothScrollToPosition(messages.size)
+    }
+
     override fun initInjector() {
+        mActivityComponent.inject(this)
     }
 
     /**
      * socket监听事件
      */
     val listener = object : SocketListener {
-        override fun onLeaveEvent(user: UserInfo) {
+        override fun onMessage(msgInfo: MessageInfoBean) {
+            runOnUiThread {
+                messages.add(msgInfo)
+                mAdapter?.notifyItemInserted(messages.size)
+//                mAdapter?.setNewData(messages)
+                messageRsv?.smoothScrollToPosition(messages.size)
+            }
+        }
+
+        override fun onOnlineUsers(users: MutableList<UserInfoBean>) {
+            runOnUiThread {
+                nums = users.size
+                mUserAdapter?.setNewData(users)
+                usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
+                onlineUserTv.text = getString(R.string.online_users, users.size)
+            }
+        }
+
+        override fun onLeaveEvent(user: UserInfoBean) {
             runOnUiThread {
                 updateUserStatus(user, true)
             }
         }
 
-        override fun onJoinEvent(user: UserInfo) {
+        override fun onJoinEvent(user: UserInfoBean) {
             runOnUiThread {
                 updateUserStatus(user, false)
             }
@@ -104,8 +121,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         }
     }
 
-
-    fun updateUserStatus(userInfo: UserInfo, isLeave: Boolean) {
+    fun updateUserStatus(userInfo: UserInfoBean, isLeave: Boolean) {
         userNameTv?.text = userInfo.nickname
         userStatusTv?.text = if (isLeave) getString(R.string.user_join) else getString(R.string.user_leave)
         CoverLoader.loadImageView(this, userInfo.avatar, userCoverIv)
@@ -205,7 +221,7 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_clear_msg) {
             messages.clear()
-            curPosition = 0
+            mPresenter?.deleteMessages()
             mAdapter?.notifyDataSetChanged()
         } else if (item?.itemId == R.id.action_about) {
             MaterialDialog.Builder(this)
@@ -222,19 +238,4 @@ class ChatActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
         MusicApp.socketManager.removeSocketListener(listener)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun updateMessage(msg: MessageEvent) {
-        curPosition = messages.size
-        mAdapter?.setNewData(messages)
-        messageRsv?.smoothScrollToPosition(curPosition)
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun updateUserInfo(chatUsers: ChatUserEvent) {
-        nums = chatUsers.users.size
-        mUserAdapter?.setNewData(users)
-        usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
-        onlineUserTv.text = getString(R.string.online_users, users.size)
-    }
 }

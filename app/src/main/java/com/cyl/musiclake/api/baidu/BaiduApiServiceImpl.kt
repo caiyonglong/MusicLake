@@ -2,6 +2,9 @@ package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
 import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_BIG
+import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
+import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_SMALL
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -271,9 +274,9 @@ object BaiduApiServiceImpl {
                                 music.artist = it.artist
                                 music.artistId = it.artistId
                                 music.mid = it.songid
-                                music.coverUri = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 150)
-                                music.coverSmall = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 90)
-                                music.coverBig = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, 500)
+                                music.coverUri = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, PIC_SIZE_NORMAL)
+                                music.coverSmall = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, PIC_SIZE_SMALL)
+                                music.coverBig = MusicUtils.getAlbumPic(it.thumb.split("@")[0], Constants.BAIDU, PIC_SIZE_BIG)
                                 songs.add(music)
                             }
                         }
@@ -311,9 +314,9 @@ object BaiduApiServiceImpl {
                             music.albumId = it.albumId
                             music.isOnline = true
                             music.mid = it.songId
-                            music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 150)
-                            music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 90)
-                            music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 500)
+                            music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_NORMAL)
+                            music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_SMALL)
+                            music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_BIG)
                             songs.add(music)
                         }
                         artist.count = it.songNums
@@ -345,9 +348,9 @@ object BaiduApiServiceImpl {
                         music.albumId = it.albumId
                         music.isOnline = true
                         music.mid = it.songId
-                        music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 150)
-                        music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 90)
-                        music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, 500)
+                        music.coverUri = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_NORMAL)
+                        music.coverSmall = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_SMALL)
+                        music.coverBig = MusicUtils.getAlbumPic(it.picSmall.split("@")[0], Constants.BAIDU, PIC_SIZE_BIG)
                         songs.add(music)
                     }
                     album.count = it.songlist?.size ?: 0

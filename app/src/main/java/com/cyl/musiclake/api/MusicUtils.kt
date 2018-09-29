@@ -105,9 +105,9 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.coverUri = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, 150)
-        music.coverBig = musicInfo.album.cover
-        music.coverSmall = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, 90)
+        music.coverUri = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
+        music.coverBig = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
+        music.coverSmall = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_SMALL)
         return music
     }
 
@@ -140,9 +140,9 @@ object MusicUtils {
                 music.artist = artistNames
                 music.artistId = artistIds
             }
-            music.coverUri = getAlbumPic(it.album.cover, type, 150)
-            music.coverBig = it.album.cover
-            music.coverSmall = getAlbumPic(it.album.cover, type, 90)
+            music.coverUri = getAlbumPic(it.album.cover, type, PIC_SIZE_NORMAL)
+            music.coverBig = getAlbumPic(it.album.cover, type, PIC_SIZE_BIG)
+            music.coverSmall = getAlbumPic(it.album.cover, type, PIC_SIZE_SMALL)
             if (!it.cp) {
                 musicList.add(music)
             }
@@ -174,9 +174,9 @@ object MusicUtils {
                 music.artist = artistNames
                 music.artistId = artistIds
             }
-            music.coverUri = getAlbumPic(it.album.picUrl, Constants.NETEASE, 150)
-            music.coverBig = it.album.picUrl
-            music.coverSmall = getAlbumPic(it.album.picUrl, Constants.NETEASE, 90)
+            music.coverUri = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
+            music.coverBig = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
+            music.coverSmall = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
             if (it.cp != 0) {
                 musicList.add(music)
             }
@@ -210,28 +210,55 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.coverUri = getAlbumPic(song.album.cover, type, 150)
-        music.coverBig = song.album.cover
-        music.coverSmall = getAlbumPic(song.album.cover, type, 90)
+        music.coverUri = getAlbumPic(song.album.cover, type, PIC_SIZE_NORMAL)
+        music.coverBig = getAlbumPic(song.album.cover, type, PIC_SIZE_BIG)
+        music.coverSmall = getAlbumPic(song.album.cover, type, PIC_SIZE_SMALL)
         return music
     }
 
+    val PIC_SIZE_SMALL = 0
+    val PIC_SIZE_NORMAL = 1
+    val PIC_SIZE_BIG = 2
+
     /**
      * 根据不同的歌曲类型生成不同的图片
+     * @param size
      */
-    fun getAlbumPic(url: String?, type: String?, width: Int = 140): String? {
+    fun getAlbumPic(url: String?, type: String?, size: Int): String? {
         return when (type) {
             Constants.QQ -> {
-                url?.replace("300x300", "${width}x$width")
+                when (size) {
+                    PIC_SIZE_SMALL -> {
+                        url?.replace("300x300", "90x90")
+                    }
+                    PIC_SIZE_NORMAL -> {
+                        url?.replace("300x300", "150x150")
+                    }
+                    else -> {
+                        url
+                    }
+                }
             }
             Constants.XIAMI -> {
-                "$url@1e_1c_100Q_${width}w_${width}h"
+                when (size) {
+                    PIC_SIZE_SMALL -> "$url@1e_1c_100Q_90w_90h"
+                    PIC_SIZE_NORMAL -> "$url@1e_1c_100Q_150w_150h"
+                    else -> "$url@1e_1c_100Q_300w_300h"
+                }
             }
             Constants.NETEASE -> {
-                "$url?param=${width}y$width"
+                when (size) {
+                    PIC_SIZE_SMALL -> "$url?param=90y90"
+                    PIC_SIZE_NORMAL -> "$url?param=150y150"
+                    else -> "$url?param=150y450"
+                }
             }
             Constants.BAIDU -> {
-                "$url?@s_1,w_$width,h_$width"
+                when (size) {
+                    PIC_SIZE_SMALL -> "$url?@s_1,w_90,h_90"
+                    PIC_SIZE_NORMAL -> "$url?@s_1,w_150,h_150"
+                    else -> "$url?@s_1,w_300,h_300"
+                }
             }
             else -> {
                 url

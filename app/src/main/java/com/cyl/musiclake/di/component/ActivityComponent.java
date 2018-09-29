@@ -6,6 +6,7 @@ import android.content.Context;
 import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerActivity;
+import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity;
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity;
@@ -39,6 +40,7 @@ public interface ActivityComponent {
     Activity getActivity();
 
     void inject(ShakeActivity activity);
+
     void inject(BaiduMusicListActivity baiduMusicListActivity);
 
     void inject(UserCenterActivity userCenterActivity);
@@ -58,4 +60,6 @@ public interface ActivityComponent {
     void inject(PlaylistDetailActivity playlistDetailActivity);
 
     void inject(EditSongListActivity editMusicActivity);
+
+    void inject(@NotNull ChatActivity chatActivity);
 }

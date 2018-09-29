@@ -265,7 +265,7 @@
     <string name="share_content">\"我正在使用 MusicLake 听音乐，我觉得很不错哦，推荐给你用一下，下载链接：https://github.com/caiyonglong/MusicLake/releases\"</string>
     <string name="share_song_content">\n\n我分享的歌曲是 %1$s 的 %2$s"</string>
     <string name="share_local_song">我正在听 %1$s的%2$s，喜欢的可以搜索一下哦!</string>
-    <string name="feedback_content">==============我正在使用 音乐湖 听音乐==============\n\n Android 版本号: %1$s \n\n 手机型号： %2$s %3$s \n\n反馈问题：\n "</string>
+    <string name="feedback_content">==============\n Android 版本号: %1$s \n\n 手机型号： %2$s %3$s \n\n软件版本号： %4$s\n==============\n\n反馈问题（如果有异常问题，麻烦描述一下复现情景哦，Thanks!）：\n "</string>
     <string name="retry">重试</string>
     <string name="general_error">网络错误</string>
     <string name="qq_login_tips">QQ登录</string>
@@ -365,9 +365,11 @@
     <string name="folder_title">文件夹</string>
     <string name="song_comment_title">歌曲评论</string>
     <string name="song_comment_new">最新评论</string>
+    <!--音乐社区-->
     <string name="real_time_user">实时在线人数</string>
     <string name="send_message">发送消息</string>
     <string name="title_activity_chat">音乐社区</string>
+    <string name="title_about_chat">关于音乐社区</string>
     <string name="chat_title">音乐社区</string>
     <string name="message_center">实时聊天室</string>
     <string name="online_users">已登录用户(%1$d)</string>
@@ -378,7 +380,7 @@
     <string name="chat_open">打开</string>
     <string name="chat_close">关闭</string>
     <string name="clear_msg">清除消息记录</string>
-    <string name="about_music_lake">实时统计功能用于实时统计MusicLake的在线人数，登录后你可以在这里发送实时消息，也可以看到实时在线的人数，所有的消息都会在退出应用时自动清空，也可以手动清空！</string>
+    <string name="about_music_lake">实时统计功能主要用于实时统计MusicLake的在线人数，登录后你可以在这里发送消息，反馈问题，分享歌曲！</string>
     <string name="open_socket_tips">请在设置中开启实时统计功能！</string>
     <string name="playing_empty">暂无播放任何歌曲</string>
     <string name="weibo_login">微博登录</string>

@@ -5,11 +5,11 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.playlist.MusicInfo
-import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.bean.MessageEvent
+import com.cyl.musiclake.bean.MessageInfoBean
+import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketManager
@@ -22,9 +22,9 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent, BaseViewHolder>(R.layout.item_chat, list) {
+class ChatListAdapter(list: List<MessageInfoBean>) : BaseQuickAdapter<MessageInfoBean, BaseViewHolder>(R.layout.item_chat, list) {
 
-    override fun convert(holder: BaseViewHolder, item: MessageEvent) {
+    override fun convert(holder: BaseViewHolder, item: MessageInfoBean) {
         holder.setText(R.id.tv_comment_user, item.userInfo?.nickname ?: "")
         holder.setText(R.id.tv_comment_time, item.datetime)
         holder.setText(R.id.tv_comment_content, item.message)
@@ -34,14 +34,15 @@ class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent,
             holder.getView<View>(R.id.tv_comment_content).visibility = View.VISIBLE
             holder.getView<View>(R.id.include_music).visibility = View.GONE
         } else if (item.type == SocketManager.MESSAGE_SHARE) {
+            var musicInfo: MusicInfo? = null
             try {
-                item.music = MusicApp.GSON.fromJson(item.message, MusicInfo::class.java)
+                musicInfo = MusicApp.GSON.fromJson(item.message, MusicInfo::class.java)
             } catch (e: Throwable) {
             } finally {
-                if (item.music != null) {
+                if (musicInfo != null) {
                     holder.getView<View>(R.id.include_music).visibility = View.VISIBLE
                     holder.getView<View>(R.id.tv_comment_content).visibility = View.GONE
-                    val music = MusicUtils.getMusic(item.music!!)
+                    val music = MusicUtils.getMusic(musicInfo)
                     holder.setText(R.id.tv_title, ConvertUtils.getTitle(music.title))
                     holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(music.artist, music.album))
                     if (music.type == Constants.LOCAL) {
@@ -181,8 +182,8 @@ class ChatListAdapter(list: List<MessageEvent>) : BaseQuickAdapter<MessageEvent,
 //}
 
 
-class OnlineUserListAdapter(list: List<UserInfo>) : BaseQuickAdapter<UserInfo, BaseViewHolder>(R.layout.item_user, list) {
-    override fun convert(helper: BaseViewHolder, item: UserInfo) {
+class OnlineUserListAdapter(list: List<UserInfoBean>) : BaseQuickAdapter<UserInfoBean, BaseViewHolder>(R.layout.item_user, list) {
+    override fun convert(helper: BaseViewHolder, item: UserInfoBean) {
         CoverLoader.loadImageView(mContext, item.avatar, helper.getView(R.id.user_avatar))
         helper.setText(R.id.user_name, item.nickname)
         helper.itemView.setOnClickListener {

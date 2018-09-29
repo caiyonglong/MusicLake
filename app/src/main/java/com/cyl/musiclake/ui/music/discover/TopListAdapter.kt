@@ -4,6 +4,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.CoverLoader
@@ -22,7 +23,7 @@ class TopListAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, BaseView
         if (neteaseList.coverUrl == null)
             return
         val url = when (neteaseList.type) {
-            Constants.PLAYLIST_WY_ID -> MusicUtils.getAlbumPic(neteaseList.coverUrl, Constants.NETEASE, 300)
+            Constants.PLAYLIST_WY_ID -> MusicUtils.getAlbumPic(neteaseList.coverUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
             else -> neteaseList.coverUrl
         }
         CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))
@@ -33,7 +34,7 @@ class TopPlaylistAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, Base
 
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         val url = when (playlist.type) {
-            Constants.PLAYLIST_WY_ID -> MusicUtils.getAlbumPic(playlist.coverUrl, Constants.NETEASE, 300)
+            Constants.PLAYLIST_WY_ID -> MusicUtils.getAlbumPic(playlist.coverUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
             else -> playlist.coverUrl
         }
         CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))

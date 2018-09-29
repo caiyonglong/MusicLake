@@ -125,6 +125,8 @@ public class Constants {
 
     public static final String IS_URL_HEADER = "http";
 
+    public static final String TEXT_PLAIN = "text/plain";
+
 
     //根据音乐id获取音乐详情接口
     public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";

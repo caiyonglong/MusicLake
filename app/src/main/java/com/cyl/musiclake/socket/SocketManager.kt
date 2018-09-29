@@ -1,14 +1,12 @@
 package com.cyl.musiclake.socket
 
-import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
-import com.cyl.musiclake.bean.MessageEvent
+import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.SocketOnlineEvent
+import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.event.ChatUserEvent
-import com.cyl.musiclake.ui.chat.ChatActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
@@ -42,6 +40,7 @@ class SocketManager {
     var realUsersNum = 0
     lateinit var socket: Socket
     var socketListeners = mutableListOf<SocketListener>()
+    var onlineUsers = mutableListOf<UserInfoBean>()
 
     fun initSocket() {
         try {
@@ -73,14 +72,6 @@ class SocketManager {
         socket.emit(event, msg)
     }
 
-
-    /**
-     * 接收消息
-     */
-    private fun receiveSocketMessage(msg: MessageEvent) {
-        ChatActivity.messages.add(msg)
-    }
-
     /**
      * 建立连接
      */
@@ -104,14 +95,17 @@ class SocketManager {
             EventBus.getDefault().post(SocketOnlineEvent(num = realUsersNum))
         }.on(MESSAGE_ONLINE_USERS) { result ->
             val data = result[0] as JSONArray
-            val users = mutableListOf<UserInfo>()
+            val users = mutableListOf<UserInfoBean>()
             for (i in 0 until data.length()) {
-                val user = UserInfo(
-                        id = data.getJSONObject(i).getInt("id"),
-                        nickname = data.getJSONObject(i).getString("nickname"),
-                        avatar = data.getJSONObject(i).getString("avatar")
-                )
+                val user = UserInfoBean().apply {
+                    id = data.getJSONObject(i).getInt("id")
+                    nickname = data.getJSONObject(i).getString("nickname")
+                    avatar = data.getJSONObject(i).getString("avatar")
+                }
                 users.add(user)
+            }
+            socketListeners.forEach {
+                it.onOnlineUsers(users)
             }
             saveUserInfo(users)
         }.on(Socket.EVENT_RECONNECT) {
@@ -125,16 +119,19 @@ class SocketManager {
             }
         }.on(MESSAGE_BROADCAST) { broadcast ->
             try {
-                val message = Gson().fromJson(broadcast[0].toString(), MessageEvent::class.java)
-                EventBus.getDefault().post(message)
-                receiveSocketMessage(message)
                 LogUtil.e("收到消息：${broadcast[0]}")
+                val message = Gson().fromJson(broadcast[0].toString(), MessageInfoBean::class.java)
+                message.userInfo?.save()
+                message.save()
+                socketListeners.forEach {
+                    it.onMessage(message)
+                }
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
         }.on(MESSAGE_SOME_JOIN) { user ->
             try {
-                val userInfo = Gson().fromJson(user[0].toString(), UserInfo::class.java)
+                val userInfo = Gson().fromJson(user[0].toString(), UserInfoBean::class.java)
                 LogUtil.e("上线：${user[0]}")
                 socketListeners.forEach {
                     it.onJoinEvent(userInfo)
@@ -144,7 +141,7 @@ class SocketManager {
             }
         }.on(MESSAGE_SOME_LEAVE) { user ->
             try {
-                val userInfo = Gson().fromJson(user[0].toString(), UserInfo::class.java)
+                val userInfo = Gson().fromJson(user[0].toString(), UserInfoBean::class.java)
                 LogUtil.e("下线：${user[0]}")
                 socketListeners.forEach {
                     it.onLeaveEvent(userInfo)
@@ -206,14 +203,12 @@ class SocketManager {
     /**
      * 保存用户信息
      */
-    private fun saveUserInfo(userInfo: MutableList<UserInfo>?) {
+    private fun saveUserInfo(userInfo: MutableList<UserInfoBean>?) {
         userInfo?.let {
-            ChatActivity.users = it
-            EventBus.getDefault().post(ChatUserEvent(it))
+            onlineUsers = it
         }
         if (userInfo == null) {
-            ChatActivity.users.clear()
-            EventBus.getDefault().post(ChatUserEvent(mutableListOf()))
+            onlineUsers.clear()
         }
     }
 }

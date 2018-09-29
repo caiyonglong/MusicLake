@@ -25,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.bean.MessageEvent;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
 import com.cyl.musiclake.common.Constants;
@@ -185,7 +184,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
-                if (controlFragment.topContainer != null) {
+                if (controlFragment != null && controlFragment.topContainer != null) {
                     controlFragment.topContainer.setAlpha(1 - slideOffset * 2);
                     if (controlFragment.topContainer.getAlpha() < 0) {
                         controlFragment.topContainer.setVisibility(View.GONE);
@@ -431,6 +430,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             setPlaylistQueueChange();
         } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
             Music music = PlayManager.getPlayingMusic();
+            if (controlFragment == null) return;
             if (music != null && music.isLove()) {
                 controlFragment.mIvLove.setImageResource(R.drawable.item_favorite_love);
             } else if (music != null && !music.isLove()) {

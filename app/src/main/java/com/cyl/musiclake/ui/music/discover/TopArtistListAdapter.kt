@@ -4,6 +4,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_SMALL
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.utils.CoverLoader
 
@@ -18,7 +19,7 @@ class TopArtistListAdapter(list: List<Artist>) : BaseQuickAdapter<Artist, BaseVi
         if (artist.name == null)
             return
         helper.setText(R.id.tv_name, artist.name)
-        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, 90), helper.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, PIC_SIZE_SMALL), helper.getView(R.id.iv_cover))
     }
 }
 
@@ -26,6 +27,6 @@ class ArtistListAdapter(artistList: MutableList<Artist>) : BaseQuickAdapter<Arti
 
     override fun convert(helper: BaseViewHolder, artist: Artist) {
         helper.setText(R.id.tv_name, artist.name)
-        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, 90), helper.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(mContext, MusicUtils.getAlbumPic(artist.picUrl, artist.type, PIC_SIZE_SMALL), helper.getView(R.id.iv_cover))
     }
 }
