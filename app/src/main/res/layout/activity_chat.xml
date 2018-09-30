@@ -26,29 +26,28 @@
                 android:background="@color/colorPrimary"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-
-                <TextView
-                    android:id="@+id/onlineUserTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:text="@string/online_users"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_16" />
+                <!--<TextView-->
+                    <!--android:id="@+id/onlineUserTv"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="end"-->
+                    <!--android:layout_marginEnd="@dimen/dp_8"-->
+                    <!--android:layout_marginStart="@dimen/dp_8"-->
+                    <!--android:text="@string/online_users"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/sp_16" />-->
 
             </android.support.v7.widget.Toolbar>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/usersRsv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_56"
-                app:layout_constraintBottom_toTopOf="@+id/messageRsv"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <!--<android.support.v7.widget.RecyclerView-->
+                <!--android:id="@+id/usersRsv"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_56"-->
+                <!--app:layout_constraintBottom_toTopOf="@+id/messageRsv"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent" />-->
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

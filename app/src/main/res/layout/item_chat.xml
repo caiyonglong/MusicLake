@@ -73,6 +73,8 @@
             android:padding="@dimen/dp_8"
             android:textColor="@color/black"
             android:textSize="14sp"
+            android:autoLink="email|web"
+            android:textIsSelectable="true"
             tools:text="testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" />
 
         <include

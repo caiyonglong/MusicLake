@@ -7,6 +7,7 @@ import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
+import com.cyl.musiclake.ui.chat.ChatDetailActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity;
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity;
@@ -62,4 +63,6 @@ public interface ActivityComponent {
     void inject(EditSongListActivity editMusicActivity);
 
     void inject(@NotNull ChatActivity chatActivity);
+
+    void inject(@NotNull ChatDetailActivity chatDetailActivity);
 }

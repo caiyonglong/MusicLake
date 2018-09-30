@@ -223,14 +223,23 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".ui.chat.ChatActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_chat"
-            android:theme="@style/MyThemeBlue">
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.chat.ChatDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_chat"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyThemeBlue" />
     </application>
 
 </manifest>

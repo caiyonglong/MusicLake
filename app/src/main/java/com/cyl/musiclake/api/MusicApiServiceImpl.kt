@@ -38,12 +38,12 @@ object MusicApiServiceImpl {
                 val musicList = mutableListOf<Music>()
                 if (it.status) {
                     if (type == ANY || type == NETEASE)
-//                        it.data?.netease?.songs?.forEach {
-//                            if (!it.cp) {
-//                                it.vendor = Constants.NETEASE
-//                                musicList.add(MusicUtils.getMusic(it))
-//                            }
-//                        }
+                        it.data.netease.songs?.forEach {
+                            if (!it.cp) {
+                                it.vendor = Constants.NETEASE
+                                musicList.add(MusicUtils.getMusic(it))
+                            }
+                        }
                     if (type == ANY || type == QQ)
                         it.data.qq.songs?.forEach {
                             if (!it.cp) {

@@ -166,7 +166,7 @@ public class CoverLoader {
         if (mContext == null) return;
         GlideApp.with(mContext)
                 .load(url)
-                .error(R.drawable.default_cover)
+                .error(R.drawable.ic_account_circle)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);

@@ -2,13 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_about"
-        android:title="@string/title_about_chat"
+        android:id="@+id/action_detail"
+        android:title="@string/chat_detail"
         app:showAsAction="collapseActionView" />
-
     <item
-        android:id="@+id/action_clear_msg"
-        android:title="@string/clear_msg"
+        android:id="@+id/action_about"
+        android:title="@string/chat_about"
         app:showAsAction="collapseActionView" />
 
 </menu>

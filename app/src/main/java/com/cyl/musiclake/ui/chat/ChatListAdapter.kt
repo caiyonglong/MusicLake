@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.chat
 
 import android.app.Activity
 import android.view.View
-import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.playlist.MusicInfo
@@ -30,7 +29,6 @@ class ChatListAdapter(list: List<MessageInfoBean>) : BaseQuickAdapter<MessageInf
         holder.setText(R.id.tv_comment_user, item.userInfo?.nickname ?: "")
         holder.setText(R.id.tv_comment_time, item.datetime)
         holder.setText(R.id.tv_comment_content, item.message)
-        holder.getView<TextView>(R.id.tv_comment_content).setTextIsSelectable(true)
         CoverLoader.loadImageView(mContext, item.userInfo?.avatar, holder.getView(R.id.civ_cover))
         if (item.type == SocketManager.MESSAGE_BROADCAST) {
             holder.getView<View>(R.id.tv_comment_content).visibility = View.VISIBLE
@@ -189,15 +187,16 @@ class OnlineUserListAdapter(list: List<UserInfoBean>) : BaseQuickAdapter<UserInf
     override fun convert(helper: BaseViewHolder, item: UserInfoBean) {
         CoverLoader.loadImageView(mContext, item.avatar, helper.getView(R.id.user_avatar))
         helper.setText(R.id.user_name, item.nickname)
+        helper.setText(R.id.user_name, item.nickname)
+        when {
+            item.platform == "android" -> helper.setImageResource(R.id.platformIv, R.drawable.ic_phone_android)
+            item.platform == "linux" -> helper.setImageResource(R.id.platformIv, R.drawable.linux)
+            item.platform == "windows" -> helper.setImageResource(R.id.platformIv, R.drawable.ic_desktop_windows)
+            item.platform == "pc" -> helper.setImageResource(R.id.platformIv, R.drawable.ic_desktop_windows)
+            item.platform == "osx" -> helper.setImageResource(R.id.platformIv, R.drawable.ic_desktop_mac_black)
+            else -> helper.setImageResource(R.id.platformIv, R.drawable.ic_phone_android)
+        }
         helper.itemView.setOnClickListener {
-            helper.getView<TextView>(R.id.user_name).visibility = View.VISIBLE
-            helper.getView<TextView>(R.id.user_name).scaleX = 0f
-            helper.getView<TextView>(R.id.user_name).scaleY = 0f
-            helper.getView<TextView>(R.id.user_name).animate().scaleY(1f).scaleX(1f).setDuration(300).start()
-            helper.getView<TextView>(R.id.user_name).postDelayed({
-                helper.getView<TextView>(R.id.user_name).animate().scaleY(0f).scaleX(0f).setDuration(300).start()
-                helper.getView<TextView>(R.id.user_name).postDelayed({ helper.getView<TextView>(R.id.user_name).visibility = View.GONE }, 300)
-            }, 3000)
         }
     }
 

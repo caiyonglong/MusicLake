@@ -82,6 +82,7 @@ class SocketManager {
                 val headers = args[0] as MutableMap<String, List<String>>
                 // modify request headers
                 LogUtil.e("请求头：" + PlaylistApiServiceImpl.token.toString())
+                headers["platform"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
                 headers["accesstoken"] = mutableListOf(PlaylistApiServiceImpl.token ?: "")
             }
             transport.on(Transport.EVENT_RESPONSE_HEADERS) {
@@ -94,6 +95,7 @@ class SocketManager {
             realUsersNum = (num[0] ?: 0).toString().toInt()
             EventBus.getDefault().post(SocketOnlineEvent(num = realUsersNum))
         }.on(MESSAGE_ONLINE_USERS) { result ->
+            LogUtil.e("当前在线人信息：${result[0] ?: ""}")
             val data = result[0] as JSONArray
             val users = mutableListOf<UserInfoBean>()
             for (i in 0 until data.length()) {
@@ -101,6 +103,7 @@ class SocketManager {
                     id = data.getJSONObject(i).getInt("id")
                     nickname = data.getJSONObject(i).getString("nickname")
                     avatar = data.getJSONObject(i).getString("avatar")
+                    platform = data.getJSONObject(i).getString("platform")
                 }
                 users.add(user)
             }

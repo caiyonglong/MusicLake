@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.chat
 
-import android.animation.Animator
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -8,6 +7,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
@@ -18,10 +18,11 @@ import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
-import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.view.NoticeView
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -32,10 +33,9 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     private var messages = mutableListOf<MessageInfoBean>()
     private var nums = 0
     private var mAdapter: ChatListAdapter? = null
-    private var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return getString(R.string.chat_title)
+        return getString(R.string.chat_title, MusicApp.socketManager.onlineUsers.size)
     }
 
     override fun getLayoutResID(): Int {
@@ -44,17 +44,19 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
     override fun initView() {
         mAdapter = ChatListAdapter(messages)
-        messageRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        linearLayoutManager.stackFromEnd = true
+        messageRsv.layoutManager = linearLayoutManager
         messageRsv.adapter = mAdapter
 //        mAdapter?.isUpFetchEnable = true
 //        mAdapter?.setUpFetchListener {
 //        }
         //用户头像列表
-        mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
-        usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        usersRsv.adapter = mUserAdapter
-        mUserAdapter?.bindToRecyclerView(usersRsv)
-        onlineUserTv.text = getString(R.string.online_users, MusicApp.socketManager.onlineUsers.size)
+//        mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
+//        usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        usersRsv.adapter = mUserAdapter
+//        mUserAdapter?.bindToRecyclerView(usersRsv)
+//        onlineUserTv.text = getString(R.string.online_users, MusicApp.socketManager.onlineUsers.size)
     }
 
     override fun initData() {
@@ -86,7 +88,6 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
             runOnUiThread {
                 messages.add(msgInfo)
                 mAdapter?.notifyItemInserted(messages.size)
-//                mAdapter?.setNewData(messages)
                 messageRsv?.smoothScrollToPosition(messages.size)
             }
         }
@@ -94,9 +95,10 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         override fun onOnlineUsers(users: MutableList<UserInfoBean>) {
             runOnUiThread {
                 nums = users.size
-                mUserAdapter?.setNewData(users)
-                usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
-                onlineUserTv.text = getString(R.string.online_users, users.size)
+//                mUserAdapter?.setNewData(users)
+//                usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
+//                onlineUserTv.text = getString(R.string.online_users, users.size)
+                updateTitle(getString(R.string.chat_title, MusicApp.socketManager.onlineUsers.size))
             }
         }
 
@@ -120,26 +122,17 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
      * 更新用户状态（上下线）
      */
     fun updateUserStatus(userInfo: UserInfoBean, isLeave: Boolean) {
-        userNameTv?.text = userInfo.nickname
-        userStatusTv?.text = if (isLeave) getString(R.string.user_join) else getString(R.string.user_leave)
-        CoverLoader.loadImageView(this, userInfo.avatar, userCoverIv)
-        promptView?.animate()?.cancel()
-        promptView?.visibility = View.VISIBLE
-        promptView?.animate()?.setListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                promptView?.visibility = View.GONE
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })?.setDuration(3000)?.start()
+        userNoticeContainerView.removeAllViews()
+        val noticeView = NoticeView(this).apply {
+            this.userInfo = userInfo
+            this.isLeave = isLeave
+        }
+        noticeView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        userNoticeContainerView.addView(noticeView)
+        noticeView.postDelayed({ userNoticeContainerView.removeView(noticeView) }, 2000)
+        if (userNoticeContainerView.childCount > 5) {
+            userNoticeContainerView.removeViewAt(0)
+        }
     }
 
     /**
@@ -209,8 +202,8 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.action_clear_msg) {
-            mPresenter?.deleteMessages()
+        if (item?.itemId == R.id.action_detail) {
+            startActivity<ChatDetailActivity>()
         } else if (item?.itemId == R.id.action_about) {
             MaterialDialog.Builder(this)
                     .title(R.string.prompt)
@@ -231,6 +224,9 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         messageRsv?.smoothScrollToPosition(messages.size)
     }
 
+    /**
+     * 显示历史消息
+     */
     override fun showHistortMessages(msgList: MutableList<MessageInfoBean>) {
         LogUtil.e("showHistortMessages")
         messages.addAll(0, msgList)

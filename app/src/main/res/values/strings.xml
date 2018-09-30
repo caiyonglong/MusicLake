@@ -370,9 +370,11 @@
     <string name="send_message">发送消息</string>
     <string name="title_activity_chat">音乐社区</string>
     <string name="title_about_chat">关于音乐社区</string>
-    <string name="chat_title">音乐社区</string>
+    <string name="chat_detail">详细信息</string>
+    <string name="chat_about">关于聊天室</string>
+    <string name="chat_title">聊天室(%1$d)</string>
     <string name="message_center">实时聊天室</string>
-    <string name="online_users">已登录用户(%1$d)</string>
+    <string name="online_users">已登录的在线用户(%1$d)</string>
     <string name="send">发送</string>
     <string name="custom_count_down_time">自定义时间</string>
     <string name="count_down_minutes">分钟（不能大于24小时）</string>
