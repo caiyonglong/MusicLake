@@ -20,9 +20,6 @@ class NoticeView : FrameLayout {
     private val userStatusTv by lazy { mRootView.findViewById<TextView>(R.id.userStatusTv) }
     private val userCoverIv by lazy { mRootView.findViewById<ImageView>(R.id.userCoverIv) }
 
-    var userInfo: UserInfoBean? = null
-    var isLeave: Boolean = false
-
     constructor(context: Context) : super(context) {
         init()
     }
@@ -32,16 +29,18 @@ class NoticeView : FrameLayout {
     }
 
     fun init() {
-        userNameTv?.text = userInfo?.nickname
-        userStatusTv?.text = if (isLeave) context.getString(R.string.user_join) else context.getString(R.string.user_leave)
-        CoverLoader.loadImageView(context, userInfo?.avatar, userCoverIv)
+    }
 
+    fun setNewData(userInfo: UserInfoBean, isLeave: Boolean) {
+        userNameTv?.text = userInfo.nickname
+        userStatusTv?.text = if (isLeave) context.getString(R.string.user_join) else context.getString(R.string.user_leave)
+        CoverLoader.loadImageView(context, userInfo.avatar, userCoverIv)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         this.visibility = View.VISIBLE
-        this.animate()?.setListener(object : Animator.AnimatorListener {
+        this.animate()?.alpha(0f)?.translationY(0f)?.setListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
             }
 

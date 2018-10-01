@@ -18,7 +18,9 @@ import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
+import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import com.cyl.musiclake.view.NoticeView
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
@@ -60,7 +62,8 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     }
 
     override fun initData() {
-        mPresenter?.loadMessages()
+        showLoading()
+        mPresenter?.loadMessages(FormatUtil.getChatDateTime(System.currentTimeMillis()))
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             if (Constants.TEXT_PLAIN == intent.type) {
                 dealTextMessage(intent)
@@ -122,14 +125,11 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
      * 更新用户状态（上下线）
      */
     fun updateUserStatus(userInfo: UserInfoBean, isLeave: Boolean) {
-        userNoticeContainerView.removeAllViews()
-        val noticeView = NoticeView(this).apply {
-            this.userInfo = userInfo
-            this.isLeave = isLeave
-        }
+        val noticeView = NoticeView(this)
+        noticeView.setNewData(userInfo, isLeave)
         noticeView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         userNoticeContainerView.addView(noticeView)
-        noticeView.postDelayed({ userNoticeContainerView.removeView(noticeView) }, 2000)
+        noticeView.postDelayed({ userNoticeContainerView.removeView(noticeView) }, 3000)
         if (userNoticeContainerView.childCount > 5) {
             userNoticeContainerView.removeViewAt(0)
         }
@@ -161,8 +161,9 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
             }
         })
         addIv.setOnClickListener {
+            //            updateUserStatus(MusicApp.socketManager.onlineUsers[0], true)
             MaterialDialog.Builder(this)
-                    .items("分享当前正在播放歌曲")
+                    .items("分享正在播放歌曲")
                     .itemsCallback { _, _, _, _ ->
                         sendMusicMessage()
                     }
@@ -174,7 +175,31 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
             }
             true
         }
+        mSwipeRefreshLayout?.isEnabled = true
+        mAdapter?.isUpFetchEnable = true
+        mAdapter?.setUpFetchListener {
+            startUpFetch()
+        }
         MusicApp.socketManager.addSocketListener(listener)
+    }
+
+    /**
+     * 下拉加载更多
+     */
+    private fun startUpFetch() {
+        /**
+         * set fetching on when start network request.
+         */
+        mAdapter?.isUpFetching = true
+        /**
+         * get data from internet.
+         */
+        mSwipeRefreshLayout?.isRefreshing = true
+        messageRsv.postDelayed({
+            if (messages.size > 0) {
+                mPresenter?.loadMessages(messages[0].datetime)
+            }
+        }, 2000)
     }
 
 
@@ -206,7 +231,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
             startActivity<ChatDetailActivity>()
         } else if (item?.itemId == R.id.action_about) {
             MaterialDialog.Builder(this)
-                    .title(R.string.prompt)
+                    .title(R.string.chat_about)
                     .content(R.string.about_music_lake)
                     .positiveText(R.string.sure)
                     .show()
@@ -228,10 +253,17 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
      * 显示历史消息
      */
     override fun showHistortMessages(msgList: MutableList<MessageInfoBean>) {
-        LogUtil.e("showHistortMessages")
+        LogUtil.e("showHistortMessages =" + msgList.size)
         messages.addAll(0, msgList)
         mAdapter?.notifyDataSetChanged()
+        hideLoading()
         messageRsv?.smoothScrollToPosition(msgList.size)
+        mAdapter?.isUpFetching = false
+        mSwipeRefreshLayout?.isRefreshing = false
+        if (msgList.size == 0) {
+            mSwipeRefreshLayout?.isEnabled = false
+            mAdapter?.isUpFetchEnable = false
+        }
     }
 
     override fun deleteSuccessful() {

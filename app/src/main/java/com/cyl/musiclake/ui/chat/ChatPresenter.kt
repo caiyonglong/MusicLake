@@ -7,6 +7,7 @@ import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketManager
+import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.ToastUtils
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -33,10 +34,17 @@ constructor() : BasePresenter<ChatContract.View>(), ChatContract.Presenter {
     /**
      * 加载云消息,默认加载云消息
      */
-    override fun loadMessages(start: String?, end: String?) {
-        model.getChatHistory(start, end, success = {
+    override fun loadMessages(end: String?) {
+        var endTime: String? = null
+        val start = end?.let {
+            val time = FormatUtil.getChatParseDateTime(it)
+            endTime = FormatUtil.getChatDateTime(time - 1)
+            FormatUtil.getChatDateTime(time - 1000 * 60 * 60 * 24 * 2)
+        }
+        model.getChatHistory(start, endTime, success = {
             it?.let { it1 -> mView?.showHistortMessages(it1) }
         }, fail = {
+            mView?.hideLoading()
             ToastUtils.show(it)
         })
     }

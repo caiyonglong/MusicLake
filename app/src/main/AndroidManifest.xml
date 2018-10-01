@@ -104,7 +104,8 @@
             android:name=".ui.music.search.SearchActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.zone.EditActivity"
             android:label="@string/app_name"
@@ -216,6 +217,9 @@
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.importplaylist.ImportPlaylistActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

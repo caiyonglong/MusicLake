@@ -118,7 +118,7 @@ public class ApiManager {
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                         .addInterceptor(mRewriteCacheControlInterceptor)
-                        .addInterceptor(mLoggingInterceptor)
+//                        .addInterceptor(mLoggingInterceptor)
                         .build();
             }
         }
@@ -194,6 +194,7 @@ public class ApiManager {
                                 }
                             } catch (IOException | JSONException e1) {
                                 e1.printStackTrace();
+                                result.error(MusicApp.getAppContext().getString(R.string.error_connection));
                             }
                         } else {
                             if (result != null) {
@@ -202,6 +203,8 @@ public class ApiManager {
                                 } else {
                                     result.error(e.getMessage());
                                 }
+                            } else {
+                                result.error(MusicApp.getAppContext().getString(R.string.error_connection));
                             }
                         }
 

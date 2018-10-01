@@ -7,56 +7,58 @@
     android:clickable="true"
     android:focusable="true">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/civ_cover"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="@dimen/dp_8"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_16"
-        android:src="@drawable/default_cover"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+    <TextView
+        android:id="@+id/tv_comment_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="#666666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@+id/tv_comment_user"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="20:38" />
 
     <TextView
         android:id="@+id/tv_comment_user"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_14"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_time"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/tv_comment_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_time"
         tools:text="userName" />
 
-    <TextView
-        android:id="@+id/tv_comment_time"
-        android:layout_width="0dp"
-        android:layout_height="13dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="@dimen/dp_16"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="#666666"
-        android:textSize="@dimen/sp_12"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_comment_user"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="20:38" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_cover"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/default_cover"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_user" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_8"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="@dimen/dp_8"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -69,20 +71,20 @@
             android:id="@+id/tv_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoLink="email|web"
             android:background="@drawable/bg_edit"
             android:padding="@dimen/dp_8"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            android:autoLink="email|web"
             android:textIsSelectable="true"
+            android:textSize="14sp"
             tools:text="testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" />
 
         <include
             android:id="@+id/include_music"
-            android:visibility="gone"
             layout="@layout/item_play_queue"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
     </LinearLayout>
 
 

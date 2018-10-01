@@ -3,6 +3,8 @@ package com.cyl.musiclake.api
 
 import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musicapi.bean.*
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.R
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -34,7 +36,7 @@ object MusicApiServiceImpl {
      */
     fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
-            BaseApiImpl.searchSong(key, limit, page) {
+            BaseApiImpl.searchSong(key, limit, page, success = {
                 val musicList = mutableListOf<Music>()
                 if (it.status) {
                     if (type == ANY || type == NETEASE)
@@ -61,9 +63,12 @@ object MusicApiServiceImpl {
                     result.onNext(musicList)
                     result.onComplete()
                 } else {
-                    result.onError(Throwable("service error"))
+                    result.onError(Throwable(MusicApp.getAppContext().getString(R.string.error_search)))
                 }
-            }
+            }, fail = {
+                result.onError(Throwable(it
+                        ?: MusicApp.getAppContext().getString(R.string.error_connection)))
+            })
         }
     }
 
@@ -315,27 +320,27 @@ object MusicApiServiceImpl {
                 MusicApi.getLocalLyricInfo(mLyricPath)
             } else create { result ->
                 BaseApiImpl.getLyricInfo(vendor, mid) {
-                            if (it.status) {
-                                val lyricInfo = it.data.lyric
-                                val lyric = StringBuilder()
-                                lyricInfo.forEach {
-                                    lyric.append(it)
-                                    lyric.append("\n")
-                                }
-                                it.data.translate.forEach {
-                                    lyric.append(it)
-                                    lyric.append("\n")
-                                }
-                                //保存文件
-                                val save = FileUtils.writeText(mLyricPath, lyric.toString())
-                                LogUtil.e("保存网络歌词：$save")
-                                Observable.fromArray(lyric)
-                                result.onNext(lyric.toString())
-                                result.onComplete()
-                            } else {
-                                result.onError(Throwable(""))
-                            }
+                    if (it.status) {
+                        val lyricInfo = it.data.lyric
+                        val lyric = StringBuilder()
+                        lyricInfo.forEach {
+                            lyric.append(it)
+                            lyric.append("\n")
                         }
+                        it.data.translate.forEach {
+                            lyric.append(it)
+                            lyric.append("\n")
+                        }
+                        //保存文件
+                        val save = FileUtils.writeText(mLyricPath, lyric.toString())
+                        LogUtil.e("保存网络歌词：$save")
+                        Observable.fromArray(lyric)
+                        result.onNext(lyric.toString())
+                        result.onComplete()
+                    } else {
+                        result.onError(Throwable(""))
+                    }
+                }
             }
         } catch (e: Throwable) {
             e.printStackTrace()

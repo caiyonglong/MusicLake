@@ -7,23 +7,13 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("SimpleDateFormat")
 /**
  * <br></br>
  * **进行一些转换工作**
  */
 object FormatUtil {
 
-
-    /**
-     * 获取当前时间
-     *
-     * @return 时间
-     */
-    val time: String
-        get() {
-            val dfs = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            return dfs.format(Date())
-        }
 
     /**
      * 格式化时间
@@ -84,11 +74,11 @@ object FormatUtil {
 
     @SuppressLint("SimpleDateFormat")
             /**
-     * 格式化时间
-     *
-     * @param time 时间值 (00:00 -23:59:59)
-     * @return 时间
-     */
+             * 格式化时间
+             *
+             * @param time 时间值 (00:00 -23:59:59)
+             * @return 时间
+             */
     fun formatDate(time: String): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val parse = dateFormat.parse(time)
@@ -215,10 +205,27 @@ object FormatUtil {
      * @return 时间
      */
     fun distime(time: Long): String {
-
         val dfs = SimpleDateFormat("yyyy-MM-dd")
         val date = Date(time)
         return dfs.format(date)
     }
 
+    private val dfs by lazy { SimpleDateFormat("yyyy-MM-dd HH:mm:ss") }
+
+    /**
+     * 获取当前时间
+     * @return 时间 yyyy-MM-dd HH:mm:ss
+     */
+    fun getChatDateTime(time: Long): String {
+        return dfs.format(Date(time))
+    }
+
+
+    /**
+     * 根据字符串获取当前时间
+     * @return 时间 yyyy-MM-dd HH:mm:ss
+     */
+    fun getChatParseDateTime(time: String): Long {
+        return dfs.parse(time).time
+    }
 }

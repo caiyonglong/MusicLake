@@ -167,6 +167,7 @@
     <string name="action_rotate">旋转</string>
 
     <string name="error_connection">网络连接异常，请稍后重试！</string>
+    <string name="error_search">搜索失败，请稍后重试</string>
     <string name="secret_num">~~ 动态 %1$d ~~</string>
     <string name="error_playing_track">播放出错</string>
     <string name="folders">文件夹</string>
@@ -323,6 +324,7 @@
     <string name="about_card1_message">嗨! 欢迎使用音乐湖！</string>
     <string name="about_title">如果你喜欢这个应用，给个Star吧!</string>
     <string name="about_git_hub">源代码(GitHub)</string>
+    <string name="about_pc">PC端</string>
     <string name="about_update">检查更新</string>
     <string name="download_exits">%1$s已在下载列表中…</string>
 
@@ -374,7 +376,7 @@
     <string name="chat_about">关于聊天室</string>
     <string name="chat_title">聊天室(%1$d)</string>
     <string name="message_center">实时聊天室</string>
-    <string name="online_users">已登录的在线用户(%1$d)</string>
+    <string name="online_users">聊天室成员(%1$d)</string>
     <string name="send">发送</string>
     <string name="custom_count_down_time">自定义时间</string>
     <string name="count_down_minutes">分钟（不能大于24小时）</string>
@@ -382,7 +384,7 @@
     <string name="chat_open">打开</string>
     <string name="chat_close">关闭</string>
     <string name="clear_msg">清除消息记录</string>
-    <string name="about_music_lake">实时统计功能主要用于实时统计MusicLake的在线人数，登录后你可以在这里发送消息，反馈问题，分享歌曲！</string>
+    <string name="about_music_lake">实时统计功能主要用于实时统计在线人数，聊天室功能给你一个反馈问题，分享歌曲的一个平台！</string>
     <string name="open_socket_tips">请在设置中开启实时统计功能！</string>
     <string name="playing_empty">暂无播放任何歌曲</string>
     <string name="weibo_login">微博登录</string>
@@ -390,5 +392,6 @@
     <string name="weibosdk_demo_toast_auth_canceled">登录已取消</string>
     <string name="user_join">下线</string>
     <string name="user_leave">上线</string>
+    <string name="chat_gg">消息支持云备份！再也不用担心消息哦，功能暂时还不够完善，如遇bug问题，请及时反馈，我会尽快修复。感谢使用！</string>
 
 </resources>

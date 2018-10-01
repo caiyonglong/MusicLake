@@ -232,6 +232,7 @@ public class Constants {
      */
     public static final String ABOUT_MUSIC_LAKE = "https://github.com/caiyonglong/MusicLake";
     public static final String ABOUT_MUSIC_LAKE_ISSUES = "https://github.com/caiyonglong/MusicLake/issues/new";
+    public static final String ABOUT_MUSIC_LAKE_PC = "https://github.com/sunzongzheng/music/releases";
     public static final String ABOUT_MUSIC_LAKE_URL = "https://github.com/caiyonglong/MusicLake/blob/develop/README.md";
 
 

@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="@color/colorPrimary"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:background="@color/colorPrimary">
 
     <EditText
         android:id="@+id/searchEditText"
@@ -18,6 +16,8 @@
         android:background="@color/colorPrimary"
         android:drawablePadding="8dp"
         android:hint="@string/search"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:imeOptions="actionSearch|flagNoFullscreen"
         android:inputType="textFilter|textNoSuggestions"
         android:maxLines="1"

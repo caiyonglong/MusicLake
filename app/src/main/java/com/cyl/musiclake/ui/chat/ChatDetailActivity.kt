@@ -17,7 +17,7 @@ class ChatDetailActivity : BaseActivity<ChatPresenter>() {
     private var mUserAdapter: OnlineUserListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return getString(R.string.chat_about)
+        return getString(R.string.chat_detail)
     }
 
     override fun getLayoutResID(): Int {

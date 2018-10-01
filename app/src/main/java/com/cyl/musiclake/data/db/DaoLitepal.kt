@@ -23,9 +23,9 @@ object DaoLitepal {
      */
     fun getAllSearchInfo(title: String? = null): MutableList<SearchHistoryBean> {
         return if (title == null) {
-            LitePal.findAll(SearchHistoryBean::class.java)
+            LitePal.order("id desc").find(SearchHistoryBean::class.java)
         } else {
-            LitePal.where("title like ?", "%$title%").find(SearchHistoryBean::class.java)
+            LitePal.where("title like ?", "%$title%").order("id desc").find(SearchHistoryBean::class.java)
         }
     }
 

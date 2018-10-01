@@ -14,8 +14,8 @@
 
 <body>
 <script>
-        dsBridge.registerAsyn("asyn", {
-            tag:"asyn",
+        dsBridge.registerAsyn("musicApi", {
+            tag:"musicApi",
             //搜索全部功能
             searchSong: function (keyword,limit,offset, responseCallback) {
                 musicApi.searchSong(keyword,offset).then(function (data) {

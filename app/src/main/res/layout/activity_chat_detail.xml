@@ -19,6 +19,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include layout="@layout/card_chat_detail_1" />
+
             <include layout="@layout/card_chat_detail" />
 
         </LinearLayout>

@@ -33,7 +33,7 @@ public class TestActivity extends BaseActivity {
             statusTv.setText("searchSong");
             resultTv.setText(result.toString());
             return null;
-        });
+        }, null);
     }
 
     @OnClick(R.id.btn_test3)

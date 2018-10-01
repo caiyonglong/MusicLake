@@ -3,6 +3,7 @@ package com.cyl.musiclake.base;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -122,6 +123,9 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         }
 
         if (mSwipeRefreshLayout != null) {
+            //设置刷新球颜色
+            mSwipeRefreshLayout.setColorSchemeColors(Color.parseColor("#05b962"), Color.parseColor("#F4B400"), Color.parseColor("#DB4437"));
+            mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.WHITE);
             mSwipeRefreshLayout.setEnabled(false);
         }
     }

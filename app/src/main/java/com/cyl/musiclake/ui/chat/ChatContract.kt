@@ -14,7 +14,7 @@ interface ChatContract {
 
     interface Presenter : BaseContract.BasePresenter<View> {
         fun sendMusicMessage()
-        fun loadMessages(start: String? = null, end: String? = null)
+        fun loadMessages( end: String? = null)
         fun loadLocalMessages()
         fun deleteMessages()
     }
