@@ -30,7 +30,7 @@ deploy:
   provider: releases
   api_key: ${GH_TOKEN}
   file:
-    - $HOME/app/build/outputs/apk/release/*
+    - $HOME/app/release/*
   skip_cleanup: true
   on:
     tags: true
