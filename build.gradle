@@ -2,7 +2,7 @@
 
 buildscript {
     ext.anko_version = '0.10.5'
-    ext.kotlin_version = '1.2.51'
+    ext.kotlin_version = '1.2.61'
     ext.support_version = '27.1.1'
     ext.retrofit_version = '2.4.0'
     repositories {

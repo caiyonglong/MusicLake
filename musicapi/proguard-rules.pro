@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#x5内核
+-dontwarn com.tencent.smtt.**
+-keep class com.tencent.smtt.** { *; }

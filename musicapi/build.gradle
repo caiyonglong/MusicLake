@@ -3,9 +3,6 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
-
-
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 27
@@ -31,7 +28,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
+    api 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
+
     api 'com.squareup.okhttp3:okhttp:3.10.0'
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'com.android.support:appcompat-v7:27.1.1'

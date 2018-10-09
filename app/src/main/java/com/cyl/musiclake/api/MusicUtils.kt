@@ -1,11 +1,11 @@
 package com.cyl.musiclake.api
 
-import com.cyl.musicapi.bean.ListItem
 import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.netease.TracksItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
+import com.cyl.musicapi.playlist.QualityBean
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
@@ -17,46 +17,14 @@ import com.cyl.musiclake.common.Constants
 object MusicUtils {
 
     /**
-     * 在线歌曲实体类转化成本地歌曲实体
-     */
-    fun getMusic(item: ListItem): Music {
-        val music = Music()
-        music.mid = item.id.toString()
-        music.title = item.name
-        music.type = Constants.NETEASE
-        music.album = item.album.name
-        music.isOnline = true
-        music.albumId = item.album.id
-        music.commentId = item.commentId.toString()
-        music.isCp = item.cp
-
-        if (item.artists != null) {
-            var artistIds = item.artists?.get(0)?.id
-            var artistNames = item.artists?.get(0)?.name
-            for (j in 1 until item.artists?.size!! - 1) {
-                artistIds += ",${item.artists?.get(j)?.id}"
-                artistNames += ",${item.artists?.get(j)?.name}"
-            }
-            music.artist = artistNames
-            music.artistId = artistIds
-        }
-        music.coverUri = item.album.cover
-        music.coverBig = item.album.cover
-        music.coverSmall = item.album.cover
-        return music
-    }
-
-    /**
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体
      */
     fun getMusic(musicInfo: MusicInfo): Music {
         val music = Music()
         if (musicInfo.songId != null) {
             music.mid = musicInfo.songId
-            music.commentId = musicInfo.songId
         } else if (musicInfo.id != null) {
             music.mid = musicInfo.id
-            music.commentId = musicInfo.id
         }
         music.collectId = musicInfo.id
         music.title = musicInfo.name
@@ -64,7 +32,6 @@ object MusicUtils {
         music.type = musicInfo.vendor
         music.album = musicInfo.album.name
         music.albumId = musicInfo.album.id
-        music.commentId = musicInfo.commentId
         music.isCp = musicInfo.cp
         music.isDl = musicInfo.dl
 
@@ -94,7 +61,6 @@ object MusicUtils {
             val music = Music()
             it.id?.let { id ->
                 music.mid = id
-                music.commentId = id
             }
             music.title = it.name
             music.type = type
@@ -130,7 +96,6 @@ object MusicUtils {
             val music = Music()
             it.id?.let { id ->
                 music.mid = id
-                music.commentId = id
             }
             music.title = it.name
             music.type = Constants.NETEASE
@@ -169,7 +134,6 @@ object MusicUtils {
         music.isOnline = true
         music.album = song.album.name
         music.albumId = song.album.id
-        music.commentId = song.commentId
         music.isCp = song.cp
         music.isDl = song.dl
 
@@ -262,9 +226,8 @@ object MusicUtils {
         }
         val album = Album(music.albumId, music.album, music.coverUri)
         if (music.type == Constants.BAIDU) music.isCp = false
-        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, music.mid, music.isCp, music.isDl)
+        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, cp = music.isCp, dl = music.isDl, quality = QualityBean())
     }
-
 
     /**
      * 获取歌手名

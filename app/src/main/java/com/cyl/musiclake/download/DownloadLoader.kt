@@ -27,7 +27,11 @@ object DownloadLoader {
         val data = LitePal.where("finish = 1").find(TasksManagerModel::class.java)
         data.forEach {
             val music = it.mid?.let { it1 ->
-                DaoLitepal.getMusicInfo(it1)
+                try {
+                    DaoLitepal.getMusicInfo(it1)
+                } catch (e: Throwable) {
+                    null
+                }
             }
             music?.forEach { origin ->
                 if (origin.uri != null || origin.uri?.startsWith("http:")!!) {

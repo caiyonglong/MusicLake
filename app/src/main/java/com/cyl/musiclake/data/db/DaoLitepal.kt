@@ -161,7 +161,7 @@ object DaoLitepal {
     }
 
     fun getMusicInfo(mid: String): MutableList<Music>? {
-        return LitePal.where("mid =? ", mid).find(Music::class.java)
+        return LitePal.where("mid = ? ", mid).find(Music::class.java)
     }
 
     fun removeSong(pid: String, mid: String) {

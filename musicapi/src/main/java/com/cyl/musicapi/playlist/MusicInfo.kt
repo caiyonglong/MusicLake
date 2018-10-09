@@ -20,7 +20,6 @@ data class Album(@SerializedName("id")
                  @SerializedName("cover")
                  val cover: String? = "")
 
-
 data class MusicInfo(@SerializedName("id")
                      val id: String?,
                      @SerializedName("songId")
@@ -33,12 +32,19 @@ data class MusicInfo(@SerializedName("id")
                      val album: Album,
                      @SerializedName("vendor")
                      var vendor: String? = "",
-                     @SerializedName("commentId")
-                     val commentId: String? = "",
                      @SerializedName("dl")
                      val dl: Boolean = false,
                      @SerializedName("cp")
-                     val cp: Boolean = false)
+                     val cp: Boolean = false,
+                     @SerializedName("quality")
+                     val quality: QualityBean)
+
+data class QualityBean(@SerializedName("192")
+                       val normal: Boolean = false,
+                       @SerializedName("320")
+                       val middle: Boolean = false,
+                       @SerializedName("999")
+                       val high: Boolean = false)
 
 data class CollectBatchBean(@SerializedName("ids")
                             val ids: List<String>? = null,

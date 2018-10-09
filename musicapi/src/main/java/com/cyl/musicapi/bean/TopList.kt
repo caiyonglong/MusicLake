@@ -1,6 +1,6 @@
 package com.cyl.musicapi.bean
 
-
+import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.annotations.SerializedName
 
 data class NeteaseBean(@SerializedName("data")
@@ -17,20 +17,6 @@ data class TopData(@SerializedName("cover")
                    @SerializedName("description")
                    val description: String = "",
                    @SerializedName("list")
-                   val list: List<ListItem>?)
-
-
-data class ListItem(@SerializedName("artists")
-                    val artists: List<ArtistsItem>?,
-                    @SerializedName("album")
-                    val album: Album,
-                    @SerializedName("name")
-                    val name: String = "",
-                    @SerializedName("commentId")
-                    val commentId: Int = 0,
-                    @SerializedName("id")
-                    val id: Int = 0,
-                    @SerializedName("cp")
-                    val cp: Boolean = false)
+                   val list: List<MusicInfo>?)
 
 

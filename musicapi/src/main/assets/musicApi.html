@@ -14,8 +14,8 @@
 
 <body>
 <script>
-        dsBridge.registerAsyn("musicApi", {
-            tag:"musicApi",
+    dsBridge.registerAsyn("api", {
+            tag:"api",
             //搜索全部功能
             searchSong: function (keyword,limit,offset, responseCallback) {
                 musicApi.searchSong(keyword,offset).then(function (data) {
@@ -92,6 +92,8 @@
                 })
             }
         })
+
+
 
 </script>
 </body>

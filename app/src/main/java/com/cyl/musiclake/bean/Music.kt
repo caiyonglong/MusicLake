@@ -14,6 +14,7 @@ import org.litepal.crud.LitePalSupport
 class Music() : LitePalSupport(), Parcelable {
     // 歌曲类型 本地/网络
     var type: String? = null
+    //数据库存储id
     var id: Long = 0
     // 歌曲id
     var mid: String? = null
@@ -57,8 +58,6 @@ class Music() : LitePalSupport(), Parcelable {
     var isCp: Boolean = false
     //在线歌曲是否付费歌曲，false 不能下载
     var isDl: Boolean = true
-    //歌曲评论Id
-    var commentId: String? = null
     //收藏id
     var collectId: String? = null
 
@@ -86,7 +85,6 @@ class Music() : LitePalSupport(), Parcelable {
         date = parcel.readLong()
         isCp = parcel.readByte() != 0.toByte()
         isDl = parcel.readByte() != 0.toByte()
-        commentId = parcel.readString()
         collectId = parcel.readString()
     }
 
@@ -118,7 +116,6 @@ class Music() : LitePalSupport(), Parcelable {
         parcel.writeLong(date)
         parcel.writeByte(if (isCp) 1 else 0)
         parcel.writeByte(if (isDl) 1 else 0)
-        parcel.writeString(commentId)
         parcel.writeString(collectId)
     }
 

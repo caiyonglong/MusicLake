@@ -43,7 +43,7 @@ object BaseApiImpl {
      * @param query
      */
     fun searchSong(query: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit, fail: ((String?) -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.searchSong", arrayOf(query, limit, offset)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.searchSong", arrayOf(query, limit, offset)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
                 success.invoke(result)
@@ -55,25 +55,25 @@ object BaseApiImpl {
         }
 //        when (type) {
 //            "ANY" -> {
-//                mWebView?.callHandler("musicApi.searchSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                mWebView?.callHandler("api.searchSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
 //                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
 //                    success.invoke(result)
 //                })
 //            }
 //            "QQ" -> {
-//                mWebView?.callHandler("musicApi.searchQQSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                mWebView?.callHandler("api.searchQQSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
 //                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
 //                    success.invoke(result)
 //                })
 //            }
 //            "XIAMI" -> {
-//                mWebView?.callHandler("musicApi.searchXiamiSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                mWebView?.callHandler("api.searchXiamiSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
 //                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
 //                    success.invoke(result)
 //                })
 //            }
 //            "NETEASE" -> {
-//                mWebView?.callHandler("musicApi.searchNeteaseSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
+//                mWebView?.callHandler("api.searchNeteaseSong", arrayOf(query, limit, offset), { retValue: JSONObject ->
 //                    val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
 //                    success.invoke(result)
 //                })
@@ -86,7 +86,7 @@ object BaseApiImpl {
      * 获取歌曲详情
      */
     fun getSongDetail(vendor: String, id: String, success: (result: SongDetail) -> Unit, fail: (() -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.getSongDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getSongDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongDetail>(retValue.toString(), SongDetail::class.java)
                 success.invoke(result)
@@ -101,14 +101,14 @@ object BaseApiImpl {
      * [101126,16435051,139808]
      */
     fun getBatchSongDetail(query: String, ids: Array<String>, success: (result: BatchSongDetail) -> Unit) {
-        mWebView?.callHandler("musicApi.getBatchSongDetail", arrayOf<Any>(query, ids)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getBatchSongDetail", arrayOf<Any>(query, ids)) { retValue: JSONObject ->
             val result = gson.fromJson<BatchSongDetail>(retValue.toString(), BatchSongDetail::class.java)
             success.invoke(result)
         }
     }
 
     fun getTopList(id: String, success: (result: NeteaseBean) -> Unit) {
-        mWebView?.callHandler("musicApi.getTopList", arrayOf<Any>(id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getTopList", arrayOf<Any>(id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<NeteaseBean>(retValue.toString(), NeteaseBean::class.java)
                 success.invoke(result)
@@ -119,7 +119,7 @@ object BaseApiImpl {
     }
 
     fun getLyricInfo(vendor: String, id: String, success: (result: LyricData) -> Unit) {
-        mWebView?.callHandler("musicApi.getLyric", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getLyric", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<LyricData>(retValue.toString(), LyricData::class.java)
                 success.invoke(result)
@@ -130,7 +130,7 @@ object BaseApiImpl {
     }
 
     fun getComment(vendor: String, id: String, success: (result: Any) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.getComment", arrayOf(vendor, id, 1, 50)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getComment", arrayOf(vendor, id, 1, 50)) { retValue: JSONObject ->
             if (retValue["status"] as Boolean) {
                 println(retValue.toString())
                 val rr = retValue.getJSONObject("data").getJSONArray("comments")?.getJSONObject(0)
@@ -158,7 +158,7 @@ object BaseApiImpl {
     }
 
     fun getSongUrl(vendor: String, id: String, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.getSongUrl", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getSongUrl", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)
                 success.invoke(result)
@@ -173,7 +173,7 @@ object BaseApiImpl {
      * id，歌手ID
      */
     fun getArtistSongs(vendor: String, id: String, offset: Int, limit: Int, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.getArtistSongs", arrayOf<Any>(vendor, id, offset, limit)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getArtistSongs", arrayOf<Any>(vendor, id, offset, limit)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
                 success.invoke(result)
@@ -188,7 +188,7 @@ object BaseApiImpl {
      * id，专辑ID
      */
     fun getAlbumSongs(vendor: String, id: String, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.getAlbumSongs", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getAlbumSongs", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
                 success.invoke(result)
@@ -203,7 +203,7 @@ object BaseApiImpl {
      * id，专辑ID
      */
     fun getAlbumDetail(vendor: String, id: String, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("musicApi.getAlbumDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getAlbumDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
                 success.invoke(result)
