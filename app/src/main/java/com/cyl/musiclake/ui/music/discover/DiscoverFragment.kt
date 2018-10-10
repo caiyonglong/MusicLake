@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.discover
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
@@ -13,7 +14,14 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
+import com.zhouwei.mzbanner.holder.MZHolderCreator
 import kotlinx.android.synthetic.main.frag_discover.*
+import android.view.LayoutInflater
+import android.widget.ImageView
+import com.cyl.musicapi.netease.BannerBean
+import com.zhouwei.mzbanner.holder.MZViewHolder
+
+
 
 
 /**
@@ -53,6 +61,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun initViews() {
+
         wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
         //适配器
         mNeteaseAdapter = TopPlaylistAdapter(playlist)
@@ -79,6 +88,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         mRadioAdapter?.bindToRecyclerView(radioRsv)
 
     }
+
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -144,6 +154,20 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     override fun showBaiduCharts(charts: MutableList<Playlist>) {
     }
 
+    override fun showBannerView(banners :MutableList<BannerBean>){
+        //banner
+        mzBannerView.setPages(banners as List<Nothing>) { BannerViewHolder() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mzBannerView.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mzBannerView.pause()
+    }
     override fun showNeteaseCharts(charts: MutableList<Playlist>) {
         hideLoading()
         playlistView.visibility = View.VISIBLE

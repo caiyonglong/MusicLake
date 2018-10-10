@@ -163,4 +163,7 @@ dependencies {
     api 'com.tencent.bugly:nativecrashreport:3.3.1'
     //微博
     api 'com.sina.weibo.sdk:core:4.3.0:openDefaultRelease@aar'
+
+    //横幅
+    api 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
 }

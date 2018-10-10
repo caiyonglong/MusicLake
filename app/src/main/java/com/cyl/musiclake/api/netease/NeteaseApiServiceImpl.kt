@@ -185,4 +185,11 @@ object NeteaseApiServiceImpl {
     fun getCatList(): Observable<CatListBean> {
         return apiService.getCatList()
     }
+
+    /**
+     * 获取banner
+     */
+    fun getBanners(): Observable<BannerResult> {
+        return apiService.getBanner()
+    }
 }

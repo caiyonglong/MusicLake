@@ -1,13 +1,19 @@
 package com.cyl.musiclake.ui.music.discover
 
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.CoverLoader
+import com.zhouwei.mzbanner.holder.MZViewHolder
 
 /**
  * 作者：yonglong on 2016/8/10 21:36
@@ -40,6 +46,24 @@ class TopPlaylistAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, Base
         CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))
         helper.setText(R.id.tv_title, playlist.name)
         helper.setText(R.id.tv_playCount, "播放次数：${playlist.playCount}")
+    }
+}
+
+/**
+ * 轮播图viewHolder
+ */
+class BannerViewHolder : MZViewHolder<BannerBean> {
+    private var mImageView: ImageView? = null
+    override fun createView(context: Context): View {
+        // 返回页面布局
+        val view = LayoutInflater.from(context).inflate(R.layout.item_banner, null)
+        mImageView = view.findViewById(R.id.banner_image) as ImageView
+        return view
+    }
+
+    override fun onBind(context: Context, position: Int, data: BannerBean?) {
+        // 数据绑定
+        CoverLoader.loadImageView(context,data?.picUrl,mImageView)
     }
 }
 

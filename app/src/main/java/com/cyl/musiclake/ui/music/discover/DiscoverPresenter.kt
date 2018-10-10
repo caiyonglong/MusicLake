@@ -1,5 +1,7 @@
 package com.cyl.musiclake.ui.music.discover
 
+import com.cyl.musicapi.netease.BannerBean
+import com.cyl.musicapi.netease.BannerResult
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
@@ -59,10 +61,27 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
     }
 
     override fun loadRaios() {
+        loadBannerView()
         val observable = BaiduApiServiceImpl.getRadioChannel()
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showRadioChannels(result)
+            }
+
+            override fun error(msg: String) {
+                println(msg)
+            }
+        })
+    }
+
+    fun loadBannerView() {
+        val observable = NeteaseApiServiceImpl.getBanners()
+        ApiManager.request(observable, object : RequestCallBack<BannerResult> {
+            override fun success(result: BannerResult) {
+                if (result.code==200){
+                    mView?.showBannerView(result.banners)
+                }
+//                mView?.(result)
             }
 
             override fun error(msg: String) {

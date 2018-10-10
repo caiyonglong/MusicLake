@@ -48,4 +48,7 @@ interface NeteaseApiService {
     @GET("playlist/catlist")
     fun getCatList(): Observable<CatListBean>
 
+    @GET("banner")
+    fun getBanner(): Observable<BannerResult>
+
 }

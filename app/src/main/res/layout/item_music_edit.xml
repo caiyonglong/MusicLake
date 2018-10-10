@@ -36,7 +36,8 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_title"
         app:layout_constraintStart_toEndOf="@+id/cb_select"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/default_cover" />
+        app:srcCompat="@drawable/default_cover"
+        android:contentDescription="TODO" />
 
 
     <TextView
@@ -83,7 +84,6 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:padding="2dp"
         android:src="@drawable/netease"
@@ -96,10 +96,10 @@
     <ImageView
         android:id="@+id/iv_more"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="0dp"
         android:contentDescription="@null"
+        android:paddingStart="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_16"
         android:src="@drawable/ic_more_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

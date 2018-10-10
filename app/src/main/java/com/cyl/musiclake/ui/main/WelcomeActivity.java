@@ -3,23 +3,33 @@ package com.cyl.musiclake.ui.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.cyl.musicapi.netease.BannerResult;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
 import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.net.RequestCallBack;
+import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
-
 /**
  * Created by 永龙 on 2016/3/19.
  */
 public class WelcomeActivity extends BaseActivity {
 
     @BindView(R.id.wel_container)
-    RelativeLayout container;
+    ConstraintLayout container;
+    @BindView(R.id.iv_header_cover)
+    ImageView heardCoverIv;
     RxPermissions rxPermissions;
 
     //需要检查的权限
@@ -42,6 +52,7 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
     }
 
     @Override
@@ -80,7 +91,9 @@ public class WelcomeActivity extends BaseActivity {
      * 检查服务是否运行
      */
     private void initPlayQueue() {
-        mHandler.postDelayed(this::startMainActivity, 2000);
+        getCoverImageUrl();
+
+
     }
 
     /**
@@ -91,6 +104,30 @@ public class WelcomeActivity extends BaseActivity {
         startActivity(intent);
         overridePendingTransition(0, 0);
         finish();
+    }
+
+    private void getCoverImageUrl(){
+        mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
+//        ApiManager.request(NeteaseApiServiceImpl.INSTANCE.getBanners(), new RequestCallBack<BannerResult>() {
+//            @Override
+//            public void success(BannerResult result) {
+//                if (result.getCode()==200){
+//                    CoverLoader.loadBitmap(WelcomeActivity.this, result.getBanners().get(0).getPicUrl(), new CoverLoader.BitmapCallBack() {
+//                        @Override
+//                        public void showBitmap(Bitmap bitmap) {
+//                            heardCoverIv.setImageDrawable(ImageUtils.createBlurredImageFromBitmap(bitmap, 12));
+//                        }
+//                    });
+//
+//                    mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
+//                }
+//            }
+//
+//            @Override
+//            public void error(String msg) {
+//                mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
+//            }
+//        });
     }
 
 }
