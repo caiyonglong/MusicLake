@@ -1,11 +1,10 @@
 package com.cyl.musiclake.bean
 
-import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
+import com.cyl.musicapi.playlist.QualityBean
 import org.litepal.crud.LitePalSupport
 
-@SuppressLint("ParcelCreator")
 /**
  * 作者：yonglong on 2016/8/9 10:50
  * 邮箱：643872807@qq.com
@@ -60,6 +59,10 @@ class Music() : LitePalSupport(), Parcelable {
     var isDl: Boolean = true
     //收藏id
     var collectId: String? = null
+    //音乐品质，默认标准模式
+    var quality: Int = 128000
+    //音乐品质选择
+    var qualityList: QualityBean? = null
 
     constructor(parcel: Parcel) : this() {
         type = parcel.readString()
@@ -86,41 +89,72 @@ class Music() : LitePalSupport(), Parcelable {
         isCp = parcel.readByte() != 0.toByte()
         isDl = parcel.readByte() != 0.toByte()
         collectId = parcel.readString()
+        quality = parcel.readInt()
     }
 
-    override fun toString(): String {
-        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp,isDl=$isDl, collectId=$collectId)"
+    constructor(type: String?, id: Long, mid: String?, title: String?, artist: String?, album: String?, artistId: String?, albumId: String?, trackNumber: Int, duration: Long, isLove: Boolean, isOnline: Boolean, uri: String?, lyric: String?, coverUri: String?, coverBig: String?, coverSmall: String?, fileName: String?, fileSize: Long, year: String?, date: Long, isCp: Boolean, isDl: Boolean, collectId: String?, quality: Int, qualityList: QualityBean?) : this() {
+        this.type = type
+        this.id = id
+        this.mid = mid
+        this.title = title
+        this.artist = artist
+        this.album = album
+        this.artistId = artistId
+        this.albumId = albumId
+        this.trackNumber = trackNumber
+        this.duration = duration
+        this.isLove = isLove
+        this.isOnline = isOnline
+        this.uri = uri
+        this.lyric = lyric
+        this.coverUri = coverUri
+        this.coverBig = coverBig
+        this.coverSmall = coverSmall
+        this.fileName = fileName
+        this.fileSize = fileSize
+        this.year = year
+        this.date = date
+        this.isCp = isCp
+        this.isDl = isDl
+        this.collectId = collectId
+        this.quality = quality
+        this.qualityList = qualityList
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(type)
-        parcel.writeLong(id)
-        parcel.writeString(mid)
-        parcel.writeString(title)
-        parcel.writeString(artist)
-        parcel.writeString(album)
-        parcel.writeString(artistId)
-        parcel.writeString(albumId)
-        parcel.writeInt(trackNumber)
-        parcel.writeLong(duration)
-        parcel.writeByte(if (isLove) 1 else 0)
-        parcel.writeByte(if (isOnline) 1 else 0)
-        parcel.writeString(uri)
-        parcel.writeString(lyric)
-        parcel.writeString(coverUri)
-        parcel.writeString(coverBig)
-        parcel.writeString(coverSmall)
-        parcel.writeString(fileName)
-        parcel.writeLong(fileSize)
-        parcel.writeString(year)
-        parcel.writeLong(date)
-        parcel.writeByte(if (isCp) 1 else 0)
-        parcel.writeByte(if (isDl) 1 else 0)
-        parcel.writeString(collectId)
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(type)
+        dest.writeLong(id)
+        dest.writeString(mid)
+        dest.writeString(title)
+        dest.writeString(artist)
+        dest.writeString(album)
+        dest.writeString(artistId)
+        dest.writeString(albumId)
+        dest.writeInt(trackNumber)
+        dest.writeLong(duration)
+        dest.writeByte(if (isLove) 1 else 0)
+        dest.writeByte(if (isOnline) 1 else 0)
+        dest.writeString(uri)
+        dest.writeString(lyric)
+        dest.writeString(coverUri)
+        dest.writeString(coverBig)
+        dest.writeString(coverSmall)
+        dest.writeString(fileName)
+        dest.writeLong(fileSize)
+        dest.writeString(year)
+        dest.writeLong(date)
+        dest.writeByte(if (isCp) 1 else 0)
+        dest.writeByte(if (isDl) 1 else 0)
+        dest.writeString(collectId)
+        dest.writeInt(quality)
     }
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    override fun toString(): String {
+        return "Music(type=$type, id=$id, mid=$mid, title=$title, artist=$artist, album=$album, artistId=$artistId, albumId=$albumId, trackNumber=$trackNumber, duration=$duration, isLove=$isLove, isOnline=$isOnline, uri=$uri, lyric=$lyric, coverUri=$coverUri, coverBig=$coverBig, coverSmall=$coverSmall, fileName=$fileName, fileSize=$fileSize, year=$year, date=$date, isCp=$isCp,isDl=$isDl, collectId=$collectId)"
     }
 
     companion object CREATOR : Parcelable.Creator<Music> {
@@ -132,7 +166,6 @@ class Music() : LitePalSupport(), Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 
 }
 

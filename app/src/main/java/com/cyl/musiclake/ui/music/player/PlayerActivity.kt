@@ -34,6 +34,7 @@ import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.comment.SongCommentActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
+import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.utils.*
@@ -52,6 +53,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var lyricView: View? = null
     private val viewPagerContent = mutableListOf<View>()
     private var mLyricView: LyricView? = null
+    private var mQualityTv: TextView? = null
     private var coverAnimator: ObjectAnimator? = null
 
     override fun showNowPlaying(music: Music?) {
@@ -324,11 +326,15 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         coverView = LayoutInflater.from(this).inflate(R.layout.frag_player_coverview, viewPager, false)
         lyricView = LayoutInflater.from(this).inflate(R.layout.frag_player_lrcview, viewPager, false)
         mLyricView = lyricView?.findViewById(R.id.lyricShow)
+        mQualityTv = coverView?.findViewById(R.id.tv_quality)
         coverView?.let {
             viewPagerContent.add(it)
         }
         lyricView?.let {
             viewPagerContent.add(it)
+        }
+        mQualityTv?.setOnClickListener {
+            QualitySelectDialog.newInstance(playingMusic).show(this)
         }
 
         val mAdapter = MyPagerAdapter(viewPagerContent)

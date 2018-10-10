@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.search
 
-import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
@@ -11,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseActivity
@@ -182,14 +180,26 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
                 queryString = searchEditText.text.toString().trim { it <= ' ' }
                 search(queryString)
             }
+            R.id.menu_filter_baidu -> {
+                changeFilter(item, SearchEngine.Filter.BAIDU)
+            }
+            R.id.menu_filter_qq -> {
+                changeFilter(item, SearchEngine.Filter.QQ)
+            }
+            R.id.menu_filter_xiami -> {
+                changeFilter(item, SearchEngine.Filter.XIAMI)
+            }
+            R.id.menu_filter_netease -> {
+                changeFilter(item, SearchEngine.Filter.NETEASE)
+            }
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun changeFilter(item: MenuItem, filter: SearchEngine.Filter) {
         this.filter = filter
         this.filterItemCheckedId = item.itemId
-        item.isChecked = true
+        item.isChecked = !item.isChecked
 
         if (!TextUtils.isEmpty(queryString)) {
             isSearchOnline = true

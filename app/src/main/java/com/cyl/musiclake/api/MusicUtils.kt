@@ -15,7 +15,6 @@ import com.cyl.musiclake.common.Constants
  */
 
 object MusicUtils {
-
     /**
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体
      */
@@ -34,7 +33,6 @@ object MusicUtils {
         music.albumId = musicInfo.album.id
         music.isCp = musicInfo.cp
         music.isDl = musicInfo.dl
-
         if (musicInfo.artists != null) {
             var artistIds = musicInfo.artists?.get(0)?.id
             var artistNames = musicInfo.artists?.get(0)?.name
@@ -45,6 +43,7 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
+        music.qualityList = musicInfo.quality
         music.coverUri = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
         music.coverBig = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
         music.coverSmall = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_SMALL)
@@ -122,37 +121,6 @@ object MusicUtils {
         return musicList
     }
 
-
-    /**
-     * 搜索歌曲实体类转化成本地歌曲实体
-     */
-    fun getSearchMusic(song: SongsItem, type: String): Music {
-        val music = Music()
-        music.mid = song.id
-        music.title = song.name
-        music.type = type
-        music.isOnline = true
-        music.album = song.album.name
-        music.albumId = song.album.id
-        music.isCp = song.cp
-        music.isDl = song.dl
-
-        if (song.artists != null) {
-            var artistIds = song.artists?.get(0)?.id
-            var artistNames = song.artists?.get(0)?.name
-            for (j in 1 until song.artists?.size!! - 1) {
-                artistIds += ",${song.artists?.get(j)?.id}"
-                artistNames += ",${song.artists?.get(j)?.name}"
-            }
-            music.artist = artistNames
-            music.artistId = artistIds
-        }
-        music.coverUri = getAlbumPic(song.album.cover, type, PIC_SIZE_NORMAL)
-        music.coverBig = getAlbumPic(song.album.cover, type, PIC_SIZE_BIG)
-        music.coverSmall = getAlbumPic(song.album.cover, type, PIC_SIZE_SMALL)
-        return music
-    }
-
     val PIC_SIZE_SMALL = 0
     val PIC_SIZE_NORMAL = 1
     val PIC_SIZE_BIG = 2
@@ -226,7 +194,8 @@ object MusicUtils {
         }
         val album = Album(music.albumId, music.album, music.coverUri)
         if (music.type == Constants.BAIDU) music.isCp = false
-        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, cp = music.isCp, dl = music.isDl, quality = QualityBean())
+        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, cp = music.isCp, dl = music.isDl, quality = music.qualityList
+                ?: QualityBean())
     }
 
     /**

@@ -7,7 +7,7 @@ package com.cyl.musiclake.ui.music.search;
  */
 public class SearchEngine {
     public enum Filter {
-        ANY, QQ, NETEASE, XIAMI
+        ANY, QQ, NETEASE, XIAMI, BAIDU
     }
 }
 

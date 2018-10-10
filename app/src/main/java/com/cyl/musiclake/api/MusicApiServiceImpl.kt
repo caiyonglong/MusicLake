@@ -116,12 +116,13 @@ object MusicApiServiceImpl {
 
     /**
      * 获取歌曲url信息
+     * @param br 音乐品质
      *
      */
-    fun getMusicUrl(vendor: String, mid: String): Observable<String> {
+    fun getMusicUrl(vendor: String, mid: String, br: Int = 128000): Observable<String> {
         return create { result ->
             BaseApiImpl
-                    .getSongUrl(vendor, mid, {
+                    .getSongUrl(vendor, mid, br, {
                         if (it.status) {
                             val url =
                                     if (vendor == Constants.XIAMI) {
@@ -134,6 +135,24 @@ object MusicApiServiceImpl {
                             result.onError(Throwable(""))
                         }
                     }, {})
+        }
+    }
+
+    /**
+     * 获取歌曲详细信息
+     * @param br 音乐品质
+     *
+     */
+    fun getSongDetail(vendor: String, mid: String): Observable<Music> {
+        return create { result ->
+            BaseApiImpl.getSongDetail(vendor, mid, {
+                if (it.status) {
+                    result.onNext(MusicUtils.getMusic(it.data))
+                    result.onComplete()
+                } else {
+                    result.onError(Throwable(""))
+                }
+            }, {})
         }
     }
 

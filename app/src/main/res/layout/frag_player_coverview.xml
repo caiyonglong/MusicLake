@@ -8,16 +8,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_16"
         android:gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="@drawable/bg_play_select"
+            android:drawableEnd="@drawable/ic_arrow_down_small"
+            android:drawablePadding="@dimen/dp_2"
+            android:paddingBottom="2dp"
+            android:paddingEnd="@dimen/dp_4"
+            android:paddingStart="10dp"
+            android:paddingTop="2dp"
+            android:text="标准"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_button"
+            android:background="@drawable/bg_play_select"
             android:paddingBottom="2dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -38,7 +54,6 @@
         android:layout_marginStart="30dp"
         android:elevation="10dp"
         android:src="@drawable/default_cover"
-        app:civ_border_color="@color/white"
         android:transitionName="@string/transition_cover"
-        />
+        app:civ_border_color="@color/white" />
 </LinearLayout>

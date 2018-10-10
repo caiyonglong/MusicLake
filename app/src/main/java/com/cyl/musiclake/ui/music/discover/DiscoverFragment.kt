@@ -22,8 +22,6 @@ import com.cyl.musicapi.netease.BannerBean
 import com.zhouwei.mzbanner.holder.MZViewHolder
 
 
-
-
 /**
  * 功能：在线排行榜
  * 作者：yonglong on 2016/8/11 18:14
@@ -154,9 +152,13 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     override fun showBaiduCharts(charts: MutableList<Playlist>) {
     }
 
-    override fun showBannerView(banners :MutableList<BannerBean>){
+    override fun showBannerView(banners: MutableList<BannerBean>) {
+//        for (i in 0 until banners.size) {
+//            if (banners[i].targetType == "3000")
+//                banners.removeAt(i)
+//        }
         //banner
-        mzBannerView.setPages(banners as List<Nothing>) { BannerViewHolder() }
+        mzBannerView.setPages(banners as List<Nothing>) { activity?.let { BannerViewHolder(it) } }
     }
 
     override fun onResume() {
@@ -168,6 +170,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         super.onPause()
         mzBannerView.pause()
     }
+
     override fun showNeteaseCharts(charts: MutableList<Playlist>) {
         hideLoading()
         playlistView.visibility = View.VISIBLE
@@ -198,6 +201,5 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             return fragment
         }
     }
-
 
 }

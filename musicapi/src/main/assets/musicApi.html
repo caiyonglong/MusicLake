@@ -53,8 +53,8 @@
                 })
             },
             //获取歌曲url
-            getSongUrl: function (vendor,id, responseCallback) {
-                musicApi.getSongUrl(vendor,id).then(function (data) {
+            getSongUrl: function (vendor,id,br, responseCallback) {
+                musicApi.getSongUrl(vendor,id,br).then(function (data) {
                     responseCallback(data)
                 })
             },
@@ -92,6 +92,14 @@
                 })
             }
         })
+
+
+
+
+
+
+
+
 
 
 

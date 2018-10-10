@@ -157,8 +157,8 @@ object BaseApiImpl {
         }
     }
 
-    fun getSongUrl(vendor: String, id: String, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
-        mWebView?.callHandler("api.getSongUrl", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+    fun getSongUrl(vendor: String, id: String, br: Int, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
+        mWebView?.callHandler("api.getSongUrl", arrayOf<Any>(vendor, id, br)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)
                 success.invoke(result)

@@ -74,7 +74,7 @@ public class TestActivity extends BaseActivity {
         if (music != null) {
             String type = music.getType();
             String mid = music.getMid();
-            searchApi.getSongUrl(type, mid, result -> {
+            searchApi.getSongUrl(type, mid, 128000, result -> {
                 statusTv.setText("getSongUrl");
                 resultTv.setText(result.toString());
                 return null;

@@ -3,24 +3,17 @@ package com.cyl.musiclake.ui.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import com.cyl.musicapi.netease.BannerResult;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl;
 import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.net.ApiManager;
-import com.cyl.musiclake.net.RequestCallBack;
-import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.ImageUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
+
 /**
  * Created by 永龙 on 2016/3/19.
  */
@@ -106,7 +99,7 @@ public class WelcomeActivity extends BaseActivity {
         finish();
     }
 
-    private void getCoverImageUrl(){
+    private void getCoverImageUrl() {
         mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
 //        ApiManager.request(NeteaseApiServiceImpl.INSTANCE.getBanners(), new RequestCallBack<BannerResult>() {
 //            @Override

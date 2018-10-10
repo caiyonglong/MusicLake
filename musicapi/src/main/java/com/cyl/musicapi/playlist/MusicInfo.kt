@@ -40,11 +40,11 @@ data class MusicInfo(@SerializedName("id")
                      val quality: QualityBean)
 
 data class QualityBean(@SerializedName("192")
-                       val normal: Boolean = false,
+                       val high: Boolean = false,
                        @SerializedName("320")
-                       val middle: Boolean = false,
+                       val hq: Boolean = false,
                        @SerializedName("999")
-                       val high: Boolean = false)
+                       val sq: Boolean = false)
 
 data class CollectBatchBean(@SerializedName("ids")
                             val ids: List<String>? = null,
