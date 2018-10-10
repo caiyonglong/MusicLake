@@ -120,6 +120,7 @@ object MusicApiServiceImpl {
      *
      */
     fun getMusicUrl(vendor: String, mid: String, br: Int = 128000): Observable<String> {
+        LogUtil.d("getMusicUrl $vendor $mid $br")
         return create { result ->
             BaseApiImpl
                     .getSongUrl(vendor, mid, br, {

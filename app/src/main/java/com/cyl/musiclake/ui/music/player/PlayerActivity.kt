@@ -53,7 +53,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var lyricView: View? = null
     private val viewPagerContent = mutableListOf<View>()
     private var mLyricView: LyricView? = null
-    private var mQualityTv: TextView? = null
+    var mQualityTv: TextView? = null
     private var coverAnimator: ObjectAnimator? = null
 
     override fun showNowPlaying(music: Music?) {
@@ -66,7 +66,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //更新图片
 //        CoverLoader.loadBigImageView(this, music, coverView?.findViewById<ImageView>(R.id.civ_cover))
         //更新类型
-        updateMusicType(playingMusic?.type)
+        updateMusicType()
         //更新收藏状态
         music?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
@@ -109,7 +109,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             updatePlayStatus(it)
         }
         showLyric(FloatLyricViewManager.lyricInfo, true)
-        updateMusicType(playingMusic?.type)
+        updateMusicType()
     }
 
     override fun listener() {
@@ -334,7 +334,11 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             viewPagerContent.add(it)
         }
         mQualityTv?.setOnClickListener {
-            QualitySelectDialog.newInstance(playingMusic).show(this)
+            QualitySelectDialog.newInstance(playingMusic).apply {
+                changeSuccessListener = {
+                    this@PlayerActivity.mQualityTv?.text = it
+                }
+            }.show(this)
         }
 
         val mAdapter = MyPagerAdapter(viewPagerContent)
@@ -388,9 +392,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     /**
      * 更新歌曲類型
+     * 更新音乐品质
      */
-    private fun updateMusicType(type: String?) {
-        val value: String? = when (type) {
+    private fun updateMusicType() {
+        val value: String? = when (playingMusic?.type) {
             Constants.QQ -> {
                 getString(R.string.res_qq)
             }
@@ -407,6 +412,14 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 getString(R.string.res_local)
             }
         }
+        val quality = when (playingMusic?.quality) {
+            128000 -> "标准"
+            192000 -> "较高品质"
+            320000 -> "HQ高品质"
+            999000 -> "SQ无损品质"
+            else -> "标准"
+        }
+        mQualityTv?.text = quality
         value?.let {
             coverView?.findViewById<TextView>(R.id.tv_source)?.text = value
         }

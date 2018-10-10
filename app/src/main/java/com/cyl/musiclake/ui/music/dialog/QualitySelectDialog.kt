@@ -16,12 +16,15 @@ import android.widget.TextView
 import com.cyl.musicapi.playlist.QualityBean
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.player.PlayManager
 
 class QualitySelectDialog : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
     var mAdapter: QualityAdapter? = null
     private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.dialog_quality, null, false) }
     private val recyclerView by lazy { mRootView.findViewById<RecyclerView>(R.id.bottomSheetRv) }
+
+    var changeSuccessListener: ((String) -> Unit)? = null
 
     companion object {
         var music: Music? = null
@@ -62,22 +65,18 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
      */
     inner class QualityAdapter(qualityList: QualityBean?) : RecyclerView.Adapter<QualityAdapter.ItemViewHolder>() {
 
-        var qualities = mutableListOf(
-                128000 to "标准品质",
-                192000 to "较高品质",
-                320000 to "HQ品质",
-                999000 to "SQ无损品质")
+        var qualities = mutableListOf(128000 to "标准品质")
 
         init {
             qualityList?.let {
-                if (!it.high) {
-                    qualities.remove(128000 to "标准品质")
+                if (it.high) {
+                    qualities.add(192000 to "较高品质")
                 }
-                if (!it.hq) {
-                    qualities.remove(192000 to "较高品质")
+                if (it.hq) {
+                    qualities.add(320000 to "HQ品质")
                 }
-                if (!it.sq) {
-                    qualities.remove(999000 to "SQ无损品质")
+                if (it.sq) {
+                    qualities.add(999000 to "SQ无损品质")
                 }
             }
         }
@@ -94,7 +93,9 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
 
             holder.itemView.setOnClickListener {
                 music?.quality = qualities[position].first
+                changeSuccessListener?.invoke(qualities[position].second)
                 mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+                PlayManager.play(PlayManager.position())
             }
         }
 

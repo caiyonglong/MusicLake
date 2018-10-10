@@ -1,5 +1,6 @@
 package com.cyl.musiclake.player;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -58,6 +59,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -327,6 +329,7 @@ public class MusicPlayerService extends Service {
     /**
      * 参数配置，AudioManager、锁屏
      */
+    @SuppressLint("InvalidWakeLockTag")
     private void initConfig() {
 
         //初始化主线程Handler
@@ -502,7 +505,7 @@ public class MusicPlayerService extends Service {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
             notifyChange(META_CHANGED);
             LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
-            if (mPlayingMusic.getUri() == null || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
+            if (mPlayingMusic.getUri() == null || !Objects.equals(mPlayingMusic.getType(), Constants.LOCAL) || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
                 ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
                     @Override
                     public void success(Music result) {

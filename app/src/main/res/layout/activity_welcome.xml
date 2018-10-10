@@ -28,7 +28,7 @@
         android:layout_marginTop="@dimen/dp_16"
         android:gravity="center"
         android:lineSpacingExtra="@dimen/dp_2"
-        android:text="音乐湖\n听你想听、分享你听！"
+        android:text="音乐湖\n听我想听的、分享我喜欢的！"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_16"
         app:layout_constraintEnd_toEndOf="@+id/iv_header_cover"
