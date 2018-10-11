@@ -293,6 +293,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
         mTvSinger.setText(info.getArtistName());
         mTvMvDetail.setText(info.getDesc());
         mTvPublishTime.setText(getString(R.string.publish_time, info.getPublishTime()));
+        updateTitle(info.getName());
 
         mSingerView.setOnClickListener(v -> {
             Artist artist = new Artist();

@@ -6,6 +6,7 @@ import com.cyl.musicapi.bean.*
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
+import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
@@ -122,33 +123,33 @@ object MusicApiServiceImpl {
     fun getMusicUrl(vendor: String, mid: String, br: Int = 128000): Observable<String> {
         LogUtil.d("getMusicUrl $vendor $mid $br")
         return create { result ->
-            BaseApiImpl
-                    .getSongUrl(vendor, mid, br, {
-                        if (it.status) {
-                            val url =
-                                    if (vendor == Constants.XIAMI) {
-                                        if (it.data.url.startsWith("http")) it.data.url
-                                        else "http:${it.data.url}"
-                                    } else it.data.url
-                            result.onNext(url)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(""))
-                        }
-                    }, {})
+            BaseApiImpl.getSongUrl(vendor, mid, br, {
+                if (it.status) {
+                    val url =
+                            if (vendor == Constants.XIAMI) {
+                                if (it.data.url.startsWith("http")) it.data.url
+                                else "http:${it.data.url}"
+                            } else it.data.url
+                    result.onNext(url)
+                    result.onComplete()
+                } else {
+                    result.onError(Throwable(""))
+                }
+            }, {})
         }
     }
 
     /**
      * 获取歌曲详细信息
-     * @param br 音乐品质
      *
      */
     fun getSongDetail(vendor: String, mid: String): Observable<Music> {
         return create { result ->
             BaseApiImpl.getSongDetail(vendor, mid, {
                 if (it.status) {
-                    result.onNext(MusicUtils.getMusic(it.data))
+                    val music = it.data
+                    music.vendor = vendor
+                    result.onNext(MusicUtils.getMusic(music))
                     result.onComplete()
                 } else {
                     result.onError(Throwable(""))
@@ -275,25 +276,35 @@ object MusicApiServiceImpl {
 
 
     /**
-     * 获取专辑单曲
-     *
+     * 获取专辑信息单曲
+     * @param vendor 专辑类型
+     * @param id 专辑id
+     * @return
      */
-    fun getAlbumSongs(vendor: String, id: String): Observable<MutableList<Music>> {
+    fun getAlbumSongs(vendor: String, id: String): Observable<Album> {
         return create { result ->
-            BaseApiImpl
-                    .getAlbumDetail(vendor, id, {
-                        if (it.status) {
-                            val musicList = arrayListOf<Music>()
-                            it.data.songs.forEach {
-                                it.vendor = vendor
-                                musicList.add(MusicUtils.getMusic(it))
-                            }
-                            result.onNext(musicList)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(""))
-                        }
-                    }, {})
+            BaseApiImpl.getAlbumDetail(vendor, id, {
+                if (it.status) {
+                    val album = Album()
+                    val musicList = arrayListOf<Music>()
+                    it.data.songs.forEach {
+                        it.vendor = vendor
+                        musicList.add(MusicUtils.getMusic(it))
+                    }
+                    album.info = it.data.desc
+                    album.songs = musicList
+                    album.name = it.data.name
+                    album.albumId = id
+                    album.cover = it.data.cover
+                    album.type = vendor
+                    album.artistId = it.data.artist.id
+                    album.artistName = it.data.artist.name
+                    result.onNext(album)
+                    result.onComplete()
+                } else {
+                    result.onError(Throwable(""))
+                }
+            }, {})
         }
     }
 

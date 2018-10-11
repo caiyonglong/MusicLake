@@ -393,5 +393,10 @@
     <string name="user_join">下线</string>
     <string name="user_leave">上线</string>
     <string name="chat_gg">消息支持云备份！再也不用担心消息哦，功能暂时还不够完善，如遇bug问题，请及时反馈，我会尽快修复。感谢使用！</string>
+    <string name="search_filter_title">搜索过滤</string>
+    <string name="search_filter_summary">过滤不同平台的音乐源</string>
+    <string name="search_filter_qq">qq音乐</string>
+    <string name="search_filter_xiami">虾米音乐</string>
+    <string name="search_filter_netease">网易云音乐</string>
 
 </resources>

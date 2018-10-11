@@ -15,7 +15,6 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.PlayHistoryLoader
-import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
@@ -37,6 +36,18 @@ import org.jetbrains.anko.startActivity
  * 版本：2.5
  */
 class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), PlaylistDetailContract.View {
+    override fun showTitle(title: String) {
+        updateTitle(title)
+    }
+
+    override fun showCover(cover: String) {
+        CoverLoader.loadImageView(context, coverUrl, album_art)
+    }
+
+    override fun showDescInfo(title: String) {
+
+    }
+
     private var mAdapter: SongAdapter? = null
     private val musicList = mutableListOf<Music>()
     private var mPlaylist: Playlist? = null

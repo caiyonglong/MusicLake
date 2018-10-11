@@ -2,10 +2,12 @@ package com.cyl.musiclake.ui.music.discover
 
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musicapi.netease.BannerResult
+import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
@@ -78,7 +80,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
         val observable = NeteaseApiServiceImpl.getBanners()
         ApiManager.request(observable, object : RequestCallBack<BannerResult> {
             override fun success(result: BannerResult) {
-                if (result.code==200){
+                if (result.code == 200) {
                     mView?.showBannerView(result.banners)
                 }
 //                mView?.(result)

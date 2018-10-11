@@ -10,17 +10,20 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.bean.Album
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.music.mv.MvDetailActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.Tools
 import com.zhouwei.mzbanner.holder.MZViewHolder
+import org.jetbrains.anko.startActivity
 
 /**
  * 作者：yonglong on 2016/8/10 21:36
@@ -85,15 +88,18 @@ class BannerViewHolder(val activity: Activity) : MZViewHolder<BannerBean> {
                     //歌单
                     NavigationHelper.navigateToPlaylist(activity, Playlist().apply {
                         pid = data.targetId
-                        type = Constants.NETEASE
+                        type = Constants.PLAYLIST_WY_ID
                     }, null)
                 }
+                data?.targetType == "1004" -> {
+                    //mv
+                    context.startActivity<MvDetailActivity>(Extras.MV_ID to data.targetId)
+                }
                 data?.targetType == "1" -> {
-                    //歌曲
-                    PlayManager.playOnline(Music().apply {
-                        mid = data.targetId
-                        type = Constants.NETEASE
-                    })
+                    //单曲
+                    MusicApi.loadSongDetailInfo(Constants.NETEASE, data.targetId) { result ->
+                        PlayManager.playOnline(result)
+                    }
                 }
             }
         }

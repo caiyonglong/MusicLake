@@ -9,6 +9,7 @@ import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 
@@ -142,5 +143,21 @@ object MusicApi {
                 emitter.onError(e)
             }
         }
+    }
+
+    /**
+     * 根据id获取歌曲信息
+     */
+    fun loadSongDetailInfo(vendor: String, mid: String, success: ((Music?) -> Unit)?) {
+        val observable = MusicApiServiceImpl.getSongDetail(vendor, mid)
+        ApiManager.request(observable, object : RequestCallBack<Music> {
+            override fun success(result: Music) {
+                success?.invoke(result)
+            }
+
+            override fun error(msg: String) {
+                ToastUtils.show(msg)
+            }
+        })
     }
 }

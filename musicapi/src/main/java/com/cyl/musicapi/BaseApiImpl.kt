@@ -157,7 +157,10 @@ object BaseApiImpl {
         }
     }
 
-    fun getSongUrl(vendor: String, id: String, br: Int, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
+    /**
+     * 获取播放地址
+     */
+    fun getSongUrl(vendor: String, id: String, br: Int=128000, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
         mWebView?.callHandler("api.getSongUrl", arrayOf<Any>(vendor, id, br)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)
@@ -202,10 +205,10 @@ object BaseApiImpl {
      * 获取专辑详情
      * id，专辑ID
      */
-    fun getAlbumDetail(vendor: String, id: String, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
+    fun getAlbumDetail(vendor: String, id: String, success: (result: AlbumData) -> Unit, fail: ((String) -> Unit)? = null) {
         mWebView?.callHandler("api.getAlbumDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
-                val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
+                val result = gson.fromJson<AlbumData>(retValue.toString(), AlbumData::class.java)
                 success.invoke(result)
             } catch (e: Throwable) {
                 e.message?.let { fail?.invoke(it) }

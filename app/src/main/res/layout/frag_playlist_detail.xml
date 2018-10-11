@@ -26,7 +26,8 @@
                 android:background="@android:color/white"
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:titleEnabled="false">
 
                 <ImageView
                     android:id="@+id/album_art"

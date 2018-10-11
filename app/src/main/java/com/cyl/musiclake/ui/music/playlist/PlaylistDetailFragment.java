@@ -35,6 +35,7 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.ItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -321,5 +322,20 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     @Override
     public void success(int type) {
         onBackPress();
+    }
+
+    @Override
+    public void showTitle(@NotNull String title) {
+
+    }
+
+    @Override
+    public void showCover(@NotNull String cover) {
+
+    }
+
+    @Override
+    public void showDescInfo(@NotNull String title) {
+
     }
 }

@@ -24,6 +24,28 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/search_filter_title">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_search_qq"
+            android:summary="@string/search_filter_summary"
+            android:title="@string/search_filter_qq" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_search_netease"
+            android:summary="@string/search_filter_summary"
+            android:title="@string/search_filter_netease" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_search_xiami"
+            android:summary="@string/search_filter_summary"
+            android:title="@string/search_filter_xiami" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_data_sync">
 
         <PreferenceScreen

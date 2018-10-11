@@ -110,17 +110,12 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             return
         }
         val observable = MusicApiServiceImpl.getAlbumSongs(album.type.toString(), album.albumId.toString())
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
-                val iterator = result.iterator()
-                while (iterator.hasNext()) {
-                    val temp = iterator.next()
-                    if (temp.isCp) {
-                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
-                        iterator.remove()// 推荐使用
-                    }
-                }
-                mView?.showPlaylistSongs(result)
+        ApiManager.request(observable, object : RequestCallBack<Album> {
+            override fun success(result: Album) {
+                result.name?.let { mView?.showTitle(it) }
+                result.cover?.let { mView?.showCover(it) }
+                result.info?.let { mView?.showDescInfo(it) }
+                mView?.showPlaylistSongs(result.songs)
             }
 
             override fun error(msg: String) {
