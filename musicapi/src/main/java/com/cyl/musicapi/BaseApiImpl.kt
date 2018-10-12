@@ -152,7 +152,7 @@ object BaseApiImpl {
                     }
                 }
             } else {
-                fail?.invoke("请求失败")
+                fail?.invoke(retValue["msg"].toString())
             }
         }
     }
@@ -160,7 +160,7 @@ object BaseApiImpl {
     /**
      * 获取播放地址
      */
-    fun getSongUrl(vendor: String, id: String, br: Int=128000, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
+    fun getSongUrl(vendor: String, id: String, br: Int = 128000, success: (result: SongBean) -> Unit, fail: (() -> Unit)? = null) {
         mWebView?.callHandler("api.getSongUrl", arrayOf<Any>(vendor, id, br)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SongBean>(retValue.toString(), SongBean::class.java)

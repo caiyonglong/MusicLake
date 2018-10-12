@@ -7,12 +7,16 @@ import com.google.gson.annotations.SerializedName
 data class ArtistSongsData(@SerializedName("data")
                            val data: ArtistSongs,
                            @SerializedName("status")
-                           val status: Boolean = false)
+                           val status: Boolean = false,
+                           @SerializedName("msg")
+                           val msg: String = "")
 
 data class AlbumData(@SerializedName("data")
                      val data: AlbumBean,
                      @SerializedName("status")
-                     val status: Boolean = false)
+                     val status: Boolean = false,
+                     @SerializedName("msg")
+                     val msg: String = "")
 
 data class AlbumBean(@SerializedName("name")
                      val name: String = "",

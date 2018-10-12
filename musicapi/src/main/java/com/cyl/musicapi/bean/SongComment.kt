@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName
 data class SongCommentData<T>(@SerializedName("data")
                               val data: CommentData<T>?,
                               @SerializedName("status")
-                              val status: Boolean = false)
+                              val status: Boolean = false,
+                              @SerializedName("msg")
+                              val msg: String = "")
 
 data class User(@SerializedName("avatarUrl")
                 val avatarUrl: String = "",

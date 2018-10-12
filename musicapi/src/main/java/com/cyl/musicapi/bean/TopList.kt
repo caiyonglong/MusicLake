@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName
 data class NeteaseBean(@SerializedName("data")
                        val data: TopData,
                        @SerializedName("status")
-                       val status: Boolean = false)
+                       val status: Boolean = false,
+                       @SerializedName("msg")
+                       val msg: String = "")
 
 data class TopData(@SerializedName("cover")
                    val cover: String = "",

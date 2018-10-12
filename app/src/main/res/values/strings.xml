@@ -32,6 +32,7 @@
     <string name="item_history">播放历史</string>
     <string name="item_favorite">我的收藏</string>
     <string name="item_download">我的下载</string>
+    <string name="item_cached">我的缓存</string>
     <string name="local_music">本地歌曲</string>
 
     <string name="song_num">%1$d 首</string>
@@ -376,7 +377,7 @@
     <string name="chat_about">关于聊天室</string>
     <string name="chat_title">聊天室(%1$d)</string>
     <string name="message_center">实时聊天室</string>
-    <string name="online_users">聊天室成员(%1$d)</string>
+    <string name="online_users">在线成员(%1$d)</string>
     <string name="send">发送</string>
     <string name="custom_count_down_time">自定义时间</string>
     <string name="count_down_minutes">分钟（不能大于24小时）</string>
@@ -392,7 +393,7 @@
     <string name="weibosdk_demo_toast_auth_canceled">登录已取消</string>
     <string name="user_join">下线</string>
     <string name="user_leave">上线</string>
-    <string name="chat_gg">消息支持云备份！再也不用担心消息哦，功能暂时还不够完善，如遇bug问题，请及时反馈，我会尽快修复。感谢使用！</string>
+    <string name="chat_gg">有什么问题不能及时反馈？请点击链接加入群聊【音乐湖交流群】：https://jq.qq.com/?_wv=1027&amp;k=5oF9xQv</string>
     <string name="search_filter_title">搜索过滤</string>
     <string name="search_filter_summary">过滤不同平台的音乐源</string>
     <string name="search_filter_qq">qq音乐</string>

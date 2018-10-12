@@ -129,6 +129,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                 toFragment(position)
             }
         }
+
+        cacheView.setSongsNum(musicList.size, 4)
+        cacheView.setOnItemClickListener { view, position ->
+            toFragment(position)
+        }
     }
 
     private fun toFragment(position: Int) {
@@ -137,6 +142,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
             1 -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, PlaylistLoader.getHistoryPlaylist(), null)
             2 -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, PlaylistLoader.getFavoritePlaylist(), null)
             3 -> NavigationHelper.navigateToDownload(mFragmentComponent.activity, null)
+            4 -> NavigationHelper.navigatePlayQueue(mFragmentComponent.activity)
         }
     }
 

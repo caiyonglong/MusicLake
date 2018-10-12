@@ -29,6 +29,7 @@ class ChatDetailActivity : BaseActivity<ChatPresenter>() {
         mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
         usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         usersRsv.adapter = mUserAdapter
+        usersRsv.isNestedScrollingEnabled = false
         usersRsv.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         mUserAdapter?.bindToRecyclerView(usersRsv)
         onlineUserTv.text = getString(R.string.online_users, MusicApp.socketManager.onlineUsers.size)

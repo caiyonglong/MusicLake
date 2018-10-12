@@ -15,7 +15,9 @@ data class Qq(@SerializedName("total")
 data class SearchData(@SerializedName("data")
                       val data: Data,
                       @SerializedName("status")
-                      val status: Boolean = false)
+                      val status: Boolean = false,
+                      @SerializedName("msg")
+                      val msg: String = "")
 
 
 data class Xiami(@SerializedName("total")
@@ -71,7 +73,9 @@ data class SongsItem(@SerializedName("artists")
 data class SongDetail(@SerializedName("data")
                       val data: MusicInfo,
                       @SerializedName("status")
-                      val status: Boolean = false)
+                      val status: Boolean = false,
+                      @SerializedName("msg")
+                      val msg: String = "")
 
 data class BatchSongDetail(@SerializedName("data")
                            val data: List<MusicInfo>,

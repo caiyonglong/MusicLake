@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
+                android:autoLink="web"
                 android:lineSpacingExtra="@dimen/dp_4"
                 android:text="@string/chat_gg"
                 android:textColor="@color/black" />

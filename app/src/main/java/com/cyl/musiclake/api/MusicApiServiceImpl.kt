@@ -15,6 +15,7 @@ import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import io.reactivex.Observable
 import io.reactivex.Observable.create
 
@@ -64,7 +65,7 @@ object MusicApiServiceImpl {
                     result.onNext(musicList)
                     result.onComplete()
                 } else {
-                    result.onError(Throwable(MusicApp.getAppContext().getString(R.string.error_search)))
+                    result.onError(Throwable(it.msg))
                 }
             }, fail = {
                 result.onError(Throwable(it
@@ -186,7 +187,9 @@ object MusicApiServiceImpl {
                     } else {
                         result.onError(Throwable(""))
                     }
-                }, {})
+                }, {
+                    ToastUtils.show(it)
+                })
             }
             Constants.QQ -> create { result ->
                 BaseApiImpl
@@ -211,7 +214,9 @@ object MusicApiServiceImpl {
                             } else {
                                 result.onError(Throwable(""))
                             }
-                        }, {})
+                        }, {
+                            ToastUtils.show(it)
+                        })
             }
             Constants.XIAMI -> create { result ->
                 BaseApiImpl
@@ -236,7 +241,9 @@ object MusicApiServiceImpl {
                             } else {
                                 result.onError(Throwable(""))
                             }
-                        }, {})
+                        }, {
+                            ToastUtils.show(it)
+                        })
             }
             else -> null
         }
