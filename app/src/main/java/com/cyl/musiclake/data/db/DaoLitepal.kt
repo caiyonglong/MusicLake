@@ -109,7 +109,7 @@ object DaoLitepal {
      * 删除本地歌曲（Music、MusicToPlaylist）
      */
     fun deleteMusic(music: Music) {
-        val path = FileUtils.getMusicDir() + music.artist + " - " + music.title + ".mp3"
+        val path = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + ".tmp"
         if (FileUtils.exists(path)) {
             FileUtils.delFile(path)
         }

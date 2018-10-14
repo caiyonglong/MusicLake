@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.main.PageAdapter;
 
 import butterknife.BindView;
@@ -23,10 +24,12 @@ public class DownloadFragment extends BaseLazyFragment {
     TabLayout mTabLayout;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+    boolean isCache = false;
 
-    public static DownloadFragment newInstance() {
+    public static DownloadFragment newInstance(Boolean isCache) {
         Bundle args = new Bundle();
         DownloadFragment fragment = new DownloadFragment();
+        args.putBoolean(Constants.KEY_IS_CACHE, isCache);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,6 +42,12 @@ public class DownloadFragment extends BaseLazyFragment {
     @Override
     public void initViews() {
         mToolbar.setTitle(getResources().getString(R.string.item_download));
+        if (getArguments() != null) {
+            isCache = getArguments().getBoolean(Constants.KEY_IS_CACHE, false);
+            if (isCache) {
+                mToolbar.setTitle(getResources().getString(R.string.item_cached));
+            }
+        }
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
             appCompatActivity.setSupportActionBar(mToolbar);
@@ -53,8 +62,10 @@ public class DownloadFragment extends BaseLazyFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(DownloadedFragment.newInstance(), getString(R.string.download_complete));
-        adapter.addFragment(DownloadManagerFragment.Companion.newInstance(), getString(R.string.download_processing));
+        adapter.addFragment(DownloadedFragment.newInstance(true), getString(R.string.cache_complete));
+        adapter.addFragment(DownloadManagerFragment.Companion.newInstance(true), getString(R.string.cache_processing));
+        adapter.addFragment(DownloadedFragment.newInstance(false), getString(R.string.download_complete));
+        adapter.addFragment(DownloadManagerFragment.Companion.newInstance(false), getString(R.string.download_processing));
         viewPager.setAdapter(adapter);
     }
 

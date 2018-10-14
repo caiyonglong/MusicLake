@@ -32,7 +32,7 @@
     <string name="item_history">播放历史</string>
     <string name="item_favorite">我的收藏</string>
     <string name="item_download">我的下载</string>
-    <string name="item_cached">我的缓存</string>
+    <string name="item_cached">缓存下载</string>
     <string name="local_music">本地歌曲</string>
 
     <string name="song_num">%1$d 首</string>
@@ -186,13 +186,18 @@
     <string name="tasks_manager_demo_status_loading">加载中&#8230;</string>
     <string name="tasks_manager_demo_status_pending">队列中</string>
     <string name="tasks_manager_demo_status_started">开始下载</string>
+    <string name="tasks_manager_cache_status_started">开始下载</string>
     <string name="tasks_manager_demo_status_connected">已连接上</string>
     <string name="tasks_manager_demo_status_progress">下载中&#8230;</string>
+    <string name="tasks_manager_cache_status_progress">下载中&#8230;</string>
     <string name="tasks_manager_demo_status_downloading" formatted="false">已下载%d %%</string>
+    <string name="tasks_manager_cache_status_downloading" formatted="false">已缓存%d %%</string>
     <string name="tasks_manager_demo_status_error">出错</string>
     <string name="tasks_manager_demo_status_paused">暂停</string>
     <string name="tasks_manager_demo_status_completed">下载完成</string>
+    <string name="tasks_manager_cache_status_completed">缓存完成</string>
     <string name="tasks_manager_demo_status_not_downloaded">未下载</string>
+    <string name="tasks_manager_cache_status_not_downloaded">未缓存</string>
 
 
     <string name="play_next">播放下一首</string>
@@ -249,9 +254,9 @@
     <string name="song_artist">歌手名</string>
     <string name="search_no_results">没有结果</string>
     <string name="all">所有</string>
+    <string name="netease">网易云音乐</string>
     <string name="qq">qq音乐</string>
     <string name="xiami">虾米音乐</string>
-    <string name="netease">网易云音乐</string>
 
     <string name="res_baidu">百度</string>
     <string name="res_qq">QQ</string>
@@ -316,8 +321,10 @@
     <string name="lyric_search_apply">歌词修改成功</string>
     <string name="love">收藏</string>
     <string name="song_resource">音乐来源</string>
-    <string name="download_complete">已下载</string>
-    <string name="download_processing">正在下载</string>
+    <string name="download_complete">已下载的歌</string>
+    <string name="cache_complete">已缓存的歌</string>
+    <string name="download_processing">下载中</string>
+    <string name="cache_processing">缓存中</string>
     <string name="download_content">是否将 %1$s 添加到下载队列</string>
     <string name="dd">暂无歌词</string>
     <string name="recently_update">最近更新：%1$s</string>
@@ -398,6 +405,9 @@
     <string name="search_filter_summary">过滤不同平台的音乐源</string>
     <string name="search_filter_qq">qq音乐</string>
     <string name="search_filter_xiami">虾米音乐</string>
-    <string name="search_filter_netease">网易云音乐</string>
+    <string name="search_filter_netease">网易云</string>
+    <string name="search_filter_baidu">百度音乐</string>
+    <string name="remove_repeat">去重</string>
+    <string name="remove_copyright">包含无版权歌曲</string>
 
 </resources>

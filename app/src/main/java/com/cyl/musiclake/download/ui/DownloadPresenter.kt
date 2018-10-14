@@ -26,8 +26,8 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun reloadDownloadMusic(event: DownloadEvent) {
-        loadDownloadMusic()
-        loadDownloading()
+        loadDownloadMusic(event.isCache)
+        loadDownloading(event.isCache)
     }
 
     override fun detachView() {
@@ -35,7 +35,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
         EventBus.getDefault().unregister(this)
     }
 
-    override fun loadDownloadMusic() {
+    override fun loadDownloadMusic(isCache: Boolean) {
         mView?.showLoading()
         doAsync {
             val data = DownloadLoader.getDownloadList()
@@ -45,7 +45,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
         }
     }
 
-    override fun loadDownloading() {
+    override fun loadDownloading(isCache: Boolean) {
         doAsync {
             val data = DownloadLoader.getDownloadingList()
             uiThread {

@@ -146,7 +146,7 @@ object TasksManager {
     /**
      * @param tid :下载任务唯一ID
      */
-    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String): TasksManagerModel? {
+    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String,isCached:Boolean): TasksManagerModel? {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(mid) || TextUtils.isEmpty(path)) {
             return null
         }

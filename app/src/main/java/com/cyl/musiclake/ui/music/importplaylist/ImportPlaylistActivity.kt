@@ -122,12 +122,13 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             override fun success(result: Playlist) {
                 showLoading(false)
                 musicList.clear()
-                result.musicList.forEach {
-                    if (!it.isCp) {
-                        musicList.add(it)
-                    }
-                }
-                result.musicList = musicList
+                musicList = result.musicList
+//                result.musicList.forEach {
+//                    if (!it.isCp) {
+//                        musicList.add(it)
+//                    }
+//                }
+//                result.musicList = musicList
                 showResultAdapter(result)
             }
 

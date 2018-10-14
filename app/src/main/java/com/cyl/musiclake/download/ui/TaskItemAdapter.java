@@ -12,11 +12,9 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.download.TasksManager;
 import com.cyl.musiclake.download.TasksManagerModel;
 import com.cyl.musiclake.event.DownloadEvent;
-import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -35,6 +33,7 @@ import java.util.List;
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
     private Context mContext;
+    private Boolean isCache;
     private List<TasksManagerModel> models;
 
 
@@ -46,8 +45,9 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         this.models = models;
     }
 
-    public TaskItemAdapter(Context mContext, List<TasksManagerModel> list) {
+    public TaskItemAdapter(Context mContext, List<TasksManagerModel> list, Boolean isCache) {
         this.mContext = mContext;
+        this.isCache = isCache;
         this.models = list;
     }
 

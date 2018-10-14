@@ -87,17 +87,17 @@ object NavigationHelper {
         transaction.addToBackStack(fragment.getTag()).commit()
     }
 
-    fun navigateToDownload(context: Activity, transitionViews: Pair<View, String>?) {
+    fun navigateToDownload(context: Activity, isCache: Boolean = false, transitionViews: Pair<View, String>? = null) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment: Fragment
 
         if (transitionViews != null) {
             transaction.addSharedElement(transitionViews.first, transitionViews.second)
-            fragment = DownloadFragment.newInstance()
+            fragment = DownloadFragment.newInstance(isCache)
         } else {
             //            transaction.setCustomAnimations(R.anim.activity_fade_in,
             //                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
-            fragment = DownloadFragment.newInstance()
+            fragment = DownloadFragment.newInstance(isCache)
         }
         transaction.hide((context.supportFragmentManager.findFragmentById(R.id.fragment_container)))
         transaction.add(R.id.fragment_container, fragment)

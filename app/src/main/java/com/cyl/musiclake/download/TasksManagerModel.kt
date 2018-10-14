@@ -15,4 +15,5 @@ class TasksManagerModel : LitePalSupport() {
     var url: String? = null
     var path: String? = null
     var finish: Boolean = false
+    var cache: Boolean = true
 }

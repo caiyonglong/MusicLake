@@ -43,6 +43,15 @@ public class Constants {
     public static final String BAIDU_RADIO_LIST = "baidu_radio_list";
     public static final String NETEASE_ARITIST_LIST = "netease_artist_list";
 
+    /**
+     * 搜索过滤
+     */
+    public static final String SP_KEY_SEARCH_FILTER_NETEASE = "sp_netease";
+    public static final String SP_KEY_SEARCH_FILTER_QQ = "sp_netease";
+    public static final String SP_KEY_SEARCH_FILTER_XIAMI = "sp_xiami";
+    public static final String SP_KEY_SEARCH_FILTER_BAIDU = "sp_baidu";
+    public static final String SP_KEY_SEARCH_FILTER_ = "sp_netease";
+
     //歌单操作
     public static final int PLAYLIST_ADD = 0;
     public static final int PLAYLIST_DELETE = 1;
@@ -117,8 +126,8 @@ public class Constants {
     public static final String SONG_ADD = "addSong";
     public static final String SONG = "song";
 
-    //下载
-    public static final String UPDATEAPP = "updateApp";
+    //是否是缓存
+    public static final String KEY_IS_CACHE = "is_cache";
 
     //歌单
     public static final String PLAYLIST_ID = "playlist";
@@ -253,6 +262,6 @@ public class Constants {
      */
     public static final String SCOPE = "";
 
-//    public static final String SOCKET_URL = "http://39.108.214.63:15003";
+    //    public static final String SOCKET_URL = "http://39.108.214.63:15003";
     public static final String SOCKET_URL = "https://socket.zzsun.cc";
 }

@@ -42,6 +42,12 @@ public class FileUtils {
         return mkdirs(dir);
     }
 
+
+    public static String getMusicCacheDir() {
+        String dir = getAppDir() + "MusicCache/";
+        return mkdirs(dir);
+    }
+
     public static String getImageDir() {
         String dir = getAppDir() + "cache/";
         return mkdirs(dir);

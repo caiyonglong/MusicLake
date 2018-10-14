@@ -29,10 +29,12 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     RecyclerView mRecyclerView;
 
     private SongAdapter mAdapter;
+    private Boolean isCache;
     private List<Music> musicList = new ArrayList<>();
 
-    public static DownloadedFragment newInstance() {
+    public static DownloadedFragment newInstance(Boolean isCache) {
         Bundle args = new Bundle();
+        args.putBoolean(Constants.KEY_IS_CACHE, isCache);
         DownloadedFragment fragment = new DownloadedFragment();
         fragment.setArguments(args);
         return fragment;
@@ -54,7 +56,10 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
 
     @Override
     protected void loadData() {
-        mPresenter.loadDownloadMusic();
+        if (getArguments() != null) {
+            isCache = getArguments().getBoolean(Constants.KEY_IS_CACHE);
+        }
+        mPresenter.loadDownloadMusic(isCache);
     }
 
     @Override

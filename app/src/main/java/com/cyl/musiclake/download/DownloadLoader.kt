@@ -106,6 +106,6 @@ object DownloadLoader {
                 Mp3Util.getTagInfo(it1)
             }
         }
-        NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicDir())
+        NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicCacheDir())
     }
 }

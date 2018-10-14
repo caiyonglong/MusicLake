@@ -153,6 +153,33 @@ fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) ->
 /**
  * 下载歌曲
  */
+fun AppCompatActivity.cacheMusic(music: Music?) {
+    if (music == null) {
+        return
+    }
+    if (music.type == Constants.LOCAL) {
+        return
+    }
+    LogUtil.e(javaClass.simpleName, "cache-----${music.uri}")
+    /**
+     * 当前activity 销毁时 不显示
+     */
+    if (this@cacheMusic.isDestroyed || this@cacheMusic.isFinishing) return
+    if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
+        showTipsDialog(this@cacheMusic, R.string.download_network_tips) {
+            addDownloadQueue(music)
+        }
+        return
+    }
+    if (music.uri != null && music.uri?.startsWith("http")!!) {
+        addDownloadQueue(music)
+        return
+    }
+}
+
+/**
+ * 下载歌曲
+ */
 fun AppCompatActivity.downloadMusic(music: Music?) {
     if (music == null) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
@@ -335,7 +362,7 @@ fun showTipsDialog(context: AppCompatActivity, content: Int, success: (() -> Uni
 /**
  * 增加到增加到下载队列
  */
-fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false) {
+fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: Boolean = false) {
     ApiManager.request(MusicApi.getMusicInfo(result), object : RequestCallBack<Music> {
         override fun success(result: Music) {
             LogUtil.e(javaClass.simpleName, "-----${result.uri}")
@@ -348,13 +375,14 @@ fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false) {
                 ToastUtils.show(getString(R.string.download_add_success))
             }
             DaoLitepal.saveOrUpdateMusic(result)
-            val path = FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
+            val path = if (isCache) FileUtils.getMusicCacheDir() + result.artist + " - " + result.title + ".tmp"
+            else FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
             val task = FileDownloader.getImpl()
                     .create(result.uri)
                     .setPath(path)
                     .setCallbackProgressTimes(100)
                     .setListener(TaskItemAdapter.taskDownloadListener)
-            val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path)
+            val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path,isCache)
             if (model != null) {
                 TasksManager.addTaskForViewHolder(task)
                 task.start()

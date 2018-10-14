@@ -141,8 +141,8 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
             0 -> NavigationHelper.navigateToLocalMusic(mFragmentComponent.activity, null)
             1 -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, PlaylistLoader.getHistoryPlaylist(), null)
             2 -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, PlaylistLoader.getFavoritePlaylist(), null)
-            3 -> NavigationHelper.navigateToDownload(mFragmentComponent.activity, null)
-            4 -> NavigationHelper.navigatePlayQueue(mFragmentComponent.activity)
+            3 -> NavigationHelper.navigateToDownload(mFragmentComponent.activity)
+            4 -> NavigationHelper.navigateToDownload(mFragmentComponent.activity, true,null)
         }
     }
 

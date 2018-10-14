@@ -24,6 +24,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.AnimationUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.Tools
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -160,15 +161,24 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
                 //数据全部加载完毕
                 mAdapter.loadMoreEnd()
             } else {
-                mOffset++
+                mOffset += limit
                 //成功获取更多数据
-                queryString?.let { mPresenter?.search(it, filter, limit, mOffset) }
+                queryString?.let { mPresenter?.search(it, SearchEngine.Filter.ANY, limit, mOffset) }
             }
         }, 1000)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
+
+        //设置初始值
+//        menu.getItem(R.id.menu_filter_baidu).isChecked = true
+//        menu.getItem(R.id.menu_filter_netease).isChecked = false
+//        menu.getItem(R.id.menu_filter_qq).isChecked = false
+//        menu.getItem(R.id.menu_filter_xiami).isChecked = false
+//        menu.getItem(R.id.menu_filter_repeat).isChecked = false
+//        menu.getItem(R.id.menu_filter_copyright).isChecked = false
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -203,7 +213,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
         if (!TextUtils.isEmpty(queryString)) {
             isSearchOnline = true
-            search(queryString)
         }
     }
 
@@ -236,7 +245,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             Tools.hideInputView(searchEditText)
             updateHistoryPanel(false)
             mPresenter?.saveQueryInfo(query)
-            mPresenter?.search(query, filter, limit, mOffset)
+            mPresenter?.search(query, SearchEngine.Filter.ANY, limit, mOffset)
             mAdapter.setOnLoadMoreListener(listener, resultListRcv)
         }
     }

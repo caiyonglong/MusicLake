@@ -298,8 +298,7 @@
                     android:onClick="downloadMusic"
                     app:materialIcon="arrow_collapse_down"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="24dp"
-                    tools:targetApi="lollipop" />
+                    app:materialIconSize="24dp" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/shareIv"
@@ -339,8 +338,7 @@
                     android:onClick="addToPlaylist"
                     app:materialIcon="playlist_plus"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="24dp"
-                    tools:targetApi="lollipop" />
+                    app:materialIconSize="24dp" />
 
                 <net.steamcrafted.materialiconlib.MaterialIconView
                     android:id="@+id/songCommentTv"
@@ -353,8 +351,7 @@
                     android:onClick="showSongComment"
                     app:materialIcon="comment_multiple_outline"
                     app:materialIconColor="@color/white"
-                    app:materialIconSize="24dp"
-                    tools:targetApi="lollipop" />
+                    app:materialIconSize="24dp" />
 
             </LinearLayout>
 

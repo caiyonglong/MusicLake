@@ -1,18 +1,23 @@
 package com.cyl.musiclake.ui.music.playqueue
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ColorUtil
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
+import com.cyl.musiclake.utils.ToastUtils
+import org.jetbrains.anko.dip
 
 /**
  * Created by D22434 on 2017/9/26.
@@ -30,25 +35,38 @@ class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
     constructor(musicList: List<Music>) : super(R.layout.item_play_queue, musicList) {}
 
     override fun convert(holder: BaseViewHolder, item: Music) {
-
+        CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
-        holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
 
-//        if (mSwatch != null) {
-//            holder.setTextColor(R.id.tv_title, mSwatch!!.bodyTextColor)
-//            holder.setTextColor(R.id.tv_artist, mSwatch!!.titleTextColor)
-//            (holder.getView<View>(R.id.iv_clear) as ImageView).setColorFilter(ColorUtil.getBlackWhiteColor(mSwatch!!.rgb))
-//        }
+        //音质图标显示
+        val quality = when {
+            item.qualityList?.sq == true -> mContext.resources.getDrawable(R.drawable.sq_icon,null)
+            item.qualityList?.hq == true -> mContext.resources.getDrawable(R.drawable.hq_icon,null)
+            else -> null
+        }
+        quality?.let {
+            quality.setBounds(0, 0, quality.minimumWidth+mContext.dip(2), quality.minimumHeight)
+            holder.getView<TextView>(R.id.tv_artist).setCompoundDrawables(quality,null,null,null)
+        }
+        //设置歌手专辑名
+        holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
+        //设置播放状态
         if (PlayManager.getPlayingId() == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext,R.color.app_green))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext,R.color.app_green))
         } else {
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext,R.color.black))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext,R.color.grey))
         }
-//        if (isDialog) {
-//            holder.setImageResource(R.id.iv_clear, R.drawable.ic_clear)
-//        } else {
-//            holder.setImageResource(R.id.iv_clear, R.drawable.ic_more)
-//        }
+        holder.addOnClickListener(R.id.iv_more)
+
+        if (item.isCp) {
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext,R.color.grey))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext,R.color.grey))
+        }
+
         if (item.type == Constants.LOCAL) {
             holder.getView<View>(R.id.iv_resource).visibility = View.GONE
         } else {
@@ -71,13 +89,21 @@ class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
         if (item.coverUri != null) {
             CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         }
+        if (item.coverUri.isNullOrEmpty()) {
+            //加载歌曲专辑图
+            item.title?.let {
+                MusicApi.getMusicAlbumPic(item.title.toString(), success = {
+                    item.coverUri = it
+                    CoverLoader.loadImageView(mContext, it, holder.getView(R.id.iv_cover))
+                })
+            }
+        }
+        if (item.isCp) {
+            holder.itemView.setOnClickListener {
+                ToastUtils.show("歌曲无法播放")
+            }
+        }
         holder.addOnClickListener(R.id.iv_more)
         holder.addOnClickListener(R.id.iv_love)
     }
-
-    fun setPaletteSwatch(swatch: Palette.Swatch) {
-        mSwatch = swatch
-        notifyDataSetChanged()
-    }
-
 }

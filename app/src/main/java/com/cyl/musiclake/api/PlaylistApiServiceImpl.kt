@@ -182,13 +182,16 @@ object PlaylistApiServiceImpl {
      * 批量收藏歌曲（同一歌单）
      * 调用接口成功返回{}
      * 调用接口失败返回{"msg":""}
+     * @param pid 歌单ID
+     * @param vendor 歌曲来源
+     * @param musics 歌曲
      */
     fun collectBatchMusic(pid: String, vendor: String, musics: MutableList<Music>?): Observable<String>? {
         val ids = mutableListOf<String>()
         musics?.forEach {
-            if (!it.isCp) {
+//            if (!it.isCp) {
                 ids.add(it.mid.toString())
-            }
+//            }
         }
         return playlistApiService.collectBatchMusic(token, pid, CollectBatchBean(ids = ids, vendor = vendor))
                 .flatMap { result ->

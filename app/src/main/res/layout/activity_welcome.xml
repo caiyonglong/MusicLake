@@ -4,22 +4,25 @@
     android:id="@+id/wel_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorPrimary"
     android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/iv_header_cover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:src="@mipmap/ic_launcher_round"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_music"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.328" />
+
 
     <TextView
         android:id="@+id/musicLakeTv"
@@ -27,12 +30,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
         android:gravity="center"
-        android:lineSpacingExtra="@dimen/dp_2"
-        android:text="音乐湖\n听我想听的、分享我喜欢的！"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_16"
+        android:text="音乐湖"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/iv_header_cover"
         app:layout_constraintStart_toStartOf="@+id/iv_header_cover"
         app:layout_constraintTop_toBottomOf="@+id/iv_header_cover" />
+
+
+    <TextView
+        android:id="@+id/musicLakeTv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="听我想听的歌、分享我喜欢的歌！"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintEnd_toEndOf="@+id/iv_header_cover"
+        app:layout_constraintStart_toStartOf="@+id/iv_header_cover"
+        app:layout_constraintTop_toBottomOf="@+id/musicLakeTv" />
 
 </android.support.constraint.ConstraintLayout>
