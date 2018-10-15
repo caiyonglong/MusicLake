@@ -38,7 +38,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
     override fun loadDownloadMusic(isCache: Boolean) {
         mView?.showLoading()
         doAsync {
-            val data = DownloadLoader.getDownloadList()
+            val data = DownloadLoader.getDownloadList(isCache)
             uiThread {
                 mView?.showSongs(data)
             }

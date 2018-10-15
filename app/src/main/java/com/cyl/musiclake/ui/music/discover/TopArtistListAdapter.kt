@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.widget.CheckedTextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.cyl.musicapi.bean.SingerCate
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_SMALL
@@ -36,19 +37,20 @@ class ArtistListAdapter(artistList: MutableList<Artist>) : BaseQuickAdapter<Arti
 /**
  * 歌手地区
  */
-class ArtistCateAdapter(categories: MutableList<String>, val changeListener: SingerCateChangeListener? = null) : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_artist_cate, categories) {
-    var selectID = -100
+class ArtistCateAdapter(categories: MutableList<SingerCate>) : BaseQuickAdapter<SingerCate, BaseViewHolder>(R.layout.item_artist_cate, categories) {
+    var flagId = -100
+    var position = 0
 
-    override fun convert(helper: BaseViewHolder, cate: String) {
-        helper.setText(R.id.titleTv, cate)
-        helper.getView<CheckedTextView>(R.id.titleTv).isChecked = selectID == helper.adapterPosition
-        helper.setTextColor(R.id.titleTv, if (selectID == helper.adapterPosition) Color.WHITE else Color.BLACK)
+    override fun convert(helper: BaseViewHolder, cate: SingerCate) {
+        helper.setText(R.id.titleTv, cate.name)
+        helper.getView<CheckedTextView>(R.id.titleTv).isChecked = position == helper.adapterPosition
+        helper.setTextColor(R.id.titleTv, if (position == helper.adapterPosition) Color.WHITE else Color.BLACK)
 
-        helper.itemView.setOnClickListener {
-            selectID = if (helper.adapterPosition == 0) -100 else helper.adapterPosition
-            changeListener?.change()
-            notifyDataSetChanged()
-        }
+//        helper.itemView.setOnClickListener {
+//            position = helper.adapterPosition
+//            flagId = cate.id
+////            notifyDataSetChanged()
+//        }
     }
 
 }

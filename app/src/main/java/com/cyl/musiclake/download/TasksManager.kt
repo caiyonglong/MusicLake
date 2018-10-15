@@ -155,7 +155,7 @@ object TasksManager {
         if (model != null) {
             return model
         }
-        val newModel = DownloadLoader.addTask(tid, mid, name, url, path)
+        val newModel = DownloadLoader.addTask(tid, mid, name, url, path,isCached)
         if (newModel != null) {
             modelList.add(newModel)
         }

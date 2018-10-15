@@ -18,13 +18,13 @@
             tag:"api",
             //搜索全部功能
             searchSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.searchSong(keyword,offset).then(function (data) {
+                musicApi.searchSong(keyword,offset,limit).then(function (data) {
                     responseCallback(data)
                 })
             },
             //搜索netease功能
             searchNeteaseSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.netease.searchSong(keyword,offset).then(function (data) {
+                musicApi.netease.searchSong(keyword,limit,offset).then(function (data) {
                     responseCallback(data)
                 })
             },
@@ -36,7 +36,7 @@
             },
             //搜索qq
             searchQQSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.qq.searchSong(keyword,offset).then(function (data) {
+                musicApi.qq.searchSong(keyword,limit,offset).then(function (data) {
                     responseCallback(data)
                 })
             },

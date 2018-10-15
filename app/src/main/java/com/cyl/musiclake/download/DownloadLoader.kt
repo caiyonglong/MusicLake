@@ -5,7 +5,6 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.utils.FileUtils
@@ -13,7 +12,6 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Mp3Util
 import com.cyl.musiclake.utils.ToastUtils
 import com.liulishuo.filedownloader.util.FileDownloadUtils
-import org.jaudiotagger.audio.mp3.MP3File
 import org.litepal.LitePal
 
 object DownloadLoader {
@@ -22,9 +20,9 @@ object DownloadLoader {
     /**
      * 获取已下载列表
      */
-    fun getDownloadList(): MutableList<Music> {
+    fun getDownloadList(isCached: Boolean = false): MutableList<Music> {
         val musicList = mutableListOf<Music>()
-        val data = LitePal.where("finish = 1").find(TasksManagerModel::class.java)
+        val data = LitePal.where("finish = 1 and cache = ?", if (isCached) "1" else "0").find(TasksManagerModel::class.java)
         data.forEach {
             val music = it.mid?.let { it1 ->
                 try {
@@ -48,17 +46,17 @@ object DownloadLoader {
     }
 
     /**
-     * 获取已下载列表
+     * 获取下载列表
      */
     fun getDownloadingList(): MutableList<TasksManagerModel> {
-        return LitePal.where("finish = 0").find(TasksManagerModel::class.java)
+        return LitePal.where("finish = 0 and cache = 0").find(TasksManagerModel::class.java)
     }
 
     /**
-     * 获取已下载列表
+     * 获取缓存列表
      */
-    fun getAllDownloadList(): MutableList<TasksManagerModel> {
-        return LitePal.findAll(TasksManagerModel::class.java)
+    fun getCacheingList(): MutableList<TasksManagerModel> {
+        return LitePal.where("finish = 0 and cache = 1").find(TasksManagerModel::class.java)
     }
 
     /**
@@ -68,12 +66,12 @@ object DownloadLoader {
         return LitePal.isExist(TasksManagerModel::class.java, "mid = ?", mid)
     }
 
-    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String): TasksManagerModel? {
+    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String, cached: Boolean): TasksManagerModel? {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(path)) {
             return null
         }
         //判断是否已下载过
-        if (isHasMusic(mid)) {
+        if (!cached && isHasMusic(mid)) {
             ToastUtils.show(MusicApp.getAppContext().getString(R.string.download_exits, name))
             return null
         }
@@ -86,6 +84,7 @@ object DownloadLoader {
         model.url = url
         model.path = path
         model.finish = false
+        model.cache = cached
         model.saveOrUpdate("tid = ?", tid.toString())
         return model
     }

@@ -348,20 +348,11 @@ object MusicApiServiceImpl {
      * 获取歌手列表
      *
      */
-    fun getArtists(offset: Int, params: Any): Observable<MutableList<Artist>> {
+    fun getArtists(offset: Int, params: Any): Observable<Artists> {
         return create { result ->
             BaseApiImpl.getArtists(offset, MusicApp.GSON.toJson(params), {
                 if (it.status) {
-                    val artists = mutableListOf<Artist>()
-                    it.data.singerList.forEach { singer ->
-                        val artist = Artist()
-                        artist.artistId = singer.singer_id
-                        artist.name = singer.singer_name
-                        artist.picUrl = singer.singer_pic
-                        artist.type = Constants.QQ
-                        artists.add(artist)
-                    }
-                    result.onNext(artists)
+                    result.onNext(it.data)
                     result.onComplete()
                 } else {
                     result.onError(Throwable(it.msg))

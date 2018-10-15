@@ -161,7 +161,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
                 //数据全部加载完毕
                 mAdapter.loadMoreEnd()
             } else {
-                mOffset += limit
                 //成功获取更多数据
                 queryString?.let { mPresenter?.search(it, SearchEngine.Filter.ANY, limit, mOffset) }
             }
@@ -170,15 +169,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
-
-        //设置初始值
-//        menu.getItem(R.id.menu_filter_baidu).isChecked = true
-//        menu.getItem(R.id.menu_filter_netease).isChecked = false
-//        menu.getItem(R.id.menu_filter_qq).isChecked = false
-//        menu.getItem(R.id.menu_filter_xiami).isChecked = false
-//        menu.getItem(R.id.menu_filter_repeat).isChecked = false
-//        menu.getItem(R.id.menu_filter_copyright).isChecked = false
-
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -210,6 +200,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         this.filter = filter
         this.filterItemCheckedId = item.itemId
         item.isChecked = !item.isChecked
+
 
         if (!TextUtils.isEmpty(queryString)) {
             isSearchOnline = true
@@ -251,6 +242,9 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
     }
 
     override fun showSearchResult(list: MutableList<Music>) {
+        if (list.size != 0) {
+            mOffset += limit
+        }
         searchResults.addAll(list)
         mAdapter.setNewData(searchResults)
         mAdapter.loadMoreComplete()
