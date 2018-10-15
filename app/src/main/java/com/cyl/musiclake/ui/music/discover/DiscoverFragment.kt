@@ -91,7 +91,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.seeAllArtistTv -> {
-                activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.NETEASE_ARITIST_LIST, artists, channels)) }
+                activity?.let { NavigationHelper.navigateFragment(it, ArtistListFragment()) }
             }
             R.id.seeAllRadioTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST, artists, channels)) }
