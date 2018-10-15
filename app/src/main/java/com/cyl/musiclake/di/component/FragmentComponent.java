@@ -6,6 +6,7 @@ import android.content.Context;
 import com.cyl.musiclake.di.module.FragmentModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerFragment;
+import com.cyl.musiclake.ui.music.discover.ArtistListFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.download.ui.DownloadManagerFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
@@ -84,4 +85,6 @@ public interface FragmentComponent {
     void inject(@NotNull CoverFragment coverFragment);
 
     void inject(@NotNull NeteasePlaylistFragment neteasePlaylistFragment);
+
+    void inject(@NotNull ArtistListFragment artistListFragment);
 }

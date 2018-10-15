@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
     <!-- require dsbridge init js -->
     <script type="text/javascript" src="dist/dsbridge.js"></script>
-    <script type="text/javascript" src="dist/app.native.js"></script>
+    <script type="text/javascript" src="https://cdn.zzsun.cc/music-lake/app.native.js"></script>
 </head>
 
 <body>
@@ -78,6 +78,11 @@
             },
             getArtistSongs:function( vendor, id, offset, limit,responseCallback) {
                 musicApi.getArtistSongs(vendor, id, offset, limit).then(function (data) {
+                    responseCallback(data)
+                })
+            },
+            getArtists:function(offset, params,responseCallback) {
+                musicApi.qq.getArtists(offset, params).then(function (data) {
                     responseCallback(data)
                 })
             },

@@ -215,4 +215,19 @@ object BaseApiImpl {
             }
         }
     }
+
+    /**
+     * 获取专辑详情
+     * id，专辑ID
+     */
+    fun getArtists(offset: Int, params: Any, success: (result: ArtistsData) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("api.getArtists", arrayOf(offset, params)) { retValue: JSONObject ->
+            try {
+                val result = gson.fromJson<ArtistsData>(retValue.toString(), ArtistsData::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                e.message?.let { fail?.invoke(it) }
+            }
+        }
+    }
 }

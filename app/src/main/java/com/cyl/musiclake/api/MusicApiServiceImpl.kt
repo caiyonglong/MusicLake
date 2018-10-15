@@ -153,7 +153,7 @@ object MusicApiServiceImpl {
                     result.onNext(MusicUtils.getMusic(music))
                     result.onComplete()
                 } else {
-                    result.onError(Throwable(""))
+                    result.onError(Throwable(it.msg))
                 }
             }, {})
         }
@@ -185,7 +185,7 @@ object MusicApiServiceImpl {
                         result.onNext(comments)
                         result.onComplete()
                     } else {
-                        result.onError(Throwable(""))
+                        result.onError(Throwable(it.msg))
                     }
                 }, {
                     ToastUtils.show(it)
@@ -212,7 +212,7 @@ object MusicApiServiceImpl {
                                 result.onNext(comments)
                                 result.onComplete()
                             } else {
-                                result.onError(Throwable(""))
+                                result.onError(Throwable(it.msg))
                             }
                         }, {
                             ToastUtils.show(it)
@@ -239,7 +239,7 @@ object MusicApiServiceImpl {
                                 result.onNext(comments)
                                 result.onComplete()
                             } else {
-                                result.onError(Throwable(""))
+                                result.onError(Throwable(it.msg))
                             }
                         }, {
                             ToastUtils.show(it)
@@ -275,7 +275,7 @@ object MusicApiServiceImpl {
                             result.onNext(artist)
                             result.onComplete()
                         } else {
-                            result.onError(Throwable(""))
+                            result.onError(Throwable(it.msg))
                         }
                     }, {})
         }
@@ -309,7 +309,7 @@ object MusicApiServiceImpl {
                     result.onNext(album)
                     result.onComplete()
                 } else {
-                    result.onError(Throwable(""))
+                    result.onError(Throwable(it.msg))
                 }
             }, {})
         }
@@ -337,9 +337,36 @@ object MusicApiServiceImpl {
                             result.onNext(playlist)
                             result.onComplete()
                         } else {
-                            result.onError(Throwable(""))
+                            result.onError(Throwable(it.msg))
                         }
                     }, {})
+        }
+    }
+
+
+    /**
+     * 获取歌手列表
+     *
+     */
+    fun getArtists(offset: Int, params: Any): Observable<MutableList<Artist>> {
+        return create { result ->
+            BaseApiImpl.getArtists(offset, MusicApp.GSON.toJson(params), {
+                if (it.status) {
+                    val artists = mutableListOf<Artist>()
+                    it.data.singerList.forEach { singer ->
+                        val artist = Artist()
+                        artist.artistId = singer.singer_id
+                        artist.name = singer.singer_name
+                        artist.picUrl = singer.singer_pic
+                        artist.type = Constants.QQ
+                        artists.add(artist)
+                    }
+                    result.onNext(artists)
+                    result.onComplete()
+                } else {
+                    result.onError(Throwable(it.msg))
+                }
+            }, {})
         }
     }
 
@@ -376,7 +403,7 @@ object MusicApiServiceImpl {
                         result.onNext(lyric.toString())
                         result.onComplete()
                     } else {
-                        result.onError(Throwable(""))
+                        result.onError(Throwable(it.msg))
                     }
                 }
             }

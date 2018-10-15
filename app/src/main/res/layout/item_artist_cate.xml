@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatCheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/titleTv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_4"
+    android:background="@drawable/bg_artist_cate_item"
+    android:ellipsize="end"
+    android:lines="1"
+    android:paddingEnd="@dimen/dp_8"
+    android:paddingStart="@dimen/dp_8"
+    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+    android:textColor="@color/white"
+    android:textSize="@dimen/sp_16"
+    tools:text="Search query" />
+
