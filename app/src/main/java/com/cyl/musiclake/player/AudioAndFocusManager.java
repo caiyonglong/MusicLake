@@ -60,6 +60,7 @@ public class AudioAndFocusManager {
     public void requestAudioFocus() {
         if (SystemUtils.isO()) {
             AudioFocusRequest mAudioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setOnAudioFocusChangeListener(audioFocusChangeListener)
                     .build();
             int res = mAudioManager.requestAudioFocus(mAudioFocusRequest);
             if (res == 1) {
