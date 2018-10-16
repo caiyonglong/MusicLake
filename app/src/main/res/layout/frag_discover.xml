@@ -28,14 +28,55 @@
                 app:indicatorPaddingLeft="8dp"
                 app:open_mz_mode="false" />
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_16">
+
+                <TextView
+                    android:id="@+id/hotSingerTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/ic_hot"
+                    android:gravity="center"
+                    android:text="@string/hot_artist" />
+
+                <TextView
+                    android:id="@+id/singerListTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/ic_supervisor_account"
+                    android:gravity="center"
+                    android:text="@string/all_artist" />
+
+                <TextView
+                    android:id="@+id/radioTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/ic_radio"
+                    android:gravity="center"
+                    android:text="@string/radio_list" />
+
+            </LinearLayout>
+
+
             <LinearLayout
                 android:id="@+id/artistView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -78,8 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"

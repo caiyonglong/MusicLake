@@ -2,12 +2,9 @@ package com.cyl.musiclake.ui.music.player
 
 import android.animation.ObjectAnimator
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
-import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
@@ -17,11 +14,11 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
@@ -37,7 +34,10 @@ import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
 import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
-import com.cyl.musiclake.utils.*
+import com.cyl.musiclake.utils.FormatUtil
+import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
+import com.cyl.musiclake.utils.Tools
 import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
@@ -282,6 +282,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         lyricView = LayoutInflater.from(this).inflate(R.layout.frag_player_lrcview, viewPager, false)
         mLyricView = lyricView?.findViewById(R.id.lyricShow)
         mQualityTv = coverView?.findViewById(R.id.tv_quality)
+        coverView?.findViewById<TextView>(R.id.tv_sound_effect)?.setOnClickListener {
+            NavigationHelper.navigateToSoundEffect(this)
+        }
         coverView?.let {
             viewPagerContent.add(it)
         }

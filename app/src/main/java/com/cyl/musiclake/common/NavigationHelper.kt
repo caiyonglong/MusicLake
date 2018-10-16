@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
@@ -17,6 +18,7 @@ import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.download.ui.DownloadFragment
 import com.cyl.musiclake.player.MusicPlayerService
+import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
@@ -25,6 +27,7 @@ import com.cyl.musiclake.ui.music.playlist.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
+import com.cyl.musiclake.utils.ToastUtils
 import java.io.File
 
 /**
@@ -49,6 +52,17 @@ object NavigationHelper {
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
+
+    fun navigateToSoundEffect(context: Activity) {
+        try {
+            val effects = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+            effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId())
+            context.startActivityForResult(effects, 666)
+        } catch (e: Exception) {
+            ToastUtils.show("设备不支持均衡！")
+        }
+    }
+
 
     fun navigateToFolderSongs(context: Activity, path: String) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()

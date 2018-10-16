@@ -1,12 +1,12 @@
 package com.cyl.musiclake.ui.music.discover
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.View
+import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Artist
@@ -14,12 +14,7 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
-import com.zhouwei.mzbanner.holder.MZHolderCreator
 import kotlinx.android.synthetic.main.frag_discover.*
-import android.view.LayoutInflater
-import android.widget.ImageView
-import com.cyl.musicapi.netease.BannerBean
-import com.zhouwei.mzbanner.holder.MZViewHolder
 
 
 /**
@@ -90,10 +85,13 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.seeAllArtistTv -> {
+            R.id.singerListTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, ArtistListFragment()) }
             }
-            R.id.seeAllRadioTv -> {
+            R.id.seeAllArtistTv, R.id.hotSingerTv -> {
+                activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.NETEASE_ARITIST_LIST, artists, channels)) }
+            }
+            R.id.seeAllRadioTv, R.id.radioTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST, artists, channels)) }
             }
             R.id.catTag1Tv -> {
@@ -135,6 +133,9 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         cateTagTv.setOnClickListener(this)
         catTag1Tv.setOnClickListener(this)
         catTag2Tv.setOnClickListener(this)
+        singerListTv.setOnClickListener(this)
+        hotSingerTv.setOnClickListener(this)
+        radioTv.setOnClickListener(this)
         seeAllRadioTv.setOnClickListener(this)
         seeAllArtistTv.setOnClickListener(this)
     }
@@ -179,14 +180,12 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
     override fun showArtistCharts(charts: MutableList<Artist>) {
         hideLoading()
-        artistView.visibility = View.VISIBLE
         this.artists = charts
         mArtistListAdapter?.setNewData(charts)
     }
 
     override fun showRadioChannels(channels: MutableList<Playlist>) {
         hideLoading()
-        radioView.visibility = View.VISIBLE
         this.channels = channels
         mRadioAdapter?.setNewData(channels)
     }

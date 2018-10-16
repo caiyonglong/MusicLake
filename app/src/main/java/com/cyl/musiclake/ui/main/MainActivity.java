@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
@@ -48,7 +47,6 @@ import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -270,13 +268,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mTargetClass = AboutActivity.class;
                 break;
             case R.id.nav_menu_equalizer:
-                try {
-                    Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId());
-                    startActivityForResult(effects, 666);
-                } catch (Exception e) {
-                    ToastUtils.show("设备不支持均衡！");
-                }
+                NavigationHelper.INSTANCE.navigateToSoundEffect(this);
                 break;
             case R.id.nav_menu_exit:
                 mTargetClass = null;
