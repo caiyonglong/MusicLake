@@ -359,7 +359,7 @@ object MusicApiServiceImpl {
      */
     fun getArtists(offset: Int, params: Any): Observable<Artists> {
         return create { result ->
-            BaseApiImpl.getArtists(offset, MusicApp.GSON.toJson(params), {
+            BaseApiImpl.getArtists(offset, params, {
                 if (it.status) {
                     result.onNext(it.data)
                     result.onComplete()

@@ -8,8 +8,8 @@ import com.cyl.musiclake.bean.Artist
 interface ArtistListContract {
 
     interface View : BaseContract.BaseView {
-        fun showArtistList(charts: MutableList<Artist>)
-        fun showArtistTags(charts: SingerTag)
+        fun showArtistList(artistList: MutableList<Artist>)
+        fun showArtistTags(tags: SingerTag)
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {

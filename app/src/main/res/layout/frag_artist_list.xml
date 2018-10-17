@@ -89,8 +89,7 @@
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_8"
-            android:text="@string/dd" />
+            android:layout_margin="@dimen/dp_8" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/resultRsv"
@@ -102,5 +101,7 @@
             android:paddingTop="@dimen/dp_8" />
 
     </LinearLayout>
+
+    <include layout="@layout/item_loading" />
 
 </android.support.design.widget.CoordinatorLayout>

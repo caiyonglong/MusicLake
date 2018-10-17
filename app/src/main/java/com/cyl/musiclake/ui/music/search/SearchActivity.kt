@@ -78,6 +78,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             SearchEngine.Filter.XIAMI to true,
             SearchEngine.Filter.NETEASE to true,
             SearchEngine.Filter.BAIDU to true,
+            SearchEngine.Filter.REPEAT to true,
             SearchEngine.Filter.CP to true)
 
 
@@ -216,6 +217,12 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             R.id.menu_filter_netease -> {
                 changeFilter(item, SearchEngine.Filter.NETEASE)
             }
+            R.id.menu_filter_repeat -> {
+                changeFilter(item, SearchEngine.Filter.REPEAT)
+            }
+            R.id.menu_filter_copyright -> {
+                changeFilter(item, SearchEngine.Filter.CP)
+            }
         }
         return true
     }
@@ -286,29 +293,58 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
     /**
      * 显示过滤后的搜索结果
      */
-    fun showFilterResult() {
+    private fun showFilterResult() {
         songList.clear()
         searchResults.forEach {
-            when {
-                filter[SearchEngine.Filter.QQ] == true && it.type == Constants.QQ -> {
+            if (filter[SearchEngine.Filter.QQ] == true && it.type == Constants.QQ) {
+                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
                     songList.add(it)
-                }
-                filter[SearchEngine.Filter.BAIDU] == true && it.type == Constants.BAIDU -> {
-                    songList.add(it)
-                }
-                filter[SearchEngine.Filter.NETEASE] == true && it.type == Constants.NETEASE -> {
-                    songList.add(it)
-                }
-                filter[SearchEngine.Filter.XIAMI] == true && it.type == Constants.XIAMI -> {
-                    songList.add(it)
-                }
-                filter[SearchEngine.Filter.CP] == true && it.isCp -> {
+                } else if (filter[SearchEngine.Filter.CP] == true) {
                     songList.add(it)
                 }
             }
+            if (filter[SearchEngine.Filter.BAIDU] == true && it.type == Constants.BAIDU) {
+                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+                    songList.add(it)
+                } else if (filter[SearchEngine.Filter.CP] == true) {
+                    songList.add(it)
+                }
+            }
+            if (filter[SearchEngine.Filter.NETEASE] == true && it.type == Constants.NETEASE) {
+                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+                    songList.add(it)
+                } else if (filter[SearchEngine.Filter.CP] == true) {
+                    songList.add(it)
+                }
+            }
+            if (filter[SearchEngine.Filter.XIAMI] == true && it.type == Constants.XIAMI) {
+                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+                    songList.add(it)
+                } else if (filter[SearchEngine.Filter.CP] == true) {
+                    songList.add(it)
+                }
+            }
+            if (filter[SearchEngine.Filter.REPEAT] == true) {
+                songList = removeDuplicate(songList)
+            }
+
         }
         mAdapter.setNewData(songList)
         mAdapter.loadMoreComplete()
+    }
+
+    /**
+     * 移除重复歌曲
+     */
+    private fun removeDuplicate(list: MutableList<Music>): MutableList<Music> {
+        for (i in 0 until list.size - 1) {
+            for (j in list.size - 1 downTo i + 1) {
+                if (list[j].title == list[i].title && list[j].artist == list[i].artist && list[j].album == list[i].album) {
+                    list.removeAt(j)
+                }
+            }
+        }
+        return list
     }
 
     /**

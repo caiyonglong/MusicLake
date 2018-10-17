@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="听我想听的歌、分享我喜欢的歌！"
+        android:text="听我想听的歌"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
         app:layout_constraintEnd_toEndOf="@+id/iv_header_cover"

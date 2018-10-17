@@ -7,7 +7,9 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_artist_list.*
+import java.lang.StringBuilder
 
 /**
  * 功能：在线排行榜
@@ -22,12 +24,12 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
 //    private val indexList = mutableListOf("全部", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
 
     var singerTag: SingerTag? = null
-
     //适配器
     var areaListAdapter: ArtistCateAdapter? = null
     var sexListAdapter: ArtistCateAdapter? = null
     var genreListAdapter: ArtistCateAdapter? = null
     var indexListAdapter: ArtistCateAdapter? = null
+    private val filterTips = StringBuilder()
 
 
     private var mArtistAdapter: ArtistListAdapter? = null
@@ -57,29 +59,42 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
 
     override fun loadData() {
         //适配器
-//        val areaListAdapter = ArtistCateAdapter(areaList)
-//        val sexListAdapter = ArtistCateAdapter(sexList)
-//        val genreListAdapter = ArtistCateAdapter(genreList)
-//        val indexListAdapter = ArtistCateAdapter(indexList)
-
-        getArtistList()
+        updateArtistList()
     }
 
+    override fun retryLoading() {
+        super.retryLoading()
+        loadData()
+    }
     override fun listener() {
 
     }
 
-    fun getArtistList() {
+    /**
+     * 更新歌曲列表
+     */
+    private fun updateArtistList() {
         val area = areaListAdapter?.flagId ?: -100
         val sex = sexListAdapter?.flagId ?: -100
         val genre = genreListAdapter?.flagId ?: -100
         val index = indexListAdapter?.flagId ?: -100
-        val tips = singerTag?.area?.get(areaListAdapter?.position ?: 0)?.name ?: " "+
-        singerTag?.sex?.get(sexListAdapter?.position ?: 0)?.name ?: " "+
-        singerTag?.genre?.get(genreListAdapter?.position ?: 0)?.name ?: " "+
-        singerTag?.index?.get(indexListAdapter?.position ?: 0)?.name ?: ""
-        titleTv.text = if (tips.isEmpty()) "热门" else tips
+        filterTips.setLength(0)
+        filterTips.append(singerTag?.index?.get(indexListAdapter?.position ?: 0)?.name ?: "热门")
+        filterTips.append(" ")
+        if (areaListAdapter != null && areaListAdapter?.position != 0) {
+            filterTips.append(singerTag?.area?.get(areaListAdapter?.position ?: 0)?.name ?: "")
+            filterTips.append("-")
+        }
+        if (sexListAdapter != null && sexListAdapter?.position != 0) {
+            filterTips.append(singerTag?.sex?.get(sexListAdapter?.position ?: 0)?.name ?: "")
+            filterTips.append("-")
+        }
+        if (areaListAdapter != null && genreListAdapter?.position != 0) {
+            filterTips.append(singerTag?.genre?.get(genreListAdapter?.position ?: 0)?.name ?: "")
+        }
+        titleTv.text = filterTips.toString()
         val params = mapOf("area" to area, "sex" to sex, "genre" to genre, "index" to index)
+        LogUtil.e("artistList", params.toString())
         mPresenter?.loadArtists(0, params)
     }
 
@@ -94,13 +109,13 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
         }
     }
 
-    override fun showArtistTags(charts: SingerTag) {
+    override fun showArtistTags(tags: SingerTag) {
         if (areaListAdapter == null) {
-            areaListAdapter = ArtistCateAdapter(charts.area)
-            indexListAdapter = ArtistCateAdapter(charts.index)
-            sexListAdapter = ArtistCateAdapter(charts.sex)
-            genreListAdapter = ArtistCateAdapter(charts.genre)
-            singerTag = charts
+            areaListAdapter = ArtistCateAdapter(tags.area)
+            indexListAdapter = ArtistCateAdapter(tags.index)
+            sexListAdapter = ArtistCateAdapter(tags.sex)
+            genreListAdapter = ArtistCateAdapter(tags.genre)
+            singerTag = tags
 
             areaRsv.adapter = areaListAdapter
             areaListAdapter?.bindToRecyclerView(areaRsv)
@@ -114,29 +129,29 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
             genreRsv.adapter = genreListAdapter
             genreListAdapter?.bindToRecyclerView(genreRsv)
 
-            areaListAdapter?.setOnItemClickListener { adapter, view, position ->
+            areaListAdapter?.setOnItemClickListener { _, _, position ->
                 areaListAdapter?.position = position
                 areaListAdapter?.flagId = singerTag?.area?.get(position)?.id ?: -100
                 areaListAdapter?.notifyDataSetChanged()
-                getArtistList()
+                updateArtistList()
             }
-            genreListAdapter?.setOnItemClickListener { _, view, position ->
+            genreListAdapter?.setOnItemClickListener { _, _, position ->
                 genreListAdapter?.position = position
                 genreListAdapter?.flagId = singerTag?.genre?.get(position)?.id ?: -100
                 genreListAdapter?.notifyDataSetChanged()
-                getArtistList()
+                updateArtistList()
             }
-            indexListAdapter?.setOnItemClickListener { _, view, position ->
+            indexListAdapter?.setOnItemClickListener { _, _, position ->
                 indexListAdapter?.position = position
                 indexListAdapter?.flagId = singerTag?.index?.get(position)?.id ?: -100
                 indexListAdapter?.notifyDataSetChanged()
-                getArtistList()
+                updateArtistList()
             }
-            sexListAdapter?.setOnItemClickListener { _, view, position ->
+            sexListAdapter?.setOnItemClickListener { _, _, position ->
                 sexListAdapter?.position = position
                 sexListAdapter?.flagId = singerTag?.sex?.get(position)?.id ?: -100
-                indexListAdapter?.notifyDataSetChanged()
-                getArtistList()
+                sexListAdapter?.notifyDataSetChanged()
+                updateArtistList()
             }
         }
     }

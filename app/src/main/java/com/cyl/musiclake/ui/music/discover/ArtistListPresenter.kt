@@ -18,6 +18,7 @@ import javax.inject.Inject
 class ArtistListPresenter @Inject
 constructor() : BasePresenter<ArtistListContract.View>(), ArtistListContract.Presenter {
     override fun loadArtists(offset: Int, params: Any) {
+        mView?.showLoading()
         ApiManager.request(MusicApiServiceImpl.getArtists(offset, params), object : RequestCallBack<Artists> {
             override fun success(result: Artists) {
                 val artists = mutableListOf<Artist>()
@@ -30,12 +31,14 @@ constructor() : BasePresenter<ArtistListContract.View>(), ArtistListContract.Pre
                     }
                     artists.add(artist)
                 }
+                mView?.hideLoading()
                 mView?.showArtistList(artists)
                 mView?.showArtistTags(result.tags)
             }
 
             override fun error(msg: String) {
-                ToastUtils.show(msg)
+                mView?.hideLoading()
+                mView?.showError(msg,true)
             }
         })
     }
