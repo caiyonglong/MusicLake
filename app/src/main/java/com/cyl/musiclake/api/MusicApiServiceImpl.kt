@@ -41,27 +41,36 @@ object MusicApiServiceImpl {
             BaseApiImpl.searchSong(key, limit, page, success = {
                 val musicList = mutableListOf<Music>()
                 if (it.status) {
-                    if (type == ANY || type == NETEASE)
-                        it.data.netease.songs?.forEach {
-                            if (!it.cp) {
-                                it.vendor = Constants.NETEASE
-                                musicList.add(MusicUtils.getMusic(it))
+                    try {
+                        val neteaseSize = it.data.netease.songs?.size ?: 0
+                        val qqSize = it.data.netease.songs?.size ?: 0
+                        val xiamiSize = it.data.netease.songs?.size ?: 0
+                        val max = Math.max(Math.max(neteaseSize, qqSize), xiamiSize)
+                        for (i in 0 until max) {
+                            if (neteaseSize > i) {
+                                it.data.netease.songs?.get(i)?.let { music ->
+                                    music.vendor = Constants.NETEASE
+                                    musicList.add(MusicUtils.getMusic(music))
+                                }
+                            }
+
+                            if (qqSize > i) {
+                                it.data.qq.songs?.get(i)?.let { music ->
+                                    music.vendor = Constants.QQ
+                                    musicList.add(MusicUtils.getMusic(music))
+                                }
+                            }
+
+                            if (xiamiSize > i) {
+                                it.data.xiami.songs?.get(i)?.let { music ->
+                                    music.vendor = Constants.XIAMI
+                                    musicList.add(MusicUtils.getMusic(music))
+                                }
                             }
                         }
-                    if (type == ANY || type == QQ)
-                        it.data.qq.songs?.forEach {
-                            if (!it.cp) {
-                                it.vendor = Constants.QQ
-                                musicList.add(MusicUtils.getMusic(it))
-                            }
-                        }
-                    if (type == ANY || type == XIAMI)
-                        it.data.xiami.songs?.forEach {
-                            if (!it.cp) {
-                                it.vendor = Constants.XIAMI
-                                musicList.add(MusicUtils.getMusic(it))
-                            }
-                        }
+                    } catch (e: Throwable) {
+
+                    }
                     result.onNext(musicList)
                     result.onComplete()
                 } else {

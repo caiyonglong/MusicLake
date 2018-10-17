@@ -16,7 +16,7 @@ import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
-import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.NeteasePlaylistFragment;
 import com.cyl.musiclake.ui.music.player.CoverFragment;
 import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
@@ -24,7 +24,7 @@ import com.cyl.musiclake.ui.music.player.PlayControlFragment;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
-import com.cyl.musiclake.ui.music.online.fragment.BaiduPlaylistFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.download.ui.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
 

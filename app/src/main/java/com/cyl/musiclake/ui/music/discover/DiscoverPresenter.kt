@@ -8,6 +8,7 @@ import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.utils.ToastUtils
 import javax.inject.Inject
 
 /**
@@ -25,7 +26,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
-                println(msg)
+                mView?.showEmptyView(msg)
             }
         })
     }
@@ -41,7 +42,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
-                println(msg)
+                mView?.showEmptyView(msg)
             }
         })
     }
@@ -53,7 +54,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
-                println(msg)
+                mView?.showEmptyView(msg)
             }
         })
     }
@@ -67,7 +68,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             }
 
             override fun error(msg: String) {
-                println(msg)
+                mView?.showEmptyView(msg)
             }
         })
     }
@@ -79,11 +80,10 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
                 if (result.code == 200) {
                     mView?.showBannerView(result.banners)
                 }
-//                mView?.(result)
             }
 
             override fun error(msg: String) {
-                println(msg)
+                mView?.showEmptyView(msg)
             }
         })
     }

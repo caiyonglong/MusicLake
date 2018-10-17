@@ -8,6 +8,7 @@ import android.util.Pair
 import android.view.View
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
+import com.cyl.musiclake.base.BaseFragment
 import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
@@ -23,7 +24,7 @@ import kotlinx.android.synthetic.main.frag_discover.*
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
+class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
     private var mNeteaseAdapter: TopPlaylistAdapter? = null
     private var mArtistListAdapter: TopArtistListAdapter? = null
@@ -112,6 +113,10 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun loadData() {
+        showLoading()
+        mPresenter?.loadNetease("全部")
+        mPresenter?.loadArtists()
+        mPresenter?.loadRaios()
     }
 
     override fun listener() {
@@ -140,14 +145,17 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         seeAllArtistTv.setOnClickListener(this)
     }
 
-    override fun onLazyLoad() {
-        showLoading()
-        mPresenter?.loadNetease("全部")
-        mPresenter?.loadArtists()
-        mPresenter?.loadRaios()
+//    override fun onLazyLoad() {
+//    }
+
+    override fun showEmptyView(msg: String) {
+        hideLoading()
+        showError(msg, true)
     }
 
-    override fun showEmptyView() {
+    override fun retryLoading() {
+        super.retryLoading()
+        loadData()
     }
 
     override fun showBaiduCharts(charts: MutableList<Playlist>) {
@@ -191,7 +199,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     companion object {
-
         fun newInstance(): DiscoverFragment {
             val args = Bundle()
 

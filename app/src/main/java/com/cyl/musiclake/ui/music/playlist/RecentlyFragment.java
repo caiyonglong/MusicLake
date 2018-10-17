@@ -15,7 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.PlayHistoryLoader;
+import com.cyl.musiclake.bean.data.PlayHistoryLoader;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;

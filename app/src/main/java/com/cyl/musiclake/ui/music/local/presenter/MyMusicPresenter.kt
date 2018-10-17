@@ -2,8 +2,8 @@ package com.cyl.musiclake.ui.music.local.presenter
 
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.data.PlayHistoryLoader
-import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.bean.data.PlayHistoryLoader
+import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.download.DownloadLoader
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.music.local.contract.MyMusicContract

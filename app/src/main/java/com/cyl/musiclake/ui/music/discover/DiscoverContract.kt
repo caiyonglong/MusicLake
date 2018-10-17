@@ -9,7 +9,7 @@ import com.cyl.musiclake.bean.Artist
 interface DiscoverContract {
 
     interface View : BaseContract.BaseView {
-        fun showEmptyView()
+        fun showEmptyView(msg: String)
 
         fun showBaiduCharts(charts: MutableList<Playlist>)
 

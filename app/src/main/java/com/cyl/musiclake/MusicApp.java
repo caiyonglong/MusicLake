@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.data.PlaylistLoader;
+import com.cyl.musiclake.bean.data.PlaylistLoader;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;

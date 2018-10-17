@@ -15,9 +15,9 @@ import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.data.PlayHistoryLoader
-import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.data.db.DaoLitepal
+import com.cyl.musiclake.bean.data.PlayHistoryLoader
+import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.download.TasksManager
 import com.cyl.musiclake.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.LoginEvent
@@ -25,18 +25,14 @@ import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
-import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
-import com.sina.weibo.sdk.WbSdk
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.litepal.LitePal
-import com.sina.weibo.sdk.auth.Oauth2AccessToken
 import com.sina.weibo.sdk.auth.AccessTokenKeeper
 
 

@@ -1,12 +1,8 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
-import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract
-import com.cyl.musiclake.utils.CoverLoader
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject

@@ -7,7 +7,7 @@ import com.cyl.musiclake.base.BaseContract
 import com.cyl.musiclake.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.data.db.DaoLitepal
+import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.utils.Mp3Util
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_music_edit.*

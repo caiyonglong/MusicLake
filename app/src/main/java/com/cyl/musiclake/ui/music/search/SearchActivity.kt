@@ -18,13 +18,12 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.data.db.DaoLitepal
+import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.AnimationUtils
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.Tools
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -32,6 +31,7 @@ import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.acitvity_search.*
 import kotlinx.android.synthetic.main.toolbar_search_layout.*
 import java.util.*
+import java.util.stream.Collectors
 
 /**
  * 作者：yonglong on 2016/9/15 12:32
@@ -39,23 +39,48 @@ import java.util.*
  * 版本：2.5
  */
 class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
-    //搜索信息
+    /**
+     * 搜索信息
+     */
     private var queryString: String? = null
+    /**
+     * 搜索结果
+     */
+    private val searchResults = mutableListOf<Music>()
+    /**
+     * 歌曲列表
+     */
+    private var songList = mutableListOf<Music>()
+
+    /**
+     * 适配器
+     */
     private var historyAdapter: SearchHistoryAdapter? = null
     private var hotSearchAdapter: HotSearchAdapter? = null
-
-    private val searchResults = mutableListOf<Music>()
     private var mAdapter: SongAdapter = SongAdapter(searchResults)
+    /**
+     * 搜索历史
+     */
     private var searchHistory: MutableList<SearchHistoryBean> = ArrayList()
 
+    /**
+     * 分页偏移量
+     */
     private var mCurrentCounter = 10
     private val limit = 10
     private var mOffset = 0
     private var isSearchOnline = false
 
-    internal var filter: SearchEngine.Filter = SearchEngine.Filter.ANY
+    /**
+     * 过滤
+     */
 
-    private var filterItemCheckedId = -1
+    var filter = mutableMapOf(SearchEngine.Filter.QQ to true,
+            SearchEngine.Filter.XIAMI to true,
+            SearchEngine.Filter.NETEASE to true,
+            SearchEngine.Filter.BAIDU to true,
+            SearchEngine.Filter.CP to true)
+
 
     override fun getLayoutResID(): Int {
         return R.layout.acitvity_search
@@ -150,7 +175,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         }
 
         mAdapter.setOnItemChildClickListener { _, _, position ->
-            val music = searchResults[position]
+            val music = songList[position]
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(this)
         }
     }
@@ -196,15 +221,13 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         return true
     }
 
-    private fun changeFilter(item: MenuItem, filter: SearchEngine.Filter) {
-        this.filter = filter
-        this.filterItemCheckedId = item.itemId
-        item.isChecked = !item.isChecked
-
-
+    private fun changeFilter(item: MenuItem, filterType: SearchEngine.Filter) {
+        filter.put(key = filterType, value = !(filter[filterType] ?: true))
+        item.isChecked = filter[filterType] ?: true
         if (!TextUtils.isEmpty(queryString)) {
             isSearchOnline = true
         }
+        showFilterResult()
     }
 
 
@@ -241,19 +264,49 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         }
     }
 
+    /**
+     * 显示搜索记录
+     */
     override fun showSearchResult(list: MutableList<Music>) {
         if (list.size != 0) {
             mOffset += limit
         }
         searchResults.addAll(list)
-        mAdapter.setNewData(searchResults)
-        mAdapter.loadMoreComplete()
+        showFilterResult()
         isSearchOnline = false
         mCurrentCounter = mAdapter.data.size
         if (searchResults.size == 0) {
             showEmptyState()
         }
         LogUtil.e("search", mCurrentCounter.toString() + "--" + mCurrentCounter + "--" + mOffset)
+    }
+
+    /**
+     * 显示过滤后的搜索结果
+     */
+    fun showFilterResult() {
+        songList.clear()
+        searchResults.forEach {
+            when {
+                filter[SearchEngine.Filter.QQ] == true && it.type == Constants.QQ -> {
+                    songList.add(it)
+                }
+                filter[SearchEngine.Filter.BAIDU] == true && it.type == Constants.BAIDU -> {
+                    songList.add(it)
+                }
+                filter[SearchEngine.Filter.NETEASE] == true && it.type == Constants.NETEASE -> {
+                    songList.add(it)
+                }
+                filter[SearchEngine.Filter.XIAMI] == true && it.type == Constants.XIAMI -> {
+                    songList.add(it)
+                }
+                filter[SearchEngine.Filter.CP] == true && it.isCp -> {
+                    songList.add(it)
+                }
+            }
+        }
+        mAdapter.setNewData(songList)
+        mAdapter.loadMoreComplete()
     }
 
     /**
@@ -287,6 +340,9 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         }
     }
 
+    /**
+     * 显示历史
+     */
     override fun showSearchHistory(result: MutableList<SearchHistoryBean>) {
         searchHistory = result
         if (historyAdapter == null) {

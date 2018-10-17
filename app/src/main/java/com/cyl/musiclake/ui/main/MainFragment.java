@@ -12,8 +12,7 @@ import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
 import com.cyl.musiclake.ui.music.mv.MvFragment;
-import com.cyl.musiclake.ui.music.mv.MvListFragment;
-import com.cyl.musiclake.ui.music.online.fragment.NeteasePlaylistFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.NeteasePlaylistFragment;
 
 import butterknife.BindView;
 

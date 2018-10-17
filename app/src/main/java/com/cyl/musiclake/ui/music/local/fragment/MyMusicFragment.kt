@@ -9,7 +9,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.data.PlaylistLoader
+import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
