@@ -16,9 +16,9 @@ import com.cyl.musiclake.base.BaseActivity
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
+import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
@@ -31,7 +31,6 @@ import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.acitvity_search.*
 import kotlinx.android.synthetic.main.toolbar_search_layout.*
 import java.util.*
-import java.util.stream.Collectors
 
 /**
  * 作者：yonglong on 2016/9/15 12:32
@@ -139,12 +138,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             searchEditText.setText("")
             clearSearchIv.visibility = View.GONE
         }
-        mAdapter.setOnItemClickListener { _, view, position ->
-            if (searchResults.size <= position) return@setOnItemClickListener
-
-            PlayManager.playOnline(searchResults[position])
-            NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
-        }
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -174,6 +167,12 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             false
         }
 
+        mAdapter.setOnItemClickListener { _, view, position ->
+            if (songList.size <= position) return@setOnItemClickListener
+
+            PlayManager.playOnline(songList[position])
+            NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
+        }
         mAdapter.setOnItemChildClickListener { _, _, position ->
             val music = songList[position]
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(this)
@@ -258,6 +257,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             searchEditText.clearFocus()
             Tools.hideInputView(searchEditText)
             updateHistoryPanel(false)
+            mAdapter.setEnableLoadMore(true)
             mPresenter?.saveQueryInfo(query)
             mPresenter?.search(query, SearchEngine.Filter.ANY, limit, mOffset)
             mAdapter.setOnLoadMoreListener(listener, resultListRcv)
@@ -276,6 +276,8 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         isSearchOnline = false
         mCurrentCounter = mAdapter.data.size
         if (searchResults.size == 0) {
+            mAdapter.loadMoreComplete()
+            mAdapter.setEnableLoadMore(false)
             showEmptyState()
         }
         LogUtil.e("search", mCurrentCounter.toString() + "--" + mCurrentCounter + "--" + mOffset)

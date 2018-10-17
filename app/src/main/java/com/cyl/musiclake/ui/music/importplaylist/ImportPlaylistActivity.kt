@@ -88,21 +88,21 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     private fun getPlaylistId(link: String) {
         try {
             when {
-                link.contains("http://music.163.com") -> {
+                link.contains("music.163.com") -> {
                     val len = link.lastIndexOf("playlist/") + "playlist/".length
                     val id = link.substring(len, len + link.substring(len).indexOf("/"))
-                    importMusic("netease", id)
+                    importMusic(Constants.NETEASE, id)
                 }
-                link.contains("http://y.qq.com") -> {
+                link.contains("y.qq.com") -> {
                     val len = link.lastIndexOf("id=") + "id=".length
                     val id = link.substring(len, len + link.substring(len).indexOf("&")).trim()
-                    importMusic("qq", id)
+                    importMusic(Constants.QQ, id)
                 }
-                link.contains("https://www.xiami.com") -> {
+                link.contains("www.xiami.com") -> {
                     val len = link.lastIndexOf("collect/") + "collect/".length
                     val end = if (link.indexOf("?") == -1) link.indexOf("(") else link.indexOf("?")
                     val id = link.substring(len, end).trim()
-                    importMusic("xiami", id)
+                    importMusic(Constants.XIAMI, id)
                 }
                 else -> {
                     showLoading(false)

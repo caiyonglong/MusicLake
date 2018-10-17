@@ -16,8 +16,8 @@ interface DownloadContract {
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {
-        fun loadDownloadMusic(isCache:Boolean)
+        fun loadDownloadMusic(isCache: Boolean)
 
-        fun loadDownloading(isCache:Boolean)
+        fun loadDownloading()
     }
 }

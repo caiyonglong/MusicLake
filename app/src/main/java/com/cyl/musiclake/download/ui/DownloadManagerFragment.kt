@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.download.TasksManager
 import com.cyl.musiclake.download.TasksManagerModel
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
@@ -17,13 +16,9 @@ import java.lang.ref.WeakReference
 
 class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadContract.View {
     private var mAdapter: TaskItemAdapter? = null
-    private var isCache: Boolean = false
 
     override fun loadData() {
-        isCache = arguments?.getBoolean(Constants.KEY_IS_CACHE) ?: false
-        if (isCache) {
-            mPresenter?.loadDownloading(isCache)
-        }
+        mPresenter?.loadDownloading()
     }
 
     override fun getLayoutId(): Int {
@@ -78,7 +73,7 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
     private fun updateDownLoadList(list: List<TasksManagerModel>) {
         hideLoading()
         if (mAdapter == null) {
-            mAdapter = TaskItemAdapter(context, list,isCache)
+            mAdapter = TaskItemAdapter(context, list)
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.adapter = mAdapter
         } else {
@@ -92,10 +87,9 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
 
     companion object {
 
-        fun newInstance(isCache: Boolean): DownloadManagerFragment {
+        fun newInstance(): DownloadManagerFragment {
             val args = Bundle()
             val fragment = DownloadManagerFragment()
-            args.putBoolean(Constants.KEY_IS_CACHE, isCache)
             fragment.arguments = args
             return fragment
         }

@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference
 
 /**
  * Created by yonglong on 2018/1/23.
- * 下载任务管理
+ * 下载任务管理、新增缓存下载
  */
 object TasksManager {
     private var modelList = DownloadLoader.getDownloadingList()
@@ -146,7 +146,7 @@ object TasksManager {
     /**
      * @param tid :下载任务唯一ID
      */
-    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String,isCached:Boolean): TasksManagerModel? {
+    fun addTask(tid: Int, mid: String?, name: String?, url: String?, path: String, isCached: Boolean): TasksManagerModel? {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(mid) || TextUtils.isEmpty(path)) {
             return null
         }
@@ -155,7 +155,7 @@ object TasksManager {
         if (model != null) {
             return model
         }
-        val newModel = DownloadLoader.addTask(tid, mid, name, url, path,isCached)
+        val newModel = DownloadLoader.addTask(tid, mid, name, url, path, isCached)
         if (newModel != null) {
             modelList.add(newModel)
         }

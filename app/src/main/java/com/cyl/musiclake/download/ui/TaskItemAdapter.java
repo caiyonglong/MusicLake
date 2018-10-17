@@ -33,7 +33,6 @@ import java.util.List;
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
     private static final String TAG = "TaskItemAdapter";
     private Context mContext;
-    private Boolean isCache;
     private List<TasksManagerModel> models;
 
 
@@ -45,9 +44,8 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         this.models = models;
     }
 
-    public TaskItemAdapter(Context mContext, List<TasksManagerModel> list, Boolean isCache) {
+    public TaskItemAdapter(Context mContext, List<TasksManagerModel> list) {
         this.mContext = mContext;
-        this.isCache = isCache;
         this.models = list;
     }
 

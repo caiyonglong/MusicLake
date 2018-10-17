@@ -31,7 +31,7 @@
     <string name="item_local">本地歌曲</string>
     <string name="item_history">播放历史</string>
     <string name="item_favorite">我的收藏</string>
-    <string name="item_download">我的下载</string>
+    <string name="item_download">缓存&amp;下载</string>
     <string name="item_cached">缓存下载</string>
     <string name="local_music">本地歌曲</string>
 
