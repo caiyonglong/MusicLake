@@ -138,6 +138,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
 
     public void setVolume(final float vol) {
+        LogUtil.e("Volume","vol = "+vol);
         mCurrentMediaPlayer.setVolume(vol, vol);
     }
 

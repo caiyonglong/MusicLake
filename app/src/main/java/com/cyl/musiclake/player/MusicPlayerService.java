@@ -126,8 +126,8 @@ public class MusicPlayerService extends Service {
     public static final int PLAYER_PREPARED = 8; //mediaplayer准备完成
 
     public static final int AUDIO_FOCUS_CHANGE = 12; //音频焦点改变
-    public static final int VOLUME_FADE_DOWN = 13; //音频焦点改变
-    public static final int VOLUME_FADE_UP = 14; //音频焦点改变
+    public static final int VOLUME_FADE_DOWN = 13; //音量改变减少
+    public static final int VOLUME_FADE_UP = 14; //音量改变增加
 
 
     private final int NOTIFICATION_ID = 0x123;
@@ -157,6 +157,7 @@ public class MusicPlayerService extends Service {
     ServiceReceiver mServiceReceiver;
     HeadsetReceiver mHeadsetReceiver;
     HeadsetPlugInReceiver mHeadsetPlugInReceiver;
+    IntentFilter intentFilter;
 
     private FloatLyricViewManager mFloatLyricViewManager;
 
@@ -414,10 +415,10 @@ public class MusicPlayerService extends Service {
      */
     private void initReceiver() {
         //实例化过滤器，设置广播
+        intentFilter = new IntentFilter(ACTION_SERVICE);
         mServiceReceiver = new ServiceReceiver();
         mHeadsetReceiver = new HeadsetReceiver();
         mHeadsetPlugInReceiver = new HeadsetPlugInReceiver();
-        IntentFilter intentFilter = new IntentFilter(ACTION_SERVICE);
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
         intentFilter.addAction(SHUTDOWN);
@@ -548,7 +549,6 @@ public class MusicPlayerService extends Service {
             if (mPlayer.isInitialized()) {
                 mHandler.removeMessages(VOLUME_FADE_DOWN);
                 mHandler.sendEmptyMessage(VOLUME_FADE_UP); //组件调到正常音量
-
                 isMusicPlaying = true;
 //                notifyChange(PLAY_STATE_CHANGED);
             }
@@ -1293,16 +1293,11 @@ public class MusicPlayerService extends Service {
      * 耳机插入广播接收器
      */
     public class HeadsetPlugInReceiver extends BroadcastReceiver {
-
-        final IntentFilter filter;
-
         public HeadsetPlugInReceiver() {
-            filter = new IntentFilter();
-
             if (Build.VERSION.SDK_INT >= 21) {
-                filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+                intentFilter.addAction(AudioManager.ACTION_HEADSET_PLUG);
             } else {
-                filter.addAction(Intent.ACTION_HEADSET_PLUG);
+                intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
             }
         }
 
@@ -1322,13 +1317,11 @@ public class MusicPlayerService extends Service {
      */
     private class HeadsetReceiver extends BroadcastReceiver {
 
-        final IntentFilter filter;
         final BluetoothAdapter bluetoothAdapter;
 
         public HeadsetReceiver() {
-            filter = new IntentFilter();
-            filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY); //有线耳机拔出变化
-            filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED); //蓝牙耳机连接变化
+            intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY); //有线耳机拔出变化
+            intentFilter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED); //蓝牙耳机连接变化
 
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         }
@@ -1339,6 +1332,7 @@ public class MusicPlayerService extends Service {
                 //当前是正在运行的时候才能通过媒体按键来操作音频
                 switch (intent.getAction()) {
                     case BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
+                        LogUtil.e("蓝牙耳机插拔状态改变");
                         if (bluetoothAdapter != null &&
                                 BluetoothProfile.STATE_DISCONNECTED == bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEADSET) &&
                                 isPlaying()) {
@@ -1347,11 +1341,13 @@ public class MusicPlayerService extends Service {
                         }
                         break;
                     case AudioManager.ACTION_AUDIO_BECOMING_NOISY:
+                        LogUtil.e("有线耳机插拔状态改变");
                         if (isPlaying()) {
                             //有线耳机断开连接 同时当前音乐正在播放 则将其暂停
                             pause();
                         }
                         break;
+
                 }
             }
         }
