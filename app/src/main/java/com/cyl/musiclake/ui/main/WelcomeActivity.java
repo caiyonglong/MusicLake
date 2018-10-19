@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.main;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
@@ -101,26 +102,9 @@ public class WelcomeActivity extends BaseActivity {
 
     private void getCoverImageUrl() {
         mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
-//        ApiManager.request(NeteaseApiServiceImpl.INSTANCE.getBanners(), new RequestCallBack<BannerResult>() {
-//            @Override
-//            public void success(BannerResult result) {
-//                if (result.getCode()==200){
-//                    CoverLoader.loadBitmap(WelcomeActivity.this, result.getBanners().get(0).getPicUrl(), new CoverLoader.BitmapCallBack() {
-//                        @Override
-//                        public void showBitmap(Bitmap bitmap) {
-//                            heardCoverIv.setImageDrawable(ImageUtils.createBlurredImageFromBitmap(bitmap, 12));
-//                        }
-//                    });
-//
-//                    mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
-//                }
-//            }
-//
-//            @Override
-//            public void error(String msg) {
-//                mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 5000);
-//            }
-//        });
+
+
+
     }
 
 }

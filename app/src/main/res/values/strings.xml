@@ -24,6 +24,10 @@
     <string name="playlist_queue">播放队列</string>
     <string name="playlist_manager">歌单管理</string>
     <string name="title_batch_operate">批量操作</string>
+    <string name="title_order">排序</string>
+    <string name="title_order_title">按歌曲名</string>
+    <string name="title_order_artist">按歌手名</string>
+    <string name="title_order_album">按专辑名</string>
     <string name="settings">设置</string>
     <string name="exit">关闭</string>
 
@@ -33,6 +37,7 @@
     <string name="item_favorite">我的收藏</string>
     <string name="item_download">缓存&amp;下载</string>
     <string name="item_cached">缓存下载</string>
+    <string name="item_cached_music">缓存歌曲</string>
     <string name="local_music">本地歌曲</string>
 
     <string name="song_num">%1$d 首</string>

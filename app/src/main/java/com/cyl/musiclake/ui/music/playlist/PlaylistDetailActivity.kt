@@ -188,6 +188,18 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             R.id.action_batch -> {
                 startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
             }
+            R.id.action_order_title -> {
+                musicList.sortBy { it.title }
+                mAdapter?.notifyDataSetChanged()
+            }
+            R.id.action_order_album -> {
+                musicList.sortBy { it.album }
+                mAdapter?.notifyDataSetChanged()
+            }
+            R.id.action_order_artist -> {
+                musicList.sortBy { it.artist }
+                mAdapter?.notifyDataSetChanged()
+            }
         }
         return super.onOptionsItemSelected(item)
 
@@ -219,7 +231,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 menu.removeItem(R.id.action_delete_playlist)
             }
         }
-
         return super.onCreateOptionsMenu(menu)
     }
 

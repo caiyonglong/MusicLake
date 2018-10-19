@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.cyl.musiclake.R;
@@ -15,7 +16,10 @@ import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumsContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumPresenter;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -69,7 +73,6 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
     @Override
     protected void listener() {
     }
-
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {

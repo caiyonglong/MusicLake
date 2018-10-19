@@ -200,7 +200,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     fun downloadMusic(view: View?) {
-        downloadMusic(playingMusic)
+        QualitySelectDialog.newInstance(playingMusic).apply {
+            isDownload =true
+            downloadMusic(playingMusic)
+        }.show(this)
     }
 
     override fun setPlayingBitmap(albumArt: Bitmap?) {
@@ -296,6 +299,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 changeSuccessListener = {
                     this@PlayerActivity.mQualityTv?.text = it
                 }
+                isDownload =false
             }.show(this)
         }
 

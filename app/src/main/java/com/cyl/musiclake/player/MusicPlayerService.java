@@ -475,7 +475,7 @@ public class MusicPlayerService extends Service {
      */
     public void next(Boolean isAuto) {
         synchronized (this) {
-            mPlayingPos = getNextPosition(isAuto);
+            mPlayingPos =PlayQueueManager.INSTANCE.getNextPosition(isAuto,mPlayQueue.size(),mPlayingPos);
             LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
@@ -487,7 +487,7 @@ public class MusicPlayerService extends Service {
      */
     public void prev() {
         synchronized (this) {
-            mPlayingPos = getPreviousPosition();
+            mPlayingPos = PlayQueueManager.INSTANCE.getPreviousPosition(mPlayQueue.size(),mPlayingPos);
             LogUtil.e(TAG, "prev: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
@@ -655,7 +655,7 @@ public class MusicPlayerService extends Service {
      */
     public void playMusic(int position) {
         if (position >= mPlayQueue.size() || position == -1) {
-            mPlayingPos = getNextPosition(true);
+            mPlayingPos = PlayQueueManager.INSTANCE.getNextPosition(true,mPlayQueue.size(),position);
         } else {
             mPlayingPos = position;
         }

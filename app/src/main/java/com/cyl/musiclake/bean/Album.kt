@@ -8,7 +8,8 @@ import java.io.Serializable
  * Created by yonglong on 2016/11/23.
  */
 
-class Album : LitePalSupport, Serializable {
+class Album : LitePalSupport, Serializable, Comparable<Album> {
+
 
     var id: Int = 0
     var albumId: String? = null
@@ -40,5 +41,9 @@ class Album : LitePalSupport, Serializable {
                 ", artistId=" + artistId +
                 ", count=" + count +
                 '}'.toString()
+    }
+
+    override fun compareTo(other: Album): Int {
+        return (this.name ?: "").compareTo(other.name ?: "")
     }
 }
