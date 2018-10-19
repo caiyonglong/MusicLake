@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.search
 
+import com.cyl.musicapi.netease.SearchInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
@@ -19,6 +20,28 @@ import javax.inject.Inject
 
 class SearchPresenter @Inject
 constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
+    override fun searchByType(key: String, offset: Int, type: Int) {
+        ApiManager.request(NeteaseApiServiceImpl.searchMoreInfo(key, offset, type),
+                object : RequestCallBack<SearchInfo> {
+                    override fun success(result: SearchInfo) {
+                        when (type) {
+                            1004 -> {
+
+                            }
+                            100 -> {
+
+                            }
+                            1000 -> {
+
+                            }
+                        }
+                    }
+
+                    override fun error(msg: String) {
+                    }
+                })
+    }
+
     override fun searchLocal(key: String) {
         mView?.showLoading()
         doAsync {

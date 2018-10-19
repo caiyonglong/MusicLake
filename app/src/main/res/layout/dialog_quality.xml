@@ -3,38 +3,44 @@
     android:id="@+id/sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/translucent_black"
+    android:background="#ee000000"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/bottomSheetRv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
+        android:id="@+id/downloadView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/cacheTv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:padding="@dimen/dp_16"
-            android:visibility="gone"
             android:text="@string/item_cached_music"
             android:textColor="@color/white" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/dp_32"
+            android:background="@color/translucent_white" />
 
         <TextView
             android:id="@+id/downloadTv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:visibility="gone"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:padding="@dimen/dp_16"
             android:text="@string/popup_download"

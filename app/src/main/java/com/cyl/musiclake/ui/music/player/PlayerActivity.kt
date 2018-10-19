@@ -27,7 +27,6 @@ import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.UIUtils
-import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.comment.SongCommentActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
@@ -201,8 +200,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     fun downloadMusic(view: View?) {
         QualitySelectDialog.newInstance(playingMusic).apply {
-            isDownload =true
-            downloadMusic(playingMusic)
+            isDownload = true
         }.show(this)
     }
 
@@ -299,7 +297,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 changeSuccessListener = {
                     this@PlayerActivity.mQualityTv?.text = it
                 }
-                isDownload =false
+                isDownload = false
             }.show(this)
         }
 

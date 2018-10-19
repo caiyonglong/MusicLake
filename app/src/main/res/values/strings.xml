@@ -360,7 +360,7 @@
     <string name="song_operate">歌曲操作</string>
     <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
     <string name="download_local_error">不能下载本地音乐!</string>
-    <string name="download_ban">因版权问题，暂不支持下载</string>
+    <string name="download_ban">因版权问题，不支持下载付费歌曲</string>
     <string name="download_ban_some">%1$d首歌曲因版权问题，暂不支持下载，是否继续下载其余%2$s首歌曲？</string>
     <string name="download_empty_error">下载歌曲0首，请选择可下载的歌曲!</string>
     <string name="download_list_tips">已自动过滤掉版权歌曲，可下载歌曲%1$s首，是否继续?</string>

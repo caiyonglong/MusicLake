@@ -1,11 +1,13 @@
 package com.cyl.musiclake.ui.music.dialog
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,6 +19,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.downloadMusic
 
 class QualitySelectDialog : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
@@ -25,6 +28,7 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
     private val recyclerView by lazy { mRootView.findViewById<RecyclerView>(R.id.bottomSheetRv) }
     private val downloadTv by lazy { mRootView.findViewById<TextView>(R.id.downloadTv) }
     private val cacheTv by lazy { mRootView.findViewById<TextView>(R.id.cacheTv) }
+    private val downloadView by lazy { mRootView.findViewById<View>(R.id.downloadView) }
 
     var isDownload = false
     var changeSuccessListener: ((String) -> Unit)? = null
@@ -74,62 +78,36 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
 
         mAdapter = QualityDAdapter(qualities)
         recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = mAdapter
 
-        if (isDownload){
-            downloadTv.visibility = View.VISIBLE
-            cacheTv.visibility = View.VISIBLE
+        if (isDownload) {
+            downloadView.visibility = View.VISIBLE
         }
-        downloadTv.setOnClickListener {
+        if (music?.isDl == false) {
+            downloadTv.isClickable = false
+            downloadTv.setTextColor(Color.GRAY)
+        } else {
+            downloadTv.isClickable = true
+            downloadTv.setTextColor(Color.WHITE)
+        }
 
+        downloadTv.setOnClickListener {
+            (activity as AppCompatActivity).downloadMusic(music)
         }
         cacheTv.setOnClickListener {
-
+            (activity as AppCompatActivity).downloadMusic(music, true)
         }
     }
 
-    /**
-     * 下拉列表适配器
-     */
-//    inner class QualityAdapter(qualityList: QualityBean?) : RecyclerView.Adapter<QualityAdapter.ItemViewHolder>() {
-//
-//
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-//            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_quality_select, parent, false)
-//            return ItemViewHolder(view)
-//        }
-//
-//        override fun onBindViewHolder(holder: QualityAdapter.ItemViewHolder, position: Int) {
-//            holder.checkIv.visibility = if (music?.quality == qualities[position].first) View.VISIBLE else View.GONE
-//
-//            holder.titleTv.text = qualities[position].second
-//
-//            holder.itemView.setOnClickListener {
-//                music?.quality = qualities[position].first
-//                changeSuccessListener?.invoke(qualities[position].second)
-//                mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-//                PlayManager.play(PlayManager.position())
-//            }
-//        }
-//
-//        override fun getItemCount(): Int {
-//            return qualities.size
-//        }
-//
-//        inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//            var titleTv: TextView = itemView.findViewById(R.id.tv_title)
-//            var checkIv: ImageView = itemView.findViewById(R.id.iv_check)
-//        }
-//    }
-
-
-    inner  class QualityDAdapter(private val qualities: List<QualityItem>) : BaseQuickAdapter<QualityItem, BaseViewHolder>(R.layout.item_quality_select, qualities) {
+    inner class QualityDAdapter(qualities: List<QualityItem>) : BaseQuickAdapter<QualityItem, BaseViewHolder>(R.layout.item_quality_select, qualities) {
 
         override fun convert(helper: BaseViewHolder, item: QualityItem) {
             helper.setText(R.id.tv_title, item.name)
             helper.getView<ImageView>(R.id.iv_check).visibility = if (item.quality == music?.quality) View.VISIBLE else View.GONE
             helper.itemView.setOnClickListener {
                 QualitySelectDialog.music?.quality = item.quality
+                notifyDataSetChanged()
                 changeSuccessListener?.invoke(item.name)
                 if (!isDownload) {
                     mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN

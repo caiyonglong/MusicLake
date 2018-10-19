@@ -180,6 +180,13 @@ object NeteaseApiServiceImpl {
     }
 
     /**
+     * 搜索
+     */
+    fun searchMoreInfo(keywords: String, offset: Int, type: Int): Observable<SearchInfo> {
+        return apiService.searchNetease(keywords, offset, type)
+    }
+
+    /**
      * 获取风格
      */
     fun getCatList(): Observable<CatListBean> {

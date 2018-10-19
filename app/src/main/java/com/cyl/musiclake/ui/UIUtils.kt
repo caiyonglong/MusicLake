@@ -14,10 +14,10 @@ import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.download.TasksManager
 import com.cyl.musiclake.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.LoginEvent
@@ -30,10 +30,10 @@ import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
+import com.sina.weibo.sdk.auth.AccessTokenKeeper
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import com.sina.weibo.sdk.auth.AccessTokenKeeper
 
 
 object UIUtils {
@@ -176,7 +176,7 @@ fun AppCompatActivity.cacheMusic(music: Music?) {
 /**
  * 下载歌曲
  */
-fun AppCompatActivity.downloadMusic(music: Music?) {
+fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
     if (music == null) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
         return
@@ -185,7 +185,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_local_error))
         return
     }
-    if (!music.isDl) {
+    if (!music.isDl && !isCache) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
         return
     }
@@ -198,7 +198,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
             if (this@downloadMusic.isDestroyed || this@downloadMusic.isFinishing) return
             if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
                 showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
-                    addDownloadQueue(result)
+                    addDownloadQueue(result, isCache = isCache)
                 }
                 return
             }
@@ -207,7 +207,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
                         .title(R.string.popup_download)
                         .content(R.string.download_content, music.title)
                         .onPositive { _, _ ->
-                            addDownloadQueue(result)
+                            addDownloadQueue(result, isCache = isCache)
                         }
                         .positiveText(R.string.sure)
                         .negativeText(R.string.cancel)
@@ -225,7 +225,7 @@ fun AppCompatActivity.downloadMusic(music: Music?) {
 
 
 /**
- * 下载歌曲
+ * 删除歌曲
  */
 fun AppCompatActivity.deleteMusic(music: Music?) {
     if (music == null) {
@@ -378,7 +378,7 @@ fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: B
                     .setPath(path)
                     .setCallbackProgressTimes(100)
                     .setListener(TaskItemAdapter.taskDownloadListener)
-            val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path,isCache)
+            val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path, isCache)
             if (model != null) {
                 TasksManager.addTaskForViewHolder(task)
                 task.start()
