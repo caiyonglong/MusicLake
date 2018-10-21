@@ -1,6 +1,5 @@
 package com.cyl.musiclake.api
 
-import com.cyl.musicapi.bean.SongsItem
 import com.cyl.musicapi.netease.TracksItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
@@ -33,6 +32,11 @@ object MusicUtils {
         music.albumId = musicInfo.album.id
         music.isCp = musicInfo.cp
         music.isDl = musicInfo.dl
+        musicInfo.quality?.let {
+            music.sq = it.sq
+            music.hq = it.hq
+            music.high = it.high
+        }
         if (musicInfo.artists != null) {
             var artistIds = musicInfo.artists?.get(0)?.id
             var artistNames = musicInfo.artists?.get(0)?.name
@@ -43,7 +47,6 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.qualityList = musicInfo.quality
         music.coverUri = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
         music.coverBig = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
         music.coverSmall = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_SMALL)
@@ -68,6 +71,11 @@ object MusicUtils {
             music.albumId = it.album.id
             music.isCp = it.cp
             music.isDl = it.dl
+            it.quality?.let {quality->
+                music.sq = quality.sq
+                music.hq = quality.hq
+                music.high = quality.high
+            }
             if (it.artists != null) {
                 var artistIds = it.artists?.get(0)?.id
                 var artistNames = it.artists?.get(0)?.name
@@ -194,8 +202,7 @@ object MusicUtils {
         }
         val album = Album(music.albumId, music.album, music.coverUri)
         if (music.type == Constants.BAIDU) music.isCp = false
-        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, cp = music.isCp, dl = music.isDl, quality = music.qualityList
-                ?: QualityBean())
+        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, cp = music.isCp, dl = music.isDl, quality = QualityBean(hq = music.hq, sq = music.sq, high = music.high))
     }
 
     /**

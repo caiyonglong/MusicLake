@@ -66,7 +66,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mAdapter = new PlayQueueAdapter(musicInfos, false);
+        mAdapter = new PlayQueueAdapter(musicInfos);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);

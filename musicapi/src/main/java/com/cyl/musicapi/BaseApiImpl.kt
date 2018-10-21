@@ -4,11 +4,14 @@ import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
 import com.cyl.musicapi.bean.*
+import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.json.JSONArray
 import org.json.JSONObject
 import wendu.dsbridge.CompletionHandler
 import wendu.dsbridge.DWebView
+import java.util.*
 
 
 /**
@@ -28,6 +31,7 @@ object BaseApiImpl {
             mWebView?.addJavascriptObject(object : Any() {
                 @JavascriptInterface
                 fun onAjaxRequest(requestData: Any, handler: CompletionHandler<String>) {
+                    Log.e("TAG", "-----" + requestData.toString())
                     AjaxHandler.onAjaxRequest(requestData as JSONObject, handler)
                 }
             }, null)
@@ -217,13 +221,28 @@ object BaseApiImpl {
     }
 
     /**
-     * 获取专辑详情
+     * 获取歌手详情
      * id，专辑ID
      */
     fun getArtists(offset: Int, params: Any, success: (result: ArtistsData) -> Unit, fail: ((String) -> Unit)? = null) {
         mWebView?.callHandler("api.getArtists", arrayOf(offset, params)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistsData>(retValue.toString(), ArtistsData::class.java)
+                success.invoke(result)
+            } catch (e: Throwable) {
+                e.message?.let { fail?.invoke(it) }
+            }
+        }
+    }
+    /**
+     * 获取歌手详情
+     * id，专辑ID
+     */
+    fun getAnyVendorSongDetail(ids: MutableList<Map<String, String?>>, success: (result: MutableList<MusicInfo>) -> Unit, fail: ((String) -> Unit)? = null) {
+        mWebView?.callHandler("api.getAnyVendorSongDetail", arrayOf<Any>(ids)) { retValue: JSONArray ->
+            try {
+                val listType = object : TypeToken<LinkedList<MusicInfo>>() {}.type
+                val result = gson.fromJson<MutableList<MusicInfo>>(retValue.toString(), listType)
                 success.invoke(result)
             } catch (e: Throwable) {
                 e.message?.let { fail?.invoke(it) }

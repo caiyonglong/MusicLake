@@ -30,8 +30,8 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
 
         //音质图标显示
         val quality = when {
-            item.qualityList?.sq == true -> mContext.resources.getDrawable(R.drawable.sq_icon,null)
-            item.qualityList?.hq == true -> mContext.resources.getDrawable(R.drawable.hq_icon,null)
+            item.sq -> mContext.resources.getDrawable(R.drawable.sq_icon,null)
+            item.hq -> mContext.resources.getDrawable(R.drawable.hq_icon,null)
             else -> null
         }
         quality?.let {

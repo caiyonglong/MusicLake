@@ -4,10 +4,14 @@ import android.text.TextUtils
 import android.util.SparseArray
 import com.cyl.musiclake.download.ui.DownloadManagerFragment
 import com.cyl.musiclake.download.ui.TaskItemAdapter
+import com.cyl.musiclake.event.DownloadEvent
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadConnectListener
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.model.FileDownloadStatus
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.lang.ref.WeakReference
 
 
@@ -139,8 +143,14 @@ object TasksManager {
      * @param tid :下载任务唯一ID
      */
     fun finishTask(tid: Int) {
-        DownloadLoader.updateTask(tid)
-        modelList = DownloadLoader.getDownloadingList()
+        doAsync {
+            DownloadLoader.updateTask(tid)
+            val data = DownloadLoader.getDownloadingList()
+            uiThread {
+                modelList= data
+                EventBus.getDefault().post(DownloadEvent())
+            }
+        }
     }
 
     /**

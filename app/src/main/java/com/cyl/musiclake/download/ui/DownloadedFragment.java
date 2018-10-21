@@ -86,16 +86,6 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     }
 
     @Override
-    public void showLoading() {
-        super.showLoading();
-    }
-
-    @Override
-    public void hideLoading() {
-        super.hideLoading();
-    }
-
-    @Override
     public void showErrorInfo(String msg) {
 
     }
@@ -104,7 +94,6 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     public void showSongs(List<Music> musicList) {
         this.musicList = musicList;
         mAdapter.setNewData(musicList);
-        hideLoading();
         if (musicList.size() == 0) {
             showEmptyState();
         }

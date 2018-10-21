@@ -180,15 +180,15 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 })
 
             }
-            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
+            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getPlayListMusic(it) }, object : RequestCallBack<MutableList<Music>> {
                 override fun success(result: MutableList<Music>) {
-                    val iterator = result.iterator()
-                    while (iterator.hasNext()) {
-                        val temp = iterator.next()
-                        if (temp.isCp) {
-                            iterator.remove()// 推荐使用
-                        }
-                    }
+//                    val iterator = result.iterator()
+//                    while (iterator.hasNext()) {
+//                        val temp = iterator.next()
+//                        if (temp.isCp) {
+//                            iterator.remove()// 推荐使用
+//                        }
+//                    }
                     mView?.showPlaylistSongs(result)
                 }
 

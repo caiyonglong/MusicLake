@@ -138,8 +138,12 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
 
 
     public void setVolume(final float vol) {
-        LogUtil.e("Volume","vol = "+vol);
-        mCurrentMediaPlayer.setVolume(vol, vol);
+        LogUtil.e("Volume", "vol = " + vol);
+        try {
+            mCurrentMediaPlayer.setVolume(vol, vol);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int getAudioSessionId() {
@@ -151,6 +155,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
         LogUtil.e(TAG, "Music Server Error what: " + what + " extra: " + extra);
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
                 final MusicPlayerService service = mService.get();
                 final TrackErrorInfo errorInfo = new TrackErrorInfo(service.getAudioId(),
                         service.getTitle());

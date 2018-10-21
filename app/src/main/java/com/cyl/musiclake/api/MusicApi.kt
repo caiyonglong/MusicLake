@@ -52,8 +52,32 @@ object MusicApi {
 
     /**
      * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
+     *
      */
-    fun getMusicInfo(music: Music): Observable<Music>? {
+    fun getMusicInfo(music: Music): Observable<Music> {
+        val cachePath = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + "(" + music.quality + ")"
+        val downloadPath = FileUtils.getMusicDir() + music.artist + " - " + music.title + ".mp3"
+        if (FileUtils.exists(cachePath)) {
+            return Observable.create {
+                music.uri = cachePath
+                if (music.uri != null) {
+                    it.onNext(music)
+                    it.onComplete()
+                } else {
+                    it.onError(Throwable(""))
+                }
+            }
+        } else if (FileUtils.exists(downloadPath)) {
+            return Observable.create {
+                music.uri = downloadPath
+                if (music.uri != null) {
+                    it.onNext(music)
+                    it.onComplete()
+                } else {
+                    it.onError(Throwable(""))
+                }
+            }
+        }
         return when (music.type) {
             Constants.BAIDU -> BaiduApiServiceImpl.getTingSongInfo(music).flatMap { result ->
                 Observable.create(ObservableOnSubscribe<Music> {
@@ -68,29 +92,48 @@ object MusicApi {
                 })
             }
             else -> {
-                val path = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + ".tmp"
-                if (FileUtils.exists(path)) {
-                    Observable.create {
-                        music.uri = path
+                MusicApiServiceImpl.getMusicUrl(music.type?:Constants.LOCAL, music.mid?:"").flatMap { result ->
+                    Observable.create(ObservableOnSubscribe<Music> {
+                        music.uri = result
                         if (music.uri != null) {
                             it.onNext(music)
                             it.onComplete()
                         } else {
                             it.onError(Throwable(""))
                         }
+                    })
+                }
+
+            }
+        }
+    }
+
+    /**
+     * 获取播放地址（下载）
+     */
+    fun getMusicDownloadUrl(music: Music, isCache: Boolean = false): Observable<String>? {
+        return when (music.type) {
+            Constants.BAIDU -> BaiduApiServiceImpl.getTingSongInfo(music).flatMap { result ->
+                Observable.create(ObservableOnSubscribe<String> {
+                    if (result.uri != null) {
+                        it.onNext(result.uri!!)
+                        it.onComplete()
+                    } else {
+                        it.onError(Throwable(""))
                     }
-                } else {
-                    MusicApiServiceImpl.getMusicUrl(music.type!!, music.mid!!).flatMap { result ->
-                        Observable.create(ObservableOnSubscribe<Music> {
-                            music.uri = result
-                            if (music.uri != null) {
-                                it.onNext(music)
-                                it.onComplete()
-                            } else {
-                                it.onError(Throwable(""))
-                            }
-                        })
-                    }
+                })
+            }
+            else -> {
+                val br = if (isCache) music.quality else 128000
+                MusicApiServiceImpl.getMusicUrl(music.type!!, music.mid!!, br).flatMap { result ->
+                    Observable.create(ObservableOnSubscribe<String> {
+                        if (result.isNotEmpty()) {
+                            it.onNext(result)
+                            it.onComplete()
+                        } else {
+                            it.onError(Throwable(""))
+                        }
+                    })
                 }
             }
         }

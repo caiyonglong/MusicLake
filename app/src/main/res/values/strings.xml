@@ -35,7 +35,7 @@
     <string name="item_local">本地歌曲</string>
     <string name="item_history">播放历史</string>
     <string name="item_favorite">我的收藏</string>
-    <string name="item_download">缓存&amp;下载</string>
+    <string name="item_download">下载缓存</string>
     <string name="item_cached">缓存下载</string>
     <string name="item_cached_music">缓存歌曲</string>
     <string name="local_music">本地歌曲</string>
@@ -290,6 +290,7 @@
     <string name="popup_add_to_playlist">添加到歌单</string>
     <string name="popup_detail">查看歌曲信息</string>
     <string name="popup_download">下载歌曲</string>
+    <string name="popup_cache">缓存歌曲</string>
     <string name="popup_delete">删除</string>
     <string name="popup_detail_edit">编辑歌曲信息</string>
     <string name="popup_artist">查看歌手</string>
@@ -331,7 +332,7 @@
     <string name="cache_complete">已缓存的歌</string>
     <string name="download_processing">下载中</string>
     <string name="cache_processing">缓存中</string>
-    <string name="download_content">是否将 %1$s 添加到下载队列</string>
+    <string name="download_content">是否将 %1$s 添加到缓存下载队列</string>
     <string name="dd">暂无歌词</string>
     <string name="recently_update">最近更新：%1$s</string>
     <string name="float_settings">请在设置中，打开悬浮窗设置</string>
@@ -415,5 +416,7 @@
     <string name="search_filter_baidu">百度音乐</string>
     <string name="remove_repeat">去重</string>
     <string name="remove_copyright">包含无版权歌曲</string>
+    <string name="welcome_tips">听我想听的歌</string>
+    <string name="welcome_tips_1">音乐湖</string>
 
 </resources>

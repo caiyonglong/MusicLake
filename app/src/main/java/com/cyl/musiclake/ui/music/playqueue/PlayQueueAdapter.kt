@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.music.playqueue
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
@@ -13,26 +12,16 @@ import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.utils.ColorUtil
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
 import org.jetbrains.anko.dip
 
 /**
- * Created by D22434 on 2017/9/26.
+ * Created by D22434 on 2017/9/26.ß
  */
 
-class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
-
-    private var mSwatch: Palette.Swatch? = null
-    private var isDialog = true
-
-    constructor(musicList: List<Music>, isDialog: Boolean) : super(R.layout.item_play_queue, musicList) {
-        this.isDialog = isDialog
-    }
-
-    constructor(musicList: List<Music>) : super(R.layout.item_play_queue, musicList) {}
+class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music, BaseViewHolder>(R.layout.item_play_queue, musicList) {
 
     override fun convert(holder: BaseViewHolder, item: Music) {
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
@@ -40,8 +29,8 @@ class PlayQueueAdapter : BaseItemDraggableAdapter<Music, BaseViewHolder> {
 
         //音质图标显示
         val quality = when {
-            item.qualityList?.sq == true -> mContext.resources.getDrawable(R.drawable.sq_icon,null)
-            item.qualityList?.hq == true -> mContext.resources.getDrawable(R.drawable.hq_icon,null)
+            item.sq -> mContext.resources.getDrawable(R.drawable.sq_icon,null)
+            item.hq -> mContext.resources.getDrawable(R.drawable.hq_icon,null)
             else -> null
         }
         quality?.let {

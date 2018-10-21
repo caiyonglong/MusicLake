@@ -3,6 +3,7 @@ package com.cyl.musiclake.api
 
 import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musicapi.bean.*
+import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
@@ -12,7 +13,6 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.music.search.SearchEngine
-import com.cyl.musiclake.ui.music.search.SearchEngine.Filter.*
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
@@ -36,7 +36,7 @@ object MusicApiServiceImpl {
      * @param page
      * @return
      */
-    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
+    fun searchMusic(key: String, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
             BaseApiImpl.searchSong(key, limit, page, success = {
                 val musicList = mutableListOf<Music>()
@@ -83,15 +83,6 @@ object MusicApiServiceImpl {
         }
     }
 
-
-    /**
-     * 搜索音乐具体信息（QQ音乐的播放地址会在一定的时间后失效（大概一天））
-     */
-    fun getMusicInfo(music: Music, url: String): Observable<Music>? {
-        return create { result ->
-
-        }
-    }
 
 
     /**
@@ -143,7 +134,7 @@ object MusicApiServiceImpl {
                     result.onNext(url)
                     result.onComplete()
                 } else {
-                    result.onError(Throwable(""))
+                    result.onError(Throwable(it.msg))
                 }
             }, {})
         }
@@ -352,6 +343,36 @@ object MusicApiServiceImpl {
         }
     }
 
+    class Info{
+        var vendor:String? = null
+        var id:String? = null
+    }
+
+
+    fun getAnyVendorSongDetail(list: MutableList<MusicInfo>): Observable<MutableList<Music>> {
+        return create { result ->
+            val array = mutableListOf<Map<String,String?>>()
+            list.forEach {
+                val t = mutableMapOf<String,String?>()
+                t["vendor"] = it.vendor
+                t["id"] = it.songId
+                array.add(t)
+            }
+            BaseApiImpl.getAnyVendorSongDetail(array, {data->
+                val musicList = mutableListOf<Music>()
+                for (i in 0 until data.size){
+                    if (data[i]!=null) {
+                        data[i].vendor = array[i]["vendor"]
+                        musicList.add(MusicUtils.getMusic(data[i]))
+                    }
+                }
+                result.onNext(musicList)
+            }, fail = {
+                result.onError(Throwable(it))
+            })
+        }
+
+    }
 
     /**
      * 获取歌手列表

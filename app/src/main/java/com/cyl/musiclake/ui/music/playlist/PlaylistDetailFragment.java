@@ -304,9 +304,9 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         musicList.addAll(songList);
         mAdapter.setNewData(musicList);
         if (mPlaylist != null && mPlaylist.getCoverUrl() != null) {
-            CoverLoader.loadImageView(getContext(), mPlaylist.getCoverUrl(), album_art);
+            CoverLoader.loadBigImageView(getContext(), mPlaylist.getCoverUrl(),mPlaylist.getType(), album_art);
         } else if (musicList.size() >= 1) {
-            CoverLoader.loadImageView(getContext(), musicList.get(0).getCoverUri(), album_art);
+            CoverLoader.loadBigImageView(getContext(), musicList.get(0).getCoverUri(), musicList.get(0).getType(), album_art);
         }
         if (musicList.size() == 0) {
             showEmptyState();

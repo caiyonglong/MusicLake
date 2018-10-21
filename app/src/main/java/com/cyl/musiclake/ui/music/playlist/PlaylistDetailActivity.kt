@@ -56,6 +56,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     private var mAlbum: Album? = null
     private var title: String? = null
     private var coverUrl: String? = null
+    private var type: String? = null
 
     private var bottomDialogFragment: BottomDialogFragment? = null
 
@@ -88,19 +89,19 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             title = it.name
             pid = it.pid
             coverUrl = it.coverUrl
-            CoverLoader.loadImageView(context, coverUrl, album_art)
+            CoverLoader.loadBigImageView(context, coverUrl, it.type, album_art)
         }
         mArtist?.let {
             title = it.name
             pid = it.artistId.toString()
             coverUrl = it.picUrl
-            CoverLoader.loadImageView(context, coverUrl, album_art)
+            CoverLoader.loadBigImageView(context, coverUrl, it.type, album_art)
         }
         mAlbum?.let {
             title = it.name
             pid = it.albumId.toString()
             coverUrl = it.cover
-            CoverLoader.loadImageView(context, coverUrl, album_art)
+            CoverLoader.loadBigImageView(context, coverUrl, it.type, album_art)
         }
         return title
     }
@@ -250,8 +251,9 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             }
             if (musicList.size > 0 && coverUrl == null) {
                 coverUrl = musicList[0].coverUri
+                type = musicList[0].type
             }
-            CoverLoader.loadImageView(context, coverUrl, album_art)
+            CoverLoader.loadBigImageView(context, coverUrl,type,album_art)
         }
         if (musicList.size == 0) {
             showEmptyState()

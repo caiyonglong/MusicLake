@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
+import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
@@ -42,6 +43,12 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     }
 
     override fun initData() {
+        if (Intent.ACTION_SEND == intent.action && intent.type != null) {
+            if (Constants.TEXT_PLAIN == intent.type) {
+                val title = intent?.getStringExtra(Intent.EXTRA_TEXT)
+                playlistInputView.editText?.setText(title)
+            }
+        }
     }
 
     override fun initInjector() {
@@ -104,6 +111,12 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                     val id = link.substring(len, end).trim()
                     importMusic(Constants.XIAMI, id)
                 }
+                link.contains("h.xiami.com") -> {
+                    val start = link.lastIndexOf("id=") + "id=".length
+                    val end = link.substring(start).indexOf(" ")
+                    val id = link.substring(start, start+end).trim()
+                    importMusic(Constants.XIAMI, id)
+                }
                 else -> {
                     showLoading(false)
                     ToastUtils.show("请输入有效的链接！")
@@ -134,7 +147,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
             override fun error(msg: String) {
                 showLoading(false)
-                ToastUtils.show("分享链接异常，解析失败！")
+                ToastUtils.show(msg)
             }
         })
     }

@@ -91,6 +91,11 @@
                     responseCallback(data)
                 })
             },
+            getAnyVendorSongDetail:function(arr,responseCallback) {
+                musicApi.getAnyVendorSongDetail(arr).then(function (data) {
+                    responseCallback(data)
+                })
+            },
             getAlbumDetail:function( vendor, id,responseCallback) {
                 musicApi.getAlbumDetail(vendor, id).then(function (data) {
                     responseCallback(data)

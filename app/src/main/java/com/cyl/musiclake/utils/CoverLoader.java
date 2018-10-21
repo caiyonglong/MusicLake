@@ -85,24 +85,6 @@ public class CoverLoader {
         return R.drawable.default_cover;
     }
 
-//    public static void loadImageViewByDouban(Context mContext, String info, ImageView imageView, BitmapCallBack bitmapCallBack) {
-//        MusicApi.INSTANCE.getMusicAlbumPic(info, url -> {
-//            if (imageView != null) {
-//                loadImageView(mContext, url, imageView);
-//            } else if (bitmapCallBack != null) {
-//                loadBitmap(mContext, url, bitmapCallBack);
-//            }
-//            return null;
-//        }, () -> {
-//            if (imageView != null) {
-//                loadImageView(mContext, null, imageView);
-//            } else if (bitmapCallBack != null) {
-//                loadBitmap(mContext, null, bitmapCallBack);
-//            }
-//            return null;
-//        });
-//    }
-
 
     /**
      * 显示小图
@@ -150,6 +132,17 @@ public class CoverLoader {
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(url == null ? R.drawable.music_five : url)
+                .error(getCoverUriByRandom())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    public static void loadBigImageView(Context mContext, String url,String vendor, ImageView imageView) {
+        if (imageView == null) return;
+        String newUrl = MusicUtils.INSTANCE.getAlbumPic(url,vendor, MusicUtils.INSTANCE.getPIC_SIZE_BIG());
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(newUrl)
                 .error(getCoverUriByRandom())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);

@@ -64,7 +64,7 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
     private fun initItems() {
         val qualities = mutableListOf(
                 QualityItem(name = "标准品质", quality = 128000))
-        music?.qualityList?.let {
+        music?.let {
             if (it.high) {
                 qualities.add(QualityItem(name = "较高品质", quality = 192000))
             }
@@ -93,9 +93,11 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
         }
 
         downloadTv.setOnClickListener {
+            mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             (activity as AppCompatActivity).downloadMusic(music)
         }
         cacheTv.setOnClickListener {
+            mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             (activity as AppCompatActivity).downloadMusic(music, true)
         }
     }

@@ -109,9 +109,13 @@ object DaoLitepal {
      * 删除本地歌曲（Music、MusicToPlaylist）
      */
     fun deleteMusic(music: Music) {
-        val path = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + ".tmp"
-        if (FileUtils.exists(path)) {
-            FileUtils.delFile(path)
+        val cachePath = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + "(" + music.quality + ")"
+        val downloadPath = FileUtils.getMusicDir() + music.artist + " - " + music.title + ".mp3"
+        if (FileUtils.exists(cachePath)) {
+            FileUtils.delFile(cachePath)
+        }
+        if (FileUtils.exists(downloadPath)) {
+            FileUtils.delFile(downloadPath)
         }
         if (FileUtils.exists(music.uri)) {
             FileUtils.delFile(music.uri)
@@ -157,11 +161,11 @@ object DaoLitepal {
 
 
     fun getPlaylist(pid: String): Playlist {
-        return LitePal.where("pid = ?", pid).find(Playlist::class.java).first()
+        return LitePal.where("pid = ?", pid).findFirst(Playlist::class.java)
     }
 
-    fun getMusicInfo(mid: String): MutableList<Music>? {
-        return LitePal.where("mid = ? ", mid).find(Music::class.java)
+    fun getMusicInfo(mid: String): Music? {
+        return LitePal.where("mid = ? ", mid).findFirst(Music::class.java)
     }
 
     fun removeSong(pid: String, mid: String) {

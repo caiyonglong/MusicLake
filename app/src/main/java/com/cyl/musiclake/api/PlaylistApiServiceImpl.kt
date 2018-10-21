@@ -1,5 +1,6 @@
 package com.cyl.musiclake.api
 
+import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musicapi.playlist.*
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
@@ -77,6 +78,19 @@ object PlaylistApiServiceImpl {
                             it.onComplete()
                         }
                     })
+                }
+    }
+
+    /**
+     * 获取歌单歌曲列表
+     */
+    fun getPlayListMusic(pid: String): Observable<MutableList<Music>> {
+        return playlistApiService.getMusicList(token, pid)
+                .flatMap { it ->
+                    val json = it.string()
+                    val data = Gson().fromJson<MutableList<MusicInfo>>(json, object : TypeToken<MutableList<MusicInfo>>() {
+                    }.type)
+                    MusicApiServiceImpl.getAnyVendorSongDetail(data)
                 }
     }
 
@@ -189,9 +203,7 @@ object PlaylistApiServiceImpl {
     fun collectBatchMusic(pid: String, vendor: String, musics: MutableList<Music>?): Observable<String>? {
         val ids = mutableListOf<String>()
         musics?.forEach {
-//            if (!it.isCp) {
-                ids.add(it.mid.toString())
-//            }
+            ids.add(it.mid.toString())
         }
         return playlistApiService.collectBatchMusic(token, pid, CollectBatchBean(ids = ids, vendor = vendor))
                 .flatMap { result ->

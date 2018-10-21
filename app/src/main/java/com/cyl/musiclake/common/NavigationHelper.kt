@@ -48,7 +48,7 @@ object NavigationHelper {
             //                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
             fragment = LocalMusicFragment.newInstance("local")
         }
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        context.supportFragmentManager.findFragmentById(R.id.fragment_container)?.let { transaction.hide(it) }
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
@@ -69,7 +69,7 @@ object NavigationHelper {
         val fragment: Fragment
 
         fragment = FolderSongsFragment.newInstance(path)
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        context.supportFragmentManager.findFragmentById(R.id.fragment_container)?.let { transaction.hide(it) }
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
@@ -78,7 +78,7 @@ object NavigationHelper {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment: Fragment
         fragment = RecentlyFragment.newInstance()
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
@@ -86,7 +86,7 @@ object NavigationHelper {
     fun navigatePlayQueue(context: Activity) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment = PlayQueueFragment.newInstance()
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.tag).commit()
     }
@@ -96,7 +96,7 @@ object NavigationHelper {
         val fragment: Fragment
 
         fragment = LoveFragment.newInstance()
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
@@ -113,7 +113,7 @@ object NavigationHelper {
             //                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
             fragment = DownloadFragment.newInstance(isCache)
         }
-        transaction.hide((context.supportFragmentManager.findFragmentById(R.id.fragment_container)))
+        transaction.hide((context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!))
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()
     }
@@ -157,7 +157,7 @@ object NavigationHelper {
 
     fun navigateFragment(context: Activity, fragment: Fragment) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container))
+        transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.tag).commit()
     }

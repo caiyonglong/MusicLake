@@ -218,9 +218,15 @@
         <activity
             android:name=".ui.music.importplaylist.ImportPlaylistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/import_playlist"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"

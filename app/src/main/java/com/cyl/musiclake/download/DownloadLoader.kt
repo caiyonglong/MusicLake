@@ -31,16 +31,14 @@ object DownloadLoader {
                     null
                 }
             }
-            music?.forEach { origin ->
-                if (origin.uri != null || origin.uri?.startsWith("http:")!!) {
-                    origin.uri = it.path
-                    origin.isOnline = false
-                }
-                SongLoader.updateMusic(music = origin)
-            }
-            if (music?.size ?: 0 > 0) {
-                musicList.add(music?.first()!!)
-            }
+//            music?.forEach { origin ->
+//                if (origin.uri != null || origin.uri?.startsWith("http:")!!) {
+//                    origin.uri = it.path
+//                    origin.isOnline = false
+//                }
+//                SongLoader.updateMusic(music = origin)
+//            }
+            music?.let { it1 -> musicList.add(it1) }
         }
         return musicList
     }
@@ -49,14 +47,7 @@ object DownloadLoader {
      * 获取下载列表
      */
     fun getDownloadingList(): MutableList<TasksManagerModel> {
-        return LitePal.where("finish = 0 and cache = 0").find(TasksManagerModel::class.java)
-    }
-
-    /**
-     * 获取缓存列表
-     */
-    fun getCacheingList(): MutableList<TasksManagerModel> {
-        return LitePal.where("finish = 0 and cache = 1").find(TasksManagerModel::class.java)
+        return LitePal.where("finish = 0").find(TasksManagerModel::class.java)
     }
 
     /**
@@ -93,8 +84,8 @@ object DownloadLoader {
      * 更新数据库下载任务状态
      */
     fun updateTask(tid: Int) {
-        val model = LitePal.where("tid = ?", tid.toString()).find(TasksManagerModel::class.java).first()
-        val music = model.mid?.let { DaoLitepal.getMusicInfo(it)?.first() }
+        val model = LitePal.where("tid = ?", tid.toString()).findFirst(TasksManagerModel::class.java)
+        val music = model.mid?.let { DaoLitepal.getMusicInfo(it) }
         model.finish = true
         model.saveOrUpdate("tid = ?", tid.toString())
         //更新mp3文件标签

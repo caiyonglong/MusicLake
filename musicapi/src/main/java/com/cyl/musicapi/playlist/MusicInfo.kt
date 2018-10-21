@@ -21,9 +21,9 @@ data class Album(@SerializedName("id")
                  val cover: String? = "")
 
 data class MusicInfo(@SerializedName("id")
-                     val id: String?,
+                     var id: String?,
                      @SerializedName("songId")
-                     val songId: String?,
+                     val songId: String? = null,
                      @SerializedName("name")
                      val name: String? = "",
                      @SerializedName("artists")
@@ -37,7 +37,7 @@ data class MusicInfo(@SerializedName("id")
                      @SerializedName("cp")
                      val cp: Boolean = false,
                      @SerializedName("quality")
-                     val quality: QualityBean)
+                     val quality: QualityBean?)
 
 data class QualityBean(@SerializedName("192")
                        val high: Boolean = false,

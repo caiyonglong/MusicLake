@@ -60,11 +60,11 @@
             android:lineSpacingExtra="2sp"
             android:text="@string/download_batch"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_12"/>
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/deleteTv"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_8"
@@ -75,7 +75,8 @@
             android:lineSpacingExtra="2sp"
             android:text="@string/delete"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_12"/>
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

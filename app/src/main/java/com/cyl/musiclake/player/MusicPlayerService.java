@@ -260,7 +260,12 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
                         LogUtil.e(TAG, msg.obj + "---");
-                        mMainHandler.post(() -> service.next(true));
+                        playErrorTimes++;
+                        if (playErrorTimes < MAX_ERROR_TIMES) {
+                            mMainHandler.post(() -> service.next(true));
+                        }else {
+                            mMainHandler.post(service::pause);
+                        }
                         break;
                     case RELEASE_WAKELOCK://释放电源锁
                         service.mWakeLock.release();
@@ -476,7 +481,7 @@ public class MusicPlayerService extends Service {
      */
     public void next(Boolean isAuto) {
         synchronized (this) {
-            mPlayingPos =PlayQueueManager.INSTANCE.getNextPosition(isAuto,mPlayQueue.size(),mPlayingPos);
+            mPlayingPos = PlayQueueManager.INSTANCE.getNextPosition(isAuto, mPlayQueue.size(), mPlayingPos);
             LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
@@ -488,7 +493,7 @@ public class MusicPlayerService extends Service {
      */
     public void prev() {
         synchronized (this) {
-            mPlayingPos = PlayQueueManager.INSTANCE.getPreviousPosition(mPlayQueue.size(),mPlayingPos);
+            mPlayingPos = PlayQueueManager.INSTANCE.getPreviousPosition(mPlayQueue.size(), mPlayingPos);
             LogUtil.e(TAG, "prev: " + mPlayingPos);
             stop(false);
             playCurrentAndNext();
@@ -655,7 +660,7 @@ public class MusicPlayerService extends Service {
      */
     public void playMusic(int position) {
         if (position >= mPlayQueue.size() || position == -1) {
-            mPlayingPos = PlayQueueManager.INSTANCE.getNextPosition(true,mPlayQueue.size(),position);
+            mPlayingPos = PlayQueueManager.INSTANCE.getNextPosition(true, mPlayQueue.size(), position);
         } else {
             mPlayingPos = position;
         }

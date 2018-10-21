@@ -206,7 +206,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                     }
                     R.drawable.item_download -> {
                         if (music?.type != Constants.LOCAL) {
-                            mContext.downloadMusic(music)
+                            QualitySelectDialog.newInstance(music).apply {
+                                isDownload = true
+                            }.show(mContext)
                         }
                     }
                     R.drawable.ic_share_black -> {

@@ -143,12 +143,7 @@ object SongLoader {
     }
 
     fun getMusicInfo(mid: String): Music? {
-        val data = DaoLitepal.getMusicInfo(mid)
-        if (data != null) {
-            if (data.size > 0)
-                return data[0]
-        }
-        return null
+        return DaoLitepal.getMusicInfo(mid)
     }
 
 

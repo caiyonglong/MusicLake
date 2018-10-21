@@ -3,6 +3,7 @@ package com.cyl.musiclake.download.ui
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
+import com.cyl.musiclake.base.BaseFragment
 import com.cyl.musiclake.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.download.TasksManager
@@ -14,7 +15,7 @@ import java.lang.ref.WeakReference
  * Created by yonglong on 2016/11/26.
  */
 
-class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadContract.View {
+class DownloadManagerFragment : BaseFragment<DownloadPresenter>(), DownloadContract.View {
     private var mAdapter: TaskItemAdapter? = null
 
     override fun loadData() {
@@ -53,9 +54,6 @@ class DownloadManagerFragment : BaseLazyFragment<DownloadPresenter>(), DownloadC
 
     override fun hideLoading() {
         super.hideLoading()
-    }
-
-    override fun onLazyLoad() {
     }
 
     override fun showErrorInfo(msg: String) {

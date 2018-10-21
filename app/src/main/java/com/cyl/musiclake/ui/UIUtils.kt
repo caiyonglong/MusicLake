@@ -149,33 +149,6 @@ fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) ->
 /**
  * 下载歌曲
  */
-fun AppCompatActivity.cacheMusic(music: Music?) {
-    if (music == null) {
-        return
-    }
-    if (music.type == Constants.LOCAL) {
-        return
-    }
-    LogUtil.e(javaClass.simpleName, "cache-----${music.uri}")
-    /**
-     * 当前activity 销毁时 不显示
-     */
-    if (this@cacheMusic.isDestroyed || this@cacheMusic.isFinishing) return
-    if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
-        showTipsDialog(this@cacheMusic, R.string.download_network_tips) {
-            addDownloadQueue(music)
-        }
-        return
-    }
-    if (music.uri != null && music.uri?.startsWith("http")!!) {
-        addDownloadQueue(music)
-        return
-    }
-}
-
-/**
- * 下载歌曲
- */
 fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
     if (music == null) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
@@ -189,25 +162,29 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
         return
     }
-    ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
-        override fun success(result: Music) {
-            LogUtil.e(javaClass.simpleName, "-----${result.uri}")
+    ApiManager.request(MusicApi.getMusicDownloadUrl(music,isCache), object : RequestCallBack<String> {
+        override fun success(result: String) {
+            LogUtil.e(javaClass.simpleName, "-----$result")
             /**
              * 当前activity 销毁时 不显示
              */
             if (this@downloadMusic.isDestroyed || this@downloadMusic.isFinishing) return
+
             if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
                 showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
-                    addDownloadQueue(result, isCache = isCache)
+                    music.uri = result
+                    addDownloadQueue(music, isCache = isCache)
                 }
                 return
             }
-            if (result.uri != null && result.uri?.startsWith("http")!!) {
+            if (result.isNotEmpty() && result.startsWith("http")) {
+                val titleId = if (isCache) R.string.popup_cache else R.string.popup_download
                 MaterialDialog.Builder(this@downloadMusic)
-                        .title(R.string.popup_download)
+                        .title(titleId)
                         .content(R.string.download_content, music.title)
                         .onPositive { _, _ ->
-                            addDownloadQueue(result, isCache = isCache)
+                            music.uri = result
+                            addDownloadQueue(music, isCache = isCache)
                         }
                         .positiveText(R.string.sure)
                         .negativeText(R.string.cancel)
@@ -359,36 +336,28 @@ fun showTipsDialog(context: AppCompatActivity, content: Int, success: (() -> Uni
  * 增加到增加到下载队列
  */
 fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: Boolean = false) {
-    ApiManager.request(MusicApi.getMusicInfo(result), object : RequestCallBack<Music> {
-        override fun success(result: Music) {
-            LogUtil.e(javaClass.simpleName, "-----${result.uri}")
+    LogUtil.e(javaClass.simpleName, "-----${result.uri}")
 
-            if (result.uri == null) {
-                ToastUtils.show(this@addDownloadQueue, "${result.title} 下载地址异常！")
-                return
-            }
-            if (!isBatch) {
-                ToastUtils.show(getString(R.string.download_add_success))
-            }
-            DaoLitepal.saveOrUpdateMusic(result)
-            val path = if (isCache) FileUtils.getMusicCacheDir() + result.artist + " - " + result.title + ".tmp"
-            else FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
-            val task = FileDownloader.getImpl()
-                    .create(result.uri)
-                    .setPath(path)
-                    .setCallbackProgressTimes(100)
-                    .setListener(TaskItemAdapter.taskDownloadListener)
-            val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path, isCache)
-            if (model != null) {
-                TasksManager.addTaskForViewHolder(task)
-                task.start()
-            }
-        }
-
-        override fun error(msg: String) {
-            ToastUtils.show(msg)
-        }
-    })
+    if (result.uri == null) {
+        ToastUtils.show(this@addDownloadQueue, "${result.title} 下载地址异常！")
+        return
+    }
+    if (!isBatch) {
+        ToastUtils.show(getString(R.string.download_add_success))
+    }
+    DaoLitepal.saveOrUpdateMusic(result)
+    val path = if (isCache) FileUtils.getMusicCacheDir() + result.artist + " - " + result.title + "(" + result.quality + ")"
+    else FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
+    val task = FileDownloader.getImpl()
+            .create(result.uri)
+            .setPath(path)
+            .setCallbackProgressTimes(100)
+            .setListener(TaskItemAdapter.taskDownloadListener)
+    val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path, isCache)
+    if (model != null) {
+        TasksManager.addTaskForViewHolder(task)
+        task.start()
+    }
 
 }
 

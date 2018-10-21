@@ -168,7 +168,6 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             taskActionBtn.setVisibility(View.GONE);
             taskPb.setVisibility(View.GONE);
             TasksManager.INSTANCE.finishTask(id);
-            EventBus.getDefault().post(new DownloadEvent());
         }
 
         public void updateNotDownloaded(final int status, final long sofar, final long total) {

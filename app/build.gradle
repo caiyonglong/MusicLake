@@ -17,11 +17,11 @@ android {
             storePassword '123123'
         }
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 22
         versionName "4.1.8"
         multiDexEnabled true
@@ -56,7 +56,7 @@ android {
             outputFileName = "musicLake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 28
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -83,7 +83,7 @@ dependencies {
     //RxJava and RxAndroid
     api 'io.reactivex.rxjava2:rxandroid:2.0.2'
     api 'io.reactivex.rxjava2:rxjava:2.1.17'
-    api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+    api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
 
     // Retrofit适配RxJava
     api "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"

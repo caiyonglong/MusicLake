@@ -92,7 +92,6 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
         if (areaListAdapter != null && genreListAdapter?.position != 0) {
             filterTips.append(singerTag?.genre?.get(genreListAdapter?.position ?: 0)?.name ?: "")
         }
-        titleTv.text = filterTips.toString()
         val params = mapOf("area" to area, "sex" to sex, "genre" to genre, "index" to index)
         LogUtil.e("artistList", params.toString())
         mPresenter?.loadArtists(0, params)
@@ -110,6 +109,7 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
     }
 
     override fun showArtistTags(tags: SingerTag) {
+        titleTv.text = filterTips.toString()
         if (areaListAdapter == null) {
             areaListAdapter = ArtistCateAdapter(tags.area)
             indexListAdapter = ArtistCateAdapter(tags.index)

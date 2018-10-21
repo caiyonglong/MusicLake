@@ -19,6 +19,8 @@ import javax.inject.Inject
 class DownloadPresenter @Inject
 constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Presenter {
 
+    var isCache = true
+
     override fun attachView(view: DownloadContract.View) {
         super.attachView(view)
         EventBus.getDefault().register(this)
@@ -26,7 +28,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun reloadDownloadMusic(event: DownloadEvent) {
-        loadDownloadMusic(event.isCache)
+        loadDownloadMusic(isCache)
         loadDownloading()
     }
 
@@ -36,20 +38,24 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
     }
 
     override fun loadDownloadMusic(isCache: Boolean) {
+        this.isCache = isCache
         mView?.showLoading()
         doAsync {
             val data = DownloadLoader.getDownloadList(isCache)
             uiThread {
                 mView?.showSongs(data)
+                mView?.hideLoading()
             }
         }
     }
 
     override fun loadDownloading() {
+        mView?.showLoading()
         doAsync {
             val data = DownloadLoader.getDownloadingList()
             uiThread {
                 mView?.showDownloadList(data)
+                mView?.hideLoading()
             }
         }
     }
