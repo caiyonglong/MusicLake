@@ -92,7 +92,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
     private fun showSearchOnStart() {
         searchEditText.setText(queryString)
-
         if (TextUtils.isEmpty(queryString) || TextUtils.isEmpty(searchEditText.text)) {
             searchToolbarContainer.translationX = 100f
             searchToolbarContainer.alpha = 0f

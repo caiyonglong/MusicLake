@@ -44,6 +44,12 @@
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_xiami" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_search_baidu"
+            android:summary="@string/search_filter_summary"
+            android:title="@string/search_filter_baidu" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_data_sync">

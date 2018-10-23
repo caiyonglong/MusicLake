@@ -89,7 +89,7 @@ object MusicApiServiceImpl {
                     if (it.status) {
                         try {
                             LogUtil.e("search type", type.toString().toLowerCase())
-                            it.data.songs?.forEach {music->
+                            it.data.songs?.forEach { music ->
                                 music.vendor = type.toString().toLowerCase()
                                 musicList.add(MusicUtils.getMusic(music))
                             }
@@ -105,9 +105,10 @@ object MusicApiServiceImpl {
                     result.onNext(musicList)
                     result.onComplete()
                 }, fail = {
-                    ToastUtils.show(it.toString())
-                    result.onNext(mutableListOf())
-                    result.onComplete()
+                    LogUtil.e("search", it ?: "-0-")
+//                    ToastUtils.show(it.toString())
+//                    result.onNext(mutableListOf())
+//                    result.onComplete()
 //                    result.onError(Throwable(it
 //                            ?: MusicApp.getAppContext().getString(R.string.error_connection)))
                 })

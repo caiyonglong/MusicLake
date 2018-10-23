@@ -63,27 +63,27 @@ object BaseApiImpl {
      * 独立请求
      */
     fun searchSongSingle(query: String, type: String, limit: Int, offset: Int, success: (result: SearchSingleData) -> Unit, fail: ((String?) -> Unit)? = null) {
-        val params = mapOf("keyword" to query, "limit" to limit,"offset" to offset)
-        Log.e("searchSongSingle",params.toString())
+        val params = mapOf("keyword" to query, "limit" to limit, "offset" to offset)
+        Log.e("searchSongSingle", params.toString())
         when (type) {
             "QQ" -> {
                 mWebView?.callHandler("api.searchQQSong", arrayOf(params)) { retValue: JSONObject ->
                     val result = gson.fromJson<SearchSingleData>(retValue.toString(), SearchSingleData::class.java)
-                    Log.e("searchQQSong",retValue.toString())
+                    Log.e("searchQQSong", retValue.toString())
                     success.invoke(result)
                 }
             }
             "XIAMI" -> {
                 mWebView?.callHandler("api.searchXiamiSong", arrayOf(params)) { retValue: JSONObject ->
                     val result = gson.fromJson<SearchSingleData>(retValue.toString(), SearchSingleData::class.java)
-                    Log.e("searchXiamiSong",retValue.toString())
+                    Log.e("searchXiamiSong", retValue.toString())
                     success.invoke(result)
                 }
             }
             "NETEASE" -> {
                 mWebView?.callHandler("api.searchNeteaseSong", arrayOf(params)) { retValue: JSONObject ->
                     val result = gson.fromJson<SearchSingleData>(retValue.toString(), SearchSingleData::class.java)
-                    Log.e("searchNeteaseSong",retValue.toString())
+                    Log.e("searchNeteaseSong", retValue.toString())
                     success.invoke(result)
                 }
             }

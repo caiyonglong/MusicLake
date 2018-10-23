@@ -89,19 +89,20 @@ object AjaxHandler {
 
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
-                    val data: String
-                    // If encoding is needed, the result is encoded by Base64 and returned
-                    if (finalEncode) {
-                        data = Base64.encodeToString(response.body()!!.bytes(), Base64.DEFAULT)
+                    val data: String = if (finalEncode) {
+                        Base64.encodeToString(response.body()!!.bytes(), Base64.DEFAULT)
                     } else {
-                        data = response.body()!!.string()
+                        response.body()!!.string()
                     }
+                    // If encoding is needed, the result is encoded by Base64 and returned
                     Log.e("TAG", "-----$data")
                     responseData["responseText"] = data
                     responseData["statusCode"] = response.code()
                     responseData["statusMessage"] = response.message()
                     val responseHeaders = response.headers().toMultimap()
                     responseData["headers"] = responseHeaders
+
+                    Log.e("TAG", "-----$responseData")
                     handler.complete(JSONObject(responseData).toString())
                 }
             })
