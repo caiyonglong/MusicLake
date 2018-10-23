@@ -418,5 +418,6 @@
     <string name="remove_copyright">包含无版权歌曲</string>
     <string name="welcome_tips">听我想听的歌</string>
     <string name="welcome_tips_1">音乐湖</string>
+    <string name="search_mv_hint">搜索mv(搜索内容可能不匹配)</string>
 
 </resources>

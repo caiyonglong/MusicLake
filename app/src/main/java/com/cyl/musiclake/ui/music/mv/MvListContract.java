@@ -17,5 +17,7 @@ public interface MvListContract {
         void loadMv(int offset);
 
         void loadRecentMv(int limit);
+
+        void searchMv(String key, int offset);
     }
 }

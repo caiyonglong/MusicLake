@@ -182,8 +182,8 @@ object NeteaseApiServiceImpl {
     /**
      * 搜索
      */
-    fun searchMoreInfo(keywords: String, offset: Int, type: Int): Observable<SearchInfo> {
-        return apiService.searchNetease(keywords, offset, type)
+    fun searchMoreInfo(keywords: String, limit: Int, offset: Int, type: Int): Observable<SearchInfo> {
+        return apiService.searchNetease(keywords, limit, offset, type)
     }
 
     /**

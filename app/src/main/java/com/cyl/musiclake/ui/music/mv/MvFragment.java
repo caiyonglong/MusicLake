@@ -51,6 +51,7 @@ public class MvFragment extends BaseFragment<BasePresenter> {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
         adapter.addFragment(MvListFragment.newInstance("rank"), "排行榜");
         adapter.addFragment(MvListFragment.newInstance("recently"), "最近更新");
+        adapter.addFragment(MvSearchListFragment.newInstance(), "MV搜索");
         mViewpager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewpager);
         updateTabLayout(mTabLayout);

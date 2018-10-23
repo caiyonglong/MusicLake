@@ -53,4 +53,12 @@ class MvModel {
         val observable = mvid?.let { NeteaseApiServiceImpl.getMvComment(it) } ?: return
         ApiManager.request(observable, result)
     }
+
+    /**
+     *搜索mv数据
+     */
+    fun searchMv(key: String, offset: Int, result: RequestCallBack<SearchInfo>?) {
+        val observable = NeteaseApiServiceImpl.searchMoreInfo(key, 30, offset, 1004)
+        ApiManager.request(observable,result)
+    }
 }

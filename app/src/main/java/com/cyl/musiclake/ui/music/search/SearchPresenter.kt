@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SearchPresenter @Inject
 constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
     override fun searchByType(key: String, offset: Int, type: Int) {
-        ApiManager.request(NeteaseApiServiceImpl.searchMoreInfo(key, offset, type),
+        ApiManager.request(NeteaseApiServiceImpl.searchMoreInfo(key, 10, offset, type),
                 object : RequestCallBack<SearchInfo> {
                     override fun success(result: SearchInfo) {
                         when (type) {

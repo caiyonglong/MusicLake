@@ -31,7 +31,7 @@ interface NeteaseApiService {
      * 搜索
      */
     @GET("/search")
-    fun searchNetease(@Query("keywords") keywords: String, @Query("limit") limit: Int, @Query("type") type: Int): Observable<SearchInfo>
+    fun searchNetease(@Query("keywords") keywords: String, @Query("limit") limit: Int, @Query("offset") offset: Int, @Query("type") type: Int): Observable<SearchInfo>
 
     /**
      * 获取mv排行榜
