@@ -1,6 +1,7 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
+import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_BIG
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
@@ -126,29 +127,38 @@ object BaiduApiServiceImpl {
     }
 
     /**
-     * 搜索专辑图，通过百度搜索,获取Album_Info:pic_small
+     * 通过百度搜索,获取MusicInfo
      */
-    fun getSearchPicInfo(query: String): Observable<String> {
+    fun getSearchMusicInfo(query: String, limit: Int, offset: Int): Observable<MutableList<Music>> {
         val params = mutableMapOf(
                 Constants.PARAM_QUERY to query,
-                Constants.PARAM_PAGE_SIZE to 1,
-                Constants.PARAM_PAGE_NO to 1
+                Constants.PARAM_PAGE_SIZE to limit,
+                Constants.PARAM_PAGE_NO to offset
         )
         return apiService.getSearchMerge(params)
                 .flatMap {
-                    Observable.create(ObservableOnSubscribe<String> { e ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
+                        val musicList = mutableListOf<Music>()
                         try {
-                            var url = ""
                             if (it.errorCode == 22000) {
-                                it.result.albumInfo.albumList?.get(0)?.picSmall?.let {
-                                    url = it
+                                it.result.songInfo.songList?.forEach { song ->
+                                    val musicInfo = Music()
+                                    musicInfo.mid = song.songId
+                                    musicInfo.type = Constants.BAIDU
+                                    musicInfo.title = song.title
+                                    musicInfo.artist = song.author
+                                    musicInfo.artistId = song.allArtistId
+                                    musicInfo.album = song.albumTitle
+                                    musicInfo.albumId = song.albumId
+                                    musicInfo.coverUri = song.picSmall
+                                    musicList.add(musicInfo)
                                 }
                             }
-                            e.onNext(url)
-                            e.onComplete()
                         } catch (error: Exception) {
                             e.onError(Throwable(error.message))
                         }
+                        e.onNext(musicList)
+                        e.onComplete()
                     })
                 }
     }
@@ -175,9 +185,9 @@ object BaiduApiServiceImpl {
                         music.uri = songInfo.songLink
                         music.fileSize = songInfo.size.toLong()
                         music.lyric = songInfo.lrcLink
-                        music.coverSmall = MusicUtils.getAlbumPic(songInfo.songPicSmall,Constants.BAIDU,MusicUtils.PIC_SIZE_SMALL)
-                        music.coverUri = MusicUtils.getAlbumPic(songInfo.songPicSmall,Constants.BAIDU,MusicUtils.PIC_SIZE_NORMAL)
-                        music.coverBig = MusicUtils.getAlbumPic(songInfo.songPicSmall,Constants.BAIDU,MusicUtils.PIC_SIZE_BIG)
+                        music.coverSmall = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_SMALL)
+                        music.coverUri = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_NORMAL)
+                        music.coverBig = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_BIG)
 
                     }
                     Observable.create(ObservableOnSubscribe<Music> { e ->

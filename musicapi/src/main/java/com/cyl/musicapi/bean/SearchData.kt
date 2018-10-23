@@ -11,6 +11,11 @@ data class Qq(@SerializedName("total")
               @SerializedName("keyword")
               val keyword: String = "")
 
+data class SearchResult(@SerializedName("total")
+                        val total: String = "",
+                        @SerializedName("songs")
+                        val songs: List<MusicInfo>?)
+
 
 data class SearchData(@SerializedName("data")
                       val data: Data,
@@ -18,6 +23,13 @@ data class SearchData(@SerializedName("data")
                       val status: Boolean = false,
                       @SerializedName("msg")
                       val msg: String = "")
+
+data class SearchSingleData(@SerializedName("data")
+                            val data: SearchResult,
+                            @SerializedName("status")
+                            val status: Boolean = false,
+                            @SerializedName("msg")
+                            val msg: String = "")
 
 
 data class Xiami(@SerializedName("total")
@@ -54,7 +66,6 @@ data class Data(@SerializedName("qq")
                 val netease: Netease)
 
 
-
 data class SongDetail(@SerializedName("data")
                       val data: MusicInfo,
                       @SerializedName("status")
@@ -72,13 +83,13 @@ data class BatchSongDetail(@SerializedName("data")
                            val log: LogDetail?)
 
 data class AnyBatchSongDetail(@SerializedName("data")
-                           val data: List<MusicInfo>,
-                           @SerializedName("status")
-                           val status: Boolean = false,
-                           @SerializedName("msg")
-                           val msg: String = "",
-                           @SerializedName("log")
-                           val log: LogDetail?)
+                              val data: List<MusicInfo>,
+                              @SerializedName("status")
+                              val status: Boolean = false,
+                              @SerializedName("msg")
+                              val msg: String = "",
+                              @SerializedName("log")
+                              val log: LogDetail?)
 
 data class LogDetail(@SerializedName("msg")
                      val msg: String)

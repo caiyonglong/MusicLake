@@ -23,20 +23,20 @@
                 })
             },
             //搜索netease功能
-            searchNeteaseSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.netease.searchSong(keyword,limit,offset).then(function (data) {
+            searchNeteaseSong: function (params, responseCallback) {
+                musicApi.netease.searchSong(params).then(function (data) {
                     responseCallback(data)
                 })
             },
             //搜索xiami功能
-            searchXiamiSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.xiami.searchSong(keyword,offset).then(function (data) {
+            searchXiamiSong: function (params, responseCallback) {
+                musicApi.xiami.searchSong(params).then(function (data) {
                     responseCallback(data)
                 })
             },
             //搜索qq
-            searchQQSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.qq.searchSong(keyword,limit,offset).then(function (data) {
+            searchQQSong: function (params, responseCallback) {
+                musicApi.qq.searchSong(params).then(function (data) {
                     responseCallback(data)
                 })
             },

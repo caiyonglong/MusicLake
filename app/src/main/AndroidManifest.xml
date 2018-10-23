@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 唤醒休眠 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -250,6 +251,10 @@
             android:label="@string/title_activity_chat"
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
+        <!--<uses-library-->
+            <!--android:name="org.apache.http.legacy"-->
+            <!--android:required="false" />-->
+
     </application>
 
 </manifest>

@@ -42,6 +42,31 @@ object DownloadLoader {
         }
         return musicList
     }
+    /**
+     * 获取已下载列表
+     */
+    fun getDownloadList(): MutableList<Music> {
+        val musicList = mutableListOf<Music>()
+        val data = LitePal.where("finish = 1").find(TasksManagerModel::class.java)
+        data.forEach {
+            val music = it.mid?.let { it1 ->
+                try {
+                    DaoLitepal.getMusicInfo(it1)
+                } catch (e: Throwable) {
+                    null
+                }
+            }
+//            music?.forEach { origin ->
+//                if (origin.uri != null || origin.uri?.startsWith("http:")!!) {
+//                    origin.uri = it.path
+//                    origin.isOnline = false
+//                }
+//                SongLoader.updateMusic(music = origin)
+//            }
+            music?.let { it1 -> musicList.add(it1) }
+        }
+        return musicList
+    }
 
     /**
      * 获取下载列表

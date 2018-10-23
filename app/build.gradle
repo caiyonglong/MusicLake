@@ -17,11 +17,11 @@ android {
             storePassword '123123'
         }
     }
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 22
         versionName "4.1.8"
         multiDexEnabled true
@@ -56,7 +56,7 @@ android {
             outputFileName = "musicLake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 27
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

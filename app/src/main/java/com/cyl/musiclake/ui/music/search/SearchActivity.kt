@@ -276,7 +276,10 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
      */
     override fun showSearchResult(list: MutableList<Music>) {
         if (list.size != 0) {
-            mOffset += limit
+            mOffset ++
+        } else {
+            mAdapter.loadMoreComplete()
+            mAdapter.setEnableLoadMore(false)
         }
         searchResults.addAll(list)
         showFilterResult()

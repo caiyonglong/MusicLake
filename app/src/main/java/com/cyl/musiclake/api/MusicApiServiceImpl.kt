@@ -36,53 +36,84 @@ object MusicApiServiceImpl {
      * @param page
      * @return
      */
-    fun searchMusic(key: String, limit: Int, page: Int): Observable<MutableList<Music>> {
+    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
-            BaseApiImpl.searchSong(key, limit, page, success = {
-                val musicList = mutableListOf<Music>()
-                if (it.status) {
-                    try {
-                        val neteaseSize = it.data.netease.songs?.size ?: 0
-                        val qqSize = it.data.netease.songs?.size ?: 0
-                        val xiamiSize = it.data.netease.songs?.size ?: 0
-                        val max = Math.max(Math.max(neteaseSize, qqSize), xiamiSize)
-                        for (i in 0 until max) {
-                            if (neteaseSize > i) {
-                                it.data.netease.songs?.get(i)?.let { music ->
-                                    music.vendor = Constants.NETEASE
-                                    musicList.add(MusicUtils.getMusic(music))
+            if (type == SearchEngine.Filter.ANY) {
+                BaseApiImpl.searchSong(key, type.toString(), limit, page, success = {
+                    val musicList = mutableListOf<Music>()
+                    if (it.status) {
+                        try {
+                            val neteaseSize = it.data.netease.songs?.size ?: 0
+                            val qqSize = it.data.netease.songs?.size ?: 0
+                            val xiamiSize = it.data.netease.songs?.size ?: 0
+                            val max = Math.max(Math.max(neteaseSize, qqSize), xiamiSize)
+                            for (i in 0 until max) {
+                                if (neteaseSize > i) {
+                                    it.data.netease.songs?.get(i)?.let { music ->
+                                        music.vendor = Constants.NETEASE
+                                        musicList.add(MusicUtils.getMusic(music))
+                                    }
                                 }
-                            }
 
-                            if (qqSize > i) {
-                                it.data.qq.songs?.get(i)?.let { music ->
-                                    music.vendor = Constants.QQ
-                                    musicList.add(MusicUtils.getMusic(music))
+                                if (qqSize > i) {
+                                    it.data.qq.songs?.get(i)?.let { music ->
+                                        music.vendor = Constants.QQ
+                                        musicList.add(MusicUtils.getMusic(music))
+                                    }
                                 }
-                            }
 
-                            if (xiamiSize > i) {
-                                it.data.xiami.songs?.get(i)?.let { music ->
-                                    music.vendor = Constants.XIAMI
-                                    musicList.add(MusicUtils.getMusic(music))
+                                if (xiamiSize > i) {
+                                    it.data.xiami.songs?.get(i)?.let { music ->
+                                        music.vendor = Constants.XIAMI
+                                        musicList.add(MusicUtils.getMusic(music))
+                                    }
                                 }
                             }
+                        } catch (e: Throwable) {
+                            LogUtil.e("search", e.message)
                         }
-                    } catch (e: Throwable) {
+                        LogUtil.e("search", "结果：" + musicList.size)
+                        result.onNext(musicList)
+                        result.onComplete()
+                    } else {
+                        LogUtil.e("search", it.msg)
+                        result.onError(Throwable(it.msg))
+                    }
+                }, fail = {
+                    result.onError(Throwable(it
+                            ?: MusicApp.getAppContext().getString(R.string.error_connection)))
+                })
+            } else {
+                BaseApiImpl.searchSongSingle(key, type.toString(), limit, page, success = {
+                    val musicList = mutableListOf<Music>()
+                    if (it.status) {
+                        try {
+                            LogUtil.e("search type", type.toString().toLowerCase())
+                            it.data.songs?.forEach {music->
+                                music.vendor = type.toString().toLowerCase()
+                                musicList.add(MusicUtils.getMusic(music))
+                            }
+                        } catch (e: Throwable) {
+                            LogUtil.e("search", e.message)
+                        }
+                        LogUtil.e("search", "结果：" + musicList.size)
 
+                    } else {
+                        LogUtil.e("search", it.msg)
+//                        result.onError(Throwable(it.msg))
                     }
                     result.onNext(musicList)
                     result.onComplete()
-                } else {
-                    result.onError(Throwable(it.msg))
-                }
-            }, fail = {
-                result.onError(Throwable(it
-                        ?: MusicApp.getAppContext().getString(R.string.error_connection)))
-            })
+                }, fail = {
+                    ToastUtils.show(it.toString())
+                    result.onNext(mutableListOf())
+                    result.onComplete()
+//                    result.onError(Throwable(it
+//                            ?: MusicApp.getAppContext().getString(R.string.error_connection)))
+                })
+            }
         }
     }
-
 
 
     /**
@@ -343,25 +374,25 @@ object MusicApiServiceImpl {
         }
     }
 
-    class Info{
-        var vendor:String? = null
-        var id:String? = null
+    class Info {
+        var vendor: String? = null
+        var id: String? = null
     }
 
 
     fun getAnyVendorSongDetail(list: MutableList<MusicInfo>): Observable<MutableList<Music>> {
         return create { result ->
-            val array = mutableListOf<Map<String,String?>>()
+            val array = mutableListOf<Map<String, String?>>()
             list.forEach {
-                val t = mutableMapOf<String,String?>()
+                val t = mutableMapOf<String, String?>()
                 t["vendor"] = it.vendor
                 t["id"] = it.songId
                 array.add(t)
             }
-            BaseApiImpl.getAnyVendorSongDetail(array, {data->
+            BaseApiImpl.getAnyVendorSongDetail(array, { data ->
                 val musicList = mutableListOf<Music>()
-                for (i in 0 until data.size){
-                    if (data[i]!=null) {
+                for (i in 0 until data.size) {
+                    if (data[i] != null) {
                         data[i].vendor = array[i]["vendor"]
                         musicList.add(MusicUtils.getMusic(data[i]))
                     }

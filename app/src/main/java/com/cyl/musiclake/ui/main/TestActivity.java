@@ -29,7 +29,7 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test2)
     void test2() {
-        searchApi.searchSong("薛之谦", 10, 0, result -> {
+        searchApi.searchSong("薛之谦","QQ", 10, 0, result -> {
             statusTv.setText("searchSong");
             resultTv.setText(result.toString());
             return null;

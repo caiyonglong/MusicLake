@@ -108,15 +108,15 @@ public class WelcomeActivity extends BaseActivity {
     private void getCoverImageUrl() {
         mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 3000);
         ObjectAnimator objectAnimator = ObjectAnimator.ofInt(heardCoverIv, "colorFilter",
-                getResources().getColor(R.color.app_red),
-                getResources().getColor(R.color.app_yellow),
                 getResources().getColor(R.color.app_green),
+                getResources().getColor(R.color.app_yellow),
+                getResources().getColor(R.color.app_red),
+                getResources().getColor(R.color.app_green_dark),
                 getResources().getColor(R.color.app_blue));
         objectAnimator.setEvaluator(new ArgbEvaluator());
 
         objectAnimator.setDuration(2000);
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(heardCoverIv, "y", 0f, heardCoverIv.getTop());
-        objectAnimator1.setDuration(2000);
 
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(heardCoverIv, "scaleX", 0f, 1f);
         objectAnimator2.addUpdateListener(valueAnimator -> {
