@@ -389,7 +389,7 @@
     <string name="title_about_chat">关于音乐社区</string>
     <string name="chat_detail">详细信息</string>
     <string name="chat_about">关于聊天室</string>
-    <string name="chat_title">聊天室(%1$d)</string>
+    <string name="chat_title">消息中心</string>
     <string name="message_center">实时聊天室</string>
     <string name="online_users">在线成员(%1$d)</string>
     <string name="send">发送</string>

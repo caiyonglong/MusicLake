@@ -37,7 +37,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     private var mAdapter: ChatListAdapter? = null
 
     override fun setToolbarTitle(): String {
-        return getString(R.string.chat_title, MusicApp.socketManager.onlineUsers.size)
+        return getString(R.string.chat_title)
     }
 
     override fun getLayoutResID(): Int {
@@ -63,7 +63,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
     override fun initData() {
         showLoading()
-        mPresenter?.loadMessages(FormatUtil.getChatDateTime(System.currentTimeMillis()))
+        mPresenter?.loadMessages()
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             if (Constants.TEXT_PLAIN == intent.type) {
                 dealTextMessage(intent)
@@ -101,7 +101,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 //                mUserAdapter?.setNewData(users)
 //                usersRsv.visibility = if (nums == 0) View.GONE else View.VISIBLE
 //                onlineUserTv.text = getString(R.string.online_users, users.size)
-                updateTitle(getString(R.string.chat_title, MusicApp.socketManager.onlineUsers.size))
+                updateTitle(getString(R.string.chat_title))
             }
         }
 
