@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.player;
+package com.cyl.musiclake.ui.music.bottom;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;

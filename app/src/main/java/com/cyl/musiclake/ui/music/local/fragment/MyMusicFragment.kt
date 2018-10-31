@@ -144,6 +144,14 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         super.showError(message, showRetryButton)
     }
 
+    override fun retryLoading() {
+        super.retryLoading()
+        if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
+            mPresenter?.loadPlaylist()
+        }else{
+            ToastUtils.show("请先登录")
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMetaChangedEvent(event: MetaChangedEvent) {

@@ -375,28 +375,24 @@ object MusicApiServiceImpl {
         }
     }
 
-    class Info {
-        var vendor: String? = null
-        var id: String? = null
-    }
 
-
-    fun getAnyVendorSongDetail(list: MutableList<MusicInfo>): Observable<MutableList<Music>> {
+    /**
+     * 获取详细信息
+     */
+    fun getAnyVendorSongDetail(list: MutableList<Music>): Observable<MutableList<Music>> {
         return create { result ->
             val array = mutableListOf<Map<String, String?>>()
             list.forEach {
                 val t = mutableMapOf<String, String?>()
-                t["vendor"] = it.vendor
-                t["id"] = it.songId
+                t["vendor"] = it.type
+                t["id"] = it.mid
                 array.add(t)
             }
             BaseApiImpl.getAnyVendorSongDetail(array, { data ->
                 val musicList = mutableListOf<Music>()
                 for (i in 0 until data.size) {
-                    if (data[i] != null) {
-                        data[i].vendor = array[i]["vendor"]
-                        musicList.add(MusicUtils.getMusic(data[i]))
-                    }
+                    data[i].vendor = array[i]["vendor"]
+                    musicList.add(MusicUtils.getMusic(data[i]))
                 }
                 result.onNext(musicList)
             }, fail = {

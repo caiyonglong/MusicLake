@@ -56,7 +56,7 @@ object PlaylistApiServiceImpl {
     }
 
     /**
-     * 获取歌单歌曲列表
+     * 获取歌单歌曲列表(仅从服务器获取)
      */
     fun getMusicList(pid: String): Observable<MutableList<Music>> {
         return playlistApiService.getMusicList(token, pid)
@@ -82,16 +82,10 @@ object PlaylistApiServiceImpl {
     }
 
     /**
-     * 获取歌单歌曲列表
+     * 获取歌单歌曲列表(刷新歌单列表)
      */
-    fun getPlayListMusic(pid: String): Observable<MutableList<Music>> {
-        return playlistApiService.getMusicList(token, pid)
-                .flatMap { it ->
-                    val json = it.string()
-                    val data = Gson().fromJson<MutableList<MusicInfo>>(json, object : TypeToken<MutableList<MusicInfo>>() {
-                    }.type)
-                    MusicApiServiceImpl.getAnyVendorSongDetail(data)
-                }
+    fun getPlayListMusic(data: MutableList<Music>): Observable<MutableList<Music>> {
+        return MusicApiServiceImpl.getAnyVendorSongDetail(data)
     }
 
 

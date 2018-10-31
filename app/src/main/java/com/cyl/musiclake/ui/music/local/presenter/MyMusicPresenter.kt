@@ -80,10 +80,12 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         val mIsLogin = UserStatus.getLoginStatus()
         if (mIsLogin) {
             OnlinePlaylistUtils.getOnlinePlaylist(success = {
-                mView?.showPlaylist(OnlinePlaylistUtils.playlists)
+                mView?.showPlaylist(it)
             }, fail = {
                 ToastUtils.show(it)
-                mView?.showPlaylist(OnlinePlaylistUtils.playlists)
+                if (OnlinePlaylistUtils.playlists.size == 0) {
+                    mView?.showError(it, true)
+                }
             })
         } else {
             OnlinePlaylistUtils.playlists.clear()

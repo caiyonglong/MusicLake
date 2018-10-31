@@ -29,8 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingStart="@dimen/dp_8"
-            android:paddingEnd="@dimen/dp_8" />
+            android:clipToPadding="false" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/album"
@@ -76,27 +75,24 @@
 
         <com.cyl.musiclake.view.PlayPauseView
             android:id="@+id/play_pause"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            app:anim_duration="300"
+            app:anim_duration="200"
             app:bg_color="@color/translucent"
-            app:btn_color="@color/colorPrimary"
             app:gap_width="10" />
 
 
         <ImageButton
-            android:id="@+id/play_next"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:id="@+id/queue_music"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginEnd="10dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/play_next"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_skip_next_black_18dp"
-            android:visibility="gone" />
+            android:padding="@dimen/dp_16"
+            android:src="@drawable/ic_queue_music" />
     </LinearLayout>
 
 </RelativeLayout>

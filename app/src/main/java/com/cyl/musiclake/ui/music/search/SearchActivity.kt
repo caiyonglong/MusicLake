@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.search
 
+import android.preference.PreferenceManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
@@ -193,6 +194,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
+        initSearchFilter(menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -275,7 +277,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
      */
     override fun showSearchResult(list: MutableList<Music>) {
         if (list.size != 0) {
-            mOffset ++
+            mOffset++
         } else {
             mAdapter.loadMoreComplete()
             mAdapter.setEnableLoadMore(false)
@@ -333,6 +335,25 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         }
         mAdapter.setNewData(songList)
         mAdapter.loadMoreComplete()
+    }
+
+    /**
+     * 初始化过滤条件
+     */
+    private fun initSearchFilter(menu: Menu) {
+        filter[SearchEngine.Filter.QQ] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_qq", true)
+        filter[SearchEngine.Filter.XIAMI] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_xiami", true)
+        filter[SearchEngine.Filter.BAIDU] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_baidu", true)
+        filter[SearchEngine.Filter.NETEASE] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_netease", true)
+        filter[SearchEngine.Filter.CP] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_cp", true)
+        filter[SearchEngine.Filter.REPEAT] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_repeat", true)
+
+        menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
+        menu.findItem(R.id.menu_filter_xiami).isChecked = filter[SearchEngine.Filter.XIAMI] ?: true
+        menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE] ?: true
+        menu.findItem(R.id.menu_filter_baidu).isChecked = filter[SearchEngine.Filter.BAIDU] ?: true
+        menu.findItem(R.id.menu_filter_copyright).isChecked = filter[SearchEngine.Filter.CP] ?: true
+        menu.findItem(R.id.menu_filter_repeat).isChecked = filter[SearchEngine.Filter.REPEAT] ?: true
     }
 
     /**

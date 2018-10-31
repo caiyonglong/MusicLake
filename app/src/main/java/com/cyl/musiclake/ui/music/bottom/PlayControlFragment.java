@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.player;
+package com.cyl.musiclake.ui.music.bottom;
 
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
@@ -30,6 +29,8 @@ import com.cyl.musiclake.event.StatusChangedEvent;
 import com.cyl.musiclake.player.FloatLyricViewManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
+import com.cyl.musiclake.ui.music.player.PlayContract;
+import com.cyl.musiclake.ui.music.player.PlayPresenter;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
@@ -58,7 +59,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     //整个容器
     @BindView(R.id.container)
     LinearLayout mContainer;
-    @BindView(R.id.play_next)
+    @BindView(R.id.queue_music)
     ImageButton mBtnNext;
     @BindView(R.id.song_progress_normal)
     ProgressBar mProgressBar;
@@ -117,10 +118,11 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         PlayManager.next();
     }
 
-    @OnClick(R.id.play_next)
-    void nextBottom() {
-        if (UIUtils.INSTANCE.isFastClick()) return;
-        PlayManager.next();
+    @OnClick(R.id.queue_music)
+    void showQueue() {
+        if (getActivity()!=null){
+            PlayQueueDialog.Companion.newInstance().showIt((AppCompatActivity) getActivity());
+        }
     }
 
     @OnClick(R.id.play_pause)

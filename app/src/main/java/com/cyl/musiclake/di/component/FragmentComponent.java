@@ -21,7 +21,7 @@ import com.cyl.musiclake.ui.music.mv.MvSearchListFragment;
 import com.cyl.musiclake.ui.music.player.CoverFragment;
 import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
-import com.cyl.musiclake.ui.music.player.PlayControlFragment;
+import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;

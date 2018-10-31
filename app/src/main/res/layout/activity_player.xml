@@ -257,8 +257,6 @@
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:onClick="openPlayQueue"
-                    android:src="@drawable/ic_detail"
-
                     app:materialIcon="playlist_play"
                     app:materialIconColor="@color/white"
                     app:materialIconSize="24dp" />

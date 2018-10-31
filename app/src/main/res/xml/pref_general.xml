@@ -28,27 +28,37 @@
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="key_search_qq"
+            android:key="key_search_filter_qq"
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_qq" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="key_search_netease"
+            android:key="key_search_filter_netease"
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_netease" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="key_search_xiami"
+            android:key="key_search_filter_xiami"
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_xiami" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="key_search_baidu"
+            android:key="key_search_filter_baidu"
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_baidu" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_search_filter_repeat"
+            android:summary="@string/search_filter_repeat_summary"
+            android:title="@string/search_filter_repeat" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_search_filter_cp"
+            android:summary="@string/search_filter_cp_summary"
+            android:title="@string/search_filter_cp" />
 
     </PreferenceCategory>
 

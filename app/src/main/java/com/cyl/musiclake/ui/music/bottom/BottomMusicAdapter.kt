@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.player
+package com.cyl.musiclake.ui.music.bottom
 
 import android.app.Activity
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -25,14 +25,14 @@ class BottomMusicAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseV
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
 
         if (item.coverUri != null) {
-            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+            CoverLoader.loadImageView(mContext, item.coverUri, R.drawable.default_cover, holder.getView(R.id.iv_cover))
         }
         if (item.coverUri.isNullOrEmpty()) {
             //加载歌曲专辑图
             item.title?.let {
                 MusicApi.getMusicAlbumPic(item.title.toString(), success = {
                     item.coverUri = it
-                    CoverLoader.loadImageView(mContext, it, holder.getView(R.id.iv_cover))
+                    CoverLoader.loadImageView(mContext, it, R.drawable.default_cover, holder.getView(R.id.iv_cover))
                 })
             }
         }

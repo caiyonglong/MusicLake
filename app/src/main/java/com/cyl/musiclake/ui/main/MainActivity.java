@@ -37,7 +37,7 @@ import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
-import com.cyl.musiclake.ui.music.player.PlayControlFragment;
+import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.User;

@@ -10,10 +10,15 @@ import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.event.LoginEvent
+import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
 
 
@@ -45,6 +50,8 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
             holder.setTextColor(R.id.tv_title,ContextCompat.getColor(mContext,R.color.app_green))
             holder.setTextColor(R.id.tv_artist,ContextCompat.getColor(mContext,R.color.app_green))
+
+            recyclerView.scrollToPosition(holder.adapterPosition)
         } else {
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
             holder.setTextColor(R.id.tv_title,ContextCompat.getColor(mContext,R.color.black))
@@ -92,6 +99,20 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
             holder.itemView.setOnClickListener {
                 ToastUtils.show("歌曲无法播放")
             }
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateUserInfo(event: MetaChangedEvent) {
+        notifyDataSetChanged()
+    }
+
+
+    override fun onViewAttachedToWindow(holder: BaseViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
         }
     }
 }
