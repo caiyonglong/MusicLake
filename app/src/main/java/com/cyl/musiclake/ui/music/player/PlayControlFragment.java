@@ -1,14 +1,14 @@
 package com.cyl.musiclake.ui.music.player;
 
 import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
@@ -18,11 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.common.TransitionAnimationUtils;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlayModeEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
@@ -30,9 +31,9 @@ import com.cyl.musiclake.player.FloatLyricViewManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtils;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog;
-import com.cyl.musiclake.utils.ColorUtil;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FormatUtil;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.view.LyricView;
 import com.cyl.musiclake.view.PlayPauseView;
 
@@ -42,6 +43,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,6 +70,9 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     TextView mTvArtist;
     @BindView(R.id.album)
     CircleImageView mIvAlbum;
+
+    @BindView(R.id.song_list_rcv)
+    RecyclerView bottomPlayRcv;
 
     @BindView(R.id.skip_queue)
     MaterialIconView skip_queue;
@@ -164,6 +171,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         topContainer = rootView.findViewById(R.id.top_container);
         showLyric(FloatLyricViewManager.lyricInfo, true);
         updatePlayStatus(PlayManager.isPlaying());
+        initSongList();
     }
 
     @Override
@@ -221,50 +229,6 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         coverAnimator.setRepeatMode(ObjectAnimator.RESTART);
         coverAnimator.setInterpolator(mLinearInterpolator);
     }
-
-
-//    @Override
-//    public void setPalette(Palette palette) {
-//        mPalette = palette;
-//        mSwatch = ColorUtil.getMostPopulousSwatch(palette);
-//
-//        int paletteColor;
-//        if (mSwatch != null) {
-//            paletteColor = mSwatch.getRgb();
-//            int artistColor = mSwatch.getTitleTextColor();
-//            mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-//            mTvArtistAlbum.setTextColor(artistColor);
-//        } else {
-//            mSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
-//            if (mSwatch != null) {
-//                paletteColor = mSwatch.getRgb();
-//                int artistColor = mSwatch.getTitleTextColor();
-//                mTvName.setTextColor(ColorUtil.getOpaqueColor(artistColor));
-//                mTvArtistAlbum.setTextColor(artistColor);
-//            } else {
-//                paletteColor = Color.WHITE;
-//                mTvName.setTextColor(ContextCompat.getColor(getContext(), android.R.color.primary_text_light));
-//                mTvArtistAlbum.setTextColor(ContextCompat.getColor(getContext(), android.R.color.secondary_text_light));
-//            }
-//        }
-//        //set icon color
-//        int blackWhiteColor = ColorUtil.getBlackWhiteColor(paletteColor);
-////        int statusBarColor = ColorUtil.getStatusBarColor(paletteColor);
-////        StatusBarUtil.setColor(getActivity(), statusBarColor);
-////        mLrcView.setHighLightTextColor(statusBarColor);
-////        mLrcView.setDefaultColor(mSwatch.getBodyTextColor());
-////        tv_time.setTextColor(blackWhiteColor);
-////        mTvArtistAlbum.setTextColor(blackWhiteColor);
-////        tv_duration.setTextColor(blackWhiteColor);
-////        mLrcView.setHintColor(blackWhiteColor);
-////        mBtnNext.setEnabled(true);
-////        mBtnNext.setcolo(blackWhiteColor);
-//        skip_prev.setColor(blackWhiteColor);
-//        skip_next.setColor(blackWhiteColor);
-//        skip_queue.setColor(blackWhiteColor);
-//        mPlayOrPause.setBtnColor(blackWhiteColor);
-//        mPlayOrPause.setEnabled(true);
-//    }
 
     @Override
     public void showLyric(String lyricInfo, boolean isFilePath) {
@@ -367,7 +331,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
             mTvArtist.setText(music.getArtist());
             mTvArtistAlbum.setText(music.getArtist());
 
-            CoverLoader.loadImageView(getContext(),music.getCoverUri(),mIvAlbum);
+            CoverLoader.loadImageView(getContext(), music.getCoverUri(), mIvAlbum);
 
             //更新收藏状态
             if (music.isLove()) {
@@ -390,6 +354,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
     public void onMetaChangedEvent(MetaChangedEvent event) {
         if (mPresenter != null) {
             mPresenter.updateNowPlaying(event.getMusic(), false);
+            initSongList();
         }
     }
 
@@ -430,4 +395,40 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         EventBus.getDefault().unregister(this);
     }
 
+    private BottomMusicAdapter mAdapter;
+    private List<Music> musicList = new ArrayList<>();
+
+    /**
+     * 初始化歌曲列表
+     */
+    private void initSongList() {
+        musicList.clear();
+        musicList.addAll(PlayManager.getPlayList());
+        if (mAdapter == null) {
+            bottomPlayRcv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+            mAdapter = new BottomMusicAdapter(musicList);
+            PagerSnapHelper snap = new PagerSnapHelper();
+            snap.attachToRecyclerView(bottomPlayRcv);
+            bottomPlayRcv.setAdapter(mAdapter);
+            bottomPlayRcv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                        int first = manager.findFirstVisibleItemPosition();
+                        int last = manager.findLastVisibleItemPosition();
+                        LogUtil.e("Scroll", first + "-" + last);
+                        if (first == last && first != PlayManager.position()) {
+                            PlayManager.play(first);
+                        }
+                    }
+                }
+            });
+            mAdapter.bindToRecyclerView(bottomPlayRcv);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+        bottomPlayRcv.scrollToPosition(PlayManager.position());
+    }
 }

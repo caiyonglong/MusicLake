@@ -24,6 +24,14 @@
         android:layout_centerVertical="true"
         android:orientation="horizontal">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/song_list_rcv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingStart="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_8" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/album"
             android:layout_width="45dp"
@@ -31,14 +39,16 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/dp_8"
             android:src="@drawable/default_cover"
-            android:transitionName="@string/transition_cover" />
+            android:transitionName="@string/transition_cover"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/title"
@@ -85,7 +95,8 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/play_next"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_skip_next_black_18dp" />
+            android:src="@drawable/ic_skip_next_black_18dp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>
