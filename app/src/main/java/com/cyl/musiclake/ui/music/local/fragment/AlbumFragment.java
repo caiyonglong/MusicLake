@@ -3,23 +3,15 @@ package com.cyl.musiclake.ui.music.local.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Pair;
-import android.view.MenuItem;
-import android.view.View;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.ui.base.BaseLazyFragment;
 import com.cyl.musiclake.bean.Album;
-import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumsContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumPresenter;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;

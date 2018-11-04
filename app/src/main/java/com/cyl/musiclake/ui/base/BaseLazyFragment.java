@@ -1,4 +1,4 @@
-package com.cyl.musiclake.base;
+package com.cyl.musiclake.ui.base;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.di.component.DaggerFragmentComponent;
 import com.cyl.musiclake.di.component.FragmentComponent;
 import com.cyl.musiclake.di.module.FragmentModule;
@@ -28,7 +27,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.cyl.musiclake.utils.AnimationUtils.animateView;

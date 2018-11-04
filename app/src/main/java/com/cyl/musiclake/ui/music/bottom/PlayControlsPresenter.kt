@@ -9,7 +9,7 @@ package com.cyl.musiclake.ui.music.bottom
 //import com.cyl.musiclake.MusicApp
 //import com.cyl.musiclake.R
 //import com.cyl.musiclake.RxBus
-//import com.cyl.musiclake.base.BasePresenter
+//import com.cyl.musiclake.ui.base.BasePresenter
 //import com.cyl.musiclake.bean.Music
 //import com.cyl.musiclake.event.MetaChangedEvent
 //import com.cyl.musiclake.event.StatusChangedEvent

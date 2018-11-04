@@ -18,15 +18,12 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.player.MusicPlayerService;
-import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.utils.ShakeManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;

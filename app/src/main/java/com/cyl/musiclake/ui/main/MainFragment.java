@@ -8,9 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
-import com.cyl.musiclake.ui.music.local.fragment.MyMusicFragment;
+import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 import com.cyl.musiclake.ui.music.mv.MvFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.NeteasePlaylistFragment;
 

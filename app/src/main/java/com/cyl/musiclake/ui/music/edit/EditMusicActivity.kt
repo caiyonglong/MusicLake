@@ -2,9 +2,9 @@ package com.cyl.musiclake.ui.music.edit
 
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
-import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseContract
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.bean.data.db.DaoLitepal

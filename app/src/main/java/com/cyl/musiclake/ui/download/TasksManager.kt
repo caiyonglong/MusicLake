@@ -1,9 +1,9 @@
-package com.cyl.musiclake.download
+package com.cyl.musiclake.ui.download
 
 import android.text.TextUtils
 import android.util.SparseArray
-import com.cyl.musiclake.download.ui.DownloadManagerFragment
-import com.cyl.musiclake.download.ui.TaskItemAdapter
+import com.cyl.musiclake.ui.download.ui.DownloadManagerFragment
+import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.DownloadEvent
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadConnectListener

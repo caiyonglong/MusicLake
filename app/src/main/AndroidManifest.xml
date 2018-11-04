@@ -212,7 +212,7 @@
             android:name=".ui.main.TestActivity"
             android:label="调试" />
         <activity
-            android:name=".ui.music.player.PlayerActivity"
+            android:name=".ui.music.playpage.PlayerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.edit
 
-import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.ui.music.edit.EditSongListContract
+import com.cyl.musiclake.ui.base.BasePresenter
 import javax.inject.Inject
 
 

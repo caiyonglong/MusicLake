@@ -1,4 +1,4 @@
-package com.cyl.musiclake.download.ui;
+package com.cyl.musiclake.ui.download.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,16 +12,13 @@ import android.widget.TextView;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.download.TasksManager;
-import com.cyl.musiclake.download.TasksManagerModel;
-import com.cyl.musiclake.event.DownloadEvent;
+import com.cyl.musiclake.ui.download.TasksManager;
+import com.cyl.musiclake.ui.download.TasksManagerModel;
 import com.cyl.musiclake.utils.LogUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.List;
@@ -63,7 +60,6 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             // to pause
             FileDownloader.getImpl().pause(holder.id);
         } else if (action.equals(v.getResources().getString(R.string.start))) {
-            // to start
             // to start
             final TasksManagerModel model = TasksManager.INSTANCE.get(holder.position);
             final BaseDownloadTask task = FileDownloader.getImpl().create(model.getUrl())

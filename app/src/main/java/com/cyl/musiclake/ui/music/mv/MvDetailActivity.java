@@ -20,7 +20,7 @@ import com.cyl.musicapi.netease.CommentsItemInfo;
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musicapi.netease.MvInfoDetailInfo;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;

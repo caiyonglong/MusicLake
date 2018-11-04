@@ -2,7 +2,7 @@ package com.cyl.musiclake.bean.data.db
 
 import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.download.TasksManagerModel
+import com.cyl.musiclake.ui.download.TasksManagerModel
 import com.cyl.musiclake.utils.FileUtils
 import org.litepal.LitePal
 

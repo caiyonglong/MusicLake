@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.playlist
 
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.data.AppRepository
 

@@ -3,8 +3,7 @@ package com.cyl.musiclake.ui.my;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 import com.cyl.musiclake.ui.my.user.User;
 
 import java.util.Map;

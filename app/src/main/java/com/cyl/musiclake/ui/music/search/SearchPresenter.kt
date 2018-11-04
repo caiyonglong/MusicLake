@@ -5,7 +5,7 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.MusicApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.data.db.DaoLitepal
@@ -96,7 +96,7 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
 //                    return@Function4 musicList
 //        })
 
-        ApiManager.request(observable.compose(mView?.bindToLife()),
+        ApiManager.request(observable,
                 object : RequestCallBack<MutableList<Music>> {
                     override fun success(result: MutableList<Music>) {
                         LogUtil.e("searchSuccess", result.toString())

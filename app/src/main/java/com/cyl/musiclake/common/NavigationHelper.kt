@@ -16,13 +16,13 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.download.ui.DownloadFragment
+import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
-import com.cyl.musiclake.ui.music.player.PlayerActivity
+import com.cyl.musiclake.ui.music.playpage.PlayerActivity
 import com.cyl.musiclake.ui.music.playlist.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment

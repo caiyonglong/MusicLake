@@ -1,4 +1,4 @@
-package com.cyl.musiclake.download.ui;
+package com.cyl.musiclake.ui.download.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,10 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.download.TasksManagerModel;
+import com.cyl.musiclake.ui.download.TasksManagerModel;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;

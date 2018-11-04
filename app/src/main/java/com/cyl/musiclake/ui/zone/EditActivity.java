@@ -1,16 +1,12 @@
 package com.cyl.musiclake.ui.zone;
 
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
-import com.cyl.musiclake.ui.main.MainActivity;
-import com.cyl.musiclake.ui.my.user.User;
-import com.cyl.musiclake.ui.my.user.UserStatus;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import butterknife.BindView;

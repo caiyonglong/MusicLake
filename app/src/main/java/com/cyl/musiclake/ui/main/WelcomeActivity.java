@@ -4,17 +4,14 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.widget.ImageView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 

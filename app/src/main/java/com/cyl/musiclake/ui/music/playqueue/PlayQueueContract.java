@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.playqueue;
 
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
 
 import java.util.List;

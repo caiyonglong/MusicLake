@@ -1,6 +1,6 @@
-package com.cyl.musiclake.ui.music.local.contract
+package com.cyl.musiclake.ui.music.my
 
-import com.cyl.musiclake.base.BaseContract
+import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 

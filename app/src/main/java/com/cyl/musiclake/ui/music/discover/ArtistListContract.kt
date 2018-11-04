@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.discover
 
 import com.cyl.musicapi.bean.SingerTag
-import com.cyl.musiclake.base.BaseContract
+import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Artist
 
 

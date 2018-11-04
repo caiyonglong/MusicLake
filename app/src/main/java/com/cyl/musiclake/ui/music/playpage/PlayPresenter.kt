@@ -1,7 +1,6 @@
-package com.cyl.musiclake.ui.music.player
+package com.cyl.musiclake.ui.music.playpage
 
-import android.support.v7.graphics.Palette
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.playback.PlayProgressListener

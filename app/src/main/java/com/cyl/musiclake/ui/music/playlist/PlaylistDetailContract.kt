@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.playlist
 
 import android.content.Context
-import com.cyl.musiclake.base.BaseContract
+import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music

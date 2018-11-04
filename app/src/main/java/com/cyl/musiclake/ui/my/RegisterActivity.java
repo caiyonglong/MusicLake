@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;

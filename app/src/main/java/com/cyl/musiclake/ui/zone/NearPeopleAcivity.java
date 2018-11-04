@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.utils.CoverLoader;
 

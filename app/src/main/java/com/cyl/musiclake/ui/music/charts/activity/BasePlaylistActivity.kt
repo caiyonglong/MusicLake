@@ -6,7 +6,7 @@ import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras

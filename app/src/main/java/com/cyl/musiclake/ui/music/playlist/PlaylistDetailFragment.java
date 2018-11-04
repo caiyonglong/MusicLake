@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.bean.Music;

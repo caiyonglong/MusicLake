@@ -12,15 +12,13 @@ import android.view.inputmethod.EditorInfo
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
-import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.ToastUtils
 import com.cyl.musiclake.view.NoticeView
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*

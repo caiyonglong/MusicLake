@@ -1,13 +1,12 @@
-package com.cyl.musiclake.download.ui
+package com.cyl.musiclake.ui.download.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseFragment
-import com.cyl.musiclake.base.BaseLazyFragment
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.download.TasksManager
-import com.cyl.musiclake.download.TasksManagerModel
+import com.cyl.musiclake.ui.download.TasksManager
+import com.cyl.musiclake.ui.download.TasksManagerModel
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import java.lang.ref.WeakReference
 

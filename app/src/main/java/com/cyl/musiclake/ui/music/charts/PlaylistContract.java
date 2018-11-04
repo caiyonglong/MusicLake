@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.charts;
 
 import android.content.Context;
 
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
 

@@ -15,7 +15,7 @@ import com.cyl.musiclake.bean.data.PlaylistLoader;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
-import com.cyl.musiclake.download.TasksManager;
+import com.cyl.musiclake.ui.download.TasksManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.utils.LogUtil;

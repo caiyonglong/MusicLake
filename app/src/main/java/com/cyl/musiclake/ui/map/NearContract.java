@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.map;
 
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 
 import java.util.Map;
 

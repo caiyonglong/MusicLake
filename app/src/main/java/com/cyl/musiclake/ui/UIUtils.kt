@@ -18,8 +18,8 @@ import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.download.TasksManager
-import com.cyl.musiclake.download.ui.TaskItemAdapter
+import com.cyl.musiclake.ui.download.TasksManager
+import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.net.ApiManager

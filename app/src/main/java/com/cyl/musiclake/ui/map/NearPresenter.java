@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.map;
 
 
-import com.cyl.musiclake.base.BasePresenter;
+import com.cyl.musiclake.ui.base.BasePresenter;
 
 import java.util.Map;
 

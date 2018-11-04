@@ -1,8 +1,7 @@
 package com.cyl.musiclake.ui.music.mv;
 
 import com.cyl.musicapi.netease.MvInfoDetail;
-import com.cyl.musicapi.netease.MvInfoDetailInfo;
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 
 import java.util.List;
 

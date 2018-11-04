@@ -46,7 +46,7 @@ import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.player.playback.PlayProgressListener;
 import com.cyl.musiclake.player.playqueue.PlayQueueManager;
-import com.cyl.musiclake.ui.music.player.PlayerActivity;
+import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;

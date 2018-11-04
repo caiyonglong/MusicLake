@@ -8,8 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.ui.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
 
 import java.util.ArrayList;

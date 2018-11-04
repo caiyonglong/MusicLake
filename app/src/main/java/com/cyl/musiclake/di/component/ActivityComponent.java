@@ -13,7 +13,7 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity;
 import com.cyl.musiclake.ui.music.mv.MvDetailActivity;
 import com.cyl.musiclake.ui.music.charts.activity.BaiduMusicListActivity;
 import com.cyl.musiclake.ui.music.charts.activity.BasePlaylistActivity;
-import com.cyl.musiclake.ui.music.player.PlayerActivity;
+import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.player
+package com.cyl.musiclake.ui.music.playpage
 
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter

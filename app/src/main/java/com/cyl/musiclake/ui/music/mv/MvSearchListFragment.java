@@ -10,11 +10,10 @@ import android.widget.TextView;
 
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.ui.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.utils.ToastUtils;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 

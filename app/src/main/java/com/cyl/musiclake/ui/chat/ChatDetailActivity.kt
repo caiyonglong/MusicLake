@@ -4,7 +4,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.card_chat_detail.*
 
 

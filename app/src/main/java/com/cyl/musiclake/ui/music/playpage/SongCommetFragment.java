@@ -1,12 +1,10 @@
-package com.cyl.musiclake.ui.music.player;
+package com.cyl.musiclake.ui.music.playpage;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
-import com.cyl.musiclake.view.LyricView;
+import com.cyl.musiclake.ui.base.BaseFragment;
 
 import butterknife.BindView;
 

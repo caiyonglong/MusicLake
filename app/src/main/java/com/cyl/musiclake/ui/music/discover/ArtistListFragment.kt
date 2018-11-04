@@ -4,7 +4,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
 import com.cyl.musicapi.bean.SingerTag
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseFragment
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.utils.LogUtil

@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.discover
 
 import com.cyl.musicapi.netease.BannerBean
-import com.cyl.musiclake.base.BaseContract
+import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.Artist
 

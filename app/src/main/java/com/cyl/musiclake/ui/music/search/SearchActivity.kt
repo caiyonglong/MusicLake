@@ -13,7 +13,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean

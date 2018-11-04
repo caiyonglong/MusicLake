@@ -1,4 +1,4 @@
-package com.cyl.musiclake.base;
+package com.cyl.musiclake.ui.base;
 
 
 import java.util.ArrayList;

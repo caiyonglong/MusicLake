@@ -5,16 +5,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.deleteLocalMusic
 import com.cyl.musiclake.ui.downloadBatchMusic
 import kotlinx.android.synthetic.main.activity_song_edit.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Des    : 歌曲批量操作

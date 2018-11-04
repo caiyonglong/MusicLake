@@ -5,7 +5,7 @@ import android.content.Context
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager

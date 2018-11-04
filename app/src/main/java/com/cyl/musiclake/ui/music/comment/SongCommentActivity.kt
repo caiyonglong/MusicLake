@@ -2,15 +2,13 @@ package com.cyl.musiclake.ui.music.comment
 
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musicapi.bean.SongComment
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.base.BaseActivity
-import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseContract
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_song_comment.*
 
 /**

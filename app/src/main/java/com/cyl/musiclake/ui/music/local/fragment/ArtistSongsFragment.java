@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.player.PlayManager;

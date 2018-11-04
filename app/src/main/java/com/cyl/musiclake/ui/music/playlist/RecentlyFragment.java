@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseFragment;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.bean.data.PlayHistoryLoader;
 import com.cyl.musiclake.bean.Music;

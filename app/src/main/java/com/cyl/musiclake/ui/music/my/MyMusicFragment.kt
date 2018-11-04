@@ -1,10 +1,10 @@
-package com.cyl.musiclake.ui.music.local.fragment
+package com.cyl.musiclake.ui.music.my
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseFragment
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
@@ -13,8 +13,6 @@ import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
-import com.cyl.musiclake.ui.music.local.contract.MyMusicContract
-import com.cyl.musiclake.ui.music.local.presenter.MyMusicPresenter
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity
 import com.cyl.musiclake.ui.my.user.UserStatus

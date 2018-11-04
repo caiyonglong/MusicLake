@@ -1,6 +1,6 @@
 //package com.cyl.musiclake.ui.music.online.presenter;
 //
-//import com.cyl.musiclake.base.BasePresenter;
+//import com.cyl.musiclake.ui.base.BasePresenter;
 //
 //import com.cyl.musiclake.api.netease.NeteaseMusic;
 //import com.cyl.musiclake.ui.music.online.contract.NeteaseListContract;

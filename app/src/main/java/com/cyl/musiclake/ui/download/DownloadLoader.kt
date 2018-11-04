@@ -1,4 +1,4 @@
-package com.cyl.musiclake.download
+package com.cyl.musiclake.ui.download
 
 import android.text.TextUtils
 import com.cyl.musiclake.MusicApp
@@ -6,7 +6,6 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Mp3Util

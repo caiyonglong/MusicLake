@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.chat
 
-import com.cyl.musiclake.base.BaseContract
+import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.MessageInfoBean
 
 

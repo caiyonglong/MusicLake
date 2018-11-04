@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.player
+package com.cyl.musiclake.ui.music.playpage
 
 import android.animation.ObjectAnimator
 import android.graphics.Bitmap
@@ -14,7 +14,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras

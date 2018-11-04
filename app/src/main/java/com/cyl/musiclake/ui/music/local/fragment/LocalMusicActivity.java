@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.common.NavigationHelper;
 
 /**

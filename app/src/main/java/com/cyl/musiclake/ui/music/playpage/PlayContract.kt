@@ -1,10 +1,9 @@
-package com.cyl.musiclake.ui.music.player
+package com.cyl.musiclake.ui.music.playpage
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.v7.graphics.Palette
 
-import com.cyl.musiclake.base.BaseContract
+import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Music
 
 

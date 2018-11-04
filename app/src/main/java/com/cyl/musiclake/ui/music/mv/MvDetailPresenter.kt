@@ -4,7 +4,7 @@ import com.cyl.musicapi.netease.MvComment
 import com.cyl.musicapi.netease.MvDetailInfo
 import com.cyl.musicapi.netease.MvInfo
 import com.cyl.musicapi.netease.SimilarMvInfo
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.music.mv.MvDetailContract
 import com.cyl.musiclake.ui.music.mv.MvModel

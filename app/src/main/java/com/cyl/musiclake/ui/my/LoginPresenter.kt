@@ -6,7 +6,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack

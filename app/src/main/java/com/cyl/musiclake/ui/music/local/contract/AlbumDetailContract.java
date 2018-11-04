@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.local.contract;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
 
 import java.util.List;

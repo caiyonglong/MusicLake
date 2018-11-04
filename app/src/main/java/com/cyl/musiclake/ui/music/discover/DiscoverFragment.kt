@@ -8,8 +8,7 @@ import android.util.Pair
 import android.view.View
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
-import com.cyl.musiclake.base.BaseFragment
-import com.cyl.musiclake.base.BaseLazyFragment
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants

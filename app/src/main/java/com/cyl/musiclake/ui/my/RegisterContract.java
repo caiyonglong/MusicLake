@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.my;
 
-import com.cyl.musiclake.base.BasePresenter;
-import com.cyl.musiclake.base.BaseContract;
+import com.cyl.musiclake.ui.base.BaseContract;
 
 /**
  * Created by D22434 on 2018/1/3.

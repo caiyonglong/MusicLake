@@ -1,7 +1,7 @@
-package com.cyl.musiclake.download.ui
+package com.cyl.musiclake.ui.download.ui
 
-import com.cyl.musiclake.base.BasePresenter
-import com.cyl.musiclake.download.DownloadLoader
+import com.cyl.musiclake.ui.base.BasePresenter
+import com.cyl.musiclake.ui.download.DownloadLoader
 import com.cyl.musiclake.event.DownloadEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

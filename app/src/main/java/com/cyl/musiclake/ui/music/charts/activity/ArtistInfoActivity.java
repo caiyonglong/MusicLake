@@ -6,7 +6,7 @@
 ////
 ////import com.cyl.musiclake.R;
 ////import com.cyl.musiclake.api.doupan.DoubanMusic;
-////import com.cyl.musiclake.base.BaseActivity;
+////import com.cyl.musiclake.ui.base.BaseActivity;
 ////import com.cyl.musiclake.bean.Music;
 ////import com.cyl.musiclake.common.Extras;
 ////import com.cyl.musiclake.ui.main.WebActivity;

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.download.ui;
+package com.cyl.musiclake.ui.download.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseLazyFragment;
+import com.cyl.musiclake.ui.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.main.PageAdapter;
 

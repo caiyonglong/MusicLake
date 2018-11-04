@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.MenuItem;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.base.BaseActivity;
+import com.cyl.musiclake.ui.base.BaseActivity;
 
 public class SettingsActivity extends BaseActivity {
 

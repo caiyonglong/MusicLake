@@ -6,9 +6,9 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApiServiceImpl
-import com.cyl.musiclake.base.BaseActivity
-import com.cyl.musiclake.base.BaseContract
-import com.cyl.musiclake.base.BasePresenter
+import com.cyl.musiclake.ui.base.BaseActivity
+import com.cyl.musiclake.ui.base.BaseContract
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
