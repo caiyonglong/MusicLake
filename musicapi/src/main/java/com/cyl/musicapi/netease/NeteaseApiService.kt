@@ -57,4 +57,10 @@ interface NeteaseApiService {
     @GET("banner")
     fun getBanner(): Observable<BannerResult>
 
+    @GET("login/cellphone")
+    fun loginPhone(@Query("phone") phone: String,@Query("password") id: String): Observable<LoginInfo>
+
+    @GET("login")
+    fun loginEmail(@Query("email") email: String,@Query("password") id: String): Observable<LoginInfo>
+
 }

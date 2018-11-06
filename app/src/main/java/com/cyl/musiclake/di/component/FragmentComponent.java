@@ -27,6 +27,7 @@ import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.BaiduPlaylistFragment;
 import com.cyl.musiclake.ui.download.ui.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
+import com.cyl.musiclake.ui.my.BindLoginActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -87,4 +88,6 @@ public interface FragmentComponent {
     void inject(@NotNull ArtistListFragment artistListFragment);
 
     void inject(MvSearchListFragment mvSearchListFragment);
+
+    void inject(@NotNull BindLoginActivity bindLoginActivity);
 }

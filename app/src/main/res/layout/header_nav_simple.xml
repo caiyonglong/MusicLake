@@ -7,7 +7,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/header_bg"
@@ -56,16 +58,32 @@
                 android:background="@drawable/bg_button"
                 android:elevation="@dimen/dp_4"
                 android:lines="1"
-                android:paddingBottom="@dimen/dp_4"
-                android:paddingEnd="@dimen/dp_16"
                 android:paddingStart="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_4"
+                android:paddingEnd="@dimen/dp_16"
+                android:paddingBottom="@dimen/dp_4"
                 android:text="@string/login"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 
+
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/user_bind_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_button"
+            android:lines="1"
+            android:layout_margin="@dimen/dp_16"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_4"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_4"
+            android:text="@string/bind_netease"
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 
 </RelativeLayout>

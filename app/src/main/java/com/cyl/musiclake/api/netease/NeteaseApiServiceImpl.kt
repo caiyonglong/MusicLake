@@ -199,4 +199,14 @@ object NeteaseApiServiceImpl {
     fun getBanners(): Observable<BannerResult> {
         return apiService.getBanner()
     }
+
+    /**
+     * 获取banner
+     */
+    fun loginPhone(username: String, pwd: String, isPhone: Boolean): Observable<LoginInfo> {
+        return if (isPhone)
+            apiService.loginPhone(username, pwd)
+        else
+            apiService.loginEmail(username, pwd)
+    }
 }

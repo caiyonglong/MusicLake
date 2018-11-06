@@ -39,6 +39,7 @@ import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
+import com.cyl.musiclake.ui.my.BindLoginActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -81,6 +82,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     CircleImageView mAvatarIcon;
     TextView mName;
     TextView mLoginTv;
+    TextView mBindTv;
     TextView mOnlineNumTv;
 
     private PlayControlFragment controlFragment;
@@ -146,6 +148,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvatarIcon = mHeaderView.findViewById(R.id.header_face);
         mName = mHeaderView.findViewById(R.id.header_name);
         mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
+        mBindTv = mHeaderView.findViewById(R.id.user_bind_tv);
+        mBindTv.setOnClickListener(view -> {
+            NavigationHelper.INSTANCE.navigateFragment(this,new BindLoginActivity());
+        });
     }
 
     @Override

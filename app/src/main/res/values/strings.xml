@@ -283,6 +283,7 @@
     <string name="general_error">网络错误</string>
     <string name="qq_login_tips">QQ登录</string>
     <string name="login_tips">登录后，可以使用在线同步歌单，Android端、PC端都可使用！</string>
+    <string name="bind_netease">绑定网易云音乐账号</string>
 
 
     <string name="popup_song_detail">歌曲详情</string>
@@ -423,5 +424,7 @@
     <string name="search_filter_repeat_summary">过滤掉重复的歌曲</string>
     <string name="search_filter_cp">包括无版权歌曲</string>
     <string name="search_filter_cp_summary">搜索结果包含无版权歌曲</string>
+    <string name="bind_username">手机号/邮箱</string>
+    <string name="more_bind_tips">绑定三方账号，可同步第三方账号的歌单以及歌曲推荐</string>
 
 </resources>

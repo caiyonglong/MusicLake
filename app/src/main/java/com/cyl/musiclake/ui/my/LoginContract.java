@@ -25,6 +25,8 @@ public interface LoginContract {
 
         void loginByQQ(Activity activity);
 
+        void bindNetease(String userName,String pwd);
+
         void onActivityResult(int requestCode, int resultCode, Intent data);
 
     }

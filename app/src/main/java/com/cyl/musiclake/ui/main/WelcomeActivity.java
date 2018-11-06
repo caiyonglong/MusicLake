@@ -89,7 +89,6 @@ public class WelcomeActivity extends BaseActivity {
     private void initPlayQueue() {
         getCoverImageUrl();
 
-
     }
 
     /**
@@ -104,32 +103,32 @@ public class WelcomeActivity extends BaseActivity {
 
     private void getCoverImageUrl() {
         mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 3000);
-        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(heardCoverIv, "colorFilter",
-                getResources().getColor(R.color.app_green),
-                getResources().getColor(R.color.app_yellow),
-                getResources().getColor(R.color.app_red),
-                getResources().getColor(R.color.app_green_dark),
-                getResources().getColor(R.color.app_blue));
-        objectAnimator.setEvaluator(new ArgbEvaluator());
-
-        objectAnimator.setDuration(2000);
-        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(heardCoverIv, "y", 0f, heardCoverIv.getTop());
-
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(heardCoverIv, "scaleX", 0f, 1f);
-        objectAnimator2.addUpdateListener(valueAnimator -> {
-            float value = (float) valueAnimator.getAnimatedValue();
-            heardCoverIv.setScaleY(value);
-            heardCoverIv.setRotation(value);
-        });
-        objectAnimator2.setDuration(2000);
-        objectAnimator1.setDuration(2000);
-
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(objectAnimator)
-                .with(objectAnimator2)
-                .with(objectAnimator1);
-        animatorSet.start();
+//        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(heardCoverIv, "colorFilter",
+//                getResources().getColor(R.color.app_green),
+//                getResources().getColor(R.color.app_yellow),
+//                getResources().getColor(R.color.app_red),
+//                getResources().getColor(R.color.app_green_dark),
+//                getResources().getColor(R.color.app_blue));
+//        objectAnimator.setEvaluator(new ArgbEvaluator());
+//
+//        objectAnimator.setDuration(2000);
+//        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(heardCoverIv, "y", 0f, heardCoverIv.getTop());
+//
+//        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(heardCoverIv, "scaleX", 0f, 1f);
+//        objectAnimator2.addUpdateListener(valueAnimator -> {
+//            float value = (float) valueAnimator.getAnimatedValue();
+//            heardCoverIv.setScaleY(value);
+//            heardCoverIv.setRotation(value);
+//        });
+//        objectAnimator2.setDuration(2000);
+//        objectAnimator1.setDuration(2000);
+//
+//
+//        AnimatorSet animatorSet = new AnimatorSet();
+//        animatorSet.play(objectAnimator)
+//                .with(objectAnimator2)
+//                .with(objectAnimator1);
+//        animatorSet.start();
 
     }
 

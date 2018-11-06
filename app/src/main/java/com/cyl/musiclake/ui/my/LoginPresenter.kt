@@ -4,8 +4,10 @@ package com.cyl.musiclake.ui.my
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
+import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
@@ -29,6 +31,28 @@ import javax.inject.Inject
 
 class LoginPresenter @Inject
 constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
+    override fun bindNetease(userName: String, pwd: String) {
+        if (userName.isEmpty()) return
+        if (pwd.isEmpty()) return
+        val observable =NeteaseApiServiceImpl.loginPhone(userName, pwd, !userName.contains("@"))
+        ApiManager.request(observable,
+                object : RequestCallBack<LoginInfo> {
+                    override fun success(result: LoginInfo?) {
+                        //登录成功
+                        mView?.hideLoading()
+                        ToastUtils.show(result.toString())
+                    }
+
+                    override fun error(msg: String) {
+                        //登录失败
+                        mView?.hideLoading()
+                        ToastUtils.show(msg.toString())
+                        mView?.showErrorInfo(msg)
+                    }
+                }
+        )
+    }
+
     private var userModel: UserModel? = null
 
     private var loginListener: IUiListener? = null
