@@ -9,7 +9,6 @@ import retrofit2.http.Query
  */
 
 interface NeteaseApiService {
-
     //    @Headers({"referer: http://music.163.com"})
     @GET("top/playlist")
     fun getTopPlaylist(@Query("cat") cat: String? = null, @Query("limit") limit: Int): Observable<NeteasePlaylist>
@@ -58,9 +57,14 @@ interface NeteaseApiService {
     fun getBanner(): Observable<BannerResult>
 
     @GET("login/cellphone")
-    fun loginPhone(@Query("phone") phone: String,@Query("password") id: String): Observable<LoginInfo>
+    fun loginPhone(@Query("phone") phone: String, @Query("password") password: String): Observable<LoginInfo>
 
     @GET("login")
-    fun loginEmail(@Query("email") email: String,@Query("password") id: String): Observable<LoginInfo>
+    fun loginEmail(@Query("email") email: String, @Query("password") password: String): Observable<LoginInfo>
 
+    @GET("recommend/songs")
+    fun recommendSongs(): Observable<RecommendSongsInfo>
+
+    @GET("recommend/resource")
+    fun recommendPlaylist(): Observable<RecommendPlaylist>
 }

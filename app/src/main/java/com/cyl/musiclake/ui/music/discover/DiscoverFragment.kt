@@ -8,11 +8,13 @@ import android.util.Pair
 import android.view.View
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.ui.base.BaseFragment
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
 import kotlinx.android.synthetic.main.frag_discover.*
 
@@ -28,11 +30,15 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     private var mNeteaseAdapter: TopPlaylistAdapter? = null
     private var mArtistListAdapter: TopArtistListAdapter? = null
     private var mRadioAdapter: BaiduRadioAdapter? = null
+    private var mMusicAdapter: SongAdapter? = null
+    private var mPlaylistAdapter: TopPlaylistAdapter? = null
     private var playlist = mutableListOf<Playlist>()
     private var artists = mutableListOf<Artist>()
     private var channels = mutableListOf<Playlist>()
+    private var recommend = mutableListOf<Music>()
+    private var recommendPlaylist = mutableListOf<Playlist>()
 
-    fun toCatTagAll() {
+    private fun toCatTagAll() {
         AllCategoryFragment().apply {
             curCateName = this@DiscoverFragment.cateTagTv.text.toString()
             successListener = { result ->
@@ -80,6 +86,24 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         radioRsv?.isNestedScrollingEnabled = false
         mRadioAdapter?.bindToRecyclerView(radioRsv)
 
+        //推荐列表
+        recommendRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        mMusicAdapter = SongAdapter(recommend)
+        recommendRsv.adapter = mMusicAdapter
+        recommendRsv.isFocusable = false
+        recommendRsv.isNestedScrollingEnabled = false
+        mMusicAdapter?.bindToRecyclerView(recommendRsv)
+        //推荐列表
+        recommendPlaylistRsv.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+        mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
+        recommendPlaylistRsv.adapter = mPlaylistAdapter
+        recommendPlaylistRsv.isFocusable = false
+        recommendPlaylistRsv.isNestedScrollingEnabled = false
+        mPlaylistAdapter?.bindToRecyclerView(recommendPlaylistRsv)
+
+        mSwipeRefreshLayout?.setOnRefreshListener {
+            loadData()
+        }
     }
 
 
@@ -116,6 +140,8 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
+        mPresenter?.loadRecommendSongs()
+        mPresenter?.loadRecommendPlaylist()
     }
 
     override fun listener() {
@@ -195,6 +221,18 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         hideLoading()
         this.channels = channels
         mRadioAdapter?.setNewData(channels)
+    }
+
+    override fun showRecommendPlaylist(playlists: MutableList<Playlist>) {
+        recommendPlaylistView.visibility = if (playlists.size == 0) View.GONE else View.VISIBLE
+        this.recommendPlaylist = playlists
+        mPlaylistAdapter?.setNewData(recommendPlaylist)
+    }
+
+    override fun showRecommendSongs(songs: MutableList<Music>) {
+        recommendPlaylistView.visibility = if (songs.size == 0) View.GONE else View.VISIBLE
+        this.recommend = songs
+        mMusicAdapter?.setNewData(recommend)
     }
 
     companion object {

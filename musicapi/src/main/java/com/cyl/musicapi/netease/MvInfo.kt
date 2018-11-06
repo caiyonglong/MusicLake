@@ -42,11 +42,11 @@ data class MvInfoDetail(@SerializedName("lastRank")
                         @SerializedName("desc")
                         val desc: String = "")
 
-
-data class ArtistsItem(@SerializedName("name")
-                       val name: String = "",
-                       @SerializedName("id")
-                       val id: Int = 0)
+//
+//data class ArtistsItem(@SerializedName("name")
+//                       val name: String = "",
+//                       @SerializedName("id")
+//                       val id: Int = 0)
 
 
 data class MvDetailInfo(@SerializedName("code")

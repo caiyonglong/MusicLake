@@ -1,5 +1,6 @@
 package com.cyl.musiclake.api
 
+import com.cyl.musicapi.netease.RecommendItem
 import com.cyl.musicapi.netease.TracksItem
 import com.cyl.musicapi.playlist.Album
 import com.cyl.musicapi.playlist.ArtistsItem
@@ -71,7 +72,7 @@ object MusicUtils {
             music.albumId = it.album.id
             music.isCp = it.cp
             music.isDl = it.dl
-            it.quality?.let {quality->
+            it.quality?.let { quality ->
                 music.sq = quality.sq
                 music.hq = quality.hq
                 music.high = quality.high
@@ -125,6 +126,33 @@ object MusicUtils {
             if (it.cp != 0) {
                 musicList.add(music)
             }
+        }
+        return musicList
+    }
+
+    fun getNeteaseRecommendMusic(tracks: MutableList<RecommendItem>?): MutableList<Music> {
+        val musicList = mutableListOf<Music>()
+        tracks?.forEach {
+            val music = Music()
+            music.mid = it.id.toString()
+            music.title = it.name
+            music.type = Constants.NETEASE
+            music.album = it.album.name
+            music.isOnline = true
+            music.albumId = it.album.id.toString()
+            if (it.artists != null) {
+                var artistIds = it.artists?.get(0)?.id.toString()
+                var artistNames = it.artists?.get(0)?.name
+                for (j in 1 until it.artists?.size!! - 1) {
+                    artistIds += ",${it.artists?.get(j)?.id}"
+                    artistNames += ",${it.artists?.get(j)?.name}"
+                }
+                music.artist = artistNames
+                music.artistId = artistIds
+            }
+            music.coverUri = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
+            music.coverBig = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
+            music.coverSmall = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
         }
         return musicList
     }

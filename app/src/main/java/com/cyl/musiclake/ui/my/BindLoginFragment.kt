@@ -12,11 +12,10 @@ import kotlinx.android.synthetic.main.fragment_login.*
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class BindLoginActivity : BaseFragment<LoginPresenter>(), LoginContract.View {
+class BindLoginFragment : BaseFragment<LoginPresenter>(), LoginContract.View {
     override fun getLayoutId(): Int {
         return R.layout.fragment_login
     }
-
 
     override fun initInjector() {
         mFragmentComponent.inject(this)
@@ -35,7 +34,7 @@ class BindLoginActivity : BaseFragment<LoginPresenter>(), LoginContract.View {
                 usernameWrapper.isErrorEnabled = false
                 passwordWrapper.isErrorEnabled = false
 
-                usernameWrapper.error = "邮箱或者学号"
+                usernameWrapper.error = "邮箱或者手机号"
             } else if (!validatePassword(password)) {
                 usernameWrapper.isErrorEnabled = false
                 passwordWrapper.isErrorEnabled = false
@@ -47,7 +46,7 @@ class BindLoginActivity : BaseFragment<LoginPresenter>(), LoginContract.View {
                 //TODO:登录
                 progressBar.visibility = View.VISIBLE
 
-                mPresenter?.bindNetease(username,password)
+                mPresenter?.bindNetease(username, password)
             }
         }
     }

@@ -39,7 +39,7 @@ import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
-import com.cyl.musiclake.ui.my.BindLoginActivity;
+import com.cyl.musiclake.ui.my.BindLoginFragment;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -82,7 +82,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     CircleImageView mAvatarIcon;
     TextView mName;
     TextView mLoginTv;
-    TextView mBindTv;
+    ImageView mShowBindIv;
+    View mBindNeteaseView;
     TextView mOnlineNumTv;
 
     private PlayControlFragment controlFragment;
@@ -142,16 +143,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+    boolean isUp = false;
+
     private void initNavView() {
         View mHeaderView = mNavigationView.getHeaderView(0);
         mImageView = mHeaderView.findViewById(R.id.header_bg);
         mAvatarIcon = mHeaderView.findViewById(R.id.header_face);
         mName = mHeaderView.findViewById(R.id.header_name);
         mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
-        mBindTv = mHeaderView.findViewById(R.id.user_bind_tv);
-        mBindTv.setOnClickListener(view -> {
-            NavigationHelper.INSTANCE.navigateFragment(this,new BindLoginActivity());
+        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
+        mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
+        mBindNeteaseView.setOnClickListener(view -> {
+            mDrawerLayout.closeDrawers();
+            mBindNeteaseView.setVisibility(View.GONE);
+            NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginFragment());
         });
+        mShowBindIv.setOnClickListener(view -> {
+            if (!isUp) {
+                mBindNeteaseView.setVisibility(View.VISIBLE);
+                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
+            } else {
+                mBindNeteaseView.setVisibility(View.GONE);
+                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
+            }
+            isUp = !isUp;
+        });
+
     }
 
     @Override
@@ -380,6 +397,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
             mLoginTv.setVisibility(View.GONE);
+            mShowBindIv.setVisibility(View.VISIBLE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
         } else {
@@ -387,7 +405,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mLoginTv.setVisibility(View.GONE);
-
+            mShowBindIv.setVisibility(View.GONE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint))
                     .setIcon(R.drawable.ic_exit);
 

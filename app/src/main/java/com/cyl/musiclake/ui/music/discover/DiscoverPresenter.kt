@@ -5,6 +5,7 @@ import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
@@ -79,6 +80,32 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
                 if (result.code == 200) {
                     mView?.showBannerView(result.banners)
                 }
+            }
+
+            override fun error(msg: String) {
+                mView?.showEmptyView(msg)
+            }
+        })
+    }
+
+    fun loadRecommendSongs() {
+        val observable = NeteaseApiServiceImpl.recommendSongs()
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
+            override fun success(result: MutableList<Music>) {
+                mView?.showRecommendSongs(result)
+            }
+
+            override fun error(msg: String) {
+                mView?.showEmptyView(msg)
+            }
+        })
+    }
+
+    fun loadRecommendPlaylist() {
+        val observable = NeteaseApiServiceImpl.recommendPlaylist()
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showRecommendPlaylist(result)
             }
 
             override fun error(msg: String) {

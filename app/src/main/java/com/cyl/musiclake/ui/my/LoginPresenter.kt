@@ -34,7 +34,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     override fun bindNetease(userName: String, pwd: String) {
         if (userName.isEmpty()) return
         if (pwd.isEmpty()) return
-        val observable =NeteaseApiServiceImpl.loginPhone(userName, pwd, !userName.contains("@"))
+        val observable =NeteaseApiServiceImpl.loginPhone(userName, pwd, userName.contains("@"))
         ApiManager.request(observable,
                 object : RequestCallBack<LoginInfo> {
                     override fun success(result: LoginInfo?) {
@@ -46,7 +46,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                     override fun error(msg: String) {
                         //登录失败
                         mView?.hideLoading()
-                        ToastUtils.show(msg.toString())
+                        ToastUtils.show(msg)
                         mView?.showErrorInfo(msg)
                     }
                 }

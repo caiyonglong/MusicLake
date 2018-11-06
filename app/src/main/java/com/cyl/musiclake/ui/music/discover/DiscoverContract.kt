@@ -4,6 +4,7 @@ import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.Music
 
 
 interface DiscoverContract {
@@ -20,6 +21,9 @@ interface DiscoverContract {
         fun showRadioChannels(channels: MutableList<Playlist>)
 
         fun showBannerView(banners: MutableList<BannerBean>)
+
+        fun showRecommendPlaylist(playlists: MutableList<Playlist>)
+        fun showRecommendSongs(songs: MutableList<Music>)
 
     }
 

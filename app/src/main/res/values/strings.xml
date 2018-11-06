@@ -60,7 +60,7 @@
     <string name="my_dnamic">我的发布</string>
     <!-- Strings related to login -->
     <string name="prompt_email">邮箱</string>
-    <string name="prompt_password">教务网密码</string>
+    <string name="prompt_password">密码</string>
     <string name="action_sign_in">登录</string>
     <string name="action_sign_in_short">登录</string>
     <string name="error_invalid_email">学号异常</string>

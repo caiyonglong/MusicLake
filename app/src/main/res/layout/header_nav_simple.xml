@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:elevation="@dimen/dp_8">
+    android:elevation="@dimen/dp_8"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,7 +38,6 @@
                 android:layout_margin="@dimen/dp_8"
                 android:src="@drawable/ic_account_circle" />
 
-
             <TextView
                 android:id="@+id/header_name"
                 android:layout_width="0dp"
@@ -66,25 +65,65 @@
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 
+            <ImageView
+                android:id="@+id/show_sync_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/dp_8"
+                android:src="@drawable/ic_arrow_drop_down"
+                android:visibility="gone" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/user_bind_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/heard_netease"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_button"
-            android:lines="1"
-            android:layout_margin="@dimen/dp_16"
-            android:paddingStart="@dimen/dp_16"
-            android:paddingTop="@dimen/dp_4"
-            android:paddingEnd="@dimen/dp_16"
-            android:paddingBottom="@dimen/dp_4"
-            android:text="@string/bind_netease"
-            android:textColor="@android:color/white" />
+            android:layout_margin="@dimen/dp_8"
+            android:src="@drawable/ic_account_circle"
+            android:visibility="gone" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/heard_qq"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:layout_toStartOf="@+id/heard_netease"
+            android:src="@drawable/ic_account_circle"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
-</RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/nav_sync_netease"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/navMenuStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/dp_16"
+            android:src="@drawable/ic_sync_black" />
+
+        <TextView
+            style="@style/navMenuStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="同步网易云音乐账号"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+</LinearLayout>
 

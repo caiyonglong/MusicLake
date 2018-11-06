@@ -4,6 +4,7 @@ import com.cyl.musicapi.netease.*
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.HotSearchBean
+import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
@@ -201,12 +202,71 @@ object NeteaseApiServiceImpl {
     }
 
     /**
-     * 获取banner
+     *登录
      */
-    fun loginPhone(username: String, pwd: String, isPhone: Boolean): Observable<LoginInfo> {
-        return if (isPhone)
-            apiService.loginPhone(username, pwd)
-        else
+    fun loginPhone(username: String, pwd: String, isEmail: Boolean): Observable<LoginInfo> {
+        return if (isEmail)
             apiService.loginEmail(username, pwd)
+        else
+            apiService.loginPhone(username, pwd)
     }
+
+    /**
+     *推荐歌曲
+     */
+    fun recommendSongs(): Observable<MutableList<Music>> {
+        return apiService.recommendSongs()
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<Music>()
+                                list.addAll(MusicUtils.getNeteaseRecommendMusic(it.recommend))
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable(it.msg))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+
+    /**
+     *推荐歌单
+     */
+    fun recommendPlaylist(): Observable<MutableList<Playlist>> {
+        return apiService.recommendPlaylist()
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Playlist>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<Playlist>()
+                                it.recommend?.forEach {
+                                    val playlist = Playlist()
+                                    playlist.pid = it.id.toString()
+                                    playlist.name = it.name
+                                    playlist.coverUrl = it.coverImgUrl
+                                    playlist.des = it.description
+                                    playlist.date = it.createTime
+                                    playlist.updateDate = it.updateTime
+                                    playlist.playCount = it.playCount.toLong()
+                                    playlist.type = Constants.PLAYLIST_WY_ID
+                                    list.add(playlist)
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable(it.msg))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
 }
