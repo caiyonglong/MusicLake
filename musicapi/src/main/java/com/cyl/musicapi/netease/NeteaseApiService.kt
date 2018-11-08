@@ -3,6 +3,7 @@ package com.cyl.musicapi.netease
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 /**
  * Created by yonglong on 2017/9/11.
@@ -29,8 +30,10 @@ interface NeteaseApiService {
     /**
      * 搜索
      */
-    @GET("/search")
-    fun searchNetease(@Query("keywords") keywords: String, @Query("limit") limit: Int, @Query("offset") offset: Int, @Query("type") type: Int): Observable<SearchInfo>
+//    @GET("search")
+//    fun searchNetease(@Query("keywords") keywords: String, @Query("limit") limit: Int, @Query("offset") offset: Int, @Query("type") type: Int): Observable<SearchInfo>
+    @GET
+    fun searchNetease(@Url url: String): Observable<SearchInfo>
 
     /**
      * 获取mv排行榜
@@ -38,7 +41,7 @@ interface NeteaseApiService {
     @GET("/top/mv")
     fun getTopMv(@Query("offset") offset: Int, @Query("limit") limit: Int): Observable<MvInfo>
 
-    @GET("/mv")
+    @GET("/mv/detail")
     fun getMvDetailInfo(@Query("mvid") mvid: String): Observable<MvDetailInfo>
 
     @GET("simi/mv")

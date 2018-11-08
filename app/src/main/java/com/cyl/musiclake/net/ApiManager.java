@@ -90,15 +90,8 @@ public class ApiManager {
      */
     private static final Interceptor mLoggingInterceptor = chain -> {
         Request request = chain.request();
-        User user = UserStatus.getUserInfo();
-        if (user != null && user.getToken() != null) {
-            LogUtil.e("accesstoken 不为空" + user.getToken());
-            request.newBuilder()
-                    .addHeader("accesstoken", user.getToken())
-                    .build();
-        } else {
-            request.newBuilder().build();
-        }
+        LogUtil.e("request", request.url().toString());
+        request.newBuilder().build();
         return chain.proceed(request);
     };
 
@@ -118,7 +111,7 @@ public class ApiManager {
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                         .addInterceptor(mRewriteCacheControlInterceptor)
-//                        .addInterceptor(mLoggingInterceptor)
+                        .addInterceptor(mLoggingInterceptor)
                         .build();
             }
         }

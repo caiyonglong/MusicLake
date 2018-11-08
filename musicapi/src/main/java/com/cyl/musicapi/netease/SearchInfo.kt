@@ -19,6 +19,7 @@ data class Result(@SerializedName("hots")
                   val playlists: MutableList<PlaylistsItem>?,
                   @SerializedName("playlistCount")
                   val playlistCount: Int,
+                  @SerializedName("mvs")
                   val mvs: MutableList<MvInfoDetail>?,
                   @SerializedName("mvCount")
                   val mvCount: Int,

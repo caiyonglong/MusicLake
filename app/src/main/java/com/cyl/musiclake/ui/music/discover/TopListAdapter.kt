@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.netease.BannerBean
@@ -64,16 +65,19 @@ class TopPlaylistAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, Base
  */
 class BannerViewHolder(val activity: Activity) : MZViewHolder<BannerBean> {
     private var mImageView: ImageView? = null
+    private var mTypeTitle: TextView? = null
     override fun createView(context: Context): View {
         // 返回页面布局
         val view = LayoutInflater.from(context).inflate(R.layout.item_banner, null)
         mImageView = view.findViewById(R.id.banner_image) as ImageView
+        mTypeTitle = view.findViewById(R.id.banner_title_tv) as TextView
         return view
     }
 
     override fun onBind(context: Context, position: Int, data: BannerBean?) {
         // 数据绑定
         CoverLoader.loadImageView(context, data?.picUrl, mImageView)
+        mTypeTitle?.text = data?.typeTitle
         mImageView?.setOnClickListener {
             when {
                 data?.targetType == "3000" -> Tools.openBrowser(MusicApp.getAppContext(), data.url)

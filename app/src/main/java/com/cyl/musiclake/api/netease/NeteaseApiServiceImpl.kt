@@ -184,7 +184,8 @@ object NeteaseApiServiceImpl {
      * 搜索
      */
     fun searchMoreInfo(keywords: String, limit: Int, offset: Int, type: Int): Observable<SearchInfo> {
-        return apiService.searchNetease(keywords, limit, offset, type)
+        val url = Constants.BASE_NETEASE_URL+"search?keywords=$keywords&limit=$limit&offset=$offset&type=$type"
+        return apiService.searchNetease(url)
     }
 
     /**

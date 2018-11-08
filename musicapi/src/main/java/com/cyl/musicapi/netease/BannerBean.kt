@@ -15,7 +15,7 @@ class BannerResult(@SerializedName("banners")
 //"monitorType": "",
 //"monitorImpress": "",
 //"monitorClick": ""
-class BannerBean(@SerializedName("picUrl")
+class BannerBean(@SerializedName("imageUrl")
                    val picUrl: String,
                    @SerializedName("url")
                    val url: String,
@@ -25,6 +25,8 @@ class BannerBean(@SerializedName("picUrl")
                    val backgroundUrl: String,
                    @SerializedName("targetType")
                    val targetType: String,
+                   @SerializedName("typeTitle")
+                   val typeTitle: String,
                    @SerializedName("monitorType")
                    val monitorType: String,
                    @SerializedName("monitorImpress")
