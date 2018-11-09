@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -28,6 +29,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.HttpException;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -91,10 +93,13 @@ public class ApiManager {
     private static final Interceptor mLoggingInterceptor = chain -> {
         Request request = chain.request();
         LogUtil.e("request", request.url().toString());
-        request.newBuilder().build();
+        if (request.url().toString().contains("https://netease.api.zzsun.cc/search")) {
+            String url = URLDecoder.decode(request.url().toString(), "UTF-8");
+            LogUtil.e("request", url);
+            request.newBuilder().url(url).get().build();
+        }
         return chain.proceed(request);
     };
-
 
     /**
      * 获取OkHttpClient实例
@@ -103,6 +108,9 @@ public class ApiManager {
      */
     private static OkHttpClient getOkHttpClient() {
         if (mOkHttpClient == null) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
             synchronized (ApiManager.class) {
                 Cache cache = new Cache(new File(MusicApp.getAppContext().getCacheDir(), "HttpCache"), 1024 * 1024 * 100);
                 if (mOkHttpClient == null) mOkHttpClient = new OkHttpClient.Builder()
@@ -111,7 +119,8 @@ public class ApiManager {
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                         .addInterceptor(mRewriteCacheControlInterceptor)
-//                        .addInterceptor(mLoggingInterceptor)
+                        .addInterceptor(logging)
+                        .addInterceptor(mLoggingInterceptor)
                         .build();
             }
         }

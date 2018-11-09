@@ -88,6 +88,7 @@ public class MusicPlayerService extends Service {
     public static final String ACTION_PREV = "com.cyl.music_lake.notify.prev";// 上一首广播标志
     public static final String ACTION_PLAY_PAUSE = "com.cyl.music_lake.notify.play_state";// 播放暂停广播
     public static final String ACTION_CLOSE = "com.cyl.music_lake.notify.close";// 播放暂停广播
+    public static final String ACTION_IS_WIDGET = "ACTION_IS_WIDGET";// 播放暂停广播
 
     public static final String ACTION_LYRIC = "com.cyl.music_lake.notify.lyric";// 播放暂停广播
 
@@ -266,7 +267,7 @@ public class MusicPlayerService extends Service {
                         playErrorTimes++;
                         if (playErrorTimes < MAX_ERROR_TIMES) {
                             mMainHandler.post(() -> service.next(true));
-                        }else {
+                        } else {
                             mMainHandler.post(service::pause);
                         }
                         break;
@@ -937,7 +938,7 @@ public class MusicPlayerService extends Service {
                 EventBus.getDefault().post(new MetaChangedEvent(mPlayingMusic));
                 break;
             case PLAY_STATE_CHANGED:
-                updateWidget(PLAY_STATE_CHANGED);
+                updateWidget(ACTION_PLAY_PAUSE);
                 mediaSessionManager.updatePlaybackState();
                 EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying()));
                 break;
@@ -956,6 +957,7 @@ public class MusicPlayerService extends Service {
      */
     private void updateWidget(String action) {
         Intent intent = new Intent(action);
+        intent.putExtra(ACTION_IS_WIDGET, true);
         intent.putExtra(Extras.PLAY_STATUS, isPlaying());
         if (action.equals(META_CHANGED)) {
             intent.putExtra(Extras.SONG, mPlayingMusic);
@@ -1240,7 +1242,9 @@ public class MusicPlayerService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtil.d(TAG, intent.getAction());
-            handleCommandIntent(intent);
+            if (!intent.getBooleanExtra(ACTION_IS_WIDGET, false)) {
+                handleCommandIntent(intent);
+            }
         }
     }
 

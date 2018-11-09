@@ -30,7 +30,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
 
-    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    api 'com.squareup.okhttp3:okhttp:3.11.0'
+    api 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

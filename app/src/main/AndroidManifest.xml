@@ -190,7 +190,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.cyl.music_lake.metachanged" />
-                <action android:name="com.cyl.music_lake.play_state" />
+                <action android:name="com.cyl.music_lake.notify.play_state" />
             </intent-filter>
 
             <meta-data
