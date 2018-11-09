@@ -60,22 +60,28 @@ public class StandardWidget extends BaseWidget {
             remoteViews.setOnClickPendingIntent(R.id.iv_cover, PendingIntent.getActivity(
                     context,
                     0,
-                    NavigationHelper.INSTANCE.getNowPlayingIntent(context),
+                    NavigationHelper.INSTANCE.getNowPlayingIntent(context)
+                            .setComponent(serviceName),
                     PendingIntent.FLAG_UPDATE_CURRENT
             ));
 
             remoteViews.setOnClickPendingIntent(R.id.iv_lyric, PendingIntent.getService(
                     context,
                     0,
-                    NavigationHelper.INSTANCE.getLyricIntent(context),
+                    NavigationHelper.INSTANCE.getLyricIntent(context)
+                            .setComponent(serviceName),
                     PendingIntent.FLAG_UPDATE_CURRENT
             ));
             isFirstCreate = false;
+
         }
-        remoteViews.setImageViewResource(R.id.iv_play_pause,
-                extras.getBoolean(Extras.PLAY_STATUS, false) ? R.drawable.ic_pause : R.drawable.ic_play);
-        Music music = MusicPlayerService.getInstance().getPlayingMusic();
-        if (music != null) {
+        if (extras != null) {
+            remoteViews.setImageViewResource(R.id.iv_play_pause,
+                    extras.getBoolean(Extras.PLAY_STATUS, false) ? R.drawable.ic_pause : R.drawable.ic_play);
+        }
+        if (MusicPlayerService.getInstance() != null) {
+            Music music = MusicPlayerService.getInstance().getPlayingMusic();
+            if (music == null) return;
             remoteViews.setTextViewText(R.id.tv_title, music.getTitle() + " - " + music.getArtist());
             CoverLoader.loadImageViewByMusic(context, music, artwork -> {
                 if (artwork != null) {
@@ -87,6 +93,7 @@ public class StandardWidget extends BaseWidget {
             });
         }
     }
+
 
     @Override
     public void onEnabled(Context context) {

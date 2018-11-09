@@ -53,6 +53,8 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
+import com.cyl.musiclake.view.desktop.BaseWidget;
+import com.cyl.musiclake.view.desktop.StandardWidget;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -156,6 +158,7 @@ public class MusicPlayerService extends Service {
     //广播接收者
     ServiceReceiver mServiceReceiver;
     HeadsetReceiver mHeadsetReceiver;
+    StandardWidget mStandardWidget;
     HeadsetPlugInReceiver mHeadsetPlugInReceiver;
     IntentFilter intentFilter;
 
@@ -423,15 +426,18 @@ public class MusicPlayerService extends Service {
         intentFilter = new IntentFilter(ACTION_SERVICE);
         mServiceReceiver = new ServiceReceiver();
         mHeadsetReceiver = new HeadsetReceiver();
+        mStandardWidget = new StandardWidget();
         mHeadsetPlugInReceiver = new HeadsetPlugInReceiver();
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
+        intentFilter.addAction(META_CHANGED);
         intentFilter.addAction(SHUTDOWN);
         intentFilter.addAction(ACTION_PLAY_PAUSE);
         //注册广播
         registerReceiver(mServiceReceiver, intentFilter);
         registerReceiver(mHeadsetReceiver, intentFilter);
         registerReceiver(mHeadsetPlugInReceiver, intentFilter);
+        registerReceiver(mStandardWidget, intentFilter);
     }
 
     /**
@@ -1402,6 +1408,7 @@ public class MusicPlayerService extends Service {
         unregisterReceiver(mServiceReceiver);
         unregisterReceiver(mHeadsetReceiver);
         unregisterReceiver(mHeadsetPlugInReceiver);
+        unregisterReceiver(mStandardWidget);
 
         if (mWakeLock.isHeld())
             mWakeLock.release();

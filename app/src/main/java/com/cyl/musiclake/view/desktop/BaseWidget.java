@@ -40,6 +40,12 @@ public abstract class BaseWidget extends AppWidgetProvider {
     }
 
     @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+
+    }
+
+    @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         LogUtil.e("BaseWidget", "接收到广播-------------" + action);
