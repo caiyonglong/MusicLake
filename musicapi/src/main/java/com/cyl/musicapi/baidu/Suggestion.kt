@@ -9,3 +9,9 @@ data class Suggestion(@SerializedName("suggestion_list")
                       val query: String = "")
 
 
+data class BaiduLyric(
+    @SerializedName("lrcContent")
+    val lrcContent: String,
+    @SerializedName("title")
+    val title: String
+)

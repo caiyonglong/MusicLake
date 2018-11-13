@@ -65,3 +65,106 @@ data class BaiduSongInfo(@SerializedName("data")
                          val errorCode: Int = 0)
 
 
+
+data class SongPlayRes(
+    @SerializedName("bitrate")
+    val bitrate: Bitrate,
+    @SerializedName("error_code")
+    val errorCode: Int,
+    @SerializedName("songinfo")
+    val songinfo: SongInfo
+)
+
+data class Bitrate(
+    @SerializedName("file_bitrate")
+    val fileBitrate: Int,
+    @SerializedName("file_duration")
+    val fileDuration: Int,
+    @SerializedName("file_extension")
+    val fileExtension: String,
+    @SerializedName("file_link")
+    val fileLink: String,
+    @SerializedName("file_size")
+    val fileSize: Int,
+    @SerializedName("free")
+    val free: Int,
+    @SerializedName("hash")
+    val hash: String,
+    @SerializedName("show_link")
+    val showLink: String,
+    @SerializedName("song_file_id")
+    val songFileId: Int
+)
+
+data class SongInfo(
+    @SerializedName("album_id")
+    val albumId: String,
+    @SerializedName("album_no")
+    val albumNo: String,
+    @SerializedName("album_title")
+    val albumTitle: String,
+    @SerializedName("all_artist_id")
+    val allArtistId: String,
+    @SerializedName("all_artist_ting_uid")
+    val allArtistTingUid: String,
+    @SerializedName("all_rate")
+    val allRate: String,
+    @SerializedName("artist_id")
+    val artistId: String,
+    @SerializedName("author")
+    val author: String,
+    @SerializedName("bitrate_fee")
+    val bitrateFee: String,
+    @SerializedName("charge")
+    val charge: Int,
+    @SerializedName("copy_type")
+    val copyType: String,
+    @SerializedName("has_mv")
+    val hasMv: Int,
+    @SerializedName("has_mv_mobile")
+    val hasMvMobile: Int,
+    @SerializedName("havehigh")
+    val havehigh: Int,
+    @SerializedName("is_first_publish")
+    val isFirstPublish: Int,
+    @SerializedName("korean_bb_song")
+    val koreanBbSong: String,
+    @SerializedName("learn")
+    val learn: Int,
+    @SerializedName("lrclink")
+    val lrclink: String,
+    @SerializedName("piao_id")
+    val piaoId: String,
+    @SerializedName("pic_big")
+    val picBig: String,
+    @SerializedName("pic_huge")
+    val picHuge: String,
+    @SerializedName("pic_premium")
+    val picPremium: String,
+    @SerializedName("pic_radio")
+    val picRadio: String,
+    @SerializedName("pic_small")
+    val picSmall: String,
+    @SerializedName("play_type")
+    val playType: Int,
+    @SerializedName("relate_status")
+    val relateStatus: String,
+    @SerializedName("resource_type")
+    val resourceType: String,
+    @SerializedName("resource_type_ext")
+    val resourceTypeExt: String,
+    @SerializedName("si_proxycompany")
+    val siProxycompany: String,
+    @SerializedName("song_id")
+    val songId: String,
+    @SerializedName("song_source")
+    val songSource: String,
+    @SerializedName("special_type")
+    val specialType: Int,
+    @SerializedName("ting_uid")
+    val tingUid: String,
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("toneid")
+    val toneid: String
+)

@@ -31,12 +31,7 @@ object BaiduApiServiceImpl {
 
     //获取榜单
     fun getOnlinePlaylist(): Observable<MutableList<Playlist>> {
-        val params = HashMap<String, String>()
-        params[Constants.PARAM_METHOD] = Constants.METHOD_CATEGORY
-        params["operator"] = "1"
-        params["kflag"] = "2"
-        params["format"] = "json"
-        return apiService.getOnlinePlaylist(params).flatMap { it ->
+        return apiService.getBillPlaylist().flatMap { it ->
             val playlists = mutableListOf<Playlist>()
             for (item in it.content!!) {
                 val playlist = Playlist()
@@ -69,14 +64,7 @@ object BaiduApiServiceImpl {
      * 获取歌单歌曲
      */
     fun getOnlineSongs(type: String, limit: Int, mOffset: Int): Observable<MutableList<Music>> {
-        val params = HashMap<String, String>()
-
-        params[Constants.PARAM_METHOD] = Constants.METHOD_GET_MUSIC_LIST
-        params[Constants.PARAM_TYPE] = type
-        params[Constants.PARAM_SIZE] = limit.toString()
-        params[Constants.PARAM_OFFSET] = mOffset.toString()
-
-        return apiService.getOnlineSongs(params)
+        return apiService.getBillMusicList(type,limit,mOffset)
                 .flatMap { baiduSongList ->
                     val musicList = mutableListOf<Music>()
                     for (songInfo in baiduSongList.songList!!) {
@@ -110,10 +98,7 @@ object BaiduApiServiceImpl {
      * 搜索建议
      */
     fun getSearchSuggestion(query: String): Observable<List<String>> {
-        val params = HashMap<String, String>()
-        params[Constants.PARAM_METHOD] = Constants.METHOD_SEARCH_SUGGESTION
-        params[Constants.PARAM_QUERY] = query
-        return apiService.getSearchSuggestion(params)
+        return apiService.getSearchSuggestion(query)
                 .flatMap {
                     Observable.create(ObservableOnSubscribe<List<String>> { e ->
                         try {
@@ -130,12 +115,7 @@ object BaiduApiServiceImpl {
      * 通过百度搜索,获取MusicInfo
      */
     fun getSearchMusicInfo(query: String, limit: Int, offset: Int): Observable<MutableList<Music>> {
-        val params = mutableMapOf(
-                Constants.PARAM_QUERY to query,
-                Constants.PARAM_PAGE_SIZE to limit,
-                Constants.PARAM_PAGE_NO to offset
-        )
-        return apiService.getSearchMerge(params)
+        return apiService.queryMerge(query,offset,limit)
                 .flatMap {
                     Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
                         val musicList = mutableListOf<Music>()
@@ -304,12 +284,7 @@ object BaiduApiServiceImpl {
     }
 
     fun getArtistSongList(artistId: String, offset: Int): Observable<Artist> {
-        val params = mutableMapOf(
-                Constants.PARAM_TING_UID to artistId,
-                Constants.PARAM_OFFSET to offset,
-                Constants.PARAM_LIMIT to 20
-        )
-        return apiService.getArtistSongList(params)
+        return apiService.getArtistSongList(artistId,offset)
                 .flatMap {
                     val artist = Artist()
                     val songs = mutableListOf<Music>()
@@ -344,7 +319,7 @@ object BaiduApiServiceImpl {
     }
 
     fun getAlbumSongList(albumId: String): Observable<Album> {
-        return apiService.getAlbumSongList(albumId)
+        return apiService.getAlbumInfo(albumId)
                 .flatMap {
                     val album = Album()
                     val songs = mutableListOf<Music>()

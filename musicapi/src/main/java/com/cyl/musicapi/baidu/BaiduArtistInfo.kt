@@ -76,4 +76,65 @@ data class BaiduArtistInfo(@SerializedName("comment_num")
                            @SerializedName("ting_uid")
                            val tingUid: String = "")
 
+data class ArtistAlbumList(
+    @SerializedName("albumlist")
+    val albumlist: List<Albumlist>,
+    @SerializedName("albumnums")
+    val albumnums: String,
+    @SerializedName("havemore")
+    val havemore: Int
+)
+
+data class Albumlist(
+    @SerializedName("album_id")
+    val albumId: String,
+    @SerializedName("all_artist_id")
+    val allArtistId: String,
+    @SerializedName("all_artist_ting_uid")
+    val allArtistTingUid: Any,
+    @SerializedName("area")
+    val area: Any,
+    @SerializedName("artist_id")
+    val artistId: String,
+    @SerializedName("artist_ting_uid")
+    val artistTingUid: String,
+    @SerializedName("author")
+    val author: String,
+    @SerializedName("country")
+    val country: String,
+    @SerializedName("favorites_num")
+    val favoritesNum: Any,
+    @SerializedName("gender")
+    val gender: Any,
+    @SerializedName("hot")
+    val hot: String,
+    @SerializedName("info")
+    val info: String,
+    @SerializedName("language")
+    val language: String,
+    @SerializedName("pic_big")
+    val picBig: String,
+    @SerializedName("pic_radio")
+    val picRadio: String,
+    @SerializedName("pic_s180")
+    val picS180: String,
+    @SerializedName("pic_small")
+    val picSmall: String,
+    @SerializedName("prodcompany")
+    val prodcompany: Any,
+    @SerializedName("publishcompany")
+    val publishcompany: String,
+    @SerializedName("publishtime")
+    val publishtime: String,
+    @SerializedName("recommend_num")
+    val recommendNum: Any,
+    @SerializedName("songs_total")
+    val songsTotal: String,
+    @SerializedName("style_id")
+    val styleId: Any,
+    @SerializedName("styles")
+    val styles: String,
+    @SerializedName("title")
+    val title: String
+)
 
