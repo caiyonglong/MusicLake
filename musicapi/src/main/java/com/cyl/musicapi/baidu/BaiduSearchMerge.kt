@@ -47,7 +47,7 @@ data class ArtistListItem(@SerializedName("country")
                           val artistId: String = "")
 
 
-data class VideoInfo(@SerializedName("total")
+data class VideoInfoData(@SerializedName("total")
                      val total: Int = 0)
 
 
@@ -90,7 +90,7 @@ data class Result(@SerializedName("artist_info")
                   @SerializedName("rqt_type")
                   val rqtType: Int = 0,
                   @SerializedName("video_info")
-                  val videoInfo: VideoInfo,
+                  val videoInfo: VideoInfoData,
                   @SerializedName("topic_info")
                   val topicInfo: TopicInfo)
 

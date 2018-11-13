@@ -27,7 +27,7 @@ import butterknife.BindView;
  */
 public class AllListFragment extends BaseFragment {
 
-    private static final String TAG = "NeteasePlaylistFragment";
+    private static final String TAG = "ChartsDetailFragment";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     //适配器

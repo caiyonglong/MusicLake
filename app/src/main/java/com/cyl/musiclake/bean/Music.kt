@@ -11,8 +11,6 @@ import org.litepal.crud.LitePalSupport
  * 版本：2.5
  */
 class Music() : LitePalSupport(), Parcelable {
-
-
     // 歌曲类型 本地/网络
     var type: String? = null
     //数据库存储id
@@ -68,6 +66,8 @@ class Music() : LitePalSupport(), Parcelable {
     var hq: Boolean = false //192
     var sq: Boolean = false //320
     var high: Boolean = false //999
+    //是否有mv 0代表无，1代表有
+    var hasMv: Int = 0
 
     constructor(parcel: Parcel) : this() {
         type = parcel.readString()

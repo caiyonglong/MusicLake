@@ -9,10 +9,11 @@ import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.ChartsFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 import com.cyl.musiclake.ui.music.mv.MvFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.NeteasePlaylistFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 
 import butterknife.BindView;
 
@@ -74,7 +75,7 @@ public class MainFragment extends BaseFragment {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), "我的");
         mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), "发现");
-        mAdapter.addFragment(NeteasePlaylistFragment.Companion.newInstance(), "排行榜");
+        mAdapter.addFragment(ChartsFragment.newInstance(), "排行榜");
         mAdapter.addFragment(MvFragment.newInstance(), "MV");
 //        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);

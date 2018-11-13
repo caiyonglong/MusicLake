@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.mv;
+package com.cyl.musiclake.ui.music.charts.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,9 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.main.PageAdapter;
+import com.cyl.musiclake.ui.music.mv.MvFragment;
+import com.cyl.musiclake.ui.music.mv.MvListFragment;
+import com.cyl.musiclake.ui.music.mv.MvSearchListFragment;
 import com.cyl.musiclake.view.custom.DisplayUtils;
 
 import java.lang.reflect.Field;
@@ -25,18 +29,17 @@ import butterknife.BindView;
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-public class MvFragment extends BaseFragment<BasePresenter> {
+public class ChartsFragment extends BaseFragment<BasePresenter> {
 
-    private static final String TAG = "ChartsFragment";
+    private static final String TAG = "BaiduPlaylistFragment";
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewpager;
 
-
-    public static MvFragment newInstance() {
+    public static ChartsFragment newInstance() {
         Bundle args = new Bundle();
-        MvFragment fragment = new MvFragment();
+        ChartsFragment fragment = new ChartsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,13 +52,13 @@ public class MvFragment extends BaseFragment<BasePresenter> {
     @Override
     public void initViews() {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(MvListFragment.newInstance("rank"), "排行榜");
-        adapter.addFragment(MvListFragment.newInstance("recently"), "最近更新");
-        adapter.addFragment(MvSearchListFragment.newInstance(), "MV搜索");
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.BAIDU), "百度音乐榜单");
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), "qq音乐榜单");
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.NETEASE), "网易云音乐榜单");
         mViewpager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewpager);
         updateTabLayout(mTabLayout);
-        mViewpager.setOffscreenPageLimit(2);
+        mViewpager.setOffscreenPageLimit(3);
         mViewpager.setCurrentItem(0);
     }
 

@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.charts.activity
 import android.os.Bundle
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras
-import kotlinx.android.synthetic.main.activity_online_playlist.*
+import kotlinx.android.synthetic.main.activity_chart_playlist.*
 
 /**
  * 作者：yonglong on 2016/8/24 10:43

@@ -64,7 +64,7 @@ object BaiduApiServiceImpl {
      * 获取歌单歌曲
      */
     fun getOnlineSongs(type: String, limit: Int, mOffset: Int): Observable<MutableList<Music>> {
-        return apiService.getBillMusicList(type,limit,mOffset)
+        return apiService.getBillMusicList(type, limit, mOffset)
                 .flatMap { baiduSongList ->
                     val musicList = mutableListOf<Music>()
                     for (songInfo in baiduSongList.songList!!) {
@@ -115,7 +115,7 @@ object BaiduApiServiceImpl {
      * 通过百度搜索,获取MusicInfo
      */
     fun getSearchMusicInfo(query: String, limit: Int, offset: Int): Observable<MutableList<Music>> {
-        return apiService.queryMerge(query,offset,limit)
+        return apiService.queryMerge(query, offset, limit)
                 .flatMap {
                     Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
                         val musicList = mutableListOf<Music>()
@@ -283,8 +283,11 @@ object BaiduApiServiceImpl {
                 }
     }
 
+    /**
+     * 获取歌手列表
+     */
     fun getArtistSongList(artistId: String, offset: Int): Observable<Artist> {
-        return apiService.getArtistSongList(artistId,offset)
+        return apiService.getArtistSongList(artistId, offset)
                 .flatMap {
                     val artist = Artist()
                     val songs = mutableListOf<Music>()
@@ -318,6 +321,9 @@ object BaiduApiServiceImpl {
                 }
     }
 
+    /**
+     * 获取专辑信息
+     */
     fun getAlbumSongList(albumId: String): Observable<Album> {
         return apiService.getAlbumInfo(albumId)
                 .flatMap {

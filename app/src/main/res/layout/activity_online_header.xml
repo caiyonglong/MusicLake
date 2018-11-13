@@ -41,8 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
             android:orientation="vertical">
 
             <TextView
@@ -65,8 +65,8 @@
                 android:id="@+id/tv_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="@dimen/dp_8"
                 android:ellipsize="end"
                 android:lines="4"
                 android:textSize="14sp"

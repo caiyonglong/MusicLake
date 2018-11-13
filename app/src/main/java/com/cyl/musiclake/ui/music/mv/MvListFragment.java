@@ -24,7 +24,7 @@ import butterknife.BindView;
  */
 public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements MvListContract.View {
 
-    private static final String TAG = "BaiduPlaylistFragment";
+    private static final String TAG = "ChartsFragment";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 

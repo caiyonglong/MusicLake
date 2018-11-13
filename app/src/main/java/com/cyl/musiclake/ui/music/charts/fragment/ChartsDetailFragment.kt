@@ -21,17 +21,19 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), OnlinePlaylistContract.View {
-
+class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), OnlinePlaylistContract.View {
     //适配器
     private var mAdapter: OnlineAdapter? = null
+    private var chartsType: String = Constants.BAIDU
     private var allPlaylist = mutableListOf<Playlist>()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_recyclerview_notoolbar
     }
 
-    public override fun initViews() {
+    override fun initViews() {
+        chartsType = arguments?.getString("type") ?: Constants.BAIDU
+
         //初始化列表
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -48,11 +50,12 @@ class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Onl
     }
 
     override fun onLazyLoad() {
-        mPresenter?.loadTopList()
-        mPresenter?.loadBaiDuPlaylist()
-        mPresenter?.loadQQList()
+        when (chartsType) {
+            Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
+            Constants.QQ -> mPresenter?.loadQQList()
+            Constants.NETEASE -> mPresenter?.loadTopList()
+        }
     }
-
 
     override fun loadData() {
     }
@@ -60,15 +63,19 @@ class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Onl
     override fun listener() {
         mAdapter?.setOnItemClickListener { _, _, position ->
             val intent = Intent()
-            if (allPlaylist[position].type == Constants.PLAYLIST_BD_ID) {
-                intent.setClass(activity, BaiduMusicListActivity::class.java)
-                intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
-            } else if (allPlaylist[position].type == Constants.PLAYLIST_WY_ID) {
-                intent.setClass(activity, NeteasePlaylistActivity::class.java)
-                intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
-            } else if (allPlaylist[position].type == Constants.PLAYLIST_QQ_ID) {
-                intent.setClass(activity, NeteasePlaylistActivity::class.java)
-                intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
+            when {
+                allPlaylist[position].type == Constants.PLAYLIST_BD_ID -> {
+                    intent.setClass(activity, BaiduMusicListActivity::class.java)
+                    intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
+                }
+                allPlaylist[position].type == Constants.PLAYLIST_WY_ID -> {
+                    intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                    intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
+                }
+                allPlaylist[position].type == Constants.PLAYLIST_QQ_ID -> {
+                    intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                    intent.putExtra(Extras.PLAYLIST, allPlaylist[position])
+                }
             }
             startActivity(intent)
         }
@@ -84,10 +91,11 @@ class NeteasePlaylistFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Onl
 
     companion object {
 
-        private val TAG = "NeteasePlaylistFragment"
-        fun newInstance(): NeteasePlaylistFragment {
+        private val TAG = "ChartsDetailFragment"
+        fun newInstance(type: String): ChartsDetailFragment {
             val args = Bundle()
-            val fragment = NeteasePlaylistFragment()
+            args.putString("type", type)
+            val fragment = ChartsDetailFragment()
             fragment.arguments = args
             return fragment
         }

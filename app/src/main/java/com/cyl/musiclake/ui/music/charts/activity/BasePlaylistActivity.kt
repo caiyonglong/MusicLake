@@ -1,26 +1,27 @@
 package com.cyl.musiclake.ui.music.charts.activity
 
+import android.os.Build
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Html
 import android.view.*
 import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.base.BaseActivity
+import com.cyl.musiclake.ui.music.charts.PlaylistContract
+import com.cyl.musiclake.ui.music.charts.PlaylistPresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.cyl.musiclake.ui.music.charts.PlaylistContract
-import com.cyl.musiclake.ui.music.charts.PlaylistPresenter
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.FormatUtil
-import com.cyl.musiclake.utils.SizeUtils
-import kotlinx.android.synthetic.main.activity_online_playlist.*
+import kotlinx.android.synthetic.main.activity_chart_playlist.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -29,13 +30,6 @@ import org.jetbrains.anko.startActivity
  * 版本：2.5
  */
 abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), PlaylistContract.View {
-
-    private var mViewHeader: View? = null
-    private var mIvBackground: ImageView? = null
-    private var mIvCover: ImageView? = null
-    private var mTvTitle: TextView? = null
-    private var mTvDate: TextView? = null
-    private var mTvDesc: TextView? = null
 
     var mPlaylist: Playlist? = null
     var mAdapter: SongAdapter? = null
@@ -49,13 +43,12 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     abstract fun getToolBarTitle(): String?
 
     override fun getLayoutResID(): Int {
-        return R.layout.activity_online_playlist
+        return R.layout.activity_chart_playlist
     }
 
     abstract fun getmPlaylist(): Playlist?
 
     override fun initView() {
-        initHeaderView()
         mAdapter = SongAdapter(musicList)
         mAdapter?.setEnableLoadMore(setEnableMore())
         val layoutManager = LinearLayoutManager(this)
@@ -94,17 +87,6 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         }
     }
 
-    private fun initHeaderView() {
-        mViewHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_header, null)
-        val params = AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SizeUtils.dp2px(this, 150f))
-        mViewHeader?.layoutParams = params
-        mIvCover = mViewHeader?.findViewById(R.id.iv_cover)
-        mTvTitle = mViewHeader?.findViewById(R.id.tv_title)
-//        mTvDate = mViewHeader?.findViewById(R.id.tv_update_date)
-        mTvDesc = mViewHeader?.findViewById(R.id.tv_comment)
-        mIvBackground = mViewHeader?.findViewById(R.id.coverBgIv)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
@@ -123,18 +105,20 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     private fun showHeaderInfo(playlist: Playlist?) {
         if (playlist != null) {
             CoverLoader.loadBitmap(this, playlist.coverUrl) {
-                mIvCover?.setImageBitmap(it)
-                mIvBackground?.setImageDrawable(CoverLoader.createBlurredImageFromBitmap(it))
+                coverIv.setImageBitmap(it)
+                coverBgIv.setImageDrawable(CoverLoader.createBlurredImageFromBitmap(it))
             }
-            mTvTitle?.text = playlist.name
             if (playlist.date != 0L) {
-                mTvDate?.visibility = View.VISIBLE
-                mTvDate?.text = getString(R.string.recent_update, FormatUtil.distime(playlist.date))
+                dateTv.visibility = View.VISIBLE
+                dateTv.text = getString(R.string.recent_update, FormatUtil.distime(playlist.date))
             } else {
-                mTvDate?.visibility = View.GONE
+                dateTv.visibility = View.GONE
             }
-            mTvDesc?.text = playlist.des
-            mAdapter?.setHeaderView(mViewHeader, 0)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                descTv.text = Html.fromHtml(playlist.des, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                descTv.text = Html.fromHtml(playlist.des)
+            }
         }
     }
 

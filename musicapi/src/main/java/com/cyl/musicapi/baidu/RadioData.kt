@@ -39,6 +39,7 @@ data class RadioChannelData(@SerializedName("result")
                             val errorCode: Int = 0)
 
 
+
 data class CHSongInfo(@SerializedName("all_rate")
                       val allRate: String = "",
                       @SerializedName("charge")

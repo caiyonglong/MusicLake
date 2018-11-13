@@ -67,8 +67,8 @@ interface BaiduApiService {
      */
     @GET("$V1_TING?method=$GET_BILL_LIST")
     fun getBillMusicList(@Query("type") type: String,
-                       @Query("size") size: Int,
-                       @Query("offset") offset: Int): Observable<BaiduMusicList>
+                         @Query("size") size: Int,
+                         @Query("offset") offset: Int): Observable<BaiduMusicList>
 
 
     @GET("$V1_TING?method=$SONG_PLAY")
@@ -101,8 +101,7 @@ interface BaiduApiService {
      * 获取mv信息
      */
     @GET("$V1_TING?method=$GET_PLAY_MV")
-    fun getPlayMv(@Query("song_id") songId: String): Observable<BaiduMvResult>
-
+    fun getPlayMv(@Query("song_id") songId: String): Observable<BaiduPlayMv>
 
     @GET
     fun getTingSongInfo(@Url baseUrl: String): Observable<BaiduSongInfo>
@@ -112,12 +111,6 @@ interface BaiduApiService {
     fun downloadFile(@Url downloadUrl: String, @HeaderMap params: Map<String, String>): Observable<ResponseBody>
 
     /**
-     * 获取专辑信息
-     */
-    @GET("/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.album.getAlbumInfo&format=json")
-    fun getAlbumSongList(@Query("album_id") albumId: String): Observable<AlbumSongList>
-
-    /**
      * 获取歌手歌曲信息
      */
     @GET("$V1_TING?method=$GET_ARTISTSONGLIST")
@@ -125,18 +118,17 @@ interface BaiduApiService {
                           @Query("offset") offset: Int,
                           @Query("limits") limits: Int = PAGESIZE): Observable<ArtistMusicList>
 
-
+    /**
+     * 获取专辑信息
+     */
     @GET("$V1_TING?method=$GET_ALBUMINFO")
     fun getAlbumInfo(@Query("album_id") albumId: String): Observable<AlbumSongList>
 
+    /**
+     * 搜索歌词
+     */
     @GET("$V1_TING?method=$SONG_LRC")
     fun queryLrc(@Query("songid") songId: String): Observable<BaiduLyric>
-
-//
-//    @GET(V1_TING)
-//    fun getAlbumDetail(@Query("albumId") albumId: String,
-//                       @Query("type") method: String = "album"): Observable<SongPlayResp>
-
 
     @GET("$V1_TING?method=$GET_ARTISTALUBMLIST")
     fun getArtistAlbumList(@Query("tinguid") tinguid: String,

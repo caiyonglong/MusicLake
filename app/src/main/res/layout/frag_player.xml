@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topContainer"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="match_parent"
     android:layout_gravity="top"
+    android:fitsSystemWindows="true"
     android:background="@drawable/bg_button">
 
     <ImageView

@@ -16,7 +16,7 @@ import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.NeteasePlaylistFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 import com.cyl.musiclake.ui.music.mv.MvSearchListFragment;
 import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
@@ -24,7 +24,7 @@ import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.BaiduPlaylistFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.ChartsFragment;
 import com.cyl.musiclake.ui.download.ui.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
 import com.cyl.musiclake.ui.my.BindLoginFragment;
@@ -57,8 +57,6 @@ public interface FragmentComponent {
 
     void inject(FoldersFragment foldersFragment);
 
-    void inject(BaiduPlaylistFragment baiduPlaylistFragment);
-
     void inject(RecentlyFragment recentlyFragment);
 
     void inject(PlaylistDetailFragment playlistDetailFragment);
@@ -83,7 +81,7 @@ public interface FragmentComponent {
 
     void inject(MvListFragment mvListFragment);
 
-    void inject(@NotNull NeteasePlaylistFragment neteasePlaylistFragment);
+    void inject(@NotNull ChartsDetailFragment chartsDetailFragment);
 
     void inject(@NotNull ArtistListFragment artistListFragment);
 
