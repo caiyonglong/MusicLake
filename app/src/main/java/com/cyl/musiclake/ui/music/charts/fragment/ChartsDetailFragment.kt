@@ -50,6 +50,7 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
     }
 
     override fun onLazyLoad() {
+        showLoading()
         when (chartsType) {
             Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
             Constants.QQ -> mPresenter?.loadQQList()
@@ -85,12 +86,12 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
     }
 
     override fun showCharts(charts: MutableList<Playlist>?) {
+        hideLoading()
         charts?.let { allPlaylist.addAll(it) }
         mAdapter?.setNewData(allPlaylist)
     }
 
     companion object {
-
         private val TAG = "ChartsDetailFragment"
         fun newInstance(type: String): ChartsDetailFragment {
             val args = Bundle()

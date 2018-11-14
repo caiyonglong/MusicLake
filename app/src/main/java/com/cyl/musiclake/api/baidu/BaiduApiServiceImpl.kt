@@ -1,15 +1,13 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
+import com.cyl.musicapi.baidu.MvInfo
 import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_BIG
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_SMALL
-import com.cyl.musiclake.bean.Album
-import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.net.ApiManager
@@ -17,6 +15,7 @@ import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
+import io.reactivex.internal.operators.observable.ObservableAll
 import java.util.*
 
 /**
@@ -302,6 +301,7 @@ object BaiduApiServiceImpl {
                             music.albumId = it.albumId
                             music.isOnline = true
                             music.mid = it.songId
+                            music.hasMv = it.hasMv
                             music.coverUri = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_NORMAL)
                             music.coverSmall = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_SMALL)
                             music.coverBig = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
@@ -339,6 +339,7 @@ object BaiduApiServiceImpl {
                         music.albumId = it.albumId
                         music.isOnline = true
                         music.mid = it.songId
+                        music.hasMv = it.hasMv
                         music.coverUri = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_NORMAL)
                         music.coverSmall = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_SMALL)
                         music.coverBig = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
@@ -360,5 +361,38 @@ object BaiduApiServiceImpl {
                         }
                     })
                 }
+    }
+
+    fun getMvInfo(songId:String):Observable<MvInfoBean>{
+        return apiService.getPlayMv(songId)
+                .flatMap {
+                    val mvInfo = MvInfoBean()
+                    if (it.errorCode == 22000) {
+                        mvInfo.uri=it.result.files.x31.fileLink
+                        mvInfo.title=it.result.mvInfo.title
+                        mvInfo.mid=songId
+                        mvInfo.mvId=it.result.mvInfo.mvId
+                        mvInfo.desc=it.result.mvInfo.subtitle
+                        mvInfo.picUrl = it.result.mvInfo.thumbnail
+                        val artists = mutableListOf<Artist>()
+                        it.result.mvInfo.artistList.forEach {ar->
+                            val artist = Artist()
+                            artist.name = ar.artistName
+                            artist.artistId = ar.tingUid
+                            artist.picUrl = ar.avatarS180
+                            artists.add(artist)
+                        }
+                        mvInfo.artist = artists
+                    }
+                    Observable.create(ObservableOnSubscribe<MvInfoBean> { e ->
+                        try {
+                            e.onNext(mvInfo)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
+                }
+
     }
 }

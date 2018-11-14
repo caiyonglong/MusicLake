@@ -60,6 +60,7 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
+            android:theme="@style/MainActivityTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.my.LoginActivity"
@@ -85,7 +86,7 @@
             android:name=".ui.music.charts.activity.BaiduMusicListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue" />
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.mv.MvDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
@@ -96,7 +97,7 @@
             android:name=".ui.music.charts.activity.NeteasePlaylistActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue" />
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.map.ShakeActivity"
             android:label="@string/app_name"

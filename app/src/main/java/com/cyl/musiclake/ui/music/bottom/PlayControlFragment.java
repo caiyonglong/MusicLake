@@ -120,7 +120,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 
     @OnClick(R.id.queue_music)
     void showQueue() {
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             PlayQueueDialog.Companion.newInstance().showIt((AppCompatActivity) getActivity());
         }
     }
@@ -323,6 +323,7 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
 //        tv_duration.setText(FormatUtil.INSTANCE.formatTime(max));
     }
 
+
     @Override
     public void showNowPlaying(@Nullable Music music) {
         if (music != null) {
@@ -372,6 +373,9 @@ public class PlayControlFragment extends BaseFragment<PlayPresenter> implements 
         super.onResume();
         if (coverAnimator != null && coverAnimator.isPaused() && PlayManager.isPlaying()) {
             coverAnimator.resume();
+        }
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 

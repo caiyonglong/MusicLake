@@ -1,7 +1,9 @@
 package com.cyl.musiclake.ui.music.mv
 
 import com.cyl.musicapi.netease.*
+import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
+import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 
@@ -59,6 +61,11 @@ class MvModel {
      */
     fun searchMv(key: String, offset: Int, result: RequestCallBack<SearchInfo>?) {
         val observable = NeteaseApiServiceImpl.searchMoreInfo(key, 30, offset, 1004)
+        ApiManager.request(observable,result)
+    }
+
+    fun loadBaiduMv(songId:String,result: RequestCallBack<MvInfoBean>?){
+        val observable = BaiduApiServiceImpl.getMvInfo(songId)
         ApiManager.request(observable,result)
     }
 }
