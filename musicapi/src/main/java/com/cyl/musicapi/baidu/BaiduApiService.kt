@@ -41,7 +41,7 @@ interface BaiduApiService {
     /**
      * 获取电台列表
      */
-    @GET("$V1_TING?method=$GET_CATEGORY_LIST")
+    @GET("$V1_TING?version=5.6.5.0&method=$GET_CATEGORY_LIST")
     fun getRadioChannels(): Observable<RadioData>
 
 
@@ -94,14 +94,18 @@ interface BaiduApiService {
     /**
      * 获取电台歌曲
      */
-    @GET("$V1_TING?method=$GET_CHANNEL_SONG")
-    fun getRadioChannelSongs(@Query("channelname") channelName: String): Observable<RadioChannelData>
+    @GET("$V1_TING?version=5.6.5.0&method=$GET_CHANNEL_SONG")
+    fun getRadioChannelSongs(
+            @Query("channelname") channelName: String,
+            @Query("pn") pn: Int = 0,
+            @Query("rn") rn: Int = 10
+    ): Observable<RadioChannelData>
 
     /**
      * 获取mv信息
      */
-    @GET("$V1_TING?method=$GET_PLAY_MV")
-    fun getPlayMv(@Query("song_id") songId: String): Observable<BaiduPlayMv>
+    @GET("$V1_TING?from=qianqian&method=$GET_PLAY_MV")
+    fun getPlayMv(@Query("song_id") songId: String?): Observable<BaiduPlayMv>
 
     @GET
     fun getTingSongInfo(@Url baseUrl: String): Observable<BaiduSongInfo>

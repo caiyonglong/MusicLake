@@ -9,10 +9,12 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.api.MusicApi
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
@@ -20,6 +22,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -35,33 +38,33 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
 
         //音质图标显示
         val quality = when {
-            item.sq -> mContext.resources.getDrawable(R.drawable.sq_icon,null)
-            item.hq -> mContext.resources.getDrawable(R.drawable.hq_icon,null)
+            item.sq -> mContext.resources.getDrawable(R.drawable.sq_icon, null)
+            item.hq -> mContext.resources.getDrawable(R.drawable.hq_icon, null)
             else -> null
         }
         quality?.let {
-            quality.setBounds(0, 0, quality.minimumWidth+mContext.dip(2), quality.minimumHeight)
-            holder.getView<TextView>(R.id.tv_artist).setCompoundDrawables(quality,null,null,null)
+            quality.setBounds(0, 0, quality.minimumWidth + mContext.dip(2), quality.minimumHeight)
+            holder.getView<TextView>(R.id.tv_artist).setCompoundDrawables(quality, null, null, null)
         }
         //设置歌手专辑名
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
         //设置播放状态
         if (PlayManager.getPlayingId() == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
-            holder.setTextColor(R.id.tv_title,ContextCompat.getColor(mContext,R.color.app_green))
-            holder.setTextColor(R.id.tv_artist,ContextCompat.getColor(mContext,R.color.app_green))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.app_green))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.app_green))
 
             recyclerView.scrollToPosition(holder.adapterPosition)
         } else {
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
-            holder.setTextColor(R.id.tv_title,ContextCompat.getColor(mContext,R.color.black))
-            holder.setTextColor(R.id.tv_artist,ContextCompat.getColor(mContext,R.color.grey))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.black))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
         }
         holder.addOnClickListener(R.id.iv_more)
 
         if (item.isCp) {
-            holder.setTextColor(R.id.tv_title,ContextCompat.getColor(mContext,R.color.grey))
-            holder.setTextColor(R.id.tv_artist,ContextCompat.getColor(mContext,R.color.grey))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.grey))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
         }
 
         if (item.type == Constants.LOCAL) {

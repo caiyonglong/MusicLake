@@ -61,11 +61,11 @@ class MvModel {
      */
     fun searchMv(key: String, offset: Int, result: RequestCallBack<SearchInfo>?) {
         val observable = NeteaseApiServiceImpl.searchMoreInfo(key, 30, offset, 1004)
-        ApiManager.request(observable,result)
+        ApiManager.request(observable, result)
     }
 
-    fun loadBaiduMv(songId:String,result: RequestCallBack<MvInfoBean>?){
+    fun loadBaiduMv(songId: String?, result: RequestCallBack<MvInfoBean>?) {
         val observable = BaiduApiServiceImpl.getMvInfo(songId)
-        ApiManager.request(observable,result)
+        ApiManager.request(observable, result)
     }
 }

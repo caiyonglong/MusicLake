@@ -20,6 +20,7 @@ import com.cyl.musicapi.netease.CommentsItemInfo;
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musicapi.netease.MvInfoDetailInfo;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.bean.MvInfoBean;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
@@ -229,6 +230,11 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             startActivity(intent);
             finish();
         });
+    }
+
+    @Override
+    public void showBaiduMvDetailInfo(MvInfoBean mvInfoBean) {
+
     }
 
     @Override

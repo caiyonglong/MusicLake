@@ -363,19 +363,20 @@ object BaiduApiServiceImpl {
                 }
     }
 
-    fun getMvInfo(songId:String):Observable<MvInfoBean>{
+    fun getMvInfo(songId: String?): Observable<MvInfoBean> {
         return apiService.getPlayMv(songId)
                 .flatMap {
                     val mvInfo = MvInfoBean()
                     if (it.errorCode == 22000) {
-                        mvInfo.uri=it.result.files.x31.fileLink
-                        mvInfo.title=it.result.mvInfo.title
-                        mvInfo.mid=songId
-                        mvInfo.mvId=it.result.mvInfo.mvId
-                        mvInfo.desc=it.result.mvInfo.subtitle
+                        mvInfo.uri = it.result.files.x41?.fileLink ?: (it.result.files.x31?.fileLink
+                                ?: it.result.files.x21?.fileLink)
+                        mvInfo.title = it.result.mvInfo.title
+                        mvInfo.mid = songId
+                        mvInfo.mvId = it.result.mvInfo.mvId
+                        mvInfo.desc = it.result.mvInfo.subtitle
                         mvInfo.picUrl = it.result.mvInfo.thumbnail
                         val artists = mutableListOf<Artist>()
-                        it.result.mvInfo.artistList.forEach {ar->
+                        it.result.mvInfo.artistList.forEach { ar ->
                             val artist = Artist()
                             artist.name = ar.artistName
                             artist.artistId = ar.tingUid
