@@ -15,7 +15,6 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/bg_float_lyric" />
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +57,8 @@
         <com.cyl.musiclake.view.lyric.LyricTextView
             android:id="@+id/lyric"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/dp_40"
             android:layout_gravity="top" />
 
         <LinearLayout

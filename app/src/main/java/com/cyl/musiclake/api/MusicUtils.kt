@@ -102,30 +102,28 @@ object MusicUtils {
         val musicList = mutableListOf<Music>()
         tracks?.forEach {
             val music = Music()
-            it.id?.let { id ->
-                music.mid = id
-            }
+            music.mid = it.id.toString()
             music.title = it.name
             music.type = Constants.NETEASE
-            music.album = it.album.name
+            music.album = it.al.name
             music.isOnline = true
-            music.albumId = it.album.id.toString()
-            if (it.artists != null) {
-                var artistIds = it.artists?.get(0)?.id.toString()
-                var artistNames = it.artists?.get(0)?.name
-                for (j in 1 until it.artists?.size!! - 1) {
-                    artistIds += ",${it.artists?.get(j)?.id}"
-                    artistNames += ",${it.artists?.get(j)?.name}"
+            music.albumId = it.al.id.toString()
+            if (it.ar != null) {
+                var artistIds = it.ar?.get(0)?.id.toString()
+                var artistNames = it.ar?.get(0)?.name
+                for (j in 1 until it.ar?.size!! - 1) {
+                    artistIds += ",${it.ar?.get(j)?.id}"
+                    artistNames += ",${it.ar?.get(j)?.name}"
                 }
                 music.artist = artistNames
                 music.artistId = artistIds
             }
-            music.coverUri = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
-            music.coverBig = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
-            music.coverSmall = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
-            if (it.cp != 0) {
+            music.coverUri = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
+            music.coverBig = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
+            music.coverSmall = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
+//            if (it.cp != 0) {
                 musicList.add(music)
-            }
+//            }
         }
         return musicList
     }

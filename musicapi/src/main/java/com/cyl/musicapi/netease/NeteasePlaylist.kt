@@ -3,76 +3,6 @@ package com.cyl.musicapi.netease
 
 import com.google.gson.annotations.SerializedName
 
-data class PlaylistsItem(@SerializedName("description")
-                         val description: String = "",
-                         @SerializedName("privacy")
-                         val privacy: Int = 0,
-                         @SerializedName("trackNumberUpdateTime")
-                         val trackNumberUpdateTime: Long = 0,
-                         @SerializedName("subscribed")
-                         val subscribed: Any? = null,
-                         @SerializedName("shareCount")
-                         val shareCount: Int = 0,
-                         @SerializedName("trackCount")
-                         val trackCount: Int = 0,
-                         @SerializedName("adType")
-                         val adType: Int = 0,
-                         @SerializedName("coverImgId_str")
-                         val coverImgIdStr: String = "",
-                         @SerializedName("specialType")
-                         val specialType: Int = 0,
-                         @SerializedName("copywriter")
-                         val copywriter: String = "",
-                         @SerializedName("id")
-                         val id: Long = 0,
-                         @SerializedName("tag")
-                         val tag: String = "",
-                         @SerializedName("totalDuration")
-                         val totalDuration: Int = 0,
-                         @SerializedName("ordered")
-                         val ordered: Boolean = false,
-                         @SerializedName("creator")
-                         val creator: Creator,
-                         @SerializedName("subscribers")
-                         val subscribers: MutableList<SubscribersItem>?,
-                         @SerializedName("commentThreadId")
-                         val commentThreadId: String = "",
-                         @SerializedName("highQuality")
-                         val highQuality: Boolean = false,
-                         @SerializedName("updateTime")
-                         val updateTime: Long = 0,
-                         @SerializedName("trackUpdateTime")
-                         val trackUpdateTime: Long = 0,
-                         @SerializedName("userId")
-                         val userId: Int = 0,
-                         @SerializedName("tracks")
-                         val tracks: MutableList<TracksItem>? = null,
-                         @SerializedName("tags")
-                         val tags: MutableList<String>?,
-                         @SerializedName("anonimous")
-                         val anonimous: Boolean = false,
-                         @SerializedName("commentCount")
-                         val commentCount: Int = 0,
-                         @SerializedName("cloudTrackCount")
-                         val cloudTrackCount: Int = 0,
-                         @SerializedName("coverImgUrl")
-                         val coverImgUrl: String = "",
-                         @SerializedName("playCount")
-                         val playCount: Int = 0,
-                         @SerializedName("coverImgId")
-                         val coverImgId: Long = 0,
-                         @SerializedName("createTime")
-                         val createTime: Long = 0,
-                         @SerializedName("name")
-                         val name: String = "",
-                         @SerializedName("subscribedCount")
-                         val subscribedCount: Int = 0,
-                         @SerializedName("status")
-                         val status: Int = 0,
-                         @SerializedName("newImported")
-                         val newImported: Boolean = false)
-
-
 data class Creator(@SerializedName("birthday")
                    val birthday: Long = 0,
                    @SerializedName("detailDescription")
@@ -204,24 +134,263 @@ data class NeteasePlaylistDetail(
         @SerializedName("playlist")
         val playlist: PlaylistsItem?)
 
+data class PlaylistsItem(
+    @SerializedName("adType")
+    val adType: Int,
+    @SerializedName("cloudTrackCount")
+    val cloudTrackCount: Int,
+    @SerializedName("commentCount")
+    val commentCount: Int,
+    @SerializedName("commentThreadId")
+    val commentThreadId: String,
+    @SerializedName("coverImgId")
+    val coverImgId: Long,
+    @SerializedName("coverImgId_str")
+    val coverImgIdStr: String,
+    @SerializedName("coverImgUrl")
+    val coverImgUrl: String,
+    @SerializedName("createTime")
+    val createTime: Long,
+    @SerializedName("creator")
+    val creator: Creator,
+    @SerializedName("description")
+    val description: String,
+    @SerializedName("highQuality")
+    val highQuality: Boolean,
+    @SerializedName("id")
+    val id: Long,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("newImported")
+    val newImported: Boolean,
+    @SerializedName("ordered")
+    val ordered: Boolean,
+    @SerializedName("playCount")
+    val playCount: Int,
+    @SerializedName("privacy")
+    val privacy: Int,
+    @SerializedName("shareCount")
+    val shareCount: Int,
+    @SerializedName("specialType")
+    val specialType: Int,
+    @SerializedName("status")
+    val status: Int,
+    @SerializedName("subscribed")
+    val subscribed: Boolean,
+    @SerializedName("subscribedCount")
+    val subscribedCount: Int,
+    @SerializedName("subscribers")
+    val subscribers: MutableList<Subscriber>,
+    @SerializedName("tags")
+    val tags: MutableList<String>,
+    @SerializedName("trackCount")
+    val trackCount: Int,
+    @SerializedName("trackIds")
+    val trackIds: MutableList<TrackId>,
+    @SerializedName("trackNumberUpdateTime")
+    val trackNumberUpdateTime: Long,
+    @SerializedName("trackUpdateTime")
+    val trackUpdateTime: Long,
+    @SerializedName("tracks")
+    val tracks: MutableList<TracksItem>?,
+    @SerializedName("updateTime")
+    val updateTime: Long,
+    @SerializedName("userId")
+    val userId: Int
+)
 
-data class TracksItem(@SerializedName("id")
-                      val id: String?,
-                      @SerializedName("name")
-                      val name: String? = "",
-                      @SerializedName("ar")
-                      val artists: MutableList<ArtistsItem>?,
-                      @SerializedName("al")
-                      val album: AlbumItem,
-                      @SerializedName("publishTime")
-                      val publishTime: Long = 0,
-                      @SerializedName("cp")
-                      val cp: Int = 0)
+data class TracksItem(
+    @SerializedName("a")
+    val a: Any,
+    @SerializedName("al")
+    val al: Al,
+    @SerializedName("alia")
+    val alia: MutableList<Any>,
+    @SerializedName("ar")
+    val ar: MutableList<Ar>,
+    @SerializedName("cd")
+    val cd: String,
+    @SerializedName("cf")
+    val cf: String,
+    @SerializedName("copyright")
+    val copyright: Int,
+    @SerializedName("cp")
+    val cp: Int,
+    @SerializedName("crbt")
+    val crbt: Any,
+    @SerializedName("djId")
+    val djId: Int,
+    @SerializedName("dt")
+    val dt: Int,
+    @SerializedName("fee")
+    val fee: Int,
+    @SerializedName("ftype")
+    val ftype: Int,
+    @SerializedName("h")
+    val h: H,
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("l")
+    val l: L,
+    @SerializedName("m")
+    val m: M,
+    @SerializedName("mst")
+    val mst: Int,
+    @SerializedName("mv")
+    val mv: Int,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("no")
+    val no: Int,
+    @SerializedName("pop")
+    val pop: Int,
+    @SerializedName("pst")
+    val pst: Int,
+    @SerializedName("publishTime")
+    val publishTime: Long,
+    @SerializedName("rt")
+    val rt: Any,
+    @SerializedName("rtUrl")
+    val rtUrl: Any,
+    @SerializedName("rtUrls")
+    val rtUrls: MutableList<Any>,
+    @SerializedName("rtype")
+    val rtype: Int,
+    @SerializedName("rurl")
+    val rurl: Any,
+    @SerializedName("s_id")
+    val sId: Int,
+    @SerializedName("st")
+    val st: Int,
+    @SerializedName("t")
+    val t: Int,
+    @SerializedName("tns")
+    val tns: MutableList<String>,
+    @SerializedName("v")
+    val v: Int
+)
 
-data class AlbumItem(@SerializedName("picUrl")
-                     val picUrl: String = "",
-                     @SerializedName("name")
-                     val name: String = "",
-                     @SerializedName("id")
-                     val id: Int = 0)
+data class L(
+    @SerializedName("br")
+    val br: Int,
+    @SerializedName("fid")
+    val fid: Int,
+    @SerializedName("size")
+    val size: Int,
+    @SerializedName("vd")
+    val vd: Any?
+)
 
+data class M(
+    @SerializedName("br")
+    val br: Int,
+    @SerializedName("fid")
+    val fid: Int,
+    @SerializedName("size")
+    val size: Int,
+    @SerializedName("vd")
+    val vd: Any?
+)
+
+data class Ar(
+    @SerializedName("alias")
+    val alias: MutableList<String>,
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("tns")
+    val tns: MutableList<String>
+)
+
+data class H(
+    @SerializedName("br")
+    val br: Int,
+    @SerializedName("fid")
+    val fid: Int,
+    @SerializedName("size")
+    val size: Long,
+    @SerializedName("vd")
+    val vd: Any?
+)
+
+data class Al(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("pic")
+    val pic: Long,
+    @SerializedName("picUrl")
+    val picUrl: String,
+    @SerializedName("pic_str")
+    val picStr: String,
+    @SerializedName("tns")
+    val tns: MutableList<String>
+)
+
+data class TrackId(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("v")
+    val v: Int
+)
+
+data class Subscriber(
+    @SerializedName("accountStatus")
+    val accountStatus: Int,
+    @SerializedName("authStatus")
+    val authStatus: Int,
+    @SerializedName("authority")
+    val authority: Int,
+    @SerializedName("avatarImgId")
+    val avatarImgId: Long,
+    @SerializedName("avatarImgIdStr")
+    val avatarImgIdStr: String,
+    @SerializedName("avatarImgId_str")
+    val avatarImgIdStr1: String,
+    @SerializedName("avatarUrl")
+    val avatarUrl: String,
+    @SerializedName("backgroundImgId")
+    val backgroundImgId: Long,
+    @SerializedName("backgroundImgIdStr")
+    val backgroundImgIdStr: String,
+    @SerializedName("backgroundUrl")
+    val backgroundUrl: String,
+    @SerializedName("birthday")
+    val birthday: Long,
+    @SerializedName("city")
+    val city: Int,
+    @SerializedName("defaultAvatar")
+    val defaultAvatar: Boolean,
+    @SerializedName("description")
+    val description: String,
+    @SerializedName("detailDescription")
+    val detailDescription: String,
+    @SerializedName("djStatus")
+    val djStatus: Int,
+    @SerializedName("expertTags")
+    val expertTags: Any,
+    @SerializedName("experts")
+    val experts: Any,
+    @SerializedName("followed")
+    val followed: Boolean,
+    @SerializedName("gender")
+    val gender: Int,
+    @SerializedName("mutual")
+    val mutual: Boolean,
+    @SerializedName("nickname")
+    val nickname: String,
+    @SerializedName("province")
+    val province: Int,
+    @SerializedName("remarkName")
+    val remarkName: Any,
+    @SerializedName("signature")
+    val signature: String,
+    @SerializedName("userId")
+    val userId: Int,
+    @SerializedName("userType")
+    val userType: Int,
+    @SerializedName("vipType")
+    val vipType: Int
+)

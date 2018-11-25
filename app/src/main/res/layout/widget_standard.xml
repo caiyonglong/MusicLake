@@ -13,12 +13,9 @@
 
         <ImageView
             android:id="@+id/iv_cover"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/dp_4"
-            android:layout_marginBottom="8dp"
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_72"
+            android:layout_margin="@dimen/dp_4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_lyric"
             app:layout_constraintStart_toStartOf="parent"

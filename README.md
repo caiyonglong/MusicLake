@@ -62,3 +62,13 @@
 <img src="screenshots/preview12.png" width="225" height="400"/>
 <img src="screenshots/preview13.png" width="225" height="400"/>
 </p>
+
+## :moneybag: 捐赠
+捐赠会有两个用途
+- 请允许我买杯咖啡 :coffee:
+- 微信三方登陆（满足一定条件后开通）
+- 微信:
+<img src="screenshots/donate_wechat.png" width="225" height="225"/>
+
+- 支付宝:
+<img src="screenshots/donate_alipay.png" width="225" height="225"/>

@@ -118,9 +118,9 @@ public class ApiManager {
                         .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-                        .addInterceptor(mRewriteCacheControlInterceptor)
+//                        .addInterceptor(mRewriteCacheControlInterceptor)
                         .addInterceptor(logging)
-                        .addInterceptor(mLoggingInterceptor)
+//                        .addInterceptor(mLoggingInterceptor)
                         .build();
             }
         }
