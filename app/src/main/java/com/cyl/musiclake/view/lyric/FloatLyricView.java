@@ -17,6 +17,7 @@ import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.rtugeek.android.colorseekbar.ColorSeekBar;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
@@ -29,7 +30,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 /**
  * 桌面歌词View
  */
-public class FloatLyricView extends LinearLayout implements View.OnClickListener {
+public class FloatLyricView extends FrameLayout implements View.OnClickListener {
 
     /**
      * 记录小悬浮窗的宽度
@@ -193,14 +194,14 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
                 break;
             case MotionEvent.ACTION_UP:
                 // 如果手指离开屏幕时，xDownInScreen和xInScreen相等，且yDownInScreen和yInScreen相等，则视为触发了单击事件。
-                if (xDownInScreen == xInScreen && yDownInScreen == yInScreen) {
+                if (xDownInScreen == xInScreen && yDownInScreen == yInScreen && mMovement) {
                     toggleLyricView();
                 }
                 break;
             default:
                 break;
         }
-        return true;
+        return super.onTouchEvent(event);
     }
 
     /**
@@ -280,6 +281,8 @@ public class FloatLyricView extends LinearLayout implements View.OnClickListener
                 if (mMovement) {
                     mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN);
                 } else {
+                    toggleLyricView();
+                    ToastUtils.show("桌面歌词已锁定,请前往通知栏或者设置解锁");
                     mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK);
                 }
                 break;

@@ -65,4 +65,18 @@
         <item>#795548</item>
         <item>#607D8B</item>
     </array>
+
+
+    <string-array name="pref_quality_select">
+        <item>标准</item>
+        <item>较高</item>
+        <item>高清</item>
+        <item>无损</item>
+    </string-array>
+    <string-array name="pref_quality_select_values">
+        <item>128</item>
+        <item>192</item>
+        <item>320</item>
+        <item>999</item>
+    </string-array>
 </resources>

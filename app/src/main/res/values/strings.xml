@@ -426,5 +426,12 @@
     <string name="search_filter_cp_summary">搜索结果包含无版权歌曲</string>
     <string name="bind_username">手机号/邮箱</string>
     <string name="more_bind_tips">绑定三方账号，可同步第三方账号的歌单以及歌曲推荐</string>
+    <string name="title_activity_more_settings">Settings</string>
+
+    <string name="pref_title_select_quality">音质选择</string>
+    <string name="music_quality_default">标准</string>
+    <string name="music_quality_h">较高</string>
+    <string name="music_quality_high">高清</string>
+    <string name="music_quality_super">无损</string>
 
 </resources>

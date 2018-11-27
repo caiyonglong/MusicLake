@@ -24,6 +24,15 @@
 
     </PreferenceCategory>
 
+    <ListPreference
+        android:defaultValue="128"
+        android:entries="@array/pref_quality_select"
+        android:entryValues="@array/pref_quality_select_values"
+        android:key="quality_select"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_select_quality" />
+
     <PreferenceCategory android:title="@string/search_filter_title">
 
         <SwitchPreference

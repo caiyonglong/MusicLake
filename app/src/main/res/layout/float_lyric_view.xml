@@ -31,10 +31,10 @@
 
             <ImageButton
                 android:id="@+id/music_app"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/ic_icon" />
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_margin="@dimen/dp_8"
+                android:background="@drawable/ic_music" />
 
             <TextView
                 android:id="@+id/music_title"
@@ -57,9 +57,7 @@
         <com.cyl.musiclake.view.lyric.LyricTextView
             android:id="@+id/lyric"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/dp_40"
-            android:layout_gravity="top" />
+            android:layout_height="84dp" />
 
         <LinearLayout
             android:id="@+id/ll_layout"

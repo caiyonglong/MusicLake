@@ -60,8 +60,8 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/MainActivityTheme" />
+            android:theme="@style/MainActivityTheme"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.my.LoginActivity"
             android:screenOrientation="portrait"
@@ -89,12 +89,6 @@
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.mv.MvDetailActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullScreen" />
-        <activity
-            android:name=".ui.music.mv.BaiduMvDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -228,7 +222,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/import_playlist"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden">
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -259,8 +253,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyThemeBlue" />
         <!--<uses-library-->
-        <!--android:name="org.apache.http.legacy"-->
-        <!--android:required="false" />-->
+            <!--android:name="org.apache.http.legacy"-->
+            <!--android:required="false" />-->
 
     </application>
 

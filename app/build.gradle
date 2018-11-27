@@ -66,6 +66,7 @@ android {
 dependencies {
     api 'com.android.support.constraint:constraint-layout:1.1.3'
     api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:support-v4:27.1.1'
     testImplementation 'junit:junit:4.12'
     api "com.android.support:design:$support_version"
     api "com.android.support:appcompat-v7:$support_version"
@@ -89,7 +90,6 @@ dependencies {
     api "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
-
 
     //rxpermissions 6.0权限管理
     api 'com.github.tbruyelle:rxpermissions:0.10.2'

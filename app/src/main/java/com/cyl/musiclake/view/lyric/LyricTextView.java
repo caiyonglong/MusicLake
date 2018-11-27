@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.utils.LogUtil;
@@ -24,6 +27,7 @@ public class LyricTextView extends View {
     /***/
     private int mDefaultMargin = 12;
     private int mDefaultSize = 35; //默认歌词大小
+    private int lyricMaxWidth = 0; //默认歌词大小
     private float fontSize = 16;    // 设置字体大小
     private int fontColor = Color.RED;    // 设置字体颜色
 
@@ -54,6 +58,8 @@ public class LyricTextView extends View {
     private Context context;
 
     private String content;
+    private String nextContent;
+    private String lightLyric;
     private long mStartMillis, mCurrentMillis, mEndMillis, mDuration;
 
 
@@ -72,8 +78,26 @@ public class LyricTextView extends View {
         init(context);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    }
+
     private void init(Context context) {
         this.context = context;
+
+
+        //获取屏幕宽度
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        display.getMetrics(displayMetrics);
+        int screensWidth = displayMetrics.widthPixels;
+
+        //设置歌词的最大宽度
+        int textMaxWidth = screensWidth / 7 * 6;
+        setTextMaxWidth(textMaxWidth);
 
         mTextPaint = new Paint();
         mTextPaint.setDither(true);
@@ -116,28 +140,63 @@ public class LyricTextView extends View {
 
             if (mLyricInfo != null && mLyricInfo.songLines != null && mLyricInfo.songLines.size() > 0) {
                 mStartMillis = mLyricInfo.songLines.get(mCurrentPlayLine).start;
+                content = mLyricInfo.songLines.get(mCurrentPlayLine).content;
                 if (mCurrentPlayLine >= mLyricInfo.songLines.size() - 1) {
                     mEndMillis = PlayManager.getDuration();
+                    nextContent = "";
                 } else {
                     mEndMillis = mLyricInfo.songLines.get(mCurrentPlayLine + 1).start;
+                    nextContent = mLyricInfo.songLines.get(mCurrentPlayLine + 1).content;
                 }
-                content = mLyricInfo.songLines.get(mCurrentPlayLine).content;
-                LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + content.length());
+                lightLyric = content;
 
-                if (content.length() > 0 && mEndMillis > mStartMillis) {
+                LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + content + " length = " + content.length());
+                LogUtil.e("tmp =  " + mCurrentPlayLine + "-" + mStartMillis + "==" + mEndMillis + "==" + nextContent + " length = " + content.length());
+
+                if (mEndMillis > mStartMillis) {
                     float tipTextWidth = mTextPaint.measureText(content);
                     Paint.FontMetrics fm = mHighLightPaint.getFontMetrics();
                     int height = (int) Math.ceil(fm.descent - fm.top) + 2;
                     mShaderWidth = (float) (1.0 * (mCurrentMillis - mStartMillis) / (mEndMillis - mStartMillis)) * tipTextWidth;
-                    canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
-                            (getHeight() + height) / 2, mTextPaint);
 
-                    canvas.clipRect((getWidth() - tipTextWidth) / 2,
-                            (getHeight() + height) / 2 - height,
-                            (getWidth() - tipTextWidth) / 2 + mShaderWidth,
-                            (getHeight() + height) / 2 + height);
-                    canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
-                            (getHeight() + height) / 2, mHighLightPaint);
+                    if (mCurrentPlayLine % 2 == 0) {
+                        //绘制第一行
+                        canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
+                                (getHeight() + height) / 4, mTextPaint);
+
+                        //绘制第二行
+                        canvas.drawText(nextContent, (getWidth() - mTextPaint.measureText(nextContent)) / 2,
+                                (getHeight() + height) / 2, mTextPaint);
+
+                        //绘制高亮部分
+                        canvas.clipRect((getWidth() - tipTextWidth) / 2,
+                                (getHeight() + height) / 4 - height,
+                                (getWidth() - tipTextWidth) / 2 + mShaderWidth,
+                                (getHeight() + height) / 4 + height);
+
+                        canvas.drawText(lightLyric, (getWidth() - mTextPaint.measureText(lightLyric)) / 2,
+                                (getHeight() + height) / 4, mHighLightPaint);
+
+                    } else {
+                        //绘制第二行
+                        canvas.drawText(nextContent, (getWidth() - mTextPaint.measureText(nextContent)) / 2,
+                                (getHeight() + height) / 4, mTextPaint);
+
+                        //绘制第一行
+                        canvas.drawText(content, (getWidth() - tipTextWidth) / 2,
+                                (getHeight() + height) / 2, mTextPaint);
+
+                        //绘制高亮部分
+                        canvas.clipRect((getWidth() - tipTextWidth) / 2,
+                                (getHeight() + height) / 2 - height,
+                                (getWidth() - tipTextWidth) / 2 + mShaderWidth,
+                                (getHeight() + height) / 2 + height);
+
+                        canvas.drawText(lightLyric, (getWidth() - mTextPaint.measureText(lightLyric)) / 2,
+                                (getHeight() + height) / 2, mHighLightPaint);
+                    }
+
+
                 } else if (mCurrentPlayLine > 0) {
                     content = mLyricInfo.getSongLines().get(mCurrentPlayLine - 1).content;
                     float tipTextWidth = mTextPaint.measureText(content);
@@ -253,5 +312,15 @@ public class LyricTextView extends View {
         if (current == 0) return;
         mDuration = current;
     }
+
+    /**
+     * 设置文本最大宽度，过长则滚动显示
+     *
+     * @param textMaxWidth
+     */
+    private void setTextMaxWidth(int textMaxWidth) {
+        this.lyricMaxWidth = textMaxWidth;
+    }
+
 
 }
