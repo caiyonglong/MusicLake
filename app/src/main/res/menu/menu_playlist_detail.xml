@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_18dp"
+        android:title="@string/search"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_delete_playlist"
         android:icon="@drawable/ic_delete"
         android:title="@string/menu_delete_playlist"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_rename_playlist"
         android:icon="@drawable/ic_mode_edit"
         android:title="@string/menu_rename"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_batch"
         android:title="@string/title_batch_operate"

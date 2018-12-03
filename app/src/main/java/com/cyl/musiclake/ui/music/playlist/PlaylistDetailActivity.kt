@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.playlist
 
+import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
 import android.view.Menu
@@ -22,6 +23,7 @@ import com.cyl.musiclake.ui.deletePlaylist
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
+import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.view.ItemDecoration
@@ -201,6 +203,12 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 musicList.sortBy { it.artist }
                 mAdapter?.notifyDataSetChanged()
             }
+            R.id.action_search -> {
+                val intent = Intent(this, SearchActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                intent.putExtra("is_playlist", true)
+                startActivity(intent)
+            }
         }
         return super.onOptionsItemSelected(item)
 
@@ -253,7 +261,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 coverUrl = musicList[0].coverUri
                 type = musicList[0].type
             }
-            CoverLoader.loadBigImageView(context, coverUrl,type,album_art)
+            CoverLoader.loadBigImageView(context, coverUrl, type, album_art)
         }
         if (musicList.size == 0) {
             showEmptyState()

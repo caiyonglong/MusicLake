@@ -1,4 +1,6 @@
 apply plugin: 'com.tencent.bugly.tinker-support'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 def bakPath = file("${buildDir}/bakApk/")
 

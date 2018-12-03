@@ -74,7 +74,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
     /**
      * 过滤
      */
-
     var filter = mutableMapOf(SearchEngine.Filter.QQ to true,
             SearchEngine.Filter.XIAMI to true,
             SearchEngine.Filter.NETEASE to true,
@@ -117,8 +116,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         //获取搜索历史
         mPresenter?.getSearchHistory()
 
-        //获取热搜
-        mPresenter?.getHotSearchInfo()
+        if (!intent.getBooleanExtra("is_playlist", false)) {
+            //获取热搜
+            mPresenter?.getHotSearchInfo()
+        } else {
+        }
     }
 
     override fun initInjector() {
@@ -244,6 +246,20 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
      * @param query
      */
     private fun searchLocal(query: String?) {
+        if (query != null && query.isNotEmpty()) {
+            searchResults.clear()
+            queryString = query
+            updateHistoryPanel(false)
+            mPresenter?.searchLocal(query)
+            mAdapter.setOnLoadMoreListener(null, resultListRcv)
+        }
+    }
+    /**
+     * 歌单搜索
+     *
+     * @param query
+     */
+    private fun searchPlaylistSong(query: String?) {
         if (query != null && query.isNotEmpty()) {
             searchResults.clear()
             queryString = query

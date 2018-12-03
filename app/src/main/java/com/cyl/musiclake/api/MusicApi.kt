@@ -9,6 +9,7 @@ import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -55,7 +56,20 @@ object MusicApi {
      *
      */
     fun getMusicInfo(music: Music): Observable<Music> {
-        val cachePath = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + "(" + music.quality + ")"
+        //获取默认音质
+        var quality = SPUtils.getAnyByKey(Constants.SP_KEY_SONG_QUALITY, music.quality)
+        //判断是否当前音质
+        if (music.quality != quality) {
+            quality = when {
+                quality >= 999000 && music.sq -> 999000
+                quality >= 320000 && music.hq -> 320000
+                quality >= 192000 && music.high -> 192000
+                quality >= 128000 -> 128000
+                else -> 128000
+            }
+        }
+
+        val cachePath = FileUtils.getMusicCacheDir() + music.artist + " - " + music.title + "(" + quality + ")"
         val downloadPath = FileUtils.getMusicDir() + music.artist + " - " + music.title + ".mp3"
         if (FileUtils.exists(cachePath)) {
             return Observable.create {
@@ -92,7 +106,8 @@ object MusicApi {
                 })
             }
             else -> {
-                MusicApiServiceImpl.getMusicUrl(music.type?:Constants.LOCAL, music.mid?:"").flatMap { result ->
+                MusicApiServiceImpl.getMusicUrl(music.type ?: Constants.LOCAL, music.mid
+                        ?: "",quality).flatMap { result ->
                     Observable.create(ObservableOnSubscribe<Music> {
                         music.uri = result
                         if (music.uri != null) {

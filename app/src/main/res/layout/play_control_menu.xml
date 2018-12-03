@@ -9,7 +9,7 @@
     android:elevation="5dp">
 
     <ProgressBar
-        android:id="@+id/song_progress_normal"
+        android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -25,7 +25,7 @@
         android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/song_list_rcv"
+            android:id="@+id/bottomPlayRcv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -74,7 +74,7 @@
         </LinearLayout>
 
         <com.cyl.musiclake.view.PlayPauseView
-            android:id="@+id/play_pause"
+            android:id="@+id/playPauseView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:btn_color="@color/colorPrimary"
@@ -86,7 +86,7 @@
 
 
         <ImageButton
-            android:id="@+id/queue_music"
+            android:id="@+id/playQueueIv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:tint="@color/colorPrimary"

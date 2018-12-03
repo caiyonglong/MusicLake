@@ -51,6 +51,7 @@ public class Constants {
     public static final String SP_KEY_SEARCH_FILTER_XIAMI = "sp_xiami";
     public static final String SP_KEY_SEARCH_FILTER_BAIDU = "sp_baidu";
     public static final String SP_KEY_SEARCH_FILTER_ = "sp_netease";
+    public static final String SP_KEY_SONG_QUALITY = "song_quality";
 
     //歌单操作
     public static final int PLAYLIST_ADD = 0;

@@ -1072,7 +1072,7 @@ public class MusicPlayerService extends Service {
             mNotificationPostTime = System.currentTimeMillis();
         }
         mNotificationBuilder = new Builder(this, initChannelId())
-                .setSmallIcon(R.drawable.ic_icon)
+                .setSmallIcon(R.drawable.ic_music)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTitle())
                 .setContentText(text)

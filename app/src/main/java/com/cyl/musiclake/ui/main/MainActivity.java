@@ -69,8 +69,8 @@ import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.sliding_layout)
-    public SlidingUpPanelLayout mSlidingUpPaneLayout;
+    //    @BindView(R.id.sliding_layout)
+//    public SlidingUpPanelLayout mSlidingUpPaneLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
@@ -86,7 +86,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     View mBindNeteaseView;
     TextView mOnlineNumTv;
 
-    private PlayControlFragment controlFragment;
     private static final String TAG = "MainActivity";
 
     private boolean mIsCountDown = false;
@@ -133,13 +132,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void updatePlaySongInfo(Music music) {
-        if (mSlidingUpPaneLayout == null) return;
+//        if (mSlidingUpPaneLayout == null) return;
         if (music != null) {
-            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
+//            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
             CoverLoader.loadBigImageView(this, music, mImageView);
         } else {
-            mSlidingUpPaneLayout.setPanelHeight(0);
-            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+//            mSlidingUpPaneLayout.setPanelHeight(0);
+//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
     }
 
@@ -174,14 +173,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void initData() {
         String from = getIntent().getAction();
-        if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
-            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-        }
+//        if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
+//            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
+//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+//        }
         updatePlaySongInfo(PlayManager.getPlayingMusic());
         //加载主fragment
         navigateLibrary.run();
-        navigatePlay.run();
     }
 
     @Override
@@ -191,31 +189,31 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void listener() {
-        mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                LogUtil.d(TAG, "onPanelStateChanged " + newState);
-                if (newState == PanelState.EXPANDED) {
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                } else {
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                }
-            }
-
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
-                if (controlFragment != null && controlFragment.topContainer != null) {
-                    controlFragment.topContainer.setAlpha(1 - slideOffset * 2);
-                    if (controlFragment.topContainer.getAlpha() < 0) {
-                        controlFragment.topContainer.setVisibility(View.GONE);
-                    } else {
-                        controlFragment.topContainer.setVisibility(View.VISIBLE);
-                        mSlidingUpPaneLayout.setTouchEnabled(true);
-                    }
-                }
-            }
-        });
+//        mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+//            @Override
+//            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+//                LogUtil.d(TAG, "onPanelStateChanged " + newState);
+//                if (newState == PanelState.EXPANDED) {
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                } else {
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                }
+//            }
+//
+//            @Override
+//            public void onPanelSlide(View panel, float slideOffset) {
+//                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
+////                if (controlFragment != null && controlFragment.getTopContainer() != null) {
+////                    controlFragment.getTopContainer().setAlpha(1 - slideOffset * 2);
+////                    if (controlFragment.getTopContainer().getAlpha() < 0) {
+////                        controlFragment.getTopContainer().setVisibility(View.GONE);
+////                    } else {
+////                        controlFragment.getTopContainer().setVisibility(View.VISIBLE);
+////                        mSlidingUpPaneLayout.setTouchEnabled(true);
+////                    }
+////                }
+//            }
+//        });
 
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -320,20 +318,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     };
 
-    private Runnable navigatePlay = () -> {
-        controlFragment = PlayControlFragment.newInstance();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.controls_container, controlFragment).commitAllowingStateLoss();
-    };
-
-
     //返回键
     @Override
     public void onBackPressed() {
-        if (mSlidingUpPaneLayout != null &&
-                (mSlidingUpPaneLayout.getPanelState() == PanelState.EXPANDED || mSlidingUpPaneLayout.getPanelState() == PanelState.ANCHORED)) {
-            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+//        if (mSlidingUpPaneLayout != null &&
+//                (mSlidingUpPaneLayout.getPanelState() == PanelState.EXPANDED || mSlidingUpPaneLayout.getPanelState() == PanelState.ANCHORED)) {
+//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
+//        } else
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         } else if (isNavigatingMain()) {
             Intent home = new Intent(Intent.ACTION_MAIN);
@@ -446,12 +438,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             setPlaylistQueueChange();
         } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
             Music music = PlayManager.getPlayingMusic();
-            if (controlFragment == null) return;
-            if (music != null && music.isLove()) {
-                controlFragment.mIvLove.setImageResource(R.drawable.item_favorite_love);
-            } else if (music != null && !music.isLove()) {
-                controlFragment.mIvLove.setImageResource(R.drawable.item_favorite);
-            }
+//            if (music != null && music.isLove()) {
+//                controlFragment.getMIvLove().setImageResource(R.drawable.item_favorite_love);
+//            } else if (music != null && !music.isLove()) {
+//                controlFragment.getMIvLove().setImageResource(R.drawable.item_favorite);
+//            }
         }
     }
 

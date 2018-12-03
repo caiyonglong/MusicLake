@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    sothree:umanoFadeColor="@android:color/transparent"
-    sothree:umanoPanelHeight="56dp"
-    sothree:umanoShadowHeight="5dp">
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_weight="1"
+        android:layout_height="0dp" />
 
-    <FrameLayout
+    <fragment
         android:id="@+id/controls_container"
+        android:name="com.cyl.musiclake.ui.music.bottom.PlayControlFragment"
         android:layout_width="match_parent"
-        android:layout_height="250dp" />
-
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        android:layout_height="56dp" />
+</LinearLayout>
