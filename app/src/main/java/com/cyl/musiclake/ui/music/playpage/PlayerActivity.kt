@@ -41,6 +41,7 @@ import com.cyl.musiclake.view.DepthPageTransformer
 import com.cyl.musiclake.view.LyricView
 import com.cyl.musiclake.view.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
+import kotlinx.android.synthetic.main.play_control_menu.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
@@ -218,12 +219,12 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun updatePlayStatus(isPlaying: Boolean) {
-        if (isPlaying) {
+        if (isPlaying&&!playPauseIv.isPlaying) {
             playPauseIv.play()
             coverAnimator?.isStarted?.let {
                 if (it) coverAnimator?.resume() else coverAnimator?.start()
             }
-        } else {
+        } else if (!isPlaying&&playPauseIv.isPlaying){
             coverAnimator?.pause()
             playPauseIv.pause()
         }

@@ -47,7 +47,7 @@ public class SPUtils {
     }
 
     public static long getPosition() {
-        return getAnyByKey(POSITION, 0);
+        return getAnyByKey(POSITION, 0L);
     }
 
     public static void savePosition(long id) {

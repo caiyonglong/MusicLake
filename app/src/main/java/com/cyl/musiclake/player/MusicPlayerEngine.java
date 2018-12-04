@@ -195,9 +195,11 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
-        mIsPrepared = true;
-        Message message = mHandler.obtainMessage(PLAYER_PREPARED);
-        mHandler.sendMessage(message);
+        if (!mIsPrepared) {
+            mIsPrepared = true;
+            Message message = mHandler.obtainMessage(PLAYER_PREPARED);
+            mHandler.sendMessage(message);
+        }
     }
 
     private class TrackErrorInfo {

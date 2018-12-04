@@ -256,7 +256,7 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完毕且暂时没有下一首
                         if (PlayQueueManager.INSTANCE.getPlayModeId() == PlayQueueManager.PLAY_MODE_REPEAT) {
-                            service.seekTo(0);
+                            service.seekTo(0,false);
                             mMainHandler.post(service::play);
                         } else {
                             mMainHandler.post(() -> service.next(true));
@@ -395,6 +395,7 @@ public class MusicPlayerService extends Service {
         if (mPlayingPos >= 0 && mPlayingPos < mPlayQueue.size()) {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
             updateNotification(false);
+            seekTo(SPUtils.getPosition(),true);
             notifyChange(META_CHANGED);
         }
         notifyChange(PLAY_QUEUE_CHANGE);
@@ -806,9 +807,16 @@ public class MusicPlayerService extends Service {
     /**
      * 跳到输入的进度
      */
-    public void seekTo(int pos) {
+    public void seekTo(long pos,boolean isInit) {
+        LogUtil.e(TAG, "seekTo " + pos);
         if (mPlayer != null && mPlayer.isInitialized() && mPlayingMusic != null) {
             mPlayer.seek(pos);
+            LogUtil.e(TAG, "seekTo 成功");
+        } else if (isInit){
+//            playCurrentAndNext();
+//            mPlayer.seek(pos);
+//            mPlayer.pause();
+            LogUtil.e(TAG, "seekTo 失败");
         }
     }
 
@@ -840,6 +848,8 @@ public class MusicPlayerService extends Service {
         SPUtils.setPlayPosition(mPlayingPos);
         //保存歌曲进度
         SPUtils.savePosition(getCurrentPosition());
+
+        LogUtil.e(TAG, "save 保存歌曲id=" + mPlayingPos + " 歌曲进度= " + getCurrentPosition());
         notifyChange(PLAY_QUEUE_CHANGE);
     }
 
@@ -934,7 +944,7 @@ public class MusicPlayerService extends Service {
             case META_CHANGED:
                 mFloatLyricViewManager.loadLyric(mPlayingMusic);
                 updateWidget(META_CHANGED);
-                notifyChange(PLAY_STATE_CHANGED);
+//                notifyChange(PLAY_STATE_CHANGED);
                 EventBus.getDefault().post(new MetaChangedEvent(mPlayingMusic));
                 break;
             case PLAY_STATE_CHANGED:
@@ -1280,7 +1290,7 @@ public class MusicPlayerService extends Service {
         } else if (CMD_STOP.equals(command)) {
             pause();
             mPausedByTransientLossOfFocus = false;
-            seekTo(0);
+            seekTo(0,false);
             releaseServiceUiAndStop();
         } else if (ACTION_LYRIC.equals(action)) {
             startFloatLyric();

@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.bottom
 import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -111,9 +112,9 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
 
     override fun updatePlayStatus(isPlaying: Boolean) {
-        if (isPlaying) {
+        if (isPlaying&&!playPauseView.isPlaying) {
             playPauseView.play()
-        } else {
+        } else if (!isPlaying&&playPauseView.isPlaying){
             playPauseView.pause()
         }
     }
@@ -145,6 +146,12 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMetaChangedEvent(event: MetaChangedEvent) {
         mPresenter?.updateNowPlaying(event.music, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            progressBar.setProgress(PlayManager.getCurrentPosition(),true)
+        }else{
+            progressBar.progress = PlayManager.getCurrentPosition()
+        }
+        progressBar.max = PlayManager.getDuration()
         initSongList()
     }
 
