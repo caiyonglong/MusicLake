@@ -19,7 +19,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.view.NoticeView
+import com.cyl.musiclake.ui.widget.NoticeView
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
 import org.jetbrains.anko.startActivity

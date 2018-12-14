@@ -265,4 +265,9 @@ public class Constants {
 
     //    public static final String SOCKET_URL = "http://39.108.214.63:15003";
     public static final String SOCKET_URL = "https://socket.zzsun.cc";
+
+    /**
+     * 第一次进入应用
+     */
+    public static final String SP_KEY_FIRST_COMING = "first_coming";
 }

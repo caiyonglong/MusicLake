@@ -26,7 +26,7 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.view.ItemDecoration
+import com.cyl.musiclake.ui.widget.ItemDecoration
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus

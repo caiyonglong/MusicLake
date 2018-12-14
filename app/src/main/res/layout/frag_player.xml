@@ -65,7 +65,7 @@
 
         </LinearLayout>
 
-        <com.cyl.musiclake.view.LyricView
+        <com.cyl.musiclake.ui.widget.LyricView
             android:id="@+id/lyricView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -164,7 +164,7 @@
                         android:layout_margin="5dp" />
 
 
-                    <com.cyl.musiclake.view.PlayPauseView
+                    <com.cyl.musiclake.ui.widget.PlayPauseView
                         android:id="@+id/playOrPause"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.view.lyric;
+package com.cyl.musiclake.ui.widget.lyric;
 
 import java.util.List;
 

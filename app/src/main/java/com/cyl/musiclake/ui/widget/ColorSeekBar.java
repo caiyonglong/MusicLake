@@ -1,4 +1,4 @@
-//package com.cyl.musiclake.view;
+//package com.cyl.musiclake.ui.view;
 //
 //import android.annotation.TargetApi;
 //import android.content.Context;

@@ -16,10 +16,10 @@ import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.view.LyricView;
-import com.cyl.musiclake.view.lyric.FloatLyricView;
-import com.cyl.musiclake.view.lyric.LyricInfo;
-import com.cyl.musiclake.view.lyric.LyricParseUtils;
+import com.cyl.musiclake.ui.widget.LyricView;
+import com.cyl.musiclake.ui.widget.lyric.FloatLyricView;
+import com.cyl.musiclake.ui.widget.lyric.LyricInfo;
+import com.cyl.musiclake.ui.widget.lyric.LyricParseUtils;
 
 import java.util.ArrayList;
 import java.util.List;

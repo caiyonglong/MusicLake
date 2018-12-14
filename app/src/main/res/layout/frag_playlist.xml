@@ -7,7 +7,7 @@
 
     <include layout="@layout/item_toolbar" />
 
-    <com.cyl.musiclake.view.MultiViewPager
+    <com.cyl.musiclake.ui.widget.MultiViewPager
         android:id="@+id/mul_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

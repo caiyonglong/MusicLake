@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -30,6 +31,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private PreferenceScreen mPreferenceCache;
     public SwitchPreference mWifiSwitch, mSocketSwitch;
     public CheckBoxPreference mLyricCheckBox;
+    public MultiSelectListPreference multiSelectListPreference;
 
     public static SettingsFragment newInstance() {
         Bundle args = new Bundle();
@@ -76,6 +78,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
         mSocketSwitch = (SwitchPreference) findPreference("key_socket");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
+        multiSelectListPreference = (MultiSelectListPreference) findPreference("key_search_filter");
 
         mPreferenceCache.setOnPreferenceClickListener(this);
         mSocketSwitch.setOnPreferenceClickListener(this);

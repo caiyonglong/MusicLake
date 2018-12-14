@@ -32,7 +32,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.view.ItemDecoration;
+import com.cyl.musiclake.ui.widget.ItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;

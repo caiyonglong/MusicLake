@@ -11,8 +11,11 @@ import android.support.design.widget.Snackbar;
 import android.widget.ImageView;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
+import com.cyl.musiclake.utils.Tools;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
@@ -57,7 +60,7 @@ public class WelcomeActivity extends BaseActivity {
         if (SystemUtils.isMarshmallow()) {
             checkPermissionAndThenLoad();
         } else {
-            initPlayQueue();
+            initWelcome();
         }
     }
 
@@ -74,7 +77,7 @@ public class WelcomeActivity extends BaseActivity {
         rxPermissions.request(mPermissionList)
                 .subscribe(granted -> {
                     if (granted) {
-                        initPlayQueue();
+                        initWelcome();
                     } else {
                         Snackbar.make(container, getResources().getString(R.string.permission_hint),
                                 Snackbar.LENGTH_INDEFINITE)
@@ -86,9 +89,14 @@ public class WelcomeActivity extends BaseActivity {
     /**
      * 检查服务是否运行
      */
-    private void initPlayQueue() {
-        getCoverImageUrl();
-
+    private void initWelcome() {
+        boolean isFirst = SPUtils.getAnyByKey(Constants.SP_KEY_FIRST_COMING, true);
+        if (isFirst) {
+            getCoverImageUrl();
+            SPUtils.putAnyCommit(Constants.SP_KEY_FIRST_COMING, false);
+        } else {
+            startMainActivity();
+        }
     }
 
     /**
@@ -103,33 +111,6 @@ public class WelcomeActivity extends BaseActivity {
 
     private void getCoverImageUrl() {
         mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 3000);
-//        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(heardCoverIv, "colorFilter",
-//                getResources().getColor(R.color.app_green),
-//                getResources().getColor(R.color.app_yellow),
-//                getResources().getColor(R.color.app_red),
-//                getResources().getColor(R.color.app_green_dark),
-//                getResources().getColor(R.color.app_blue));
-//        objectAnimator.setEvaluator(new ArgbEvaluator());
-//
-//        objectAnimator.setDuration(2000);
-//        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(heardCoverIv, "y", 0f, heardCoverIv.getTop());
-//
-//        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(heardCoverIv, "scaleX", 0f, 1f);
-//        objectAnimator2.addUpdateListener(valueAnimator -> {
-//            float value = (float) valueAnimator.getAnimatedValue();
-//            heardCoverIv.setScaleY(value);
-//            heardCoverIv.setRotation(value);
-//        });
-//        objectAnimator2.setDuration(2000);
-//        objectAnimator1.setDuration(2000);
-//
-//
-//        AnimatorSet animatorSet = new AnimatorSet();
-//        animatorSet.play(objectAnimator)
-//                .with(objectAnimator2)
-//                .with(objectAnimator1);
-//        animatorSet.start();
-
     }
 
 }

@@ -113,13 +113,13 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.cyl.musiclake.view.MultiTouchViewPager
+        <com.cyl.musiclake.ui.widget.MultiTouchViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-        </com.cyl.musiclake.view.MultiTouchViewPager>
+        </com.cyl.musiclake.ui.widget.MultiTouchViewPager>
 
         <LinearLayout
             android:id="@+id/detailView"
@@ -209,7 +209,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="@dimen/dp_8" />
 
-                    <com.cyl.musiclake.view.PlayPauseView
+                    <com.cyl.musiclake.ui.widget.PlayPauseView
                         android:id="@+id/playPauseIv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

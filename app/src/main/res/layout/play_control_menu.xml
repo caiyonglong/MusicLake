@@ -73,7 +73,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <com.cyl.musiclake.view.PlayPauseView
+        <com.cyl.musiclake.ui.widget.PlayPauseView
             android:id="@+id/playPauseView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

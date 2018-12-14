@@ -79,4 +79,21 @@
         <item>320</item>
         <item>999</item>
     </string-array>
+
+    <string-array name="pref_search_filter_select">
+        <item>qq音乐</item>
+        <item>虾米音乐</item>
+        <item>网易云音乐</item>
+        <item>百度音乐</item>
+        <item>去重</item>
+        <item>包含无版权</item>
+    </string-array>
+    <string-array name="pref_search_filter_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
 </resources>

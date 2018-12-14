@@ -17,7 +17,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract;
 import com.cyl.musiclake.ui.music.local.presenter.FolderSongPresenter;
-import com.cyl.musiclake.view.ItemDecoration;
+import com.cyl.musiclake.ui.widget.ItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

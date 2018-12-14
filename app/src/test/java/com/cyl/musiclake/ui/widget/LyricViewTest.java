@@ -1,7 +1,7 @@
-package com.cyl.musiclake.view;
+package com.cyl.musiclake.ui.widget;
 
-import com.cyl.musiclake.view.lyric.LyricInfo;
-import com.cyl.musiclake.view.lyric.LyricParseUtils;
+import com.cyl.musiclake.ui.widget.lyric.LyricInfo;
+import com.cyl.musiclake.ui.widget.lyric.LyricParseUtils;
 
 import junit.framework.TestCase;
 

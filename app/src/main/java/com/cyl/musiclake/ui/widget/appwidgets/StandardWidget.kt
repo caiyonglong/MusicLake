@@ -1,4 +1,4 @@
-package com.cyl.musiclake.view.desktop
+package com.cyl.musiclake.ui.widget.appwidgets
 
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -22,7 +22,7 @@ class StandardWidget : BaseWidget() {
 
     private var isFirstCreate = true
 
-    internal override fun getLayoutRes(): Int {
+    override fun getLayoutRes(): Int {
         return R.layout.widget_standard
     }
 
@@ -31,7 +31,7 @@ class StandardWidget : BaseWidget() {
         if (isFirstCreate) {
             remoteViews.setOnClickPendingIntent(R.id.iv_next, PendingIntent.getService(
                     context,
-                    BaseWidget.REQUEST_NEXT,
+                    REQUEST_NEXT,
                     Intent(context, MusicPlayerService::class.java)
                             .setAction(MusicPlayerService.ACTION_NEXT)
                             .setComponent(serviceName),
@@ -39,7 +39,7 @@ class StandardWidget : BaseWidget() {
             ))
             remoteViews.setOnClickPendingIntent(R.id.iv_prev, PendingIntent.getService(
                     context,
-                    BaseWidget.REQUEST_PREV,
+                    REQUEST_PREV,
                     Intent(context, MusicPlayerService::class.java)
                             .setAction(MusicPlayerService.ACTION_PREV)
                             .setComponent(serviceName),
@@ -47,7 +47,7 @@ class StandardWidget : BaseWidget() {
             ))
             remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, PendingIntent.getService(
                     context,
-                    BaseWidget.REQUEST_PLAYPAUSE,
+                    REQUEST_PLAYPAUSE,
                     Intent(context, MusicPlayerService::class.java)
                             .setAction(MusicPlayerService.ACTION_PLAY_PAUSE)
                             .setComponent(serviceName),

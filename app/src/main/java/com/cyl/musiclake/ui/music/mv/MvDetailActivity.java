@@ -26,7 +26,7 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.bean.Artist;
-import com.cyl.musiclake.view.custom.DisplayUtils;
+import com.cyl.musiclake.utils.DisplayUtils;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.exoplayer2.Player;

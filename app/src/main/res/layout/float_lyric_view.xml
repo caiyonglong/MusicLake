@@ -54,7 +54,7 @@
 
         </LinearLayout>
 
-        <com.cyl.musiclake.view.lyric.LyricTextView
+        <com.cyl.musiclake.ui.widget.lyric.LyricTextView
             android:id="@+id/lyric"
             android:layout_width="match_parent"
             android:layout_height="84dp" />

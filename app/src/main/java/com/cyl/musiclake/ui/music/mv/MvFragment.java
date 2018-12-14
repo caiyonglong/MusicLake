@@ -13,7 +13,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.main.PageAdapter;
-import com.cyl.musiclake.view.custom.DisplayUtils;
+import com.cyl.musiclake.utils.DisplayUtils;
 
 import java.lang.reflect.Field;
 

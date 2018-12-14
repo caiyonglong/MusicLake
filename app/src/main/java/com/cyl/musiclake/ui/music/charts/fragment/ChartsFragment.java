@@ -14,10 +14,7 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.main.PageAdapter;
-import com.cyl.musiclake.ui.music.mv.MvFragment;
-import com.cyl.musiclake.ui.music.mv.MvListFragment;
-import com.cyl.musiclake.ui.music.mv.MvSearchListFragment;
-import com.cyl.musiclake.view.custom.DisplayUtils;
+import com.cyl.musiclake.utils.DisplayUtils;
 
 import java.lang.reflect.Field;
 

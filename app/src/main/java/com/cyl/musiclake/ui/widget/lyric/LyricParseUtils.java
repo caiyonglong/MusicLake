@@ -1,7 +1,7 @@
-package com.cyl.musiclake.view.lyric;
+package com.cyl.musiclake.ui.widget.lyric;
 
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.view.lyric.LyricInfo.LineInfo;
+import com.cyl.musiclake.ui.widget.lyric.LyricInfo.LineInfo;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

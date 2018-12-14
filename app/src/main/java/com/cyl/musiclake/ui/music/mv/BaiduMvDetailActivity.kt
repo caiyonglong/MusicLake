@@ -14,7 +14,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
-import com.cyl.musiclake.view.custom.DisplayUtils
+import com.cyl.musiclake.utils.DisplayUtils
 import com.devbrackets.android.exomedia.listener.OnPreparedListener
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.activity_mv_detail.*

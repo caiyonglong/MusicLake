@@ -37,11 +37,10 @@ import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.Tools
-import com.cyl.musiclake.view.DepthPageTransformer
-import com.cyl.musiclake.view.LyricView
-import com.cyl.musiclake.view.MultiTouchViewPager
+import com.cyl.musiclake.ui.widget.DepthPageTransformer
+import com.cyl.musiclake.ui.widget.LyricView
+import com.cyl.musiclake.ui.widget.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
-import kotlinx.android.synthetic.main.play_control_menu.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity

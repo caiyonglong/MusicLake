@@ -1,4 +1,4 @@
-package com.cyl.musiclake.view;
+package com.cyl.musiclake.ui.widget;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;

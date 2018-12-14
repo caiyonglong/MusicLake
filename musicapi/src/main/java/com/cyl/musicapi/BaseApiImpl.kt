@@ -7,6 +7,8 @@ import com.cyl.musicapi.bean.*
 import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.WebViewClient
 import org.json.JSONArray
 import org.json.JSONObject
 import wendu.dsbridge.CompletionHandler
@@ -27,6 +29,11 @@ object BaseApiImpl {
     fun initWebView(context: Context) {
         try {
             mWebView = DWebView(context)
+            mWebView?.webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
+                    return false
+                }
+            }
             DWebView.setWebContentsDebuggingEnabled(true)
             mWebView?.addJavascriptObject(object : Any() {
                 @JavascriptInterface

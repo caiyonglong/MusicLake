@@ -46,6 +46,7 @@ class SocketManager {
         try {
             val opts = IO.Options()
             opts.forceNew = true
+            opts.reconnectionAttempts = 5
             opts.timeout = 50 * 1000
             opts.transports = arrayOf(WebSocket.NAME)
             socket = IO.socket(Constants.SOCKET_URL, opts)

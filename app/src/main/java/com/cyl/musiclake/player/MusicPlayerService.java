@@ -53,8 +53,7 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.cyl.musiclake.view.desktop.BaseWidget;
-import com.cyl.musiclake.view.desktop.StandardWidget;
+import com.cyl.musiclake.ui.widget.appwidgets.StandardWidget;
 
 import org.greenrobot.eventbus.EventBus;
 
