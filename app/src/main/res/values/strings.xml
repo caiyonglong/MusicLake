@@ -434,4 +434,11 @@
     <string name="music_quality_high">高清</string>
     <string name="music_quality_super">无损</string>
 
+    <string name="float_lock">桌面歌词已锁定</string>
+    <string name="float_lock_ticker">桌面歌词已锁定,可在通知栏解锁</string>
+    <string name="float_unlock">桌面歌词已解除锁定</string>
+    <string name="unlock_notification_description">桌面歌词已锁定</string>
+    <string name="click_to_unlock">点击解除锁定</string>
+    <string name="unlock_notification">通知栏解锁</string>
+
 </resources>

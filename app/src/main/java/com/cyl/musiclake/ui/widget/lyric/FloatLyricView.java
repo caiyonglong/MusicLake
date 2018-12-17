@@ -1,7 +1,15 @@
 package com.cyl.musiclake.ui.widget.lyric;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,8 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.player.FloatLyricViewManager;
 import com.cyl.musiclake.player.MusicPlayerService;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
@@ -103,10 +113,15 @@ public class FloatLyricView extends FrameLayout implements View.OnClickListener 
     private LinearLayout mLinLyricView;
     private FrameLayout mFrameBackground;
     private View mRootView;
+    private boolean mIsLock;
+    private UnLockNotify mNotify;
+
 
     public FloatLyricView(Context context) {
         super(context);
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        mNotify = new UnLockNotify();
+
         mRootView = LayoutInflater.from(context).inflate(R.layout.float_lyric_view, this);
         FrameLayout view = findViewById(R.id.small_window_layout);
         viewWidth = view.getLayoutParams().width;
@@ -139,6 +154,7 @@ public class FloatLyricView extends FrameLayout implements View.OnClickListener 
         mSettingsButton.setOnClickListener(this);
 
         mFontSize = SPUtils.getFontSize();
+        mIsLock = SPUtils.getAnyByKey(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false);
         mLyricText.setFontSizeScale(mFontSize);
         mSizeSeekBar.setProgress((int) mFontSize);
 
@@ -265,6 +281,7 @@ public class FloatLyricView extends FrameLayout implements View.OnClickListener 
         return statusBarHeight;
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -281,8 +298,7 @@ public class FloatLyricView extends FrameLayout implements View.OnClickListener 
                 if (mMovement) {
                     mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN);
                 } else {
-                    toggleLyricView();
-                    ToastUtils.show("桌面歌词已锁定,请前往通知栏或者设置解锁");
+                    saveLock(true,true);
                     mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK);
                 }
                 break;
@@ -316,6 +332,81 @@ public class FloatLyricView extends FrameLayout implements View.OnClickListener 
             mSettingLinearLayout.setVisibility(GONE);
         } else {
             mSettingLinearLayout.setVisibility(VISIBLE);
+        }
+    }
+
+
+    public void saveLock(boolean lock, boolean toast) {
+        mIsLock = lock;
+        SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, mIsLock);
+        if (toast) {
+            ToastUtils.show(MusicApp.getAppContext(), !mIsLock ? R.string.float_unlock : R.string.float_lock);
+        }
+        WindowManager.LayoutParams params = (WindowManager.LayoutParams) getLayoutParams();
+        if (params != null) {
+            if (lock) {
+                //锁定后点击通知栏解锁
+                mNotify.notifyToUnlock();
+                params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+            } else {
+                mMovement = true;
+                mNotify.cancel();
+                params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            }
+            toggleLyricView();
+            windowManager.updateViewLayout(this, params);
+        }
+    }
+
+
+    private static class UnLockNotify {
+        private static final String UNLOCK_NOTIFICATION_CHANNEL_ID = "unlock_notification";
+        private static final int UNLOCK_NOTIFICATION_ID = 2;
+        private Context mContext;
+        private NotificationManager mNotificationManager;
+
+        UnLockNotify() {
+            mContext = MusicApp.getAppContext();
+            mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                initNotificationChanel();
+            }
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        private void initNotificationChanel() {
+            NotificationChannel notificationChannel = new NotificationChannel(UNLOCK_NOTIFICATION_CHANNEL_ID, mContext.getString(R.string.unlock_notification), NotificationManager.IMPORTANCE_LOW);
+            notificationChannel.setShowBadge(false);
+            notificationChannel.enableLights(false);
+            notificationChannel.enableVibration(false);
+            notificationChannel.setDescription(mContext.getString(R.string.unlock_notification_description));
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        void notifyToUnlock() {
+            Notification notification = new NotificationCompat.Builder(mContext, UNLOCK_NOTIFICATION_CHANNEL_ID)
+                    .setContentText(mContext.getString(R.string.float_lock))
+                    .setContentTitle(mContext.getString(R.string.click_to_unlock))
+                    .setShowWhen(false)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setOngoing(true)
+                    .setTicker(mContext.getString(R.string.float_lock_ticker))
+                    .setContentIntent(buildPendingIntent())
+                    .setSmallIcon(R.drawable.ic_music)
+                    .build();
+            mNotificationManager.notify(UNLOCK_NOTIFICATION_ID, notification);
+        }
+
+        void cancel() {
+            mNotificationManager.cancel(UNLOCK_NOTIFICATION_ID);
+        }
+
+        PendingIntent buildPendingIntent() {
+            Intent intent = new Intent(MusicPlayerService.SERVICE_CMD);
+            intent.putExtra(MusicPlayerService.CMD_NAME, MusicPlayerService.UNLOCK_DESKTOP_LYRIC);
+            intent.setComponent(new ComponentName(mContext, MusicPlayerService.class));
+            return PendingIntent.getService(mContext, 0x1123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
     }
 

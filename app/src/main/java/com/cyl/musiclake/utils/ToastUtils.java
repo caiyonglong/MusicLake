@@ -27,10 +27,10 @@ public class ToastUtils {
     }
 
 
-    public static void show(Context context, int info) {
+    public static void show(Context context, int resId) {
         if (toast != null)
             toast.cancel();
-        toast = Toast.makeText(context, info + "", Toast.LENGTH_SHORT);
+        toast = Toast.makeText(context, context.getString(resId), Toast.LENGTH_SHORT);
         toast.show();
     }
 }

@@ -15,11 +15,11 @@ import com.cyl.musiclake.api.MusicApiServiceImpl;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.ui.widget.LyricView;
 import com.cyl.musiclake.ui.widget.lyric.FloatLyricView;
 import com.cyl.musiclake.ui.widget.lyric.LyricInfo;
 import com.cyl.musiclake.ui.widget.lyric.LyricParseUtils;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ public class FloatLyricViewManager {
     private static WindowManager.LayoutParams mFloatLyricViewParams;
     private static WindowManager mWindowManager;
     private static LyricInfo mLyricInfo;
+    private boolean mIsLock;
     private Handler handler = new Handler();
     private String mSongName;
     private static boolean isFirstSettingLyric; //第一次设置歌词
@@ -273,6 +274,12 @@ public class FloatLyricViewManager {
         return mWindowManager;
     }
 
+
+    public void saveLock(boolean lock, boolean toast) {
+        mFloatLyricView.saveLock(lock, toast);
+    }
+
+
 //    private String getProcess() throws Exception {
 //        if (Build.VERSION.SDK_INT >= 21) {
 //            return getProcessNew();
@@ -317,4 +324,6 @@ public class FloatLyricViewManager {
 //        }
 //        return topPackageName;
 //    }
+
+
 }

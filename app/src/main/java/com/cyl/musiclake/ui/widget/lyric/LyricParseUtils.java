@@ -135,6 +135,10 @@ public class LyricParseUtils {
                 String content = line.substring(lastIndexOfRightBracket + 1, line.length());
                 //去除trc歌词中每个字的时间长
                 content = content.replaceAll("<[0-9]{1,5}>", "");
+                if (content.length()==0){
+                    content ="......";
+                    LogUtil.e(content);
+                }
                 String times = line.substring(0, lastIndexOfRightBracket + 1).replace("[", "-").replace("]", "-");
                 String arrTimes[] = times.split("-");
                 for (String temp : arrTimes) {

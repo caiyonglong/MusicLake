@@ -118,6 +118,8 @@ public class MusicPlayerService extends Service {
     public static final String SERVICE_CMD = "cmd_service";//状态改变
     public static final String FROM_MEDIA_BUTTON = "media";//状态改变
     public static final String CMD_NAME = "name";//状态改变
+    public static final String UNLOCK_DESKTOP_LYRIC = "unlock_lyric"; //音量改变增加
+
 
     public static final int TRACK_WENT_TO_NEXT = 2; //下一首
     public static final int RELEASE_WAKELOCK = 3; //播放完成
@@ -255,7 +257,7 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_PLAY_ENDED://mPlayer播放完毕且暂时没有下一首
                         if (PlayQueueManager.INSTANCE.getPlayModeId() == PlayQueueManager.PLAY_MODE_REPEAT) {
-                            service.seekTo(0,false);
+                            service.seekTo(0, false);
                             mMainHandler.post(service::play);
                         } else {
                             mMainHandler.post(() -> service.next(true));
@@ -394,7 +396,7 @@ public class MusicPlayerService extends Service {
         if (mPlayingPos >= 0 && mPlayingPos < mPlayQueue.size()) {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
             updateNotification(false);
-            seekTo(SPUtils.getPosition(),true);
+            seekTo(SPUtils.getPosition(), true);
             notifyChange(META_CHANGED);
         }
         notifyChange(PLAY_QUEUE_CHANGE);
@@ -806,12 +808,12 @@ public class MusicPlayerService extends Service {
     /**
      * 跳到输入的进度
      */
-    public void seekTo(long pos,boolean isInit) {
+    public void seekTo(long pos, boolean isInit) {
         LogUtil.e(TAG, "seekTo " + pos);
         if (mPlayer != null && mPlayer.isInitialized() && mPlayingMusic != null) {
             mPlayer.seek(pos);
             LogUtil.e(TAG, "seekTo 成功");
-        } else if (isInit){
+        } else if (isInit) {
 //            playCurrentAndNext();
 //            mPlayer.seek(pos);
 //            mPlayer.pause();
@@ -1088,6 +1090,9 @@ public class MusicPlayerService extends Service {
                 .setWhen(mNotificationPostTime)
                 .addAction(playButtonResId, "",
                         retrievePlaybackAction(ACTION_PLAY_PAUSE))
+                .addAction(R.drawable.ic_skip_previous,
+                        "",
+                        retrievePlaybackAction(ACTION_PREV))
                 .addAction(R.drawable.ic_skip_next,
                         "",
                         retrievePlaybackAction(ACTION_NEXT))
@@ -1110,7 +1115,7 @@ public class MusicPlayerService extends Service {
             mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSessionManager.getMediaSession())
-                    .setShowActionsInCompactView(0, 1, 2, 3);
+                    .setShowActionsInCompactView(1, 0, 2, 3,4);
             mNotificationBuilder.setStyle(style);
         }
 
@@ -1281,6 +1286,8 @@ public class MusicPlayerService extends Service {
             } else {
                 play();
             }
+        } else if (UNLOCK_DESKTOP_LYRIC.equals(command)) {
+            mFloatLyricViewManager.saveLock(false, true);
         } else if (CMD_PAUSE.equals(command)) {
             pause();
             mPausedByTransientLossOfFocus = false;
@@ -1289,7 +1296,7 @@ public class MusicPlayerService extends Service {
         } else if (CMD_STOP.equals(command)) {
             pause();
             mPausedByTransientLossOfFocus = false;
-            seekTo(0,false);
+            seekTo(0, false);
             releaseServiceUiAndStop();
         } else if (ACTION_LYRIC.equals(action)) {
             startFloatLyric();

@@ -15,6 +15,18 @@ import com.cyl.musiclake.R;
  * 内部存儲工具類
  */
 public class SPUtils {
+    /**
+     * 第一次进入应用
+     */
+    public static final String SP_KEY_FIRST_COMING = "first_coming";
+
+    /**
+     * 桌面歌词锁定
+     */
+    public static final String SP_KEY_FLOAT_LYRIC_LOCK = "float_lyric_lock";
+
+
+
     private static final String MUSIC_ID = "music_id";
     private static final String PLAY_POSITION = "play_position";
     private static final String PLAY_MODE = "play_mode";

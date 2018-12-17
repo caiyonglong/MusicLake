@@ -90,10 +90,10 @@ public class WelcomeActivity extends BaseActivity {
      * 检查服务是否运行
      */
     private void initWelcome() {
-        boolean isFirst = SPUtils.getAnyByKey(Constants.SP_KEY_FIRST_COMING, true);
+        boolean isFirst = SPUtils.getAnyByKey(SPUtils.SP_KEY_FIRST_COMING, true);
         if (isFirst) {
             getCoverImageUrl();
-            SPUtils.putAnyCommit(Constants.SP_KEY_FIRST_COMING, false);
+            SPUtils.putAnyCommit(SPUtils.SP_KEY_FIRST_COMING, false);
         } else {
             startMainActivity();
         }
