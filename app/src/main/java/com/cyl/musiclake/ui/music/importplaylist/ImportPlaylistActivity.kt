@@ -102,7 +102,13 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 }
                 link.contains("y.qq.com") -> {
                     val len = link.lastIndexOf("id=") + "id=".length
-                    val id = link.substring(len, len + link.substring(len).indexOf("&")).trim()
+
+                    val idString = link.substring(len)
+                    val id = if (idString.indexOf("&") > 0) {
+                        link.substring(len, len + link.substring(len).indexOf("&")).trim()
+                    } else {
+                        idString
+                    }
                     importMusic(Constants.QQ, id)
                 }
                 link.contains("www.xiami.com") -> {
@@ -114,7 +120,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 link.contains("h.xiami.com") -> {
                     val start = link.lastIndexOf("id=") + "id=".length
                     val end = link.substring(start).indexOf(" ")
-                    val id = link.substring(start, start+end).trim()
+                    val id = link.substring(start, start + end).trim()
                     importMusic(Constants.XIAMI, id)
                 }
                 else -> {
