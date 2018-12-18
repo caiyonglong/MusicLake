@@ -16,6 +16,14 @@ import retrofit2.http.*
 interface PlaylistApiService {
 
     /**
+     * 获取音乐接口api的最新接口
+     * @param url 请求链接
+     * @return
+     */
+    @GET
+    fun checkMusicApiJs(@Url url: String): Observable<String>
+
+    /**
      * 获取聊天信息
      * @param start_dt 开始时间 2018-09-29默认为 2018-09-29 00:00:00
      * @param end_dt 结束时间 '2018-09-29 23:59:59'

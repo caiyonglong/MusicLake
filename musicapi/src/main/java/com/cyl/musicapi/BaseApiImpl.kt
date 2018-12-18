@@ -27,6 +27,7 @@ object BaseApiImpl {
     var mWebView: DWebView? = null
 
     fun initWebView(context: Context) {
+        initAssets()
         try {
             mWebView = DWebView(context)
             mWebView?.webViewClient = object : WebViewClient() {
@@ -46,6 +47,12 @@ object BaseApiImpl {
         } catch (e: Throwable) {
             Log.e("BaseApiImpl", e.message)
         }
+    }
+
+    /**
+     * 初始化js文件
+     */
+    private fun initAssets() {
     }
 
     /**
