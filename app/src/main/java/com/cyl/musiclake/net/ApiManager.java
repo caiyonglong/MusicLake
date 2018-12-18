@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,6 +28,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -92,11 +96,12 @@ public class ApiManager {
      */
     private static final Interceptor mLoggingInterceptor = chain -> {
         Request request = chain.request();
-        LogUtil.e("request", request.url().toString());
-        if (request.url().toString().contains("https://netease.api.zzsun.cc/search")) {
-            String url = URLDecoder.decode(request.url().toString(), "UTF-8");
-            LogUtil.e("request", url);
-            request.newBuilder().url(url).get().build();
+        if (chain.request().url().toString().contains("https://45.76.48.211")) {
+            HttpUrl newUrl = request.url().newBuilder()
+                    .host("netease.api.zzsun.cc")
+                    .build();
+            request = request.newBuilder().url(newUrl).build();
+            return chain.proceed(request);
         }
         return chain.proceed(request);
     };
@@ -115,12 +120,20 @@ public class ApiManager {
                 Cache cache = new Cache(new File(MusicApp.getAppContext().getCacheDir(), "HttpCache"), 1024 * 1024 * 100);
                 if (mOkHttpClient == null) mOkHttpClient = new OkHttpClient.Builder()
                         .cache(cache)
+//                        .hostnameVerifier(new HostnameVerifier() {
+//                            @Override
+//                            public boolean verify(String s, SSLSession sslSession) {
+//                                LogUtil.e("HOSTNAME " + s);
+//                                if (s.equals("45.76.48.211")) return true;
+//                                return false;
+//                            }
+//                        })
                         .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
 //                        .addInterceptor(mRewriteCacheControlInterceptor)
+                        .addInterceptor(mLoggingInterceptor)
                         .addInterceptor(logging)
-//                        .addInterceptor(mLoggingInterceptor)
                         .build();
             }
         }
