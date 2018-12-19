@@ -63,7 +63,7 @@ object FloatUtil {
             if (Build.VERSION.SDK_INT >= 23) {
                 try {
                     val clazz = Settings::class.java
-                    val canDrawOverlays = clazz!!.getDeclaredMethod("canDrawOverlays", Context::class.java)
+                    val canDrawOverlays = clazz.getDeclaredMethod("canDrawOverlays", Context::class.java)
                     result = canDrawOverlays.invoke(null, context) as Boolean
                 } catch (e: Exception) {
                     Log.e("FloatUtil", Log.getStackTraceString(e))

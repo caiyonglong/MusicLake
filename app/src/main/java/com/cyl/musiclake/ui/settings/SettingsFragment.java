@@ -15,6 +15,7 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.utils.DataClearManager;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
@@ -28,6 +29,8 @@ import com.cyl.musiclake.utils.ToastUtils;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
+    private Preference mPreferenceDownloadFile;
+    private Preference mPreferenceCacheFile;
     private PreferenceScreen mPreferenceCache;
     public SwitchPreference mWifiSwitch, mSocketSwitch;
     public CheckBoxPreference mLyricCheckBox;
@@ -75,6 +78,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      */
     private void initView() {
         mPreferenceCache = (PreferenceScreen) findPreference("key_cache");
+        mPreferenceDownloadFile = findPreference("key_download_file");
+        mPreferenceCacheFile = findPreference("key_cache_file");
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
         mSocketSwitch = (SwitchPreference) findPreference("key_socket");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
@@ -83,6 +88,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mPreferenceCache.setOnPreferenceClickListener(this);
         mSocketSwitch.setOnPreferenceClickListener(this);
         mLyricCheckBox.setOnPreferenceClickListener(this);
+
+        mPreferenceDownloadFile.setSummary(FileUtils.getMusicDir());
+        mPreferenceCacheFile.setSummary(FileUtils.getMusicCacheDir());
     }
 
 

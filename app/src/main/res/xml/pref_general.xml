@@ -33,24 +33,28 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_select_quality" />
 
-    <PreferenceCategory android:title="@string/search_filter_title">
+    <PreferenceCategory android:title="@string/item_download">
+        <Preference
+            android:key="key_download_file"
+            android:title="@string/pref_title_download" />
+        <Preference
+            android:key="key_cache_file"
+            android:title="@string/pref_title_cache" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/search_filter_title">
         <MultiSelectListPreference
-            android:defaultValue="true"
-            android:key="key_search_filter"
             android:entries="@array/pref_search_filter_select"
             android:entryValues="@array/pref_search_filter_values"
+            android:key="key_search_filter"
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_title" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_data_sync">
-
         <PreferenceScreen
             android:key="key_cache"
             android:title="@string/pref_title_clear" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

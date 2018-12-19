@@ -3,7 +3,6 @@ package com.cyl.musiclake.api
 
 import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musicapi.bean.*
-import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.doupan.DoubanApiServiceImpl
@@ -39,7 +38,7 @@ object MusicApiServiceImpl {
     fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
             if (type == SearchEngine.Filter.ANY) {
-                BaseApiImpl.searchSong(key, type.toString(), limit, page, success = {
+                BaseApiImpl.searchSong(key,  limit, page, success = {
                     val musicList = mutableListOf<Music>()
                     if (it.status) {
                         try {
@@ -104,13 +103,6 @@ object MusicApiServiceImpl {
                     }
                     result.onNext(musicList)
                     result.onComplete()
-                }, fail = {
-                    LogUtil.e("search", it ?: "-0-")
-//                    ToastUtils.show(it.toString())
-//                    result.onNext(mutableListOf())
-//                    result.onComplete()
-//                    result.onError(Throwable(it
-//                            ?: MusicApp.getAppContext().getString(R.string.error_connection)))
                 })
             }
         }

@@ -60,7 +60,7 @@ object BaseApiImpl {
      *
      * @param query
      */
-    fun searchSong(query: String, type: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit, fail: ((String?) -> Unit)? = null) {
+    fun searchSong(query: String, limit: Int, offset: Int, success: (result: SearchData) -> Unit, fail: ((String?) -> Unit)? = null) {
         mWebView?.callHandler("api.searchSong", arrayOf(query, limit, offset)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<SearchData>(retValue.toString(), SearchData::class.java)
@@ -76,7 +76,7 @@ object BaseApiImpl {
     /**
      * 独立请求
      */
-    fun searchSongSingle(query: String, type: String, limit: Int, offset: Int, success: (result: SearchSingleData) -> Unit, fail: ((String?) -> Unit)? = null) {
+    fun searchSongSingle(query: String, type: String, limit: Int, offset: Int, success: (result: SearchSingleData) -> Unit) {
         val params = mapOf("keyword" to query, "limit" to limit, "offset" to offset)
         Log.e("searchSongSingle", params.toString())
         when (type) {

@@ -79,7 +79,7 @@
     <string name="no_result">对不起，没有搜索到相关数据！</string>
 
     <string name="title_activity_settings">设置</string>
-    <string name="info_common_settings">通用设置</string>
+    <string name="info_common_settings">常规</string>
     <string name="info_secret_setting">隐私设置</string>
     <string name="info_secret_setting_detail">是否隐藏手机号和邮箱</string>
 
@@ -94,6 +94,8 @@
     <string name="pref_title_social">不公开自己的基本信息</string>
 
     <string name="pref_title_info">完善基本信息</string>
+    <string name="pref_title_download">文件下载位置</string>
+    <string name="pref_title_cache">文件缓存位置</string>
 
 
     <!-- Example settings for Data & Sync -->
