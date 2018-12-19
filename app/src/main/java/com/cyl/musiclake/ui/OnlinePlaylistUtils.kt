@@ -6,12 +6,14 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
 import com.cyl.musiclake.ui.my.user.UserStatus
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -59,6 +61,25 @@ object OnlinePlaylistUtils {
                 }
                 playlist.musicList = musicList
                 success.invoke(playlist)
+            }
+        })
+    }
+
+
+    /**
+     * 获取最新通知消息
+     */
+    fun getMusicNoticeInfo(success: (NoticeInfo) -> Unit, fail: (String) -> Unit) {
+        ApiManager.request(PlaylistApiServiceImpl.getMusicLakeNotice(), object : RequestCallBack<NoticeInfo> {
+            override fun success(result: NoticeInfo) {
+                val noticeCode = SPUtils.getAnyByKey(SPUtils.SP_KEY_NOTICE_CODE, -1)
+                if (noticeCode < result.id) {
+                    success.invoke(result)
+                }
+            }
+
+            override fun error(msg: String) {
+                fail.invoke(msg)
             }
         })
     }

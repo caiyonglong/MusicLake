@@ -3,6 +3,7 @@ package com.cyl.musiclake.api
 import com.cyl.musicapi.BaseApiImpl
 import com.cyl.musicapi.playlist.*
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
@@ -24,6 +25,13 @@ object PlaylistApiServiceImpl {
     val token: String?
         get() = UserStatus.getUserInfo()?.token
 
+    /**
+     * 获取全部歌单
+     */
+    fun getMusicLakeNotice(): Observable<NoticeInfo> {
+        val url = "https://music-lake-android.zzsun.cc/notice.json"
+        return playlistApiService.checkMusicLakeNotice(url)
+    }
     /**
      * 获取全部歌单
      */

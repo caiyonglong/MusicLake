@@ -19,6 +19,7 @@ public class SPUtils {
      * 第一次进入应用
      */
     public static final String SP_KEY_FIRST_COMING = "first_coming";
+    public static final String SP_KEY_NOTICE_CODE = "notice_code";
 
     /**
      * 桌面歌词锁定

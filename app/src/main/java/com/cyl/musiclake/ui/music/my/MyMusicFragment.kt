@@ -3,9 +3,11 @@ package com.cyl.musiclake.ui.music.my
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
@@ -16,16 +18,31 @@ import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.frag_local.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.yesButton
 
 /**
  * Created by Monkey on 2015/6/29.
  */
 class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
+
+    override fun showNoticeInfo(notice: NoticeInfo) {
+        alert {
+            isCancelable = false
+            title = "提示"
+            message = notice.message
+            yesButton {
+                SPUtils.putAnyCommit(SPUtils.SP_KEY_NOTICE_CODE, notice.id)
+            }
+        }.show()
+    }
+
     private var playlists = mutableListOf<Playlist>()
     private var mAdapter: PlaylistAdapter? = null
 
@@ -44,7 +61,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         playlistRcv.adapter = mAdapter
         mAdapter?.bindToRecyclerView(playlistRcv)
 
+        //加载通知
+        mPresenter?.loadMusicLakeNotice()
     }
+
 
     override fun initInjector() {
         mFragmentComponent.inject(this)
@@ -146,7 +166,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         super.retryLoading()
         if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
             mPresenter?.loadPlaylist()
-        }else{
+        } else {
             ToastUtils.show("请先登录")
         }
     }

@@ -5,6 +5,7 @@ import com.cyl.musicapi.playlist.CollectResult
 import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musicapi.playlist.UserInfo
 import com.cyl.musiclake.bean.MessageInfoBean
+import com.cyl.musiclake.bean.NoticeInfo
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.http.*
@@ -22,6 +23,13 @@ interface PlaylistApiService {
      */
     @GET
     fun checkMusicApiJs(@Url url: String): Observable<String>
+    /**
+     * 获取音乐接口api的最新通知
+     * @param url 请求链接 https://music-lake-android.zzsun.cc/notice.json
+     * @return
+     */
+    @GET
+    fun checkMusicLakeNotice(@Url url: String): Observable<NoticeInfo>
 
     /**
      * 获取聊天信息

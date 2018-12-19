@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.my
 
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
 
 interface MyMusicContract {
@@ -18,6 +19,7 @@ interface MyMusicContract {
 
         fun showDownloadList(musicList: MutableList<Music>)
 
+        fun showNoticeInfo(notice: NoticeInfo)
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {

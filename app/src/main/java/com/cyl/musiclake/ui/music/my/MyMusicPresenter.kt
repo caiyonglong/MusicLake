@@ -76,6 +76,15 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         updateDownload()
     }
 
+    fun loadMusicLakeNotice() {
+        OnlinePlaylistUtils.getMusicNoticeInfo(
+                success = {
+                    mView?.showNoticeInfo(it)
+                }, fail = {
+        }
+        )
+    }
+
     override fun loadPlaylist(playlist: Playlist?) {
         val mIsLogin = UserStatus.getLoginStatus()
         if (mIsLogin) {
