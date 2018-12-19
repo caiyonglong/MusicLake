@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MusicLake</string>
+    <string name="app_name">音乐湖</string>
     <string name="sure">确定</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>
@@ -222,7 +222,7 @@
     <string name="about_des">描述</string>
     <string name="about_version">软件版本号</string>
     <string name="about_project">项目地址</string>
-    <string name="about_feedback">帮助与反馈</string>
+    <string name="about_feedback">邮件反馈</string>
     <string name="about_software"><u>关于软件</u></string>
     <string name="about_project_url">https://github.com/caiyonglong/MusicLake</string>
     <string name="share_title">分享</string>
@@ -360,7 +360,7 @@
     <string name="prompt">提示</string>
     <string name="async_songs">同步歌曲</string>
     <string name="import_playlist_song">导入到歌单</string>
-    <string name="import_playlist_tips">打开QQ音乐(不支持短连接)、网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!</string>
+    <string name="import_playlist_tips">打开网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!</string>
     <string name="song_operate">歌曲操作</string>
     <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
     <string name="download_local_error">不能下载本地音乐!</string>

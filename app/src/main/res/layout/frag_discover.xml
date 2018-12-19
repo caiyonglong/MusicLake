@@ -66,6 +66,7 @@
                             android:background="?android:attr/selectableItemBackgroundBorderless"
                             android:drawableTop="@drawable/ic_supervisor_account"
                             android:gravity="center"
+                            android:visibility="gone"
                             android:text="@string/all_artist" />
 
                         <TextView

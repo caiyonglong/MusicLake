@@ -53,7 +53,7 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
         showLoading()
         when (chartsType) {
             Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
-            Constants.QQ -> mPresenter?.loadQQList()
+//            Constants.QQ -> mPresenter?.loadQQList()
             Constants.NETEASE -> mPresenter?.loadTopList()
         }
     }

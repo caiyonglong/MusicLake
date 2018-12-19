@@ -60,7 +60,7 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
         mView?.showLoading()
         val observable = Observable.mergeDelayError(
                 BaiduApiServiceImpl.getSearchMusicInfo(key, limit, page),
-                MusicApiServiceImpl.searchMusic(key, SearchEngine.Filter.QQ, limit, page),
+//                MusicApiServiceImpl.searchMusic(key, SearchEngine.Filter.QQ, limit, page),
                 MusicApiServiceImpl.searchMusic(key, SearchEngine.Filter.XIAMI, limit, page),
                 MusicApiServiceImpl.searchMusic(key, SearchEngine.Filter.NETEASE, limit, page))
 //                Function4<MutableList<Music>, MutableList<Music>, MutableList<Music>, MutableList<Music>, MutableList<Music>> { t1, t2, t3, t4 ->

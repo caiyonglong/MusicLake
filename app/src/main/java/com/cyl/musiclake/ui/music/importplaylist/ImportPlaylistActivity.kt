@@ -100,17 +100,17 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                     val id = link.substring(len, len + link.substring(len).indexOf("/"))
                     importMusic(Constants.NETEASE, id)
                 }
-                link.contains("y.qq.com") -> {
-                    val len = link.lastIndexOf("id=") + "id=".length
-
-                    val idString = link.substring(len)
-                    val id = if (idString.indexOf("&") > 0) {
-                        link.substring(len, len + link.substring(len).indexOf("&")).trim()
-                    } else {
-                        idString
-                    }
-                    importMusic(Constants.QQ, id)
-                }
+//                link.contains("y.qq.com") -> {
+//                    val len = link.lastIndexOf("id=") + "id=".length
+//
+//                    val idString = link.substring(len)
+//                    val id = if (idString.indexOf("&") > 0) {
+//                        link.substring(len, len + link.substring(len).indexOf("&")).trim()
+//                    } else {
+//                        idString
+//                    }
+//                    importMusic(Constants.QQ, id)
+//                }
                 link.contains("www.xiami.com") -> {
                     val len = link.lastIndexOf("collect/") + "collect/".length
                     val end = if (link.indexOf("?") == -1) link.indexOf("(") else link.indexOf("?")

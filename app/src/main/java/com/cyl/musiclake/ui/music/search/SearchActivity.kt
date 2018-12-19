@@ -211,9 +211,9 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             R.id.menu_filter_baidu -> {
                 changeFilter(item, SearchEngine.Filter.BAIDU)
             }
-            R.id.menu_filter_qq -> {
-                changeFilter(item, SearchEngine.Filter.QQ)
-            }
+//            R.id.menu_filter_qq -> {
+//                changeFilter(item, SearchEngine.Filter.QQ)
+//            }
             R.id.menu_filter_xiami -> {
                 changeFilter(item, SearchEngine.Filter.XIAMI)
             }
@@ -364,7 +364,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         filter[SearchEngine.Filter.CP] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_cp", true)
         filter[SearchEngine.Filter.REPEAT] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_repeat", true)
 
-        menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
+//        menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
         menu.findItem(R.id.menu_filter_xiami).isChecked = filter[SearchEngine.Filter.XIAMI] ?: true
         menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE] ?: true
         menu.findItem(R.id.menu_filter_baidu).isChecked = filter[SearchEngine.Filter.BAIDU] ?: true

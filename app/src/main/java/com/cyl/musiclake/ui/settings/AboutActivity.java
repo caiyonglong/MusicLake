@@ -82,6 +82,11 @@ public class AboutActivity extends BaseActivity {
         Beta.checkUpgrade();
     }
 
+    @OnClick(R.id.email_feedback)
+    void toEmailFeedback() {
+        Tools.INSTANCE.feeback(this);
+    }
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_about;

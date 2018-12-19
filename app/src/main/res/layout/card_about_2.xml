@@ -5,10 +5,7 @@
     android:id="@+id/card_about_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="32dp"
-    android:layout_marginEnd="@dimen/dp_8"
-    android:layout_marginStart="@dimen/dp_8"
-    android:layout_marginTop="@dimen/dp_8"
+    android:layout_margin="@dimen/dp_8"
     android:background="@color/white"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="2dp">
@@ -155,6 +152,28 @@
                 android:layout_margin="@dimen/text_margin"
                 android:textColor="@color/black"
                 tools:text="0" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/email_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/text_margin"
+                android:src="@drawable/ic_feedback" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/about_feedback" />
+
         </LinearLayout>
 
 

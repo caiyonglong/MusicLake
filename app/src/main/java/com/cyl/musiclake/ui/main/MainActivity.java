@@ -157,16 +157,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mBindNeteaseView.setVisibility(View.GONE);
             NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginFragment());
         });
-        mShowBindIv.setOnClickListener(view -> {
-            if (!isUp) {
-                mBindNeteaseView.setVisibility(View.VISIBLE);
-                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
-            } else {
-                mBindNeteaseView.setVisibility(View.GONE);
-                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
-            }
-            isUp = !isUp;
-        });
+//        mShowBindIv.setOnClickListener(view -> {
+//            if (!isUp) {
+//                mBindNeteaseView.setVisibility(View.VISIBLE);
+//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
+//            } else {
+//                mBindNeteaseView.setVisibility(View.GONE);
+//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
+//            }
+//            isUp = !isUp;
+//        });
 
     }
 
@@ -389,7 +389,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
             mLoginTv.setVisibility(View.GONE);
-            mShowBindIv.setVisibility(View.VISIBLE);
+//            mShowBindIv.setVisibility(View.VISIBLE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
         } else {
@@ -397,7 +397,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
             mLoginTv.setVisibility(View.GONE);
-            mShowBindIv.setVisibility(View.GONE);
+//            mShowBindIv.setVisibility(View.GONE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint))
                     .setIcon(R.drawable.ic_exit);
 
@@ -514,4 +514,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
     }
+
 }

@@ -18,10 +18,10 @@
             <group
                 android:id="@+id/search_filter_group"
                 android:checkableBehavior="all">
-                <item
-                    android:id="@+id/menu_filter_qq"
-                    android:checked="true"
-                    android:title="@string/qq" />
+                <!--<item-->
+                    <!--android:id="@+id/menu_filter_qq"-->
+                    <!--android:checked="true"-->
+                    <!--android:title="@string/qq" />-->
                 <item
                     android:id="@+id/menu_filter_xiami"
                     android:checked="true"
