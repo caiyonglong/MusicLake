@@ -116,11 +116,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         //获取搜索历史
         mPresenter?.getSearchHistory()
 
-        if (!intent.getBooleanExtra("is_playlist", false)) {
-            //获取热搜
-            mPresenter?.getHotSearchInfo()
-        } else {
-        }
+//        if (!intent.getBooleanExtra("is_playlist", false)) {
+//            //获取热搜
+//            mPresenter?.getHotSearchInfo()
+//        } else {
+//        }
     }
 
     override fun initInjector() {
@@ -196,7 +196,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
-        initSearchFilter(menu)
+//        initSearchFilter(menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -208,24 +208,24 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
                 queryString = searchEditText.text.toString().trim { it <= ' ' }
                 search(queryString)
             }
-            R.id.menu_filter_baidu -> {
-                changeFilter(item, SearchEngine.Filter.BAIDU)
-            }
+//            R.id.menu_filter_baidu -> {
+//                changeFilter(item, SearchEngine.Filter.BAIDU)
+//            }
 //            R.id.menu_filter_qq -> {
 //                changeFilter(item, SearchEngine.Filter.QQ)
 //            }
-            R.id.menu_filter_xiami -> {
-                changeFilter(item, SearchEngine.Filter.XIAMI)
-            }
-            R.id.menu_filter_netease -> {
-                changeFilter(item, SearchEngine.Filter.NETEASE)
-            }
-            R.id.menu_filter_repeat -> {
-                changeFilter(item, SearchEngine.Filter.REPEAT)
-            }
-            R.id.menu_filter_copyright -> {
-                changeFilter(item, SearchEngine.Filter.CP)
-            }
+//            R.id.menu_filter_xiami -> {
+//                changeFilter(item, SearchEngine.Filter.XIAMI)
+//            }
+//            R.id.menu_filter_netease -> {
+//                changeFilter(item, SearchEngine.Filter.NETEASE)
+//            }
+//            R.id.menu_filter_repeat -> {
+//                changeFilter(item, SearchEngine.Filter.REPEAT)
+//            }
+//            R.id.menu_filter_copyright -> {
+//                changeFilter(item, SearchEngine.Filter.CP)
+//            }
         }
         return true
     }
@@ -273,19 +273,20 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
      * 在线搜索
      */
     private fun search(query: String?) {
-        if (query != null && query.isNotEmpty()) {
-            showLoading()
-            mOffset = 0
-            searchResults.clear()
-            queryString = query
-            searchEditText.clearFocus()
-            Tools.hideInputView(searchEditText)
-            updateHistoryPanel(false)
-            mAdapter.setEnableLoadMore(true)
-            mPresenter?.saveQueryInfo(query)
-            mPresenter?.search(query, SearchEngine.Filter.ANY, limit, mOffset)
-            mAdapter.setOnLoadMoreListener(listener, resultListRcv)
-        }
+        searchLocal(query)
+//        if (query != null && query.isNotEmpty()) {
+//            showLoading()
+//            mOffset = 0
+//            searchResults.clear()
+//            queryString = query
+//            searchEditText.clearFocus()
+//            Tools.hideInputView(searchEditText)
+//            updateHistoryPanel(false)
+//            mAdapter.setEnableLoadMore(true)
+//            mPresenter?.saveQueryInfo(query)
+//            mPresenter?.search(query, SearchEngine.Filter.ANY, limit, mOffset)
+//            mAdapter.setOnLoadMoreListener(listener, resultListRcv)
+//        }
     }
 
     /**
@@ -314,42 +315,42 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
      * 显示过滤后的搜索结果
      */
     private fun showFilterResult() {
-        songList.clear()
-        searchResults.forEach {
-            if (filter[SearchEngine.Filter.QQ] == true && it.type == Constants.QQ) {
-                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
-                    songList.add(it)
-                } else if (filter[SearchEngine.Filter.CP] == true) {
-                    songList.add(it)
-                }
-            }
-            if (filter[SearchEngine.Filter.BAIDU] == true && it.type == Constants.BAIDU) {
-                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
-                    songList.add(it)
-                } else if (filter[SearchEngine.Filter.CP] == true) {
-                    songList.add(it)
-                }
-            }
-            if (filter[SearchEngine.Filter.NETEASE] == true && it.type == Constants.NETEASE) {
-                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
-                    songList.add(it)
-                } else if (filter[SearchEngine.Filter.CP] == true) {
-                    songList.add(it)
-                }
-            }
-            if (filter[SearchEngine.Filter.XIAMI] == true && it.type == Constants.XIAMI) {
-                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
-                    songList.add(it)
-                } else if (filter[SearchEngine.Filter.CP] == true) {
-                    songList.add(it)
-                }
-            }
-            if (filter[SearchEngine.Filter.REPEAT] == true) {
-                songList = removeDuplicate(songList)
-            }
-
-        }
-        mAdapter.setNewData(songList)
+//        songList.clear()
+//        searchResults.forEach {
+//            if (filter[SearchEngine.Filter.QQ] == true && it.type == Constants.QQ) {
+//                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+//                    songList.add(it)
+//                } else if (filter[SearchEngine.Filter.CP] == true) {
+//                    songList.add(it)
+//                }
+//            }
+//            if (filter[SearchEngine.Filter.BAIDU] == true && it.type == Constants.BAIDU) {
+//                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+//                    songList.add(it)
+//                } else if (filter[SearchEngine.Filter.CP] == true) {
+//                    songList.add(it)
+//                }
+//            }
+//            if (filter[SearchEngine.Filter.NETEASE] == true && it.type == Constants.NETEASE) {
+//                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+//                    songList.add(it)
+//                } else if (filter[SearchEngine.Filter.CP] == true) {
+//                    songList.add(it)
+//                }
+//            }
+//            if (filter[SearchEngine.Filter.XIAMI] == true && it.type == Constants.XIAMI) {
+//                if (filter[SearchEngine.Filter.CP] == false && !it.isCp) {
+//                    songList.add(it)
+//                } else if (filter[SearchEngine.Filter.CP] == true) {
+//                    songList.add(it)
+//                }
+//            }
+//            if (filter[SearchEngine.Filter.REPEAT] == true) {
+//                songList = removeDuplicate(songList)
+//            }
+//
+//        }
+        mAdapter.setNewData(searchResults)
         mAdapter.loadMoreComplete()
     }
 
@@ -365,11 +366,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         filter[SearchEngine.Filter.REPEAT] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_repeat", true)
 
 //        menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
-        menu.findItem(R.id.menu_filter_xiami).isChecked = filter[SearchEngine.Filter.XIAMI] ?: true
-        menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE] ?: true
-        menu.findItem(R.id.menu_filter_baidu).isChecked = filter[SearchEngine.Filter.BAIDU] ?: true
-        menu.findItem(R.id.menu_filter_copyright).isChecked = filter[SearchEngine.Filter.CP] ?: true
-        menu.findItem(R.id.menu_filter_repeat).isChecked = filter[SearchEngine.Filter.REPEAT] ?: true
+//        menu.findItem(R.id.menu_filter_xiami).isChecked = filter[SearchEngine.Filter.XIAMI] ?: true
+//        menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE] ?: true
+//        menu.findItem(R.id.menu_filter_baidu).isChecked = filter[SearchEngine.Filter.BAIDU] ?: true
+//        menu.findItem(R.id.menu_filter_copyright).isChecked = filter[SearchEngine.Filter.CP] ?: true
+//        menu.findItem(R.id.menu_filter_repeat).isChecked = filter[SearchEngine.Filter.REPEAT] ?: true
     }
 
     /**

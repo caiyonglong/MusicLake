@@ -6,14 +6,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.ChartsFragment;
-import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
-import com.cyl.musiclake.ui.music.mv.MvFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 
 import butterknife.BindView;
 
@@ -60,6 +57,7 @@ public class MainFragment extends BaseFragment {
                 toggle.setDisplayHomeAsUpEnabled(true);
             }
         }
+        mTabLayout.setVisibility(View.GONE);
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
         setupViewPager(mViewPager);
@@ -74,9 +72,9 @@ public class MainFragment extends BaseFragment {
     private void setupViewPager(ViewPager mViewPager) {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), "我的");
-        mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), "发现");
-        mAdapter.addFragment(ChartsFragment.newInstance(), "排行榜");
-        mAdapter.addFragment(MvFragment.newInstance(), "MV");
+//        mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), "发现");
+//        mAdapter.addFragment(ChartsFragment.newInstance(), "排行榜");
+//        mAdapter.addFragment(MvFragment.newInstance(), "MV");
 //        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);
     }

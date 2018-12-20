@@ -35,10 +35,12 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showNoticeInfo(notice: NoticeInfo) {
         alert {
             isCancelable = false
-            title = "提示"
+            title = notice.title
             message = notice.message
-            yesButton {
-                SPUtils.putAnyCommit(SPUtils.SP_KEY_NOTICE_CODE, notice.id)
+            if (notice.dismiss) {
+                yesButton {
+                    SPUtils.putAnyCommit(SPUtils.SP_KEY_NOTICE_CODE, notice.id)
+                }
             }
         }.show()
     }

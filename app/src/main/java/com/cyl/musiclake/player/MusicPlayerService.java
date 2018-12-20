@@ -521,26 +521,29 @@ public class MusicPlayerService extends Service {
             notifyChange(META_CHANGED);
             LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || !Objects.equals(mPlayingMusic.getType(), Constants.LOCAL) || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
-                    @Override
-                    public void success(Music result) {
-                        LogUtil.e(TAG, "-----" + result.toString());
-                        mPlayingMusic = result;
-                        saveHistory();
-                        isMusicPlaying = true;
-                        playErrorTimes = 0;
-                        mPlayer.setDataSource(mPlayingMusic.getUri());
-                    }
-
-                    @Override
-                    public void error(String msg) {
-                        ToastUtils.show(msg);
-                    }
-                });
+//                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
+//                    @Override
+//                    public void success(Music result) {
+//                        LogUtil.e(TAG, "-----" + result.toString());
+//                        mPlayingMusic = result;
+//                        saveHistory();
+//                        isMusicPlaying = true;
+//                        playErrorTimes = 0;
+//                        mPlayer.setDataSource(mPlayingMusic.getUri());
+//                    }
+//
+//                    @Override
+//                    public void error(String msg) {
+//                        ToastUtils.show(msg);
+//                    }
+//                });
+                isMusicPlaying = false;
+                ToastUtils.show("因歌曲存在版权问题播放失败，请支持正版！");
+            } else {
+                isMusicPlaying = true;
             }
             saveHistory();
             mHistoryPos.add(mPlayingPos);
-            isMusicPlaying = true;
             if (mPlayingMusic.getUri() != null) {
                 if (!mPlayingMusic.getUri().startsWith(Constants.IS_URL_HEADER) && !FileUtils.exists(mPlayingMusic.getUri())) {
                     isAbnormalPlay();
@@ -1115,7 +1118,7 @@ public class MusicPlayerService extends Service {
             mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSessionManager.getMediaSession())
-                    .setShowActionsInCompactView(1, 0, 2, 3,4);
+                    .setShowActionsInCompactView(1, 0, 2, 3, 4);
             mNotificationBuilder.setStyle(style);
         }
 

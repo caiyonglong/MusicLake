@@ -10,6 +10,8 @@ import android.view.WindowManager;
 
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
+import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.bean.data.SongLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.bean.data.PlaylistLoader;
 import com.cyl.musiclake.di.component.ApplicationComponent;
@@ -19,6 +21,7 @@ import com.cyl.musiclake.ui.download.TasksManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.UpdateUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
