@@ -3,9 +3,6 @@ package com.cyl.musiclake.net;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
-import com.cyl.musiclake.ui.my.user.User;
-import com.cyl.musiclake.ui.my.user.UserStatus;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,11 +12,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -132,7 +125,7 @@ public class ApiManager {
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
 //                        .addInterceptor(mRewriteCacheControlInterceptor)
-                        .addInterceptor(mLoggingInterceptor)
+//                        .addInterceptor(mLoggingInterceptor)
                         .addInterceptor(logging)
                         .build();
             }

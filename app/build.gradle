@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 // 依赖插件脚本
-apply from: 'tinker-support.gradle'
+//apply from: 'tinker-support.gradle'
 
 repositories {
     mavenCentral()
@@ -17,13 +17,13 @@ android {
             storePassword '123123'
         }
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 27
-        versionName "4.2.0"
+        targetSdkVersion 28
+        versionCode 30
+        versionName "4.5.0"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
@@ -56,7 +56,7 @@ android {
             outputFileName = "musicLake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 28
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -66,7 +66,7 @@ android {
 dependencies {
     api 'com.android.support.constraint:constraint-layout:1.1.3'
     api fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:support-v4:28.0.0'
     testImplementation 'junit:junit:4.12'
     api "com.android.support:design:$support_version"
     api "com.android.support:appcompat-v7:$support_version"
@@ -157,10 +157,11 @@ dependencies {
     api 'com.tencent.bugly:crashreport_upgrade:1.3.5'
 
     // 指定tinker依赖版本（注：应用升级1.3.5版本起，不再内置tinker）
-    api 'com.tencent.tinker:tinker-android-lib:1.9.6'
+//    api 'com.tencent.tinker:tinker-android-lib:1.9.6'
 
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     api 'com.tencent.bugly:nativecrashreport:3.3.1'
+
     //微博
     api 'com.sina.weibo.sdk:core:4.3.0:openDefaultRelease@aar'
 
