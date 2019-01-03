@@ -50,7 +50,7 @@ public class ChartsFragment extends BaseFragment<BasePresenter> {
     public void initViews() {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
         adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.BAIDU), "百度音乐榜单");
-//        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), "qq音乐榜单");
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), "qq音乐榜单");
         adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.NETEASE), "网易云音乐榜单");
         mViewpager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewpager);

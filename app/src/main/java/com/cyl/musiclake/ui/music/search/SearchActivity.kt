@@ -13,7 +13,6 @@ import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
@@ -21,6 +20,7 @@ import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.AnimationUtils
@@ -211,9 +211,9 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             R.id.menu_filter_baidu -> {
                 changeFilter(item, SearchEngine.Filter.BAIDU)
             }
-//            R.id.menu_filter_qq -> {
-//                changeFilter(item, SearchEngine.Filter.QQ)
-//            }
+            R.id.menu_filter_qq -> {
+                changeFilter(item, SearchEngine.Filter.QQ)
+            }
             R.id.menu_filter_xiami -> {
                 changeFilter(item, SearchEngine.Filter.XIAMI)
             }
@@ -364,7 +364,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         filter[SearchEngine.Filter.CP] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_cp", true)
         filter[SearchEngine.Filter.REPEAT] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_repeat", true)
 
-//        menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
+        menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
         menu.findItem(R.id.menu_filter_xiami).isChecked = filter[SearchEngine.Filter.XIAMI] ?: true
         menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE] ?: true
         menu.findItem(R.id.menu_filter_baidu).isChecked = filter[SearchEngine.Filter.BAIDU] ?: true

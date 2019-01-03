@@ -91,7 +91,7 @@ public class ApiManager {
         Request request = chain.request();
         if (chain.request().url().toString().contains("https://45.76.48.211")) {
             HttpUrl newUrl = request.url().newBuilder()
-                    .host("netease.api.zzsun.cc")
+                    .host("netease2.api.zzsun.cc")
                     .build();
             request = request.newBuilder().url(newUrl).build();
             return chain.proceed(request);

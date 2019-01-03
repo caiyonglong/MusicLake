@@ -81,7 +81,7 @@
     </string-array>
 
     <string-array name="pref_search_filter_select">
-        <!--<item>qq音乐</item>-->
+        <item>QQ音乐</item>
         <item>虾米音乐</item>
         <item>网易云音乐</item>
         <item>百度音乐</item>

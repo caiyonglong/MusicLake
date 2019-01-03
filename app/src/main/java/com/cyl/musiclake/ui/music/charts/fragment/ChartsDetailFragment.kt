@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.ui.base.BaseLazyFragment
+import com.cyl.musiclake.ui.music.charts.OnlineAdapter
 import com.cyl.musiclake.ui.music.charts.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.charts.activity.NeteasePlaylistActivity
-import com.cyl.musiclake.ui.music.charts.OnlineAdapter
 import com.cyl.musiclake.ui.music.charts.contract.OnlinePlaylistContract
 import com.cyl.musiclake.ui.music.charts.presenter.OnlinePlaylistPresenter
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
@@ -53,7 +53,7 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
         showLoading()
         when (chartsType) {
             Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
-//            Constants.QQ -> mPresenter?.loadQQList()
+            Constants.QQ -> mPresenter?.loadQQList()
             Constants.NETEASE -> mPresenter?.loadTopList()
         }
     }

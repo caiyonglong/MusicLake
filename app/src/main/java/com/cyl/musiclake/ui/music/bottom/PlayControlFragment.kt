@@ -10,9 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
-import butterknife.OnClick
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.NavigationHelper
@@ -21,7 +19,6 @@ import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.playpage.PlayContract
 import com.cyl.musiclake.ui.music.playpage.PlayPresenter
@@ -190,7 +187,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
             snap.attachToRecyclerView(bottomPlayRcv)
             bottomPlayRcv.adapter = mAdapter
             bottomPlayRcv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         val manager = recyclerView?.layoutManager as LinearLayoutManager
