@@ -110,7 +110,6 @@
                 tools:listitem="@layout/item_search_hot" />
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,7 +122,6 @@
                 android:layout_weight="1"
                 android:text="@string/search_history" />
 
-
             <ImageView
                 android:id="@+id/clearAllIv"
                 android:layout_width="wrap_content"
@@ -131,7 +129,6 @@
                 android:contentDescription="@string/search_history"
                 android:src="@drawable/ic_delete"
                 android:tint="@color/black" />
-
         </LinearLayout>
 
 

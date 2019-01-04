@@ -75,7 +75,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 //            downloadIv.visibility = if (it) View.VISIBLE else View.GONE
 //        }
         //隐藏显示歌曲评论
-        songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
+//        songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
 
         coverAnimator?.cancel()
         coverAnimator?.start()

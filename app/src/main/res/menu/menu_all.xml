@@ -45,10 +45,10 @@
                 android:id="@+id/nav_menu_about"
                 android:icon="@drawable/ic_about"
                 android:title="@string/pref_title_about" />
-            <!--<item-->
-                <!--android:id="@+id/nav_menu_feedback"-->
-                <!--android:icon="@drawable/ic_feedback"-->
-                <!--android:title="@string/about_feedback" />-->
+            <item
+                android:id="@+id/nav_menu_feedback"
+                android:icon="@drawable/ic_feedback"
+                android:title="@string/about_feedback" />
             <item
                 android:id="@+id/nav_menu_setting"
                 android:icon="@mipmap/icon_setting"

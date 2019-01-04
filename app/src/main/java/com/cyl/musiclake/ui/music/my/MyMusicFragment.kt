@@ -3,17 +3,16 @@ package com.cyl.musiclake.ui.music.my
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity
@@ -35,10 +34,12 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showNoticeInfo(notice: NoticeInfo) {
         alert {
             isCancelable = false
-            title = "提示"
+            title = notice.title
             message = notice.message
-            yesButton {
-                SPUtils.putAnyCommit(SPUtils.SP_KEY_NOTICE_CODE, notice.id)
+            if (notice.dismiss) {
+                yesButton {
+                    SPUtils.putAnyCommit(SPUtils.SP_KEY_NOTICE_CODE, notice.id)
+                }
             }
         }.show()
     }

@@ -443,5 +443,6 @@
     <string name="unlock_notification_description">桌面歌词已锁定</string>
     <string name="click_to_unlock">点击解除锁定</string>
     <string name="unlock_notification">通知栏解锁</string>
+    <string name="recommend_song_list">推荐歌单</string>
 
 </resources>

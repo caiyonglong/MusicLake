@@ -540,7 +540,6 @@ public class MusicPlayerService extends Service {
             }
             saveHistory();
             mHistoryPos.add(mPlayingPos);
-            isMusicPlaying = true;
             if (mPlayingMusic.getUri() != null) {
                 if (!mPlayingMusic.getUri().startsWith(Constants.IS_URL_HEADER) && !FileUtils.exists(mPlayingMusic.getUri())) {
                     isAbnormalPlay();
@@ -1115,7 +1114,7 @@ public class MusicPlayerService extends Service {
             mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSessionManager.getMediaSession())
-                    .setShowActionsInCompactView(1, 0, 2, 3,4);
+                    .setShowActionsInCompactView(1, 0, 2, 3, 4);
             mNotificationBuilder.setStyle(style);
         }
 

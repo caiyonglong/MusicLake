@@ -227,11 +227,8 @@ public class Constants {
      * 在线歌单接口Api*************************************************
      */
 
-    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc";
-    public static final String BASE_TEST_PLAYER_URL = "https://player-test.zzsun.cc/";
-    //    public static final String BASE_NETEASE_URL = "http://192.168.123.44:3000";
-    public static final String BASE_NETEASE_URL = "https://45.76.48.211/";
-    //    public static final String BASE_NETEASE_URL = "http://musicapi.leanapp.cn/";
+    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc/";
+    public static final String BASE_NETEASE_URL = "http://musicapi.leanapp.cn/";
     //bugly app_id
     public static final String BUG_APP_ID = "fd892b37ea";
 

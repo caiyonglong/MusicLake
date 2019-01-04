@@ -11,9 +11,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.ChartsFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
-import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 import com.cyl.musiclake.ui.music.mv.MvFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
+import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 
 import butterknife.BindView;
 

@@ -7,4 +7,8 @@ class NoticeInfo {
     var id = 0
     @SerializedName("message")
     var message = ""
+    @SerializedName("title")
+    var title = ""
+    @SerializedName("dismiss")
+    var dismiss = true
 }
