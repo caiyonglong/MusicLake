@@ -1,5 +1,11 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
 
+# 因收到官方警告函，我们已关闭app的相关api服务,不再提供apk。有需要，可以自己回滚代码，替换 [musicApi](https://github.com/caiyonglong/MusicLake/blob/20f5a3883e1ba082d8dddde1c1c7ca6e680c9a66/musicapi/src/main/assets/musicApi.html#L12) 地址成本地文件
+ 
+最后警告 请勿传播，仅限自用！
+请勿传播，仅限自用！
+请勿传播，仅限自用！
+
 # 免责声明
 - 音乐湖只用作个人学习研究，禁止用于商业及非法用途，如产生法律纠纷与本人无关
 - 音乐api来自于github，非官方版api，本软件不提供任何音频存储服务，如需下载音频，请支持正版！。
@@ -32,15 +38,6 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 - [版本计划](https://github.com/caiyonglong/MusicLake/projects)
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ)
-
-# [更新日志](RELEASENOTE.md)
-## v4.2.1
-- 版权原因，下线网易云音乐
-
-## v4.2.0
-- 版权原因，qq音乐下线
-- 修复桌面歌词锁定状态无法点击问题
-- 其他优化
 
 # 相关项目|音乐API
 - [音乐API](https://github.com/sunzongzheng/musicApi)
