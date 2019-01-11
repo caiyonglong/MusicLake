@@ -54,7 +54,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
 
     @Override
     public void initViews() {
-        mToolbar.setTitle("播放历史");
+        mToolbar.setTitle(getString(R.string.item_history));
 
         setHasOptionsMenu(true);
         if (getActivity() != null) {

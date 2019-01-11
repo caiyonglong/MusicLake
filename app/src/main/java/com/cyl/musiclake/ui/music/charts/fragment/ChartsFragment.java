@@ -49,9 +49,9 @@ public class ChartsFragment extends BaseFragment<BasePresenter> {
     @Override
     public void initViews() {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.BAIDU), "百度音乐榜单");
-        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), "qq音乐榜单");
-        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.NETEASE), "网易云音乐榜单");
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.BAIDU), getString(R.string.res_baidu));
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), getString(R.string.res_qq));
+        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.NETEASE), getString(R.string.res_wangyi));
         mViewpager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewpager);
         updateTabLayout(mTabLayout);

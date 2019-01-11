@@ -57,7 +57,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
 
     @Override
     public void initViews() {
-        mToolbar.setTitle("播放队列");
+        mToolbar.setTitle(getString(R.string.playlist_queue));
 
         setHasOptionsMenu(true);
         if (getActivity() != null) {

@@ -5,7 +5,16 @@
     <string name="close">关闭</string>
     <!--欢迎界面-->
     <string name="permission_hint">软件必须获取相关权限</string>
+    <string name="welcome_tips">听我想听的歌</string>
+    <string name="welcome_tips_1">音乐湖</string>
+
+
     <!--主界面-->
+    <string name="my">我的</string>
+    <string name="discover">发现</string>
+    <string name="charts">排行榜</string>
+    <string name="mv">MV</string>
+
     <string name="login_hint">点我登录</string>
     <string name="un_login_tips">暂未登录</string>
     <string name="logout_hint">退出登录/关闭</string>
@@ -49,8 +58,6 @@
     <string name="near_people">分享人资料</string>
     <string name="detail_position">位置详情</string>
     <string name="plusone">+1</string>
-    <string name="item_clicked" translatable="false">item clicked！</string>
-    <string name="item_longclicked" translatable="false">item long clicked！</string>
     <string name="action_edit">发布动态</string>
     <string name="title_activity_playlist_song">PlaylistSongActivity</string>
     <string name="large_text">
@@ -136,10 +143,6 @@
     <!-- Transitions -->
     <string name="transition_cover">CoverTransition</string>
     <string name="transition_album">AlbumTransition</string>
-    <string name="transition_morph_view" translatable="false">morph_view_transition</string>
-    <string name="transition_name" translatable="false">square_transition</string>
-    <string name="transition_toolbar_name" translatable="false">toolbar_transition</string>
-    <string name="transition_shared_toolbar" translatable="false">shared_toolbar_transition</string>
 
 
     <string name="song_list_item_title_1">1.%1$s - %2$s</string>
@@ -163,6 +166,7 @@
     <string name="tip_empty_queue">播放队列为空</string>
     <string name="tip_empty_playlist">暂无歌单，快去新建吧！</string>
     <string name="recent_update">最近更新：%s</string>
+    <string name="recent_update_title">最近更新</string>
 
     <string name="search">搜索</string>
     <string name="search_history">搜索历史</string>
@@ -211,6 +215,8 @@
     <string name="album">专辑</string>
     <string name="setting_lyric">桌面歌词</string>
     <string name="setting_lyric_des">点击请求悬浮窗权限</string>
+    <string name="setting_socket">实时统计</string>
+    <string name="setting_socket_des">默认开启，如果影响到运行速度请关闭！</string>
     <string name="setting_timing">定时关闭</string>
     <string name="setting_timing_summary">定时关闭</string>
     <string name="count_down_time">定时关闭播放</string>
@@ -220,7 +226,7 @@
     <string name="version">版本号</string>
     <string name="author">作者</string>
     <string name="about_des">描述</string>
-    <string name="about_version">软件版本号</string>
+    <string name="about_version">软件版本号: %1$s</string>
     <string name="about_project">项目地址</string>
     <string name="about_feedback">邮件反馈</string>
     <string name="about_software"><u>关于软件</u></string>
@@ -419,8 +425,6 @@
     <string name="search_filter_baidu">百度音乐</string>
     <string name="remove_repeat">去重</string>
     <string name="remove_copyright">包含无版权歌曲</string>
-    <string name="welcome_tips">听我想听的歌</string>
-    <string name="welcome_tips_1">音乐湖</string>
     <string name="search_mv_hint">搜索mv</string>
     <string name="search_filter_repeat">去重</string>
     <string name="search_filter_repeat_summary">过滤掉重复的歌曲</string>
@@ -436,7 +440,6 @@
     <string name="music_quality_high">高清</string>
     <string name="music_quality_super">无损</string>
 
-
     <string name="float_lock">桌面歌词已锁定</string>
     <string name="float_lock_ticker">桌面歌词已锁定,可在通知栏解锁</string>
     <string name="float_unlock">桌面歌词已解除锁定</string>
@@ -444,5 +447,16 @@
     <string name="click_to_unlock">点击解除锁定</string>
     <string name="unlock_notification">通知栏解锁</string>
     <string name="recommend_song_list">推荐歌单</string>
+
+    <!--登录界面-->
+    <string name="login_title">用户登录</string>
+    <string name="logout_prompt">您确定要退出或切换其他账号吗？</string>
+
+    <string name="sound_quality_standard">标准</string>
+    <string name="sound_quality_high">较高品质</string>
+    <string name="sound_quality_hq_high">HQ品质</string>
+    <string name="sound_quality_sq_high">无损品质</string>
+    <string name="sound_quality">音质</string>
+    <string name="sound_effect">音效</string>
 
 </resources>

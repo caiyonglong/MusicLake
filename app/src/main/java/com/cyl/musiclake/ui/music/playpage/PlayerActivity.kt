@@ -218,12 +218,12 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun updatePlayStatus(isPlaying: Boolean) {
-        if (isPlaying&&!playPauseIv.isPlaying) {
+        if (isPlaying && !playPauseIv.isPlaying) {
             playPauseIv.play()
             coverAnimator?.isStarted?.let {
                 if (it) coverAnimator?.resume() else coverAnimator?.start()
             }
-        } else if (!isPlaying&&playPauseIv.isPlaying){
+        } else if (!isPlaying && playPauseIv.isPlaying) {
             coverAnimator?.pause()
             playPauseIv.pause()
         }
@@ -373,11 +373,11 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             }
         }
         val quality = when (playingMusic?.quality) {
-            128000 -> "标准"
-            192000 -> "较高品质"
-            320000 -> "HQ高品质"
-            999000 -> "SQ无损品质"
-            else -> "标准"
+            128000 -> getString(R.string.sound_quality_standard)
+            192000 -> getString(R.string.sound_quality_high)
+            320000 -> getString(R.string.sound_quality_hq_high)
+            999000 -> getString(R.string.sound_quality_sq_high)
+            else -> getString(R.string.sound_quality_standard)
         }
         mQualityTv?.text = quality
         value?.let {

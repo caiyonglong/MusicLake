@@ -16,6 +16,7 @@ import com.cyl.musiclake.utils.CoverLoader;
  * 主要管理Android 5.0以后线控和蓝牙远程控制播放
  */
 
+@SuppressWarnings("ALL")
 public class MediaSessionManager {
 
     private static final String TAG = "MediaSessionManager";

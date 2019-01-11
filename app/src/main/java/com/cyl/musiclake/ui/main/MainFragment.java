@@ -72,10 +72,10 @@ public class MainFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager mViewPager) {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
-        mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), "我的");
-        mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), "发现");
-        mAdapter.addFragment(ChartsFragment.newInstance(), "排行榜");
-        mAdapter.addFragment(MvFragment.newInstance(), "MV");
+        mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), getContext().getString(R.string.my));
+        mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), getContext().getString(R.string.discover));
+        mAdapter.addFragment(ChartsFragment.newInstance(), getContext().getString(R.string.charts));
+        mAdapter.addFragment(MvFragment.newInstance(), getContext().getString(R.string.mv));
 //        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);
     }

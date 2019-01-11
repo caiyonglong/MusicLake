@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     protected String setToolbarTitle() {
-        return "用户登录";
+        return getString(R.string.login_title);
     }
 
     @Override
@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     private void updateTokenView(boolean b) {
         if (mPresenter != null) {
-            mPresenter.loginServer(mAccessToken.getToken(), mAccessToken.getUid(),Constants.WEIBO);
+            mPresenter.loginServer(mAccessToken.getToken(), mAccessToken.getUid(), Constants.WEIBO);
         }
     }
 

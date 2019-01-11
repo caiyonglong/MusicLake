@@ -13,8 +13,8 @@
 
         <SwitchPreference
             android:key="key_socket"
-            android:summary="默认开启，如果影响到运行速度请关闭！"
-            android:title="实时统计" />
+            android:summary="@string/setting_socket_des"
+            android:title="@string/setting_socket" />
 
         <SwitchPreference
             android:defaultValue="true"

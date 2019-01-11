@@ -49,7 +49,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
 
     @Override
     public void initViews() {
-        mToolbar.setTitle("收藏");
+        mToolbar.setTitle(getString(R.string.item_favorite));
         setHasOptionsMenu(true);
         if (getActivity() != null) {
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();

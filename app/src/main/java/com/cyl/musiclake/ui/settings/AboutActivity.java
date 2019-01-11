@@ -100,7 +100,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mVersion.setText(String.format("版本号 v%s", BuildConfig.VERSION_NAME));
+        mVersion.setText(getString(R.string.about_version,BuildConfig.VERSION_NAME));
         mRealTimeUserTv.setText(String.valueOf(MusicApp.socketManager.getRealUsersNum()));
     }
 

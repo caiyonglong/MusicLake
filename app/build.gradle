@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-// 依赖插件脚本
-//apply from: 'tinker-support.gradle'
 
 repositories {
     mavenCentral()
@@ -167,4 +165,5 @@ dependencies {
 
     //横幅
     api 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

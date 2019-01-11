@@ -1,5 +1,7 @@
 package com.cyl.musiclake.player.playqueue
 
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.R
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
@@ -19,7 +21,7 @@ object PlayQueueManager {
     //播放模式
     private var playingModeId = 0
 
-    private val playingMode = arrayOf("顺序播放", "单曲循环", "随机播放")
+    private val playingMode = arrayOf(R.string.play_mode_loop, R.string.play_mode_repeat, R.string.play_mode_random)
 
     /**
      * 总共多少首歌曲
@@ -52,7 +54,7 @@ object PlayQueueManager {
      * 获取播放模式
      */
     fun getPlayMode(): String {
-        return playingMode[playingModeId]
+        return MusicApp.mContext.getString(playingMode[playingModeId]);
     }
 
     private fun initOrderList(total: Int) {

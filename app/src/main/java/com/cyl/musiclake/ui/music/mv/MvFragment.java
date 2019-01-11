@@ -49,9 +49,9 @@ public class MvFragment extends BaseFragment<BasePresenter> {
     @Override
     public void initViews() {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(MvListFragment.newInstance("rank"), "排行榜");
-        adapter.addFragment(MvListFragment.newInstance("recently"), "最近更新");
-        adapter.addFragment(MvSearchListFragment.newInstance(), "MV搜索");
+        adapter.addFragment(MvListFragment.newInstance("rank"), getString(R.string.charts));
+        adapter.addFragment(MvListFragment.newInstance("recently"), getString(R.string.recent_update_title));
+        adapter.addFragment(MvSearchListFragment.newInstance(), getString(R.string.search));
         mViewpager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewpager);
         updateTabLayout(mTabLayout);

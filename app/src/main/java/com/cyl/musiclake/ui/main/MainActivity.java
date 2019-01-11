@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
 import com.cyl.musiclake.common.Constants;
@@ -34,10 +33,10 @@ import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
-import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.BindLoginFragment;
 import com.cyl.musiclake.ui.my.LoginActivity;
@@ -47,10 +46,7 @@ import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.Tools;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -251,12 +247,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_login_status:
                 if (mIsLogin) {
                     new MaterialDialog.Builder(this)
-                            .title("音乐湖")
-                            .content("您确定要退出或切换其他账号吗？")
-                            .positiveText("确定")
+                            .title(R.string.app_name)
+                            .content(R.string.logout_prompt)
+                            .positiveText(android.R.string.yes)
                             .onPositive((materialDialog, dialogAction) -> {
                                 logout();
-                            }).negativeText("取消").show();
+                            }).negativeText(android.R.string.cancel).show();
                 } else {
                     mTargetClass = LoginActivity.class;
                 }
