@@ -180,6 +180,7 @@ public class FastScroller {
     }
 
     /**
+     * 处理触摸事件，并决定是否显示快速滚动条(如果已经显示则更新)
      * Handles the touch event and determines whether to show the fast scroller (or updates it if
      * it is already showing).
      */
@@ -195,7 +196,8 @@ public class FastScroller {
                 break;
             case MotionEvent.ACTION_MOVE:
                 // Check if we should start scrolling
-                if (!mIsDragging && isNearPoint(downX, downY) &&
+                if (!mIsDragging &&
+                        isNearPoint(downX, downY) &&
                         Math.abs(y - downY) > mTouchSlop) {
                     mRecyclerView.getParent().requestDisallowInterceptTouchEvent(true);
                     mIsDragging = true;

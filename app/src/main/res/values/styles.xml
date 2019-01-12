@@ -109,7 +109,8 @@
 
     <style name="MyThemeBlue.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MainActivityTheme" parent="MyThemeBlue">
+    <style name="MainActivityTheme" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
@@ -125,4 +126,7 @@
         <item name="android:layout_marginStart">@dimen/dp_16</item>
         <item name="android:layout_marginEnd">@dimen/dp_16</item>
     </style>
+
+
+
 </resources>

@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.cyl.musiclake.R
+import com.cyl.musiclake.R.id.titleIv
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
@@ -407,9 +408,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
 
     private fun closeActivity() {
-        overridePendingTransition(0, 0)
-        ActivityCompat.finishAfterTransition(this)
-        finish()
+        super.onBackPressed()
+//        finish()
+//        overridePendingTransition(0, 0)
+//        ActivityCompat.finishAfterTransition(this)
     }
 
     override fun onDestroy() {

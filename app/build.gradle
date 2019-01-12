@@ -80,8 +80,8 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
 
     //RxJava and RxAndroid
-    api 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    api 'io.reactivex.rxjava2:rxjava:2.1.17'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    api 'io.reactivex.rxjava2:rxjava:2.2.3'
     api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
 
     // Retrofit适配RxJava

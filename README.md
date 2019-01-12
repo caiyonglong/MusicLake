@@ -1,10 +1,7 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
 
-# 因收到官方警告函，我们已关闭app的相关api服务,不再提供apk。有需要，可以自己回滚代码，替换 [musicApi](https://github.com/caiyonglong/MusicLake/blob/20f5a3883e1ba082d8dddde1c1c7ca6e680c9a66/musicapi/src/main/assets/musicApi.html#L12) 地址成本地文件
- 
-最后警告 请勿传播，仅限自用！
-请勿传播，仅限自用！
-请勿传播，仅限自用！
+# 因收到官方警告函，我们已关闭app的相关api服务,不再提供任何apk。
+
 
 # 免责声明
 - 音乐湖只用作个人学习研究，禁止用于商业及非法用途，如产生法律纠纷与本人无关

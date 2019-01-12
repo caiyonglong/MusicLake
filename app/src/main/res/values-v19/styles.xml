@@ -24,6 +24,7 @@
 
     <style name="MainActivityTheme" parent="MyThemeBlue">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
 </resources>

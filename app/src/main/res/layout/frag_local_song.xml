@@ -55,7 +55,6 @@
                 app:fastScrollThumbColor="@color/colorAccent"
                 app:fastScrollThumbEnabled="true"
                 app:fastScrollTrackColor="#1f000000"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

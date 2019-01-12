@@ -15,6 +15,7 @@ import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
+import com.cyl.musiclake.ui.widget.fastscroll.FastScrollRecyclerView
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
@@ -31,7 +32,7 @@ import org.jetbrains.anko.startActivity
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList) {
+class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList),FastScrollRecyclerView.SectionedAdapter{
     override fun convert(holder: BaseViewHolder, item: Music) {
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
@@ -111,6 +112,10 @@ class SongAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHold
         notifyDataSetChanged()
     }
 
+
+    override fun getSectionName(position: Int): String {
+        return musicList[position].title?.get(0).toString()
+    }
 
     override fun onViewAttachedToWindow(holder: BaseViewHolder) {
         super.onViewAttachedToWindow(holder)
