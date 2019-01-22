@@ -61,11 +61,6 @@ public class MusicApp extends Application {
     private ApplicationComponent mApplicationComponent;
     public Point screenSize = new Point();
 
-//    public MusicApp() {
-//        super(ShareConstants.TINKER_ENABLE_ALL, "com.cyl.musiclake.MusicAppLike",
-//                "com.tencent.tinker.loader.TinkerLoader", false);
-//    }
-
     public static synchronized MusicApp getInstance() {
         return sInstance;
     }

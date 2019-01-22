@@ -100,8 +100,8 @@ dependencies {
     //对话框
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    api 'com.github.bumptech.glide:glide:4.7.1'
-    kapt 'com.github.bumptech.glide:compiler:4.7.1'
+    api 'com.github.bumptech.glide:glide:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
     api 'com.sothree.slidinguppanel:library:3.4.0'
     api 'com.liulishuo.filedownloader:library:1.7.4'
     api 'com.github.florent37:shapeofview:1.0.4'
@@ -165,5 +165,5 @@ dependencies {
 
     //横幅
     api 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

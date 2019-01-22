@@ -196,8 +196,8 @@ public class FloatLyricViewManager {
                     mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                             | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                     mFloatLyricViewParams.gravity = Gravity.START | Gravity.TOP;
-                    mFloatLyricViewParams.width = mFloatLyricView.viewWidth;
-                    mFloatLyricViewParams.height = mFloatLyricView.viewHeight;
+                    mFloatLyricViewParams.width = mFloatLyricView.getViewWidth();
+                    mFloatLyricViewParams.height = mFloatLyricView.getViewHeight();
                     mFloatLyricViewParams.x = screenWidth;
                     mFloatLyricViewParams.y = screenHeight / 2;
                 }
@@ -240,12 +240,12 @@ public class FloatLyricViewManager {
             handler.post(() -> {
                 if (mFloatLyricView != null) {
                     if (isFirstSettingLyric) {
-                        mFloatLyricView.mTitle.setText(mSongName);
-                        mFloatLyricView.mLyricText.setLyricInfo(mLyricInfo);
+                        mFloatLyricView.getMTitle().setText(mSongName);
+                        mFloatLyricView.getMLyricText().setLyricInfo(mLyricInfo);
                         isFirstSettingLyric = false;
                     }
-                    mFloatLyricView.mLyricText.setCurrentTimeMillis(positon);
-                    mFloatLyricView.mLyricText.setDurationMillis(duration);
+                    mFloatLyricView.getMLyricText().setCurrentTimeMillis(positon);
+                    mFloatLyricView.getMLyricText().setDurationMillis(duration);
                 }
             });
         }

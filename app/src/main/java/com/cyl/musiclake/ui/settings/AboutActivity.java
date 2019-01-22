@@ -37,21 +37,16 @@ import static com.cyl.musiclake.common.Constants.ABOUT_MUSIC_LAKE_URL;
  * Created by lw on 2018/2/12.
  */
 public class AboutActivity extends BaseActivity {
-    //    @BindView(R.id.flipperView)
-//    FlipperView flipperView;
     @BindView(R.id.tv_about_version)
     TextView mVersion;
     @BindView(R.id.cardEmailView)
     View cardEmailView;
-    //    @BindView(R.id.logoFab)
-//    FloatingActionButton mLogoFab;
     @BindView(R.id.shareFab)
     FloatingActionButton shareFab;
     @BindView(R.id.realTimeUserTv)
     TextView mRealTimeUserTv;
     @BindView(R.id.aboutContainerView)
     View mView;
-//    ObjectAnimator animator;
 
     @OnClick(R.id.cardGithubView)
     void introduce() {
@@ -149,12 +144,6 @@ public class AboutActivity extends BaseActivity {
         });
         // 保存 每个 View 当前的可见状态(Visibility)。
         TransitionManager.beginDelayedTransition(mView.findViewById(R.id.ll_layout), transition);
-
-        // 移动红圈到中央
-//        RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams
-//                .WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        layoutParams1.addRule(RelativeLayout.CENTER_IN_PARENT);
-//        cardEmailView.setLayoutParams(layoutParams1);
     }
 
     private void animateRevealColor(ViewGroup viewRoot, @ColorRes int color) {
