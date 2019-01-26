@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.ChartsFragment;
+import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.mv.MvFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
@@ -74,7 +74,7 @@ public class MainFragment extends BaseFragment {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
         mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), getContext().getString(R.string.my));
         mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), getContext().getString(R.string.discover));
-        mAdapter.addFragment(ChartsFragment.newInstance(), getContext().getString(R.string.charts));
+        mAdapter.addFragment(ChartsDetailFragment.Companion.newInstance(), getContext().getString(R.string.charts));
         mAdapter.addFragment(MvFragment.newInstance(), getContext().getString(R.string.mv));
 //        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);

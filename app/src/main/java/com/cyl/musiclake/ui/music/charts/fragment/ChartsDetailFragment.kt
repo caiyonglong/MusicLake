@@ -1,8 +1,9 @@
 package com.cyl.musiclake.ui.music.charts.fragment
 
+import android.animation.Animator
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
@@ -13,7 +14,7 @@ import com.cyl.musiclake.ui.music.charts.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.charts.activity.NeteasePlaylistActivity
 import com.cyl.musiclake.ui.music.charts.contract.OnlinePlaylistContract
 import com.cyl.musiclake.ui.music.charts.presenter.OnlinePlaylistPresenter
-import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
+import kotlinx.android.synthetic.main.fragment_charts.*
 
 /**
  * 功能：在线排行榜
@@ -26,9 +27,10 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
     private var mAdapter: OnlineAdapter? = null
     private var chartsType: String = Constants.BAIDU
     private var allPlaylist = mutableListOf<Playlist>()
+    private var isShowing = true
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_recyclerview_notoolbar
+        return R.layout.fragment_charts
     }
 
     override fun initViews() {
@@ -43,6 +45,7 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
         mAdapter = OnlineAdapter(allPlaylist)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
+
     }
 
     override fun initInjector() {
@@ -51,11 +54,14 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
 
     override fun onLazyLoad() {
         showLoading()
-        when (chartsType) {
-            Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
-            Constants.QQ -> mPresenter?.loadQQList()
-            Constants.NETEASE -> mPresenter?.loadTopList()
-        }
+        mPresenter?.loadBaiDuPlaylist()
+        mPresenter?.loadQQList()
+        mPresenter?.loadTopList()
+//        when (chartsType) {
+//            Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
+//            Constants.QQ -> mPresenter?.loadQQList()
+//            Constants.NETEASE -> mPresenter?.loadTopList()
+//        }
     }
 
     override fun loadData() {
@@ -93,12 +99,8 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
 
     companion object {
         private val TAG = "ChartsDetailFragment"
-        fun newInstance(type: String): ChartsDetailFragment {
-            val args = Bundle()
-            args.putString("type", type)
-            val fragment = ChartsDetailFragment()
-            fragment.arguments = args
-            return fragment
+        fun newInstance(): ChartsDetailFragment {
+            return ChartsDetailFragment()
         }
     }
 

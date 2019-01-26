@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.ui.main.PageAdapter;
@@ -49,9 +48,9 @@ public class ChartsFragment extends BaseFragment<BasePresenter> {
     @Override
     public void initViews() {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
-        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.BAIDU), getString(R.string.res_baidu));
-        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), getString(R.string.res_qq));
-        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.NETEASE), getString(R.string.res_wangyi));
+//        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.BAIDU), getString(R.string.res_baidu));
+//        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.QQ), getString(R.string.res_qq));
+//        adapter.addFragment(ChartsDetailFragment.Companion.newInstance(Constants.NETEASE), getString(R.string.res_wangyi));
         mViewpager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewpager);
         updateTabLayout(mTabLayout);
