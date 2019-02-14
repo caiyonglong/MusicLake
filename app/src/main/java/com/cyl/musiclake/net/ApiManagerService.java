@@ -1,10 +1,8 @@
 package com.cyl.musiclake.net;
 
 import com.cyl.musiclake.api.ApiModel;
-import com.cyl.musiclake.ui.map.location.Location;
 import com.cyl.musiclake.ui.my.user.User;
 
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -24,9 +22,6 @@ public interface ApiManagerService {
 
     @POST
     Observable<ApiModel<User>> getUserInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
-
-    @GET
-    Observable<ApiModel<List<Location>>> getNearPeopleInfo(@Url String baseUrl, @QueryMap Map<String, String> params);
 
     @Streaming
     @GET

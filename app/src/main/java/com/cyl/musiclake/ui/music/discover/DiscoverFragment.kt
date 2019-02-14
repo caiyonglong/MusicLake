@@ -60,7 +60,6 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     }
 
     override fun initViews() {
-
         wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
         //适配器
         mNeteaseAdapter = TopPlaylistAdapter(playlist)
@@ -175,7 +174,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
 
     override fun showEmptyView(msg: String) {
         hideLoading()
-        showError(msg, true)
+//        showError(msg, true)
     }
 
     override fun retryLoading() {

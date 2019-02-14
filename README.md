@@ -1,6 +1,8 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
 
-# 因收到官方警告函，我们已关闭app的相关api服务,不再提供任何apk。
+# 因收到网易云音乐和QQ音乐的官方警告函，我们已关闭app的相关api服务,不再提供任何apk。
+- 音乐api可以下载 [app.native.js](https://github.com/sunzongzheng/musicApi/blob/master/dist/app.native.js)保存到本地，替换掉MusicLake/musicapi/src/main/assets/musicApi.html中的 js文件
+- 有服务器的可以自己搭建 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 。
 
 # 免责声明
 - 音乐湖只用作个人学习研究，禁止用于商业及非法用途，如产生法律纠纷与本人无关
@@ -28,7 +30,8 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 - QQ登录、微博登陆、在线歌单同步
 - 网易云热门歌手，百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式、歌词翻译
-- 精力有限，需求不饱和都会逐步完善，有兴趣可赏个star静等完善与bug修复，期望的功能也可提[issues](https://github.com/caiyonglong/MusicLake/issues)
+- 精力有限，需求不饱和都会逐步完善
+- 有兴趣可赏个star静等完善与bug修复，期望的功能也可提[issues](https://github.com/caiyonglong/MusicLake/issues)
 - [PC端](https://github.com/sunzongzheng/music)
 - [版本计划](https://github.com/caiyonglong/MusicLake/projects)
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)

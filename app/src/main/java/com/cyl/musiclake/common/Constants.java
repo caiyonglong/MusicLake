@@ -1,7 +1,5 @@
 package com.cyl.musiclake.common;
 
-import android.os.Environment;
-
 /**
  * Created by yonglong on 2016/5/8.
  */
@@ -60,9 +58,6 @@ public class Constants {
     //QQ APP_ID
     public static final String APP_ID = "101454823";
 
-    //社区根目录(头像图片网址前缀)
-    public static final String DEFAULT_IMGHEADER = "http://119.29.27.116/hkmusic";
-
     //社区后台操作php
     public static final String DEFAULT_URL = "http://119.29.27.116/hkmusic/operate.php";
     public static final String LOGIN_URL = "http://119.29.27.116/hkmusic/login.php";
@@ -103,24 +98,7 @@ public class Constants {
 
     //功能
     public static final String FUNC = "func";
-    //动态secret
-    public static final String SECRET_ADD = "add";
-    public static final String COMMENT_ADD = "addComment";
-    public static final String GET_SECRET_LIST = "getSecretList";
-    public static final String GET_MYSECRET_LIST = "getMySecretList";
-    public static final String PAGENUM = "pageNum";
-    //点赞
-    public static final String CHANGE_AGREE = "changeAgree";
-    //评论
-    public static final String GET_COMMENT_LIST = "getCommentList";
-    //位置信息
-    public static final String LOCATION = "location";
-    public static final String LAT = "lat";//location_latitude
-    public static final String LON = "lon";//location_longitude
-    //清理位置信息
-    public static final String CLEARN = "clearLocation";
-    //附近
-    public static final String NEAR = "near";
+
     //摇一摇歌曲
     public static final String SONG_ADD = "addSong";
     public static final String SONG = "song";
@@ -134,26 +112,6 @@ public class Constants {
     public static final String IS_URL_HEADER = "http";
 
     public static final String TEXT_PLAIN = "text/plain";
-
-
-    //根据音乐id获取音乐详情接口
-    public static final String DEFAULT_MUSIC_INTERFACE = "http://suen.pw/interface/music/api.php?operate=getInfo&&songID=";
-    //根据关键词获取音乐接口
-    public static final String DEFAULT_MUSIC_LIST_URL = "http://suen.pw/interface/music/api.php?operate=search&&key=";
-
-    //音乐歌词根网址
-    public static final String DEFAULT_MUSIC_LRCPATH = "http://tingapi.ting.baidu.com";
-    //图片地址
-    public static final String DEFAULT_USERIMG_PATH = Environment.getExternalStorageDirectory() + "/hkmusic/cache/";
-
-    //头像上传网址
-    public static final String DEFAULT_IMG_UPLOAD = "http://119.29.27.116/hcyl/music_BBS/upload_file.php";
-
-    public static final String FORMAT = "json";
-
-
-    public static final String TOGGLE_SOCKET = "toggle_socket";
-
 
     /**
      * 悬浮窗权限requestCode
@@ -200,34 +158,16 @@ public class Constants {
      * 百度音乐Api*************************************************
      */
     public static final String BASE_URL_BAIDU_MUSIC = "http://musicapi.qianqian.com/";
-    public static final String METHOD_CATEGORY = "baidu.ting.billboard.billCategory";
-    public static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
-    public static final String METHOD_SEARCH_SUGGESTION = "baidu.ting.search.suggestion";
-    public static final String METHOD_MUSIC_INFO = "baidu.ting.song.getInfos";
-    public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
-    public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.common";
-    public static final String METHOD_SEARCH_MERGE = "baidu.ting.search.merge";
-
-    public static final String PARAM_METHOD = "method";
-    public static final String PARAM_TYPE = "type";
-    public static final String PARAM_SIZE = "size";
-    public static final String PARAM_PAGE_SIZE = "page_size";
-    public static final String PARAM_PAGE_NO = "page_no";
-    public static final String PARAM_OFFSET = "offset";
-    public static final String PARAM_LIMIT = "limit";
-    public static final String PARAM_SONG_ID = "songid";
-    public static final String PARAM_TING_UID = "tinguid";
-    public static final String PARAM_ALBUM_ID = "album_id";
-    public static final String PARAM_QUERY = "query";
 
     public static final String URL_GET_SONG_INFO = "http://music.baidu.com/data/music/links?songIds=";
-
 
     /**
      * 在线歌单接口Api*************************************************
      */
-
     public static final String BASE_PLAYER_URL = " https://player.zzsun.cc/";
+    /**
+     * 网易云音乐接口
+     */
     public static final String BASE_NETEASE_URL = "https://netease.api.zzsun.cc/";
     //bugly app_id
     public static final String BUG_APP_ID = "fd892b37ea";

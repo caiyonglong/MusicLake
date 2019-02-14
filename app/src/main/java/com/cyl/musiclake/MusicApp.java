@@ -20,7 +20,6 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.UpdateUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
@@ -78,7 +77,6 @@ public class MusicApp extends Application {
         mContext = this;
         initApplicationComponent();
         LitePal.initialize(this);
-        UpdateUtils.init(this);
         mTencent = Tencent.createInstance(Constants.APP_ID, this);
         initBugly();
         initLogin();

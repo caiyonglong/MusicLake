@@ -78,11 +78,6 @@
             android:name=".ui.music.playlist.PlaylistManagerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.zone.NearPeopleAcivity"
-            android:label="@string/near_people"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.music.comment.SongCommentActivity"
             android:label="@string/song_comment_title"
             android:screenOrientation="portrait" />
@@ -103,23 +98,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
-            android:name=".ui.map.ShakeActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.music.search.SearchActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".ui.zone.EditActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.my.UserCenterActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.edit.EditSongListActivity"
             android:label="@string/app_name"
@@ -160,12 +143,6 @@
         <activity
             android:name=".ui.main.WebActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.zone.CommentActivity"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
         <!-- 接入第三方QQ登录 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"

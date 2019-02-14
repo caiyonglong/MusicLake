@@ -9,10 +9,6 @@ package com.cyl.musiclake.common;
  */
 
 public class Extras {
-    public static final String BILLBOARD_DESC = "billboard_desc";
-    public static final String BILLBOARD_TYPE = "billboard_type";
-    public static final String BILLBOARD_TITLE = "billboard_title";
-    public static final String BILLBOARD_ALBUM = "billboard_album";
 
     public static final String ALBUM = "album";
     public static final String SONG_NAME = "song_name";
@@ -25,9 +21,6 @@ public class Extras {
     public static final String USER_ID = "user_id";
 
 
-    public static final String PLAYLIST_FOREGROUND_COLOR = "foreground_color";
-
-    public static final String PLAYLIST_BACKGROUND_IMAGE = "background_image";
     public static final String PLAYLIST_NAME = "playlist_name";
 
     public static final String TRANSITIONNAME = "transitionName";
@@ -43,11 +36,6 @@ public class Extras {
     public static final String MV_TITLE = "mv_title";
     public static final String MV_ID = "mv_mid";
 
-
-    //返回值 playlistDetail
-    public static final int TO_PLAYLISTDETAIL = 0;
-    public static final String SONG_TYPE = "song_type";
-    public static final String COMMUNITY_FLAG = "community_flag";
 
     //在线歌曲id
     public static final String TING_UID = "ting_uid";

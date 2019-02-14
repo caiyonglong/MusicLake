@@ -3,12 +3,12 @@ package com.cyl.musicapi
 import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.cyl.musicapi.bean.*
 import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.tencent.smtt.sdk.WebView
-import com.tencent.smtt.sdk.WebViewClient
 import org.json.JSONArray
 import org.json.JSONObject
 import wendu.dsbridge.CompletionHandler

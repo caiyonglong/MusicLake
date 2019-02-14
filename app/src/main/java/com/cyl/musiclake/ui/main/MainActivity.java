@@ -35,7 +35,6 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
-import com.cyl.musiclake.ui.map.ShakeActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.BindLoginFragment;
@@ -262,8 +261,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 item.setChecked(true);
                 if (!mIsLogin) {
                     mTargetClass = LoginActivity.class;
-                } else {
-                    mTargetClass = ShakeActivity.class;
                 }
                 break;
             case R.id.nav_menu_playQueue:

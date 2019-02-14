@@ -1,22 +1,18 @@
 package com.cyl.musiclake.api.baidu
 
 import com.cyl.musicapi.baidu.BaiduApiService
-import com.cyl.musicapi.baidu.MvInfo
-import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.api.MusicUtils
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_BIG
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_SMALL
 import com.cyl.musiclake.bean.*
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
-import io.reactivex.internal.operators.observable.ObservableAll
-import java.util.*
 
 /**
  * Created by yonglong on 2018/1/21.

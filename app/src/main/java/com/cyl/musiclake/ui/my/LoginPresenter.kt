@@ -8,11 +8,12 @@ import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.api.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.my.user.User
+import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
@@ -34,7 +35,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     override fun bindNetease(userName: String, pwd: String) {
         if (userName.isEmpty()) return
         if (pwd.isEmpty()) return
-        val observable =NeteaseApiServiceImpl.loginPhone(userName, pwd, userName.contains("@"))
+        val observable = NeteaseApiServiceImpl.loginPhone(userName, pwd, userName.contains("@"))
         ApiManager.request(observable,
                 object : RequestCallBack<LoginInfo> {
                     override fun success(result: LoginInfo?) {
@@ -53,17 +54,10 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
         )
     }
 
-    private var userModel: UserModel? = null
-
     private var loginListener: IUiListener? = null
-
-    init {
-        this.userModel = UserModel()
-    }
 
     override fun attachView(view: LoginContract.View) {
         super.attachView(view)
-        userModel = UserModel()
     }
 
     override fun login(params: Map<String, String>) {
@@ -79,12 +73,12 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                 object : RequestCallBack<User> {
                     override fun success(result: User?) {
                         if (result != null) {
-                            userModel?.savaInfo(result)
+                            UserStatus.saveUserInfo(result)
                         }
                         //登录成功
                         mView?.hideLoading()
                         //登录成功
-                        mView?.success(userModel?.userInfo)
+                        mView?.success(UserStatus.getUserInfo())
                     }
 
                     override fun error(msg: String) {
@@ -158,12 +152,14 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                                 userInfo.name = nickName
                                 userInfo.nick = nickName
                                 //保存用户信息
-                                userModel!!.savaInfo(userInfo)
+                                UserStatus.saveUserInfo(userInfo)
                                 loginServer(MusicApp.mTencent.accessToken, MusicApp.mTencent.openId, Constants.QQ)
                             } catch (e: JSONException) {
                                 ToastUtils.show("网络异常，请稍后重试！")
                                 e.printStackTrace()
                             }
+
+
 
                         }
 
