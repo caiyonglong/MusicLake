@@ -31,7 +31,7 @@
                         android:id="@+id/mzBannerView"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:paddingTop="@dimen/dp_8"
                         android:paddingBottom="@dimen/dp_8"
                         app:canLoop="true"
@@ -44,7 +44,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:orientation="horizontal"
                         android:padding="@dimen/dp_16">
 
@@ -86,13 +86,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
+                            android:background="?cardColor"
                             android:orientation="horizontal">
 
                             <TextView
@@ -130,7 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -159,7 +159,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -188,7 +188,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -232,7 +232,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@color/white"
+                        android:background="?cardColor"
                         android:orientation="vertical"
                         android:visibility="gone">
 

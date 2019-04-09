@@ -16,4 +16,11 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     override fun initInjector() {
     }
+
+    /**
+     * 开始动画
+     */
+    fun startAnimation() {
+
+    }
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?windowBackground">
 
 
     <android.support.design.widget.AppBarLayout
@@ -17,7 +17,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@color/white"
+            android:background="?colorPrimary"
             app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
@@ -26,7 +26,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:background="@color/colorPrimary"
+                android:background="?colorPrimary"
                 android:elevation="5dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />

@@ -69,10 +69,10 @@
                         android:layout_marginEnd="@dimen/dp_16"
                         android:background="@drawable/bg_button"
                         android:lines="1"
-                        android:paddingBottom="@dimen/dp_4"
-                        android:paddingEnd="@dimen/dp_16"
                         android:paddingStart="@dimen/dp_16"
                         android:paddingTop="@dimen/dp_4"
+                        android:paddingEnd="@dimen/dp_16"
+                        android:paddingBottom="@dimen/dp_4"
                         android:text="@string/login"
                         android:textColor="@android:color/white" />
 
@@ -122,10 +122,10 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_red_spot"
                     android:elevation="@dimen/dp_4"
-                    android:paddingBottom="@dimen/dp_2"
-                    android:paddingEnd="@dimen/dp_8"
                     android:paddingStart="@dimen/dp_8"
                     android:paddingTop="@dimen/dp_2"
+                    android:paddingEnd="@dimen/dp_8"
+                    android:paddingBottom="@dimen/dp_2"
                     android:textColor="@color/white"
                     tools:text="20000000" />
             </LinearLayout>
@@ -244,6 +244,37 @@
                     android:layout_marginEnd="@dimen/dp_16"
                     android:checked="false" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/navMenuStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/dp_16"
+                    android:src="@drawable/ic_timer_black" />
+
+                <TextView
+                    style="@style/navMenuStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/nav_night"
+                    android:textColor="@color/black" />
+
+                <Switch
+                    android:id="@+id/nav_menu_night_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:checked="false" />
             </LinearLayout>
 
             <com.xw.repo.BubbleSeekBar
@@ -393,8 +424,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginEnd="@dimen/dp_16"
                 android:text="@string/logout_hint"
                 android:textColor="@color/black" />
         </LinearLayout>

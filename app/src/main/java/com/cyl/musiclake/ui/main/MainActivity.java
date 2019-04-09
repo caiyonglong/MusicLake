@@ -43,6 +43,7 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
+import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.Tools;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     Switch mSwitchCountDown;
+    Switch mNightModeSw;
     TextView mSwitchCountDownTv;
 
     public ImageView mImageView;
@@ -104,6 +106,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         disableNavigationViewScrollbars(mNavigationView);
         checkLoginStatus();
         initCountDownView();
+        initNightMode();
     }
 
 
@@ -504,6 +507,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             } else {
                 mSwitchCountDownTv.setVisibility(View.GONE);
                 CountDownUtils.INSTANCE.removeTextViewListener(mSwitchCountDownTv);
+            }
+        });
+    }
+
+    /**
+     * 初始化夜间模式
+     */
+    private void initNightMode() {
+        View item = mNavigationView.getMenu().findItem(R.id.nav_menu_night_mode).getActionView();
+        mNightModeSw = item.findViewById(R.id.night_mode_switch);
+        mNightModeSw.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && ThemeStore.THEME_MODE != ThemeStore.NIGHT) {
+                ThemeStore.THEME_MODE = ThemeStore.NIGHT;
+//                recreate();
+            } else if (ThemeStore.THEME_MODE != ThemeStore.DAY) {
+                ThemeStore.THEME_MODE = ThemeStore.DAY;
+//                recreate();
             }
         });
     }

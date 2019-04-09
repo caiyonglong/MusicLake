@@ -24,6 +24,7 @@ import com.cyl.musiclake.di.component.DaggerActivityComponent;
 import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -90,6 +91,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setUpTheme();
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);
@@ -285,4 +287,11 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     public void onDefaultEvent(MetaChangedEvent event) {
     }
 
+    private void setUpTheme() {
+        if (ThemeStore.THEME_MODE == ThemeStore.NIGHT) {
+            setTheme(R.style.MyThemeDark);
+        } else {
+            setTheme(R.style.MyThemeBlue);
+        }
+    }
 }
