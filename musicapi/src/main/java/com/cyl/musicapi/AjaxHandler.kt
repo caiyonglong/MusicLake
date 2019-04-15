@@ -3,6 +3,7 @@ package com.cyl.musicapi
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
+import com.cyl.musicapi.dsbridge.CompletionHandler
 
 import org.json.JSONObject
 
@@ -18,7 +19,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import wendu.dsbridge.CompletionHandler
+//import wendu.dsbridge.CompletionHandler
 
 
 /**

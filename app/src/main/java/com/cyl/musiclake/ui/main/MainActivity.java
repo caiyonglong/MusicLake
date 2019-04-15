@@ -516,11 +516,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
-    /**
-     * 欢迎界面跳转到主界面
-     */
-    private void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
 }

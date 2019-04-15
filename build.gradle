@@ -9,6 +9,9 @@ buildscript {
         google()
         jcenter()
         maven {
+            url "https://jitpack.io"
+        }
+        maven {
             url 'https://maven.google.com/'
             name 'Google'
         }
@@ -30,7 +33,6 @@ allprojects {
         maven {
             url "https://jitpack.io"
         }
-
         maven {
             url 'https://maven.google.com/'
             name 'Google'

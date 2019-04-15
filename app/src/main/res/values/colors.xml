@@ -122,4 +122,25 @@
 
     <color name="chatBackgroundColor">#dcdcdc</color>
 
+
+    <!-- 灰色字体 -->
+    <color name="gray_6c6a6c">#6c6a6c</color>
+    <!--专辑与艺术家灰色字体-->
+    <color name="gray_8d8c8e">#8d8c8e</color>
+
+    <color name="light_normal_tab_text_color">#99ffffff</color>
+    <!--白天模式-->
+    <color name="day_text_color">#6d6c69</color>
+    <color name="day_text_color_primary">@color/black</color>
+    <color name="day_ripple_color">#1f000000</color>
+
+    <!--夜间模式-->
+    <color name="night_text_color">#6c6a6c</color>
+    <color name="night_text_color_primary">@color/white</color>
+    <color name="night_ripple_color">#353538</color>
+
+
+    <color name="dark_normal_tab_text_color">@color/night_text_color</color>
+
+
 </resources>

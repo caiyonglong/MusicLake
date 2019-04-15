@@ -19,6 +19,7 @@ import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
+import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.LogUtil;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -89,6 +90,7 @@ public class MusicApp extends Application {
         if (manager != null) {
             manager.getDefaultDisplay().getSize(screenSize);
         }
+        ThemeStore.getThemeMode();
     }
 
     private void initLogin() {

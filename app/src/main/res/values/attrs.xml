@@ -61,12 +61,24 @@
         <attr name="fastScrollPopupTextSize" format="reference|dimension" />
         <attr name="fastScrollPopupBackgroundSize" format="reference|dimension" />
         <attr name="fastScrollPopupPosition" format="enum">
-            <enum name="adjacent" value="0"/>
-            <enum name="center" value="1"/>
+            <enum name="adjacent" value="0" />
+            <enum name="center" value="1" />
         </attr>
         <attr name="fastScrollAutoHide" format="reference|boolean" />
         <attr name="fastScrollAutoHideDelay" format="reference|integer" />
         <attr name="fastScrollEnableThumbInactiveColor" format="reference|boolean" />
         <attr name="fastScrollThumbEnabled" format="reference|boolean" />
     </declare-styleable>
+
+    <!--夜间模式的基本属性-->
+    <attr name="windowBackground" format="reference" />
+    <attr name="accentColor" format="reference" />
+    <attr name="cardColor" format="reference" />
+    <attr name="iconColor" format="reference" />
+    <attr name="progressBackgroundColor" format="reference" />
+    <attr name="progressDrawable" format="reference" />
+    <attr name="progressDrawableWithBackground" format="reference" />
+    <attr name="textColorPrimary" format="reference" />
+    <!--<attr name="textColor" format="reference" />-->
+    <attr name="ripple_color" format="reference" />
 </resources>

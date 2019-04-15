@@ -110,7 +110,7 @@
                                 android:padding="10dp"
                                 android:text="@string/see_all"
 
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="?colorPrimary"
                                 android:textSize="@dimen/sp_12" />
                         </LinearLayout>
 
@@ -211,7 +211,7 @@
                                 android:padding="10dp"
                                 android:text="@string/see_all"
 
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="?colorPrimary"
                                 android:textSize="@dimen/sp_12" />
                         </LinearLayout>
 
@@ -258,7 +258,7 @@
                                 android:background="?android:attr/selectableItemBackgroundBorderless"
                                 android:padding="10dp"
                                 android:text="@string/cate_huayu"
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="?colorPrimary"
                                 android:textSize="@dimen/sp_12" />
 
                             <View
@@ -273,7 +273,7 @@
                                 android:background="?android:attr/selectableItemBackgroundBorderless"
                                 android:padding="10dp"
                                 android:text="@string/cate_liuxing"
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="?colorPrimary"
                                 android:textSize="@dimen/sp_12" />
 
                             <View
@@ -288,7 +288,7 @@
                                 android:background="?android:attr/selectableItemBackgroundBorderless"
                                 android:padding="10dp"
                                 android:text="@string/cate_gufeng"
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="?colorPrimary"
                                 android:textSize="@dimen/sp_12" />
 
 

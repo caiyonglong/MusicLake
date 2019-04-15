@@ -1,18 +1,17 @@
 <resources>
 
-    <attr name="windowBackground" format="reference" />
-    <attr name="accentColor" format="reference" />
-    <attr name="cardColor" format="reference" />
-    <attr name="iconColor" format="reference" />
-    <attr name="progressBackgroundColor" format="reference" />
-    <attr name="progressDrawable" format="reference" />
-    <attr name="progressDrawableWithBackground" format="reference" />
+    <!--<attr name="windowBackground" format="reference" />-->
+    <!--<attr name="accentColor" format="reference" />-->
+    <!--<attr name="cardColor" format="reference" />-->
+    <!--<attr name="iconColor" format="reference" />-->
+    <!--<attr name="progressBackgroundColor" format="reference" />-->
+    <!--<attr name="progressDrawable" format="reference" />-->
+    <!--<attr name="progressDrawableWithBackground" format="reference" />-->
 
     <style name="AppTheme" parent="MyThemeBlue" />
 
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
-
         <!--选中状态icon的颜色和字体颜色-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

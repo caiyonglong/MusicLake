@@ -16,7 +16,7 @@
         android:drawableStart="@drawable/ic_review"
         android:gravity="center"
         android:text="@string/lyric_preview"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="?colorPrimary" />
 
     <TextView
         android:id="@+id/titleTv"
@@ -50,6 +50,6 @@
         android:layout_margin="@dimen/dp_16"
         android:gravity="center"
         android:text="@string/lyric_use"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="?colorPrimary" />
 
 </LinearLayout>

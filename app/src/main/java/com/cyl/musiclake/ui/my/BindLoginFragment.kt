@@ -1,22 +1,14 @@
 package com.cyl.musiclake.ui.my
 
 import android.content.Intent
-import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.webkit.JavascriptInterface
-import android.webkit.WebSettings
-import android.webkit.WebView
 import android.widget.LinearLayout
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.my.user.User
 import com.just.agentweb.AgentWeb
-import com.just.agentweb.IAgentWebSettings
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login_web.*
-import wendu.dsbridge.CompletionHandler
-import wendu.dsbridge.DWebView
 
 /**
  * 作者：yonglong on 2016/8/11 18:17
@@ -65,12 +57,12 @@ class BindLoginFragment : BaseFragment<LoginPresenter>(), LoginContract.View {
         var isQQ = true
 
         btn.setOnClickListener {
-            if (isQQ){
+            if (isQQ) {
                 initWebView("https://y.qq.com")
-            }else{
+            } else {
                 initWebView("https://music.163.com")
             }
-            isQQ=!isQQ
+            isQQ = !isQQ
         }
     }
 

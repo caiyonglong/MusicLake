@@ -112,7 +112,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="@string/real_time_user"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="?colorPrimary" />
 
                 <TextView
                     android:id="@+id/nav_menu_online_num"
@@ -393,7 +393,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_settings"
-                android:tint="@color/colorPrimary" />
+                android:tint="?colorPrimary" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -417,7 +417,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_exit"
-                android:tint="@color/colorPrimary" />
+                android:tint="?colorPrimary" />
 
             <TextView
                 android:id="@+id/nav_menu_exit_tv"

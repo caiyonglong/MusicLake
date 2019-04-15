@@ -49,7 +49,7 @@
                         android:layout_marginLeft="40dp"
                         android:layout_marginStart="40dp"
                         android:text="@string/login"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="?colorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </RelativeLayout>

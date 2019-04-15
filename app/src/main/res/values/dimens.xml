@@ -56,4 +56,7 @@
     <dimen name="divider_height">0.5dp</dimen>
     <dimen name="card_recycler_corner_radius">2dp</dimen>
     <dimen name="card_recycler_elevation">2dp</dimen>
+
+    <dimen name="tab_text_size">15sp</dimen>
+    <dimen name="tab_height">48dp</dimen>
 </resources>

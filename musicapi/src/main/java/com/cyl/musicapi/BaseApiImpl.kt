@@ -6,13 +6,13 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.cyl.musicapi.bean.*
+import com.cyl.musicapi.dsbridge.CompletionHandler
+import com.cyl.musicapi.dsbridge.DWebView
 import com.cyl.musicapi.playlist.MusicInfo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
-import wendu.dsbridge.CompletionHandler
-import wendu.dsbridge.DWebView
 import java.util.*
 
 
