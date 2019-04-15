@@ -155,17 +155,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mBindNeteaseView.setVisibility(View.GONE);
             NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginFragment());
         });
-//        mShowBindIv.setOnClickListener(view -> {
-//            if (!isUp) {
-//                mBindNeteaseView.setVisibility(View.VISIBLE);
-//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
-//            } else {
-//                mBindNeteaseView.setVisibility(View.GONE);
-//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
-//            }
-//            isUp = !isUp;
-//        });
-
     }
 
     @Override
@@ -259,12 +248,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     mTargetClass = LoginActivity.class;
                 }
                 mDrawerLayout.closeDrawers();
-                break;
-            case R.id.nav_menu_shake:
-                item.setChecked(true);
-                if (!mIsLogin) {
-                    mTargetClass = LoginActivity.class;
-                }
                 break;
             case R.id.nav_menu_playQueue:
                 NavigationHelper.INSTANCE.navigatePlayQueue(this);
@@ -517,15 +500,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initNightMode() {
         View item = mNavigationView.getMenu().findItem(R.id.nav_menu_night_mode).getActionView();
         mNightModeSw = item.findViewById(R.id.night_mode_switch);
+        mNightModeSw.setChecked(ThemeStore.THEME_MODE == ThemeStore.NIGHT);
         mNightModeSw.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && ThemeStore.THEME_MODE != ThemeStore.NIGHT) {
                 ThemeStore.THEME_MODE = ThemeStore.NIGHT;
-//                recreate();
-            } else if (ThemeStore.THEME_MODE != ThemeStore.DAY) {
+//                startMainActivity();
+                ThemeStore.updateThemeMode();
+                recreate();
+            } else if (!isChecked && ThemeStore.THEME_MODE != ThemeStore.DAY) {
                 ThemeStore.THEME_MODE = ThemeStore.DAY;
-//                recreate();
+//                startMainActivity();
+                ThemeStore.updateThemeMode();
+                recreate();
             }
         });
     }
 
+    /**
+     * 欢迎界面跳转到主界面
+     */
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }

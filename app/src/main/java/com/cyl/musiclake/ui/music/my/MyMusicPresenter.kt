@@ -1,12 +1,11 @@
 package com.cyl.musiclake.ui.music.my
 
-import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.SongLoader
-import com.cyl.musiclake.ui.download.DownloadLoader
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
-import com.cyl.musiclake.ui.music.my.MyMusicContract
+import com.cyl.musiclake.ui.base.BasePresenter
+import com.cyl.musiclake.ui.download.DownloadLoader
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.ToastUtils
 import org.jetbrains.anko.doAsync

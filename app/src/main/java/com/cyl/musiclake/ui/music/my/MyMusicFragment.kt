@@ -30,6 +30,14 @@ import org.jetbrains.anko.yesButton
  * Created by Monkey on 2015/6/29.
  */
 class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
+    private var playlists = mutableListOf<Playlist>()
+    private var mAdapter: PlaylistAdapter? = null
+    private var isShowingNotice = false
+
+    override fun getLayoutId(): Int {
+        return R.layout.frag_local
+    }
+
 
     override fun showNoticeInfo(notice: NoticeInfo) {
         alert {
@@ -42,13 +50,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                 }
             }
         }.show()
-    }
-
-    private var playlists = mutableListOf<Playlist>()
-    private var mAdapter: PlaylistAdapter? = null
-
-    override fun getLayoutId(): Int {
-        return R.layout.frag_local
     }
 
     public override fun initViews() {

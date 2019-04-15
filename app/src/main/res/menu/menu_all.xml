@@ -10,7 +10,6 @@
                     android:id="@+id/nav_login_status"
                     android:icon="@drawable/ic_exit"
                     android:title="@string/login" />
-
                 <item
                     android:id="@+id/nav_menu_playQueue"
                     android:icon="@drawable/ic_playlist_play"
@@ -37,7 +36,7 @@
                 <item
                     android:id="@+id/nav_menu_night_mode"
                     android:icon="@drawable/ic_timer_black"
-                    android:title="@string/count_down_time"
+                    android:title="@string/theme_change"
                     app:actionLayout="@layout/item_night_mode_toggle" />
             </menu>
         </item>

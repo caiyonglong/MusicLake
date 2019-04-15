@@ -26,6 +26,7 @@ public class SPUtils {
      * 桌面歌词锁定
      */
     public static final String SP_KEY_FLOAT_LYRIC_LOCK = "float_lyric_lock";
+    public static final String SP_KEY_THEME_MODE = "theme_mode";
 
 
 

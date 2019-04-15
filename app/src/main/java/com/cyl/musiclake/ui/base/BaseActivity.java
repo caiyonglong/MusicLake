@@ -288,6 +288,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     }
 
     private void setUpTheme() {
+        ThemeStore.THEME_MODE = ThemeStore.getThemeMode();
         if (ThemeStore.THEME_MODE == ThemeStore.NIGHT) {
             setTheme(R.style.MyThemeDark);
         } else {

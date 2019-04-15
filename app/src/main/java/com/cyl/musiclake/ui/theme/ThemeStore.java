@@ -1,5 +1,7 @@
 package com.cyl.musiclake.ui.theme;
 
+import com.cyl.musiclake.utils.SPUtils;
+
 /**
  * 作者：yonglong
  * 包名：com.cyl.musiclake.ui.theme
@@ -13,7 +15,10 @@ public class ThemeStore {
     public static int THEME_MODE = DAY;
 
     public static void updateThemeMode() {
-
+        SPUtils.putAnyCommit(SPUtils.SP_KEY_THEME_MODE, THEME_MODE);
     }
-    
+
+    public static int getThemeMode() {
+        return SPUtils.getAnyByKey(SPUtils.SP_KEY_THEME_MODE, DAY);
+    }
 }
