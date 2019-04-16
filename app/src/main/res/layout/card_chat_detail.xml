@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_about_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="32dp"
-    android:layout_marginEnd="@dimen/dp_8"
     android:layout_marginStart="@dimen/dp_8"
     android:layout_marginTop="@dimen/dp_8"
-    android:background="@color/white"
-    card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="2dp">
+    android:layout_marginEnd="@dimen/dp_8"
+    android:layout_marginBottom="32dp"
+    app:cardBackgroundColor="?cardColor"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/onlineUserTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/text_margin"
             android:text="@string/online_users"
-            android:textColor="@color/colorAccent"
+            android:textColor="?colorAccent"
             android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/main_background" />
+            android:background="?deliverColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,10 +41,10 @@
                 android:id="@+id/usersRsv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:layout_constraintBottom_toTopOf="@+id/messageRsv"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toTopOf="@+id/messageRsv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
 
 

@@ -12,7 +12,6 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -37,7 +36,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="@dimen/sp_16"
-                app:layout_constraintBottom_toTopOf="@+id/guideline"
                 app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/play_mode_repeat" />

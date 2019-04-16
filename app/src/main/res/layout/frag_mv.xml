@@ -13,6 +13,7 @@
         android:background="?windowBackground"
         android:tag="tab_indicator_accent_color,bg_primary_color"
         app:tabGravity="fill"
+        app:tabIndicatorFullWidth="false"
         app:tabMode="fixed" />
 
     <android.support.v4.view.ViewPager

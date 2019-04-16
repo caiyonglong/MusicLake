@@ -6,14 +6,13 @@
     android:layout_margin="4dp"
     android:gravity="center"
     android:orientation="vertical"
+    app:cardBackgroundColor="?cardColor"
     app:cardCornerRadius="4dp"
     app:cardElevation="@dimen/dp_2">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/cardColor"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -23,7 +22,6 @@
             android:layout_height="120dp"
             android:scaleType="fitXY"
             android:src="@drawable/default_cover" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,6 +71,7 @@
                     android:layout_marginTop="5dp"
                     android:lines="1"
                     android:text="3.加载中…"
+                    android:textColor="@color/deepOrange"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>

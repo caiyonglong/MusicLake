@@ -20,9 +20,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
@@ -35,7 +35,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/song_title"
                         android:inputType="text"
-                        android:textColor="@color/black"
                         android:textSize="16sp" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -43,9 +42,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
@@ -58,7 +57,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/song_artist"
                         android:inputType="text"
-                        android:textColor="#2fa881"
                         android:textSize="16sp" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -66,9 +64,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
@@ -81,7 +79,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/album"
                         android:inputType="text"
-                        android:textColor="#2fa881"
                         android:textSize="16sp" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>

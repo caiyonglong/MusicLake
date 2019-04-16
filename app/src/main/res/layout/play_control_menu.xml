@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="57dp"
     android:layout_gravity="top"
-    android:background="@color/white"
+    android:background="?cardColor"
     android:elevation="5dp">
 
     <ProgressBar
@@ -77,11 +77,11 @@
             android:id="@+id/playPauseView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:btn_color="@color/colorPrimary"
             android:layout_gravity="center"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             app:anim_duration="200"
             app:bg_color="@color/translucent"
+            app:btn_color="?iconColor"
             app:gap_width="10" />
 
 
@@ -89,12 +89,12 @@
             android:id="@+id/playQueueIv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tint="@color/colorPrimary"
             android:layout_gravity="center"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/play_next"
             android:padding="@dimen/dp_16"
-            android:src="@drawable/ic_queue_music" />
+            android:src="@drawable/ic_queue_music"
+            android:tint="?iconColor" />
     </LinearLayout>
 
 </RelativeLayout>

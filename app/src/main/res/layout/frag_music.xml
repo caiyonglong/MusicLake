@@ -23,6 +23,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabIndicatorFullWidth="false"
             android:tag="tab_indicator_accent_color,bg_primary_color"
             app:tabGravity="fill"
             app:tabMode="fixed" />
@@ -33,7 +34,6 @@
         android:id="@+id/m_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:overScrollMode="never"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

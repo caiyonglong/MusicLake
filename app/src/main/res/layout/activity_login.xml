@@ -20,10 +20,18 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:visibility="gone"
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            app:layout_constraintBottom_toBottomOf="@+id/moreTips"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,16 +46,16 @@
                     <View
                         android:layout_width="8dp"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:background="#2fa881" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="40dp"
                         android:layout_marginStart="40dp"
+                        android:layout_marginLeft="40dp"
                         android:text="@string/login"
                         android:textColor="?colorPrimary"
                         android:textSize="20sp"
@@ -59,10 +67,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
-                    android:paddingEnd="30dp"
+                    android:paddingStart="40dp"
                     android:paddingLeft="40dp"
-                    android:paddingRight="30dp"
-                    android:paddingStart="40dp">
+                    android:paddingEnd="30dp"
+                    android:paddingRight="30dp">
 
                     <android.support.design.widget.TextInputLayout
 
@@ -85,10 +93,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
-                    android:paddingEnd="30dp"
+                    android:paddingStart="40dp"
                     android:paddingLeft="40dp"
-                    android:paddingRight="30dp"
-                    android:paddingStart="40dp">
+                    android:paddingEnd="30dp"
+                    android:paddingRight="30dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/passwordWrapper"
@@ -108,11 +116,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical"
-                    android:paddingLeft="40dp"
-                    android:paddingStart="40dp">
+                    android:paddingStart="40dp"
+                    android:paddingLeft="40dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -129,10 +137,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/cv"
-            android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="16dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:elevation="5dp"
             android:transitionName="loginFab"
             app:fab_colorNormal="@color/app_green"
@@ -151,9 +159,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/qqlogin"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/qq_login_tips"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/qqlogin"
@@ -166,10 +174,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/cv"
-            android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="16dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:elevation="5dp"
             android:transitionName="loginFab"
             app:fab_colorNormal="@color/app_yellow"
@@ -187,9 +195,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/qqlogin"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/weibo_login"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/wbLogin"
@@ -202,9 +210,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="@string/login_tips"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -236,12 +244,12 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cv"
             android:layout_alignEnd="@+id/cv"
             android:layout_alignRight="@+id/cv"
-            android:layout_alignTop="@+id/cv"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="-20dp"
             android:layout_marginRight="-20dp"
-            android:layout_marginTop="25dp"
             android:src="@drawable/ic_send_white_18dp"
             android:transitionName="loginFab"
             android:visibility="gone"
@@ -253,10 +261,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:elevation="10dp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/moreTips"
