@@ -23,6 +23,7 @@ interface DiscoverContract {
         fun showBannerView(banners: MutableList<BannerBean>)
 
         fun showRecommendPlaylist(playlists: MutableList<Playlist>)
+
         fun showRecommendSongs(songs: MutableList<Music>)
 
     }

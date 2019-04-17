@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:text="榜单"
-                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <LinearLayout

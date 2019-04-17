@@ -16,6 +16,7 @@ import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_discover.*
 
 
@@ -27,17 +28,27 @@ import kotlinx.android.synthetic.main.frag_discover.*
  */
 class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
+    /**
+     * 适配器
+     */
     private var mNeteaseAdapter: TopPlaylistAdapter? = null
     private var mArtistListAdapter: TopArtistListAdapter? = null
     private var mRadioAdapter: BaiduRadioAdapter? = null
     private var mMusicAdapter: SongAdapter? = null
     private var mPlaylistAdapter: TopPlaylistAdapter? = null
+
+    /**
+     * 数据集合
+     */
     private var playlist = mutableListOf<Playlist>()
     private var artists = mutableListOf<Artist>()
     private var channels = mutableListOf<Playlist>()
     private var recommend = mutableListOf<Music>()
     private var recommendPlaylist = mutableListOf<Playlist>()
 
+    /**
+     * 显示所有分类
+     */
     private fun toCatTagAll() {
         AllCategoryFragment().apply {
             curCateName = this@DiscoverFragment.cateTagTv.text.toString()
@@ -59,52 +70,14 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         return R.layout.frag_discover
     }
 
+    /**
+     * 初始化
+     */
     override fun initViews() {
-        wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
-        //适配器
-        mNeteaseAdapter = TopPlaylistAdapter(playlist)
-        wangChartsRv?.adapter = mNeteaseAdapter
-        wangChartsRv?.isFocusable = false
-        wangChartsRv?.isNestedScrollingEnabled = false
-        mNeteaseAdapter?.bindToRecyclerView(wangChartsRv)
-
-        chartsArtistRcv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
-        //适配器
-        mArtistListAdapter = TopArtistListAdapter(artists)
-        chartsArtistRcv?.adapter = mNeteaseAdapter
-        chartsArtistRcv?.isFocusable = false
-        chartsArtistRcv?.isNestedScrollingEnabled = false
-        mArtistListAdapter?.bindToRecyclerView(chartsArtistRcv)
-
-        //电台列表
-        radioRsv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
-        //适配器
-        mRadioAdapter = BaiduRadioAdapter(channels)
-        radioRsv?.adapter = mRadioAdapter
-        radioRsv?.isFocusable = false
-        radioRsv?.isNestedScrollingEnabled = false
-        mRadioAdapter?.bindToRecyclerView(radioRsv)
-
-        //推荐列表
-        recommendRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        mMusicAdapter = SongAdapter(recommend)
-        recommendRsv.adapter = mMusicAdapter
-        recommendRsv.isFocusable = false
-        recommendRsv.isNestedScrollingEnabled = false
-        mMusicAdapter?.bindToRecyclerView(recommendRsv)
-        //推荐列表
-        recommendPlaylistRsv.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
-        mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
-        recommendPlaylistRsv.adapter = mPlaylistAdapter
-        recommendPlaylistRsv.isFocusable = false
-        recommendPlaylistRsv.isNestedScrollingEnabled = false
-        mPlaylistAdapter?.bindToRecyclerView(recommendPlaylistRsv)
-
         mSwipeRefreshLayout?.setOnRefreshListener {
             loadData()
         }
     }
-
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -135,7 +108,6 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     }
 
     override fun loadData() {
-        showLoading()
         mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
@@ -144,20 +116,6 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     }
 
     override fun listener() {
-        mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
-            val playlist = adapter.data[position] as Playlist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
-        }
-
-        mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
-            val artist = adapter.data[position] as Artist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
-        }
-
-        mRadioAdapter?.setOnItemClickListener { _, view, position ->
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, channels[position], Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
-        }
-
         catTag3Tv.setOnClickListener(this)
         cateTagTv.setOnClickListener(this)
         catTag1Tv.setOnClickListener(this)
@@ -169,12 +127,8 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         seeAllArtistTv.setOnClickListener(this)
     }
 
-//    override fun onLazyLoad() {
-//    }
-
     override fun showEmptyView(msg: String) {
-        hideLoading()
-//        showError(msg, true)
+        LogUtil.d("Discover", "msg = $msg")
     }
 
     override fun retryLoading() {
@@ -182,16 +136,22 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         loadData()
     }
 
+    /**
+     * 显示百度排行榜
+     */
     override fun showBaiduCharts(charts: MutableList<Playlist>) {
     }
 
+    /**
+     * 显示顶部横幅
+     */
     override fun showBannerView(banners: MutableList<BannerBean>) {
-//        for (i in 0 until banners.size) {
-//            if (banners[i].targetType == "3000")
-//                banners.removeAt(i)
-//        }
-        //banner
-        mzBannerView.setPages(banners as List<Nothing>) { activity?.let { BannerViewHolder(it) } }
+        if (banners.size > 0) {
+            mzBannerView.visibility = View.VISIBLE
+            mzBannerView.setPages(banners as List<Nothing>) { activity?.let { BannerViewHolder(it) } }
+        } else {
+            mzBannerView.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -204,34 +164,113 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         mzBannerView.pause()
     }
 
+    /**
+     * 显示网易云排行榜
+     */
     override fun showNeteaseCharts(charts: MutableList<Playlist>) {
-        hideLoading()
-        playlistView.visibility = View.VISIBLE
-        mNeteaseAdapter?.setNewData(charts)
+        this.playlist = charts
+        if (mNeteaseAdapter == null) {
+            //适配器
+            mNeteaseAdapter = TopPlaylistAdapter(playlist)
+            wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
+            wangChartsRv?.adapter = mNeteaseAdapter
+            wangChartsRv?.isFocusable = false
+            wangChartsRv?.isNestedScrollingEnabled = false
+            mNeteaseAdapter?.bindToRecyclerView(wangChartsRv)
+            mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
+                val playlist = adapter.data[position] as Playlist
+                NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
+            }
+        } else {
+            mNeteaseAdapter?.notifyDataSetChanged()
+        }
+        playlistView.visibility = if (playlist.size > 0) View.VISIBLE else View.GONE
     }
 
+    /**
+     * 显示歌手榜单
+     */
     override fun showArtistCharts(charts: MutableList<Artist>) {
-        hideLoading()
         this.artists = charts
-        mArtistListAdapter?.setNewData(charts)
+        if (mArtistListAdapter == null) {
+            chartsArtistRcv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            //适配器
+            mArtistListAdapter = TopArtistListAdapter(artists)
+            chartsArtistRcv?.adapter = mNeteaseAdapter
+            chartsArtistRcv?.isFocusable = false
+            chartsArtistRcv?.isNestedScrollingEnabled = false
+            mArtistListAdapter?.bindToRecyclerView(chartsArtistRcv)
+            mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
+                val artist = adapter.data[position] as Artist
+                NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
+            }
+        } else {
+            mArtistListAdapter?.notifyDataSetChanged()
+        }
+        artistView.visibility = if (artists.size <= 0) View.GONE else View.VISIBLE
     }
 
+    /**
+     * 显示电台列表
+     */
     override fun showRadioChannels(channels: MutableList<Playlist>) {
-        hideLoading()
         this.channels = channels
-        mRadioAdapter?.setNewData(channels)
+        if (mRadioAdapter == null) {
+            //适配器
+            mRadioAdapter = BaiduRadioAdapter(channels)
+            //电台列表
+            radioRsv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            radioRsv?.adapter = mRadioAdapter
+            radioRsv?.isFocusable = false
+            radioRsv?.isNestedScrollingEnabled = false
+            mRadioAdapter?.bindToRecyclerView(radioRsv)
+            mRadioAdapter?.setOnItemClickListener { _, view, position ->
+                NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, channels[position], Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
+            }
+        } else {
+            mRadioAdapter?.notifyDataSetChanged()
+        }
+        radioView.visibility = if (channels.size <= 0) View.GONE else View.VISIBLE
     }
 
+    /**
+     * 显示推荐歌单
+     */
     override fun showRecommendPlaylist(playlists: MutableList<Playlist>) {
         recommendPlaylistView.visibility = if (playlists.size == 0) View.GONE else View.VISIBLE
         this.recommendPlaylist = playlists
-        mPlaylistAdapter?.setNewData(recommendPlaylist)
+        if (mPlaylistAdapter == null) {
+            mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
+            //推荐列表
+            recommendPlaylistRsv.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            recommendPlaylistRsv.adapter = mPlaylistAdapter
+            recommendPlaylistRsv.isFocusable = false
+            recommendPlaylistRsv.isNestedScrollingEnabled = false
+            mPlaylistAdapter?.bindToRecyclerView(recommendPlaylistRsv)
+        } else {
+            mPlaylistAdapter?.notifyDataSetChanged()
+        }
+        recommendPlaylistView.visibility = if (recommendPlaylist.size <= 0) View.GONE else View.VISIBLE
     }
 
+    /**
+     * 显示推荐歌曲
+     */
     override fun showRecommendSongs(songs: MutableList<Music>) {
         recommendPlaylistView.visibility = if (songs.size == 0) View.GONE else View.VISIBLE
         this.recommend = songs
-        mMusicAdapter?.setNewData(recommend)
+        if (mMusicAdapter == null) {
+            mMusicAdapter = SongAdapter(recommend)
+            //推荐列表
+            recommendRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            recommendRsv.adapter = mMusicAdapter
+            recommendRsv.isFocusable = false
+            recommendRsv.isNestedScrollingEnabled = false
+            mMusicAdapter?.bindToRecyclerView(recommendRsv)
+        } else {
+            mMusicAdapter?.notifyDataSetChanged()
+        }
+        recommendRsv.visibility = if (recommend.size <= 0) View.GONE else View.VISIBLE
     }
 
     companion object {

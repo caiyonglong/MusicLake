@@ -13,7 +13,7 @@
     <!--分割颜色-->
     <attr name="deliverColor" format="reference" />
 
-    <style name="AppTheme" parent="MyThemeDark" />
+    <style name="AppTheme" parent="MyThemeBlue" />
 
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
@@ -22,11 +22,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/orange</item>
         <!--正常状态下字体颜色和icon颜色-->
+        <!--正常状态下字体颜色和icon颜色-->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:actionMenuTextColor">@color/black</item>
 
         <item name="deliverColor">@color/main_background</item>
 
         <item name="android:windowBackground">@color/white</item>
         <item name="windowBackground">@color/white</item>
+        <item name="accentColor">@color/deepOrange</item>
         <item name="iconColor">@color/colorPrimary</item>
         <item name="cardColor">@android:color/white</item>
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
@@ -74,16 +78,8 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="AppTheme.Search" parent="MyThemeBlue">
-        <item name="colorAccent">@color/main_white</item>
-    </style>
-
     <style name="AppTheme.Divider">
         <item name="android:background">?android:attr/listDivider</item>
-    </style>
-
-    <style name="AppTheme.Text" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">?textColor</item>
     </style>
 
     <style name="FabStyle">

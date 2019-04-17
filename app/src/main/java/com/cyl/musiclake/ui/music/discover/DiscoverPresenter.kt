@@ -27,6 +27,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showBaiduCharts(mutableListOf())
             }
         })
     }
@@ -43,6 +44,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showNeteaseCharts(mutableListOf())
             }
         })
     }
@@ -55,6 +57,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showArtistCharts(mutableListOf())
             }
         })
     }
@@ -69,6 +72,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showRadioChannels(mutableListOf())
             }
         })
     }
@@ -79,11 +83,14 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
             override fun success(result: BannerResult) {
                 if (result.code == 200) {
                     mView?.showBannerView(result.banners)
+                } else {
+                    mView?.showBannerView(mutableListOf())
                 }
             }
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showBannerView(mutableListOf())
             }
         })
     }
@@ -97,6 +104,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showRecommendSongs(mutableListOf())
             }
         })
     }
@@ -110,6 +118,7 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
 
             override fun error(msg: String) {
                 mView?.showEmptyView(msg)
+                mView?.showRecommendPlaylist(mutableListOf())
             }
         })
     }

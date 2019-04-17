@@ -59,4 +59,5 @@
 
     <dimen name="tab_text_size">15sp</dimen>
     <dimen name="tab_height">48dp</dimen>
+    <dimen name="dp_35">35dp</dimen>
 </resources>

@@ -461,5 +461,8 @@
     <string name="nav_night">开启夜间模式</string>
     <string name="theme_change">打开夜间模式</string>
     <string name="announcement">公告</string>
+    <string name="genres">流派</string>
+    <string name="artists">艺术家</string>
+    <string name="recommend">推荐</string>
 
 </resources>

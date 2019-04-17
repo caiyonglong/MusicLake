@@ -35,7 +35,6 @@
                     app:actionLayout="@layout/item_count_down_toggle" />
                 <item
                     android:id="@+id/nav_menu_night_mode"
-                    android:icon="@drawable/ic_timer_black"
                     android:title="@string/theme_change"
                     app:actionLayout="@layout/item_night_mode_toggle" />
             </menu>
@@ -55,11 +54,11 @@
                 android:title="@string/about_feedback" />
             <item
                 android:id="@+id/nav_menu_setting"
-                android:icon="@mipmap/icon_setting"
+                android:icon="@drawable/ic_settings"
                 android:title="@string/settings" />
             <item
                 android:id="@+id/nav_menu_exit"
-                android:icon="@mipmap/icon_exit"
+                android:icon="@drawable/ic_exit"
                 android:title="@string/exit" />
         </menu>
     </item>

@@ -65,8 +65,6 @@ import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    //    @BindView(R.id.sliding_layout)
-//    public SlidingUpPanelLayout mSlidingUpPaneLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
@@ -176,31 +174,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void listener() {
-//        mSlidingUpPaneLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-//            @Override
-//            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-//                LogUtil.d(TAG, "onPanelStateChanged " + newState);
-//                if (newState == PanelState.EXPANDED) {
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                } else {
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                }
-//            }
-//
-//            @Override
-//            public void onPanelSlide(View panel, float slideOffset) {
-//                LogUtil.d(TAG, "onPanelSlide, offset " + slideOffset);
-////                if (controlFragment != null && controlFragment.getTopContainer() != null) {
-////                    controlFragment.getTopContainer().setAlpha(1 - slideOffset * 2);
-////                    if (controlFragment.getTopContainer().getAlpha() < 0) {
-////                        controlFragment.getTopContainer().setVisibility(View.GONE);
-////                    } else {
-////                        controlFragment.getTopContainer().setVisibility(View.VISIBLE);
-////                        mSlidingUpPaneLayout.setTouchEnabled(true);
-////                    }
-////                }
-//            }
-//        });
 
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
