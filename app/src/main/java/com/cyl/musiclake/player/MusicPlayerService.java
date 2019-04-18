@@ -46,6 +46,7 @@ import com.cyl.musiclake.net.ApiManager;
 import com.cyl.musiclake.net.RequestCallBack;
 import com.cyl.musiclake.player.playback.PlayProgressListener;
 import com.cyl.musiclake.player.playqueue.PlayQueueManager;
+import com.cyl.musiclake.ui.music.playpage.LockScreenPlayerActivity;
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
@@ -1252,9 +1253,21 @@ public class MusicPlayerService extends Service {
      * Service broadcastReceiver 监听service中广播
      */
     private class ServiceReceiver extends BroadcastReceiver {
+
+//        public ServiceReceiver() {
+//            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+//        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtil.d(TAG, intent.getAction());
+//            if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+//                LogUtil.e(TAG, "屏幕熄灭进入锁屏界面");
+//                Intent lockScreen = new Intent(MusicPlayerService.this, LockScreenPlayerActivity.class);
+//                lockScreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(lockScreen);
+//            }
+
             if (!intent.getBooleanExtra(ACTION_IS_WIDGET, false)) {
                 handleCommandIntent(intent);
             }
@@ -1340,7 +1353,6 @@ public class MusicPlayerService extends Service {
             }
         }
     }
-
 
     /**
      * 耳机拔出广播接收器

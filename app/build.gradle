@@ -166,4 +166,5 @@ dependencies {
     //横幅
     api 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
 }

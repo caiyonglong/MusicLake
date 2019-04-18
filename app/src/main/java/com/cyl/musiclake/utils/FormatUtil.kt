@@ -2,6 +2,7 @@ package com.cyl.musiclake.utils
 
 import android.annotation.SuppressLint
 import java.io.UnsupportedEncodingException
+import java.lang.ref.SoftReference
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -227,5 +228,41 @@ object FormatUtil {
      */
     fun getChatParseDateTime(time: String): Long {
         return dfs.parse(time).time
+    }
+
+    fun formatDate(date: Date?, pattern: String?): String {
+        if (date == null) throw IllegalArgumentException("date is null")
+        if (pattern == null) throw IllegalArgumentException("pattern is null")
+
+        val formatter = formatFor(pattern)
+        return formatter.format(date)
+    }
+
+    private val THREADLOCAL_FORMATS = object : ThreadLocal<SoftReference<Map<String, SimpleDateFormat>>>() {
+
+        override fun initialValue(): SoftReference<Map<String, SimpleDateFormat>> {
+            return SoftReference(
+                    HashMap())
+        }
+
+    }
+
+    fun formatFor(pattern: String): SimpleDateFormat {
+        val ref = THREADLOCAL_FORMATS.get()
+        var formats: MutableMap<String, SimpleDateFormat>? = ref.get() as MutableMap<String, SimpleDateFormat>
+        if (formats == null) {
+            formats = HashMap()
+            THREADLOCAL_FORMATS.set(
+                    SoftReference<Map<String, SimpleDateFormat>>(formats))
+        }
+
+        var format = formats[pattern]
+        if (format == null) {
+            format = SimpleDateFormat(pattern, Locale.US)
+            format.timeZone = TimeZone.getTimeZone("GMT")
+            formats[pattern] = format
+        }
+
+        return format
     }
 }

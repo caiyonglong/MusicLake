@@ -164,11 +164,11 @@ public class Constants {
     /**
      * 在线歌单接口Api*************************************************
      */
-    public static final String BASE_PLAYER_URL = " https://player.zzsun.cc/";
+    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc/";
     /**
      * 网易云音乐接口
      */
-    public static final String BASE_NETEASE_URL = "https://netease.api.zzsun.cc/";
+    public static final String BASE_NETEASE_URL = "http://192.168.31.78:3000/";
     //bugly app_id
     public static final String BUG_APP_ID = "fd892b37ea";
 

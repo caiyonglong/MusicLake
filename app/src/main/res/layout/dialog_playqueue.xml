@@ -52,7 +52,7 @@
 
         <View
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_0.5"
+            android:layout_height="@dimen/dp_05"
             android:background="@color/translucent_white" />
 
         <android.support.v7.widget.RecyclerView

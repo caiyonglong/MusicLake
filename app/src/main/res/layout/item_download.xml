@@ -19,8 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="文件名"
-            android:textColor="@color/black" />
+            android:text="文件名" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -35,7 +34,7 @@
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:background="@drawable/btn_bg"
         android:text="10%"
         android:textColor="@color/white"

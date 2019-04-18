@@ -2,9 +2,8 @@ package com.cyl.musiclake.ui.music.playpage
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-
-import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.ui.base.BaseContract
 
 
 interface PlayContract {
@@ -21,7 +20,7 @@ interface PlayContract {
 
         fun updatePlayStatus(isPlaying: Boolean)
 
-        fun updatePlayMode()
+        fun updatePlayMode() {}
 
         fun updateProgress(progress: Long, max: Long)
 

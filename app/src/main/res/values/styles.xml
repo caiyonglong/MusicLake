@@ -58,7 +58,7 @@
         <item name="deliverColor">@color/black_translucent</item>
         <item name="accentColor">@color/colorAccentDarkTheme</item>
         <item name="iconColor">@color/colorAccentDarkTheme</item>
-        <item name="cardColor">@color/progressBackgroundColorLight</item>
+        <item name="cardColor">@color/card_dark</item>
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground

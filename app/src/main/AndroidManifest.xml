@@ -229,6 +229,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.music.playpage.LockScreenPlayerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.chat.ChatDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_chat"

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_translucent">
+
+    <ImageView
+        android:id="@+id/playerBackgroundIv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/lyricView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/timeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.01"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_48"
+            android:textStyle="normal"
+            tools:text="19:56" />
+
+        <TextView
+            android:id="@+id/dateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:letterSpacing="0.02"
+            android:maxLines="1"
+            android:textColor="@color/whiteAlpha54"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal"
+            tools:text="Wednesday, 15 June" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/songNameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:letterSpacing="0.02"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="normal"
+                tools:text="江南" />
+
+            <TextView
+                android:id="@+id/singerTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_24"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:letterSpacing="0.02"
+                android:maxLines="1"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="normal"
+                tools:text="林俊杰" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <com.cyl.musiclake.ui.widget.LyricView
+        android:id="@+id/lyricView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_200"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/prevIv"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_weight="1"
+                android:src="@drawable/ic_prev_big" />
+
+
+            <ImageView
+                android:id="@+id/playPauseIv"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:src="@drawable/ic_play_big" />
+
+            <ImageView
+                android:id="@+id/nextIv"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_weight="1"
+                android:src="@drawable/ic_next_big" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/slideTv"
+            android:layout_width="@dimen/dp_72"
+            android:layout_height="@dimen/dp_24"
+            android:layout_margin="@dimen/dp_16"
+            android:gravity="center"
+            android:text="滑动解锁" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

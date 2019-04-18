@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_56"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:background="?selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -13,12 +13,11 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

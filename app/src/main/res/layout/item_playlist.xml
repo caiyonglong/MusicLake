@@ -29,7 +29,6 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="歌单名"
-            android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView

@@ -4,6 +4,7 @@
     android:id="@+id/discoverContainerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?windowBackground"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -28,8 +29,8 @@
                     android:id="@+id/mzBannerView"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:paddingTop="@dimen/dp_8"
                     android:background="?cardColor"
+                    android:paddingTop="@dimen/dp_8"
                     android:paddingBottom="@dimen/dp_8"
                     app:canLoop="true"
                     app:indicatorAlign="center"
@@ -217,10 +218,10 @@
 
                 <LinearLayout
                     android:id="@+id/playlistView"
-                    android:background="?cardColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
+                    android:background="?cardColor"
                     android:orientation="vertical"
                     android:visibility="gone">
 

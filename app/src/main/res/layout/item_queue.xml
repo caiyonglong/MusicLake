@@ -62,7 +62,6 @@
         android:contentDescription="@string/song_resource"
         android:padding="2dp"
         android:src="@drawable/netease"
-
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iv_more"
@@ -79,7 +78,7 @@
         android:contentDescription="@null"
         android:scaleType="centerInside"
         android:src="@drawable/ic_delete"
-        android:tint="@color/black"
+        android:tint="?iconColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_resource"

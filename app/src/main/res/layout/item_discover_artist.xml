@@ -32,7 +32,6 @@
         android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/black"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

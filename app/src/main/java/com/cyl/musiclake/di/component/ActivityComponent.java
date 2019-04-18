@@ -14,6 +14,7 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity;
 import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity;
 import com.cyl.musiclake.ui.music.mv.MvDetailActivity;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity;
+import com.cyl.musiclake.ui.music.playpage.LockScreenPlayerActivity;
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
@@ -62,4 +63,6 @@ public interface ActivityComponent {
     void inject(@NotNull ChatDetailActivity chatDetailActivity);
 
     void inject(@NotNull BaiduMvDetailActivity baiduMvDetailActivity);
+
+    void inject(@NotNull LockScreenPlayerActivity lockScreenPlayerActivity);
 }

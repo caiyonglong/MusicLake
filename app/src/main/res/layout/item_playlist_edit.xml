@@ -28,7 +28,6 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/playlist_name"
-            android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
