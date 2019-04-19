@@ -31,18 +31,19 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="windowBackground">@color/white</item>
         <item name="accentColor">@color/deepOrange</item>
-        <item name="iconColor">@color/colorPrimary</item>
+        <item name="iconColor">@color/black</item>
         <item name="cardColor">@android:color/white</item>
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
         </item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
     </style>
 
-
     <!--夜间模式-->
-    <style name="MyThemeDark" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="MyThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--选中状态icon的颜色和字体颜色-->
         <item name="colorPrimary">@color/colorPrimaryDarkTheme</item>
@@ -50,8 +51,6 @@
         <item name="colorAccent">@color/colorAccentDarkTheme</item>
         <!--正常状态下字体颜色和icon颜色-->
         <item name="android:textColor">@color/white</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
-
         <item name="android:textColorHint">@color/white_translucent</item>
         <item name="android:windowBackground">@color/window_background_dark</item>
         <item name="windowBackground">@color/window_background_dark</item>
@@ -63,6 +62,10 @@
         <item name="progressDrawable">@drawable/progress_drawable</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
         </item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="android:popupBackground">@color/window_background_dark</item>
     </style>
 
     <style name="FullScreen" parent="MyThemeBlue">
@@ -132,5 +135,8 @@
         <item name="android:layout_marginEnd">@dimen/dp_16</item>
     </style>
 
+    <style name="PopupMenuDark" parent="@style/Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@color/window_background_dark</item>
+    </style>
 
 </resources>

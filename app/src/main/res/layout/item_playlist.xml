@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
+    android:layout_margin="@dimen/dp_4"
     android:foreground="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -12,6 +13,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/dp_8"
         android:src="@drawable/default_cover"
         android:transitionName="@string/transition_album" />
 
@@ -28,8 +30,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:text="歌单名"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="歌单名" />
 
         <TextView
             android:id="@+id/tv_num"
@@ -47,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:src="@drawable/ic_navigate_next" />
+        android:src="@drawable/ic_navigate_next"
+        android:tint="?iconColor" />
 </LinearLayout>
 

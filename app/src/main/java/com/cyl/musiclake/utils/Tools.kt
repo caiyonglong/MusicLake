@@ -10,7 +10,6 @@ import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
-import java.lang.StringBuilder
 
 
 /**
@@ -71,6 +70,7 @@ object Tools {
     fun openBrowser(context: Context?, url: String) {
         val uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context?.startActivity(intent)
     }
 
