@@ -28,8 +28,7 @@
                 android:layout_height="56dp"
                 android:background="?colorPrimary"
                 android:elevation="5dp"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:layout_collapseMode="pin" />
 
             <LinearLayout
                 android:layout_width="match_parent"

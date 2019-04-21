@@ -25,12 +25,10 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
-import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
@@ -321,15 +319,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return (currentFragment instanceof MainFragment);
     }
 
-
-    private void setPlaylistQueueChange() {
-//        if (PlayManager.getPlayList().size() == 0) {
-//            mSlidingUpPaneLayout.setPanelState(PanelState.HIDDEN);
-//        } else if (PlayManager.getPlayList().size() >= 0 && mSlidingUpPaneLayout.getPanelState() == PanelState.HIDDEN) {
-//            mSlidingUpPaneLayout.setPanelState(PanelState.EXPANDED);
-//        }
-    }
-
     /**
      * 设置用户状态信息
      */
@@ -376,25 +365,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void updateOnlineInfo(SocketOnlineEvent event) {
         if (mOnlineNumTv != null) {
             mOnlineNumTv.setText(String.valueOf(event.getNum()));
-        }
-    }
-
-    /**
-     * 更新歌单
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updatePlaylist(PlaylistEvent event) {
-        if (event.getType().equals(Constants.PLAYLIST_QUEUE_ID)) {
-            setPlaylistQueueChange();
-        } else if (event.getType().equals(Constants.PLAYLIST_LOVE_ID)) {
-            Music music = PlayManager.getPlayingMusic();
-//            if (music != null && music.isLove()) {
-//                controlFragment.getMIvLove().setImageResource(R.drawable.item_favorite_love);
-//            } else if (music != null && !music.isLove()) {
-//                controlFragment.getMIvLove().setImageResource(R.drawable.item_favorite);
-//            }
         }
     }
 

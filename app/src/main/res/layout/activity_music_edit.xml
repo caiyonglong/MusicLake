@@ -84,7 +84,9 @@
             </LinearLayout>
 
             <Button
+                android:textColor="@color/white"
                 android:id="@+id/saveTagBtn"
+                android:background="@drawable/bg_btn_blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_16"

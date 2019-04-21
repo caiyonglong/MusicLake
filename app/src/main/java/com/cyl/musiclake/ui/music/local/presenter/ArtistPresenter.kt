@@ -19,7 +19,12 @@ constructor() : BasePresenter<ArtistContract.View>(), ArtistContract.Presenter {
         doAsync {
             val data = SongLoader.getAllArtists()
             uiThread {
-                mView?.showArtists(data)
+                mView?.hideLoading()
+                if (data.size > 0) {
+                    mView?.showArtists(data)
+                } else {
+                    mView?.showEmptyView()
+                }
             }
         }
     }

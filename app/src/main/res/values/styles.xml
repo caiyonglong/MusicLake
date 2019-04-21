@@ -22,14 +22,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/orange</item>
         <!--正常状态下字体颜色和icon颜色-->
-        <!--正常状态下字体颜色和icon颜色-->
+        <item name="textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:actionMenuTextColor">@color/black</item>
 
         <item name="deliverColor">@color/main_background</item>
 
-        <item name="android:windowBackground">@color/white</item>
-        <item name="windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="windowBackground">@color/background</item>
         <item name="accentColor">@color/deepOrange</item>
         <item name="iconColor">@color/black</item>
         <item name="cardColor">@android:color/white</item>
@@ -39,17 +39,16 @@
         </item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-
     </style>
 
     <!--夜间模式-->
     <style name="MyThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
-
         <!--选中状态icon的颜色和字体颜色-->
         <item name="colorPrimary">@color/colorPrimaryDarkTheme</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkDarkTheme</item>
         <item name="colorAccent">@color/colorAccentDarkTheme</item>
         <!--正常状态下字体颜色和icon颜色-->
+        <item name="textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/white_translucent</item>
         <item name="android:windowBackground">@color/window_background_dark</item>
@@ -57,7 +56,8 @@
         <item name="deliverColor">@color/black_translucent</item>
         <item name="accentColor">@color/colorAccentDarkTheme</item>
         <item name="iconColor">@color/colorAccentDarkTheme</item>
-        <item name="cardColor">@color/card_dark</item>
+        <item name="cardColor">@color/colorPrimaryDarkTheme</item>
+
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
@@ -70,15 +70,6 @@
 
     <style name="FullScreen" parent="MyThemeBlue">
         <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="menu_labels_style">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AppTheme.Divider">
@@ -135,8 +126,16 @@
         <item name="android:layout_marginEnd">@dimen/dp_16</item>
     </style>
 
-    <style name="PopupMenuDark" parent="@style/Widget.AppCompat.Light.PopupMenu">
-        <item name="android:popupBackground">@color/window_background_dark</item>
+
+    <!--白天主题菜单-->
+    <style name="PopupMenuDayStyle" parent="Base.ThemeOverlay.AppCompat.Light">
+        <item name="android:disabledAlpha">0.5</item>
+        <item name="android:textColor">@color/day_text_color_primary</item>
+    </style>
+    <!--夜间模式菜单-->
+    <style name="PopupMenuNightStyle" parent="Base.ThemeOverlay.AppCompat.Dark">
+        <item name="android:disabledAlpha">0.5</item>
+        <item name="android:textColor">@color/night_text_color_primary</item>
     </style>
 
 </resources>

@@ -20,7 +20,7 @@
     <color name="black">#000000</color>
 
     <color name="black_semi_transparent">#B2000000</color>
-    <color name="background">#ffffff</color>
+    <color name="background">#f7f7f6</color>
     <color name="half_black">#808080</color>
     <color name="white_pressed">#f1f1f1</color>
 

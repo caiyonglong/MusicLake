@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/item_music" />
+        android:src="@drawable/item_music"
+        android:tint="?iconColor" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -37,6 +38,6 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:scaleType="center"
         android:src="@drawable/ic_play_circle"
-        android:tint="?colorPrimary" />
+        android:tint="?iconColor" />
 
 </LinearLayout>

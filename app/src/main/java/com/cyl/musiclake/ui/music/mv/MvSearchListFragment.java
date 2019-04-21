@@ -99,7 +99,9 @@ public class MvSearchListFragment extends BaseLazyFragment<MvListPresenter> impl
 
     @Override
     protected void loadData() {
-
+        if (mvList.size() == 0) {
+            showEmptyState();
+        }
     }
 
     @Override

@@ -2,33 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-     <FrameLayout
+    android:orientation="vertical">
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-         <TextView
-             android:id="@+id/title_des_text"
-             android:layout_width="match_parent"
-             android:gravity="center"
-             android:layout_height="40dp"/>
-           <Button
-             android:id="@+id/back"
-             android:layout_width="30dp"
-             android:layout_height="40dp"
-             android:background="@drawable/ic_chevron_left_white_18dp"/>
-     </FrameLayout>
+
+        <TextView
+            android:id="@+id/title_des_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_chevron_left_white_18dp" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="centerInside">
-        </android.support.v4.view.ViewPager>
+            android:scaleType="centerInside"/>
 
         <ProgressBar
             android:id="@+id/pb_loading"
