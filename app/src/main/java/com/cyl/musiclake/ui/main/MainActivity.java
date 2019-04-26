@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,7 +97,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-        transparentStatusBar(this);
+//        transparentStatusBar(this);
         //菜单栏的头部控件初始化
         initNavView();
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -467,6 +468,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.e(TAG, "onNewIntent");
+        
+    }
+
     /**
      * 初始化夜间模式
      */
@@ -479,12 +487,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 ThemeStore.THEME_MODE = ThemeStore.NIGHT;
 //                startMainActivity();
                 ThemeStore.updateThemeMode();
-                recreate();
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
             } else if (!isChecked && ThemeStore.THEME_MODE != ThemeStore.DAY) {
                 ThemeStore.THEME_MODE = ThemeStore.DAY;
 //                startMainActivity();
                 ThemeStore.updateThemeMode();
-                recreate();
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }

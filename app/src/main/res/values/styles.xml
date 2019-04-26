@@ -28,8 +28,8 @@
 
         <item name="deliverColor">@color/main_background</item>
 
-        <item name="android:windowBackground">@color/white</item>
-        <item name="windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+        <item name="windowBackground">@color/backgroundColor</item>
         <item name="accentColor">@color/deepOrange</item>
         <item name="iconColor">@color/black</item>
         <item name="cardColor">@android:color/white</item>
