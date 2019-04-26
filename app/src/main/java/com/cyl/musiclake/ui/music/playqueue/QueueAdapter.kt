@@ -9,6 +9,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.utils.ConvertUtils
 
 /**
@@ -28,7 +29,11 @@ class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHol
             holder.setTextColor(R.id.tv_title, Color.parseColor("#0091EA"))
             holder.setTextColor(R.id.tv_artist, Color.parseColor("#01579B"))
         } else {
-            holder.setTextColor(R.id.tv_title, Color.parseColor("#000000"))
+            if (ThemeStore.THEME_MODE == ThemeStore.DAY) {
+                holder.setTextColor(R.id.tv_title, Color.parseColor("#000000"))
+            } else {
+                holder.setTextColor(R.id.tv_title, Color.parseColor("#ffffff"))
+            }
             holder.setTextColor(R.id.tv_artist, Color.parseColor("#9e9e9e"))
         }
         holder.addOnClickListener(R.id.iv_more)

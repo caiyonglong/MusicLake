@@ -162,7 +162,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/qq_login_tips"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/qqlogin"
             app:layout_constraintStart_toStartOf="@+id/qqlogin"
             app:layout_constraintTop_toBottomOf="@+id/qqlogin" />
@@ -198,7 +197,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/weibo_login"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/wbLogin"
             app:layout_constraintStart_toStartOf="@+id/wbLogin"
             app:layout_constraintTop_toBottomOf="@+id/wbLogin" />

@@ -14,7 +14,6 @@
     android:paddingStart="@dimen/dp_8"
     android:paddingEnd="@dimen/dp_8"
     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-    android:textColor="@color/white"
     android:textSize="@dimen/sp_16"
     tools:text="Search query" />
 

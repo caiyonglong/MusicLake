@@ -40,8 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_56"
                 app:elevation="5dp"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:layout_collapseMode="pin" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

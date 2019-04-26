@@ -45,12 +45,6 @@ class ArtistCateAdapter(categories: MutableList<SingerCate>) : BaseQuickAdapter<
         helper.setText(R.id.titleTv, cate.name)
         helper.getView<CheckedTextView>(R.id.titleTv).isChecked = position == helper.adapterPosition
         helper.setTextColor(R.id.titleTv, if (position == helper.adapterPosition) Color.WHITE else Color.BLACK)
-
-//        helper.itemView.setOnClickListener {
-//            position = helper.adapterPosition
-//            flagId = cate.id
-////            notifyDataSetChanged()
-//        }
     }
 
 }

@@ -13,9 +13,11 @@ import android.view.View
 import android.widget.SeekBar
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
@@ -41,7 +43,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     private var mAdapter: BottomMusicAdapter? = null
     private val musicList = ArrayList<Music>()
 
-
     override fun getLayoutId(): Int {
         return R.layout.play_control_menu
     }
@@ -50,6 +51,8 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         //初始化控件
         showLyric(FloatLyricViewManager.lyricInfo, true)
         updatePlayStatus(PlayManager.isPlaying())
+        musicList.clear()
+        musicList.addAll(PlayManager.getPlayList())
         initSongList()
     }
 
@@ -65,7 +68,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         playPauseView.setOnClickListener {
             PlayManager.playPause()
         }
-
     }
 
     override fun loadData() {
@@ -109,9 +111,9 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
 
     override fun updatePlayStatus(isPlaying: Boolean) {
-        if (isPlaying&&!playPauseView.isPlaying) {
+        if (isPlaying && !playPauseView.isPlaying) {
             playPauseView.play()
-        } else if (!isPlaying&&playPauseView.isPlaying){
+        } else if (!isPlaying && playPauseView.isPlaying) {
             playPauseView.pause()
         }
     }
@@ -144,18 +146,30 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     fun onMetaChangedEvent(event: MetaChangedEvent) {
         mPresenter?.updateNowPlaying(event.music, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            progressBar.setProgress(PlayManager.getCurrentPosition(),true)
-        }else{
+            progressBar.setProgress(PlayManager.getCurrentPosition(), true)
+        } else {
             progressBar.progress = PlayManager.getCurrentPosition()
         }
         progressBar.max = PlayManager.getDuration()
-        initSongList()
+
+        bottomPlayRcv.scrollToPosition(PlayManager.position())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStatusChangedEvent(event: StatusChangedEvent) {
         playPauseView.setLoading(!event.isPrepared)
         updatePlayStatus(event.isPlaying)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPlayListChange(event: PlaylistEvent) {
+        if (event.type == Constants.PLAYLIST_QUEUE_ID) {
+            LogUtil.d(TAG, "播放列表已改变")
+            musicList.clear()
+            musicList.addAll(PlayManager.getPlayList())
+            mAdapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onResume() {
@@ -178,8 +192,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
      * 初始化歌曲列表
      */
     private fun initSongList() {
-        musicList.clear()
-        musicList.addAll(PlayManager.getPlayList())
         if (mAdapter == null) {
             bottomPlayRcv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             mAdapter = BottomMusicAdapter(musicList)
@@ -193,7 +205,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
                         val manager = recyclerView?.layoutManager as LinearLayoutManager
                         val first = manager.findFirstVisibleItemPosition()
                         val last = manager.findLastVisibleItemPosition()
-                        LogUtil.e("Scroll", first.toString() + "-" + last)
+                        LogUtil.e("Scroll", "$first-$last")
                         if (first == last && first != PlayManager.position()) {
                             PlayManager.play(first)
                         }
@@ -206,6 +218,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         }
         bottomPlayRcv.scrollToPosition(PlayManager.position())
     }
+
 
     companion object {
 

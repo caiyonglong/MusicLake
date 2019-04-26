@@ -15,6 +15,7 @@ class MvListPresenter @Inject
 constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
     private val mvModel = MvModel()
     override fun loadMv(offset: Int) {
+        mView?.showLoading()
         mvModel.loadMv(offset, object : RequestCallBack<MvInfo> {
             override fun success(result: MvInfo?) {
                 result?.data?.let {
@@ -24,6 +25,7 @@ constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
             }
 
             override fun error(msg: String?) {
+                mView?.hideLoading()
                 mView?.showError(msg, true)
             }
 
