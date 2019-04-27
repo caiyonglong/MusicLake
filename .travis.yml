@@ -29,8 +29,6 @@ cache:
 deploy:
   provider: releases
   api_key: ${GH_TOKEN}
-  file:
-    - $HOME/app/build/outputs/*
   skip_cleanup: true
   on:
     tags: true

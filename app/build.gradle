@@ -20,8 +20,8 @@ android {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 30
-        versionName "4.5.0"
+        versionCode 31
+        versionName "5.0.0"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
