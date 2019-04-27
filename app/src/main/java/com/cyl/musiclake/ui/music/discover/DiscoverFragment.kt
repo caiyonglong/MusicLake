@@ -74,9 +74,6 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
      * 初始化
      */
     override fun initViews() {
-        mSwipeRefreshLayout?.setOnRefreshListener {
-            loadData()
-        }
     }
 
     override fun onClick(v: View?) {
@@ -182,7 +179,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
             }
         } else {
-            mNeteaseAdapter?.notifyDataSetChanged()
+            mNeteaseAdapter?.setNewData(playlist)
         }
         playlistView.visibility = if (playlist.size > 0) View.VISIBLE else View.GONE
     }
@@ -205,7 +202,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
             }
         } else {
-            mArtistListAdapter?.notifyDataSetChanged()
+            mArtistListAdapter?.setNewData(artists)
         }
         artistView.visibility = if (artists.size <= 0) View.GONE else View.VISIBLE
     }
@@ -217,7 +214,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         this.channels = channels
         if (mRadioAdapter == null) {
             //适配器
-            mRadioAdapter = BaiduRadioAdapter(channels)
+            mRadioAdapter = BaiduRadioAdapter(this.channels)
             //电台列表
             radioRsv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
             radioRsv?.adapter = mRadioAdapter
@@ -248,7 +245,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             recommendPlaylistRsv.isNestedScrollingEnabled = false
             mPlaylistAdapter?.bindToRecyclerView(recommendPlaylistRsv)
         } else {
-            mPlaylistAdapter?.notifyDataSetChanged()
+            mPlaylistAdapter?.setNewData(this.recommendPlaylist)
         }
         recommendPlaylistView.visibility = if (recommendPlaylist.size <= 0) View.GONE else View.VISIBLE
     }

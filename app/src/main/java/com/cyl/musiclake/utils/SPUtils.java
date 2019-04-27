@@ -23,12 +23,15 @@ public class SPUtils {
     public static final String SP_KEY_NOTICE_CODE = "notice_code";
 
     /**
+     * 音乐接口
+     */
+    public static final String SP_KEY_PLATER_API_URL = "music_api";
+    public static final String SP_KEY_NETEASE_API_URL = "netease_api";
+    /**
      * 桌面歌词锁定
      */
     public static final String SP_KEY_FLOAT_LYRIC_LOCK = "float_lyric_lock";
     public static final String SP_KEY_THEME_MODE = "theme_mode";
-
-
 
     private static final String MUSIC_ID = "music_id";
     private static final String PLAY_POSITION = "play_position";

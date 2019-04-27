@@ -15,6 +15,13 @@
 
     <style name="AppTheme" parent="MyThemeBlue" />
 
+    <style name="AppTheme.Welcome" parent="AppTheme">
+        <!-- 设置开机过渡图，当然也能换成自定义的布局/图片 -->
+        <item name="android:windowBackground">@drawable/bg_launch</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
         <!--选中状态icon的颜色和字体颜色-->
@@ -39,6 +46,9 @@
         </item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenuDayStyle</item>
+        <item name="android:tabWidgetStyle">@style/CustomTabLayout.Light</item>
     </style>
 
     <!--夜间模式-->
@@ -50,6 +60,7 @@
         <!--正常状态下字体颜色和icon颜色-->
         <item name="textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:textColorSecondary">@color/white_translucent</item>
         <item name="android:textColorHint">@color/white_translucent</item>
         <item name="android:windowBackground">@color/window_background_dark</item>
         <item name="windowBackground">@color/window_background_dark</item>
@@ -65,7 +76,10 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowTranslucentStatus">true</item>
 
-        <item name="android:popupBackground">@color/window_background_dark</item>
+        <item name="android:popupMenuStyle">@style/PopupMenuNightStyle</item>
+        <item name="android:tabWidgetStyle">@style/CustomTabLayout.Dark</item>
+
+        <item name="android:textColorPrimary">@color/white_translucent</item>
     </style>
 
     <style name="FullScreen" parent="MyThemeBlue">
@@ -128,14 +142,44 @@
 
 
     <!--白天主题菜单-->
-    <style name="PopupMenuDayStyle" parent="Base.ThemeOverlay.AppCompat.Light">
+    <style name="PopupMenuDayStyle" parent="@style/ThemeOverlay.AppCompat.Light">
         <item name="android:disabledAlpha">0.5</item>
+        <item name="android:popupBackground">@color/white</item><!-- popMenu的背景色-->
         <item name="android:textColor">@color/day_text_color_primary</item>
     </style>
     <!--夜间模式菜单-->
-    <style name="PopupMenuNightStyle" parent="Base.ThemeOverlay.AppCompat.Dark">
+    <style name="PopupMenuNightStyle" parent="@style/ThemeOverlay.AppCompat.Light">
         <item name="android:disabledAlpha">0.5</item>
+        <item name="android:popupBackground">@color/window_background_dark</item><!-- popMenu的背景色-->
         <item name="android:textColor">@color/night_text_color_primary</item>
+    </style>
+
+
+    <!--tabLayout样式-->
+    <style name="CustomTabLayout.Light" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/grey</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextAppearance">@style/CustomTabTextAppearance.Light</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="CustomTabLayout.Dark" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextAppearance">@style/CustomTabTextAppearance.Dark</item>
+        <item name="tabSelectedTextColor">@color/colorAccentDarkTheme</item>
+    </style>
+
+    <style name="CustomTabTextAppearance.Light" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="android:textColor">@color/light_normal_tab_text_color</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="CustomTabTextAppearance.Dark" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="android:textColor">@color/dark_normal_tab_text_color</item>
+        <item name="textAllCaps">true</item>
     </style>
 
 </resources>

@@ -4,51 +4,49 @@
     android:id="@+id/wel_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_launch"
     android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/iv_header_cover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_margin="@dimen/dp_16"
         android:src="@drawable/ic_music"
-        android:tint="@color/app_green"
+        android:tint="@color/white"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.328" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <TextView
         android:id="@+id/musicLakeTv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/iv_header_cover"
-        app:layout_constraintStart_toStartOf="@+id/iv_header_cover"
-        app:layout_constraintTop_toBottomOf="@+id/iv_header_cover" />
+        app:layout_constraintBottom_toTopOf="@+id/musicLakeTv1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_header_cover" />
 
 
     <TextView
         android:id="@+id/musicLakeTv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
         android:text="@string/welcome_tips"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
-        app:layout_constraintEnd_toEndOf="@+id/iv_header_cover"
-        app:layout_constraintStart_toStartOf="@+id/iv_header_cover"
-        app:layout_constraintTop_toBottomOf="@+id/musicLakeTv" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/musicLakeTv"
+        app:layout_constraintStart_toStartOf="@+id/musicLakeTv" />
 
 </android.support.constraint.ConstraintLayout>

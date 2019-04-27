@@ -57,7 +57,8 @@
                         android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:drawableTop="@drawable/ic_hot"
                         android:gravity="center"
-                        android:text="@string/hot_artist" />
+                        android:text="@string/hot_artist"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/singerListTv"
@@ -77,7 +78,8 @@
                         android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:drawableTop="@drawable/ic_radio"
                         android:gravity="center"
-                        android:text="@string/radio_list" />
+                        android:text="@string/radio_list"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

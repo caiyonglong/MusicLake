@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
             android:tag="tab_indicator_accent_color,bg_primary_color"
+            android:theme="?android:tabWidgetStyle"
             app:tabGravity="fill"
             app:tabIndicatorFullWidth="false"
             app:tabMode="fixed" />

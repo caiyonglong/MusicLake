@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.search
 
+import android.app.PendingIntent.getActivity
 import android.preference.PreferenceManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -230,12 +231,32 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         return true
     }
 
+    /**
+     * 改变过滤设置
+     */
     private fun changeFilter(item: MenuItem, filterType: SearchEngine.Filter) {
         filter.put(key = filterType, value = !(filter[filterType] ?: true))
         item.isChecked = filter[filterType] ?: true
         if (!TextUtils.isEmpty(queryString)) {
             isSearchOnline = true
         }
+
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val options = prefs.getStringSet("key_search_filter", mutableSetOf())
+        val searchFilters = resources.getStringArray(R.array.pref_search_filter_select)
+
+        for (i in 0 until searchFilters.size) {
+            if (searchFilters[i] == item.title) {
+                if (item.isChecked) options.add((i + 1).toString())
+                else options.remove((i + 1).toString())
+            }
+        }
+        options.forEach {
+            LogUtil.d("保存过滤设置 ${searchFilters[it.toInt() - 1]}");
+        }
+        //保存
+        prefs.edit().putStringSet("key_search_filter", options).apply()
         showFilterResult()
     }
 
@@ -254,6 +275,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             mAdapter.setOnLoadMoreListener(null, resultListRcv)
         }
     }
+
     /**
      * 歌单搜索
      *
@@ -357,19 +379,31 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
      * 初始化过滤条件
      */
     private fun initSearchFilter(menu: Menu) {
-        filter[SearchEngine.Filter.QQ] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_qq", true)
-        filter[SearchEngine.Filter.XIAMI] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_xiami", true)
-        filter[SearchEngine.Filter.BAIDU] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_baidu", true)
-        filter[SearchEngine.Filter.NETEASE] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_netease", true)
-        filter[SearchEngine.Filter.CP] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_cp", true)
-        filter[SearchEngine.Filter.REPEAT] = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_repeat", true)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val options = prefs.getStringSet("key_search_filter", null)
+        val searchFilters = resources.getStringArray(R.array.pref_search_filter_select)
+        val selectFilters = mutableListOf<String>()
+        if (options != null) {
+            for (t in options) {
+                selectFilters.add(searchFilters[t.toInt() - 1])
+            }
+        }
+
+        filter[SearchEngine.Filter.QQ] = selectFilters.contains(getString(R.string.search_filter_qq))// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_qq", true)
+        filter[SearchEngine.Filter.XIAMI] = selectFilters.contains(getString(R.string.search_filter_xiami))// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_xiami", true)
+        filter[SearchEngine.Filter.BAIDU] = selectFilters.contains(getString(R.string.search_filter_baidu))// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_baidu", true)
+        filter[SearchEngine.Filter.NETEASE] = selectFilters.contains(getString(R.string.search_filter_netease))// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_netease", true)
+        filter[SearchEngine.Filter.CP] = selectFilters.contains(getString(R.string.search_filter_cp))//selectFilters.contains(getString(R.string.search_filter_cp)) PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_cp", true)
+        filter[SearchEngine.Filter.REPEAT] = selectFilters.contains(getString(R.string.search_filter_repeat))// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("key_search_filter_repeat", true)
 
         menu.findItem(R.id.menu_filter_qq).isChecked = filter[SearchEngine.Filter.QQ] ?: true
         menu.findItem(R.id.menu_filter_xiami).isChecked = filter[SearchEngine.Filter.XIAMI] ?: true
-        menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE] ?: true
+        menu.findItem(R.id.menu_filter_netease).isChecked = filter[SearchEngine.Filter.NETEASE]
+                ?: true
         menu.findItem(R.id.menu_filter_baidu).isChecked = filter[SearchEngine.Filter.BAIDU] ?: true
         menu.findItem(R.id.menu_filter_copyright).isChecked = filter[SearchEngine.Filter.CP] ?: true
-        menu.findItem(R.id.menu_filter_repeat).isChecked = filter[SearchEngine.Filter.REPEAT] ?: true
+        menu.findItem(R.id.menu_filter_repeat).isChecked = filter[SearchEngine.Filter.REPEAT]
+                ?: true
     }
 
     /**

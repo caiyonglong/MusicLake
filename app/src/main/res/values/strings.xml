@@ -417,7 +417,7 @@
     <string name="user_join">下线</string>
     <string name="user_leave">上线</string>
     <string name="chat_gg">有什么问题不能及时反馈？请点击链接加入群聊【音乐湖交流群】：https://jq.qq.com/?_wv=1027&amp;k=5oF9xQv</string>
-    <string name="search_filter_title">搜索过滤</string>
+    <string name="search_filter_title">在线音乐搜索方式</string>
     <string name="search_filter_summary">过滤不同平台的音乐源</string>
     <string name="search_filter_qq">qq音乐</string>
     <string name="search_filter_xiami">虾米音乐</string>
@@ -464,5 +464,8 @@
     <string name="genres">流派</string>
     <string name="artists">艺术家</string>
     <string name="recommend">推荐</string>
+    <string name="pref_title_netease">网易云音乐API</string>
+    <string name="pref_title_music_api">音乐湖后台API</string>
+    <string name="settings_restart_app">重启App后生效</string>
 
 </resources>

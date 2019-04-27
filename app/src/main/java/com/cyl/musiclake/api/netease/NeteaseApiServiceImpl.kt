@@ -8,6 +8,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
+import com.cyl.musiclake.utils.SPUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 
@@ -18,7 +19,7 @@ import io.reactivex.ObservableOnSubscribe
 object NeteaseApiServiceImpl {
     private val TAG = "NeteaseApiServiceImpl"
 
-    val apiService by lazy { ApiManager.getInstance().create(NeteaseApiService::class.java, Constants.BASE_NETEASE_URL) }
+    val apiService by lazy { ApiManager.getInstance().create(NeteaseApiService::class.java, SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL)) }
 
     /**
      * 获取歌单歌曲
@@ -184,7 +185,7 @@ object NeteaseApiServiceImpl {
      * 搜索
      */
     fun searchMoreInfo(keywords: String, limit: Int, offset: Int, type: Int): Observable<SearchInfo> {
-        val url = Constants.BASE_NETEASE_URL+"search?keywords= $keywords&limit=$limit&offset=$offset&type=$type"
+        val url = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL) + "search?keywords= $keywords&limit=$limit&offset=$offset&type=$type"
 //        return apiService.searchNetease(url)
 //        @Query("keywords") keywords: String, @Query("limit") limit: Int, @Query("offset") offset: Int, @Query("type") type: Int
         return apiService.searchNetease(url)

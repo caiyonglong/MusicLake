@@ -80,12 +80,12 @@
     </string-array>
 
     <string-array name="pref_search_filter_select">
-        <item>QQ音乐</item>
-        <item>虾米音乐</item>
-        <item>网易云音乐</item>
-        <item>百度音乐</item>
-        <item>去重</item>
-        <item>包含无版权</item>
+        <item>@string/search_filter_qq</item>
+        <item>@string/search_filter_xiami</item>
+        <item>@string/search_filter_netease</item>
+        <item>@string/search_filter_baidu</item>
+        <item>@string/search_filter_repeat</item>
+        <item>@string/search_filter_cp</item>
     </string-array>
     <string-array name="pref_search_filter_values">
         <item>1</item>

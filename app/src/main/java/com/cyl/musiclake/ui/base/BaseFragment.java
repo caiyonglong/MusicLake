@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.di.component.DaggerFragmentComponent;
 import com.cyl.musiclake.di.component.FragmentComponent;
 import com.cyl.musiclake.di.module.FragmentModule;
+import com.cyl.musiclake.utils.LogUtil;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
@@ -92,9 +94,15 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         }
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
-            mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.parseColor("#BBFFFF"));
-
-            mSwipeRefreshLayout.setEnabled(false);
+//            mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.parseColor("#FFFFFF"));
+            mSwipeRefreshLayout.setEnabled(true);
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                LogUtil.d("下拉刷新");
+                new Handler().postDelayed(() -> {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    loadData();
+                }, 2000);
+            });
         }
     }
 

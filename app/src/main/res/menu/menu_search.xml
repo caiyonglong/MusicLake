@@ -21,15 +21,15 @@
                 <item
                     android:id="@+id/menu_filter_qq"
                     android:checked="true"
-                    android:title="@string/qq" />
+                    android:title="@string/search_filter_qq" />
                 <item
                     android:id="@+id/menu_filter_xiami"
                     android:checked="true"
-                    android:title="@string/xiami" />
+                    android:title="@string/search_filter_xiami" />
                 <item
                     android:id="@+id/menu_filter_netease"
                     android:checked="true"
-                    android:title="@string/netease" />
+                    android:title="@string/search_filter_netease" />
                 <item
                     android:id="@+id/menu_filter_baidu"
                     android:checked="true"
@@ -37,11 +37,11 @@
                 <item
                     android:id="@+id/menu_filter_repeat"
                     android:checked="true"
-                    android:title="@string/remove_repeat" />
+                    android:title="@string/search_filter_repeat" />
                 <item
                     android:id="@+id/menu_filter_copyright"
                     android:checked="true"
-                    android:title="@string/remove_copyright" />
+                    android:title="@string/search_filter_cp" />
             </group>
         </menu>
     </item>

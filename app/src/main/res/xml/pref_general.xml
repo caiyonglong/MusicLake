@@ -22,13 +22,18 @@
             android:summary="@string/pref_title_wifi_summary"
             android:title="@string/pref_title_wifi" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="key_night_mode"
+            android:title="@string/nav_night" />
+
     </PreferenceCategory>
 
     <ListPreference
         android:defaultValue="128"
         android:entries="@array/pref_quality_select"
         android:entryValues="@array/pref_quality_select_values"
-        android:key="quality_select"
+        android:key="key_music_quality"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/pref_title_select_quality" />
@@ -49,6 +54,15 @@
             android:key="key_search_filter"
             android:summary="@string/search_filter_summary"
             android:title="@string/search_filter_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_notifications">
+        <EditTextPreference
+            android:key="key_music_api"
+            android:title="@string/pref_title_music_api" />
+        <EditTextPreference
+            android:key="key_netease_api"
+            android:title="@string/pref_title_netease" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_data_sync">

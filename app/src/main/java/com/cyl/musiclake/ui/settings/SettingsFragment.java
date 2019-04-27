@@ -1,12 +1,17 @@
 package com.cyl.musiclake.ui.settings;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 
@@ -14,12 +19,18 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.ui.main.MainActivity;
+import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.DataClearManager;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
+
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Author   : D22434
@@ -32,9 +43,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private Preference mPreferenceDownloadFile;
     private Preference mPreferenceCacheFile;
     private PreferenceScreen mPreferenceCache;
-    public SwitchPreference mWifiSwitch, mSocketSwitch;
+    public SwitchPreference mWifiSwitch, mSocketSwitch, mNightSwitch;
     public CheckBoxPreference mLyricCheckBox;
-    public MultiSelectListPreference multiSelectListPreference;
+    public ListPreference mMusicQualityPreference;
+    public MultiSelectListPreference mSearchFilterPreference;
+    public EditTextPreference mMusicApiPreference;
+    public EditTextPreference mNeteaseApiPreference;
+
+    private Set<String> searchOptions;
+    private String[] searchFilters;
+    private String musicApi;// = SPUtils.getAnyByKey(SPUtils.SP_KEY_PLATER_API_URL, Constants.BASE_PLAYER_URL);
+    private String neteaseApi;// = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL);
+
 
     public static SettingsFragment newInstance() {
         Bundle args = new Bundle();
@@ -82,8 +102,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mPreferenceCacheFile = findPreference("key_cache_file");
         mWifiSwitch = (SwitchPreference) findPreference("wifi_mode");
         mSocketSwitch = (SwitchPreference) findPreference("key_socket");
+        mNightSwitch = (SwitchPreference) findPreference("key_night_mode");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
-        multiSelectListPreference = (MultiSelectListPreference) findPreference("key_search_filter");
+        mMusicQualityPreference = (ListPreference) findPreference("key_music_quality");
+        mSearchFilterPreference = (MultiSelectListPreference) findPreference("key_search_filter");
+        mMusicApiPreference = (EditTextPreference) findPreference("key_music_api");
+        mNeteaseApiPreference = (EditTextPreference) findPreference("key_netease_api");
 
         mPreferenceCache.setOnPreferenceClickListener(this);
         mSocketSwitch.setOnPreferenceClickListener(this);
@@ -91,6 +115,113 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         mPreferenceDownloadFile.setSummary(FileUtils.getMusicDir());
         mPreferenceCacheFile.setSummary(FileUtils.getMusicCacheDir());
+
+        initSearchFilterSettings(true);
+        mMusicQualityPreference.setSummary(mMusicQualityPreference.getEntry());
+        mMusicQualityPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            //把preference这个Preference强制转化为ListPreference类型
+            ListPreference listPreference = (ListPreference) preference;
+            //获取ListPreference中的实体内容
+            CharSequence[] entries = listPreference.getEntries();
+            //获取ListPreference中的实体内容的下标值
+            int index = listPreference.findIndexOfValue((String) newValue);
+            //把listPreference中的摘要显示为当前ListPreference的实体内容中选择的那个项目
+            listPreference.setSummary(entries[index]);
+            ToastUtils.show("优先播放音质为：" + entries[index]);
+            return false;
+        });
+        mNightSwitch.setChecked(ThemeStore.THEME_MODE == ThemeStore.NIGHT);
+        mNightSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean isChecked = (boolean) newValue;
+            mNightSwitch.setChecked(isChecked);
+            if (isChecked && ThemeStore.THEME_MODE != ThemeStore.NIGHT) {
+                ThemeStore.THEME_MODE = ThemeStore.NIGHT;
+                ThemeStore.updateThemeMode();
+                updateTheme();
+            } else if (!isChecked && ThemeStore.THEME_MODE != ThemeStore.DAY) {
+                ThemeStore.THEME_MODE = ThemeStore.DAY;
+                ThemeStore.updateThemeMode();
+                updateTheme();
+            }
+            return false;
+        });
+
+        mSearchFilterPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (searchOptions != newValue) {
+                searchOptions = (Set<String>) newValue;
+            }
+            initSearchFilterSettings(false);
+            return false;
+        });
+        initApiSettings();
+    }
+
+    /**
+     * 更新主题配置
+     */
+    private void updateTheme(){
+        for (int i = 0; i < MusicApp.activities.size(); i++) {
+            if (MusicApp.activities.get(i) instanceof MainActivity) {
+                MusicApp.activities.get(i).recreate();
+            }
+        }
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
+        getActivity().overridePendingTransition(0, 0);
+        getActivity().finish();
+    }
+
+    /**
+     * 初始化搜索过滤
+     */
+    private void initSearchFilterSettings(boolean isInit) {
+        if (isInit) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            searchOptions = prefs.getStringSet("key_search_filter", null);
+            searchFilters = getResources().getStringArray(R.array.pref_search_filter_select);
+        }
+
+        if (searchOptions != null) {
+            StringBuilder info = new StringBuilder();
+            for (String t : searchOptions) {
+                info.append(searchFilters[Integer.valueOf(t) - 1]);
+                info.append("、");
+            }
+            info.deleteCharAt(info.length() - 1);
+            mSearchFilterPreference.setSummary(info);
+        }
+    }
+
+    /**
+     * 初始化Api设置
+     */
+    private void initApiSettings() {
+        //获取本地api地址
+        musicApi = SPUtils.getAnyByKey(SPUtils.SP_KEY_PLATER_API_URL, Constants.BASE_PLAYER_URL);
+        neteaseApi = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL);
+//
+        mMusicApiPreference.setSummary(musicApi);
+        mMusicApiPreference.setText(musicApi);
+        mNeteaseApiPreference.setSummary(neteaseApi);
+        mNeteaseApiPreference.setText(neteaseApi);
+
+        mMusicApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (!newValue.toString().equals(neteaseApi)) {
+                musicApi = String.valueOf(newValue);
+                preference.setSummary(musicApi);
+                SPUtils.putAnyCommit(SPUtils.SP_KEY_PLATER_API_URL, musicApi);
+                ToastUtils.show(getString(R.string.settings_restart_app));
+            }
+            return false;
+        });
+        mNeteaseApiPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (!newValue.toString().equals(neteaseApi)) {
+                neteaseApi = String.valueOf(newValue);
+                preference.setSummary(neteaseApi);
+                SPUtils.putAnyCommit(SPUtils.SP_KEY_NETEASE_API_URL, neteaseApi);
+                ToastUtils.show(getString(R.string.settings_restart_app));
+            }
+            return false;
+        });
     }
 
 

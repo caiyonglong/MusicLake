@@ -29,7 +29,6 @@
         android:layout_marginTop="@dimen/dp_8"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/black"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="@+id/tv_comment_time"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -83,7 +82,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_8"
             android:padding="@dimen/dp_8"
-            android:textColor="@color/black"
             android:textSize="14sp" />
 
     </LinearLayout>

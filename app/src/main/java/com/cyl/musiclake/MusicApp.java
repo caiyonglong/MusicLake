@@ -32,6 +32,7 @@ import com.tencent.tauth.Tencent;
 
 import org.litepal.LitePal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,6 +70,7 @@ public class MusicApp extends Application {
         return sInstance.getApplicationContext();
     }
 
+    public static List<Activity> activities = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -160,6 +162,7 @@ public class MusicApp extends Application {
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                activities.add(activity);
                 Activitycount++;
             }
 
@@ -196,6 +199,7 @@ public class MusicApp extends Application {
             @Override
             public void onActivityDestroyed(Activity activity) {
                 Activitycount--;
+                activities.remove(activity);
                 if (Activitycount == 0) {
                     LogUtil.d(">>>>>>>>>>>>>>>>>>>APP 关闭");
                     if (socketManager != null) {

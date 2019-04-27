@@ -54,7 +54,7 @@
         <activity
             android:name=".ui.main.WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/FullScreen">
+            android:theme="@style/AppTheme.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

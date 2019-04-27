@@ -9,6 +9,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.net.ApiManager
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
+import com.cyl.musiclake.utils.SPUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Observable
@@ -20,7 +21,7 @@ import io.reactivex.ObservableOnSubscribe
 
 object PlaylistApiServiceImpl {
     private val TAG = "PlaylistApiServiceImpl"
-    val playlistApiService by lazy { ApiManager.getInstance().create(PlaylistApiService::class.java, Constants.BASE_PLAYER_URL) }
+    val playlistApiService by lazy { ApiManager.getInstance().create(PlaylistApiService::class.java, SPUtils.getAnyByKey(SPUtils.SP_KEY_PLATER_API_URL, Constants.BASE_PLAYER_URL)) }
 
     val token: String?
         get() = UserStatus.getUserInfo()?.token

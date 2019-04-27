@@ -95,7 +95,7 @@ public class WelcomeActivity extends BaseActivity {
             getCoverImageUrl();
             SPUtils.putAnyCommit(SPUtils.SP_KEY_FIRST_COMING, false);
         } else {
-            startMainActivity();
+            mHandler.postDelayed(WelcomeActivity.this::startMainActivity, 1000);
         }
     }
 
