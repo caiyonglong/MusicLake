@@ -1,9 +1,12 @@
 package com.cyl.musiclake.net;
 
+import android.util.Log;
+
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.gson.MyGsonConverterFactory;
 import com.cyl.musiclake.utils.NetworkUtils;
+import com.cyl.musiclake.utils.SPUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -12,6 +15,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -100,6 +105,47 @@ public class ApiManager {
     };
 
     /**
+     * 增加cookie
+     */
+    public static class ReceivedCookiesInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response originalResponse = chain.proceed(chain.request());
+
+            if (!originalResponse.headers("Set-Cookie").isEmpty()) {
+                HashSet<String> cookies = new HashSet<>();
+
+                for (String header : originalResponse.headers("Set-Cookie")) {
+                    cookies.add(header);
+                }
+                Log.v("OkHttp", "获取到 Header: " + cookies);
+                SPUtils.putAnyCommit("cookie", cookies);
+            }
+            return originalResponse;
+        }
+    }
+
+
+    /**
+     * 读取cookie
+     */
+    public static class AddCookiesInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request.Builder builder = chain.request().newBuilder();
+            HashSet<String> preferences = (HashSet<String>) SPUtils.getAnyByKey("cookie", (Set<String>) null);
+            if (preferences != null) {
+                for (String cookie : preferences) {
+                    builder.addHeader("Cookie", cookie);
+                    Log.v("OkHttp", "Adding Header: " + cookie); // This is done so I know which headers are being added; this interceptor is used after the normal logging of OkHttp
+                }
+            }
+            return chain.proceed(builder.build());
+        }
+    }
+
+    /**
      * 获取OkHttpClient实例
      *
      * @return
@@ -124,8 +170,8 @@ public class ApiManager {
                         .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-//                        .addInterceptor(mRewriteCacheControlInterceptor)
-//                        .addInterceptor(mLoggingInterceptor)
+                        .addInterceptor(new ReceivedCookiesInterceptor())
+                        .addInterceptor(new AddCookiesInterceptor())
                         .addInterceptor(logging)
                         .build();
             }

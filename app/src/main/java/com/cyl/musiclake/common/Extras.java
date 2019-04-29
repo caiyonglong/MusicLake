@@ -52,4 +52,5 @@ public class Extras {
 
     public static final int REQUEST_CODE_EIDT_SONG = 200;
 
+    public static final String LOGIN_METHEOD = "login_method";
 }

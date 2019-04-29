@@ -75,17 +75,16 @@
                 android:src="@drawable/ic_arrow_drop_down"
                 android:visibility="gone" />
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/heard_netease"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/dp_8"
+                android:elevation="@dimen/dp_4"
+                android:src="@drawable/netease" />
         </LinearLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/heard_netease"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/dp_8"
-            android:src="@drawable/ic_account_circle"
-            android:visibility="gone" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/heard_qq"

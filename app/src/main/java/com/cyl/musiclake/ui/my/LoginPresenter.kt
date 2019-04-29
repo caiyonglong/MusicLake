@@ -41,6 +41,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                     override fun success(result: LoginInfo?) {
                         //登录成功
                         mView?.hideLoading()
+                        mView?.bindSuccess(result)
                         ToastUtils.show(result.toString())
                     }
 
@@ -158,7 +159,6 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                                 ToastUtils.show("网络异常，请稍后重试！")
                                 e.printStackTrace()
                             }
-
 
 
                         }

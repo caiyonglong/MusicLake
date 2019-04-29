@@ -13,6 +13,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
@@ -28,6 +29,7 @@ import kotlinx.android.synthetic.main.frag_discover.*
  */
 class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
+    private val TAG = "DiscoverFragment"
     /**
      * 适配器
      */
@@ -81,6 +83,13 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             R.id.singerListTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, ArtistListFragment()) }
             }
+            R.id.recommendSongsTv -> {
+                val playlist = Playlist()
+                playlist.musicList = recommend
+                playlist.pid = Constants.PLAYLIST_WY_RECOMMEND_ID
+                playlist.name = "每日推荐"
+                activity?.let { NavigationHelper.navigateToPlaylist(it, playlist, null) }
+            }
             R.id.seeAllArtistTv, R.id.hotSingerTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.NETEASE_ARITIST_LIST, artists, channels)) }
             }
@@ -122,10 +131,11 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         radioTv.setOnClickListener(this)
         seeAllRadioTv.setOnClickListener(this)
         seeAllArtistTv.setOnClickListener(this)
+        recommendSongsTv.setOnClickListener(this)
     }
 
     override fun showEmptyView(msg: String) {
-        LogUtil.d("Discover", "msg = $msg")
+        LogUtil.d(TAG, "errorMsg = $msg")
     }
 
     override fun retryLoading() {
@@ -225,7 +235,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, channels[position], Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
             }
         } else {
-            mRadioAdapter?.notifyDataSetChanged()
+            mRadioAdapter?.setNewData(this.channels)
         }
         radioView.visibility = if (channels.size <= 0) View.GONE else View.VISIBLE
     }
@@ -234,16 +244,21 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
      * 显示推荐歌单
      */
     override fun showRecommendPlaylist(playlists: MutableList<Playlist>) {
+        LogUtil.d(TAG, "获取推荐歌单 songs：" + playlists.size)
         recommendPlaylistView.visibility = if (playlists.size == 0) View.GONE else View.VISIBLE
         this.recommendPlaylist = playlists
         if (mPlaylistAdapter == null) {
             mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
             //推荐列表
-            recommendPlaylistRsv.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            recommendPlaylistRsv.layoutManager = GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
             recommendPlaylistRsv.adapter = mPlaylistAdapter
             recommendPlaylistRsv.isFocusable = false
             recommendPlaylistRsv.isNestedScrollingEnabled = false
             mPlaylistAdapter?.bindToRecyclerView(recommendPlaylistRsv)
+            mPlaylistAdapter?.setOnItemClickListener { adapter, view, position ->
+                val playlist = adapter.data[position] as Playlist
+                NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
+            }
         } else {
             mPlaylistAdapter?.setNewData(this.recommendPlaylist)
         }
@@ -254,7 +269,8 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
      * 显示推荐歌曲
      */
     override fun showRecommendSongs(songs: MutableList<Music>) {
-        recommendPlaylistView.visibility = if (songs.size == 0) View.GONE else View.VISIBLE
+        LogUtil.d(TAG, "获取推荐歌曲 songs：" + songs.size)
+        recommendView.visibility = if (songs.size == 0) View.GONE else View.VISIBLE
         this.recommend = songs
         if (mMusicAdapter == null) {
             mMusicAdapter = SongAdapter(recommend)
@@ -263,11 +279,17 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             recommendRsv.adapter = mMusicAdapter
             recommendRsv.isFocusable = false
             recommendRsv.isNestedScrollingEnabled = false
+
+            mMusicAdapter?.setOnItemClickListener { _, view, position ->
+                if (view.id != R.id.iv_more) {
+                    PlayManager.play(position, recommend, Constants.PLAYLIST_LOVE_ID)
+                    mMusicAdapter?.notifyDataSetChanged()
+                }
+            }
             mMusicAdapter?.bindToRecyclerView(recommendRsv)
         } else {
-            mMusicAdapter?.notifyDataSetChanged()
+            mMusicAdapter?.setNewData(recommend)
         }
-        recommendRsv.visibility = if (recommend.size <= 0) View.GONE else View.VISIBLE
     }
 
     companion object {

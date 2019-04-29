@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 
+import java.util.Set;
+
 /**
  * 作者：yonglong on 2016/8/12 16:03
  * 邮箱：643872807@qq.com
@@ -27,11 +29,14 @@ public class SPUtils {
      */
     public static final String SP_KEY_PLATER_API_URL = "music_api";
     public static final String SP_KEY_NETEASE_API_URL = "netease_api";
+    public static final String SP_KEY_NETEASE_UID = "netease_uid";
     /**
      * 桌面歌词锁定
      */
     public static final String SP_KEY_FLOAT_LYRIC_LOCK = "float_lyric_lock";
     public static final String SP_KEY_THEME_MODE = "theme_mode";
+    public static final String SP_KEY_USER_NAME = "user_name";
+    public static final String SP_KEY_PASSWORD = "pass_word";
 
     private static final String MUSIC_ID = "music_id";
     private static final String PLAY_POSITION = "play_position";
@@ -168,8 +173,16 @@ public class SPUtils {
         getPreferences().edit().putLong(key, value).apply();
     }
 
+    public static void putAnyCommit(String key, Set<String> defValue) {
+        getPreferences().edit().putStringSet(key, defValue).apply();
+    }
+
     public static String getAnyByKey(String key, @Nullable String defValue) {
         return getPreferences().getString(key, defValue);
+    }
+
+    public static Set<String> getAnyByKey(String key, Set<String> defValue) {
+        return getPreferences().getStringSet(key, defValue);
     }
 
     public static void putAnyCommit(String key, @Nullable String value) {

@@ -23,7 +23,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp"
             app:cardUseCompatPadding="true"
@@ -167,6 +166,24 @@
             app:layout_constraintTop_toBottomOf="@+id/qqlogin" />
 
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cv"
+            android:layout_alignEnd="@+id/cv"
+            android:layout_margin="@dimen/dp_16"
+            android:background="@color/app_green"
+            android:backgroundTint="@color/app_green"
+            android:elevation="5dp"
+            android:src="@drawable/ic_send_white_18dp"
+            android:transitionName="loginFab"
+            app:borderWidth="0dp"
+            app:elevation="5dp"
+            app:layout_constraintEnd_toEndOf="@+id/cv"
+            app:layout_constraintTop_toTopOf="@+id/cv"
+            app:rippleColor="@color/app_green_dark" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/wbLogin"
             android:layout_width="wrap_content"
@@ -236,21 +253,6 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/cv"
-            android:layout_alignEnd="@+id/cv"
-            android:layout_alignRight="@+id/cv"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="-20dp"
-            android:layout_marginRight="-20dp"
-            android:src="@drawable/ic_send_white_18dp"
-            android:transitionName="loginFab"
-            android:visibility="gone"
-            app:fabSize="normal" />
 
         <ProgressBar
             android:id="@+id/progressBar"

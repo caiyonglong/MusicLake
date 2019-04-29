@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.my
 import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
+import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.my.user.User
@@ -16,6 +17,8 @@ import kotlinx.android.synthetic.main.fragment_login_web.*
  * 版本：2.5
  */
 class BindLoginFragment : BaseFragment<LoginPresenter>(), LoginContract.View {
+    override fun bindSuccess(loginInfo: LoginInfo?) {
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_login_web

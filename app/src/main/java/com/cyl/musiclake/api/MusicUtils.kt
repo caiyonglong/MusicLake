@@ -122,7 +122,7 @@ object MusicUtils {
             music.coverBig = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
             music.coverSmall = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
 //            if (it.cp != 0) {
-                musicList.add(music)
+            musicList.add(music)
 //            }
         }
         return musicList
@@ -132,12 +132,12 @@ object MusicUtils {
         val musicList = mutableListOf<Music>()
         tracks?.forEach {
             val music = Music()
-            music.mid = it.id.toString()
+            music.mid = it.id
             music.title = it.name
             music.type = Constants.NETEASE
             music.album = it.album.name
             music.isOnline = true
-            music.albumId = it.album.id.toString()
+            music.albumId = it.album.id
             if (it.artists != null) {
                 var artistIds = it.artists?.get(0)?.id.toString()
                 var artistNames = it.artists?.get(0)?.name
@@ -151,6 +151,7 @@ object MusicUtils {
             music.coverUri = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
             music.coverBig = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
             music.coverSmall = getAlbumPic(it.album.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
+            musicList.add(music)
         }
         return musicList
     }

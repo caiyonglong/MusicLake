@@ -27,6 +27,7 @@ public class Constants {
     public static final String PLAYLIST_BD_ID = "playlist_bd";
     //网易云歌单
     public static final String PLAYLIST_WY_ID = "playlist_wy";
+    public static final String PLAYLIST_WY_RECOMMEND_ID = "playlist_wy_recommend_songs";
     //QQ歌单
     public static final String PLAYLIST_QQ_ID = "playlist_qq";
     //虾米歌单
@@ -38,6 +39,7 @@ public class Constants {
     //百度电台列表
     public static final String BAIDU_RADIO_LIST = "baidu_radio_list";
     public static final String NETEASE_ARITIST_LIST = "netease_artist_list";
+
 
     /**
      * 搜索过滤
@@ -117,6 +119,7 @@ public class Constants {
      * 悬浮窗权限requestCode
      */
     public static final int REQUEST_CODE_FLOAT_WINDOW = 0x123;
+    public static final int REQUEST_CODE_LOGIN = 10001;
 
     //在线音乐
     public static final String FILENAME_MP3 = ".mp3";
@@ -164,7 +167,7 @@ public class Constants {
     /**
      * 在线歌单接口Api*************************************************
      */
-    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc/";
+    public static final String BASE_PLAYER_URL = "https://player2.zzsun.cc/";
     /**
      * 网易云音乐接口
      */

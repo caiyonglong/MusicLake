@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,8 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
@@ -36,7 +39,6 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
-import com.cyl.musiclake.ui.my.BindLoginFragment;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
@@ -45,6 +47,8 @@ import com.cyl.musiclake.ui.settings.SettingsActivity;
 import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.Tools;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -103,7 +107,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         disableNavigationViewScrollbars(mNavigationView);
         checkLoginStatus();
         initCountDownView();
-        initNightMode();
     }
 
 
@@ -145,14 +148,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvatarIcon = mHeaderView.findViewById(R.id.header_face);
         mName = mHeaderView.findViewById(R.id.header_name);
         mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
-        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
+//        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
+        mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
         mBindNeteaseView.setOnClickListener(view -> {
-            mDrawerLayout.closeDrawers();
-            mBindNeteaseView.setVisibility(View.GONE);
-            NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginFragment());
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.putExtra(Extras.LOGIN_METHEOD, Constants.NETEASE);
+            startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
+//            mDrawerLayout.closeDrawers();
+//            mBindNeteaseView.setVisibility(View.GONE);
+//            NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginFragment());
         });
     }
+
 
     @Override
     protected void initData() {
@@ -442,7 +450,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.e(TAG, "onNewIntent");
-        
+
     }
 
     /**
@@ -467,6 +475,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(intent);
             }
         });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE_LOGIN) {
+            String uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
+            if (uid != null && uid.length() > 0) {
+                LogUtil.d(TAG, "uid = " + uid);
+                mBindNeteaseView.setVisibility(View.GONE);
+            }
+        }
     }
 
 }

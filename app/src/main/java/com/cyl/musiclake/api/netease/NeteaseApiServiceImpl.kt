@@ -220,7 +220,7 @@ object NeteaseApiServiceImpl {
      */
     fun recommendSongs(): Observable<MutableList<Music>> {
         return apiService.recommendSongs()
-                .flatMap { it ->
+                .flatMap {
                     Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
                         try {
                             if (it.code == 200) {
@@ -253,7 +253,7 @@ object NeteaseApiServiceImpl {
                                     val playlist = Playlist()
                                     playlist.pid = it.id.toString()
                                     playlist.name = it.name
-                                    playlist.coverUrl = it.coverImgUrl
+                                    playlist.coverUrl = if(it.coverImgUrl!=null)it.coverImgUrl else it.creator.avatarUrl
                                     playlist.des = it.description
                                     playlist.date = it.createTime
                                     playlist.updateDate = it.updateTime

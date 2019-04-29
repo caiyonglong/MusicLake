@@ -1,7 +1,6 @@
 package com.cyl.musicapi.netease
 
 import com.google.gson.annotations.SerializedName
-import kotlin.collections.List
 
 /**
  * Created by cyl on 2018/11/6.
@@ -30,7 +29,7 @@ data class BMusic(@SerializedName("extension")
                   @SerializedName("size")
                   val size: Int = 0,
                   @SerializedName("volumeDelta")
-                  val volumeDelta: Int = 0,
+                  val volumeDelta: Double = 0.0,
                   @SerializedName("name")
                   val name: String = "",
                   @SerializedName("bitrate")
@@ -38,7 +37,7 @@ data class BMusic(@SerializedName("extension")
                   @SerializedName("playTime")
                   val playTime: Int = 0,
                   @SerializedName("id")
-                  val id: Int = 0,
+                  val id: String,
                   @SerializedName("dfsId")
                   val dfsId: Int = 0,
                   @SerializedName("sr")
@@ -58,7 +57,7 @@ data class Artist(@SerializedName("picUrl")
                   @SerializedName("img1v1Id")
                   val imgVId: Int = 0,
                   @SerializedName("id")
-                  val id: Int = 0,
+                  val id: String,
                   @SerializedName("picId")
                   val picId: Int = 0,
                   @SerializedName("albumSize")
@@ -72,7 +71,7 @@ data class MMusic(@SerializedName("extension")
                   @SerializedName("size")
                   val size: Int = 0,
                   @SerializedName("volumeDelta")
-                  val volumeDelta: Int = 0,
+                  val volumeDelta: Double = 0.0,
                   @SerializedName("name")
                   val name: String = "",
                   @SerializedName("bitrate")
@@ -80,7 +79,7 @@ data class MMusic(@SerializedName("extension")
                   @SerializedName("playTime")
                   val playTime: Int = 0,
                   @SerializedName("id")
-                  val id: Int = 0,
+                  val id: String,
                   @SerializedName("dfsId")
                   val dfsId: Int = 0,
                   @SerializedName("sr")
@@ -100,7 +99,7 @@ data class ArtistsItem(@SerializedName("picUrl")
                        @SerializedName("img1v1Id")
                        val imgVId: Int = 0,
                        @SerializedName("id")
-                       val id: Int = 0,
+                       val id: String,
                        @SerializedName("picId")
                        val picId: Int = 0,
                        @SerializedName("albumSize")
@@ -134,7 +133,7 @@ data class RecommendItem(@SerializedName("no")
                          @SerializedName("starred")
                          val starred: Boolean = false,
                          @SerializedName("artists")
-                         val artists: List<ArtistsItem>?,
+                         val artists: MutableList<ArtistsItem>?,
                          @SerializedName("popularity")
                          val popularity: Int = 0,
                          @SerializedName("playedNum")
@@ -144,7 +143,7 @@ data class RecommendItem(@SerializedName("no")
                          @SerializedName("starredNum")
                          val starredNum: Int = 0,
                          @SerializedName("id")
-                         val id: Int = 0,
+                         val id: String,
                          @SerializedName("alg")
                          val alg: String = "",
                          @SerializedName("album")
@@ -204,7 +203,7 @@ data class Album(@SerializedName("transName")
                  @SerializedName("copyrightId")
                  val copyrightId: Int = 0,
                  @SerializedName("artists")
-                 val artists: List<ArtistsItem>?,
+                 val artists: MutableList<ArtistsItem>?,
                  @SerializedName("name")
                  val name: String = "",
                  @SerializedName("company")
@@ -212,7 +211,7 @@ data class Album(@SerializedName("transName")
                  @SerializedName("subType")
                  val subType: String = "",
                  @SerializedName("id")
-                 val id: Int = 0,
+                 val id: String,
                  @SerializedName("picId")
                  val picId: Long = 0,
                  @SerializedName("status")
@@ -242,7 +241,7 @@ data class Privilege(@SerializedName("st")
                      @SerializedName("maxbr")
                      val maxbr: Int = 0,
                      @SerializedName("id")
-                     val id: Int = 0,
+                     val id: String,
                      @SerializedName("pl")
                      val pl: Int = 0,
                      @SerializedName("sp")
@@ -256,7 +255,7 @@ data class LMusic(@SerializedName("extension")
                   @SerializedName("size")
                   val size: Int = 0,
                   @SerializedName("volumeDelta")
-                  val volumeDelta: Int = 0,
+                  val volumeDelta: Double = 0.0,
                   @SerializedName("name")
                   val name: String = "",
                   @SerializedName("bitrate")
@@ -264,7 +263,7 @@ data class LMusic(@SerializedName("extension")
                   @SerializedName("playTime")
                   val playTime: Int = 0,
                   @SerializedName("id")
-                  val id: Int = 0,
+                  val id: String,
                   @SerializedName("dfsId")
                   val dfsId: Int = 0,
                   @SerializedName("sr")
@@ -276,7 +275,7 @@ data class HMusic(@SerializedName("extension")
                   @SerializedName("size")
                   val size: Int = 0,
                   @SerializedName("volumeDelta")
-                  val volumeDelta: Int = 0,
+                  val volumeDelta: Double = 0.0,
                   @SerializedName("name")
                   val name: String = "",
                   @SerializedName("bitrate")
@@ -284,7 +283,7 @@ data class HMusic(@SerializedName("extension")
                   @SerializedName("playTime")
                   val playTime: Int = 0,
                   @SerializedName("id")
-                  val id: Int = 0,
+                  val id: String,
                   @SerializedName("dfsId")
                   val dfsId: Int = 0,
                   @SerializedName("sr")

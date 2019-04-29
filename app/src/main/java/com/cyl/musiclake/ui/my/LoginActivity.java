@@ -12,11 +12,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.cyl.musicapi.netease.LoginInfo;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.event.LoginEvent;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.my.user.User;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
@@ -45,6 +48,8 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     FloatingActionButton fab;
     @BindView(R.id.qqlogin)
     com.getbase.floatingactionbutton.FloatingActionButton qqlogin;
+    @BindView(R.id.wbLogin)
+    com.getbase.floatingactionbutton.FloatingActionButton wbLogin;
     @BindView(R.id.register)
     Button register;
 
@@ -56,7 +61,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    private static final String TAG = "weibosdk";
+    private static final String TAG = "LoginActivity";
     /** 显示认证后的信息，如 AccessToken */
     /**
      * 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能
@@ -67,6 +72,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
      */
     private SsoHandler mSsoHandler;
 
+    private String loginMethod;
+    private String username = "";
+    private String password = "";
 
     @Override
     protected int getLayoutResID() {
@@ -75,11 +83,21 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     protected void initView() {
+        loginMethod = getIntent().getStringExtra(Extras.LOGIN_METHEOD);
+        if (loginMethod != null) {
+            cv.setVisibility(View.VISIBLE);
+            qqlogin.setVisibility(View.GONE);
+            wbLogin.setVisibility(View.GONE);
+            usernameWrapper.getEditText().setText(SPUtils.getAnyByKey(SPUtils.SP_KEY_USER_NAME, username));
+            passwordWrapper.getEditText().setText(SPUtils.getAnyByKey(SPUtils.SP_KEY_PASSWORD, password));
+        } else {
+            fab.hide();
+        }
     }
 
     @Override
     protected void initData() {
-        usernameWrapper.setHint("用户名");
+        usernameWrapper.setHint("手机号");
         passwordWrapper.setHint("密码");
         if (mPresenter != null) {
             mPresenter.attachView(this);
@@ -89,6 +107,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     protected String setToolbarTitle() {
+        loginMethod = getIntent().getStringExtra(Extras.LOGIN_METHEOD);
+        if (loginMethod != null && loginMethod.equals(Constants.NETEASE)) {
+            return getString(R.string.bind_netease);
+        }
         return getString(R.string.login_title);
     }
 
@@ -110,14 +132,13 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @OnClick(R.id.fab)
     public void loginto() {
-        final String username = usernameWrapper.getEditText().getText().toString();
-        final String password = passwordWrapper.getEditText().getText().toString();
+        username = usernameWrapper.getEditText().getText().toString();
+        password = passwordWrapper.getEditText().getText().toString();
         // TODO: 检查　
         if (!validatePassword(username)) {
             usernameWrapper.setErrorEnabled(false);
             passwordWrapper.setErrorEnabled(false);
-
-            usernameWrapper.setError("邮箱或者学号");
+            usernameWrapper.setError("网易云绑定的手机号");
         } else if (!validatePassword(password)) {
             usernameWrapper.setErrorEnabled(false);
             passwordWrapper.setErrorEnabled(false);
@@ -135,6 +156,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(Constants.USER_EMAIL, username);
                     params.put(Constants.PASSWORD, password);
+                    mPresenter.bindNetease(username, password);
                 }
             });
         }
@@ -167,7 +189,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     //判断密码是否合法
     public boolean validatePassword(String password) {
-        return password.length() >= 5 && password.length() <= 18;
+        return password.length() >= 1 && password.length() <= 18;
     }
 
 
@@ -196,11 +218,22 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public void showErrorInfo(String msg) {
         ToastUtils.show(this, msg);
+        if (loginMethod != null) {
+            fab.show();
+        }
     }
 
     @Override
     public void success(User user) {
         EventBus.getDefault().post(new LoginEvent(true, user));
+        finish();
+    }
+
+    @Override
+    public void bindSuccess(LoginInfo loginInfo) {
+        SPUtils.putAnyCommit(SPUtils.SP_KEY_NETEASE_UID, loginInfo.getProfile().getUserId() + "");
+        SPUtils.putAnyCommit(SPUtils.SP_KEY_USER_NAME, username);
+        SPUtils.putAnyCommit(SPUtils.SP_KEY_PASSWORD, password);
         finish();
     }
 
