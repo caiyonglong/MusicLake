@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants

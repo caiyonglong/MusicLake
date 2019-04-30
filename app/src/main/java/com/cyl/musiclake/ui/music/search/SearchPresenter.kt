@@ -2,14 +2,14 @@ package com.cyl.musiclake.ui.music.search
 
 import com.cyl.musicapi.netease.SearchInfo
 import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.api.MusicApiServiceImpl
-import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
+import com.cyl.musiclake.api.music.MusicApiServiceImpl
+import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
+import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.data.db.DaoLitepal
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable

@@ -6,11 +6,11 @@ import android.content.Intent
 import android.widget.Toast
 import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.MusicApp
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus

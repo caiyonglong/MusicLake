@@ -1,7 +1,7 @@
 package com.cyl.musiclake.api;
 
-import com.cyl.musiclake.api.qq.QQApiModel;
-import com.cyl.musiclake.api.qq.QQApiServiceImpl;
+import com.cyl.musicapi.qq.QQApiModel;
+import com.cyl.musicapi.qq.QQApiServiceImpl;
 
 import org.junit.Test;
 

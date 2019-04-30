@@ -1,10 +1,10 @@
 package com.cyl.musiclake.ui.music.charts.presenter
 
-import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
+import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.ui.music.charts.contract.BaiduListContract
 
 import javax.inject.Inject

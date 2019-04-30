@@ -3,12 +3,11 @@ package com.cyl.musiclake.ui.music.local.adapter
 import android.app.Activity
 import android.os.Build
 import android.util.Pair
-import android.view.View
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
+import com.cyl.musiclake.api.music.MusicApi
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper

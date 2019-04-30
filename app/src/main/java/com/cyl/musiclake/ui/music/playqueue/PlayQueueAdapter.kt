@@ -1,14 +1,13 @@
 package com.cyl.musiclake.ui.music.playqueue
 
 import android.support.v4.content.ContextCompat
-import android.support.v7.graphics.Palette
 import android.view.View
 import android.widget.TextView
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
+import com.cyl.musiclake.api.music.MusicApi
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager

@@ -1,9 +1,9 @@
 package com.cyl.musiclake.ui.chat
 
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageInfoBean
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import org.litepal.LitePal
 
 

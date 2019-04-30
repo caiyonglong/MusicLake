@@ -1,12 +1,12 @@
 package com.cyl.musiclake.ui.music.discover
 
 import com.cyl.musicapi.bean.Artists
-import com.cyl.musiclake.api.MusicApiServiceImpl
+import com.cyl.musiclake.api.music.MusicApiServiceImpl
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import javax.inject.Inject
 
 /**

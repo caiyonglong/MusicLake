@@ -11,9 +11,9 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_NORMAL
+import com.cyl.musiclake.api.music.MusicApi
+import com.cyl.musiclake.api.music.MusicUtils
+import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants

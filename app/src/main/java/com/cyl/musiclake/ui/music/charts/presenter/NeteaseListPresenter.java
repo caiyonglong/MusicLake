@@ -2,7 +2,7 @@
 //
 //import com.cyl.musiclake.ui.base.BasePresenter;
 //
-//import com.cyl.musiclake.api.netease.NeteaseMusic;
+//import com.cyl.musiclake.api.music.netease.NeteaseMusic;
 //import com.cyl.musiclake.ui.music.online.contract.NeteaseListContract;
 //
 //import javax.inject.Inject;

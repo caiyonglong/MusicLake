@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.mv
 import com.cyl.musicapi.netease.MvInfo
 import com.cyl.musicapi.netease.SearchInfo
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.RequestCallBack
 import javax.inject.Inject
 
 /**

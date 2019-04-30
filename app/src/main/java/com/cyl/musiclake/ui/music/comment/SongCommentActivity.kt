@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.music.comment
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musicapi.bean.SongComment
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
+import com.cyl.musiclake.api.music.MusicApi
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter

@@ -6,7 +6,7 @@ import com.cyl.musicapi.netease.MvInfo
 import com.cyl.musicapi.netease.SimilarMvInfo
 import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.RequestCallBack
 import javax.inject.Inject
 
 /**

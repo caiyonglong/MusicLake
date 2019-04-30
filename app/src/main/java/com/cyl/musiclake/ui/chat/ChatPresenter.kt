@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.chat
 
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.player.PlayManager

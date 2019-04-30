@@ -6,8 +6,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musicapi.bean.SingerCate
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
-import com.cyl.musiclake.api.MusicUtils.PIC_SIZE_SMALL
+import com.cyl.musiclake.api.music.MusicUtils
+import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_SMALL
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.utils.CoverLoader
 

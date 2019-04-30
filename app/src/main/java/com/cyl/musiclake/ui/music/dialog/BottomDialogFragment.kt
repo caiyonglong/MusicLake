@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicUtils
+import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -25,7 +25,6 @@ import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.deleteSingleMusic
-import com.cyl.musiclake.ui.downloadMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.Tools

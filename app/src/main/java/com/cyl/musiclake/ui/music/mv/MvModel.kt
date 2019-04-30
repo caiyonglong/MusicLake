@@ -1,11 +1,11 @@
 package com.cyl.musiclake.ui.music.mv
 
 import com.cyl.musicapi.netease.*
-import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
+import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
+import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.bean.MvInfoBean
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 
 /**
  * Des    :

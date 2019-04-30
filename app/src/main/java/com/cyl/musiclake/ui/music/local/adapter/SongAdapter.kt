@@ -6,15 +6,11 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
+import com.cyl.musiclake.api.music.MusicApi
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.ui.widget.fastscroll.FastScrollRecyclerView
 import com.cyl.musiclake.utils.ConvertUtils
@@ -24,7 +20,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.startActivity
 
 
 /**

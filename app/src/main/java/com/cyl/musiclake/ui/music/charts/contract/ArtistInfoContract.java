@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.charts.contract;
 
 
-import com.cyl.musiclake.api.doupan.DoubanMusic;
+import com.cyl.musiclake.api.music.doupan.DoubanMusic;
 import com.cyl.musiclake.ui.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
 

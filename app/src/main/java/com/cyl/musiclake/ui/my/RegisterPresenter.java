@@ -4,7 +4,7 @@ package com.cyl.musiclake.ui.my;
 import com.cyl.musiclake.api.ApiModel;
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.net.ApiManager;
+import com.cyl.musiclake.api.net.ApiManager;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,5 +1,6 @@
 package com.cyl.musiclake.api
 
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import org.junit.Test
 
 /**

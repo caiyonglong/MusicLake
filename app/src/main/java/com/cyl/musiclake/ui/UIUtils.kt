@@ -10,8 +10,8 @@ import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.MusicApi
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.music.MusicApi
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.data.PlayHistoryLoader
@@ -22,8 +22,8 @@ import com.cyl.musiclake.ui.download.TasksManager
 import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.my.user.User

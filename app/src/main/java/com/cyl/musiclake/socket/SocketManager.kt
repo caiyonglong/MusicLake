@@ -2,7 +2,7 @@ package com.cyl.musiclake.socket
 
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.SocketOnlineEvent
 import com.cyl.musiclake.bean.UserInfoBean

@@ -2,14 +2,14 @@ package com.cyl.musiclake.ui.music.charts
 
 import android.content.Context
 
-import com.cyl.musiclake.api.PlaylistApiServiceImpl
-import com.cyl.musiclake.api.baidu.BaiduApiServiceImpl
-import com.cyl.musiclake.api.netease.NeteaseApiServiceImpl
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
+import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.net.ApiManager
-import com.cyl.musiclake.net.RequestCallBack
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 
 import javax.inject.Inject
 
