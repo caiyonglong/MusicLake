@@ -167,7 +167,7 @@ public class Constants {
     /**
      * 在线歌单接口Api*************************************************
      */
-    public static final String BASE_PLAYER_URL = "https://player2.zzsun.cc/";
+    public static final String BASE_PLAYER_URL = "https://player.zzsun.cc/";
     /**
      * 网易云音乐接口
      */

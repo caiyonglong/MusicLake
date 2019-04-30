@@ -12,10 +12,10 @@
         android:layout_height="@dimen/dp_40"
         android:background="?cardColor"
         android:tag="tab_indicator_accent_color,bg_primary_color"
-        android:theme="?android:tabWidgetStyle"
         app:tabGravity="fill"
         app:tabIndicatorFullWidth="false"
-        app:tabMode="fixed" />
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="?accentColor" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
