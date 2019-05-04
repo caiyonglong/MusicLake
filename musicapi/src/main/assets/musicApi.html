@@ -7,102 +7,37 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
-    <!-- require dsbridge init js -->
-    <script type="text/javascript" src="dist/dsbridge.js"></script>
     <script type="text/javascript" src="dist/app.native.js"></script>
 </head>
 
 <body>
 <script>
     setTimeout(function() {console.log(window.musicApi)}, 5000)
-    dsBridge.registerAsyn("api", {
-            tag:"api",
-            //搜索全部功能
-            searchSong: function (keyword,limit,offset, responseCallback) {
-                musicApi.searchSong(keyword,offset).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            //搜索netease功能
-            searchNeteaseSong: function (params, responseCallback) {
-                musicApi.netease.searchSong(params).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            //搜索xiami功能
-            searchXiamiSong: function (params, responseCallback) {
-                musicApi.xiami.searchSong(params).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            //搜索qq
-            searchQQSong: function (params, responseCallback) {
-                musicApi.qq.searchSong(params).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            // 获取歌曲详情
-            getSongDetail: function (vendor,id, responseCallback) {
-                musicApi.getSongDetail(vendor,id).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            // 批量获取歌曲详情
-            getBatchSongDetail: function (vendor,ids, responseCallback) {
-                musicApi.getBatchSongDetail(vendor,ids).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            //获取歌曲url
-            getSongUrl: function (vendor,id,br, responseCallback) {
-                musicApi.getSongUrl(vendor,id,br).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            //获取歌词
-            getLyric: function (vendor,id, responseCallback) {
-                musicApi.getLyric(vendor,id).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            // 获取排行榜（网易云）
-            getTopList: function (id, responseCallback) {
-                musicApi.getTopList(id).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            // 获取歌曲评论
-            getComment: function (vendor, id, offset, limit, responseCallback) {
-                musicApi.getComment(vendor, id, offset, limit).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            getArtistSongs:function( vendor, id, offset, limit,responseCallback) {
-                musicApi.getArtistSongs(vendor, id, offset, limit).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            getArtists:function(offset, params,responseCallback) {
-                musicApi.qq.getArtists(offset, params).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            getAlbumSongs:function( vendor, id,responseCallback) {
-                musicApi.getAlbumSongs(vendor, id).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            getAnyVendorSongDetail:function(arr,responseCallback) {
-                musicApi.getAnyVendorSongDetail(arr).then(function (data) {
-                    responseCallback(data)
-                })
-            },
-            getAlbumDetail:function( vendor, id,responseCallback) {
-                musicApi.getAlbumDetail(vendor, id).then(function (data) {
-                    responseCallback(data)
-                })
+
+    function walk(father) {
+        const obj = father ? musicApi[father] : musicApi
+        const method = "api" + (father ? `.${father}` : "")
+        const target = {
+            tag: method
+        }
+        Object.keys(obj).forEach(function (key) {
+            const item = obj[key]
+            if (typeof item === 'function') {
+                target[key] = function () {
+                    const responseCallback = arguments[arguments.length - 1]
+                    item(...arguments).then(function (data) {
+                        responseCallback(data)
+                    })
+                }
             }
         })
+        dsBridge.registerAsyn(method, target)
+    }
+
+    walk()
+    walk('qq')
+    walk('netease')
+    walk('xiami')
 
 </script>
 </body>
