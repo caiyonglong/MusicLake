@@ -12,7 +12,6 @@ interface PlaylistDetailContract {
     interface View : BaseContract.BaseView {
 
         override fun getContext(): Context
-
         fun showPlaylistSongs(songList: MutableList<Music>?)
 
         fun showTitle(title: String)
@@ -21,13 +20,15 @@ interface PlaylistDetailContract {
         fun removeMusic(position: Int)
 
         fun success(type: Int)
+
+        fun showEmptyView(msg: String)
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {
-
         fun loadPlaylistSongs(playlist: Playlist)
 
         fun loadArtistSongs(artist: Artist)
+
         fun loadAlbumSongs(album: Album)
 
         fun deletePlaylist(playlist: Playlist)

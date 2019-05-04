@@ -1,5 +1,8 @@
 package com.cyl.musiclake.ui.music.my
 
+import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.SongLoader
@@ -7,6 +10,8 @@ import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.download.DownloadLoader
 import com.cyl.musiclake.ui.my.user.UserStatus
+import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -99,5 +104,21 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
             OnlinePlaylistUtils.playlists.clear()
             mView?.showPlaylist(OnlinePlaylistUtils.playlists)
         }
+    }
+
+    fun loadWyUserPlaylist() {
+        val uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "")
+        LogUtil.d("MyMusic", "uid = $uid")
+        if (uid.isEmpty()) return
+        val observable = NeteaseApiServiceImpl.getUserPlaylist(uid = uid)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showWyPlaylist(result)
+            }
+
+            override fun error(msg: String) {
+                mView?.showWyPlaylist(mutableListOf())
+            }
+        })
     }
 }

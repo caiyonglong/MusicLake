@@ -338,4 +338,9 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     public void showDescInfo(@NotNull String title) {
 
     }
+
+    @Override
+    public void showEmptyView(@NotNull String msg) {
+
+    }
 }

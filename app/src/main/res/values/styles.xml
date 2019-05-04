@@ -37,7 +37,7 @@
 
         <item name="android:windowBackground">@color/background</item>
         <item name="windowBackground">@color/background</item>
-        <item name="accentColor">@color/deepOrange</item>
+        <item name="accentColor">@color/black</item>
         <item name="iconColor">@color/black</item>
         <item name="cardColor">@android:color/white</item>
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
@@ -80,6 +80,7 @@
         <item name="android:tabWidgetStyle">@style/CustomTabLayout.Dark</item>
 
         <item name="android:textColorPrimary">@color/white_translucent</item>
+
     </style>
 
     <style name="FullScreen" parent="MyThemeBlue">
@@ -181,5 +182,6 @@
         <item name="android:textColor">@color/dark_normal_tab_text_color</item>
         <item name="textAllCaps">true</item>
     </style>
+
 
 </resources>

@@ -89,88 +89,76 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_16"
-                        android:layout_weight="1"
-                        android:text="@string/playlist_online"
-                        android:textSize="@dimen/sp_16" />
-
-                    <ImageView
-                        android:id="@+id/playlistAddIv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_playlist_add"
-                        android:tint="?iconColor" />
-
-                    <ImageView
-                        android:id="@+id/playlistManagerIv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/dp_16"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_more"
-                        android:tint="?iconColor" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_1"
-                    android:background="@color/divider_line" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/playlistRcv"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clipToPadding="false"
-                        android:minHeight="@dimen/dp_200"
-                        android:paddingTop="@dimen/dp_8" />
-
-                    <ProgressBar
-                        android:id="@+id/loading_progress_bar"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:indeterminate="true"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                        android:gravity="center_vertical">
 
-                    <!--ERROR PANEL-->
-                    <include
-                        android:id="@+id/error_panel"
-                        layout="@layout/error_retry"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/playlistTab"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/dp_16"
+                            android:layout_weight="1"
+                            app:tabIndicatorHeight="0dp"
+                            app:tabSelectedTextColor="?accentColor" />
 
-                    <include
-                        android:id="@+id/empty_state_view"
-                        layout="@layout/view_song_empty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="50dp"
-                        tools:visibility="visible" />
+                        <ImageView
+                            android:id="@+id/playlistAddIv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_playlist_add"
+                            android:tint="?iconColor" />
 
-                </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/playlistManagerIv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/dp_16"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_more"
+                            android:tint="?iconColor" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/divider_line" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/playlistRcv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:minHeight="@dimen/dp_200"
+                            android:paddingTop="@dimen/dp_8" />
+
+                        <ProgressBar
+                            android:id="@+id/loading_progress_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:indeterminate="true"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                    </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

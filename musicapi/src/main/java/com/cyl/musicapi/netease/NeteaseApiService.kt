@@ -67,4 +67,10 @@ interface NeteaseApiService {
 
     @GET("recommend/resource")
     fun recommendPlaylist(): Observable<RecommendPlaylist>
+
+    /**
+     * 获取用户歌单
+     */
+    @GET("/user/playlist")
+    fun getUserPlaylist(@Query("uid") uid: String): Observable<NeteasePlaylist>
 }

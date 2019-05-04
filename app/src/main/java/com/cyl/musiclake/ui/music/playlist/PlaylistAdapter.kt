@@ -6,7 +6,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.utils.CoverLoader
 
 /**
@@ -27,3 +26,4 @@ class PlaylistAdapter(playlists: List<Playlist>) : BaseQuickAdapter<Playlist, Ba
         }
     }
 }
+

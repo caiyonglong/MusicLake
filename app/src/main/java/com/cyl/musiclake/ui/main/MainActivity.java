@@ -28,7 +28,6 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
@@ -39,17 +38,18 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
+import com.cyl.musiclake.ui.my.BindLoginActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
 import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
-import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.Tools;
+import com.squareup.haha.perflib.Main;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -140,8 +140,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    boolean isUp = false;
-
     private void initNavView() {
         View mHeaderView = mNavigationView.getHeaderView(0);
         mImageView = mHeaderView.findViewById(R.id.header_bg);
@@ -151,13 +149,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
         mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
+        String wy_uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
+        if (wy_uid.length() > 0) {
+            mBindNeteaseView.setVisibility(View.GONE);
+        } else {
+            mBindNeteaseView.setVisibility(View.VISIBLE);
+        }
         mBindNeteaseView.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.putExtra(Extras.LOGIN_METHEOD, Constants.NETEASE);
+            mDrawerLayout.closeDrawers();
+            Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
             startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
-//            mDrawerLayout.closeDrawers();
-//            mBindNeteaseView.setVisibility(View.GONE);
-//            NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginFragment());
+//            NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginActivity());
         });
     }
 
@@ -419,6 +421,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+    /**
+     * 初始化倒计时
+     */
     private void initCountDownView() {
         View numItem = mNavigationView.getMenu().findItem(R.id.nav_menu_online_num).getActionView();
         mOnlineNumTv = numItem.findViewById(R.id.msg_num_tv);
@@ -452,31 +457,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Log.e(TAG, "onNewIntent");
 
     }
-
-    /**
-     * 初始化夜间模式
-     */
-    private void initNightMode() {
-        View item = mNavigationView.getMenu().findItem(R.id.nav_menu_night_mode).getActionView();
-        mNightModeSw = item.findViewById(R.id.night_mode_switch);
-        mNightModeSw.setChecked(ThemeStore.THEME_MODE == ThemeStore.NIGHT);
-        mNightModeSw.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked && ThemeStore.THEME_MODE != ThemeStore.NIGHT) {
-                ThemeStore.THEME_MODE = ThemeStore.NIGHT;
-//                startMainActivity();
-                ThemeStore.updateThemeMode();
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                startActivity(intent);
-            } else if (!isChecked && ThemeStore.THEME_MODE != ThemeStore.DAY) {
-                ThemeStore.THEME_MODE = ThemeStore.DAY;
-//                startMainActivity();
-                ThemeStore.updateThemeMode();
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

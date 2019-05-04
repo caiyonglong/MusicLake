@@ -31,10 +31,6 @@ import javax.inject.Inject
 class PlaylistDetailPresenter @Inject
 constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailContract.Presenter {
 
-    private val netease = ArrayList<String>()
-    private val qq = ArrayList<String>()
-    private val xiami = ArrayList<String>()
-
     override fun loadArtistSongs(artist: Artist) {
         if (artist.type == null || artist.type == Constants.LOCAL) {
             doAsync {
@@ -126,7 +122,6 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
         })
     }
 
-
     override fun loadPlaylistSongs(playlist: Playlist) {
         when (playlist.type) {
             Constants.PLAYLIST_LOCAL_ID,
@@ -180,6 +175,9 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 })
 
             }
+            Constants.PLAYLIST_WY_RECOMMEND_ID -> {
+                loadRecommendSongs()
+            }
             else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
                 override fun success(result: MutableList<Music>) {
                     mView?.showPlaylistSongs(result)
@@ -201,6 +199,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
     }
 
+
     override fun renamePlaylist(playlist: Playlist, title: String) {
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
             override fun success(result: String) {
@@ -212,6 +211,23 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
             override fun error(msg: String) {
                 ToastUtils.show(msg)
+            }
+        })
+    }
+
+    /**
+     * 获取每日推荐
+     */
+    private fun loadRecommendSongs() {
+        val observable = NeteaseApiServiceImpl.recommendSongs()
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
+            override fun success(result: MutableList<Music>) {
+                mView?.showPlaylistSongs(result)
+            }
+
+            override fun error(msg: String) {
+                mView?.showEmptyView(msg)
+                mView?.showPlaylistSongs(mutableListOf())
             }
         })
     }

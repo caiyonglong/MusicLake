@@ -870,7 +870,7 @@ public class LyricView extends View {
      * @param progress 进度条大小0-100
      */
     public void setTextSize(int progress) {
-        setRawTextSize((float) (progress * 0.2 + 35));
+        setRawTextSize(getRawSize(TypedValue.COMPLEX_UNIT_SP, (float) (progress * 0.2 + 35)));
     }
 
     /**

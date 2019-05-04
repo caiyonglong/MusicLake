@@ -1,8 +1,11 @@
 package com.cyl.musiclake.ui.base;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +13,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -92,6 +96,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setUpTheme();
+        setCustomDensity(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);
@@ -295,4 +300,45 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
             setTheme(R.style.MyThemeBlue);
         }
     }
+
+
+    /**
+     * https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
+     * 屏幕适配
+     */
+    private void setCustomDensity(Activity activity) {
+        DisplayMetrics appDisplayMetrics = MusicApp.getAppContext().getResources().getDisplayMetrics();
+        //density = px/dp dp值是设计图的宽度
+        float targetDensity = appDisplayMetrics.widthPixels / 360f;
+        int targetDensityDpi = (int) (160 * targetDensity);
+        float targetScaledDensity = targetDensity * (appDisplayMetrics.scaledDensity / appDisplayMetrics.density);
+
+        appDisplayMetrics.density = targetDensity;
+        appDisplayMetrics.scaledDensity = targetScaledDensity;
+        appDisplayMetrics.densityDpi = targetDensityDpi;
+
+        DisplayMetrics activityDisplayMetrics = activity.getResources().getDisplayMetrics();
+        activityDisplayMetrics.densityDpi = targetDensityDpi;
+        activityDisplayMetrics.density = targetDensity;
+        activityDisplayMetrics.scaledDensity = targetScaledDensity;
+        density = targetDensity;
+    }
+
+    private float density = 0f;
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        if (res.getConfiguration().fontScale != 1f) {
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+        }
+        //同步这只density，解决横屏息屏后UI问题，问题原因是息屏后density变化导致， 推出原因是谷歌广告造成，目前只想到这种方式来解决
+        if (density != 0f) {
+            res.getDisplayMetrics().density = density;
+        }
+        return res;
+    }
+
 }

@@ -70,6 +70,9 @@
             android:name=".ui.my.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.my.BindLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.my.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -85,8 +85,8 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             }
             R.id.recommendSongsTv -> {
                 val playlist = Playlist()
-                playlist.musicList = recommend
                 playlist.pid = Constants.PLAYLIST_WY_RECOMMEND_ID
+                playlist.type = Constants.PLAYLIST_WY_RECOMMEND_ID
                 playlist.name = "每日推荐"
                 activity?.let { NavigationHelper.navigateToPlaylist(it, playlist, null) }
             }
@@ -117,7 +117,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
-        mPresenter?.loadRecommendSongs()
+//        mPresenter?.loadRecommendSongs()
         mPresenter?.loadRecommendPlaylist()
     }
 

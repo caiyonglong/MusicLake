@@ -95,20 +95,6 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
         })
     }
 
-    fun loadRecommendSongs() {
-        val observable = NeteaseApiServiceImpl.recommendSongs()
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
-                mView?.showRecommendSongs(result)
-            }
-
-            override fun error(msg: String) {
-                mView?.showEmptyView(msg)
-                mView?.showRecommendSongs(mutableListOf())
-            }
-        })
-    }
-
     fun loadRecommendPlaylist() {
         val observable = NeteaseApiServiceImpl.recommendPlaylist()
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {

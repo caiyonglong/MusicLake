@@ -24,10 +24,9 @@ import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
-import com.cyl.musiclake.ui.music.charts.fragment.ChartsFragment;
 import com.cyl.musiclake.ui.download.ui.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
-import com.cyl.musiclake.ui.my.BindLoginFragment;
+import com.cyl.musiclake.ui.my.BindLoginActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -87,5 +86,5 @@ public interface FragmentComponent {
 
     void inject(MvSearchListFragment mvSearchListFragment);
 
-    void inject(@NotNull BindLoginFragment bindLoginActivity);
+    void inject(@NotNull BindLoginActivity bindLoginActivity);
 }

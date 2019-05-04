@@ -42,7 +42,6 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                         //登录成功
                         mView?.hideLoading()
                         mView?.bindSuccess(result)
-                        ToastUtils.show(result.toString())
                     }
 
                     override fun error(msg: String) {

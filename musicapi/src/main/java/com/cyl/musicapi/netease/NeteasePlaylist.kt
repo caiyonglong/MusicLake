@@ -126,7 +126,10 @@ data class NeteasePlaylist(@SerializedName("lasttime")
                            @SerializedName("more")
                            val more: Boolean = false,
                            @SerializedName("playlists")
-                           val playlists: MutableList<PlaylistsItem>?)
+                           val playlists: MutableList<PlaylistsItem>?,
+                           @SerializedName("playlist")
+                           val playlist: MutableList<PlaylistsItem>?)
+
 
 data class NeteasePlaylistDetail(
         @SerializedName("code")

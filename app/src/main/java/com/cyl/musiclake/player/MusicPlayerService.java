@@ -395,7 +395,7 @@ public class MusicPlayerService extends Service {
         mPlayingPos = SPUtils.getPlayPosition();
         if (mPlayingPos >= 0 && mPlayingPos < mPlayQueue.size()) {
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
-            updateNotification(false);
+            updateNotification(true);
             seekTo(SPUtils.getPosition(), true);
             notifyChange(META_CHANGED);
         }
@@ -1241,8 +1241,11 @@ public class MusicPlayerService extends Service {
             mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_play;
         mNotification = mNotificationBuilder.build();
         mFloatLyricViewManager.updatePlayStatus(isMusicPlaying);
-        startForeground(NOTIFICATION_ID, mNotification);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+
+        if (mPlayingMusic != null) {
+            startForeground(NOTIFICATION_ID, mNotification);
+            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+        }
     }
 
     /**

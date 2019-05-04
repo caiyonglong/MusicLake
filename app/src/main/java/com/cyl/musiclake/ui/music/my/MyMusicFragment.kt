@@ -2,8 +2,9 @@ package com.cyl.musiclake.ui.music.my
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v7.widget.LinearLayoutManager
-import com.cyl.musiclake.R
+import android.view.View
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
@@ -26,16 +27,22 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
 
+
 /**
  * Created by Monkey on 2015/6/29.
  */
 class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
+
+
+    private var localPlaylists = mutableListOf<Playlist>()
     private var playlists = mutableListOf<Playlist>()
+    private var wyPlaylists = mutableListOf<Playlist>()
+
+    private var playlistTag = Constants.PLAYLIST_CUSTOM_ID
     private var mAdapter: PlaylistAdapter? = null
-    private var isShowingNotice = false
 
     override fun getLayoutId(): Int {
-        return R.layout.frag_local
+        return com.cyl.musiclake.R.layout.frag_local
     }
 
 
@@ -62,9 +69,51 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mAdapter = PlaylistAdapter(playlists)
         playlistRcv.adapter = mAdapter
         mAdapter?.bindToRecyclerView(playlistRcv)
+        mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
 
         //加载通知
         mPresenter?.loadMusicLakeNotice()
+
+//        val linearLayout = playlistTab.getChildAt(0) as LinearLayout
+//        linearLayout.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
+//        linearLayout.dividerPadding = 40 // 设置分割线的pandding
+//        linearLayout.dividerDrawable = context?.let { ContextCompat.getDrawable(it, com.cyl.musiclake.R.drawable.bg_divider_tab) }
+
+        playlistTab.addTab(playlistTab.newTab().setText("本地歌单").setTag(Constants.PLAYLIST_LOCAL_ID))
+        playlistTab.addTab(playlistTab.newTab().setText("自建歌单").setTag(Constants.PLAYLIST_CUSTOM_ID))
+        playlistTab.addTab(playlistTab.newTab().setText("网易歌单").setTag(Constants.PLAYLIST_WY_ID))
+
+        playlistTab.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                p0?.tag?.let {
+                    playlistTag = it.toString()
+                }
+                when (p0?.tag) {
+                    Constants.PLAYLIST_LOCAL_ID -> {
+                        mAdapter?.setNewData(localPlaylists)
+                        playlistAddIv.visibility = View.VISIBLE
+                    }
+                    Constants.PLAYLIST_CUSTOM_ID -> {
+                        mAdapter?.setNewData(playlists)
+                        playlistAddIv.visibility = View.VISIBLE
+                    }
+                    Constants.PLAYLIST_WY_ID -> {
+                        mAdapter?.setNewData(wyPlaylists)
+                        playlistAddIv.visibility = View.INVISIBLE
+                    }
+                }
+                if (mAdapter?.data?.size == 0) {
+                    mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
+                }
+            }
+        })
     }
 
 
@@ -78,7 +127,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                 val dialog = CreatePlaylistDialog.newInstance()
                 dialog.show(childFragmentManager, TAG_CREATE)
             } else {
-                ToastUtils.show(getString(R.string.prompt_login))
+                ToastUtils.show(getString(com.cyl.musiclake.R.string.prompt_login))
             }
         }
         playlistManagerIv.setOnClickListener {
@@ -94,13 +143,14 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
             mPresenter?.loadPlaylist()
         }
+        mPresenter?.loadWyUserPlaylist()
     }
 
 
     override fun showSongs(songList: MutableList<Music>) {
         localView.setSongsNum(songList.size, 0)
         localView.setOnItemClickListener { view, position ->
-            if (view.id == R.id.iv_play) {
+            if (view.id == com.cyl.musiclake.R.id.iv_play) {
                 PlayManager.play(0, songList, Constants.PLAYLIST_LOCAL_ID)
             } else {
                 toFragment(position)
@@ -108,12 +158,31 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
     }
 
+    override fun showLocalPlaylist(playlists: MutableList<Playlist>) {
+
+    }
+
+    /**
+     * 显示网易歌单
+     */
+    override fun showWyPlaylist(playlists: MutableList<Playlist>) {
+        this.wyPlaylists = playlists
+//        mAdapter?.setNewData(wyPlaylists)
+//        if (playlists.size == 0) {
+//            showEmptyState()
+//            mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
+//        }
+//        hideLoading()
+    }
+
+    /**
+     * 显示在线歌单
+     */
     override fun showPlaylist(playlists: MutableList<Playlist>) {
         this.playlists = playlists
         mAdapter?.setNewData(playlists)
         if (playlists.size == 0) {
-            showEmptyState()
-            mAdapter?.setEmptyView(R.layout.view_playlist_empty)
+            mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
         }
         hideLoading()
     }
@@ -121,7 +190,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showHistory(musicList: MutableList<Music>) {
         historyView.setSongsNum(musicList.size, 1)
         historyView.setOnItemClickListener { view, position ->
-            if (view.id == R.id.iv_play) {
+            if (view.id == com.cyl.musiclake.R.id.iv_play) {
                 PlayManager.play(0, musicList, Constants.PLAYLIST_HISTORY_ID)
             } else {
                 toFragment(position)
@@ -132,7 +201,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showLoveList(musicList: MutableList<Music>) {
         favoriteView.setSongsNum(musicList.size, 2)
         favoriteView.setOnItemClickListener { view, position ->
-            if (view.id == R.id.iv_play) {
+            if (view.id == com.cyl.musiclake.R.id.iv_play) {
                 PlayManager.play(0, musicList, Constants.PLAYLIST_LOVE_ID)
             } else {
                 toFragment(position)
@@ -143,7 +212,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showDownloadList(musicList: MutableList<Music>) {
         downloadView.setSongsNum(musicList.size, 3)
         downloadView.setOnItemClickListener { view, position ->
-            if (view.id == R.id.iv_play) {
+            if (view.id == com.cyl.musiclake.R.id.iv_play) {
                 PlayManager.play(0, musicList, Constants.PLAYLIST_DOWNLOAD_ID)
             } else {
                 toFragment(position)

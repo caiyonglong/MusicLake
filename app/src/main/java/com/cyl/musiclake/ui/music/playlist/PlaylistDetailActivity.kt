@@ -38,6 +38,10 @@ import org.jetbrains.anko.startActivity
  * 版本：2.5
  */
 class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), PlaylistDetailContract.View {
+    override fun showEmptyView(msg: String) {
+
+    }
+
     override fun showTitle(title: String) {
         updateTitle(title)
     }
