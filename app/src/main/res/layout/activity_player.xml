@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/playingBgIv"
-        android:transitionName="@string/transition_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:transitionName="@string/transition_cover" />
 
     <View
         android:layout_width="match_parent"
@@ -71,6 +71,7 @@
                     android:layout_marginTop="@dimen/dp_4"
                     android:gravity="center"
                     android:lines="1"
+                    android:textColor="@color/whiteAlpha54"
                     android:textSize="@dimen/sp_12"
                     tools:text="@string/artist_tips" />
 

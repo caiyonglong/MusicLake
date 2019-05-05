@@ -17,7 +17,6 @@
         android:ellipsize="end"
         android:gravity="center"
         android:lines="1"
-        android:textColor="@color/colorAccent"
         android:textSize="@dimen/sp_16"
         tools:text="Search query" />
 

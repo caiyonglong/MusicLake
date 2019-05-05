@@ -156,8 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
-                        android:text="@string/recommend_song"
-                        android:textColor="@color/black" />
+                        android:text="@string/recommend_song" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recommendRsv"
@@ -274,7 +273,7 @@
                             android:background="?android:attr/selectableItemBackgroundBorderless"
                             android:padding="10dp"
                             android:text="@string/cate_huayu"
-                            android:textColor="?colorPrimary"
+                            android:textColor="?colorAccent"
                             android:textSize="@dimen/sp_12" />
 
                         <View
@@ -289,7 +288,7 @@
                             android:background="?android:attr/selectableItemBackgroundBorderless"
                             android:padding="10dp"
                             android:text="@string/cate_liuxing"
-                            android:textColor="?colorPrimary"
+                            android:textColor="?colorAccent"
                             android:textSize="@dimen/sp_12" />
 
                         <View
@@ -304,7 +303,7 @@
                             android:background="?android:attr/selectableItemBackgroundBorderless"
                             android:padding="10dp"
                             android:text="@string/cate_gufeng"
-                            android:textColor="?colorPrimary"
+                            android:textColor="?colorAccent"
                             android:textSize="@dimen/sp_12" />
 
 
@@ -314,6 +313,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
                             android:layout_marginEnd="@dimen/dp_8"
+                            android:drawableTint="?iconColor"
                             android:background="@drawable/btn_more_bg"
                             android:drawableEnd="@drawable/ic_navigate_next"
                             android:gravity="center"
