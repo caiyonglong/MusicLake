@@ -51,7 +51,7 @@
                     android:layout_height="56dp"
                     android:elevation="5dp"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="?popupMenuStyle" />
+                    app:popupTheme="?android:popupMenuStyle" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
