@@ -138,4 +138,8 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mAdapter?.loadMoreComplete()
     }
 
+    override fun showNeteaseCharts(playlistList: MutableList<Playlist>?) {
+
+    }
+
 }

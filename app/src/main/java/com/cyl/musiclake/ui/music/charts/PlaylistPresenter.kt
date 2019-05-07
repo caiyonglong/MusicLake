@@ -19,6 +19,9 @@ import javax.inject.Inject
 
 class PlaylistPresenter @Inject
 constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Presenter {
+    /**
+     *根据歌单id获取歌单详情
+     */
     override fun loadMorePlaylist(id: String, context: Context?) {
         mView?.showLoading()
         val observable = NeteaseApiServiceImpl.getPlaylistDetail(id)
@@ -35,6 +38,9 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
         })
     }
 
+    /**
+     * 获取排行榜歌单
+     */
     override fun loadPlaylist(idx: String, type: String?) {
         mView?.showLoading()
         val observable = PlaylistApiServiceImpl.getRankDetailInfo(intArrayOf(idx.toInt()), null, type)
@@ -51,6 +57,9 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
         })
     }
 
+    /**
+     * 获取百度音乐排行榜音乐
+     */
     override fun loadOnlineMusicList(type: String, limit: Int, mOffset: Int) {
         mView?.showLoading()
         ApiManager.request(BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset), object : RequestCallBack<MutableList<Music>> {
@@ -68,6 +77,22 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
                 mView?.hideLoading()
             }
 
+        })
+    }
+
+    /**
+     * 加载网易排行榜（0歌曲）
+     */
+    fun loadNetease(tag: String) {
+        val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 30)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showNeteaseCharts(result)
+            }
+
+            override fun error(msg: String) {
+                mView?.showNeteaseCharts(mutableListOf())
+            }
         })
     }
 

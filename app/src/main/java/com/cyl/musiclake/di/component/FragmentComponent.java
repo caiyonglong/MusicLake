@@ -22,6 +22,7 @@ import com.cyl.musiclake.ui.music.playlist.LoveFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailFragment;
+import com.cyl.musiclake.ui.music.playlist.PlaylistFragment;
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment;
 import com.cyl.musiclake.ui.music.local.fragment.SongsFragment;
 import com.cyl.musiclake.ui.download.ui.DownloadedFragment;
@@ -87,4 +88,6 @@ public interface FragmentComponent {
     void inject(MvSearchListFragment mvSearchListFragment);
 
     void inject(@NotNull BindLoginActivity bindLoginActivity);
+
+    void inject(@NotNull PlaylistFragment playlistFragment);
 }

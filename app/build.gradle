@@ -168,4 +168,6 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
+    implementation 'com.robertlevonyan.view:MaterialChipView:1.2.5'
 }

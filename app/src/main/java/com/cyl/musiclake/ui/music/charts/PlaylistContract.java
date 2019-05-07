@@ -17,9 +17,11 @@ public interface PlaylistContract {
 
         void showOnlineMusicList(List<Music> musicList);
 
+        void showNeteaseCharts(List<Playlist> playlistList);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
+
         void loadPlaylist(String idx, String type);
 
         void loadMorePlaylist(String tag, Context context);

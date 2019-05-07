@@ -93,7 +93,7 @@ object NeteaseApiServiceImpl {
      */
     fun getPlaylistDetail(id: String): Observable<Playlist> {
         return apiService.getPlaylistDetail(id)
-                .flatMap { it ->
+                .flatMap {
                     Observable.create(ObservableOnSubscribe<Playlist> { e ->
                         try {
                             if (it.code == 200) {

@@ -17,8 +17,10 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
+import com.cyl.musiclake.ui.music.playlist.AllPlaylistActivity
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_discover.*
+import org.jetbrains.anko.support.v4.startActivity
 
 
 /**
@@ -47,18 +49,6 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     private var channels = mutableListOf<Playlist>()
     private var recommend = mutableListOf<Music>()
     private var recommendPlaylist = mutableListOf<Playlist>()
-
-    /**
-     * 显示所有分类
-     */
-    private fun toCatTagAll() {
-        AllCategoryFragment().apply {
-            curCateName = this@DiscoverFragment.cateTagTv.text.toString()
-            successListener = { result ->
-                this@DiscoverFragment.updateCate(result)
-            }
-        }.showIt(mFragmentComponent.activity as FragmentActivity)
-    }
 
     /**
      * 更新分类标签
@@ -105,7 +95,9 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             R.id.catTag3Tv -> {
                 updateCate("古风")
             }
-            R.id.cateTagTv -> toCatTagAll()
+            R.id.cateTagTv -> {
+//                startActivity<AllPlaylistActivity>()
+            }
         }
     }
 

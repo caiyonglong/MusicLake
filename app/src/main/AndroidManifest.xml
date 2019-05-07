@@ -4,30 +4,20 @@
     package="com.cyl.musiclake">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <!-- 手机震动 -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" /> <!-- 手机震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 文件读写权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 文件读写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 允许获得audio session ID -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- 允许获得电话状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 唤醒休眠 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许获得audio session ID -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许获得电话状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 唤醒休眠 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <!-- 用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于读取手机当前的状态 -->
     <!-- 定位包、导航包需要的额外权限（注：基础权限也需要） -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -47,6 +37,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -71,6 +62,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.my.BindLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.music.playlist.AllPlaylistActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.my.RegisterActivity"
@@ -143,8 +137,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.main.WebActivity"
-            android:screenOrientation="portrait" />
-        <!-- 接入第三方QQ登录 -->
+            android:screenOrientation="portrait" /> <!-- 接入第三方QQ登录 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -171,7 +164,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.cyl.musiclake.ui.widget.appwidgets.StandardWidget"
+            android:name=".ui.widget.appwidgets.StandardWidget"
             android:label="@string/widget_standard">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -192,8 +185,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider>
-        <!-- <meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" /> -->
+        </provider> <!-- <meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" /> -->
         <activity
             android:name=".ui.main.TestActivity"
             android:label="调试" />
@@ -210,7 +202,9 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
@@ -227,7 +221,9 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>

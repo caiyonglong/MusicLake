@@ -20,6 +20,7 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.robertlevonyan.views.chip.Chip
 
 /**
  * Des    :
@@ -36,6 +37,7 @@ class AllCategoryFragment : DialogFragment() {
     private var mAdapter: AllCateAdapter? = null
 
     var curCateName: String = "全部"
+    var curCateList = mutableListOf<String>()
 
     companion object {
         var categoryTags = mutableListOf<String>()
@@ -70,7 +72,7 @@ class AllCategoryFragment : DialogFragment() {
             }
             it?.postDelayed({
                 context?.getString(R.string.cate_all)?.let { it1 -> successListener?.invoke(it1) }
-                dismissAllowingStateLoss()
+//                dismissAllowingStateLoss()
             }, 300)
         }
         backIv?.setOnClickListener {
@@ -110,6 +112,10 @@ class AllCategoryFragment : DialogFragment() {
                     }
                 }
                 categoryTags.clear()
+
+                categoryTags.add("我的歌单广场")
+                categoryTags.addAll(curCateList)
+
                 map.forEach {
                     categoryTags.add(it.key)
                     categoryTags.addAll(it.value)
@@ -133,7 +139,10 @@ class AllCategoryFragment : DialogFragment() {
             mAdapter?.clickListener = {
                 this@AllCategoryFragment.cateTagRcv?.postDelayed({
                     this@AllCategoryFragment.successListener?.invoke(categoryTags[it])
-                    dismissAllowingStateLoss()
+                    if (!curCateList.contains(categoryTags[it])) {
+                        curCateList.add(categoryTags[it])
+                    }
+//                    dismissAllowingStateLoss()
                 }, 300)
             }
             mAdapter?.notifyDataSetChanged()
@@ -174,14 +183,16 @@ class AllCategoryFragment : DialogFragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (holder is TagViewHolder) {
-                holder.tagTv.setTextColor(Color.parseColor("#000000"))
+                holder.tagTv.isSelectable = false
+//                holder.tagTv.setTextColor(Color.parseColor("#000000"))
                 tag?.let {
                     if (it == list[position]) {
-                        holder.tagTv.setTextColor(Color.parseColor("#DB4437"))
+                        holder.tagTv.isSelectable = true
+//                        holder.tagTv.setTextColor(Color.parseColor("#DB4437"))
                     }
                 }
-                holder.tagTv.text = list[position]
-                holder.tagTv.setOnClickListener {
+                holder.tagTv.chipText = list[position]
+                holder.tagTv.setOnChipClickListener {
                     setSelectName(position)
                     notifyDataSetChanged()
                     clickListener?.invoke(position)
@@ -194,7 +205,7 @@ class AllCategoryFragment : DialogFragment() {
 
         override fun getItemViewType(position: Int): Int {
             return when (list[position]) {
-                "语种", "风格", "场景", "情感", "主题" -> TITLE_ITEM
+                "我的歌单广场", "语种", "风格", "场景", "情感", "主题" -> TITLE_ITEM
                 else -> TAG_ITEM
             }
         }
@@ -204,7 +215,7 @@ class AllCategoryFragment : DialogFragment() {
         }
 
         inner class TagViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var tagTv = itemView.findViewById<Button>(R.id.tagTv)
+            var tagTv = itemView.findViewById<Chip>(R.id.tagTv)
         }
 
         inner class TitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
