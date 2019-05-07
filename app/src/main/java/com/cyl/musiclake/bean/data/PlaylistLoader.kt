@@ -1,12 +1,13 @@
 package com.cyl.musiclake.bean.data
 
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.common.Constants
 
 /**
  * 作者：yonglong on 2016/11/6 17:02
+ * 本地歌单操作类
  */
 object PlaylistLoader {
     private val TAG = "PlaylistLoader"
@@ -17,20 +18,40 @@ object PlaylistLoader {
      * @param context
      * @return
      */
-    fun getAllPlaylist(): List<Playlist> {
+    fun getAllPlaylist(): MutableList<Playlist> {
         return DaoLitepal.getAllPlaylist()
     }
 
+    /**
+     * 获取pid歌单
+     */
     fun getPlaylist(pid: String): Playlist {
         return DaoLitepal.getPlaylist(pid)
     }
 
+
+    /**
+     * 获取播放历史
+     */
     fun getHistoryPlaylist(): Playlist {
         return DaoLitepal.getPlaylist(Constants.PLAYLIST_HISTORY_ID)
     }
 
+    /**
+     * 获取收藏
+     */
     fun getFavoritePlaylist(): Playlist {
         return DaoLitepal.getPlaylist(Constants.PLAYLIST_LOVE_ID)
+    }
+
+    /**
+     * 创建默认的歌单
+     *
+     * @param name
+     * @return
+     */
+    fun createDefaultPlaylist(type: String, name: String): Boolean {
+        return createPlaylist(type, type, name)
     }
 
     /**
@@ -39,22 +60,34 @@ object PlaylistLoader {
      * @param name
      * @return
      */
-    fun createDefaultPlaylist(pid: String, name: String): Boolean {
+    fun createPlaylist(pid: String, type: String, name: String): Boolean {
         val playlist = Playlist()
         playlist.pid = pid
         playlist.date = System.currentTimeMillis()
         playlist.updateDate = System.currentTimeMillis()
         playlist.name = name
-        playlist.type = pid
-        if (pid != Constants.PLAYLIST_QUEUE_ID)
+        playlist.type = type
+        if (type != Constants.PLAYLIST_QUEUE_ID)
             playlist.order = "updateDate desc"
         return DaoLitepal.saveOrUpdatePlaylist(playlist)
     }
 
+
+    /**
+     * 重命名歌单
+     * 调用接口成功返回{}
+     * 调用接口失败返回{"msg":""}
+     */
+    fun renamePlaylist(playlist: Playlist, name: String): Boolean {
+        playlist.name = name
+        return DaoLitepal.saveOrUpdatePlaylist(playlist)
+    }
+
+
     /**
      * 扫描歌单歌曲
      */
-    fun getMusicForPlaylist(pid: String, order: String?): MutableList<Music> {
+    fun getMusicForPlaylist(pid: String, order: String? = null): MutableList<Music> {
         return if (order == null) {
             DaoLitepal.getMusicList(pid)
         } else {

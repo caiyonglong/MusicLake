@@ -1,10 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenuView;
@@ -17,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -49,7 +44,6 @@ import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.Tools;
-import com.squareup.haha.perflib.Main;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -110,20 +104,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-    /**
-     * 使状态栏透明
-     */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private static void transparentStatusBar(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
-        } else {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMetaChangedEvent(MetaChangedEvent event) {
         updatePlaySongInfo(event.getMusic());
@@ -149,12 +129,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
         mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
-        String wy_uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
-        if (wy_uid.length() > 0) {
-            mBindNeteaseView.setVisibility(View.GONE);
-        } else {
-            mBindNeteaseView.setVisibility(View.VISIBLE);
-        }
+//        String wy_uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
+//        if (wy_uid.length() > 0) {
+//            mBindNeteaseView.setVisibility(View.GONE);
+//        } else {
+//            mBindNeteaseView.setVisibility(View.VISIBLE);
+//        }
         mBindNeteaseView.setOnClickListener(view -> {
             mDrawerLayout.closeDrawers();
             Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
@@ -465,7 +445,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             String uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
             if (uid != null && uid.length() > 0) {
                 LogUtil.d(TAG, "uid = " + uid);
-                mBindNeteaseView.setVisibility(View.GONE);
+//                mBindNeteaseView.setVisibility(View.GONE);
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.playlist
 
 import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -9,7 +8,6 @@ import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.main.PageAdapter
 import kotlinx.android.synthetic.main.activity_all_playlist.*
-import kotlinx.android.synthetic.main.frag_discover.*
 import java.util.*
 
 class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
@@ -64,7 +62,11 @@ class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
     private fun setupViewPager(mViewPager: ViewPager) {
         val mAdapter = PageAdapter(supportFragmentManager)
         for (i in cateList.indices) {
-            mAdapter.addFragment(PlaylistFragment.newInstance(cateList[i]), cateList[i])
+            when (i) {
+                0 -> mAdapter.addFragment(PlaylistFragment.newInstance("全部"), cateList[i])
+                1 -> mAdapter.addFragment(TopPlaylistFragment.newInstance(), cateList[i])
+                else -> mAdapter.addFragment(PlaylistFragment.newInstance(cateList[i]), cateList[i])
+            }
         }
         mViewPager.adapter = mAdapter
     }

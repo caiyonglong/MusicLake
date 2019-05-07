@@ -149,7 +149,7 @@ public class CoverLoader {
         if (mContext == null) return;
         GlideApp.with(mContext)
                 .load(url)
-                .error(R.drawable.ic_account_circle)
+                .error(R.drawable.holder_with_bg)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);

@@ -7,26 +7,26 @@ import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deletePlaylist
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.SearchActivity
+import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.ui.widget.ItemDecoration
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -156,15 +156,15 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             R.id.action_delete_playlist -> {
                 LogUtil.e("action_delete_playlist")
                 mPlaylist?.let {
-                    deletePlaylist(it, success = { isHistory ->
-                        if (isHistory) {
+                    deletePlaylist(it, success = {
+                        if (mPlaylist?.type==Constants.PLAYLIST_HISTORY_ID) {
                             musicList.clear()
                             PlayHistoryLoader.clearPlayHistory()
                             mAdapter?.notifyDataSetChanged()
                             showEmptyState()
                             EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_HISTORY_ID, it))
                         } else if (mPresenter != null) {
-                            OnlinePlaylistUtils.deletePlaylist(it) { _ ->
+                            OnlinePlaylistUtils.deletePlaylist(it) {
                                 onBackPress()
                             }
                         }

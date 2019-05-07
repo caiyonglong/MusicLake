@@ -32,10 +32,10 @@ object DaoLitepal {
     /**
      * 增加搜索
      */
-    fun addSearchInfo(info: String) {
+    fun addSearchInfo(info: String) :Boolean{
         val id = System.currentTimeMillis()
         val queryInfo = SearchHistoryBean(id, info)
-        queryInfo.saveOrUpdate("title = ?", info)
+       return queryInfo.saveOrUpdate("title = ?", info)
     }
 
 
@@ -43,7 +43,9 @@ object DaoLitepal {
      * 删除搜索历史
      */
     fun deleteSearchInfo(info: String) {
-        LitePal.deleteAll(SearchHistoryBean::class.java, "title = ? ", info)
+        LitePal.deleteAllAsync(SearchHistoryBean::class.java, "title = ? ", info).listen {
+
+        }
     }
 
     /**
@@ -80,6 +82,9 @@ object DaoLitepal {
 //        }
 //    }
 
+    /**
+     * 添加歌曲到歌单
+     */
     fun addToPlaylist(music: Music, pid: String): Boolean {
         saveOrUpdateMusic(music)
         val count = LitePal.where("mid = ? and pid = ?", music.mid, pid)
@@ -125,14 +130,26 @@ object DaoLitepal {
         LitePal.deleteAll(MusicToPlaylist::class.java, "mid = ?", music.mid)
     }
 
-    fun deletePlaylist(playlist: Playlist) {
-        LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", playlist.pid)
+    /**
+     * 删除歌单
+     * 先删除歌单歌曲，然后删除歌单
+     */
+    fun deletePlaylist(playlist: Playlist):Int {
+       LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", playlist.pid)
+       return LitePal.deleteAll(Playlist::class.java, "pid=?", playlist.pid)
     }
 
-    fun clearPlaylist(pid: String) {
-        LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", pid)
+    /**
+     * 清空歌单歌曲
+     */
+    fun clearPlaylist(pid: String):Int{
+        return  LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", pid)
     }
 
+    /**
+     * 根据pid获取本地歌单所有歌曲
+     * @param pid
+     */
     fun getMusicList(pid: String, order: String = ""): MutableList<Music> {
         val musicLists = mutableListOf<Music>()
         when (pid) {
@@ -155,11 +172,18 @@ object DaoLitepal {
         return musicLists
     }
 
-    fun getAllPlaylist(): List<Playlist> {
-        return LitePal.where("pid != ? and pid !=?", Constants.PLAYLIST_QUEUE_ID, Constants.PLAYLIST_HISTORY_ID).find(Playlist::class.java)
+    /**
+     * 获取本地新建的所有歌单
+     */
+    fun getAllPlaylist(): MutableList<Playlist> {
+        return LitePal.where("type = ?", Constants.PLAYLIST_LOCAL_ID).find(Playlist::class.java)
     }
 
 
+    /**
+     * 根据pid获取本地歌单
+     * @param pid
+     */
     fun getPlaylist(pid: String): Playlist {
         return LitePal.where("pid = ?", pid).findFirst(Playlist::class.java)
     }

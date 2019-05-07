@@ -158,6 +158,7 @@
                         android:padding="10dp"
                         android:text="@string/recommend_song" />
 
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recommendRsv"
                         android:layout_width="match_parent"
@@ -181,12 +182,37 @@
                     android:visibility="gone"
                     tools:visibility="gone">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="@string/recommend_song_list"
-                        android:textColor="@color/black" />
+                        android:gravity="center_horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="@string/recommend_song_list"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/cateTagTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginEnd="@dimen/dp_8"
+                            android:background="@drawable/btn_more_bg"
+                            android:drawableEnd="@drawable/ic_navigate_next"
+                            android:drawableTint="?iconColor"
+                            android:gravity="center"
+                            android:paddingStart="@dimen/dp_8"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingEnd="@dimen/dp_8"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:text="@string/playlist_square"
+                            android:textColor="@color/colorAccent" />
+                    </RelativeLayout>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recommendPlaylistRsv"
@@ -305,24 +331,6 @@
                             android:text="@string/cate_gufeng"
                             android:textColor="?colorAccent"
                             android:textSize="@dimen/sp_12" />
-
-
-                        <TextView
-                            android:id="@+id/cateTagTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dp_8"
-                            android:layout_marginEnd="@dimen/dp_8"
-                            android:drawableTint="?iconColor"
-                            android:background="@drawable/btn_more_bg"
-                            android:drawableEnd="@drawable/ic_navigate_next"
-                            android:gravity="center"
-                            android:paddingStart="@dimen/dp_8"
-                            android:paddingTop="@dimen/dp_2"
-                            android:paddingEnd="@dimen/dp_8"
-                            android:paddingBottom="@dimen/dp_2"
-                            android:text="@string/cate_all"
-                            android:textColor="@color/colorAccent" />
 
                     </LinearLayout>
 

@@ -16,23 +16,23 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.bean.data.PlayHistoryLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.bean.data.PlayHistoryLoader;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.cyl.musiclake.ui.widget.ItemDecoration;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.ui.widget.ItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
@@ -177,8 +177,8 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         switch (id) {
             case R.id.action_delete_playlist:
                 LogUtil.e("action_delete_playlist");
-                UIUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, isHistory -> {
-                    if (isHistory) {
+                UIUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, () -> {
+                    if (mPlaylist.getType().equals(Constants.PLAYLIST_HISTORY_ID)) {
                         musicList.clear();
                         PlayHistoryLoader.INSTANCE.clearPlayHistory();
                         mAdapter.notifyDataSetChanged();

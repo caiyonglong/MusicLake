@@ -6,12 +6,12 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.api.net.ApiManager
-import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -85,7 +85,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                                     this@ImportPlaylistActivity.finish()
                                 })
                             }
-                        })
+                        }, type = "")
                     }.build()
                     .show()
 

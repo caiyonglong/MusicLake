@@ -469,5 +469,6 @@
     <string name="settings_restart_app">重启App后生效</string>
     <string name="recommend_song">推荐歌曲</string>
     <string name="playlist_square">歌单广场</string>
+    <string name="tag_filter">筛选</string>
 
 </resources>

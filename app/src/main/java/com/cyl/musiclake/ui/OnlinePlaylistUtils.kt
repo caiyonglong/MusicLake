@@ -4,18 +4,21 @@ import android.support.v7.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
-import com.cyl.musiclake.api.net.ApiManager
-import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 /**
  * Created by master on 2018/4/8.
@@ -32,6 +35,17 @@ object OnlinePlaylistUtils {
      * 删除当前歌单
      */
     fun deletePlaylist(playlist: Playlist, success: (String) -> Unit) {
+        if (playlist.type == Constants.PLAYLIST_LOCAL_ID) {
+            doAsync {
+                PlaylistLoader.deletePlaylist(playlist)
+                uiThread {
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_DELETE, playlist))
+                    success.invoke("歌单删除成功")
+                }
+            }
+            return
+        }
+
         ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.deletePlaylist(it) }, object : RequestCallBack<String> {
             override fun success(result: String) {
                 success.invoke(result)
@@ -112,11 +126,13 @@ object OnlinePlaylistUtils {
         }
         if (musics == null || musics.size == 0) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.no_song_to_add))
+            showLocalPlaylistDialog(activity, musicList = musics)
             return
         }
         musics.forEach {
             if (it.type == Constants.LOCAL || it.type == Constants.BAIDU) {
                 ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
+                showLocalPlaylistDialog(activity, musicList = musics)
                 return
             }
         }
@@ -138,10 +154,12 @@ object OnlinePlaylistUtils {
         }
         if (music.type == Constants.LOCAL || music.type == Constants.BAIDU) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
+            showLocalPlaylistDialog(activity, music)
             return
         }
         if (!UserStatus.getLoginStatus()) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
+            showLocalPlaylistDialog(activity, music)
             return
         }
         getOnlinePlaylist(success = {
@@ -149,6 +167,15 @@ object OnlinePlaylistUtils {
         }, fail = {
             ToastUtils.show(it)
         })
+    }
+
+    private fun showLocalPlaylistDialog(activity: AppCompatActivity, music: Music? = null, musicList: MutableList<Music>? = null) {
+        doAsync {
+            val playlist = PlaylistLoader.getAllPlaylist()
+            uiThread {
+                showSelectDialog(activity, playlist, music, musicList)
+            }
+        }
     }
 
     /**
@@ -180,16 +207,24 @@ object OnlinePlaylistUtils {
      * 目前支持网易，虾米，qq
      */
     private fun collectMusic(playlist: Playlist, music: Music?) {
-        ApiManager.request(PlaylistApiServiceImpl.collectMusic(playlist.pid.toString(), music!!), object : RequestCallBack<String> {
-            override fun success(result: String) {
-                ToastUtils.show(result)
+        if (playlist.type == Constants.PLAYLIST_LOCAL_ID) {
+            playlist.pid?.let {
+                PlaylistLoader.addToPlaylist(it, music!!)
+                ToastUtils.show("成功添加到本地歌单")
                 EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
+        } else if (playlist.type == Constants.PLAYLIST_CUSTOM_ID) {
+            ApiManager.request(PlaylistApiServiceImpl.collectMusic(playlist.pid.toString(), music!!), object : RequestCallBack<String> {
+                override fun success(result: String) {
+                    ToastUtils.show(result)
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
+                }
 
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
-            }
-        })
+                override fun error(msg: String) {
+                    ToastUtils.show(msg)
+                }
+            })
+        }
     }
 
     /**
@@ -197,18 +232,25 @@ object OnlinePlaylistUtils {
      * 目前支持网易，虾米，qq
      */
     fun collectBatchMusic(playlist: Playlist, vendor: String, musicList: MutableList<Music>?, success: (() -> Unit)? = null) {
-        ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(playlist.pid.toString(), vendor, musicList), object : RequestCallBack<String> {
-            override fun success(result: String?) {
-                ToastUtils.show(result)
+        if (playlist.type == Constants.PLAYLIST_LOCAL_ID) {
+            playlist.pid?.let {
+                PlaylistLoader.addMusicList(it, musicList!!)
                 success?.invoke()
                 EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
+        } else if (playlist.type == Constants.PLAYLIST_CUSTOM_ID) {
+            ApiManager.request(PlaylistApiServiceImpl.collectBatchMusic(playlist.pid.toString(), vendor, musicList), object : RequestCallBack<String> {
+                override fun success(result: String?) {
+                    ToastUtils.show(result)
+                    success?.invoke()
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
+                }
 
-            override fun error(msg: String?) {
-                ToastUtils.show(msg)
-            }
-
-        })
+                override fun error(msg: String?) {
+                    ToastUtils.show(msg)
+                }
+            })
+        }
     }
 
     /**
@@ -216,38 +258,59 @@ object OnlinePlaylistUtils {
      * 目前支持网易，虾米，qq
      */
     private fun collectBatch2Music(playlist: Playlist, musicList: MutableList<Music>?) {
-        ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(playlist.pid.toString(), musicList), object : RequestCallBack<String> {
-            override fun success(result: String) {
-                ToastUtils.show(result)
+        if (playlist.type == Constants.PLAYLIST_LOCAL_ID) {
+            playlist.pid?.let {
+                PlaylistLoader.addMusicList(it, musicList!!)
                 EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
+        } else if (playlist.type == Constants.PLAYLIST_CUSTOM_ID) {
+            ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(playlist.pid.toString(), musicList), object : RequestCallBack<String> {
+                override fun success(result: String) {
+                    ToastUtils.show(result)
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
+                }
 
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
-            }
-        })
+                override fun error(msg: String) {
+                    ToastUtils.show(msg)
+                }
+            })
+        }
     }
 
     /**
      * 新建歌单
+     * @param name 歌单名
+     * @param type 歌单类型名
      */
-    fun createPlaylist(name: String, success: (Playlist) -> Unit) {
+    fun createPlaylist(name: String, type: String, success: (Playlist) -> Unit) {
         val mIsLogin = UserStatus.getLoginStatus()
-        if (mIsLogin) {
-            ApiManager.request(
-                    PlaylistApiServiceImpl.createPlaylist(name),
-                    object : RequestCallBack<Playlist> {
-                        override fun success(result: Playlist) {
-                            success.invoke(result)
-                        }
+        if (type == Constants.PLAYLIST_CUSTOM_ID) {
+            if (mIsLogin) {
+                ApiManager.request(
+                        PlaylistApiServiceImpl.createPlaylist(name),
+                        object : RequestCallBack<Playlist> {
+                            override fun success(result: Playlist) {
+                                success.invoke(result)
+                            }
 
-                        override fun error(msg: String) {
-                            ToastUtils.show(msg)
+                            override fun error(msg: String) {
+                                ToastUtils.show(msg)
+                            }
                         }
-                    }
-            )
+                )
+            } else {
+                ToastUtils.show(MusicApp.getAppContext().getString(R.string.un_login_tips))
+            }
         } else {
-            ToastUtils.show(MusicApp.getAppContext().getString(R.string.un_login_tips))
+            val pid = System.currentTimeMillis().toString()
+            doAsync {
+                val success = PlaylistLoader.createPlaylist(pid, Constants.PLAYLIST_LOCAL_ID, name)
+                uiThread {
+                    if (success) {
+                        EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, Playlist()))
+                    }
+                }
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.discover
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
@@ -16,7 +15,6 @@ import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.cyl.musiclake.ui.music.playlist.AllCategoryFragment
 import com.cyl.musiclake.ui.music.playlist.AllPlaylistActivity
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_discover.*
@@ -96,7 +94,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
                 updateCate("古风")
             }
             R.id.cateTagTv -> {
-//                startActivity<AllPlaylistActivity>()
+                startActivity<AllPlaylistActivity>()
             }
         }
     }
@@ -106,7 +104,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     }
 
     override fun loadData() {
-        mPresenter?.loadNetease("全部")
+//        mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
 //        mPresenter?.loadRecommendSongs()

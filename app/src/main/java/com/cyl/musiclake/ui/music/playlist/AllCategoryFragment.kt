@@ -37,6 +37,7 @@ class AllCategoryFragment : DialogFragment() {
     private var mAdapter: AllCateAdapter? = null
 
     var curCateName: String = "全部"
+    var isHighQuality: Boolean = false
     var curCateList = mutableListOf<String>()
 
     companion object {
@@ -72,7 +73,9 @@ class AllCategoryFragment : DialogFragment() {
             }
             it?.postDelayed({
                 context?.getString(R.string.cate_all)?.let { it1 -> successListener?.invoke(it1) }
-//                dismissAllowingStateLoss()
+                if (isHighQuality) {
+                    dismissAllowingStateLoss()
+                }
             }, 300)
         }
         backIv?.setOnClickListener {
@@ -113,9 +116,10 @@ class AllCategoryFragment : DialogFragment() {
                 }
                 categoryTags.clear()
 
-                categoryTags.add("我的歌单广场")
-                categoryTags.addAll(curCateList)
-
+                if (!isHighQuality) {
+                    categoryTags.add("我的歌单广场")
+                    categoryTags.addAll(curCateList)
+                }
                 map.forEach {
                     categoryTags.add(it.key)
                     categoryTags.addAll(it.value)
@@ -139,10 +143,13 @@ class AllCategoryFragment : DialogFragment() {
             mAdapter?.clickListener = {
                 this@AllCategoryFragment.cateTagRcv?.postDelayed({
                     this@AllCategoryFragment.successListener?.invoke(categoryTags[it])
-                    if (!curCateList.contains(categoryTags[it])) {
+                    if (!isHighQuality && !curCateList.contains(categoryTags[it])) {
                         curCateList.add(categoryTags[it])
                     }
-//                    dismissAllowingStateLoss()
+
+                    if (isHighQuality) {
+                        dismissAllowingStateLoss()
+                    }
                 }, 300)
             }
             mAdapter?.notifyDataSetChanged()

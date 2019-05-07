@@ -1,16 +1,14 @@
 package com.cyl.musiclake.ui.music.charts
 
 import android.content.Context
-
-import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
-
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.ui.base.BasePresenter
 import javax.inject.Inject
 
 /**
@@ -85,6 +83,22 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
      */
     fun loadNetease(tag: String) {
         val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 30)
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showNeteaseCharts(result)
+            }
+
+            override fun error(msg: String) {
+                mView?.showNeteaseCharts(mutableListOf())
+            }
+        })
+    }
+
+    /**
+     * 加载网易排行榜（0歌曲）
+     */
+    fun loadHighQualityPlaylist(tag: String) {
+        val observable = NeteaseApiServiceImpl.getTopPlaylistsHigh(tag, 30, null)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showNeteaseCharts(result)

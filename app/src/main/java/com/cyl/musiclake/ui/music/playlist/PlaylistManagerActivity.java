@@ -9,10 +9,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.bean.Playlist;
+import com.cyl.musiclake.bean.data.PlaylistLoader;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.OnlinePlaylistUtils;
+import com.cyl.musiclake.ui.base.BaseActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,7 +32,7 @@ public class PlaylistManagerActivity extends BaseActivity {
     RecyclerView mPlaylistRcv;
 
     private PlaylistEditAdapter mAdapter;
-    private List<Playlist> playlists = OnlinePlaylistUtils.INSTANCE.getPlaylists();
+    private List<Playlist> playlists = new ArrayList<>();
 
     @Override
     protected int getLayoutResID() {
@@ -86,6 +90,13 @@ public class PlaylistManagerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        String type = getIntent().getStringExtra(Extras.PLAYLIST_TYPE);
+        if (type.equals(Constants.PLAYLIST_CUSTOM_ID)) {
+            playlists = OnlinePlaylistUtils.INSTANCE.getPlaylists();
+        } else {
+            playlists = PlaylistLoader.INSTANCE.getAllPlaylist();
+        }
+        mAdapter.setNewData(playlists);
     }
 
     @Override

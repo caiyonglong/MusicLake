@@ -5,6 +5,7 @@ import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.data.PlayHistoryLoader
+import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.base.BasePresenter
@@ -90,23 +91,41 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     }
 
     override fun loadPlaylist(playlist: Playlist?) {
-        val mIsLogin = UserStatus.getLoginStatus()
-        if (mIsLogin) {
-            OnlinePlaylistUtils.getOnlinePlaylist(success = {
-                mView?.showPlaylist(it)
-            }, fail = {
-                ToastUtils.show(it)
-                if (OnlinePlaylistUtils.playlists.size == 0) {
-                    mView?.showError(it, true)
+        if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
+            val mIsLogin = UserStatus.getLoginStatus()
+            if (mIsLogin) {
+                OnlinePlaylistUtils.getOnlinePlaylist(success = {
+                    mView?.showPlaylist(it)
+                }, fail = {
+                    ToastUtils.show(it)
+                    if (OnlinePlaylistUtils.playlists.size == 0) {
+                        mView?.showError(it, true)
+                    }
+                })
+            } else {
+                OnlinePlaylistUtils.playlists.clear()
+                mView?.showPlaylist(OnlinePlaylistUtils.playlists)
+            }
+        }
+        loadWyUserPlaylist()
+    }
+
+    fun loadLocalPlaylist() {
+        doAsync {
+            val playlist = PlaylistLoader.getAllPlaylist()
+            playlist.forEach {
+                it.pid?.let { it1 ->
+                    val list = PlaylistLoader.getMusicForPlaylist(it1)
+                    it.total = list.size.toLong()
                 }
-            })
-        } else {
-            OnlinePlaylistUtils.playlists.clear()
-            mView?.showPlaylist(OnlinePlaylistUtils.playlists)
+            }
+            uiThread {
+                mView?.showLocalPlaylist(playlist)
+            }
         }
     }
 
-    fun loadWyUserPlaylist() {
+    private fun loadWyUserPlaylist() {
         val uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "")
         LogUtil.d("MyMusic", "uid = $uid")
         if (uid.isEmpty()) return

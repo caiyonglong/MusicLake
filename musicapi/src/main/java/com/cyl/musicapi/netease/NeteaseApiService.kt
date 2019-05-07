@@ -1,7 +1,10 @@
 package com.cyl.musicapi.netease
 
 import io.reactivex.Observable
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
+import retrofit2.http.Url
 
 /**
  * Created by yonglong on 2017/9/11.
@@ -11,6 +14,9 @@ interface NeteaseApiService {
     //    @Headers({"referer: http://music.163.com"})
     @GET("top/playlist")
     fun getTopPlaylist(@Query("cat") cat: String? = null, @Query("limit") limit: Int): Observable<NeteasePlaylist>
+
+    @GET("/top/playlist/highquality")
+    fun getTopPlaylistHigh(@QueryMap map: MutableMap<String, Any>): Observable<NeteasePlaylist>
 
     @GET("/playlist/detail")
     fun getPlaylistDetail(@Query("id") id: String): Observable<NeteasePlaylistDetail>

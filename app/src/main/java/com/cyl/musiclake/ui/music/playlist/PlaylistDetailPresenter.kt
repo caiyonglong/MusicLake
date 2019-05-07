@@ -1,26 +1,25 @@
 package com.cyl.musiclake.ui.music.playlist
 
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
-import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.ui.base.BasePresenter
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
-import com.cyl.musiclake.api.net.ApiManager
-import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.util.*
 import javax.inject.Inject
 
 
@@ -201,18 +200,32 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
 
     override fun renamePlaylist(playlist: Playlist, title: String) {
-        ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
-            override fun success(result: String) {
-                mView.success(1)
-                playlist.name = title
-                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_RENAME, playlist))
-                ToastUtils.show(result)
-            }
+        if(playlist.type==Constants.PLAYLIST_CUSTOM_ID) {
+            ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
+                override fun success(result: String) {
+                    mView.success(1)
+                    playlist.name = title
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_RENAME, playlist))
+                    ToastUtils.show(result)
+                }
 
-            override fun error(msg: String) {
-                ToastUtils.show(msg)
+                override fun error(msg: String) {
+                    ToastUtils.show(msg)
+                }
+            })
+        }else{
+            doAsync {
+               val success= PlaylistLoader.renamePlaylist(playlist,title)
+                uiThread {
+                    if(success){
+                        mView.success(1)
+                        playlist.name = title
+                        EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_RENAME, playlist))
+                        ToastUtils.show("更新成功")
+                    }
+                }
             }
-        })
+        }
     }
 
     /**

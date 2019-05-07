@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
@@ -38,7 +42,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     private var playlists = mutableListOf<Playlist>()
     private var wyPlaylists = mutableListOf<Playlist>()
 
-    private var playlistTag = Constants.PLAYLIST_CUSTOM_ID
+    private var playlistTag = Constants.PLAYLIST_LOCAL_ID
     private var mAdapter: PlaylistAdapter? = null
 
     override fun getLayoutId(): Int {
@@ -123,27 +127,31 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
     override fun listener() {
         playlistAddIv.setOnClickListener {
-            if (UserStatus.getLoginStatus()) {
-                val dialog = CreatePlaylistDialog.newInstance()
-                dialog.show(childFragmentManager, TAG_CREATE)
-            } else {
+            val dialog = CreatePlaylistDialog.newInstance()
+            dialog.successListener = {
+                OnlinePlaylistUtils.createPlaylist(it, type = playlistTag) {
+                    ToastUtils.show(MusicApp.getAppContext().getString(R.string.create_playlist_success))
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, null))
+                }
+            }
+            if (playlistTag == Constants.PLAYLIST_CUSTOM_ID && !UserStatus.getLoginStatus()) {
                 ToastUtils.show(getString(com.cyl.musiclake.R.string.prompt_login))
+            } else {
+                dialog.show(childFragmentManager, TAG_CREATE)
             }
         }
         playlistManagerIv.setOnClickListener {
             val intent = Intent(activity, PlaylistManagerActivity::class.java)
+            intent.putExtra(Extras.PLAYLIST_TYPE, playlistTag)
             startActivity(intent)
         }
-
-
     }
+
 
     override fun loadData() {
         mPresenter?.loadSongs()
-        if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
-            mPresenter?.loadPlaylist()
-        }
-        mPresenter?.loadWyUserPlaylist()
+        mPresenter?.loadPlaylist()
+        mPresenter?.loadLocalPlaylist()
     }
 
 
@@ -159,7 +167,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
     override fun showLocalPlaylist(playlists: MutableList<Playlist>) {
-
+        this.localPlaylists = playlists
+        mAdapter?.setNewData(localPlaylists)
+        if (localPlaylists.size == 0) {
+            mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
+        }
     }
 
     /**
@@ -180,10 +192,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
      */
     override fun showPlaylist(playlists: MutableList<Playlist>) {
         this.playlists = playlists
-        mAdapter?.setNewData(playlists)
-        if (playlists.size == 0) {
-            mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
-        }
         hideLoading()
     }
 
@@ -233,14 +241,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         super.showError(message, showRetryButton)
     }
 
-    override fun retryLoading() {
-        super.retryLoading()
-        if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
-            mPresenter?.loadPlaylist()
-        } else {
-            ToastUtils.show("请先登录")
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMetaChangedEvent(event: MetaChangedEvent) {
@@ -274,7 +274,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlaylistChangedEvent(event: MyPlaylistEvent) {
         when (event.operate) {
-            Constants.PLAYLIST_ADD -> mPresenter?.loadPlaylist()
+            Constants.PLAYLIST_ADD -> {
+                if (event.playlist?.type == Constants.PLAYLIST_LOCAL_ID) mPresenter?.loadLocalPlaylist()
+                if (event.playlist?.type == Constants.PLAYLIST_CUSTOM_ID) mPresenter?.loadPlaylist()
+            }
             Constants.PLAYLIST_DELETE -> {
                 for (i in 0 until playlists.size) {
                     if (playlists[i].pid == event.playlist?.pid) {
@@ -283,12 +286,29 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                         return
                     }
                 }
+                for (i in 0 until localPlaylists.size) {
+                    if (localPlaylists[i].pid == event.playlist?.pid) {
+                        localPlaylists.removeAt(i)
+                        mAdapter?.notifyItemRemoved(i)
+                        return
+                    }
+                }
             }
-            Constants.PLAYLIST_UPDATE -> mPresenter?.loadPlaylist()
+            Constants.PLAYLIST_UPDATE -> {
+                mPresenter?.loadPlaylist()
+                mPresenter?.loadLocalPlaylist()
+            }
             Constants.PLAYLIST_RENAME -> {
                 for (i in 0 until playlists.size) {
                     if (playlists[i].pid == event.playlist?.pid) {
                         playlists[i].name = event.playlist?.name
+                        mAdapter?.notifyItemChanged(i)
+                        return
+                    }
+                }
+                for (i in 0 until localPlaylists.size) {
+                    if (localPlaylists[i].pid == event.playlist?.pid) {
+                        localPlaylists[i].name = event.playlist?.name
                         mAdapter?.notifyItemChanged(i)
                         return
                     }

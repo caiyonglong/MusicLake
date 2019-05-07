@@ -89,6 +89,46 @@ object NeteaseApiServiceImpl {
     }
 
     /**
+     * 获取歌单歌曲数据
+     */
+    fun getTopPlaylistsHigh(tag: String, limit: Int, before: Long?): Observable<MutableList<Playlist>> {
+        val map = mutableMapOf<String, Any>()
+        map["cate"] = tag
+        map["limit"] = limit
+        before?.let {
+            map["before"] = it
+        }
+        return apiService.getTopPlaylistHigh(map)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<MutableList<Playlist>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<Playlist>()
+                                it.playlists?.forEach {
+                                    val playlist = Playlist()
+                                    playlist.pid = it.id.toString()
+                                    playlist.name = it.name
+                                    playlist.coverUrl = it.coverImgUrl
+                                    playlist.des = it.description
+                                    playlist.date = it.createTime
+                                    playlist.updateDate = it.updateTime
+                                    playlist.playCount = it.playCount.toLong()
+                                    playlist.type = Constants.PLAYLIST_WY_ID
+                                    list.add(playlist)
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable("网络异常"))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+    /**
      * 获取精品歌单歌曲数据
      */
     fun getPlaylistDetail(id: String): Observable<Playlist> {

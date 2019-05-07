@@ -11,6 +11,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
+import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
@@ -18,13 +20,11 @@ import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.ui.download.TasksManager
-import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.api.net.ApiManager
-import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
+import com.cyl.musiclake.ui.download.TasksManager
+import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -118,7 +118,7 @@ object UIUtils {
 /**
  * 删除歌单
  */
-fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) -> Unit)?, fail: (() -> Unit)? = null) {
+fun Context.deletePlaylist(playlist: Playlist, success: (() -> Unit)?, fail: (() -> Unit)? = null) {
     when (playlist.pid) {
         Constants.PLAYLIST_HISTORY_ID -> {
             MaterialDialog.Builder(this)
@@ -126,7 +126,7 @@ fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) ->
                     .content("是否清空播放历史？")
                     .onPositive { _, _ ->
                         PlayHistoryLoader.clearPlayHistory()
-                        success?.invoke(true)
+                        success?.invoke()
                     }
                     .positiveText("确定")
                     .negativeText("取消")
@@ -137,7 +137,7 @@ fun Context.deletePlaylist(playlist: Playlist, success: ((isHistory: Boolean) ->
                     .title("提示")
                     .content("是否删除这个歌单？")
                     .onPositive { _, _ ->
-                        success?.invoke(false)
+                        success?.invoke()
                     }
                     .positiveText("确定")
                     .negativeText("取消")

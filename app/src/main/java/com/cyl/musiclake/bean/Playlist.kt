@@ -36,7 +36,6 @@ class Playlist() : LitePalSupport(), Parcelable {
 
     var playCount: Long = 0
 
-
     //歌曲集合
     var musicList = mutableListOf<Music>()
 
