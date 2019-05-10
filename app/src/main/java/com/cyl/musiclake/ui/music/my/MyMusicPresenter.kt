@@ -106,6 +106,8 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
                 OnlinePlaylistUtils.playlists.clear()
                 mView?.showPlaylist(OnlinePlaylistUtils.playlists)
             }
+        } else {
+            mView?.showPlaylist(mutableListOf())
         }
         loadWyUserPlaylist()
     }

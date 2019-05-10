@@ -99,23 +99,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                 p0?.tag?.let {
                     playlistTag = it.toString()
                 }
-                when (p0?.tag) {
-                    Constants.PLAYLIST_LOCAL_ID -> {
-                        mAdapter?.setNewData(localPlaylists)
-                        playlistAddIv.visibility = View.VISIBLE
-                    }
-                    Constants.PLAYLIST_CUSTOM_ID -> {
-                        mAdapter?.setNewData(playlists)
-                        playlistAddIv.visibility = View.VISIBLE
-                    }
-                    Constants.PLAYLIST_WY_ID -> {
-                        mAdapter?.setNewData(wyPlaylists)
-                        playlistAddIv.visibility = View.INVISIBLE
-                    }
-                }
-                if (mAdapter?.data?.size == 0) {
-                    mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
-                }
+                updatePlaylist()
             }
         })
     }
@@ -166,12 +150,36 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
     }
 
-    override fun showLocalPlaylist(playlists: MutableList<Playlist>) {
-        this.localPlaylists = playlists
-        mAdapter?.setNewData(localPlaylists)
-        if (localPlaylists.size == 0) {
+    /**
+     * 更新歌单列表
+     */
+    private fun updatePlaylist() {
+        when (playlistTag) {
+            Constants.PLAYLIST_LOCAL_ID -> {
+                mAdapter?.setNewData(localPlaylists)
+                playlistAddIv.visibility = View.VISIBLE
+            }
+            Constants.PLAYLIST_CUSTOM_ID -> {
+                mAdapter?.setNewData(playlists)
+                playlistAddIv.visibility = View.VISIBLE
+            }
+            Constants.PLAYLIST_WY_ID -> {
+                mAdapter?.setNewData(wyPlaylists)
+                playlistAddIv.visibility = View.INVISIBLE
+            }
+        }
+        //如果歌单列表为空则显示空提示
+        if (mAdapter?.data?.size == 0) {
             mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
         }
+    }
+
+    /**
+     * 显示本地歌单
+     */
+    override fun showLocalPlaylist(playlists: MutableList<Playlist>) {
+        this.localPlaylists = playlists
+        updatePlaylist()
     }
 
     /**
@@ -179,12 +187,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
      */
     override fun showWyPlaylist(playlists: MutableList<Playlist>) {
         this.wyPlaylists = playlists
-//        mAdapter?.setNewData(wyPlaylists)
-//        if (playlists.size == 0) {
-//            showEmptyState()
-//            mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
-//        }
-//        hideLoading()
+        updatePlaylist()
     }
 
     /**
@@ -192,7 +195,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
      */
     override fun showPlaylist(playlists: MutableList<Playlist>) {
         this.playlists = playlists
-        hideLoading()
+        updatePlaylist()
     }
 
     override fun showHistory(musicList: MutableList<Music>) {
