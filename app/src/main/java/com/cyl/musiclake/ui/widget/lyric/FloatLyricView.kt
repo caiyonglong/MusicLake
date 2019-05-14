@@ -134,7 +134,6 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         mSettingsButton.setOnClickListener(this)
 
         mFontSize = SPUtils.getFontSize().toFloat()
-        mIsLock = SPUtils.getAnyByKey(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false)
         mLyricText.setFontSizeScale(mFontSize)
         mSizeSeekBar.progress = mFontSize.toInt()
 

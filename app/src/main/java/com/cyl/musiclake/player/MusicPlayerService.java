@@ -192,6 +192,9 @@ public class MusicPlayerService extends Service {
 
     private static MusicPlayerService instance;
 
+    //歌词定时器
+    private Timer lyricTimer;
+
     public static MusicPlayerService getInstance() {
         return instance;
     }
@@ -1177,8 +1180,12 @@ public class MusicPlayerService extends Service {
         }
     }
 
-    private Timer lyricTimer;
 
+    /**
+     * 显示桌面歌词
+     *
+     * @param show
+     */
     public void showDesktopLyric(boolean show) {
         if (show) {
             // 开启定时器，每隔0.5秒刷新一次
