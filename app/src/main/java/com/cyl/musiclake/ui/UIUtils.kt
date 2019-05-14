@@ -8,9 +8,11 @@ import android.text.InputType
 import android.widget.ImageView
 import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
+import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
+import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
@@ -162,7 +164,7 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
         return
     }
-    ApiManager.request(MusicApi.getMusicDownloadUrl(music,isCache), object : RequestCallBack<String> {
+    ApiManager.request(MusicApi.getMusicDownloadUrl(music, isCache), object : RequestCallBack<String> {
         override fun success(result: String) {
             LogUtil.e(javaClass.simpleName, "-----$result")
             /**
@@ -442,3 +444,26 @@ fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
             .build()
             .show()
 }
+
+fun getNeteaseLoginStatus(success: ((User) -> Unit)?, fail: (() -> Unit)?) {
+    val observer = NeteaseApiServiceImpl.getLoginStatus();
+    ApiManager.request(observer, object : RequestCallBack<LoginInfo> {
+        override fun success(result: LoginInfo?) {
+            if (result?.code == 200) {
+                val user = User()
+                user.name = result.profile.nickname
+                user.avatar = result.profile.avatarUrl
+                user.id = result.profile.userId.toString()
+                //登录成功
+                success?.invoke(user)
+            } else {
+                fail?.invoke()
+            }
+        }
+
+        override fun error(msg: String?) {
+            fail?.invoke()
+        }
+    })
+}
+

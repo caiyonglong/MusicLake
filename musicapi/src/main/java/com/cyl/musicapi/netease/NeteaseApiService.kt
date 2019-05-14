@@ -67,6 +67,11 @@ interface NeteaseApiService {
 
     @GET("login")
     fun loginEmail(@Query("email") email: String, @Query("password") password: String): Observable<LoginInfo>
+    /**
+     * 获取登录状态
+     */
+    @GET("/login/status")
+    fun getLoginStatus(): Observable<LoginInfo>
 
     @GET("recommend/songs")
     fun recommendSongs(): Observable<RecommendSongsInfo>
@@ -79,4 +84,5 @@ interface NeteaseApiService {
      */
     @GET("/user/playlist")
     fun getUserPlaylist(@Query("uid") uid: String): Observable<NeteasePlaylist>
+
 }

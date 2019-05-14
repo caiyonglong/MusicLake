@@ -84,7 +84,6 @@ class StandardWidget : BaseWidget() {
                 } else {
                     remoteViews.setImageViewResource(R.id.iv_cover, R.drawable.default_cover)
                 }
-
             }
         }
     }

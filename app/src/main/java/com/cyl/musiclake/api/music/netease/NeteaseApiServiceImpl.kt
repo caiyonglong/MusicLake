@@ -255,6 +255,10 @@ object NeteaseApiServiceImpl {
             apiService.loginPhone(username, pwd)
     }
 
+    fun getLoginStatus(): Observable<LoginInfo> {
+        return apiService.getLoginStatus()
+    }
+
     /**
      *推荐歌曲
      */

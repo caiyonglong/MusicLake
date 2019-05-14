@@ -43,6 +43,7 @@ import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public ImageView mImageView;
     CircleImageView mAvatarIcon;
     TextView mName;
-    TextView mLoginTv;
+    //    TextView mLoginTv;
     ImageView mShowBindIv;
     View mBindNeteaseView;
     TextView mOnlineNumTv;
@@ -113,7 +114,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        if (mSlidingUpPaneLayout == null) return;
         if (music != null) {
 //            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
-            CoverLoader.loadBigImageView(this, music, mImageView);
+            CoverLoader.INSTANCE.loadBigImageView(this, music, mImageView);
         } else {
 //            mSlidingUpPaneLayout.setPanelHeight(0);
 //            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
@@ -125,21 +126,38 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mImageView = mHeaderView.findViewById(R.id.header_bg);
         mAvatarIcon = mHeaderView.findViewById(R.id.header_face);
         mName = mHeaderView.findViewById(R.id.header_name);
-        mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
+//        mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
 //        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
         mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
-//        String wy_uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
-//        if (wy_uid.length() > 0) {
-//            mBindNeteaseView.setVisibility(View.GONE);
-//        } else {
-//            mBindNeteaseView.setVisibility(View.VISIBLE);
-//        }
-        mBindNeteaseView.setOnClickListener(view -> {
-            mDrawerLayout.closeDrawers();
-            Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
-            startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
-//            NavigationHelper.INSTANCE.navigateFragment(this, new BindLoginActivity());
+        mShowBindIv.setOnClickListener(v -> {
+            mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setVisible(!mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible());
+            if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
+                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
+            } else {
+                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
+            }
+        });
+
+    }
+
+    private void checkBindStatus(Boolean isInit) {
+        UIUtilsKt.getNeteaseLoginStatus(user -> {
+            ToastUtils.show("已绑定网易云音乐");
+            if (isInit) {
+                mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setTitle("已绑定网易云音乐(" + user.getName() + ")");
+                CoverLoader.INSTANCE.loadDrawable(this, user.getAvatar(), drawable -> {
+                    mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setIcon(drawable);
+                    return null;
+                });
+            }
+            return null;
+        }, () -> {
+            if (!isInit) {
+                Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
+                startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
+            }
+            return null;
         });
     }
 
@@ -213,6 +231,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_playQueue:
                 NavigationHelper.INSTANCE.navigatePlayQueue(this);
+                break;
+            case R.id.nav_bind_wy:
+                checkBindStatus(false);
                 break;
             case R.id.nav_menu_import:
                 mTargetClass = ImportPlaylistActivity.class;
@@ -318,9 +339,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (mIsLogin && user != null) {
             MusicApp.socketManager.toggleSocket(true);
             String url = user.getAvatar();
-            CoverLoader.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
+            CoverLoader.INSTANCE.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
-            mLoginTv.setVisibility(View.GONE);
 //            mShowBindIv.setVisibility(View.VISIBLE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
@@ -328,7 +348,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             MusicApp.socketManager.toggleSocket(false);
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
-            mLoginTv.setVisibility(View.GONE);
 //            mShowBindIv.setVisibility(View.GONE);
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.login_hint))
                     .setIcon(R.drawable.ic_exit);
@@ -368,6 +387,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (UserStatus.getLoginStatus()) {
             updateUserInfo(new LoginEvent(true, UserStatus.getUserInfo()));
         }
+        checkBindStatus(true);
     }
 
     /**

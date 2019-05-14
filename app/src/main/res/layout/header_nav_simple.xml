@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/dp_8"
@@ -23,7 +25,7 @@
             android:layout_height="match_parent"
             android:background="@color/translucent_white_16p" />
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -36,54 +38,55 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_margin="@dimen/dp_8"
-                android:src="@drawable/ic_account_circle" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_account_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/header_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="@string/app_name"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
-
-            <TextView
-                android:id="@+id/user_login_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/dp_16"
-                android:background="@drawable/bg_button"
-                android:elevation="@dimen/dp_4"
-                android:lines="1"
-                android:paddingStart="@dimen/dp_16"
-                android:paddingTop="@dimen/dp_4"
-                android:paddingEnd="@dimen/dp_16"
-                android:paddingBottom="@dimen/dp_4"
-                android:text="@string/login"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@+id/header_face"
+                app:layout_constraintEnd_toStartOf="@+id/heard_netease"
+                app:layout_constraintStart_toEndOf="@+id/header_face"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/show_sync_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/dp_8"
                 android:src="@drawable/ic_arrow_drop_down"
-                android:visibility="gone" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/heard_netease"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/dp_8"
+                android:layout_marginBottom="8dp"
                 android:elevation="@dimen/dp_4"
-                android:src="@drawable/netease" />
-        </LinearLayout>
+                android:src="@drawable/netease"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -92,7 +95,6 @@
             android:layout_height="56dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="8dp"
-            android:layout_toStartOf="@+id/heard_netease"
             android:src="@drawable/ic_account_circle"
             android:visibility="gone" />
 

@@ -1131,10 +1131,11 @@ public class MusicPlayerService extends Service {
         }
 
         if (mPlayingMusic != null) {
-            CoverLoader.loadImageViewByMusic(this, mPlayingMusic, bitmap -> {
+            CoverLoader.INSTANCE.loadImageViewByMusic(this, mPlayingMusic, bitmap -> {
                 mNotificationBuilder.setLargeIcon(bitmap);
                 mNotification = mNotificationBuilder.build();
                 mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+                return null;
             });
         }
         mNotification = mNotificationBuilder.build();
@@ -1231,10 +1232,11 @@ public class MusicPlayerService extends Service {
     private void updateNotification(boolean isChange) {
         if (isChange) {
             if (mPlayingMusic != null) {
-                CoverLoader.loadImageViewByMusic(this, mPlayingMusic, bitmap -> {
+                CoverLoader.INSTANCE.loadImageViewByMusic(this, mPlayingMusic, bitmap -> {
                     mNotificationBuilder.setLargeIcon(bitmap);
                     mNotification = mNotificationBuilder.build();
                     mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+                    return null;
                 });
             }
             mNotificationBuilder.setContentTitle(getTitle());

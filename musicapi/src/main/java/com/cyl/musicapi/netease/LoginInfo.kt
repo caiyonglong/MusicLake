@@ -33,11 +33,12 @@ data class Account(@SerializedName("salt")
                    val status: Int = 0)
 
 
-
 data class LoginInfo(@SerializedName("clientId")
                      val clientId: String = "",
                      @SerializedName("code")
                      val code: Int = 0,
+                     @SerializedName("msg")
+                     val msg: String = "",
                      @SerializedName("loginType")
                      val loginType: Int = 0,
                      @SerializedName("profile")
