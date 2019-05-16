@@ -720,6 +720,8 @@ public class MusicPlayerService extends Service {
         } else {
             mPlayQueue.add(mPlayQueue.size(), music);
         }
+        //发送播放列表改变
+        notifyChange(PLAY_QUEUE_CHANGE);
         LogUtil.e(TAG, music.toString());
         mPlayingMusic = music;
         playCurrentAndNext();
@@ -735,9 +737,9 @@ public class MusicPlayerService extends Service {
             play(music);
         } else if (mPlayingPos < mPlayQueue.size()) {
             mPlayQueue.add(mPlayingPos + 1, music);
+            //发送播放列表改变
+            notifyChange(PLAY_QUEUE_CHANGE);
         }
-        //发送播放列表改变
-        notifyChange(PLAY_QUEUE_CHANGE);
     }
 
     /**
