@@ -736,6 +736,8 @@ public class MusicPlayerService extends Service {
         } else if (mPlayingPos < mPlayQueue.size()) {
             mPlayQueue.add(mPlayingPos + 1, music);
         }
+        //发送播放列表改变
+        notifyChange(PLAY_QUEUE_CHANGE);
     }
 
     /**

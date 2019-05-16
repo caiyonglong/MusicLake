@@ -32,7 +32,7 @@ public class NetworkUtils {
      * @param context 上下文
      * @return {@code true}: 可用<br>{@code false}: 不可用
      */
-    public static boolean isAvailable(Context context) {
+    public static boolean isNetworkAvailable(Context context) {
         NetworkInfo info = getActiveNetworkInfo(context);
         return info != null && info.isAvailable();
     }
@@ -71,6 +71,21 @@ public class NetworkUtils {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm != null && cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    /**
+     * 判断wifi是否可用
+     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
+     *
+     * @param context 上下文
+     * @return {@code true}: 连接<br>{@code false}: 未连接
+     */
+    public static boolean isWifiAvaliable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm != null && cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isAvailable()
                 && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
     }
 

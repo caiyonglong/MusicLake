@@ -198,7 +198,7 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
         if (emptyStateView != null) animateView(emptyStateView, false, 150);
         if (loadingProgressBar != null) animateView(loadingProgressBar, true, 400);
-        animateView(errorPanelRoot, false, 150);
+        if (errorPanelRoot != null) animateView(errorPanelRoot, false, 150);
     }
 
     @Override
@@ -206,14 +206,14 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
         if (emptyStateView != null) animateView(emptyStateView, false, 150);
         if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
-        animateView(errorPanelRoot, false, 150);
+        if (errorPanelRoot != null) animateView(errorPanelRoot, false, 150);
     }
 
     @Override
     public void showEmptyState() {
         if (emptyStateView != null) animateView(emptyStateView, true, 200);
         if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
-        animateView(errorPanelRoot, false, 150);
+        if (errorPanelRoot != null) animateView(errorPanelRoot, false, 150);
     }
 
     @Override
@@ -221,11 +221,12 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         hideLoading();
         if (errorTextView != null)
             errorTextView.setText(message);
-        if (errorButtonRetry != null)
+        if (errorButtonRetry != null) {
             errorButtonRetry.setOnClickListener(v -> retryLoading());
-        if (showRetryButton) animateView(errorButtonRetry, true, 600);
-        else animateView(errorButtonRetry, false, 0);
-        animateView(errorPanelRoot, true, 300);
+            if (showRetryButton) animateView(errorButtonRetry, true, 600);
+            else animateView(errorButtonRetry, false, 0);
+        }
+        if (errorPanelRoot != null) animateView(errorPanelRoot, true, 300);
     }
 
     @Override

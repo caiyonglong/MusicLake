@@ -24,12 +24,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.HttpException;
 import retrofit2.Retrofit;
@@ -57,36 +55,6 @@ public class ApiManager {
     // 避免出现 HTTP 403 Forbidden，参考：http://stackoverflow.com/questions/13670692/403-forbidden-with-java-but-not-web-browser
     private static final String AVOID_HTTP403_FORBIDDEN = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
     private static volatile OkHttpClient mOkHttpClient;
-
-    /**
-     * 云端响应头拦截器，用来配置缓存策略
-     * Dangerous interceptor that rewrites the server's cache-control header.
-     */
-    private static final Interceptor mRewriteCacheControlInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            if (!NetworkUtils.isConnected()) {
-                request = request.newBuilder()
-                        .cacheControl(CacheControl.FORCE_CACHE)
-                        .build();
-            }
-            Response originalResponse = chain.proceed(request);
-            if (NetworkUtils.isConnected()) {
-                //有网的时候读接口上的@Headers里的配置，可以在这里进行统一的设置
-                String cacheControl = request.cacheControl().toString();
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", cacheControl)
-                        .removeHeader("Pragma")
-                        .build();
-            } else {
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_CONTROL_CACHE)
-                        .removeHeader("Pragma")
-                        .build();
-            }
-        }
-    };
 
     /**
      * 日志拦截器
@@ -119,14 +87,6 @@ public class ApiManager {
                 Cache cache = new Cache(new File(MusicApp.getAppContext().getCacheDir(), "HttpCache"), 1024 * 1024 * 100);
                 if (mOkHttpClient == null) mOkHttpClient = new OkHttpClient.Builder()
                         .cache(cache)
-//                        .hostnameVerifier(new HostnameVerifier() {
-//                            @Override
-//                            public boolean verify(String s, SSLSession sslSession) {
-//                                LogUtil.e("HOSTNAME " + s);
-//                                if (s.equals("45.76.48.211")) return true;
-//                                return false;
-//                            }
-//                        })
                         .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                         .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                         .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
@@ -178,6 +138,10 @@ public class ApiManager {
      * 发送网络请求
      */
     public static <T> void request(Observable<T> service, RequestCallBack<T> result) {
+        if (!NetworkUtils.isNetworkAvailable(MusicApp.getInstance())) {
+            result.error(MusicApp.getAppContext().getString(R.string.error_connection));
+            return;
+        }
         service.subscribeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

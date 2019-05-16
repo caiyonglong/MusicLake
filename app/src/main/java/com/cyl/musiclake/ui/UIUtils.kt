@@ -172,7 +172,7 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
              */
             if (this@downloadMusic.isDestroyed || this@downloadMusic.isFinishing) return
 
-            if (!NetworkUtils.isWifiConnected(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
+            if (!NetworkUtils.isWifiAvaliable(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
                 showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
                     music.uri = result
                     addDownloadQueue(music, isCache = isCache)
@@ -238,7 +238,7 @@ fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
         if (downloadList.size == 0) {
             return@showTipsDialog
         }
-        if (!NetworkUtils.isWifiConnected(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
+        if (!NetworkUtils.isWifiAvaliable(this@downloadBatchMusic) && SPUtils.getWifiMode()) {
             showTipsDialog(this@downloadBatchMusic, R.string.download_network_tips) {
                 downloadList.forEach {
                     addDownloadQueue(it, true)
