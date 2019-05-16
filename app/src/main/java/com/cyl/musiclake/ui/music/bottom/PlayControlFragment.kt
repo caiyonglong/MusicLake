@@ -151,7 +151,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
             progressBar.progress = PlayManager.getCurrentPosition()
         }
         progressBar.max = PlayManager.getDuration()
-
         bottomPlayRcv.scrollToPosition(PlayManager.position())
     }
 
@@ -169,12 +168,14 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
             musicList.clear()
             musicList.addAll(PlayManager.getPlayList())
             mAdapter?.notifyDataSetChanged()
+            bottomPlayRcv.scrollToPosition(PlayManager.position())
         }
     }
 
     override fun onResume() {
         super.onResume()
         mAdapter?.notifyDataSetChanged()
+        bottomPlayRcv.scrollToPosition(PlayManager.position())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -26,9 +26,10 @@ import java.util.*
 
 class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
-    private lateinit var tvPlayMode: TextView
-    private lateinit var ivPlayMode: ImageView
-    private lateinit var clearAll: ImageView
+    private lateinit var playModeTv: TextView
+    private lateinit var songSumTv: TextView
+    private lateinit var playModeIv: ImageView
+    private lateinit var clearAllIv: ImageView
     private lateinit var recyclerView: RecyclerView
     private var mPresenter: PlayQueuePresenter? = null
     private var musicList: List<Music> = ArrayList()
@@ -65,10 +66,11 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_playqueue, null)
-        recyclerView = view.findViewById(R.id.recycler_view_songs)
-        tvPlayMode = view.findViewById(R.id.tv_play_mode)
-        ivPlayMode = view.findViewById(R.id.iv_play_mode)
-        clearAll = view.findViewById(R.id.clear_all)
+        recyclerView = view.findViewById(R.id.rcv_songs)
+        playModeTv = view.findViewById(R.id.tv_play_mode)
+        songSumTv = view.findViewById(R.id.tv_song_sum)
+        playModeIv = view.findViewById(R.id.iv_play_mode)
+        clearAllIv = view.findViewById(R.id.iv_clear_all)
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
@@ -89,15 +91,15 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
 
     private fun initListener() {
-        tvPlayMode.setOnClickListener { view ->
-            UIUtils.updatePlayMode(ivPlayMode, true)
-            tvPlayMode.text = PlayQueueManager.getPlayMode()
+        playModeTv.setOnClickListener { view ->
+            UIUtils.updatePlayMode(playModeIv, true)
+            playModeTv.text = PlayQueueManager.getPlayMode()
         }
-        ivPlayMode.setOnClickListener { view ->
+        playModeIv.setOnClickListener { view ->
             UIUtils.updatePlayMode(view as ImageView, true)
-            tvPlayMode.text = PlayQueueManager.getPlayMode()
+            playModeTv.text = PlayQueueManager.getPlayMode()
         }
-        clearAll.setOnClickListener { v ->
+        clearAllIv.setOnClickListener { v ->
             MaterialDialog.Builder(context!!)
                     .title(R.string.playlist_queue_clear)
                     .positiveText(R.string.sure)
@@ -141,8 +143,8 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
 
     fun updatePlayMode() {
-        UIUtils.updatePlayMode(ivPlayMode, false)
-        tvPlayMode.text = PlayQueueManager.getPlayMode()
+        UIUtils.updatePlayMode(playModeIv, false)
+        playModeTv.text = PlayQueueManager.getPlayMode()
     }
 
     override fun showLoading() {
@@ -172,6 +174,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun showSongs(songs: List<Music>) {
         musicList = songs
+        songSumTv.text = songs.size.toString()
         updatePlayMode()
         mAdapter?.setNewData(songs)
         //滚动到正在播放的位置
