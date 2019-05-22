@@ -96,7 +96,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setUpTheme();
-        setCustomDensity(this);
+//        setCustomDensity(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);

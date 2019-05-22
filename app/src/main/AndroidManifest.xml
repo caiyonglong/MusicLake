@@ -97,7 +97,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.music.edit.EditSongListActivity"
             android:label="@string/app_name"
@@ -199,7 +199,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/import_playlist"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden">
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 

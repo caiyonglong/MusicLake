@@ -240,12 +240,12 @@ object BaseApiImpl {
     }
 
     /**
-     * 获取歌手详情
-     * id，专辑ID
+     * 获取歌手列表
      */
     fun getArtists(offset: Int, params: Any, success: (result: ArtistsData) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("api.getArtists", arrayOf(offset, params)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.qq.getArtists", arrayOf(offset, params)) { retValue: JSONObject ->
             try {
+                Log.e("BaseApiImpl", "getArtists $retValue")
                 val result = gson.fromJson<ArtistsData>(retValue.toString(), ArtistsData::class.java)
                 success.invoke(result)
             } catch (e: Throwable) {
