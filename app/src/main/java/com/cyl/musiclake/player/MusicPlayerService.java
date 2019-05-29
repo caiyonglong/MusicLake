@@ -538,7 +538,9 @@ public class MusicPlayerService extends Service {
 
                     @Override
                     public void error(String msg) {
+                        LogUtil.e(TAG, "播放异常-----" + msg);
                         ToastUtils.show(msg);
+                        next(true);
                     }
                 });
             }

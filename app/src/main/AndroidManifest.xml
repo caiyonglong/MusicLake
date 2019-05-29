@@ -236,6 +236,11 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_chat"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.sleeptimer.SleepTimerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_chat"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

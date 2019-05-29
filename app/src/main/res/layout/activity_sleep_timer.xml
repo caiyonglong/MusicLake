@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="clickCancelItem"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/switch_minutes_close_1"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/sleepTimeCancelTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.03"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            android:visibility="gone"
+            tools:text="18:22" />
+
+        <ImageView
+            android:id="@+id/tagCancelIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/ic_selection_2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="clickShiWuItem"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/shi_wu_minutes_close"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <!--<com.cyl.musiclake.ui.widget.SleepTimeTextView-->
+        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+            android:id="@+id/sleepTimeShiWuTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.03"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            tools:text="18:22" />
+
+        <ImageView
+            android:id="@+id/tagShiWuIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/ic_selection_2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="clickSanShiItem"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/san_shi_minutes_close"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+            android:id="@+id/sleepTimeSanShiTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.03"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            tools:text="18:22" />
+
+        <ImageView
+            android:id="@+id/tagSanShiIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/ic_selection_2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="clickSiWuItem"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/si_wu_minutes_close"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+            android:id="@+id/sleepTimeSiWuTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.03"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            tools:text="18:22" />
+
+        <ImageView
+            android:id="@+id/tagSiWuIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/ic_selection_2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="clickLiuShiItem"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/liu_shi_minutes_close"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+            android:id="@+id/sleepTimeLiuShiTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.03"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            tools:text="18:22" />
+
+        <ImageView
+            android:id="@+id/tagLiuShiIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/ic_selection_2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="clickCustomItem"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/custom_minutes_close"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+            android:id="@+id/sleepTimeCustomTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.03"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            tools:text="18:22" />
+
+        <ImageView
+            android:id="@+id/tagCustomIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/ic_selection_2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.02"
+            android:text="@string/switch_minutes_close"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="normal" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sleepTimerSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_16" />
+    </LinearLayout>
+</LinearLayout>

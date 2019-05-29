@@ -39,6 +39,7 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
+import com.cyl.musiclake.ui.sleeptimer.SleepTimerActivity;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
@@ -243,6 +244,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_menu_online_num:
                 mTargetClass = ChatActivity.class;
+                break;
+            case R.id.nav_menu_count_down:
+                mTargetClass = SleepTimerActivity.class;
                 break;
             case R.id.nav_menu_feedback:
                 Tools.INSTANCE.feeback(this);
