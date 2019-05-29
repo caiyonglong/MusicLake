@@ -1,25 +1,24 @@
-package com.cyl.musiclake.ui.sleeptimer
+package com.cyl.musiclake.ui.timing
 
 import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
+import android.text.InputType
 import android.view.View
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
+import com.afollestad.materialdialogs.DialogAction
+import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.ui.widget.CountDown
+import com.cyl.musiclake.utils.CountDownUtils
+import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_sleep_timer.*
 
-
 /**
- * 若红楼梦空，亦初心不变
- * 作者：weijiale
- * 包名：com.aoe.music.ui.module.leftmenu.sleeptimer
- * 时间：2018/5/18 16:57
- * 描述：
+ * 定时关闭
  */
 class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     private val shiwuTv by lazy { findViewById<TextView>(R.id.sleepTimeShiWuTv) }
@@ -44,9 +43,9 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
     override fun initData() {
         initStatus()
         initTime()
-        sleepTimerSwitch.isChecked = CountDown.isOpenSleepSwitch
+        sleepTimerSwitch.isChecked = CountDownUtils.isOpenSleepSwitch
         sleepTimerSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            CountDown.isOpenSleepSwitch = isChecked
+            CountDownUtils.isOpenSleepSwitch = isChecked
         }
     }
 
@@ -54,12 +53,12 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
     }
 
     private fun initTime() {
-        CountDown.addTextView(shiwuTv)
-        CountDown.addTextView(sanshiTv)
-        CountDown.addTextView(siwuTv)
-        CountDown.addTextView(liushiTv)
-        CountDown.addTextView(customTv)
-        when (CountDown.type) {
+        CountDownUtils.addTextView(shiwuTv)
+        CountDownUtils.addTextView(sanshiTv)
+        CountDownUtils.addTextView(siwuTv)
+        CountDownUtils.addTextView(liushiTv)
+        CountDownUtils.addTextView(customTv)
+        when (CountDownUtils.type) {
             1 -> clickShiWuItem(null)
             2 -> clickSanShiItem(null)
             3 -> clickSiWuItem(null)
@@ -76,7 +75,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         shiwuIv.visibility = View.VISIBLE
         shiwuTv.visibility = View.VISIBLE
         if (view != null) {
-            CountDown.start(15 * 60 * 1000, 1)
+            CountDownUtils.start(15 * 60 * 1000, 1)
         }
 
     }
@@ -86,7 +85,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         sanshiIv.visibility = View.VISIBLE
         sanshiTv.visibility = View.VISIBLE
         if (view != null) {
-            CountDown.start(30 * 60 * 1000, 2)
+            CountDownUtils.start(30 * 60 * 1000, 2)
         }
 
     }
@@ -96,7 +95,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         siwuIv.visibility = View.VISIBLE
         siwuTv.visibility = View.VISIBLE
         if (view != null) {
-            CountDown.start(45 * 60 * 1000, 3)
+            CountDownUtils.start(45 * 60 * 1000, 3)
         }
 
     }
@@ -106,7 +105,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         liushiIv.visibility = View.VISIBLE
         liushiTv.visibility = View.VISIBLE
         if (view != null) {
-            CountDown.start(60 * 60 * 1000, 4)
+            CountDownUtils.start(60 * 60 * 1000, 4)
         }
     }
 
@@ -115,6 +114,23 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         customIv.visibility = View.VISIBLE
         customTv.visibility = View.VISIBLE
         view?.let {
+            MaterialDialog.Builder(this)
+                    .title(getString(R.string.custom_count_down_time))
+                    .inputType(InputType.TYPE_CLASS_NUMBER)//可以输入的类型-电话号码
+                    .input(getString(R.string.count_down_minutes), "") { dialog1, input ->
+                        val time = (input ?: 0).toString().toInt()
+                        dialog1.getActionButton(DialogAction.POSITIVE).isEnabled = time <= 24 * 60
+                    }
+                    .inputRange(1, 4)
+                    .onPositive { dialog12, _ ->
+                        val time = (dialog12.inputEditText?.text
+                                ?: 0).toString().toInt()
+                        if (time == 0 || time > 24 * 60) {
+                            ToastUtils.show(getString(R.string.down_time_more))
+                        } else {
+                            CountDownUtils.starCountDownByTime(time)
+                        }
+                    }.show()
             //            BaseSystemDialog().apply {
 //                val view = View.inflate(this@SleepTimerActivity, R.layout.dialog_select_sleep_time, null)
 //                val selectHour = view.findViewById<NumberPicker>(R.id.selectHour)
@@ -129,7 +145,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
 //                yesText = this@SleepTimerActivity.getString(R.string.start_up)
 //                contentView = view
 //                onYesClickListener = {
-//                    CountDown.start((selectHour.value * 60 * 60 * 1000 + selectM.value * 60 * 1000).toLong()
+//                    CountDownUtils.start((selectHour.value * 60 * 60 * 1000 + selectM.value * 60 * 1000).toLong()
 //                            , 5)
 //                }
 //                onNoClickListener = {
@@ -141,9 +157,14 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
     }
 
     fun clickCancelItem(view: View?) {
-        CountDown.cancel()
+        CountDownUtils.cancel()
         initStatus()
         cancelIv.visibility = View.VISIBLE
+    }
+
+    fun clickTimerSwitch(view: View?) {
+        sleepTimerSwitch.isChecked = !sleepTimerSwitch.isChecked
+        CountDownUtils.isOpenSleepSwitch = sleepTimerSwitch.isChecked
     }
 
     private fun setNumberPickerDividerColor(numberPicker: NumberPicker) {
@@ -165,7 +186,6 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
                 break
             }
         }
-
 
 //        // 分割线高度
 //        for (pf2 in pickerFields) {

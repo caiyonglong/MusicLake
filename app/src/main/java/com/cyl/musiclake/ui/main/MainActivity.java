@@ -39,13 +39,15 @@ import com.cyl.musiclake.ui.my.user.User;
 import com.cyl.musiclake.ui.my.user.UserStatus;
 import com.cyl.musiclake.ui.settings.AboutActivity;
 import com.cyl.musiclake.ui.settings.SettingsActivity;
-import com.cyl.musiclake.ui.sleeptimer.SleepTimerActivity;
+import com.cyl.musiclake.ui.timing.SleepTimerActivity;
+import com.cyl.musiclake.ui.widget.CountDownTimerTextView;
 import com.cyl.musiclake.utils.CountDownUtils;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
+import com.squareup.haha.perflib.Main;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -70,7 +72,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout mDrawerLayout;
     Switch mSwitchCountDown;
     Switch mNightModeSw;
-    TextView mSwitchCountDownTv;
+    CountDownTimerTextView mSwitchCountDownTv;
 
     public ImageView mImageView;
     CircleImageView mAvatarIcon;
@@ -182,7 +184,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void listener() {
-
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -191,6 +192,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
+                mSwitchCountDown.setChecked(CountDownUtils.INSTANCE.getType() != 0);
             }
 
             @Override
@@ -436,23 +438,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         View item = mNavigationView.getMenu().findItem(R.id.nav_menu_count_down).getActionView();
         mSwitchCountDown = item.findViewById(R.id.count_down_switch);
         mSwitchCountDownTv = item.findViewById(R.id.count_down_tv);
-        mSwitchCountDown.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                CountDownUtils.INSTANCE.setTextViewListener(mSwitchCountDownTv);
-                UIUtilsKt.showCountDown(this, checked -> {
-                    mSwitchCountDown.setChecked(checked);
-                    if (checked) {
-                        mSwitchCountDownTv.setVisibility(View.VISIBLE);
-                    } else {
-                        mSwitchCountDownTv.setVisibility(View.GONE);
-                    }
-                    return null;
-                });
-            } else {
-                mSwitchCountDownTv.setVisibility(View.GONE);
-                CountDownUtils.INSTANCE.removeTextViewListener(mSwitchCountDownTv);
-            }
-        });
+        mSwitchCountDown.setOnClickListener(v -> UIUtilsKt.showCountDown(MainActivity.this, checked -> {
+            mSwitchCountDown.setChecked(checked);
+            return null;
+        }));
     }
 
     @Override

@@ -8,14 +8,13 @@
     android:gravity="end"
     android:orientation="horizontal">
 
-    <TextView
+    <com.cyl.musiclake.ui.widget.CountDownTimerTextView
         android:id="@+id/count_down_tv"
         style="@style/navMenuStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@color/black"
-        android:visibility="gone"
         tools:text="00:00" />
 
     <Switch
@@ -24,10 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:elevation="@dimen/dp_4"
-        android:paddingBottom="@dimen/dp_2"
-        android:paddingEnd="@dimen/dp_8"
         android:paddingStart="@dimen/dp_8"
         android:paddingTop="@dimen/dp_2"
+        android:paddingEnd="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_2"
         android:textColor="@color/white" />
 
 </LinearLayout>

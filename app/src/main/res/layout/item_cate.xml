@@ -10,6 +10,20 @@
 
     <TextView
         android:id="@+id/titleTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/dp_8"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        android:textSize="@dimen/sp_16"
+        tools:text="Search query" />
+
+
+    <com.robertlevonyan.views.chip.Chip
+        android:id="@+id/editTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -18,6 +32,8 @@
         android:gravity="center"
         android:lines="1"
         android:textSize="@dimen/sp_16"
+        android:visibility="gone"
+        app:mcv_chipText="编辑"
         tools:text="Search query" />
 
 </LinearLayout>

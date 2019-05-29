@@ -2,7 +2,9 @@ package com.cyl.musiclake.ui.music.playlist
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.cyl.musicapi.netease.CatListBean
+import com.cyl.musicapi.netease.SubItem
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
@@ -30,18 +33,16 @@ import com.robertlevonyan.views.chip.Chip
 class AllCategoryFragment : DialogFragment() {
     private var rootView: View? = null
     private val cateTagRcv by lazy { rootView?.findViewById<RecyclerView>(R.id.cateTagRcv) }
-    private val cateAllTagTv by lazy { rootView?.findViewById<TextView>(R.id.cateAllTagTv) }
     private val backIv by lazy { rootView?.findViewById<ImageView>(R.id.backIv) }
 
 
     private var mAdapter: AllCateAdapter? = null
 
-    var curCateName: String = "全部"
     var isHighQuality: Boolean = false
     var curCateList = mutableListOf<String>()
 
     companion object {
-        var categoryTags = mutableListOf<String>()
+        var categoryTags = mutableListOf<Any>()
     }
 
     var successListener: ((String) -> Unit?)? = null
@@ -67,26 +68,9 @@ class AllCategoryFragment : DialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cateAllTagTv?.setOnClickListener {
-            context?.let {
-                cateAllTagTv?.setTextColor(ContextCompat.getColor(it, R.color.colorAccent))
-            }
-            it?.postDelayed({
-                context?.getString(R.string.cate_all)?.let { it1 -> successListener?.invoke(it1) }
-                if (isHighQuality) {
-                    dismissAllowingStateLoss()
-                }
-            }, 300)
-        }
         backIv?.setOnClickListener {
             dismissAllowingStateLoss()
         }
-        if (curCateName == cateAllTagTv?.text.toString()) {
-            context?.let {
-                cateAllTagTv?.setTextColor(ContextCompat.getColor(it, R.color.colorAccent))
-            }
-        }
-
         if (categoryTags.size > 0) {
             initRecyclerView(categoryTags)
             return
@@ -97,7 +81,7 @@ class AllCategoryFragment : DialogFragment() {
                 /**
                  * 排序
                  */
-                val map = mutableMapOf<String, MutableList<String>>()
+                val map = mutableMapOf<String, MutableList<SubItem>>()
                 result?.categories?.let {
                     map[result.categories.c0] = mutableListOf()
                     map[result.categories.c1] = mutableListOf()
@@ -107,18 +91,20 @@ class AllCategoryFragment : DialogFragment() {
                 }
                 result?.sub?.forEach {
                     when (it.category) {
-                        0 -> map[result.categories.c0]?.add(it.name)
-                        1 -> map[result.categories.c1]?.add(it.name)
-                        2 -> map[result.categories.c2]?.add(it.name)
-                        3 -> map[result.categories.c3]?.add(it.name)
-                        4 -> map[result.categories.c4]?.add(it.name)
+                        0 -> map[result.categories.c0]?.add(it)
+                        1 -> map[result.categories.c1]?.add(it)
+                        2 -> map[result.categories.c2]?.add(it)
+                        3 -> map[result.categories.c3]?.add(it)
+                        4 -> map[result.categories.c4]?.add(it)
                     }
                 }
                 categoryTags.clear()
 
                 if (!isHighQuality) {
                     categoryTags.add("我的歌单广场")
-                    categoryTags.addAll(curCateList)
+                    curCateList.forEach {
+                        categoryTags.add(SubItem(name = it))
+                    }
                 }
                 map.forEach {
                     categoryTags.add(it.key)
@@ -132,7 +118,7 @@ class AllCategoryFragment : DialogFragment() {
         })
     }
 
-    private fun initRecyclerView(list: MutableList<String>) {
+    private fun initRecyclerView(list: MutableList<Any>) {
         if (mAdapter == null) {
             mAdapter = context?.let { AllCateAdapter(it, list) }
             val layoutManager = FlexboxLayoutManager(context)
@@ -140,18 +126,18 @@ class AllCategoryFragment : DialogFragment() {
             layoutManager.justifyContent = JustifyContent.FLEX_START
             cateTagRcv?.layoutManager = layoutManager
             cateTagRcv?.adapter = mAdapter
-            mAdapter?.clickListener = {
-                this@AllCategoryFragment.cateTagRcv?.postDelayed({
-                    this@AllCategoryFragment.successListener?.invoke(categoryTags[it])
-                    if (!isHighQuality && !curCateList.contains(categoryTags[it])) {
-                        curCateList.add(categoryTags[it])
-                    }
-
-                    if (isHighQuality) {
-                        dismissAllowingStateLoss()
-                    }
-                }, 300)
-            }
+//            mAdapter?.clickListener = {
+//                this@AllCategoryFragment.cateTagRcv?.postDelayed({
+//                    this@AllCategoryFragment.successListener?.invoke(categoryTags[it])
+//                    if (!isHighQuality && !curCateList.contains(categoryTags[it])) {
+//                        curCateList.add(categoryTags[it])
+//                    }
+//
+//                    if (isHighQuality) {
+//                        dismissAllowingStateLoss()
+//                    }
+//                }, 300)
+//            }
             mAdapter?.notifyDataSetChanged()
         }
     }
@@ -167,14 +153,18 @@ class AllCategoryFragment : DialogFragment() {
         transaction?.add(this, tag)?.commitAllowingStateLoss()
     }
 
-    class AllCateAdapter(val context: Context, val list: MutableList<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class AllCateAdapter(val context: Context, val list: MutableList<Any>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         var clickListener: ((Int) -> Unit)? = null
 
         var tag: String? = null
 
-        fun setSelectName(position: Int) {
-            tag = list[position]
+        //是否是编辑模式
+        private var isEditMode = false
+
+
+        private fun setSelectName(tag: String) {
+            this.tag = tag
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -190,29 +180,45 @@ class AllCategoryFragment : DialogFragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (holder is TagViewHolder) {
+                val item = list[position] as SubItem
                 holder.tagTv.isSelectable = false
-//                holder.tagTv.setTextColor(Color.parseColor("#000000"))
                 tag?.let {
-                    if (it == list[position]) {
+                    if (it == item.name) {
                         holder.tagTv.isSelectable = true
-//                        holder.tagTv.setTextColor(Color.parseColor("#DB4437"))
                     }
                 }
-                holder.tagTv.chipText = list[position]
+                holder.tagTv.chipText = item.name
                 holder.tagTv.setOnChipClickListener {
-                    setSelectName(position)
-                    notifyDataSetChanged()
-                    clickListener?.invoke(position)
+                    if (isEditMode) {
+                        for (i in 1 until list.size - 1) {
+                            if (list[i] is String) {
+                                list.add(i, item)
+                                notifyDataSetChanged()
+                                return@setOnChipClickListener
+                            }
+                        }
+                    }
                 }
             } else if (holder is TitleViewHolder) {
-                holder.titleTv.text = list[position]
-            }
+                holder.titleTv.text = list[position].toString()
+                if (position == 0) {
+                    holder.editTv.visibility = View.VISIBLE
+                    holder.editTv.chipText = if (isEditMode) "完成" else "编辑"
+                } else {
+                    holder.editTv.visibility = View.GONE
+                }
 
+                holder.editTv.setOnChipClickListener {
+                    isEditMode = !isEditMode
+                    //更新列表
+                    notifyDataSetChanged()
+                }
+            }
         }
 
         override fun getItemViewType(position: Int): Int {
             return when (list[position]) {
-                "我的歌单广场", "语种", "风格", "场景", "情感", "主题" -> TITLE_ITEM
+                is String -> TITLE_ITEM
                 else -> TAG_ITEM
             }
         }
@@ -227,6 +233,7 @@ class AllCategoryFragment : DialogFragment() {
 
         inner class TitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var titleTv = itemView.findViewById<TextView>(R.id.titleTv)
+            var editTv = itemView.findViewById<Chip>(R.id.editTv)
         }
 
         private val TAG_ITEM = 1

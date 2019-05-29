@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
+        android:layout_height="@dimen/dp_48"
         android:layout_marginTop="@dimen/dp_8"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
@@ -42,15 +42,21 @@
             android:id="@+id/tagCancelIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:src="@drawable/ic_selection_2" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_05"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:background="@color/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_height="@dimen/dp_48"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="clickShiWuItem"
@@ -60,7 +66,7 @@
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
@@ -68,8 +74,7 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="normal" />
 
-        <!--<com.cyl.musiclake.ui.widget.SleepTimeTextView-->
-        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+        <com.cyl.musiclake.ui.widget.CountDownTimerTextView
             android:id="@+id/sleepTimeShiWuTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,15 +88,21 @@
             android:id="@+id/tagShiWuIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:src="@drawable/ic_selection_2" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_05"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:background="@color/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_height="@dimen/dp_48"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="clickSanShiItem"
@@ -100,7 +111,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
@@ -108,7 +119,7 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="normal" />
 
-        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+        <com.cyl.musiclake.ui.widget.CountDownTimerTextView
             android:id="@+id/sleepTimeSanShiTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,15 +133,21 @@
             android:id="@+id/tagSanShiIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:src="@drawable/ic_selection_2" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_05"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:background="@color/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_height="@dimen/dp_48"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="clickSiWuItem"
@@ -139,7 +156,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
@@ -147,7 +164,7 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="normal" />
 
-        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+        <com.cyl.musiclake.ui.widget.CountDownTimerTextView
             android:id="@+id/sleepTimeSiWuTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -161,15 +178,21 @@
             android:id="@+id/tagSiWuIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:src="@drawable/ic_selection_2" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_05"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:background="@color/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_height="@dimen/dp_48"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="clickLiuShiItem"
@@ -178,7 +201,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
@@ -186,7 +209,7 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="normal" />
 
-        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+        <com.cyl.musiclake.ui.widget.CountDownTimerTextView
             android:id="@+id/sleepTimeLiuShiTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -200,15 +223,21 @@
             android:id="@+id/tagLiuShiIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:src="@drawable/ic_selection_2" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_05"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:background="@color/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_height="@dimen/dp_48"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="clickCustomItem"
@@ -217,7 +246,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
@@ -225,7 +254,7 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="normal" />
 
-        <com.cyl.musiclake.ui.widget.SleepTimeTextView
+        <com.cyl.musiclake.ui.widget.CountDownTimerTextView
             android:id="@+id/sleepTimeCustomTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -239,23 +268,30 @@
             android:id="@+id/tagCustomIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:src="@drawable/ic_selection_2" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_05"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:background="@color/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_height="@dimen/dp_48"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
+        android:onClick="clickTimerSwitch"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"

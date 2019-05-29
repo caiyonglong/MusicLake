@@ -405,12 +405,12 @@ fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
     MaterialDialog.Builder(this)
             .title("定时关闭")
             .items(CountDownUtils.selectItems)
-            .itemsCallbackSingleChoice(CountDownUtils.selectID) { dialog, _, which, _ ->
-                CountDownUtils.selectID = which
+            .itemsCallbackSingleChoice(CountDownUtils.type) { dialog, _, which, _ ->
+                CountDownUtils.type = which
                 when (which) {
                     0 -> {
                         CountDownUtils.totalTime = 0
-                        CountDownUtils.stopCountDown()
+                        CountDownUtils.cancel()
                     }
                     5 -> {
                         dialog.cancel()
@@ -439,7 +439,7 @@ fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
                 false
             }
             .dismissListener {
-                dismissListener.invoke(CountDownUtils.isCountDowning)
+                dismissListener.invoke(CountDownUtils.type != 0)
             }
             .build()
             .show()

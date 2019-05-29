@@ -10,7 +10,7 @@
     <android.support.v7.widget.AppCompatCheckedTextView
         android:id="@+id/appCompatCheckedTextView"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/dp_40"
         android:gravity="center"
         android:padding="@dimen/dp_8"
         android:text="@string/cate_select"
@@ -32,31 +32,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/cateAllTagTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_button"
-        android:gravity="center"
-        android:padding="@dimen/dp_8"
-        android:text="@string/cate_all"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/cateTagRcv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatCheckedTextView" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cateTagRcv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cateAllTagTv" />
+        app:layout_constraintTop_toBottomOf="@+id/appCompatCheckedTextView" />
 
 </android.support.constraint.ConstraintLayout>
