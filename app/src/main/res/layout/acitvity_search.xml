@@ -20,9 +20,9 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
                 app:popupTheme="?android:popupMenuStyle">
 
                 <include
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/search_history"
                 android:src="@drawable/ic_delete"
-                android:tint="@color/black" />
+                android:tint="?iconColor" />
         </LinearLayout>
 
 
