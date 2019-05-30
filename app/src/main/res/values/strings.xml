@@ -470,12 +470,15 @@
     <string name="recommend_song">推荐歌曲</string>
     <string name="playlist_square">歌单广场</string>
     <string name="tag_filter">筛选</string>
-
+    <!--定时播放相关-->
+    <string name="title_count_down">定时关闭</string>
     <string name="shi_wu_minutes_close">15分钟后</string>
     <string name="san_shi_minutes_close">30分钟后</string>
     <string name="si_wu_minutes_close">45分钟后</string>
     <string name="liu_shi_minutes_close">60分钟后</string>
     <string name="custom_minutes_close">自定义</string>
     <string name="switch_minutes_close">播完整首歌后关闭</string>
+    <string name="switch_minutes_close_desc">计时结束后，立即关闭APP</string>
+    <string name="switch_minutes_open_desc">计时结束后，播完整首歌再关闭APP</string>
     <string name="switch_minutes_close_1">不开启</string>
 </resources>

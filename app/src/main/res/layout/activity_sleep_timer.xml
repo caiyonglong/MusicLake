@@ -24,7 +24,7 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/switch_minutes_close_1"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <TextView
@@ -71,7 +71,7 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/shi_wu_minutes_close"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <com.cyl.musiclake.ui.widget.CountDownTimerTextView
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.03"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/sp_14"
             android:textStyle="normal"
             tools:text="18:22" />
 
@@ -116,7 +116,7 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/san_shi_minutes_close"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <com.cyl.musiclake.ui.widget.CountDownTimerTextView
@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.03"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/sp_14"
             android:textStyle="normal"
             tools:text="18:22" />
 
@@ -161,7 +161,7 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/si_wu_minutes_close"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <com.cyl.musiclake.ui.widget.CountDownTimerTextView
@@ -170,7 +170,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.03"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/sp_14"
             android:textStyle="normal"
             tools:text="18:22" />
 
@@ -206,7 +206,7 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/liu_shi_minutes_close"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <com.cyl.musiclake.ui.widget.CountDownTimerTextView
@@ -215,7 +215,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.03"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/sp_14"
             android:textStyle="normal"
             tools:text="18:22" />
 
@@ -251,7 +251,7 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/custom_minutes_close"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <com.cyl.musiclake.ui.widget.CountDownTimerTextView
@@ -260,7 +260,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:letterSpacing="0.03"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/sp_14"
             android:textStyle="normal"
             tools:text="18:22" />
 
@@ -296,13 +296,26 @@
             android:fontFamily="sans-serif"
             android:letterSpacing="0.02"
             android:text="@string/switch_minutes_close"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:textStyle="normal" />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/sleepTimerSwitch"
+            android:id="@+id/playControlSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_16" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/closeAppTipsTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:fontFamily="sans-serif"
+        android:letterSpacing="0.02"
+        android:text="@string/switch_minutes_close_desc"
+        android:textColor="?subtitleTextColor"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="normal" />
+
 </LinearLayout>

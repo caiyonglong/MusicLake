@@ -43,9 +43,15 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
     override fun initData() {
         initStatus()
         initTime()
-        sleepTimerSwitch.isChecked = CountDownUtils.isOpenSleepSwitch
-        sleepTimerSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+        playControlSwitch.isChecked = CountDownUtils.isOpenSleepSwitch
+        //显示提示文字
+        closeAppTipsTv.setText(if (playControlSwitch.isChecked) R.string.switch_minutes_open_desc else R.string.switch_minutes_close_desc)
+        
+        playControlSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             CountDownUtils.isOpenSleepSwitch = isChecked
+            //显示提示文字
+            closeAppTipsTv.setText(if (isChecked) R.string.switch_minutes_open_desc else R.string.switch_minutes_close_desc)
         }
     }
 
@@ -163,8 +169,8 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
     }
 
     fun clickTimerSwitch(view: View?) {
-        sleepTimerSwitch.isChecked = !sleepTimerSwitch.isChecked
-        CountDownUtils.isOpenSleepSwitch = sleepTimerSwitch.isChecked
+        playControlSwitch.isChecked = !playControlSwitch.isChecked
+        CountDownUtils.isOpenSleepSwitch = playControlSwitch.isChecked
     }
 
     private fun setNumberPickerDividerColor(numberPicker: NumberPicker) {

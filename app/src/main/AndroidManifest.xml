@@ -239,7 +239,7 @@
         <activity
             android:name=".ui.timing.SleepTimerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_chat"
+            android:label="@string/title_count_down"
             android:screenOrientation="portrait" />
     </application>
 

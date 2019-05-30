@@ -31,15 +31,25 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 - 网易云热门歌手，百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式、歌词翻译
 - 精力有限，需求不饱和都会逐步完善
-- 有兴趣可赏个star静等完善与bug修复，期望的功能也可提[issues](https://github.com/caiyonglong/MusicLake/issues)
 - [PC端](https://github.com/sunzongzheng/music)
 - [版本计划](https://github.com/caiyonglong/MusicLake/projects)
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ)
 
+### **有兴趣可赏个star，bug修复和功能问题都可以提[issues](https://github.com/caiyonglong/MusicLake/issues)**
+
+# *新功能*
+- 新增夜间模式
+- setting界面 后台音乐接口，网易云音乐API接口可配置
+- 增加网易云音乐账号绑定（手机号登陆），每日推荐，歌单广场，网易云歌单列表
+- 增加本地歌单
+- 优化定时界面
+
+持续更新，有什么问题可以提issue！
+
 # 计划
-[ ] 整理文档
-[ ] 代码重构
+- [ ] 整理文档
+- [ ] 代码重构
  
 # 相关项目|音乐API
 - [音乐API](https://github.com/sunzongzheng/musicApi)
@@ -73,6 +83,18 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 <img src="screenshots/preview12.png" width="225" height="400"/>
 <img src="screenshots/preview13.png" width="225" height="400"/>
 </p>
+
+- 夜间模式相关截图
+
+<p>
+<img src="screenshots/dark_preview1.png" width="225" height="400"/>
+<img src="screenshots/dark_preview2.png" width="225" height="400"/>
+<img src="screenshots/dark_preview3.png" width="225" height="400"/>
+<img src="screenshots/dark_preview4.png" width="225" height="400"/>
+<img src="screenshots/dark_preview5.png" width="225" height="400"/>
+</p>
+
+
 
 ## :moneybag: 捐赠
 捐赠会有两个用途
