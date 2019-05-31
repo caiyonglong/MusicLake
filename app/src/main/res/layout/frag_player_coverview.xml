@@ -20,10 +20,10 @@
             android:background="@drawable/bg_play_select"
             android:drawableEnd="@drawable/ic_arrow_down_small"
             android:drawablePadding="@dimen/dp_2"
-            android:paddingBottom="2dp"
-            android:paddingEnd="@dimen/dp_4"
             android:paddingStart="10dp"
             android:paddingTop="2dp"
+            android:paddingEnd="@dimen/dp_4"
+            android:paddingBottom="2dp"
             android:text="标准"
             android:textColor="@color/white"
             android:textSize="12sp" />
@@ -32,13 +32,13 @@
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
             android:background="@drawable/bg_play_select"
-            android:paddingBottom="2dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="2dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="2dp"
             android:text="本地音乐"
             android:textColor="@color/white"
             android:textSize="12sp" />
@@ -48,26 +48,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_play_select"
-            android:paddingBottom="2dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="2dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="2dp"
             android:text="音效"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
     </LinearLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/civ_cover"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginStart="30dp"
-        android:elevation="10dp"
-        android:src="@drawable/default_cover"
-        android:transitionName="@string/transition_cover"
-        app:civ_border_color="@color/white" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:elevation="10dp"
+            android:src="@drawable/default_cover"
+            android:transitionName="@string/transition_cover"
+            app:civ_border_color="@color/white" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_cover_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:elevation="10dp"
+            android:src="@drawable/default_cover"
+            android:transitionName="@string/transition_cover"
+            app:civ_border_color="@color/black" />
+    </RelativeLayout>
 </LinearLayout>

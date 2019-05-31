@@ -139,6 +139,9 @@
             android:name=".ui.main.WebActivity"
             android:screenOrientation="portrait" /> <!-- 接入第三方QQ登录 -->
         <activity
+            android:name=".ui.music.mv.BaiduMvDetailActivity"
+            android:screenOrientation="portrait" /> <!-- 接入第三方QQ登录 -->
+        <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true"

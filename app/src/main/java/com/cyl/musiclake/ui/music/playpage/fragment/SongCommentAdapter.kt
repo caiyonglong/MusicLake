@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playpage
+package com.cyl.musiclake.ui.music.playpage.fragment
 
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter

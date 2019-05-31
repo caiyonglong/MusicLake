@@ -1,25 +1,18 @@
 package com.cyl.musiclake.ui.music.playpage
 
-import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
-import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.TextView
+import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.R
-import com.cyl.musiclake.R.id.titleIv
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
@@ -28,34 +21,37 @@ import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.UIUtils
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.music.comment.SongCommentActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
-import com.cyl.musiclake.ui.music.local.adapter.MyPagerAdapter
+import com.cyl.musiclake.ui.music.local.adapter.MyViewPagerAdapter
+import com.cyl.musiclake.ui.music.playpage.fragment.CoverFragment
+import com.cyl.musiclake.ui.music.playpage.fragment.LyricFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
+import com.cyl.musiclake.ui.widget.DepthPageTransformer
+import com.cyl.musiclake.ui.widget.MultiTouchViewPager
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.Tools
-import com.cyl.musiclake.ui.widget.DepthPageTransformer
-import com.cyl.musiclake.ui.widget.LyricView
-import com.cyl.musiclake.ui.widget.MultiTouchViewPager
 import kotlinx.android.synthetic.main.activity_player.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
+    override fun showLyric(lyric: String?, init: Boolean) {
+    }
 
     private var playingMusic: Music? = null
-    private var coverView: View? = null
-    private var lyricView: View? = null
-    private val viewPagerContent = mutableListOf<View>()
-    private var mLyricView: LyricView? = null
-    var mQualityTv: TextView? = null
-    private var coverAnimator: ObjectAnimator? = null
+    private var coverFragment: CoverFragment? = null
+    private var lyricFragment: LyricFragment? = null
+    private val fragments = mutableListOf<Fragment>()
 
+    /***
+     * 显示当前正在播放
+     */
     override fun showNowPlaying(music: Music?) {
         if (music == null) finish()
 
@@ -66,20 +62,20 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //更新图片
 //        CoverLoader.loadBigImageView(this, music, coverView?.findViewById<ImageView>(R.id.civ_cover))
         //更新类型
-        updateMusicType()
+        music?.let { coverFragment?.updateMusicType(it) }
         //更新收藏状态
         music?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
         //更新下载状态
 //        music?.isDl?.let {
-//            downloadIv.visibility = if (it) View.VISIBLE else View.GONE
+        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD) View.VISIBLE else View.GONE
 //        }
         //隐藏显示歌曲评论
 //        songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
 
-        coverAnimator?.cancel()
-        coverAnimator?.start()
+        //开始旋转动画
+        coverFragment?.startRotateAnimation()
     }
 
     override fun getLayoutResID(): Int {
@@ -93,6 +89,27 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     override fun initView() {
         detailView.animation = moveToViewLocation()
         updatePlayMode()
+
+        //歌词搜索
+        searchLyricIv.setOnClickListener {
+            MusicLyricDialog().apply {
+                title = playingMusic?.title
+                artist = playingMusic?.artist
+                duration = PlayManager.getDuration().toLong()
+                searchListener = {
+                }
+                textSizeListener = {
+                    lyricFragment?.lyricTv?.setTextSize(it)
+                }
+                textColorListener = {
+                    lyricFragment?.lyricTv?.setHighLightTextColor(it)
+                }
+                lyricListener = {
+                    lyricFragment?.lyricTv?.setLyricContent(it)
+                }
+            }.show(this)
+
+        }
     }
 
     override fun updatePlayMode() {
@@ -101,15 +118,16 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     override fun initData() {
         setupViewPager(viewPager)
-        initAlbumPic(coverView?.findViewById(R.id.civ_cover))
+        coverFragment?.initAlbumPic()
         mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic(), true)
         //初始加載歌詞
         //更新播放状态
         PlayManager.isPlaying().let {
             updatePlayStatus(it)
         }
-        showLyric(FloatLyricViewManager.lyricInfo, true)
-        updateMusicType()
+        lyricFragment?.showLyric(FloatLyricViewManager.lyricInfo, true)
+
+        playingMusic?.let { coverFragment?.updateMusicType(it) }
     }
 
     override fun listener() {
@@ -127,7 +145,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar?.progress?.let {
                     PlayManager.seekTo(it)
-                    mLyricView?.setCurrentTimeMillis(it.toLong())
+                    lyricFragment?.setCurrentTimeMillis(it.toLong())
                 }
             }
 
@@ -206,7 +224,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun setPlayingBitmap(albumArt: Bitmap?) {
-        coverView?.findViewById<ImageView>(R.id.civ_cover)?.setImageBitmap(albumArt)
+        coverFragment?.setImageBitmap(albumArt)
     }
 
     override fun setPlayingBg(albumArt: Drawable?, isInit: Boolean?) {
@@ -221,49 +239,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     override fun updatePlayStatus(isPlaying: Boolean) {
         if (isPlaying && !playPauseIv.isPlaying) {
             playPauseIv.play()
-            coverAnimator?.isStarted?.let {
-                if (it) coverAnimator?.resume() else coverAnimator?.start()
-            }
+            coverFragment?.resumeRotateAnimation()
         } else if (!isPlaying && playPauseIv.isPlaying) {
-            coverAnimator?.pause()
+            coverFragment?.stopRotateAnimation()
             playPauseIv.pause()
-        }
-    }
-
-    override fun showLyric(lyric: String?, init: Boolean) {
-        if (init) {
-            //初始化歌词配置
-            mLyricView?.setTextSize(SPUtils.getFontSize())
-            mLyricView?.setHighLightTextColor(SPUtils.getFontColor())
-            mLyricView?.setTouchable(true)
-            mLyricView?.setOnPlayerClickListener { progress, _ ->
-                PlayManager.seekTo(progress.toInt())
-                if (!PlayManager.isPlaying()) {
-                    PlayManager.playPause()
-                }
-            }
-        }
-        mLyricView?.setLyricContent(lyric)
-
-
-        searchLyricIv.setOnClickListener {
-            MusicLyricDialog().apply {
-                title = playingMusic?.title
-                artist = playingMusic?.artist
-                duration = PlayManager.getDuration().toLong()
-                searchListener = {
-                }
-                textSizeListener = {
-                    mLyricView?.setTextSize(it)
-                }
-                textColorListener = {
-                    mLyricView?.setHighLightTextColor(it)
-                }
-                lyricListener = {
-                    mLyricView?.setLyricContent(it)
-                }
-            }.show(this)
-
         }
     }
 
@@ -274,35 +253,22 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             progressTv.text = FormatUtil.formatTime(progress)
             durationTv.text = FormatUtil.formatTime(max)
 
-            mLyricView?.setCurrentTimeMillis(progress)
+            lyricFragment?.setCurrentTimeMillis(progress)
         }
     }
 
     private fun setupViewPager(viewPager: MultiTouchViewPager) {
-        //初始化View
-        coverView = LayoutInflater.from(this).inflate(R.layout.frag_player_coverview, viewPager, false)
-        lyricView = LayoutInflater.from(this).inflate(R.layout.frag_player_lrcview, viewPager, false)
-        mLyricView = lyricView?.findViewById(R.id.lyricShow)
-        mQualityTv = coverView?.findViewById(R.id.tv_quality)
-        coverView?.findViewById<TextView>(R.id.tv_sound_effect)?.setOnClickListener {
-            NavigationHelper.navigateToSoundEffect(this)
+        coverFragment = CoverFragment()
+        lyricFragment = LyricFragment()
+        fragments.clear()
+        coverFragment?.let {
+            fragments.add(it)
         }
-        coverView?.let {
-            viewPagerContent.add(it)
+        lyricFragment?.let {
+            fragments.add(it)
         }
-        lyricView?.let {
-            viewPagerContent.add(it)
-        }
-        mQualityTv?.setOnClickListener {
-            QualitySelectDialog.newInstance(playingMusic).apply {
-                changeSuccessListener = {
-                    this@PlayerActivity.mQualityTv?.text = it
-                }
-                isDownload = false
-            }.show(this)
-        }
+        val mAdapter = MyViewPagerAdapter(supportFragmentManager, fragments)
 
-        val mAdapter = MyPagerAdapter(viewPagerContent)
         viewPager.adapter = mAdapter
         viewPager.setPageTransformer(false, DepthPageTransformer())
         viewPager.offscreenPageLimit = 2
@@ -315,7 +281,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                 if (position == 0) {
                     searchLyricIv.visibility = View.GONE
                     operateSongIv.visibility = View.VISIBLE
-                    mLyricView?.setIndicatorShow(false)
+                    lyricFragment?.lyricTv?.setIndicatorShow(false)
                 } else {
                     searchLyricIv.visibility = View.VISIBLE
                     operateSongIv.visibility = View.GONE
@@ -336,55 +302,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         return mHiddenAction
     }
 
-
-    /**
-     * 初始化旋转动画
-     */
-    private fun initAlbumPic(view: View?) {
-        if (view == null) return
-        coverAnimator = ObjectAnimator.ofFloat(view, "rotation", 0F, 359F).apply {
-            duration = (20 * 1000).toLong()
-            repeatCount = -1
-            repeatMode = ObjectAnimator.RESTART
-            interpolator = LinearInterpolator()
-        }
-    }
-
-
-    /**
-     * 更新歌曲類型
-     * 更新音乐品质
-     */
-    private fun updateMusicType() {
-        val value: String? = when (playingMusic?.type) {
-            Constants.QQ -> {
-                getString(R.string.res_qq)
-            }
-            Constants.BAIDU -> {
-                getString(R.string.res_baidu)
-            }
-            Constants.NETEASE -> {
-                getString(R.string.res_wangyi)
-            }
-            Constants.XIAMI -> {
-                getString(R.string.res_xiami)
-            }
-            else -> {
-                getString(R.string.res_local)
-            }
-        }
-        val quality = when (playingMusic?.quality) {
-            128000 -> getString(R.string.sound_quality_standard)
-            192000 -> getString(R.string.sound_quality_high)
-            320000 -> getString(R.string.sound_quality_hq_high)
-            999000 -> getString(R.string.sound_quality_sq_high)
-            else -> getString(R.string.sound_quality_standard)
-        }
-        mQualityTv?.text = quality
-        value?.let {
-            coverView?.findViewById<TextView>(R.id.tv_source)?.text = value
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlayModeChangedEvent(event: PlayModeEvent) {
@@ -414,22 +331,5 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 //        ActivityCompat.finishAfterTransition(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        coverAnimator?.cancel()
-        coverAnimator = null
-    }
 
-
-    public override fun onResume() {
-        super.onResume()
-        if (coverAnimator != null && coverAnimator?.isPaused!! && PlayManager.isPlaying()) {
-            coverAnimator?.resume()
-        }
-    }
-
-    public override fun onStop() {
-        super.onStop()
-        coverAnimator?.pause()
-    }
 }

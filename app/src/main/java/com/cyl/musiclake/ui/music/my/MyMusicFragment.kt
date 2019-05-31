@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
@@ -33,7 +34,8 @@ import org.jetbrains.anko.yesButton
 
 
 /**
- * Created by Monkey on 2015/6/29.
+ * Created by yonglong on 2015/6/29.
+ * 我的 界面
  */
 class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
@@ -46,7 +48,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     private var mAdapter: PlaylistAdapter? = null
 
     override fun getLayoutId(): Int {
-        return com.cyl.musiclake.R.layout.frag_local
+        return R.layout.frag_local
     }
 
 
@@ -64,6 +66,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
     public override fun initViews() {
+        //初始化下载 Item
+        downloadView.visibility = if (BuildConfig.HAS_DOWNLOAD) View.VISIBLE else View.GONE
+
+        //初始化歌单列表
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.isSmoothScrollbarEnabled = false
 
@@ -73,20 +79,15 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mAdapter = PlaylistAdapter(playlists)
         playlistRcv.adapter = mAdapter
         mAdapter?.bindToRecyclerView(playlistRcv)
-        mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
+        mAdapter?.setEmptyView(R.layout.view_playlist_empty)
 
         //加载通知
         mPresenter?.loadMusicLakeNotice()
 
-//        val linearLayout = playlistTab.getChildAt(0) as LinearLayout
-//        linearLayout.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
-//        linearLayout.dividerPadding = 40 // 设置分割线的pandding
-//        linearLayout.dividerDrawable = context?.let { ContextCompat.getDrawable(it, com.cyl.musiclake.R.drawable.bg_divider_tab) }
-
+        //初始化歌单Tab
         playlistTab.addTab(playlistTab.newTab().setText("本地歌单").setTag(Constants.PLAYLIST_LOCAL_ID))
         playlistTab.addTab(playlistTab.newTab().setText("自建歌单").setTag(Constants.PLAYLIST_CUSTOM_ID))
         playlistTab.addTab(playlistTab.newTab().setText("网易歌单").setTag(Constants.PLAYLIST_WY_ID))
-
         playlistTab.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
             override fun onTabReselected(p0: TabLayout.Tab?) {
 
@@ -110,6 +111,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
     override fun listener() {
+        //新增歌单管理点击
         playlistAddIv.setOnClickListener {
             val dialog = CreatePlaylistDialog.newInstance()
             dialog.successListener = {
@@ -124,6 +126,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                 dialog.show(childFragmentManager, TAG_CREATE)
             }
         }
+        //歌单管理点击
         playlistManagerIv.setOnClickListener {
             val intent = Intent(activity, PlaylistManagerActivity::class.java)
             intent.putExtra(Extras.PLAYLIST_TYPE, playlistTag)
@@ -132,6 +135,9 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
 
+    /**
+     * 数据加载
+     */
     override fun loadData() {
         mPresenter?.loadSongs()
         mPresenter?.loadPlaylist()
@@ -142,7 +148,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showSongs(songList: MutableList<Music>) {
         localView.setSongsNum(songList.size, 0)
         localView.setOnItemClickListener { view, position ->
-            if (view.id == com.cyl.musiclake.R.id.iv_play) {
+            if (view.id == R.id.iv_play) {
                 PlayManager.play(0, songList, Constants.PLAYLIST_LOCAL_ID)
             } else {
                 toFragment(position)
@@ -170,7 +176,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
         //如果歌单列表为空则显示空提示
         if (mAdapter?.data?.size == 0) {
-            mAdapter?.setEmptyView(com.cyl.musiclake.R.layout.view_playlist_empty)
+            mAdapter?.setEmptyView(R.layout.view_playlist_empty)
         }
     }
 
@@ -201,7 +207,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun showHistory(musicList: MutableList<Music>) {
         historyView.setSongsNum(musicList.size, 1)
         historyView.setOnItemClickListener { view, position ->
-            if (view.id == com.cyl.musiclake.R.id.iv_play) {
+            if (view.id == R.id.iv_play) {
                 PlayManager.play(0, musicList, Constants.PLAYLIST_HISTORY_ID)
             } else {
                 toFragment(position)
@@ -209,10 +215,13 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
     }
 
+    /**
+     * 显示收藏列表
+     */
     override fun showLoveList(musicList: MutableList<Music>) {
         favoriteView.setSongsNum(musicList.size, 2)
         favoriteView.setOnItemClickListener { view, position ->
-            if (view.id == com.cyl.musiclake.R.id.iv_play) {
+            if (view.id == R.id.iv_play) {
                 PlayManager.play(0, musicList, Constants.PLAYLIST_LOVE_ID)
             } else {
                 toFragment(position)
@@ -220,10 +229,13 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
     }
 
+    /**
+     * 显示下载列表
+     */
     override fun showDownloadList(musicList: MutableList<Music>) {
         downloadView.setSongsNum(musicList.size, 3)
         downloadView.setOnItemClickListener { view, position ->
-            if (view.id == com.cyl.musiclake.R.id.iv_play) {
+            if (view.id == R.id.iv_play) {
                 PlayManager.play(0, musicList, Constants.PLAYLIST_DOWNLOAD_ID)
             } else {
                 toFragment(position)
@@ -324,7 +336,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     fun updateDownloadEvent(event: DownloadEvent) {
         mPresenter?.updateDownload()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

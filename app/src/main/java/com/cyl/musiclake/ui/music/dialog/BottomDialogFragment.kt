@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.Album
@@ -26,6 +27,7 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
+import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.Tools
 import org.jetbrains.anko.support.v4.startActivity
@@ -150,11 +152,17 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_artist to R.drawable.ic_art_track,
                 R.string.popup_detail_edit to R.drawable.ic_mode_edit,
                 R.string.popup_download to R.drawable.item_download,
+                //R.string.popup_mv to R.drawable.ic_mv,
                 R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
 
         init {
+            //是否显示下载歌曲Item
+            if (!BuildConfig.HAS_DOWNLOAD) {
+                itemData.remove(R.string.popup_delete)
+            }
+
             if (music?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
@@ -202,6 +210,13 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                     }
                     R.drawable.ic_delete -> {
                         turnToDelete(music)
+                    }
+                    R.drawable.ic_mv -> {
+                        if (music?.type == Constants.BAIDU) {
+                            startActivity<BaiduMvDetailActivity>(Extras.MV_ID to music?.mid)
+                        } else {
+
+                        }
                     }
                     R.drawable.item_download -> {
                         if (music?.type != Constants.LOCAL) {

@@ -36,9 +36,13 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            //自定义配置参数
+            buildConfigField "boolean", "HAS_DOWNLOAD", "true"//是否屏蔽下载功能
         }
         debug {
             signingConfig signingConfigs.release
+            //自定义配置参数
+            buildConfigField "boolean", "HAS_DOWNLOAD", "false"//是否屏蔽下载功能
         }
     }
     lintOptions {
@@ -120,7 +124,7 @@ dependencies {
     // Appcompat-v7 (only Anko Commons)
     api "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
     api 'com.amitshekhar.android:debug-db:1.0.3'
-    api 'com.devbrackets.android:exomedia:4.2.1'
+    api 'com.devbrackets.android:exomedia:4.3.0'
 
     //Eventbus
     api 'org.greenrobot:eventbus:3.1.1'
