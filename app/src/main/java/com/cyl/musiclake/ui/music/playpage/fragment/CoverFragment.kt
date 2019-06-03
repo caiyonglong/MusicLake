@@ -13,17 +13,22 @@ import android.widget.TextView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
+import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_player_coverview.*
+import org.jetbrains.anko.support.v4.startActivity
 
 class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
+    val TAG = "CoverFragment"
     val coverView by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover) }
 
     //当前专辑图片
@@ -31,6 +36,9 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     //是否初始化，第一次进入界面不播放切换动画
     var isInitAnimator = false
+
+    //搜索信息
+    var searchInfo: String? = null
 
     //旋转属性动画
     private var coverAnimator: ObjectAnimator? = null
@@ -62,6 +70,13 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
                 isDownload = false
             }.show(activity as AppCompatActivity)
         }
+
+        //点击歌曲类型，直接去搜索
+        tv_source.setOnClickListener {
+            searchInfo?.let {
+                startActivity<SearchActivity>(Extras.SEARCH_INFO to it)
+            }
+        }
     }
 
     /**
@@ -70,6 +85,8 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
      */
     fun updateMusicType(playingMusic: Music) {
         if (context == null) return
+        LogUtil.d(TAG, "CoverFragment = ${playingMusic.type}")
+        searchInfo = playingMusic.title + "-" + playingMusic.artist
         val value: String? = when (playingMusic?.type) {
             Constants.QQ -> {
                 getString(R.string.res_qq)
@@ -96,7 +113,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
         }
         tv_quality?.text = quality
         value?.let {
-            coverView?.findViewById<TextView>(R.id.tv_source)?.text = value
+            tv_source?.text = value
         }
     }
 
@@ -104,8 +121,10 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
      * 设置Bitmap
      */
     fun setImageBitmap(bm: Bitmap?) {
-        civ_cover.setImageBitmap(bm)
+        civ_cover?.setImageBitmap(bm)
+        LogUtil.d(TAG, "civ_cover 设置Bitmap")
         if (currentBitmap == null) {
+            LogUtil.d(TAG, "civ_cover2 设置Bitmap")
             civ_cover_2?.setImageBitmap(bm)
         }
         currentBitmap = bm
@@ -122,18 +141,22 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
             repeatCount = -1
             repeatMode = ObjectAnimator.RESTART
             interpolator = LinearInterpolator()
+            addUpdateListener {
+                //同时更新civ_cover_2
+                civ_cover_2?.rotation = it.animatedValue as Float
+            }
         }
 
         //缩放动画
         objectAnimator1 = ObjectAnimator.ofFloat(civ_cover_2, "scaleX", 1f, 0.7f).apply {
             duration = 500L
             interpolator = AccelerateInterpolator()
+            interpolator = AccelerateInterpolator()
             addUpdateListener {
                 civ_cover_2?.scaleY = it.animatedValue as Float
             }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
-                    objectAnimator2?.start()
                     LogUtil.d("objectAnimator", "objectAnimator1 动画结束")
                 }
 
@@ -192,7 +215,6 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
                 override fun onAnimationStart(animation: Animator?) {
                     LogUtil.d("objectAnimator", "objectAnimator2 动画开始")
-                    objectAnimator3?.start()
                 }
 
                 override fun onAnimationRepeat(animation: Animator?) {
@@ -201,7 +223,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
         }
 
         animatorSet = AnimatorSet()
-        animatorSet?.play(objectAnimator1)//?.after(objectAnimator1)
+        animatorSet?.play(objectAnimator2)?.with(objectAnimator3)?.after(objectAnimator1)
     }
 
     /**

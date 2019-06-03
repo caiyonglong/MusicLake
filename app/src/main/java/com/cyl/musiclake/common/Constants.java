@@ -86,6 +86,9 @@ public class Constants {
     public static final String NICK = "nick";
     public static final String PHONE = "phone";
     public static final String SECRET = "secret";
+    //悬浮窗屏幕位置
+    public static final String FLOAT_VIEW_X = "float_view_x";
+    public static final String FLOAT_VIEW_Y = "float_view_y";
 
 
     //更新用户信息

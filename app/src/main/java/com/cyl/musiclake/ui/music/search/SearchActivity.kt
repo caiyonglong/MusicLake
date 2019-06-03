@@ -19,6 +19,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
 import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -121,6 +122,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             //获取热搜
             mPresenter?.getHotSearchInfo()
         } else {
+        }
+
+        //传值搜索
+        if (intent.getStringExtra(Extras.SEARCH_INFO)?.isNotEmpty() == true) {
+            searchEditText.setText(intent.getStringExtra(Extras.SEARCH_INFO))
         }
     }
 

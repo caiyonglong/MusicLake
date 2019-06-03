@@ -86,6 +86,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
+    /**
+     * 初始化items
+     */
     private fun initItems() {
         titleTv.text = music?.title
         subTitleTv.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
@@ -97,6 +100,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         recyclerView.adapter = mAdapter
     }
 
+    /**
+     * 跳转到专辑
+     */
     private fun turnToAlbum() {
         val album = Album()
         album.albumId = music?.albumId
@@ -105,7 +111,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         NavigationHelper.navigateToPlaylist(mContext, album, null)
     }
 
-
+    /**
+     * 打开歌手列表
+     */
     private fun turnToArtist() {
         activity?.let { it1 ->
             if (music != null && music?.artistId != null && music?.artist != null) {
@@ -160,7 +168,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         init {
             //是否显示下载歌曲Item
             if (!BuildConfig.HAS_DOWNLOAD) {
-                itemData.remove(R.string.popup_delete)
+                itemData.remove(R.string.popup_download)
             }
 
             if (music?.type == Constants.LOCAL) {

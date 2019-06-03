@@ -46,7 +46,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         val params = window?.attributes
         params?.gravity = Gravity.BOTTOM
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
-        params?.height = MusicApp.getInstance().screenSize.y / 7 * 4
+        params?.height = MusicApp.screenSize.y / 7 * 4
         window.attributes = params
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/playerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <com.devbrackets.android.exomedia.ui.widget.VideoView
+        android:id="@+id/exoPlayerView"
+        style="@style/AppTheme"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/fullScreenIv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="4dp"
+        android:src="@drawable/ic_fullscreen_white"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/controllerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_32"
+        android:layout_gravity="bottom|end"
+        android:background="@color/float_bg"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/prevIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_prev_white" />
+
+        <ImageView
+            android:id="@+id/playPauseIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_pause_white" />
+
+        <ImageView
+            android:id="@+id/nextIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_next_white" />
+
+    </LinearLayout>
+
+</FrameLayout>

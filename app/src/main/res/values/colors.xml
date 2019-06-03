@@ -143,6 +143,7 @@
 
     <color name="dark_normal_tab_text_color">@color/night_text_color</color>
     <color name="whiteAlpha54">#8affffff</color>
+    <color name="float_bg">#99000000</color>
 
 
 </resources>

@@ -50,6 +50,7 @@ import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -497,6 +498,11 @@ public class MusicPlayerService extends Service {
      */
     public void next(Boolean isAuto) {
         synchronized (this) {
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                ToastUtils.show("网络不可用，请检查网络连接");
+                return;
+            }
+
             mPlayingPos = PlayQueueManager.INSTANCE.getNextPosition(isAuto, mPlayQueue.size(), mPlayingPos);
             LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
@@ -509,6 +515,11 @@ public class MusicPlayerService extends Service {
      */
     public void prev() {
         synchronized (this) {
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                ToastUtils.show("网络不可用，请检查网络连接");
+                return;
+            }
+
             mPlayingPos = PlayQueueManager.INSTANCE.getPreviousPosition(mPlayQueue.size(), mPlayingPos);
             LogUtil.e(TAG, "prev: " + mPlayingPos);
             stop(false);
@@ -543,7 +554,6 @@ public class MusicPlayerService extends Service {
                         saveHistory();
                         playErrorTimes = 0;
                         mPlayer.setDataSource(mPlayingMusic.getUri());
-                        notifyChange(META_CHANGED);
                     }
 
                     @Override
@@ -1230,9 +1240,6 @@ public class MusicPlayerService extends Service {
                 case TelephonyManager.CALL_STATE_OFFHOOK:   //接听状态
                 case TelephonyManager.CALL_STATE_RINGING:   //响铃状态
                     pause();
-                    break;
-                case TelephonyManager.CALL_STATE_IDLE:   //挂断
-                    play();
                     break;
             }
         }

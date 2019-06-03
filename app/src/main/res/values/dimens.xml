@@ -61,4 +61,6 @@
     <dimen name="tab_height">48dp</dimen>
     <dimen name="dp_35">35dp</dimen>
     <dimen name="sp_48">48sp</dimen>
+    <dimen name="dp_160">160</dimen>
+    <dimen name="dp_90">90</dimen>
 </resources>

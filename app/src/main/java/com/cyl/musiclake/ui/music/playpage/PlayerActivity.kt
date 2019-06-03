@@ -73,7 +73,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 //        }
         //隐藏显示歌曲评论
 //        songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
-
+        LogUtil.d("PlayerActivity", "showNowPlaying 开始旋转动画")
         //开始旋转动画
         coverFragment?.startRotateAnimation()
     }

@@ -57,10 +57,12 @@ public class MusicApp extends Application {
      */
     public static Boolean isOpenSocket = true;
 
+    public static Boolean isShowingFloatView = false;
+
     public static List<HotSearchBean> hotSearchList;
 
     private ApplicationComponent mApplicationComponent;
-    public Point screenSize = new Point();
+    public static Point screenSize = new Point();
 
     public static synchronized MusicApp getInstance() {
         return sInstance;
