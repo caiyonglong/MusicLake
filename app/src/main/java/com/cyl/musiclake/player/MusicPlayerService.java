@@ -267,7 +267,7 @@ public class MusicPlayerService extends Service {
                         }
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
-                        LogUtil.e(TAG, msg.obj + "---");
+                        LogUtil.e(TAG, "TRACK_PLAY_ERROR " + msg.obj + "---");
                         playErrorTimes++;
                         if (playErrorTimes < MAX_ERROR_TIMES) {
                             mMainHandler.post(() -> service.next(true));
@@ -280,11 +280,15 @@ public class MusicPlayerService extends Service {
                         break;
                     case PREPARE_ASYNC_UPDATE:
                         int percent = (int) msg.obj;
-                        LogUtil.e(TAG, "Loading ... " + percent);
+                        LogUtil.e(TAG, "PREPARE_ASYNC_UPDATE Loading ... " + percent);
                         notifyChange(PLAY_STATE_LOADING_CHANGED);
                         break;
                     case PLAYER_PREPARED:
                         //执行prepared之后 准备完成，更新总时长
+                        //准备完成，可以播放
+                        LogUtil.e(TAG, "PLAYER_PREPARED");
+                        isMusicPlaying = true;
+                        updateNotification(false);
                         notifyChange(PLAY_STATE_CHANGED);
                         break;
                     case AUDIO_FOCUS_CHANGE:
@@ -521,7 +525,14 @@ public class MusicPlayerService extends Service {
                 return;
             }
             mPlayingMusic = mPlayQueue.get(mPlayingPos);
+            //更新当前歌曲
             notifyChange(META_CHANGED);
+            updateNotification(true);
+            //更新播放播放状态
+            isMusicPlaying = false;
+            notifyChange(PLAY_STATE_CHANGED);
+            updateNotification(false);
+
             LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || !Objects.equals(mPlayingMusic.getType(), Constants.LOCAL) || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
                 ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
@@ -530,16 +541,15 @@ public class MusicPlayerService extends Service {
                         LogUtil.e(TAG, "-----" + result.toString());
                         mPlayingMusic = result;
                         saveHistory();
-                        isMusicPlaying = true;
-                        updateNotification(false);
                         playErrorTimes = 0;
                         mPlayer.setDataSource(mPlayingMusic.getUri());
+                        notifyChange(META_CHANGED);
                     }
 
                     @Override
                     public void error(String msg) {
                         LogUtil.e(TAG, "播放异常-----" + msg);
-                        ToastUtils.show(msg);
+                        ToastUtils.show("播放地址异常，自动切换下一首");
                         next(true);
                     }
                 });
@@ -554,12 +564,8 @@ public class MusicPlayerService extends Service {
                     mPlayer.setDataSource(mPlayingMusic.getUri());
                 }
             }
-
             mediaSessionManager.updateMetaData(mPlayingMusic);
-
             audioAndFocusManager.requestAudioFocus();
-            isMusicPlaying = false;
-            updateNotification(true);
 
             final Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
             intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
@@ -777,7 +783,6 @@ public class MusicPlayerService extends Service {
             if (mPlayer.isInitialized()) {
                 play();
             } else {
-                isMusicPlaying = true;
                 playCurrentAndNext();
             }
         }
@@ -1220,11 +1225,14 @@ public class MusicPlayerService extends Service {
     private class ServicePhoneStateListener extends PhoneStateListener {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-            // TODO Auto-generated method stub
+            LogUtil.d(TAG, "TelephonyManager state=" + state + ",incomingNumber = " + incomingNumber);
             switch (state) {
-                case TelephonyManager.CALL_STATE_OFFHOOK:   //通话状态
-                case TelephonyManager.CALL_STATE_RINGING:   //通话状态
+                case TelephonyManager.CALL_STATE_OFFHOOK:   //接听状态
+                case TelephonyManager.CALL_STATE_RINGING:   //响铃状态
                     pause();
+                    break;
+                case TelephonyManager.CALL_STATE_IDLE:   //挂断
+                    play();
                     break;
             }
         }

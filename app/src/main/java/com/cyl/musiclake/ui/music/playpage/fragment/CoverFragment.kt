@@ -25,8 +25,12 @@ import kotlinx.android.synthetic.main.frag_player_coverview.*
 class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     val coverView by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover) }
-    val civ_cover_2 by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover_2) }
+
+    //当前专辑图片
     var currentBitmap: Bitmap? = null
+
+    //是否初始化，第一次进入界面不播放切换动画
+    var isInitAnimator = false
 
     //旋转属性动画
     private var coverAnimator: ObjectAnimator? = null
@@ -151,23 +155,14 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
         //coverView 由透明变成不透明
         objectAnimator3 = ObjectAnimator.ofFloat(coverView, "alpha", 0f, 1F).apply {
-            duration = 500L
-            interpolator = AccelerateInterpolator()
-        }
-
-        //civ_cover_2 上移动画
-        objectAnimator2 = ObjectAnimator.ofFloat(civ_cover_2, "translationY", 0f, -1000f).apply {
-            duration = 500L
-            interpolator = AccelerateInterpolator()
+            duration = 300L
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
-                    civ_cover_2?.translationY = 0f
-                    civ_cover_2?.setImageBitmap(currentBitmap)
-                    civ_cover_2?.visibility = View.GONE
                     LogUtil.d("objectAnimator", "objectAnimator2 onAnimationEnd")
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
+                    coverView?.alpha = 1f
                 }
 
                 override fun onAnimationStart(animation: Animator?) {
@@ -179,8 +174,34 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
             })
         }
 
+        //civ_cover_2 上移动画
+        objectAnimator2 = ObjectAnimator.ofFloat(civ_cover_2, "translationY", 0f, -1000f).apply {
+            duration = 300L
+            interpolator = AccelerateInterpolator()
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationEnd(animation: Animator?) {
+                    civ_cover_2?.translationY = 0f
+                    civ_cover_2?.setImageBitmap(currentBitmap)
+                    civ_cover_2?.visibility = View.GONE
+                    LogUtil.d("objectAnimator", "objectAnimator2 onAnimationEnd")
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                    coverView?.alpha = 1f
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                    LogUtil.d("objectAnimator", "objectAnimator2 动画开始")
+                    objectAnimator3?.start()
+                }
+
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+            })
+        }
+
         animatorSet = AnimatorSet()
-        animatorSet?.play(objectAnimator3)?.after(objectAnimator1)//?.after(objectAnimator1)
+        animatorSet?.play(objectAnimator1)//?.after(objectAnimator1)
     }
 
     /**
@@ -189,7 +210,15 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
     fun startRotateAnimation() {
         coverAnimator?.cancel()
         coverAnimator?.start()
-        animatorSet?.start()
+
+        if (isInitAnimator) {
+            animatorSet?.cancel()
+            animatorSet?.start()
+        } else {
+            //第一次进入不播放切换动画
+            isInitAnimator = true
+            civ_cover_2?.visibility = View.GONE
+        }
     }
 
     /**
