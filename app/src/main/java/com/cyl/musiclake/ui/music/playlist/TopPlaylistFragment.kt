@@ -67,7 +67,7 @@ class TopPlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.
     public override fun initViews() {
         cateTagTv.text = mTag
         cateTagFilterTv.setOnClickListener {
-            val allCategoryFragment = AllCategoryFragment()
+            val allCategoryFragment = TopPlaylistCatFragment()
             allCategoryFragment.isHighQuality = true
             allCategoryFragment.successListener = {
                 updateTag(it)

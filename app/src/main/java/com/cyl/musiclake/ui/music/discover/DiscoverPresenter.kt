@@ -95,8 +95,28 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
         })
     }
 
+    /**
+     * 获取每日推荐（需登录）
+     */
     fun loadRecommendPlaylist() {
         val observable = NeteaseApiServiceImpl.recommendPlaylist()
+        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
+            override fun success(result: MutableList<Playlist>) {
+                mView?.showRecommendPlaylist(result)
+            }
+
+            override fun error(msg: String) {
+                mView?.showEmptyView(msg)
+                mView?.showRecommendPlaylist(mutableListOf())
+            }
+        })
+    }
+
+    /**
+     * 获取推荐歌单
+     */
+    fun loadPersonalizedPlaylist() {
+        val observable = NeteaseApiServiceImpl.personalizedPlaylist()
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showRecommendPlaylist(result)

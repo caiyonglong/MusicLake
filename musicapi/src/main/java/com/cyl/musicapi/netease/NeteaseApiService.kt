@@ -67,17 +67,36 @@ interface NeteaseApiService {
 
     @GET("login")
     fun loginEmail(@Query("email") email: String, @Query("password") password: String): Observable<LoginInfo>
+
     /**
      * 获取登录状态
      */
     @GET("/login/status")
     fun getLoginStatus(): Observable<LoginInfo>
 
+    /**
+     * 获取每日推荐歌曲（需登录）
+     */
     @GET("recommend/songs")
     fun recommendSongs(): Observable<RecommendSongsInfo>
 
+    /**
+     * 获取每日推荐歌单（需登录）
+     */
     @GET("recommend/resource")
     fun recommendPlaylist(): Observable<RecommendPlaylist>
+
+    /**
+     * 获取推荐歌单
+     */
+    @GET("/personalized")
+    fun personalizedPlaylist(): Observable<PersonalizedInfo>
+
+    /**
+     * 获取推荐Mv
+     */
+    @GET("/personalized/mv")
+    fun personalizedMv(): Observable<PersonalizedInfo>
 
     /**
      * 获取用户歌单

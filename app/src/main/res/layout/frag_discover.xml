@@ -191,8 +191,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="@string/recommend_song_list"
-                            android:textColor="@color/black" />
+                            android:text="@string/recommend_song_list" />
 
                         <TextView
                             android:id="@+id/cateTagTv"

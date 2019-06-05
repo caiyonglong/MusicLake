@@ -63,4 +63,14 @@
     <dimen name="sp_48">48sp</dimen>
     <dimen name="dp_160">160</dimen>
     <dimen name="dp_90">90</dimen>
+
+
+    <dimen name="channelHeight">40dp</dimen>
+    <dimen name="channelPadding">10dp</dimen>
+    <dimen name="channelHorizontalSpacing">10dp</dimen>
+    <dimen name="channelVerticalSpacing">5dp</dimen>
+    <dimen name="channelTextSize">14sp</dimen>
+    <dimen name="platesTitleHeight">56dp</dimen>
+    <dimen name="platesTitleLeftRightPadding">3dp</dimen>
+    <dimen name="subTitleTextSize">10sp</dimen>
 </resources>

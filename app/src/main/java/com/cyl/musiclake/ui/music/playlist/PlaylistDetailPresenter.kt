@@ -200,7 +200,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
 
 
     override fun renamePlaylist(playlist: Playlist, title: String) {
-        if(playlist.type==Constants.PLAYLIST_CUSTOM_ID) {
+        if (playlist.type == Constants.PLAYLIST_CUSTOM_ID) {
             ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.renamePlaylist(it, title) }, object : RequestCallBack<String> {
                 override fun success(result: String) {
                     mView.success(1)
@@ -213,11 +213,11 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                     ToastUtils.show(msg)
                 }
             })
-        }else{
+        } else {
             doAsync {
-               val success= PlaylistLoader.renamePlaylist(playlist,title)
+                val success = PlaylistLoader.renamePlaylist(playlist, title)
                 uiThread {
-                    if(success){
+                    if (success) {
                         mView.success(1)
                         playlist.name = title
                         EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_RENAME, playlist))
@@ -229,7 +229,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
     }
 
     /**
-     * 获取每日推荐
+     * 获取每日推荐歌曲（需登录）
      */
     private fun loadRecommendSongs() {
         val observable = NeteaseApiServiceImpl.recommendSongs()

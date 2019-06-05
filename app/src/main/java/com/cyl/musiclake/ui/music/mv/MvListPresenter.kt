@@ -14,6 +14,24 @@ import javax.inject.Inject
 class MvListPresenter @Inject
 constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
     private val mvModel = MvModel()
+    override fun loadPersonalizedMv() {
+        mView?.showLoading()
+        mvModel.loadPersonalizedMv(object : RequestCallBack<MvInfo> {
+            override fun success(result: MvInfo?) {
+                result?.data?.let {
+                    mView?.hideLoading()
+                    mView?.showMvList(it)
+                }
+            }
+
+            override fun error(msg: String?) {
+                mView?.hideLoading()
+                mView?.showError(msg, true)
+            }
+
+        })
+    }
+
     override fun loadMv(offset: Int) {
         mView?.showLoading()
         mvModel.loadMv(offset, object : RequestCallBack<MvInfo> {

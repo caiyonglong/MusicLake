@@ -33,10 +33,19 @@ class MvModel {
 
     /**
      *
-     * 加载推荐mv
+     * 加载排行榜mv
      */
     fun loadMv(offset: Int, result: RequestCallBack<MvInfo>?) {
         val observable = NeteaseApiServiceImpl.getTopMv(50, offset)
+        ApiManager.request(observable, result)
+    }
+
+    /**
+     *
+     * 加载推荐mv
+     */
+    fun loadPersonalizedMv( result: RequestCallBack<MvInfo>?) {
+        val observable = NeteaseApiServiceImpl.personalizedMv()
         ApiManager.request(observable, result)
     }
 

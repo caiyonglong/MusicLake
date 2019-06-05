@@ -7,15 +7,15 @@ import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.main.PageAdapter
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_all_playlist.*
-import java.util.*
 
 class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
-
     var mViewPager: ViewPager? = null
     var mTabLayout: TabLayout? = null
 
-    private val cateList = ArrayList(Arrays.asList("推荐", "精品", "华语", "民谣", "摇滚", "流行", "古风", "日语"))
+    private val TAG = javaClass.simpleName
+    private var cateList = mutableListOf("推荐", "精品", "华语", "民谣", "摇滚", "流行", "古风", "日语")
 
     override fun getLayoutResID(): Int {
         return R.layout.activity_all_playlist
@@ -37,9 +37,7 @@ class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
     override fun initData() {
         mTabLayout?.setupWithViewPager(mViewPager)
         mViewPager?.currentItem = 0
-        mViewPager?.let {
-            setupViewPager(it)
-        }
+        setupViewPager()
         mViewPager?.offscreenPageLimit = cateList.size
     }
 
@@ -52,14 +50,18 @@ class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
      * 显示所有分类
      */
     private fun toCatTagAll() {
-        AllCategoryFragment().apply {
+        AllPlaylistCatFragment().apply {
             curCateList = cateList
             successListener = { result ->
+                //更新viewpager
+                LogUtil.d(TAG,"更新list")
+                this@AllPlaylistActivity.cateList = curCateList
+                this@AllPlaylistActivity.setupViewPager()
             }
         }.showIt(this)
     }
 
-    private fun setupViewPager(mViewPager: ViewPager) {
+    private fun setupViewPager() {
         val mAdapter = PageAdapter(supportFragmentManager)
         for (i in cateList.indices) {
             when (i) {
@@ -68,7 +70,7 @@ class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
                 else -> mAdapter.addFragment(PlaylistFragment.newInstance(cateList[i]), cateList[i])
             }
         }
-        mViewPager.adapter = mAdapter
+        mViewPager?.adapter = mAdapter
     }
 
 }

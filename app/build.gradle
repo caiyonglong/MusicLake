@@ -162,5 +162,5 @@ dependencies {
     //cookie
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     //chip
-    implementation 'com.robertlevonyan.view:MaterialChipView:1.2.5'
+//    implementation 'com.robertlevonyan.view:MaterialChipView:1.2.5'
 }

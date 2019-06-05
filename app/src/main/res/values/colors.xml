@@ -145,5 +145,8 @@
     <color name="whiteAlpha54">#8affffff</color>
     <color name="float_bg">#99000000</color>
 
-
+    <!--频道颜色-->
+    <color name="channelNormalTextColor">#6D6D6D</color>
+    <color name="channelFixedTextColor">#CCCCCC</color>
+    <color name="subTitleTextColor">#A0A3AF</color>
 </resources>

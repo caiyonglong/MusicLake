@@ -49,6 +49,7 @@ public class MvFragment extends BaseFragment<BasePresenter> {
     @Override
     public void initViews() {
         PageAdapter adapter = new PageAdapter(getChildFragmentManager());
+        adapter.addFragment(MvListFragment.newInstance("personalized"), getString(R.string.personalized));
         adapter.addFragment(MvListFragment.newInstance("rank"), getString(R.string.charts));
         adapter.addFragment(MvListFragment.newInstance("recently"), getString(R.string.recent_update_title));
         adapter.addFragment(MvSearchListFragment.newInstance(), getString(R.string.search));

@@ -70,4 +70,41 @@
         <attr name="fastScrollThumbEnabled" format="reference|boolean" />
     </declare-styleable>
 
+    <!--频道自定义View-->
+    <declare-styleable name="ChannelView">
+        <attr name="channelHeight" format="dimension" />
+        <attr name="channelColumn" format="integer" />
+        <attr name="channelPadding" format="dimension" />
+        <attr name="channelVerticalSpacing" format="dimension" />
+        <attr name="channelHorizontalSpacing" format="dimension" />
+        <attr name="channelNormalBackground" format="reference" />
+        <attr name="channelEditBackground" format="reference" />
+        <attr name="channelFocusedBackground" format="reference" />
+        <attr name="channelNormalTextColor" format="color" />
+        <attr name="channelFixedCount" format="integer" />
+        <attr name="channelFixedTextColor" format="color" />
+        <attr name="channelFixedBackground" format="reference" />
+        <attr name="channelFocusedTextColor" format="color" />
+        <attr name="channelTextSize" format="dimension" />
+        <attr name="tipEditBackground" format="reference" />
+        <attr name="platesTitleBackground" format="reference" />
+        <attr name="tipEditTextColor" format="color" />
+        <attr name="platesTitleColor" format="color" />
+        <attr name="platesTitleBold" format="boolean" />
+        <attr name="tipEditTextSize" format="dimension" />
+        <attr name="platesTitleSize" format="dimension" />
+        <attr name="platesTitleHeight" format="dimension" />
+        <attr name="platesTitleLeftRightPadding" format="dimension" />
+        <attr name="otherSubTitleBackground" format="reference" />
+        <attr name="otherSubTitleTextColor" format="color" />
+        <attr name="otherSubTitleTextSize" format="dimension" />
+        <attr name="subTitleBackground" format="reference" />
+        <attr name="subTitleTextColor" format="color" />
+        <attr name="subTitleTextSize" format="dimension" />
+        <attr name="subTitleName" format="string" />
+        <attr name="otherSubTitleName" format="string" />
+        <attr name="tipFinishBackground" format="reference" />
+        <attr name="tipFinishTextColor" format="color" />
+        <attr name="tipFinishTextSize" format="dimension" />
+    </declare-styleable>
 </resources>

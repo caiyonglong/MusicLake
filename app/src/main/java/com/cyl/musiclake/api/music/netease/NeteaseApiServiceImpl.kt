@@ -162,14 +162,14 @@ object NeteaseApiServiceImpl {
     }
 
     /**
-     * 获取推荐mv
+     * 获取最新mv
      */
     fun getNewestMv(limit: Int): Observable<MvInfo> {
         return apiService.getNewestMv(limit)
     }
 
     /**
-     * 获取推荐mv
+     * 获取排行榜mv
      */
     fun getTopMv(limit: Int, offset: Int): Observable<MvInfo> {
         return apiService.getTopMv(offset, limit)
@@ -284,7 +284,7 @@ object NeteaseApiServiceImpl {
 
 
     /**
-     *推荐歌单
+     *每日推荐歌单
      */
     fun recommendPlaylist(): Observable<MutableList<Playlist>> {
         return apiService.recommendPlaylist()
@@ -309,6 +309,77 @@ object NeteaseApiServiceImpl {
                                 e.onComplete()
                             } else {
                                 e.onError(Throwable(it.msg))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+    /**
+     *推荐歌单
+     */
+    fun personalizedPlaylist(): Observable<MutableList<Playlist>> {
+        return apiService.personalizedPlaylist()
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MutableList<Playlist>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<Playlist>()
+                                it.result?.forEach {
+                                    val playlist = Playlist()
+                                    playlist.pid = it.id.toString()
+                                    playlist.name = it.name
+                                    playlist.coverUrl = it.picUrl
+                                    playlist.des = it.copywriter
+                                    playlist.playCount = it.playCount.toLong()
+                                    playlist.type = Constants.PLAYLIST_WY_ID
+                                    list.add(playlist)
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable(""))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+
+    /**
+     *推荐mv
+     */
+    fun personalizedMv(): Observable<MvInfo> {
+        return apiService.personalizedMv()
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MvInfo> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<MvInfoDetail>()
+                                it.result?.forEach {
+                                    val data = MvInfoDetail(
+                                            artistId = it.artistId,
+                                            id = it.id.toInt(),
+                                            artistName = it.artistName,
+                                            artists = it.artists,
+                                            cover = it.picUrl,
+                                            playCount = it.playCount.toInt(),
+                                            duration = it.duration,
+                                            desc = it.copywriter,
+                                            name = it.name
+
+                                    )
+                                    list.add(data)
+                                }
+                                val mvInfo = MvInfo(code = 200, hasMore = false, updateTime = 0, data = list)
+                                e.onNext(mvInfo)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable(""))
                             }
                         } catch (ep: Exception) {
                             e.onError(ep)

@@ -21,6 +21,9 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.downloadMusic
 
+/**
+ * 音质选择器
+ */
 class QualitySelectDialog : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
     var mAdapter: QualityDAdapter? = null

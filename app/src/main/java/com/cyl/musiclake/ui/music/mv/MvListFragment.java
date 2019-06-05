@@ -117,7 +117,9 @@ public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements
     public void onLazyLoad() {
         showLoading();
         mvList.clear();
-        if (mvType.equals("rank")) {
+        if (mvType.equals("personalized")) {
+            mPresenter.loadPersonalizedMv();
+        } else if (mvType.equals("rank")) {
             mPresenter.loadMv(0);
         } else {
             mAdapter.setEnableLoadMore(false);

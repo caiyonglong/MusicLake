@@ -67,6 +67,9 @@
             android:name=".ui.music.playlist.AllPlaylistActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.music.playlist.PlaylistActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.my.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity

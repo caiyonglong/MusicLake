@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="@string/recommend_song_list"
-        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +25,6 @@
         android:background="?selectableItemBackground"
         android:padding="10dp"
         android:text="@string/tag_filter"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -482,4 +482,11 @@
     <string name="switch_minutes_close_desc">计时结束后，立即关闭APP</string>
     <string name="switch_minutes_open_desc">计时结束后，播完整首歌再关闭APP</string>
     <string name="switch_minutes_close_1">不开启</string>
+
+
+    <!--歌单广场-->
+    <string name="channelEdit">编辑</string>
+    <string name="channelEditFinish">完成</string>
+    <string name="all_playlist">全部歌单</string>
+    <string name="personalized">推荐</string>
 </resources>

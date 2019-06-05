@@ -108,7 +108,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
 //        mPresenter?.loadRecommendSongs()
-        mPresenter?.loadRecommendPlaylist()
+        mPresenter?.loadPersonalizedPlaylist()
     }
 
     override fun listener() {
