@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
-    android:background="?windowBackground"
+    android:background="@drawable/bg_bottom_popup_container"
     android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatCheckedTextView
@@ -14,6 +14,7 @@
         android:gravity="center"
         android:padding="@dimen/dp_8"
         android:text="@string/cate_select"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/backIv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backIv"
@@ -28,9 +29,24 @@
         android:layout_marginEnd="16dp"
         android:src="@drawable/ic_arrow_back"
         android:tint="?android:textColor"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/appCompatCheckedTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.robertlevonyan.views.chip.Chip
+        android:id="@+id/chip2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/cateTagRcv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatCheckedTextView"
+        app:mcv_backgroundColor="@color/app_red"
+        app:mcv_chipText="全部歌单"
+        app:mcv_textColor="@color/white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cateTagRcv"
@@ -40,6 +56,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatCheckedTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/chip2" />
 
 </android.support.constraint.ConstraintLayout>

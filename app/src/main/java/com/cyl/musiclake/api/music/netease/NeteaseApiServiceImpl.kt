@@ -93,7 +93,7 @@ object NeteaseApiServiceImpl {
      */
     fun getTopPlaylistsHigh(tag: String, limit: Int, before: Long?): Observable<MutableList<Playlist>> {
         val map = mutableMapOf<String, Any>()
-        map["cate"] = tag
+        map["cat"] = tag
         map["limit"] = limit
         before?.let {
             map["before"] = it

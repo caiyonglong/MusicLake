@@ -174,8 +174,8 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     override fun onResume() {
         super.onResume()
-        mAdapter?.notifyDataSetChanged()
-        bottomPlayRcv.scrollToPosition(PlayManager.position())
+//        mAdapter?.notifyDataSetChanged()
+//        bottomPlayRcv.scrollToPosition(PlayManager.position())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

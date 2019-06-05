@@ -3,7 +3,6 @@ package com.cyl.musiclake.bean.data
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
-import android.text.TextUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -13,7 +12,7 @@ import com.cyl.musiclake.utils.CoverLoader
 import org.litepal.LitePal
 
 
-object SongLoader {
+object VideoLoader {
     /**
      * 获取所有艺术家
      *
@@ -34,7 +33,7 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getSongsForArtist(artistName: String?): MutableList<Music> {
+    fun getVideosForArtist(artistName: String?): MutableList<Music> {
         return LitePal.where("isonline =0 and artist like ?", "%$artistName%").find(Music::class.java)
     }
 
@@ -44,7 +43,7 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getSongsForAlbum(albumName: String?): MutableList<Music> {
+    fun getVideosForAlbum(albumName: String?): MutableList<Music> {
         return LitePal.where("isonline =0 and album like ?", "%$albumName%").find(Music::class.java)
     }
 
@@ -70,11 +69,12 @@ object SongLoader {
      * @param cursor
      * @return
      */
-    private fun getSongsForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
+    private fun getVideosForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
         val results = mutableListOf<Music>()
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
+                    val is_music = cursor.getInt(9)
                     val id = cursor.getLong(0)
                     val title = cursor.getString(1)
                     val artist = cursor.getString(2)
@@ -117,19 +117,19 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getFavoriteSong(): MutableList<Music> {
+    fun getFavoriteVideo(): MutableList<Music> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOVE_ID)
     }
 
-    fun getSongsForDB(): MutableList<Music> {
+    fun getVideosForDB(): MutableList<Music> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOCAL_ID)
     }
 
     fun getLocalMusic(context: Context, isReload: Boolean = false): MutableList<Music> {
-        val data = getSongsForDB()
+        val data = getVideosForDB()
         if (data.size == 0 || isReload) {
             data.clear()
-            val musicLists = getAllLocalSongs(context)
+            val musicLists = getAllLocalVideos(context)
             if (isReload) {
                 DaoLitepal.updateAlbumList()
                 DaoLitepal.updateArtistList()
@@ -146,7 +146,7 @@ object SongLoader {
     }
 
 
-    fun updateFavoriteSong(music: Music): Boolean {
+    fun updateFavoriteVideo(music: Music): Boolean {
         music.isLove = !music.isLove
         DaoLitepal.saveOrUpdateMusic(music)
         return music.isLove
@@ -156,7 +156,7 @@ object SongLoader {
      * 本地歌曲
      * 添加歌曲
      */
-    private fun insertSongs(musics: List<Music>) {
+    private fun insertVideos(musics: List<Music>) {
     }
 
     /**
@@ -170,47 +170,57 @@ object SongLoader {
     /**
      * 删除歌曲
      */
-    fun removeSong(music: Music) {
+    fun removeVideo(music: Music) {
         DaoLitepal.deleteMusic(music)
     }
 
     fun removeMusicList(musicList: MutableList<Music>) {
         musicList.forEach {
-            removeSong(it)
+            removeVideo(it)
         }
     }
 
-    fun getAllLocalSongs(context: Context): MutableList<Music> {
-        return getSongsForMedia(context, makeSongCursor(context, null, null))
+    fun getAllLocalVideos(context: Context): MutableList<Music> {
+        return getVideosForMedia(context, makeVideoCursor(context, null, null))
     }
 
-    fun searchSongs(context: Context, searchString: String): MutableList<Music> {
-        return getSongsForMedia(context, makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
+    fun searchVideos(context: Context, searchString: String): MutableList<Music> {
+        return getVideosForMedia(context, makeVideoCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 arrayOf("%$searchString%", "%$searchString%", "%$searchString%")))
     }
 
-    fun getSongListInFolder(context: Context, path: String): MutableList<Music> {
+    fun getVideoListInFolder(context: Context, path: String): MutableList<Music> {
         val whereArgs = arrayOf("$path%")
-        return getSongsForMedia(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null))
+        return getVideosForMedia(context, makeVideoCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null))
     }
 
-    fun makeSongCursor(context: Context, selection: String?, paramArrayOfString: Array<String>?): Cursor? {
-        val songSortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER
-        return makeSongCursor(context, selection, paramArrayOfString, songSortOrder)
+    fun makeVideoCursor(context: Context, selection: String?, paramArrayOfString: Array<String>?): Cursor? {
+        val VideoSortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER
+        return makeVideoCursor(context, selection, paramArrayOfString, VideoSortOrder)
     }
 
     /**
+     * arrayOf("_id", "title", "artist", "album", "duration", "track", "artist_id", "album_id", MediaStore.Audio.Media.DATA, "is_music")
      * 搜素本地音乐
      */
-    private fun makeSongCursor(context: Context, selection: String?, paramArrayOfString: Array<String>?, sortOrder: String?): Cursor? {
-        var selectionStatement = "duration>60000 AND is_music=1 AND title != ''"
-
-        if (!TextUtils.isEmpty(selection)) {
-            selectionStatement = "$selectionStatement AND $selection"
-        }
-        return context.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                arrayOf("_id", "title", "artist", "album", "duration", "track", "artist_id", "album_id", MediaStore.Audio.Media.DATA, "is_music"),
-                selectionStatement, paramArrayOfString, sortOrder)
+    private fun makeVideoCursor(context: Context, selection: String?, paramArrayOfString: Array<String>?, sortOrder: String?): Cursor? {
+//        var selectionStatement = "duration>60000 AND is_music=1 AND title != ''"
+//
+//        if (!TextUtils.isEmpty(selection)) {
+//            selectionStatement = "$selectionStatement AND $selection"
+//        }
+        val obj = arrayOf(
+                MediaStore.Video.Media.BUCKET_ID,//视频文件在sdcard的名称
+                MediaStore.Video.Media.DISPLAY_NAME,//视频文件在sdcard的名称
+                MediaStore.Video.Media.ARTIST,//歌曲的演唱者
+                MediaStore.Video.Media.ALBUM,//歌曲的演唱者
+                MediaStore.Video.Media.DURATION,//视频总时长
+                MediaStore.Video.Media.ARTIST,//视频总时长
+                MediaStore.Video.Media.SIZE,//视频的文件大小
+                MediaStore.Video.Media.DATA//视频的绝对地址
+        )
+        return context.contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                obj, null, paramArrayOfString, sortOrder)
     }
 
 }

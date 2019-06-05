@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.robertlevonyan.views.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tagTv"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dp_2"
-    android:ellipsize="end"
-    android:lines="1"
-    android:textSize="@dimen/sp_16"
-    app:mcv_selectable="true" />
+    android:layout_margin="@dimen/dp_4"
+    android:gravity="center">
+
+    <com.robertlevonyan.views.chip.Chip
+        android:id="@+id/tagTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        app:mcv_chipIcon="@drawable/ic_select"
+        app:mcv_chipText="@string/app_name"
+        app:mcv_selectable="true"
+        app:mcv_selectedBackgroundColor="@color/red"
+        app:mcv_selectedTextColor="@color/red" />
+</LinearLayout>
