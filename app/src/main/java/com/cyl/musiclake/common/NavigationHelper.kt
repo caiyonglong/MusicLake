@@ -16,16 +16,16 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.ui.main.MainActivity
-import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
-import com.cyl.musiclake.ui.music.playpage.PlayerActivity
+import com.cyl.musiclake.ui.music.local.fragment.LocalVideoFragment
 import com.cyl.musiclake.ui.music.playlist.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
 import com.cyl.musiclake.ui.music.playlist.RecentlyFragment
+import com.cyl.musiclake.ui.music.playpage.PlayerActivity
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import com.cyl.musiclake.utils.ToastUtils
 import java.io.File
@@ -53,6 +53,23 @@ object NavigationHelper {
         transaction.addToBackStack(fragment.getTag()).commit()
     }
 
+    fun navigateToVideo(context: Activity, transitionViews: Pair<View, String>?) {
+        val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+        val fragment: Fragment
+
+        if (transitionViews != null) {
+            transaction.addSharedElement(transitionViews.first, transitionViews.second)
+            fragment = LocalVideoFragment.newInstance("")
+        } else {
+            //            transaction.setCustomAnimations(R.anim.activity_fade_in,
+            //                    R.anim.activity_fade_out, R.anim.activity_fade_in, R.anim.activity_fade_out);
+            fragment = LocalVideoFragment.newInstance("")
+        }
+        context.supportFragmentManager.findFragmentById(R.id.fragment_container)?.let { transaction.hide(it) }
+        transaction.add(R.id.fragment_container, fragment)
+        transaction.addToBackStack(fragment.getTag()).commit()
+    }
+
     fun navigateToSoundEffect(context: Activity) {
         try {
             val effects = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
@@ -68,7 +85,7 @@ object NavigationHelper {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment: Fragment
 
-        fragment = FolderSongsFragment.newInstance(path)
+        fragment = LocalVideoFragment.newInstance(path)
         context.supportFragmentManager.findFragmentById(R.id.fragment_container)?.let { transaction.hide(it) }
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()

@@ -142,6 +142,8 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mPresenter?.loadSongs()
         mPresenter?.loadPlaylist()
         mPresenter?.loadLocalPlaylist()
+
+        showVideoList(mutableListOf())
     }
 
 
@@ -233,6 +235,20 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
      * 显示下载列表
      */
     override fun showDownloadList(musicList: MutableList<Music>) {
+        downloadView.setSongsNum(musicList.size, 4)
+        downloadView.setOnItemClickListener { view, position ->
+            if (view.id == R.id.iv_play) {
+                PlayManager.play(0, musicList, Constants.PLAYLIST_DOWNLOAD_ID)
+            } else {
+                toFragment(position)
+            }
+        }
+    }
+
+    /**
+     * 显示video列表
+     */
+    fun showVideoList(musicList: MutableList<Music>) {
         downloadView.setSongsNum(musicList.size, 3)
         downloadView.setOnItemClickListener { view, position ->
             if (view.id == R.id.iv_play) {
@@ -248,7 +264,8 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
             0 -> NavigationHelper.navigateToLocalMusic(mFragmentComponent.activity, null)
             1 -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, PlaylistLoader.getHistoryPlaylist(), null)
             2 -> NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, PlaylistLoader.getFavoritePlaylist(), null)
-            3 -> NavigationHelper.navigateToDownload(mFragmentComponent.activity)
+            3 -> NavigationHelper.navigateToVideo(mFragmentComponent.activity, null)
+            4 -> NavigationHelper.navigateToDownload(mFragmentComponent.activity)
         }
     }
 

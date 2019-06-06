@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
+import com.cyl.musiclake.bean.data.VideoLoader
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -16,11 +16,10 @@ constructor() : BasePresenter<FolderSongsContract.View>(), FolderSongsContract.P
 
     override fun loadSongs(path: String) {
         doAsync {
-            val musicList = SongLoader.getSongListInFolder(mView.context, path)
+            val musicList = VideoLoader.getAllLocalVideos(mView.context)
             uiThread {
                 mView?.showSongs(musicList)
             }
-
         }
     }
 }

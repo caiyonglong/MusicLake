@@ -13,7 +13,7 @@ import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
-import com.cyl.musiclake.ui.music.local.fragment.FolderSongsFragment;
+import com.cyl.musiclake.ui.music.local.fragment.LocalVideoFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
@@ -70,7 +70,7 @@ public interface FragmentComponent {
 
     void inject(LoveFragment loveFragment);
 
-    void inject(FolderSongsFragment folderSongsFragment);
+    void inject(LocalVideoFragment localVideoFragment);
 
     void inject(DownloadedFragment downloadedFragment);
 

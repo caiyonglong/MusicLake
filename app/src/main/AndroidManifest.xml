@@ -119,7 +119,7 @@
             android:label="@string/local_music"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.local.fragment.CommonActivity"
+            android:name=".ui.music.local.fragment.LocalVideoActivity"
             android:label="@string/local_music"
             android:screenOrientation="portrait" />
 

@@ -24,7 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> implements FolderSongsContract.View {
+public class LocalVideoFragment extends BaseFragment<FolderSongPresenter> implements FolderSongsContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -33,12 +33,12 @@ public class FolderSongsFragment extends BaseFragment<FolderSongPresenter> imple
     private String path;
     private List<Music> musicList = new ArrayList<>();
 
-    public static FolderSongsFragment newInstance(String path) {
+    public static LocalVideoFragment newInstance(String path) {
 
         Bundle args = new Bundle();
         args.putString(Extras.FOLDER_PATH, path);
 
-        FolderSongsFragment fragment = new FolderSongsFragment();
+        LocalVideoFragment fragment = new LocalVideoFragment();
         fragment.setArguments(args);
         return fragment;
     }

@@ -12,7 +12,7 @@ import com.cyl.musiclake.common.NavigationHelper;
 /**
  * Created by Monkey on 2015/6/29.
  */
-public class CommonActivity extends BaseActivity<BasePresenter> {
+public class LocalVideoActivity extends BaseActivity<BasePresenter> {
 
     @Override
     protected int getLayoutResID() {
@@ -31,8 +31,7 @@ public class CommonActivity extends BaseActivity<BasePresenter> {
 
     @Override
     protected void initData() {
-        String path = getIntent().getStringExtra(Extras.FOLDER_PATH);
-        NavigationHelper.INSTANCE.navigateToFolderSongs(this, path);
+        NavigationHelper.INSTANCE.navigateToVideo(this, null);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class CommonActivity extends BaseActivity<BasePresenter> {
     }
 
     public static void newInstance(Context context, String folderPath) {
-        Intent intent = new Intent(context, CommonActivity.class);
+        Intent intent = new Intent(context, LocalVideoActivity.class);
         intent.putExtra(Extras.FOLDER_PATH, folderPath);
         context.startActivity(intent);
     }

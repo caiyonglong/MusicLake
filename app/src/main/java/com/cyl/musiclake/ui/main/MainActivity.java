@@ -47,7 +47,6 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
-import com.squareup.haha.perflib.Main;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

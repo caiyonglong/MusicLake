@@ -489,4 +489,5 @@
     <string name="channelEditFinish">完成</string>
     <string name="all_playlist">全部歌单</string>
     <string name="personalized">推荐</string>
+    <string name="item_video">本地视频</string>
 </resources>

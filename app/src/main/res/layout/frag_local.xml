@@ -61,6 +61,15 @@
                     app:tv_desc="@string/default_num"
                     app:tv_name="@string/item_favorite" />
 
+                <com.cyl.musiclake.ui.widget.LocalItemView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:gravity="center_vertical"
+                    app:iv_icon="@drawable/ic_video_library"
+                    app:iv_icon_color="@color/app_red"
+                    app:tv_desc="@string/default_num"
+                    app:tv_name="@string/item_video" />
 
                 <com.cyl.musiclake.ui.widget.LocalItemView
                     android:id="@+id/downloadView"
