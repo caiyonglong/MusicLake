@@ -21,7 +21,7 @@ public class LocalVideoActivity extends BaseActivity<BasePresenter> {
 
     @Override
     protected String setToolbarTitle() {
-        return getResources().getString(R.string.local_music);
+        return getResources().getString(R.string.item_video);
     }
 
     @Override

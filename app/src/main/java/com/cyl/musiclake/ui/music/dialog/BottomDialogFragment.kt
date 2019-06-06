@@ -160,15 +160,23 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 R.string.popup_artist to R.drawable.ic_art_track,
                 R.string.popup_detail_edit to R.drawable.ic_mode_edit,
                 R.string.popup_download to R.drawable.item_download,
-                //R.string.popup_mv to R.drawable.ic_mv,
+                R.string.popup_mv to R.drawable.ic_video_label,
                 R.string.popup_delete to R.drawable.ic_delete,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
 
         init {
+            //是否是本地视频
+            if (music?.type == Constants.VIDEO) {
+                itemData.clear()
+            }
             //是否显示下载歌曲Item
             if (!BuildConfig.HAS_DOWNLOAD) {
                 itemData.remove(R.string.popup_download)
+            }
+            //是否有mv
+            if (music?.hasMv == 0) {
+                itemData.remove(R.string.popup_mv)
             }
 
             if (music?.type == Constants.LOCAL) {
@@ -219,8 +227,8 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                     R.drawable.ic_delete -> {
                         turnToDelete(music)
                     }
-                    R.drawable.ic_mv -> {
-                        if (music?.type == Constants.BAIDU) {
+                    R.drawable.ic_video_label -> {
+                        if (music?.type == Constants.BAIDU || music?.type == Constants.VIDEO) {
                             startActivity<BaiduMvDetailActivity>(Extras.MV_ID to music?.mid)
                         } else {
 

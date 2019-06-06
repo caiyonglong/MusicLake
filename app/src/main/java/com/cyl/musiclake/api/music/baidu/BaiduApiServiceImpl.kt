@@ -73,6 +73,7 @@ object BaiduApiServiceImpl {
                         music.artistId = songInfo.tingUid
                         music.title = songInfo.title
                         music.isOnline = true
+                        music.hasMv = songInfo.hasMv
                         music.coverUri = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_NORMAL)
                         music.coverSmall = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_SMALL)
                         music.coverBig = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
@@ -125,6 +126,7 @@ object BaiduApiServiceImpl {
                                     musicInfo.artistId = song.allArtistId
                                     musicInfo.album = song.albumTitle
                                     musicInfo.albumId = song.albumId
+                                    musicInfo.hasMv = song.hasMv
                                     musicInfo.coverUri = song.picSmall
                                     musicList.add(musicInfo)
                                 }
@@ -364,7 +366,8 @@ object BaiduApiServiceImpl {
                 .flatMap {
                     val mvInfo = MvInfoBean()
                     if (it.errorCode == 22000) {
-                        mvInfo.uri = it.result.files.x41?.fileLink ?: (it.result.files.x31?.fileLink
+                        mvInfo.uri = it.result.files.x51?.fileLink ?: it.result.files.x41?.fileLink
+                                ?: (it.result.files.x31?.fileLink
                                 ?: it.result.files.x21?.fileLink)
                         mvInfo.title = it.result.mvInfo.title
                         mvInfo.mid = songId

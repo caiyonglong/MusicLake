@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.mv
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.view.Menu
@@ -15,12 +14,12 @@ import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.utils.DisplayUtils
+import com.cyl.musiclake.utils.LogUtil
 import com.devbrackets.android.exomedia.listener.OnPreparedListener
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.google.android.exoplayer2.Player
-import kotlinx.android.synthetic.main.activity_mv_detail.*
+import kotlinx.android.synthetic.main.activity_video.video_view
 import kotlinx.android.synthetic.main.exomedia_default_controls_mobile.*
-import java.util.*
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
@@ -29,10 +28,6 @@ import java.util.*
  */
 class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.View, OnPreparedListener {
 
-    private val mvInfoDetails = ArrayList<MvInfoDetail>()
-    private var mAdapter: SimiMvListAdapter? = null
-    private var mCommentAdapter: MvCommentAdapter? = null
-    private var mHotCommentAdapter: MvCommentAdapter? = null
 
     private val fullScreenListener = FullScreenListener()
 
@@ -84,7 +79,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
 
 
     override fun getLayoutResID(): Int {
-        return R.layout.activity_mv_detail
+        return R.layout.activity_video
     }
 
     override fun initView() {
@@ -99,7 +94,19 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     override fun initData() {
         val mVid = intent.getStringExtra(Extras.MV_ID)
         showLoading()
-        mPresenter?.loadBaiduMvInfo(mVid)
+        mVid?.let {
+            mPresenter?.loadBaiduMvInfo(mVid)
+        }
+
+        //加载本地视频
+        intent.getStringExtra(Extras.VIDEO_PATH)?.let {
+            initPlayer()
+            LogUtil.d(TAG, "url = $it")
+            video_view.setVideoURI(Uri.parse(it))
+            video_view.setOnPreparedListener {
+                hideLoading()
+            }
+        }
     }
 
     override fun initInjector() {
@@ -115,7 +122,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
 
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {
         if (mvInfoBean?.uri != null) {
-            nestedScrollView.visibility = View.VISIBLE
+            LogUtil.d(TAG, "url = ${mvInfoBean.uri}")
             initPlayer()
             //For now we just picked an arbitrary item to play
             video_view.setPreviewImage(Uri.parse(mvInfoBean.picUrl))
@@ -155,21 +162,13 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     }
 
     override fun showMvList(mvList: List<MvInfoDetail>) {
-        mAdapter!!.setNewData(mvList)
-        mAdapter!!.setOnItemClickListener { adapter, view, position ->
-            val intent = Intent(this, BaiduMvDetailActivity::class.java)
-            intent.putExtra(Extras.MV_TITLE, mvList[position.toInt()].name)
-            intent.putExtra(Extras.MV_ID, mvList[position.toInt()].id.toString())
-            startActivity(intent)
-            finish()
-        }
     }
 
     override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
         hideLoading()
         if (mvInfoDetailInfo != null && mvInfoDetailInfo.brs.p720 != null) {
-            nestedScrollView.visibility = View.VISIBLE
             val url = mvInfoDetailInfo.brs.p720
+            LogUtil.d(TAG, "url = $url")
             initPlayer()
             //For now we just picked an arbitrary item to play
             video_view.setPreviewImage(Uri.parse(mvInfoDetailInfo.cover))
@@ -207,7 +206,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
      * @param fullscreen True if entering fullscreen mode
      */
     private fun setUiFlags(fullscreen: Boolean) {
-        window.decorView.systemUiVisibility = if (fullscreen) fullscreenUiFlags else stableUiFlags
+//        window.decorView.systemUiVisibility = if (fullscreen) fullscreenUiFlags else stableUiFlags
     }
 
 

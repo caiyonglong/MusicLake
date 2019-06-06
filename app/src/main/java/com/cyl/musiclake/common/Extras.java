@@ -36,6 +36,9 @@ public class Extras {
     public static final String MV_TITLE = "mv_title";
     public static final String MV_ID = "mv_mid";
 
+    //视频路径
+    public static final String VIDEO_PATH = "video_path";
+
 
     //在线歌曲id
     public static final String TING_UID = "ting_uid";

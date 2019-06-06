@@ -12,10 +12,10 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/exomedia_default_controls_text_background"
         android:orientation="vertical"
-        android:paddingBottom="16dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -49,9 +49,9 @@
         android:id="@+id/exomedia_controls_interactive_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/exomedia_default_controls_interactive_background"
         android:orientation="vertical">
 
@@ -100,6 +100,16 @@
                 app:srcCompat="@drawable/exomedia_ic_play_arrow_white"
                 tools:ignore="ContentDescription" />
 
+            <TextView
+                android:id="@+id/brsTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_8"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="高清"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/fullscreenIv"
                 android:layout_width="wrap_content"
@@ -131,8 +141,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/exomedia_min_button_height"
                 android:background="@android:color/transparent"
-                android:minHeight="@dimen/exomedia_min_button_height"
                 android:minWidth="@dimen/exomedia_min_button_height"
+                android:minHeight="@dimen/exomedia_min_button_height"
                 android:visibility="gone"
                 app:srcCompat="@drawable/exomedia_ic_skip_previous_white"
                 tools:ignore="ContentDescription,RtlHardcoded"
@@ -154,8 +164,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/exomedia_min_button_height"
                 android:background="@android:color/transparent"
-                android:minHeight="@dimen/exomedia_min_button_height"
                 android:minWidth="@dimen/exomedia_min_button_height"
+                android:minHeight="@dimen/exomedia_min_button_height"
                 android:visibility="gone"
                 app:srcCompat="@drawable/exomedia_ic_skip_next_white"
                 tools:ignore="ContentDescription,RtlHardcoded"

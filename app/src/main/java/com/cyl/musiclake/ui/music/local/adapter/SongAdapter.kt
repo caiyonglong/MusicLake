@@ -1,7 +1,11 @@
 package com.cyl.musiclake.ui.music.local.adapter
 
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -15,6 +19,7 @@ import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.ui.widget.fastscroll.FastScrollRecyclerView
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
+import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -61,13 +66,22 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             }
             holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
         }
+
         holder.addOnClickListener(R.id.iv_more)
 
+        //是否有mv（现只支持百度音乐）
+        if (item.hasMv == 1) {
+            holder.getView<View>(R.id.iv_mv).visibility = View.VISIBLE
+        } else {
+            holder.getView<View>(R.id.iv_mv).visibility = View.GONE
+        }
+        //是否可播放
         if (item.isCp) {
             holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.grey))
             holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
         }
 
+        //歌曲类型
         if (item.type == Constants.LOCAL) {
             holder.getView<View>(R.id.iv_resource).visibility = View.GONE
         } else {
@@ -84,6 +98,16 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
                 }
                 item.type == Constants.XIAMI -> {
                     holder.setImageResource(R.id.iv_resource, R.drawable.xiami)
+                }
+                //如果是视频，跳转到视频播放界面
+                item.type == Constants.VIDEO -> {
+                    holder.getView<View>(R.id.iv_resource).visibility = View.GONE
+                    item.uri?.let {
+                        holder.getView<ImageView>(R.id.iv_cover).setImageBitmap(getVideoThumbnail(it))
+                    }
+                }
+                else -> {
+                    holder.getView<View>(R.id.iv_resource).visibility = View.GONE
                 }
             }
         }
@@ -106,6 +130,21 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         }
     }
 
+    fun getVideoThumbnail(videoPath: String): Bitmap? {
+        LogUtil.d(TAG, "videoPath= $videoPath")
+        var bitmap: Bitmap? = null;
+        var mediaMetadataRetriever: MediaMetadataRetriever? = null;
+        try {
+            mediaMetadataRetriever = MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(videoPath, HashMap<String, String>())
+            bitmap = mediaMetadataRetriever.frameAtTime;
+        } catch (e: Exception) {
+            LogUtil.e(TAG, "Exception in getVideoThumbnail(String videoPath)" + e.message)
+        } finally {
+            mediaMetadataRetriever?.release()
+        }
+        return bitmap;
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateUserInfo(event: MetaChangedEvent) {

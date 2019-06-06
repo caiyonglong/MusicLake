@@ -48,6 +48,8 @@ data class VideoInfo(
 )
 
 data class Files(
+        @SerializedName("51")
+        val x51: X31?,
         @SerializedName("41")
         val x41: X31?,
         @SerializedName("31")

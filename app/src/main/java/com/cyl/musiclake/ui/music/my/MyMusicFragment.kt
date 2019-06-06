@@ -249,13 +249,9 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
      * 显示video列表
      */
     fun showVideoList(musicList: MutableList<Music>) {
-        downloadView.setSongsNum(musicList.size, 3)
-        downloadView.setOnItemClickListener { view, position ->
-            if (view.id == R.id.iv_play) {
-                PlayManager.play(0, musicList, Constants.PLAYLIST_DOWNLOAD_ID)
-            } else {
-                toFragment(position)
-            }
+        videoView.setSongsNum(musicList.size, 3)
+        videoView.setOnItemClickListener { view, position ->
+            toFragment(position)
         }
     }
 

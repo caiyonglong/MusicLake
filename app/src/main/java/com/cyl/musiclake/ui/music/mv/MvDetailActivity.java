@@ -27,12 +27,17 @@ import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.utils.DisplayUtils;
+import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
+import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.exoplayer2.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,6 +55,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     private SimiMvListAdapter mAdapter;
     private MvCommentAdapter mCommentAdapter;
     private MvCommentAdapter mHotCommentAdapter;
+    private Map<String, String> brs = new HashMap<>();
 
     @BindView(R.id.nestedScrollView)
     NestedScrollView mNestedScrollView;
@@ -86,6 +92,8 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     TextView mTvMvDetail;
     @BindView(R.id.tv_publish_time)
     TextView mTvPublishTime;
+    @BindView(R.id.brsTv)
+    TextView mBrsIv;
     @BindView(R.id.fullscreenIv)
     ImageView mFullScreenIv;
 
@@ -101,13 +109,24 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             ll.height = ViewGroup.LayoutParams.MATCH_PARENT;
             isPortrait = false;
             mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_exit_white_36dp);
+
+            mToolbar.setVisibility(View.GONE);
+            mBrsIv.setVisibility(View.VISIBLE);
+            //设置全屏
+            getWindow().getDecorView().setSystemUiVisibility(getFullscreenUiFlags());
         } else {
+            mToolbar.setVisibility(View.VISIBLE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             ViewGroup.LayoutParams ll = mVideoView.getLayoutParams();
             ll.height = DisplayUtils.dp2px(200f);
             ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
             isPortrait = true;
             mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_white);
+
+            mToolbar.setVisibility(View.VISIBLE);
+            mBrsIv.setVisibility(View.GONE);
+            //设置全屏
+            getWindow().getDecorView().setSystemUiVisibility(getStableUiFlags());
         }
     }
 
@@ -139,6 +158,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     protected void initView() {
         mAdapter = new SimiMvListAdapter(mvInfoDetails);
         mAdapter.setEnableLoadMore(true);
+        initUiFlags();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -240,14 +260,29 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     @Override
     public void showMvDetailInfo(MvInfoDetailInfo mvInfoDetailInfo) {
         hideLoading();
-        if (mvInfoDetailInfo != null && mvInfoDetailInfo.getBrs().getP720() != null) {
+        //优先1080 720 480
+        if (mvInfoDetailInfo != null) {
+            String url = null;
+            if (mvInfoDetailInfo.getBrs().getP1080() != null) {
+                url = mvInfoDetailInfo.getBrs().getP1080();
+            } else if (mvInfoDetailInfo.getBrs().getP720() != null) {
+                url = mvInfoDetailInfo.getBrs().getP720();
+            } else if (mvInfoDetailInfo.getBrs().getP480() != null) {
+                url = mvInfoDetailInfo.getBrs().getP480();
+            } else if (mvInfoDetailInfo.getBrs().getP240() != null) {
+                url = mvInfoDetailInfo.getBrs().getP240();
+            }
             mNestedScrollView.setVisibility(View.VISIBLE);
-            String url = mvInfoDetailInfo.getBrs().getP720();
-            initPlayer();
-            //For now we just picked an arbitrary item to play
-            mVideoView.setPreviewImage(Uri.parse(mvInfoDetailInfo.getCover()));
-            mVideoView.setVideoURI(Uri.parse(url));
-            updateMvInfo(mvInfoDetailInfo);
+            LogUtil.d(TAG, "url = " + url);
+            if (url == null) {
+                ToastUtils.show("播放地址异常，请稍后重试！");
+            } else {
+                initPlayer();
+                //For now we just picked an arbitrary item to play
+                mVideoView.setPreviewImage(Uri.parse(mvInfoDetailInfo.getCover()));
+                mVideoView.setVideoURI(Uri.parse(url));
+                updateMvInfo(mvInfoDetailInfo);
+            }
         }
     }
 
@@ -319,6 +354,40 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     public void onPrepared() {
         mVideoView.start();
     }
+
+
+    /**
+     * Listens to the system to determine when to show the default controls
+     * for the [VideoView]
+     */
+    private class FullScreenListener implements View.OnSystemUiVisibilityChangeListener {
+        int lastVisibility = 0;
+
+        @Override
+        public void onSystemUiVisibilityChange(int visibility) {
+            // NOTE: if the screen is double tapped in just the right way (or wrong way)
+            // the SYSTEM_UI_FLAG_HIDE_NAVIGATION flag is dropped. Because of this we
+            // no longer get notified of the temporary change when the screen is tapped
+            // (i.e. the VideoControls get the touch event instead of the OS). So we store
+            // the visibility off for use in the ControlsVisibilityListener for verification
+            lastVisibility = visibility;
+            if (visibility == 0 && View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                mVideoView.showControls();
+            }
+        }
+    }
+
+    private FullScreenListener fullScreenListener = new FullScreenListener();
+
+    /**
+     * Correctly sets up the fullscreen flags to avoid popping when we switch
+     * between fullscreen and not
+     */
+    private void initUiFlags() {
+        getWindow().getDecorView().setSystemUiVisibility(getStableUiFlags());
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(fullScreenListener);
+    }
+
 
     private int getFullscreenUiFlags() {
         return View.SYSTEM_UI_FLAG_LOW_PROFILE

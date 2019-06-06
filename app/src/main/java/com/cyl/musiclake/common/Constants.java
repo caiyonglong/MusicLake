@@ -16,6 +16,7 @@ public class Constants {
     public static final String XIAMI = "xiami";
     public static final String BAIDU = "baidu";
     public static final String NETEASE = "netease";
+    public static final String VIDEO = "video";
 
     //特殊歌单类型
     public static final String PLAYLIST_LOVE_ID = "love";

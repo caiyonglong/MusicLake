@@ -74,30 +74,23 @@ object VideoLoader {
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    val is_music = cursor.getInt(9)
                     val id = cursor.getLong(0)
                     val title = cursor.getString(1)
                     val artist = cursor.getString(2)
                     val album = cursor.getString(3)
                     val duration = cursor.getInt(4)
-                    val trackNumber = cursor.getInt(5)
-                    val artistId = cursor.getString(6)
-                    val albumId = cursor.getString(7)
-                    val path = cursor.getString(8)
-                    val coverUri = CoverLoader.getCoverUri(context, albumId)
+                    val size = cursor.getLong(5)
+                    val path = cursor.getString(6)
                     val music = Music()
-                    music.type = Constants.LOCAL
+                    music.type = Constants.VIDEO
                     music.isOnline = false
                     music.mid = id.toString()
                     music.album = album
-                    music.albumId = albumId
-                    music.artist = if (artist == "<unknown>") "未知歌手" else artist
-                    music.artistId = artistId
+                    music.artist = if (artist == "<unknown>") "未知" else artist
                     music.uri = path
-                    coverUri?.let { music.coverUri = it }
-                    music.trackNumber = trackNumber
                     music.duration = duration.toLong()
                     music.title = title
+                    music.fileSize = size
                     music.date = System.currentTimeMillis()
                     DaoLitepal.saveOrUpdateMusic(music)
                     results.add(music)
@@ -195,7 +188,7 @@ object VideoLoader {
     }
 
     fun makeVideoCursor(context: Context, selection: String?, paramArrayOfString: Array<String>?): Cursor? {
-        val VideoSortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER
+        val VideoSortOrder = MediaStore.Video.Media.DEFAULT_SORT_ORDER
         return makeVideoCursor(context, selection, paramArrayOfString, VideoSortOrder)
     }
 
@@ -215,7 +208,6 @@ object VideoLoader {
                 MediaStore.Video.Media.ARTIST,//歌曲的演唱者
                 MediaStore.Video.Media.ALBUM,//歌曲的演唱者
                 MediaStore.Video.Media.DURATION,//视频总时长
-                MediaStore.Video.Media.ARTIST,//视频总时长
                 MediaStore.Video.Media.SIZE,//视频的文件大小
                 MediaStore.Video.Media.DATA//视频的绝对地址
         )

@@ -120,7 +120,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.local.fragment.LocalVideoActivity"
-            android:label="@string/local_music"
+            android:label="@string/item_video"
             android:screenOrientation="portrait" />
 
         <service
