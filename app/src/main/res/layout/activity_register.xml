@@ -12,7 +12,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/music_five"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
@@ -42,8 +41,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="30dp"
                         android:layout_marginStart="30dp"
+                        android:layout_marginLeft="30dp"
                         android:text="用户注册"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="20sp"
@@ -53,8 +52,8 @@
                         android:id="@+id/view"
                         android:layout_width="8dp"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:background="#2fa881" />
                 </RelativeLayout>
@@ -63,8 +62,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingEnd="30dp"
-                    android:paddingStart="30dp">
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/emailWrapper"
@@ -86,8 +85,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingEnd="30dp"
-                    android:paddingStart="30dp">
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/userNameWrapper"
@@ -109,8 +108,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingEnd="30dp"
-                    android:paddingStart="30dp">
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/passWordWrapper"
