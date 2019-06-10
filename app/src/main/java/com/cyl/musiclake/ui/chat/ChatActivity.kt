@@ -48,15 +48,6 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         linearLayoutManager.stackFromEnd = true
         messageRsv.layoutManager = linearLayoutManager
         messageRsv.adapter = mAdapter
-//        mAdapter?.isUpFetchEnable = true
-//        mAdapter?.setUpFetchListener {
-//        }
-        //用户头像列表
-//        mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
-//        usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        usersRsv.adapter = mUserAdapter
-//        mUserAdapter?.bindToRecyclerView(usersRsv)
-//        onlineUserTv.text = getString(R.string.online_users, MusicApp.socketManager.onlineUsers.size)
     }
 
     override fun initData() {
@@ -161,7 +152,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         addIv.setOnClickListener {
             //            updateUserStatus(MusicApp.socketManager.onlineUsers[0], true)
             MaterialDialog.Builder(this)
-                    .items("分享正在播放歌曲")
+                    .items(getString(R.string.share_playing_song))
                     .itemsCallback { _, _, _, _ ->
                         sendMusicMessage()
                     }

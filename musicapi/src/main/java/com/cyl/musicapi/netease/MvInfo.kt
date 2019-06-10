@@ -62,13 +62,13 @@ data class SimilarMvInfo(@SerializedName("code")
 
 
 data class MvUrlInfo(@SerializedName("240")
-                     val p240: String = "",
+                     val p240: String?,
                      @SerializedName("480")
-                     val p480: String = "",
+                     val p480: String?,
                      @SerializedName("720")
-                     val p720: String = "",
+                     val p720: String?,
                      @SerializedName("1080")
-                     val p1080: String = "")
+                     val p1080: String?)
 
 data class MvInfoDetailInfo(@SerializedName("publishTime")
                             val publishTime: String = "",

@@ -100,14 +100,14 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
                 object : RequestCallBack<MutableList<Music>> {
                     override fun success(result: MutableList<Music>) {
                         LogUtil.e("searchSuccess", result.toString())
-                        mView?.showSearchResult(result)
                         mView?.hideLoading()
+                        mView?.showSearchResult(result)
                     }
 
                     override fun error(msg: String) {
                         LogUtil.e("searchFail", msg)
-                        mView?.showSearchResult(mutableListOf())
                         mView?.hideLoading()
+                        mView?.showSearchResult(mutableListOf())
                     }
                 })
     }

@@ -13,6 +13,6 @@
     <item>
         <bitmap
             android:gravity="right|top"
-            android:src="@mipmap/delete" />
+            android:src="@drawable/delete" />
     </item>
 </layer-list>

@@ -330,7 +330,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         showFilterResult()
         isSearchOnline = false
         mCurrentCounter = mAdapter.data.size
-        if (searchResults.size == 0) {
+        if (songList.size == 0) {
             mAdapter.loadMoreComplete()
             mAdapter.setEnableLoadMore(false)
             showEmptyState()

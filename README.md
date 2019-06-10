@@ -36,7 +36,9 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 - [下载页](https://github.com/caiyonglong/MusicLake/releases)
 - [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ)
 
-### **有兴趣可赏个star，bug修复和功能问题都可以提[issues](https://github.com/caiyonglong/MusicLake/issues)
+### 有兴趣可给个star，支持一下哦！
+持续更新，有什么问题可以提[issues](https://github.com/caiyonglong/MusicLake/issues)！
+
 
 # *新功能*
 - 新增夜间模式
@@ -45,7 +47,6 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 - 增加本地歌单
 - 优化定时界面
 
-持续更新，有什么问题可以提issue！
 
 # 计划
 - [ ] 整理文档

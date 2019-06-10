@@ -62,7 +62,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
         if (arguments != null) {
             path = arguments?.getString(Extras.FOLDER_PATH)
         }
-        return path ?: context?.getString(R.string.item_video)
+        return context?.getString(R.string.item_video)
     }
 
     override fun initInjector() {
@@ -72,7 +72,8 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {
-                startActivity<BaiduMvDetailActivity>(Extras.VIDEO_PATH to musicList[position].uri)
+                startActivity<BaiduMvDetailActivity>(Extras.VIDEO_PATH to musicList[position].uri,
+                        Extras.MV_TITLE to musicList[position].title)
             }
         }
         mAdapter?.setOnItemChildClickListener { adapter, view, position -> BottomDialogFragment.newInstance(musicList[position]).show(mFragmentComponent.activity as AppCompatActivity) }

@@ -15,9 +15,11 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.utils.DisplayUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import com.devbrackets.android.exomedia.listener.OnPreparedListener
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.google.android.exoplayer2.Player
+import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_video.video_view
 import kotlinx.android.synthetic.main.exomedia_default_controls_mobile.*
 
@@ -104,6 +106,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             LogUtil.d(TAG, "url = $it")
             video_view.setVideoURI(Uri.parse(it))
             video_view.setOnPreparedListener {
+                video_view.start()
                 hideLoading()
             }
         }
@@ -166,8 +169,20 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
 
     override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
         hideLoading()
-        if (mvInfoDetailInfo != null && mvInfoDetailInfo.brs.p720 != null) {
-            val url = mvInfoDetailInfo.brs.p720
+        if (mvInfoDetailInfo != null) {
+            val url = when {
+                mvInfoDetailInfo.brs.p1080 != null -> mvInfoDetailInfo.brs.p1080
+                mvInfoDetailInfo.brs.p720 != null -> mvInfoDetailInfo.brs.p720
+                mvInfoDetailInfo.brs.p480 != null -> mvInfoDetailInfo.brs.p480
+                mvInfoDetailInfo.brs.p240 != null -> mvInfoDetailInfo.brs.p240
+                else -> {
+                    ""
+                }
+            }
+            if (url == "") {
+                ToastUtils.show(getString(R.string.mv_path_error))
+                return
+            }
             LogUtil.d(TAG, "url = $url")
             initPlayer()
             //For now we just picked an arbitrary item to play

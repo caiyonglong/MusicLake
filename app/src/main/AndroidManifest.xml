@@ -223,7 +223,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_chat"
             android:screenOrientation="portrait"
-            android:theme="@style/MyThemeBlue"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

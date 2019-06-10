@@ -104,7 +104,7 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
     //下载
     api 'com.liulishuo.filedownloader:library:1.7.4'
     // a custom shape to any android view Useful for Material Design 2
