@@ -20,8 +20,8 @@ android {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 31
-        versionName "5.0.0"
+        versionCode 32
+        versionName "5.0.1"
         multiDexEnabled true
         android.compileOptions.sourceCompatibility 1.8
         android.compileOptions.targetCompatibility 1.8
@@ -83,8 +83,8 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
 
     //RxJava and RxAndroid
-    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    api 'io.reactivex.rxjava2:rxjava:2.2.3'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api 'io.reactivex.rxjava2:rxjava:2.2.7'
     api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
 
     // Retrofit适配RxJava
@@ -103,7 +103,7 @@ dependencies {
     //对话框
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    api 'com.github.bumptech.glide:glide:4.8.0'
+    api 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
     //下载
     api 'com.liulishuo.filedownloader:library:1.7.4'

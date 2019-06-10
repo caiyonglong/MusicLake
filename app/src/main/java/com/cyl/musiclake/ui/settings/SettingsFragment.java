@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.settings;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,9 +27,7 @@ import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 
-import java.nio.file.Path;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * Author   : D22434
