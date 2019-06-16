@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist;
+package com.cyl.musiclake.ui.music.playlist.detail;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -25,7 +25,7 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.OnlinePlaylistUtils;
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
@@ -185,7 +185,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                         showEmptyState();
                         EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID, mPlaylist));
                     } else if (mPresenter != null) {
-                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(mPlaylist, result -> {
+                        PlaylistManagerUtils.INSTANCE.deletePlaylist(mPlaylist, result -> {
                             onBackPress();
                             return null;
                         });
@@ -341,6 +341,11 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @Override
     public void showEmptyView(@NotNull String msg) {
+
+    }
+
+    @Override
+    public void showErrorTips(@NotNull String msg, boolean hasTry) {
 
     }
 }

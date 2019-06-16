@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.history
 
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music

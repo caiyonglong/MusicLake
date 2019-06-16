@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.square
 
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity

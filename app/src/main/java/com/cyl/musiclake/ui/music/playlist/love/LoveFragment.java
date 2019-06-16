@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist;
+package com.cyl.musiclake.ui.music.playlist.love;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

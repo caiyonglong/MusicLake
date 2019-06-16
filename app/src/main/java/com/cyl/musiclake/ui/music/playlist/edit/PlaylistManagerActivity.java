@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist;
+package com.cyl.musiclake.ui.music.playlist.edit;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +13,8 @@ import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.bean.data.PlaylistLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.ui.OnlinePlaylistUtils;
 import com.cyl.musiclake.ui.base.BaseActivity;
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class PlaylistManagerActivity extends BaseActivity {
     protected void initData() {
         String type = getIntent().getStringExtra(Extras.PLAYLIST_TYPE);
         if (type.equals(Constants.PLAYLIST_CUSTOM_ID)) {
-            playlists = OnlinePlaylistUtils.INSTANCE.getPlaylists();
+            playlists = PlaylistManagerUtils.INSTANCE.getPlaylists();
         } else {
             playlists = PlaylistLoader.INSTANCE.getAllPlaylist();
         }
@@ -110,7 +110,7 @@ public class PlaylistManagerActivity extends BaseActivity {
                 .content("是否删除歌单？")
                 .onPositive((dialog, which) -> {
                     for (String key : mAdapter.getCheckedMap().keySet()) {
-                        OnlinePlaylistUtils.INSTANCE.deletePlaylist(mAdapter.getCheckedMap().get(key), s -> {
+                        PlaylistManagerUtils.INSTANCE.deletePlaylist(mAdapter.getCheckedMap().get(key), s -> {
                             playlists.remove(mAdapter.getCheckedMap().get(key));
                             mAdapter.setNewData(playlists);
                             return null;

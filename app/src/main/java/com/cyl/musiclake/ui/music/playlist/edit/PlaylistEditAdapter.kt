@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.edit
 
 import android.widget.CheckBox
 import com.chad.library.adapter.base.BaseItemDraggableAdapter

@@ -17,11 +17,11 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
-import com.cyl.musiclake.ui.music.playlist.PlaylistManagerActivity
+import com.cyl.musiclake.ui.music.playlist.edit.PlaylistManagerActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
@@ -115,7 +115,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         playlistAddIv.setOnClickListener {
             val dialog = CreatePlaylistDialog.newInstance()
             dialog.successListener = {
-                OnlinePlaylistUtils.createPlaylist(it, type = playlistTag) {
+                PlaylistManagerUtils.createPlaylist(it, type = playlistTag) {
                     ToastUtils.show(MusicApp.getAppContext().getString(R.string.create_playlist_success))
                     EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, null))
                 }

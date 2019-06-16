@@ -9,7 +9,6 @@ import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
 import com.cyl.musiclake.ui.deleteLocalMusic
 import com.cyl.musiclake.ui.downloadBatchMusic
 import kotlinx.android.synthetic.main.activity_song_edit.*
@@ -60,7 +59,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
             mAdapter?.checkedMap?.forEach {
                 selectMusic.add(it.value)
             }
-            OnlinePlaylistUtils.addToPlaylist(this, selectMusic)
+            PlaylistManagerUtils.addToPlaylist(this, selectMusic)
         }
         downloadTv.setOnClickListener {
             val selectMusic = mutableListOf<Music>()

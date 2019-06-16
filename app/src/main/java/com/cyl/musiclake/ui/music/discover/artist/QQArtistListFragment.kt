@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.discover
+package com.cyl.musiclake.ui.music.discover.artist
 
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
@@ -7,6 +7,8 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.ui.music.discover.ArtistCateAdapter
+import com.cyl.musiclake.ui.music.discover.ArtistListAdapter
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_artist_list.*
 import java.lang.StringBuilder
@@ -16,7 +18,7 @@ import java.lang.StringBuilder
  * 邮箱：643872807@qq.com
  * 版本：4.1.3
  */
-class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContract.View {
+class QQArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContract.View {
 
 //    private val areaList = mutableListOf("全部", "内地", "港台", "日本", "韩国", "其他")
 //    private val sexList = mutableListOf("全部", "男", "女", "混合")
@@ -71,7 +73,7 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
     }
 
     /**
-     * 更新歌曲列表
+     * 更新歌手分类
      */
     private fun updateArtistList() {
         val area = areaListAdapter?.flagId ?: -100
@@ -97,6 +99,9 @@ class ArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListContra
         mPresenter?.loadArtists(0, params)
     }
 
+    /**
+     * 显示歌手歌曲
+     */
     override fun showArtistList(artistList: MutableList<Artist>) {
         //适配器
         mArtistAdapter = ArtistListAdapter(artistList)

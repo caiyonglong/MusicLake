@@ -34,7 +34,6 @@ interface NeteaseApiService {
     /**
      * 搜索
      */
-//    fun searchNetease(@Url String fullUrl): Observable<SearchInfo>
     @GET
     fun searchNetease(@Url url: String): Observable<SearchInfo>
 

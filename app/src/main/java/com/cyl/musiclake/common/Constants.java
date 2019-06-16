@@ -16,7 +16,7 @@ public class Constants {
     public static final String XIAMI = "xiami";
     public static final String BAIDU = "baidu";
     public static final String NETEASE = "netease";
-    public static final String VIDEO = "video";
+    public static final String VIDEO = "video";//本地视频
 
     //特殊歌单类型
     public static final String PLAYLIST_LOVE_ID = "love";
@@ -149,10 +149,7 @@ public class Constants {
     /**
      * QQ音乐Api*************************************************
      */
-    public static final String BASE_URL_QQ_MUSIC_SEARCH = "http://c.y.qq.com/soso/fcgi-bin/search_cp?";
-
-    public static final String BASE_URL_QQ_MUSIC_URL = "http://dl.stream.qqmusic.qq.com/";
-    public static final String BASE_URL_QQ_MUSIC_KEY = "https://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg?";
+    public static final String BASE_URL_QQ_MUSIC_URL = "https://u.y.qq.com";
 
     /**
      * 虾米音乐Api*************************************************

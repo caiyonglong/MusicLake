@@ -22,9 +22,9 @@ import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalVideoFragment
-import com.cyl.musiclake.ui.music.playlist.LoveFragment
-import com.cyl.musiclake.ui.music.playlist.PlaylistDetailActivity
-import com.cyl.musiclake.ui.music.playlist.RecentlyFragment
+import com.cyl.musiclake.ui.music.playlist.love.LoveFragment
+import com.cyl.musiclake.ui.music.playlist.detail.PlaylistDetailActivity
+import com.cyl.musiclake.ui.music.playlist.history.RecentlyFragment
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import com.cyl.musiclake.utils.ToastUtils

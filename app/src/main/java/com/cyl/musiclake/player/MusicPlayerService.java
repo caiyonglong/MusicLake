@@ -143,7 +143,7 @@ public class MusicPlayerService extends Service {
      * 错误次数，超过最大错误次数，自动停止播放
      */
     private int playErrorTimes = 0;
-    private int MAX_ERROR_TIMES = 5;
+    private int MAX_ERROR_TIMES = 1;
 
     private static final boolean DEBUG = true;
 
@@ -559,8 +559,7 @@ public class MusicPlayerService extends Service {
                     @Override
                     public void error(String msg) {
                         LogUtil.e(TAG, "播放异常-----" + msg);
-                        ToastUtils.show("播放地址异常，自动切换下一首");
-                        next(true);
+                        checkPlayErrorTimes();
                     }
                 });
             }
@@ -568,7 +567,7 @@ public class MusicPlayerService extends Service {
             mHistoryPos.add(mPlayingPos);
             if (mPlayingMusic.getUri() != null) {
                 if (!mPlayingMusic.getUri().startsWith(Constants.IS_URL_HEADER) && !FileUtils.exists(mPlayingMusic.getUri())) {
-                    isAbnormalPlay();
+                    checkPlayErrorTimes();
                 } else {
                     playErrorTimes = 0;
                     mPlayer.setDataSource(mPlayingMusic.getUri());
@@ -594,7 +593,7 @@ public class MusicPlayerService extends Service {
     /**
      * 异常播放，自动切换下一首
      */
-    private void isAbnormalPlay() {
+    private void checkPlayErrorTimes() {
         if (playErrorTimes > MAX_ERROR_TIMES) {
             pause();
         } else {

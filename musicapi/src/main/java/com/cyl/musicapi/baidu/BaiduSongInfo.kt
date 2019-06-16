@@ -3,6 +3,31 @@ package com.cyl.musicapi.baidu
 
 import com.google.gson.annotations.SerializedName
 
+//"songList": [{
+//			"queryId": "265715650",
+//			"songId": 265715650,
+//			"songName": "\u5927\u9c7c",
+//			"artistId": "164528737",
+//			"artistName": "\u5468\u6df1",
+//			"albumId": 265715651,
+//			"albumName": "\u5927\u9c7c",
+//			"songPicSmall": "http:\/\/qukufile2.qianqian.com\/data2\/pic\/0d359ec1be6f5365f92d4c83d3eeb022\/603758238\/603758238.jpg@s_2,w_90,h_90",
+//			"songPicBig": "http:\/\/qukufile2.qianqian.com\/data2\/pic\/0d359ec1be6f5365f92d4c83d3eeb022\/603758238\/603758238.jpg@s_2,w_150,h_150",
+//			"songPicRadio": "http:\/\/qukufile2.qianqian.com\/data2\/pic\/0d359ec1be6f5365f92d4c83d3eeb022\/603758238\/603758238.jpg@s_2,w_300,h_300",
+//			"lrcLink": "http:\/\/qukufile2.qianqian.com\/data2\/lrc\/7a07a153b8a9a9d918bbee676b7d4118\/603149730\/603149730.lrc",
+//			"version": "",
+//			"copyType": 0,
+//			"time": 313,
+//			"linkCode": 22000,
+//			"songLink": "http:\/\/zhangmenshiting.qianqian.com\/data2\/music\/a612909cdafecf20933bd2942c43421c\/596603939\/26571565036000128.mp3?xcode=ee75606752833ea05fa4084c7da1aa86",
+//			"showLink": "http:\/\/zhangmenshiting.qianqian.com\/data2\/music\/a612909cdafecf20933bd2942c43421c\/596603939\/26571565036000128.mp3?xcode=ee75606752833ea05fa4084c7da1aa86",
+//			"format": "mp3",
+//			"rate": 128,
+//			"size": 5021639,
+//			"relateStatus": "0",
+//			"resourceType": "0",
+//			"source": "web"
+//		}]
 data class SongItem(@SerializedName("songName")
                         val songName: String = "",
                         @SerializedName("albumName")

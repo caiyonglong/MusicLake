@@ -141,14 +141,13 @@ object BaiduApiServiceImpl {
     }
 
     /**
-     * 获取歌单详情
+     * 获取歌曲详情
      * "http://music.baidu.com/data/music/links?songIds=$mid"
      */
     fun getTingSongInfo(music: Music): Observable<Music> {
         val url = Constants.URL_GET_SONG_INFO + music.mid
         return apiService.getTingSongInfo(url)
                 .flatMap { data ->
-                    val music = Music()
                     val songInfo = data.data.songList?.get(0)
                     songInfo?.let {
                         music.type = Constants.BAIDU

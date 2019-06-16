@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.square
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,6 +12,7 @@ import com.cyl.musicapi.netease.SubItem
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.ui.music.playlist.PlaylistActivity
 import com.cyl.musiclake.ui.widget.channel.Channel
 import com.cyl.musiclake.ui.widget.channel.ChannelView
 import com.cyl.musiclake.utils.LogUtil

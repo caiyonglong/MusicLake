@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.square
 
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -7,10 +7,11 @@ import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.main.PageAdapter
+import com.cyl.musiclake.ui.music.playlist.PlaylistFragment
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_all_playlist.*
 
-class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
+class PlaylistSquareActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     var mViewPager: ViewPager? = null
     var mTabLayout: TabLayout? = null
 
@@ -55,8 +56,8 @@ class AllPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
             successListener = { result ->
                 //更新viewpager
                 LogUtil.d(TAG,"更新list")
-                this@AllPlaylistActivity.cateList = curCateList
-                this@AllPlaylistActivity.setupViewPager()
+                this@PlaylistSquareActivity.cateList = curCateList
+                this@PlaylistSquareActivity.setupViewPager()
             }
         }.showIt(this)
     }

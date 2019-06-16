@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.discover
+package com.cyl.musiclake.ui.music.discover.artist
 
 import com.cyl.musicapi.bean.Artists
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
@@ -16,7 +16,8 @@ import javax.inject.Inject
  */
 class ArtistListPresenter @Inject
 constructor() : BasePresenter<ArtistListContract.View>(), ArtistListContract.Presenter {
-    override fun loadArtists(offset: Int, params: Any) {
+
+    override fun loadArtists(offset: Int, params: Map<String, Int>) {
         mView?.showLoading()
         ApiManager.request(MusicApiServiceImpl.getArtists(offset, params), object : RequestCallBack<Artists> {
             override fun success(result: Artists) {
@@ -37,7 +38,7 @@ constructor() : BasePresenter<ArtistListContract.View>(), ArtistListContract.Pre
 
             override fun error(msg: String) {
                 mView?.hideLoading()
-                mView?.showError(msg,true)
+                mView?.showError(msg, true)
             }
         })
     }

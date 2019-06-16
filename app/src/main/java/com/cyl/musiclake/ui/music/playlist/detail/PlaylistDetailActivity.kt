@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.detail
 
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
@@ -17,7 +17,7 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deletePlaylist
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -36,8 +36,16 @@ import org.jetbrains.anko.startActivity
  * 作者：yonglong on 2016/8/15 19:54
  * 邮箱：643872807@qq.com
  * 版本：2.5
+ * 歌单详情页
  */
 class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), PlaylistDetailContract.View {
+    /**
+     * 显示异常UI
+     */
+    override fun showErrorTips(msg: String, hasTry: Boolean) {
+        showError(msg, hasTry)
+    }
+
     override fun showEmptyView(msg: String) {
 
     }
@@ -87,6 +95,9 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
     }
 
+    /**
+     * 歌单页标题
+     */
     override fun setToolbarTitle(): String? {
         mPlaylist = intent.getParcelableExtra(Extras.PLAYLIST)
         mArtist = intent.getParcelableExtra(Extras.ARTIST)
@@ -157,14 +168,14 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 LogUtil.e("action_delete_playlist")
                 mPlaylist?.let {
                     deletePlaylist(it, success = {
-                        if (mPlaylist?.type==Constants.PLAYLIST_HISTORY_ID) {
+                        if (mPlaylist?.type == Constants.PLAYLIST_HISTORY_ID) {
                             musicList.clear()
                             PlayHistoryLoader.clearPlayHistory()
                             mAdapter?.notifyDataSetChanged()
                             showEmptyState()
                             EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_HISTORY_ID, it))
                         } else if (mPresenter != null) {
-                            OnlinePlaylistUtils.deletePlaylist(it) {
+                            PlaylistManagerUtils.deletePlaylist(it) {
                                 onBackPress()
                             }
                         }

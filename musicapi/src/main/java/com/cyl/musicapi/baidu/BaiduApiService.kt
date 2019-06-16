@@ -110,6 +110,9 @@ interface BaiduApiService {
     @GET
     fun getTingSongInfo(@Url baseUrl: String): Observable<BaiduSongInfo>
 
+    @GET
+    fun getTingSongLink(@Url baseUrl: String): Observable<BaiduSongInfo>
+
     @Streaming
     @GET
     fun downloadFile(@Url downloadUrl: String, @HeaderMap params: Map<String, String>): Observable<ResponseBody>

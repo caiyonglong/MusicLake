@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist;
+package com.cyl.musiclake.ui.music.playlist.love;
 
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.ui.base.BaseContract;

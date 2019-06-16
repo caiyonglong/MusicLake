@@ -64,7 +64,7 @@
             android:name=".ui.my.BindLoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.playlist.AllPlaylistActivity"
+            android:name="com.cyl.musiclake.ui.music.playlist.square.PlaylistSquareActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.playlist.PlaylistActivity"
@@ -73,7 +73,7 @@
             android:name=".ui.my.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.playlist.PlaylistManagerActivity"
+            android:name=".ui.music.playlist.edit.PlaylistManagerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.comment.SongCommentActivity"
@@ -106,7 +106,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.playlist.PlaylistDetailActivity"
+            android:name=".ui.music.playlist.detail.PlaylistDetailActivity"
             android:label="@string/playlist_name"
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />

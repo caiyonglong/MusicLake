@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui
+package com.cyl.musiclake.ui.music.edit
 
 import android.support.v7.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
@@ -25,7 +25,7 @@ import org.jetbrains.anko.uiThread
  * 封装添加到在线歌单功能
  */
 
-object OnlinePlaylistUtils {
+object PlaylistManagerUtils {
     /**
      * 保存当前歌单列表
      */
@@ -60,26 +60,6 @@ object OnlinePlaylistUtils {
     }
 
     /**
-     * 获取在线歌单歌曲
-     */
-    fun getPlaylistMusic(playlist: Playlist, success: (Playlist) -> Unit) {
-        ApiManager.request(PlaylistApiServiceImpl.getMusicList(playlist.pid!!), object : RequestCallBack<MutableList<Music>> {
-            override fun error(msg: String?) {
-                success.invoke(playlist)
-            }
-
-            override fun success(musicList: MutableList<Music>) {
-                if (musicList.size > 0) {
-                    playlist.coverUrl = musicList[0].coverUri
-                }
-                playlist.musicList = musicList
-                success.invoke(playlist)
-            }
-        })
-    }
-
-
-    /**
      * 获取最新通知消息
      */
     fun getMusicNoticeInfo(success: (NoticeInfo) -> Unit, fail: (String) -> Unit) {
@@ -96,7 +76,6 @@ object OnlinePlaylistUtils {
             }
         })
     }
-
 
     /**
      * 获取在线歌单
@@ -116,26 +95,78 @@ object OnlinePlaylistUtils {
     }
 
     /**
-     * 批量歌曲添加到在线歌单
+     * 添加歌曲到在线歌单
+     */
+    fun addToPlaylist(activity: AppCompatActivity?, music: Music?) {
+        music?.let {
+            addToPlaylist(activity, mutableListOf(it))
+        }
+    }
+
+    /**
+     * 批量歌曲添加到歌单
+     * @param musics 选择的歌曲
      */
     fun addToPlaylist(activity: AppCompatActivity?, musics: MutableList<Music>?) {
         if (activity == null) return
+        //选择歌曲为空，则提示
+        if (musics == null || musics.size == 0) {
+            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.no_song_to_add))
+            return
+        }
+        showPlaylistSelectDialog(activity, callBack = {
+            when (it) {
+                "本地歌单" -> {
+                    addToLocalPlaylist(activity, musics)
+                }
+                "在线歌单" -> {
+                    addToOnlinePlaylist(activity, musics)
+                }
+                "网易云歌单" -> {
+                    ToastUtils.show("暂不支持此功能")
+                }
+            }
+        })
+    }
+
+    /**
+     * 批量添加到本地歌单
+     */
+    private fun addToLocalPlaylist(activity: AppCompatActivity?, musics: MutableList<Music>?) {
+        if (activity == null) return
+        //选择歌曲为空，则提示
+        if (musics == null || musics.size == 0) {
+            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.no_song_to_add))
+            return
+        }
+        //显示本地歌单列表
+        showLocalPlaylistDialog(activity, musicList = musics)
+    }
+
+    /**
+     * 批量添加到在线歌单
+     */
+    private fun addToOnlinePlaylist(activity: AppCompatActivity?, musics: MutableList<Music>?) {
+        if (activity == null) return
+        //选择歌曲为空，则提示
+        if (musics == null || musics.size == 0) {
+            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.no_song_to_add))
+            return
+        }
+        //是否登录成功
         if (!UserStatus.getLoginStatus()) {
             ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
             return
         }
-        if (musics == null || musics.size == 0) {
-            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.no_song_to_add))
-            showLocalPlaylistDialog(activity, musicList = musics)
-            return
-        }
+        //过滤本地，百度等服务器不支持的歌曲
         musics.forEach {
-            if (it.type == Constants.LOCAL || it.type == Constants.BAIDU) {
+            if (it.type == Constants.LOCAL && it.type == Constants.BAIDU) {
                 ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
                 showLocalPlaylistDialog(activity, musicList = musics)
                 return
             }
         }
+        //获取在线歌单列表，显示对话框
         getOnlinePlaylist(success = {
             showSelectDialog(activity, it, musicList = musics)
         }, fail = {
@@ -144,42 +175,23 @@ object OnlinePlaylistUtils {
     }
 
     /**
-     * 获取在线歌单
+     * 显示本地歌单列表
      */
-    fun addToPlaylist(activity: AppCompatActivity?, music: Music?) {
-        if (activity == null) return
-        if (music == null) {
-            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.resource_error))
-            return
-        }
-        if (music.type == Constants.LOCAL || music.type == Constants.BAIDU) {
-            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.warning_add_playlist))
-            showLocalPlaylistDialog(activity, music)
-            return
-        }
-        if (!UserStatus.getLoginStatus()) {
-            ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.prompt_login))
-            showLocalPlaylistDialog(activity, music)
-            return
-        }
-        getOnlinePlaylist(success = {
-            showSelectDialog(activity, it, music)
-        }, fail = {
-            ToastUtils.show(it)
-        })
-    }
-
     private fun showLocalPlaylistDialog(activity: AppCompatActivity, music: Music? = null, musicList: MutableList<Music>? = null) {
         doAsync {
             val playlist = PlaylistLoader.getAllPlaylist()
             uiThread {
-                showSelectDialog(activity, playlist, music, musicList)
+                if (playlist.size==0){
+                    ToastUtils.show("暂无本地歌单，请先创建哦😄")
+                }else{
+                    showSelectDialog(activity, playlist, music, musicList)
+                }
             }
         }
     }
 
     /**
-     * 显示歌列表
+     * 显示所有的歌单列表
      */
     private fun showSelectDialog(activity: AppCompatActivity, playlists: MutableList<Playlist>, music: Music? = null, musicList: MutableList<Music>? = null) {
         val items = mutableListOf<String>()
@@ -198,6 +210,20 @@ object OnlinePlaylistUtils {
                     } else {
                         collectMusic(playlists[which], music)
                     }
+                }
+                .build().show()
+    }
+
+    /**
+     * 显示歌单类型选择列表
+     */
+    private fun showPlaylistSelectDialog(activity: AppCompatActivity, callBack: ((String) -> Unit)) {
+        val items = mutableListOf("本地歌单", "在线歌单", "网易云歌单")
+        MaterialDialog.Builder(activity)
+                .title(R.string.add_to_playlist)
+                .items(items)
+                .itemsCallback { _, _, which, _ ->
+                    callBack.invoke(items[which])
                 }
                 .build().show()
     }
@@ -228,6 +254,7 @@ object OnlinePlaylistUtils {
     }
 
     /**
+     *
      * 歌曲批量添加到在线歌单，同类型
      * 目前支持网易，虾米，qq
      */
@@ -254,6 +281,7 @@ object OnlinePlaylistUtils {
     }
 
     /**
+     * 在线歌单
      * 歌曲批量添加到在线歌单，不同类型
      * 目前支持网易，虾米，qq
      */
@@ -278,6 +306,8 @@ object OnlinePlaylistUtils {
     }
 
     /**
+     *
+     * 在线歌单
      * 新建歌单
      * @param name 歌单名
      * @param type 歌单类型名
@@ -315,7 +345,7 @@ object OnlinePlaylistUtils {
     }
 
     /**
-     * 取消收藏
+     * 在线歌单的删除歌单（取消收藏）
      */
     fun disCollectMusic(pid: String?, music: Music?, success: () -> Unit) {
         if (pid == null) return

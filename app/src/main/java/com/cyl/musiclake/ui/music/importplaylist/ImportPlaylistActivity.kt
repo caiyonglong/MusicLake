@@ -13,7 +13,7 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
@@ -79,9 +79,9 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                     .input(getString(R.string.input_playlist), name.toString(), false) { _, _ -> }
                     .onPositive { dialog1, _ ->
                         val title = dialog1.inputEditText?.text.toString()
-                        OnlinePlaylistUtils.createPlaylist(title, success = {
+                        PlaylistManagerUtils.createPlaylist(title, success = {
                             it.pid?.let { _ ->
-                                OnlinePlaylistUtils.collectBatchMusic(it, vendor.toString(), musicList, success = {
+                                PlaylistManagerUtils.collectBatchMusic(it, vendor.toString(), musicList, success = {
                                     this@ImportPlaylistActivity.finish()
                                 })
                             }

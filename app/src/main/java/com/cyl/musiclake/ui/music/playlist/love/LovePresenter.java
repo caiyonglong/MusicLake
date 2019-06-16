@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist;
+package com.cyl.musiclake.ui.music.playlist.love;
 
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.bean.data.SongLoader;

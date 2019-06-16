@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.discover
+package com.cyl.musiclake.ui.music.discover.artist
 
 import com.cyl.musicapi.bean.SingerTag
 import com.cyl.musiclake.ui.base.BaseContract
@@ -13,6 +13,6 @@ interface ArtistListContract {
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {
-        fun loadArtists(offset: Int, params: Any)
+        fun loadArtists(offset: Int, params: Map<String,Int>)
     }
 }

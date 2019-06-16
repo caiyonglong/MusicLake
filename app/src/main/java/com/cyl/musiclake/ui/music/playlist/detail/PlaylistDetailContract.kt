@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.playlist
+package com.cyl.musiclake.ui.music.playlist.detail
 
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
@@ -23,6 +23,8 @@ interface PlaylistDetailContract {
         fun success(type: Int)
 
         fun showEmptyView(msg: String)
+        //显示歌单异常，提示
+        fun showErrorTips(msg: String, hasTry: Boolean)
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {

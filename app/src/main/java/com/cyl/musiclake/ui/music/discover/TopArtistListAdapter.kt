@@ -35,7 +35,7 @@ class ArtistListAdapter(artistList: MutableList<Artist>) : BaseQuickAdapter<Arti
 }
 
 /**
- * 歌手地区
+ * 歌手分类适配器
  */
 class ArtistCateAdapter(categories: MutableList<SingerCate>) : BaseQuickAdapter<SingerCate, BaseViewHolder>(R.layout.item_artist_cate, categories) {
     var flagId = -100
@@ -46,5 +46,4 @@ class ArtistCateAdapter(categories: MutableList<SingerCate>) : BaseQuickAdapter<
         helper.getView<CheckedTextView>(R.id.titleTv).isChecked = position == helper.adapterPosition
         helper.setTextColor(R.id.titleTv, if (position == helper.adapterPosition) Color.WHITE else Color.BLACK)
     }
-
 }

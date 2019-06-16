@@ -10,6 +10,17 @@ data class ArtistsData(@SerializedName("data")
                        @SerializedName("msg")
                        val msg: String = "")
 
+
+data class SingerList(@SerializedName("data")
+                      val data: Artists,
+                      @SerializedName("code")
+                      val code: Int = 0)
+
+data class ArtistsDataInfo(@SerializedName("singerList")
+                           val singerList: SingerList,
+                           @SerializedName("code")
+                           val code: Int = 0)
+
 data class Artists(@SerializedName("area")
                    val area: Int,
                    @SerializedName("genre")

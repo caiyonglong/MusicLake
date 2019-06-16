@@ -24,7 +24,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
@@ -143,7 +143,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 removeSuccessListener?.invoke(music)
             }
         } else {
-            OnlinePlaylistUtils.disCollectMusic(pid, music) {
+            PlaylistManagerUtils.disCollectMusic(pid, music) {
                 removeSuccessListener?.invoke(music)
             }
         }
@@ -212,7 +212,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                     R.drawable.ic_queue_play_next -> PlayManager.nextPlay(music)
                     R.drawable.ic_playlist_add -> {
                         if (music?.type != Constants.LOCAL) {
-                            OnlinePlaylistUtils.addToPlaylist(mContext, music)
+                            PlaylistManagerUtils.addToPlaylist(mContext, music)
                         }
                     }
                     R.drawable.ic_art_track -> {

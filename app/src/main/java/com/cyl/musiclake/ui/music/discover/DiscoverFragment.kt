@@ -14,8 +14,9 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
+import com.cyl.musiclake.ui.music.discover.artist.QQArtistListFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.cyl.musiclake.ui.music.playlist.AllPlaylistActivity
+import com.cyl.musiclake.ui.music.playlist.square.PlaylistSquareActivity
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_discover.*
 import org.jetbrains.anko.support.v4.startActivity
@@ -69,7 +70,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.singerListTv -> {
-                activity?.let { NavigationHelper.navigateFragment(it, ArtistListFragment()) }
+                activity?.let { NavigationHelper.navigateFragment(it, QQArtistListFragment()) }
             }
             R.id.recommendSongsTv -> {
                 val playlist = Playlist()
@@ -94,7 +95,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
                 updateCate("古风")
             }
             R.id.cateTagTv -> {
-                startActivity<AllPlaylistActivity>()
+                startActivity<PlaylistSquareActivity>()
             }
         }
     }
@@ -236,7 +237,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     override fun showRecommendPlaylist(playlists: MutableList<Playlist>) {
         LogUtil.d(TAG, "获取推荐歌单 songs：" + playlists.size)
         recommendPlaylistView.visibility = if (playlists.size == 0) View.GONE else View.VISIBLE
-        this.recommendPlaylist = playlists
+        this.recommendPlaylist = playlists.subList(0,6)
         if (mPlaylistAdapter == null) {
             mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
             //推荐列表

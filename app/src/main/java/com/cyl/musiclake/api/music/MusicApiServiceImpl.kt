@@ -6,6 +6,7 @@ import com.cyl.musicapi.bean.*
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.doupan.DoubanApiServiceImpl
+import com.cyl.musiclake.api.music.qq.QQMusicApiServiceImpl
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -38,7 +39,7 @@ object MusicApiServiceImpl {
     fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
         return create { result ->
             if (type == SearchEngine.Filter.ANY) {
-                BaseApiImpl.searchSong(key,  limit, page, success = {
+                BaseApiImpl.searchSong(key, limit, page, success = {
                     val musicList = mutableListOf<Music>()
                     if (it.status) {
                         try {
@@ -398,17 +399,8 @@ object MusicApiServiceImpl {
      * 获取歌手列表
      *
      */
-    fun getArtists(offset: Int, params: Any): Observable<Artists> {
-        return create { result ->
-            BaseApiImpl.getArtists(offset, params, {
-                if (it.status) {
-                    result.onNext(it.data)
-                    result.onComplete()
-                } else {
-                    result.onError(Throwable(it.msg))
-                }
-            }, {})
-        }
+    fun getArtists(offset: Int, params: Map<String,Int>): Observable<Artists> {
+        return QQMusicApiServiceImpl.getArtists(offset, params)
     }
 
 

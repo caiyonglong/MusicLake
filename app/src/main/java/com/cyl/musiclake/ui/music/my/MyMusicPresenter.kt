@@ -7,7 +7,7 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.bean.data.SongLoader
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.download.DownloadLoader
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -82,7 +82,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
     }
 
     fun loadMusicLakeNotice() {
-        OnlinePlaylistUtils.getMusicNoticeInfo(
+        PlaylistManagerUtils.getMusicNoticeInfo(
                 success = {
                     mView?.showNoticeInfo(it)
                 }, fail = {
@@ -94,17 +94,17 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
             val mIsLogin = UserStatus.getLoginStatus()
             if (mIsLogin) {
-                OnlinePlaylistUtils.getOnlinePlaylist(success = {
+                PlaylistManagerUtils.getOnlinePlaylist(success = {
                     mView?.showPlaylist(it)
                 }, fail = {
                     ToastUtils.show(it)
-                    if (OnlinePlaylistUtils.playlists.size == 0) {
+                    if (PlaylistManagerUtils.playlists.size == 0) {
                         mView?.showError(it, true)
                     }
                 })
             } else {
-                OnlinePlaylistUtils.playlists.clear()
-                mView?.showPlaylist(OnlinePlaylistUtils.playlists)
+                PlaylistManagerUtils.playlists.clear()
+                mView?.showPlaylist(PlaylistManagerUtils.playlists)
             }
         } else {
             mView?.showPlaylist(mutableListOf())

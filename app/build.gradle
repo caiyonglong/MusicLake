@@ -139,6 +139,7 @@ dependencies {
 
     // 编辑音乐文件标签 新版本2.2.6版本报错
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 
     //socket.io配置
     api('io.socket:socket.io-client:1.0.0') {

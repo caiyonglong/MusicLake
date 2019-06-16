@@ -19,7 +19,7 @@ import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
 import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.OnlinePlaylistUtils
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.music.comment.SongCommentActivity
@@ -200,7 +200,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * 添加到歌單
      */
     fun addToPlaylist(view: View?) {
-        OnlinePlaylistUtils.addToPlaylist(this, playingMusic)
+        PlaylistManagerUtils.addToPlaylist(this, playingMusic)
     }
 
     /**
