@@ -20,11 +20,12 @@ import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.ui.main.MainActivity
+import com.cyl.musiclake.ui.music.artist.detail.ArtistDetailActivity
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalVideoFragment
-import com.cyl.musiclake.ui.music.playlist.love.LoveFragment
 import com.cyl.musiclake.ui.music.playlist.detail.PlaylistDetailActivity
 import com.cyl.musiclake.ui.music.playlist.history.RecentlyFragment
+import com.cyl.musiclake.ui.music.playlist.love.LoveFragment
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import com.cyl.musiclake.utils.ToastUtils
@@ -138,6 +139,18 @@ object NavigationHelper {
     fun navigateToPlaylist(context: Activity, playlist: Playlist, transitionViews: Pair<View, String>?) {
         val intent = Intent(context, PlaylistDetailActivity::class.java)
         intent.putExtra(Extras.PLAYLIST, playlist)
+        if (transitionViews != null) {
+            val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(context,
+                    transitionViews.first, transitionViews.second)
+            ActivityCompat.startActivity(context, intent, compat.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
+    }
+
+    fun navigateToArtist(context: Activity, artist: Artist, transitionViews: Pair<View, String>?) {
+        val intent = Intent(context, ArtistDetailActivity::class.java)
+        intent.putExtra(Extras.ARTIST, artist)
         if (transitionViews != null) {
             val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(context,
                     transitionViews.first, transitionViews.second)

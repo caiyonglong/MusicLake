@@ -20,17 +20,16 @@ import com.cyl.musicapi.netease.CommentsItemInfo;
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musicapi.netease.MvInfoDetailInfo;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.bean.MvInfoBean;
-import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.bean.Artist;
+import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.DisplayUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.exoplayer2.Player;
 
@@ -340,7 +339,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             artist.setArtistId(String.valueOf(info.getArtistId()));
             artist.setType(Constants.NETEASE);
             artist.setName(info.getArtistName());
-            NavigationHelper.INSTANCE.navigateToPlaylist(this, artist, null);
+            NavigationHelper.INSTANCE.navigateToArtist(this, artist, null);
         });
     }
 

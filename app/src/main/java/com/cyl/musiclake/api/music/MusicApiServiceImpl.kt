@@ -26,7 +26,7 @@ import io.reactivex.Observable.create
  */
 
 object MusicApiServiceImpl {
-    private val TAG = "MusicApi"
+    private val TAG = "MusicApiServiceImpl"
 
     /**
      * 搜索音乐
@@ -279,11 +279,12 @@ object MusicApiServiceImpl {
      * 获取歌手单曲
      *
      */
-    fun getArtistSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 20): Observable<Artist> {
+    fun getArtistSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 50): Observable<Artist> {
         return create { result ->
             BaseApiImpl
                     .getArtistSongs(vendor, id, offset, limit, {
                         if (it.status) {
+                            LogUtil.d(TAG, it.toString())
                             val musicList = arrayListOf<Music>()
                             it.data.songs.forEach {
                                 if (!it.cp) {
@@ -399,7 +400,7 @@ object MusicApiServiceImpl {
      * 获取歌手列表
      *
      */
-    fun getArtists(offset: Int, params: Map<String,Int>): Observable<Artists> {
+    fun getArtists(offset: Int, params: Map<String, Int>): Observable<Artists> {
         return QQMusicApiServiceImpl.getArtists(offset, params)
     }
 

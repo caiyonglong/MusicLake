@@ -234,7 +234,7 @@
     <string name="share_title">分享</string>
     <string name="browser_title">使用系统浏览器打开</string>
     <string name="share_article_url"><![CDATA[<string name=\"share_article_url\">%1$s分享【%2$s】：%3$s</string>]]></string>
-    <string name="artist_detail">查看详情</string>
+    <string name="artist_detail">歌手详情</string>
     <string name="title_test">测试</string>
 
     <!--歌单-->

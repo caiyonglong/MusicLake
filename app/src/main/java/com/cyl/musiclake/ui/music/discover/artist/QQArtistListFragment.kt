@@ -4,14 +4,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
 import com.cyl.musicapi.bean.SingerTag
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.discover.ArtistCateAdapter
 import com.cyl.musiclake.ui.music.discover.ArtistListAdapter
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_artist_list.*
-import java.lang.StringBuilder
 
 /**
  * 功能：在线排行榜
@@ -109,7 +108,7 @@ class QQArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListCont
         mArtistAdapter?.bindToRecyclerView(resultRsv)
         mArtistAdapter?.setOnItemClickListener { adapter, view, position ->
             val artist = adapter.data[position] as Artist
-            NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
+            NavigationHelper.navigateToArtist(mFragmentComponent.activity, artist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
         }
     }
 
