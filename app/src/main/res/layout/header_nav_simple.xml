@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/header_bg"
+            android:src="?colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/header_material" />
+            android:scaleType="centerCrop" />
 
         <View
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_account_circle"
+                android:src="@drawable/ic_music"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

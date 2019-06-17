@@ -237,7 +237,11 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     override fun showRecommendPlaylist(playlists: MutableList<Playlist>) {
         LogUtil.d(TAG, "获取推荐歌单 songs：" + playlists.size)
         recommendPlaylistView.visibility = if (playlists.size == 0) View.GONE else View.VISIBLE
-        this.recommendPlaylist = playlists.subList(0,6)
+        if(playlists.size>6){
+            this.recommendPlaylist = playlists.subList(0,6)
+        }else{
+            this.recommendPlaylist = playlists
+        }
         if (mPlaylistAdapter == null) {
             mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
             //推荐列表
