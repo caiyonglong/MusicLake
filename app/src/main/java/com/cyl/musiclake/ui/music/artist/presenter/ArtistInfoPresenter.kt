@@ -1,8 +1,8 @@
-package com.cyl.musiclake.ui.music.charts.presenter
+package com.cyl.musiclake.ui.music.artist.presenter
 
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.ui.music.charts.contract.ArtistInfoContract
+import com.cyl.musiclake.ui.music.artist.contract.ArtistInfoContract
 
 import javax.inject.Inject
 

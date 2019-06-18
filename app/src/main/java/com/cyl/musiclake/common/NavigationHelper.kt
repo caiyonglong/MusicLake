@@ -20,7 +20,7 @@ import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.ui.main.MainActivity
-import com.cyl.musiclake.ui.music.artist.detail.ArtistDetailActivity
+import com.cyl.musiclake.ui.music.artist.activity.ArtistDetailActivity
 import com.cyl.musiclake.ui.music.local.fragment.LocalMusicFragment
 import com.cyl.musiclake.ui.music.local.fragment.LocalVideoFragment
 import com.cyl.musiclake.ui.music.playlist.detail.PlaylistDetailActivity

@@ -1,16 +1,12 @@
-package com.cyl.musiclake.ui.music.charts.contract;
+package com.cyl.musiclake.ui.music.artist.contract;
 
 
-import com.cyl.musiclake.api.music.doupan.DoubanMusic;
-import com.cyl.musiclake.ui.base.BaseContract;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.ui.base.BaseContract;
 
 public interface ArtistInfoContract {
 
     interface View extends BaseContract.BaseView {
-        void showErrorInfo(String msg);
-
-        void showMusicInfo(DoubanMusic doubanMusic);
 
     }
 

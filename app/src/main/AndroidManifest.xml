@@ -111,7 +111,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
-            android:name=".ui.music.artist.detail.ArtistDetailActivity"
+            android:name=".ui.music.artist.activity.ArtistDetailActivity"
             android:label="@string/artist_detail"
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />

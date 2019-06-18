@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/item_toolbar" />
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,40 +18,24 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/album_art"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="100dp"
-                android:layout_marginStart="100dp"
-                tools:targetApi="lollipop" />
+                android:layout_marginTop="10dp"
+                android:text="歌手资料"
+                android:textSize="@dimen/sp_16" />
 
             <TextView
                 android:id="@+id/tv_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
-
+                android:layout_marginTop="10dp"
+                android:text="暂无"
+                android:textColor="?subtitleTextColor" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <include layout="@layout/item_loading" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/btn_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_margin="20dp"
-            android:background="@drawable/btn_bg"
-            android:text="@string/artist_detail"
-            android:textColor="@color/white" />
-
-    </FrameLayout>
+    <!--<include layout="@layout/item_loading" />-->
 
 </android.support.design.widget.CoordinatorLayout>

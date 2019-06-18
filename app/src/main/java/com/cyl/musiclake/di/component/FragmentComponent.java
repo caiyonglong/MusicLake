@@ -6,13 +6,14 @@ import android.content.Context;
 import com.cyl.musiclake.di.module.FragmentModule;
 import com.cyl.musiclake.di.scope.ContextLife;
 import com.cyl.musiclake.di.scope.PerFragment;
+import com.cyl.musiclake.ui.music.artist.fragment.ArtistInfoFragment;
 import com.cyl.musiclake.ui.music.discover.artist.QQArtistListFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.download.ui.DownloadManagerFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumDetailFragment;
 import com.cyl.musiclake.ui.music.local.fragment.AlbumFragment;
 import com.cyl.musiclake.ui.music.local.fragment.ArtistFragment;
-import com.cyl.musiclake.ui.music.local.fragment.ArtistSongsFragment;
+import com.cyl.musiclake.ui.music.artist.fragment.ArtistSongsFragment;
 import com.cyl.musiclake.ui.music.local.fragment.LocalVideoFragment;
 import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
@@ -93,4 +94,8 @@ public interface FragmentComponent {
     void inject(@NotNull PlaylistFragment playlistFragment);
 
     void inject(@NotNull TopPlaylistFragment topPlaylistFragment);
+
+    void inject(@NotNull ArtistInfoFragment artistInfoFragment);
+
+    void inject(@NotNull com.cyl.musiclake.ui.music.artist.fragment.AlbumFragment albumFragment);
 }

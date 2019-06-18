@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.artist.detail
+package com.cyl.musiclake.ui.music.artist.contract
 
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
@@ -10,7 +10,14 @@ interface ArtistDetailContract {
 
     interface View : BaseContract.BaseView {
 
+        //显示歌曲列表
         fun showPlaylistSongs(songList: MutableList<Music>?)
+
+        //显示歌手信息
+        fun showArtistInfo(artist: Artist)
+
+        //显示歌手的所有专辑
+        fun showAllAlbum(albumList: MutableList<Album>)
 
         fun showTitle(title: String) {}
 

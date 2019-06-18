@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.artist.detail
+package com.cyl.musiclake.ui.music.artist.presenter
 
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
@@ -15,6 +15,7 @@ import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.ui.base.BasePresenter
+import com.cyl.musiclake.ui.music.artist.contract.ArtistDetailContract
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
@@ -37,8 +38,10 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
         if (artist.type == null || artist.type == Constants.LOCAL) {
             doAsync {
                 val data = SongLoader.getSongsForArtist(artist.name)
+                val albumData = SongLoader.getAllAlbums(artist.name)
                 uiThread {
                     mView.showPlaylistSongs(data)
+                    mView.showAllAlbum(albumData)
                 }
             }
             return
@@ -61,15 +64,16 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
         ApiManager.request(observable, object : RequestCallBack<Artist> {
             override fun success(result: Artist) {
                 val musicLists = result.songs
-                val iterator = musicLists.iterator()
-                while (iterator.hasNext()) {
-                    val temp = iterator.next()
-                    if (temp.isCp) {
-                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
-                        iterator.remove()// 推荐使用
-                    }
-                }
+//                val iterator = musicLists.iterator()
+//                while (iterator.hasNext()) {
+//                    val temp = iterator.next()
+//                    if (temp.isCp) {
+//                        //list.remove(temp);// 出现java.util.ConcurrentModificationException
+//                        iterator.remove()// 推荐使用
+//                    }
+//                }
                 mView?.showPlaylistSongs(musicLists)
+                mView?.showArtistInfo(result)
             }
 
             override fun error(msg: String) {

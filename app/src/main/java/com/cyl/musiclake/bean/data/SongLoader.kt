@@ -62,6 +62,16 @@ object SongLoader {
         return result
     }
 
+    /**
+     * 获取所有专辑
+     *
+     * @param context
+     * @return
+     */
+    fun getAllAlbums(artistName: String?): MutableList<Album> {
+        return LitePal.where("type =local and artistName like ?", "%$artistName%").find(Album::class.java)
+    }
+
 
     /**
      * Android 扫描获取到的数据

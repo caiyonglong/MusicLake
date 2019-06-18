@@ -1,23 +1,21 @@
-package com.cyl.musiclake.ui.music.artist.detail
+package com.cyl.musiclake.ui.music.artist.activity
 
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
-import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.cyl.musiclake.ui.widget.ItemDecoration
+import com.cyl.musiclake.ui.main.PageAdapter
+import com.cyl.musiclake.ui.music.artist.contract.ArtistDetailContract
+import com.cyl.musiclake.ui.music.artist.fragment.AlbumFragment
+import com.cyl.musiclake.ui.music.artist.presenter.ArtistDetailPresenter
+import com.cyl.musiclake.ui.music.artist.fragment.ArtistInfoFragment
+import com.cyl.musiclake.ui.music.artist.fragment.ArtistSongsFragment
 import com.cyl.musiclake.utils.CoverLoader
 import kotlinx.android.synthetic.main.frag_artist_detail.*
-import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -26,6 +24,15 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
  * 歌单详情页
  */
 class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetailContract.View {
+    override fun showAllAlbum(albumList: MutableList<Album>) {
+
+    }
+
+    override fun showArtistInfo(artist: Artist) {
+        artistSongsFragment?.artistID = artist.id
+        artistInfoFragment?.updateArtistDesc(artist.desc)
+    }
+
     /**
      * 显示异常UI
      */
@@ -49,17 +56,16 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
 
     }
 
-    private var mAdapter: SongAdapter? = null
     private val musicList = mutableListOf<Music>()
-    private var mPlaylist: Playlist? = null
     private var mArtist: Artist? = null
     private var pid: String? = null
     private var mAlbum: Album? = null
     private var title: String? = null
     private var coverUrl: String? = null
     private var type: String? = null
-
-    private var bottomDialogFragment: BottomDialogFragment? = null
+    private var artistInfoFragment: ArtistInfoFragment? = null
+    private var artistSongsFragment: ArtistSongsFragment? = null
+    private var albumFragment: AlbumFragment? = null
 
     override fun getLayoutResID(): Int {
         return R.layout.frag_artist_detail
@@ -97,41 +103,30 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
     }
 
     override fun initView() {
-        mAdapter = SongAdapter(musicList)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(ItemDecoration(this, ItemDecoration.VERTICAL_LIST))
-        recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
-        fab.setOnClickListener { PlayManager.play(0, musicList, pid) }
+        tabs?.setupWithViewPager(viewPager)
+        setupViewPager()
+        viewPager?.offscreenPageLimit = 3
     }
+
+
+    private fun setupViewPager() {
+        artistInfoFragment = ArtistInfoFragment.newInstance("")
+        artistSongsFragment = ArtistSongsFragment.newInstance("")
+        albumFragment = AlbumFragment.newInstance("")
+
+        val mAdapter = PageAdapter(supportFragmentManager)
+        mAdapter.addFragment(artistSongsFragment, "歌曲")
+        mAdapter.addFragment(albumFragment, "专辑")
+        mAdapter.addFragment(artistInfoFragment, "详情")
+        viewPager?.adapter = mAdapter
+    }
+
 
     override fun initInjector() {
         mActivityComponent.inject(this)
     }
 
     override fun listener() {
-        mAdapter?.setOnItemClickListener { _, view, position ->
-            if (view.id != R.id.iv_more) {
-                when {
-                    mPlaylist != null -> PlayManager.play(position, musicList, mPlaylist?.pid)
-                    mArtist != null -> PlayManager.play(position, musicList, mArtist?.artistId.toString())
-                    mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.albumId.toString())
-                }
-                mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
-            }
-        }
-        mAdapter?.setOnItemChildClickListener { _, _, position ->
-            bottomDialogFragment = BottomDialogFragment.newInstance(musicList[position], mPlaylist?.type).apply {
-                mPlaylist?.pid?.let {
-                    pid = it
-                }
-            }
-            bottomDialogFragment?.removeSuccessListener = {
-                removeMusic(position)
-            }
-            bottomDialogFragment?.show(this)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -157,11 +152,10 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
         songList?.let {
             musicList.addAll(songList)
         }
-        mAdapter?.setNewData(musicList)
+
+        artistSongsFragment?.showSongs(musicList)
+
         if (coverUrl == null) {
-            mPlaylist?.coverUrl?.let {
-                coverUrl = it
-            }
             mArtist?.picUrl?.let {
                 coverUrl = it
             }
@@ -178,7 +172,6 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
 
     override fun removeMusic(position: Int) {
         musicList.removeAt(position)
-        mAdapter?.notifyItemRemoved(position)
         if (musicList.size == 0) {
             showEmptyState()
         }
@@ -194,14 +187,6 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
     override fun retryLoading() {
         super.retryLoading()
         showLoading()
-        mPlaylist?.let {
-            if (it.musicList.size > 0) {
-                showPlaylistSongs(it.musicList)
-            } else {
-                mPresenter?.loadPlaylistSongs(it)
-            }
-
-        }
         mArtist?.let {
             mPresenter?.loadArtistSongs(it)
         }
