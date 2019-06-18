@@ -5,14 +5,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
-import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.artist.contract.ArtistSongContract
 import com.cyl.musiclake.ui.music.artist.presenter.ArtistSongsPresenter
+import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import java.util.*
 
@@ -24,12 +23,9 @@ import java.util.*
  */
 class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongContract.View {
 
-    var artistID: Long = 0
-    private var transitionName: String? = null
-    private var title: String? = null
+    var artistID: String? = "0"
     private var mAdapter: SongAdapter? = null
     private var musicInfos: List<Music> = ArrayList()
-
 
     private var bottomDialogFragment: BottomDialogFragment? = null
 
@@ -41,10 +37,6 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
     }
 
     public override fun initViews() {
-        artistID = arguments!!.getLong(Extras.ARTIST_ID)
-        transitionName = arguments!!.getString(Extras.TRANSITIONNAME)
-        title = arguments?.getString(Extras.PLAYLIST_NAME)
-
         mAdapter = SongAdapter(musicInfos)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
@@ -56,7 +48,6 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
     }
 
     override fun listener() {
-
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicInfos, artistID.toString())
@@ -90,9 +81,8 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
     }
 
     companion object {
-        fun newInstance(id: String): ArtistSongsFragment {
+        fun newInstance(): ArtistSongsFragment {
             val args = Bundle()
-            args.putString(Extras.ARTIST_ID, id)
             val fragment = ArtistSongsFragment()
             fragment.arguments = args
             return fragment

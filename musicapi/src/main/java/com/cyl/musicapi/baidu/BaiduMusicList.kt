@@ -129,6 +129,8 @@ data class ArtistMusicList(@SerializedName("songlist")
                            val errorCode: Int = 0,
                            @SerializedName("havemore")
                            val haveMore: Int = 0,
+                           @SerializedName("artistinfo")
+                           val artistinfo: BaiduArtistInfo?,
                            @SerializedName("songnums")
                            val songNums: Int = 0)
 

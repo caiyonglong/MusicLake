@@ -121,7 +121,7 @@ interface BaiduApiService {
      * 获取歌手歌曲信息
      */
     @GET("$V1_TING?method=$GET_ARTISTSONGLIST")
-    fun getArtistSongList(@Query("tinguid") tinguid: String,
+    fun getArtistSongList(@Query("artistid") artistid: String,
                           @Query("offset") offset: Int,
                           @Query("limits") limits: Int = PAGESIZE): Observable<ArtistMusicList>
 

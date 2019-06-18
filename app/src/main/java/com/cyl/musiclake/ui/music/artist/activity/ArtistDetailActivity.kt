@@ -11,9 +11,9 @@ import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.artist.contract.ArtistDetailContract
 import com.cyl.musiclake.ui.music.artist.fragment.AlbumFragment
-import com.cyl.musiclake.ui.music.artist.presenter.ArtistDetailPresenter
 import com.cyl.musiclake.ui.music.artist.fragment.ArtistInfoFragment
 import com.cyl.musiclake.ui.music.artist.fragment.ArtistSongsFragment
+import com.cyl.musiclake.ui.music.artist.presenter.ArtistDetailPresenter
 import com.cyl.musiclake.utils.CoverLoader
 import kotlinx.android.synthetic.main.frag_artist_detail.*
 
@@ -24,12 +24,13 @@ import kotlinx.android.synthetic.main.frag_artist_detail.*
  * 歌单详情页
  */
 class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetailContract.View {
-    override fun showAllAlbum(albumList: MutableList<Album>) {
 
+    override fun showAllAlbum(albumList: MutableList<Album>) {
+        albumFragment?.showAlbums(albumList)
     }
 
     override fun showArtistInfo(artist: Artist) {
-        artistSongsFragment?.artistID = artist.id
+        artistSongsFragment?.artistID = artist.artistId
         artistInfoFragment?.updateArtistDesc(artist.desc)
     }
 
@@ -111,7 +112,7 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
 
     private fun setupViewPager() {
         artistInfoFragment = ArtistInfoFragment.newInstance("")
-        artistSongsFragment = ArtistSongsFragment.newInstance("")
+        artistSongsFragment = ArtistSongsFragment.newInstance()
         albumFragment = AlbumFragment.newInstance("")
 
         val mAdapter = PageAdapter(supportFragmentManager)

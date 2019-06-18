@@ -17,7 +17,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="?cardColor"
+            android:background="?windowBackground"
             app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
@@ -88,7 +88,8 @@
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_8" />
+            android:layout_margin="@dimen/dp_8"
+            android:elevation="@dimen/dp_4" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/resultRsv"

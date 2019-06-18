@@ -1,19 +1,13 @@
 package com.cyl.musiclake.ui.music.artist.fragment
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.cyl.musiclake.ui.music.artist.contract.ArtistSongContract
-import com.cyl.musiclake.ui.music.artist.presenter.ArtistSongsPresenter
 import com.cyl.musiclake.ui.music.local.adapter.AlbumAdapter
 import com.cyl.musiclake.ui.music.local.contract.AlbumsContract
 import com.cyl.musiclake.ui.music.local.presenter.AlbumPresenter

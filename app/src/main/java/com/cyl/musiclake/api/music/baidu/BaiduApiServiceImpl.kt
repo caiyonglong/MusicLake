@@ -5,10 +5,10 @@ import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_BIG
 import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_SMALL
+import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import io.reactivex.Observable
@@ -70,7 +70,7 @@ object BaiduApiServiceImpl {
                         music.album = songInfo.albumTitle
                         music.albumId = songInfo.albumId
                         music.artist = songInfo.artistName
-                        music.artistId = songInfo.tingUid
+                        music.artistId = songInfo.artistId
                         music.title = songInfo.title
                         music.isOnline = true
                         music.hasMv = songInfo.hasMv
@@ -283,6 +283,7 @@ object BaiduApiServiceImpl {
      * 获取歌手列表
      */
     fun getArtistSongList(artistId: String, offset: Int): Observable<Artist> {
+        LogUtil.d(TAG, "artistId $artistId offset $offset")
         return apiService.getArtistSongList(artistId, offset)
                 .flatMap {
                     val artist = Artist()
@@ -304,6 +305,9 @@ object BaiduApiServiceImpl {
                             music.coverBig = MusicUtils.getAlbumPic(it.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
                             songs.add(music)
                         }
+                        artist.desc = it.artistinfo?.intro
+                        artist.name = it.artistinfo?.name
+                        artist.picUrl = it.artistinfo?.avatarBig
                         artist.count = it.songNums
                         artist.songs = songs
                     }
@@ -317,6 +321,7 @@ object BaiduApiServiceImpl {
                     })
                 }
     }
+
 
     /**
      * 获取专辑信息
