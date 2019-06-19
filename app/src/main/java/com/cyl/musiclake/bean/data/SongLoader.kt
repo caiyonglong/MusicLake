@@ -69,7 +69,7 @@ object SongLoader {
      * @return
      */
     fun getAllAlbums(artistName: String?): MutableList<Album> {
-        return LitePal.where("type =local and artistName like ?", "%$artistName%").find(Album::class.java)
+        return LitePal.where("type =? and artistName like ?", "local", "%$artistName%").find(Album::class.java)
     }
 
 

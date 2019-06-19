@@ -3,11 +3,11 @@ package com.cyl.musiclake.api.playlist
 import com.cyl.musicapi.playlist.*
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
 import com.cyl.musiclake.api.music.MusicUtils
+import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.SPUtils
@@ -347,7 +347,7 @@ object PlaylistApiServiceImpl {
     }
 
     /**
-     * 网易云排行榜
+     * QQ音乐排行榜
      */
     fun getQQRank(limit: Int? = null, ids: IntArray? = null): Observable<MutableList<Playlist>> {
         return playlistApiService.getQQRank(limit, ids)

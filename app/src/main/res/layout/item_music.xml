@@ -52,7 +52,7 @@
         android:textColor="?textColorPrimary"
         android:textSize="@dimen/text_size_common"
         app:layout_constraintBottom_toTopOf="@+id/tv_artist"
-        app:layout_constraintEnd_toStartOf="@+id/iv_resource"
+        app:layout_constraintEnd_toStartOf="@+id/view_tag"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
         app:layout_constraintTop_toTopOf="parent" />
@@ -77,38 +77,46 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
 
-    <ImageView
-        android:id="@+id/iv_resource"
+    <LinearLayout
+        android:id="@+id/view_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:padding="2dp"
-        android:src="@drawable/ic_mv"
-        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iv_more"
         app:layout_constraintStart_toEndOf="@+id/tv_title"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/iv_mv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:padding="2dp"
-        android:src="@drawable/ic_mv"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_more"
-        app:layout_constraintStart_toEndOf="@+id/iv_resource"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/iv_resource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:src="@drawable/baidu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_more"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_mv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:src="@drawable/ic_video"
+            android:tint="@color/colorAccentDarkTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_more"
+            app:layout_constraintStart_toEndOf="@+id/iv_resource"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_more"
@@ -120,7 +128,7 @@
         android:src="@drawable/ic_more_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_resource"
+        app:layout_constraintStart_toEndOf="@+id/view_tag"
         app:layout_constraintTop_toTopOf="parent" />
 
 

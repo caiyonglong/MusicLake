@@ -55,7 +55,6 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.my.LoginActivity"
@@ -82,7 +81,6 @@
         <activity
             android:name=".ui.music.charts.activity.BaiduMusicListActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.mv.MvDetailActivity"
@@ -93,7 +91,6 @@
         <activity
             android:name=".ui.music.charts.activity.NeteasePlaylistActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.search.SearchActivity"
@@ -108,12 +105,10 @@
         <activity
             android:name=".ui.music.playlist.detail.PlaylistDetailActivity"
             android:label="@string/playlist_name"
-            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.artist.activity.ArtistDetailActivity"
             android:label="@string/artist_detail"
-            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.edit.EditMusicActivity"
@@ -203,7 +198,6 @@
         <activity
             android:name=".ui.music.playpage.PlayerActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.music.importplaylist.ImportPlaylistActivity"

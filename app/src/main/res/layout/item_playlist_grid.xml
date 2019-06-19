@@ -38,7 +38,6 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/playlist_name"
-            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/album"
             app:layout_constraintEnd_toEndOf="@+id/album"
