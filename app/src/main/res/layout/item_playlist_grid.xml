@@ -1,5 +1,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/playlist_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,44 +22,47 @@
             android:layout_height="@dimen/dp_120"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
-            android:transitionName="@string/transition_album"
             android:src="@drawable/default_cover"
+            android:transitionName="@string/transition_album"
             app:layout_constraintBottom_toTopOf="@+id/name"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/playlist_name"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/album"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/artist"
             app:layout_constraintEnd_toEndOf="@+id/album"
-            app:layout_constraintStart_toStartOf="@+id/album" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/album"
+            app:layout_constraintTop_toBottomOf="@+id/album" />
 
         <TextView
             android:id="@+id/artist"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/playlist_creator"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/album" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

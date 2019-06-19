@@ -45,6 +45,9 @@ interface BaiduApiService {
     fun getRadioChannels(): Observable<RadioData>
 
 
+    /**
+     * 获取歌词
+     */
     @GET
     fun getBaiduLyric(@Url baseUrl: String): Observable<ResponseBody>
 
@@ -63,7 +66,7 @@ interface BaiduApiService {
     fun getBillPlaylist(): Observable<BaiduList>
 
     /**
-     * 获取音乐榜单歌曲
+     * 获取音乐榜单歌曲列表
      */
     @GET("$V1_TING?method=$GET_BILL_LIST")
     fun getBillMusicList(@Query("type") type: String,
@@ -107,6 +110,9 @@ interface BaiduApiService {
     @GET("$V1_TING?from=qianqian&method=$GET_PLAY_MV")
     fun getPlayMv(@Query("song_id") songId: String?): Observable<BaiduPlayMv>
 
+    /**
+     * 获取歌曲信息
+     */
     @GET
     fun getTingSongInfo(@Url baseUrl: String): Observable<BaiduSongInfo>
 
@@ -118,12 +124,21 @@ interface BaiduApiService {
     fun downloadFile(@Url downloadUrl: String, @HeaderMap params: Map<String, String>): Observable<ResponseBody>
 
     /**
-     * 获取歌手歌曲信息
+     * 获取歌手歌曲列表和基本信息
      */
     @GET("$V1_TING?method=$GET_ARTISTSONGLIST")
     fun getArtistSongList(@Query("tinguid") tinguid: String,
                           @Query("offset") offset: Int,
                           @Query("limits") limits: Int = PAGESIZE): Observable<ArtistMusicList>
+
+    /**
+     * 获取歌手专辑列表
+     */
+    @GET("$V1_TING?method=$GET_ARTISTALUBMLIST")
+    fun getArtistAlbumList(@Query("tinguid") tinguid: String,
+                           @Query("offset") offset: Int,
+                           @Query("limits") limits: Int = PAGESIZE)
+            : Observable<ArtistAlbumList>
 
     /**
      * 获取专辑信息
@@ -137,9 +152,4 @@ interface BaiduApiService {
     @GET("$V1_TING?method=$SONG_LRC")
     fun queryLrc(@Query("songid") songId: String): Observable<BaiduLyric>
 
-    @GET("$V1_TING?method=$GET_ARTISTALUBMLIST")
-    fun getArtistAlbumList(@Query("tinguid") tinguid: String,
-                           @Query("offset") offset: Int,
-                           @Query("limits") limits: Int = PAGESIZE)
-            : Observable<ArtistAlbumList>
 }

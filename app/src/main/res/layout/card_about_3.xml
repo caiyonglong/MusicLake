@@ -4,10 +4,10 @@
     android:id="@+id/card_about_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="32dp"
+    android:layout_marginStart="@dimen/dp_8"
     android:layout_marginTop="@dimen/dp_8"
     android:layout_marginEnd="@dimen/dp_8"
-    android:layout_marginStart="@dimen/dp_8"
+    android:layout_marginBottom="@dimen/dp_64"
     android:background="@color/white"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="2dp">
@@ -17,14 +17,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_card_about_2_1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/text_margin"
-            android:text="支持与捐赠"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_margin"
+                android:text="@string/support_and_donate"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="（请作者喝杯咖啡吧☕️）"
+                android:textSize="@dimen/sp_12" />
+
+        </LinearLayout>
 
         <View
             android:id="@+id/view_card_about_2_line"
@@ -33,55 +45,53 @@
             android:background="@color/main_background" />
 
         <LinearLayout
-            android:id="@+id/cardEmailView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:clickable="true"
+            android:layout_margin="@dimen/dp_8"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="支付宝" />
+
+            <TextView
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="微信" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_weight="1"
                 android:layout_width="@dimen/dp_120"
                 android:layout_height="@dimen/dp_120"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/text_margin"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                android:onClick="donateAliPay"
                 android:src="@drawable/donate_alipay" />
 
             <ImageView
-                android:layout_weight="1"
                 android:layout_width="@dimen/dp_120"
                 android:layout_height="@dimen/dp_120"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/text_margin"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                android:onClick="donateWeChat"
                 android:src="@drawable/donate_wechat" />
 
         </LinearLayout>
 
-
-        <!--<LinearLayout-->
-        <!--android:id="@+id/ll_card_about_source_licenses"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="?android:selectableItemBackground"-->
-        <!--android:clickable="true"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_vertical"-->
-        <!--android:layout_margin="@dimen/text_margin"-->
-        <!--android:src="@drawable/ic_copyright_black_24dp" />-->
-
-        <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_vertical"-->
-        <!--android:layout_margin="@dimen/text_margin"-->
-        <!--android:text="@string/about_source_licenses"-->
-        <!--android:textStyle="italic" />-->
-        <!--</LinearLayout>-->
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

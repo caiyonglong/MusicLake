@@ -86,7 +86,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
         //初始化歌单Tab
         playlistTab.addTab(playlistTab.newTab().setText("本地歌单").setTag(Constants.PLAYLIST_LOCAL_ID))
-        playlistTab.addTab(playlistTab.newTab().setText("自建歌单").setTag(Constants.PLAYLIST_CUSTOM_ID))
+        playlistTab.addTab(playlistTab.newTab().setText("在线歌单").setTag(Constants.PLAYLIST_CUSTOM_ID))
         playlistTab.addTab(playlistTab.newTab().setText("网易歌单").setTag(Constants.PLAYLIST_WY_ID))
         playlistTab.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
             override fun onTabReselected(p0: TabLayout.Tab?) {
@@ -166,14 +166,17 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
             Constants.PLAYLIST_LOCAL_ID -> {
                 mAdapter?.setNewData(localPlaylists)
                 playlistAddIv.visibility = View.VISIBLE
+                playlistManagerIv.visibility = View.VISIBLE
             }
             Constants.PLAYLIST_CUSTOM_ID -> {
                 mAdapter?.setNewData(playlists)
                 playlistAddIv.visibility = View.VISIBLE
+                playlistManagerIv.visibility = View.VISIBLE
             }
             Constants.PLAYLIST_WY_ID -> {
                 mAdapter?.setNewData(wyPlaylists)
                 playlistAddIv.visibility = View.INVISIBLE
+                playlistManagerIv.visibility = View.INVISIBLE
             }
         }
         //如果歌单列表为空则显示空提示

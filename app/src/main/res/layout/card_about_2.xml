@@ -33,6 +33,7 @@
         <LinearLayout
             android:id="@+id/cardEmailView"
             android:layout_width="match_parent"
+            android:onClick="toGithubIssue"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
@@ -43,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
-                android:tint="?iconColor"
-                android:src="@drawable/ic_about_email" />
+                android:src="@drawable/ic_about_email"
+                android:tint="?iconColor" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -60,15 +61,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:onClick="toGithubPage">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
-                android:tint="?iconColor"
-                android:src="@drawable/ic_github" />
+                android:src="@drawable/ic_github"
+                android:tint="?iconColor" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -84,15 +86,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:onClick="toGithubOfPc">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
-                android:tint="?iconColor"
-                android:src="@drawable/ic_desktop_windows" />
+                android:src="@drawable/ic_desktop_windows"
+                android:tint="?iconColor" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -108,15 +111,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:onClick="onCheckUpdate">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
-                android:tint="?iconColor"
-                android:src="@drawable/ic_about_update" />
+                android:src="@drawable/ic_about_update"
+                android:tint="?iconColor" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -156,20 +160,21 @@
                 android:layout_margin="@dimen/text_margin"
                 tools:text="0" />
         </LinearLayout>
+
         <LinearLayout
-            android:id="@+id/email_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:onClick="toEmailFeedBack">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/text_margin"
-                android:tint="?iconColor"
-                android:src="@drawable/ic_feedback" />
+                android:src="@drawable/ic_feedback"
+                android:tint="?iconColor" />
 
             <TextView
                 android:layout_width="wrap_content"

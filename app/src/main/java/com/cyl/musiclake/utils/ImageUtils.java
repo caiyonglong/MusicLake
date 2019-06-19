@@ -2,6 +2,7 @@ package com.cyl.musiclake.utils;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -13,7 +14,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -25,6 +28,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 作者：yonglong on 2016/8/24 20:14
@@ -399,6 +405,46 @@ public class ImageUtils {
         output.copyTo(blurTemplate);
 
         return new BitmapDrawable(MusicApp.getAppContext().getResources(), blurTemplate);
+    }
+
+    /**
+     * 保存图片
+     *
+     * @param context
+     * @param bmp
+     */
+    public static boolean saveImageToGallery(Context context, Bitmap bmp, String name) {
+        boolean isSuccess = false;
+        // 首先保存图片
+        File appDir = new File(FileUtils.getImageDir());
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        String fileName = name + ".jpg";
+        File file = new File(appDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            isSuccess = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getPath())));
+
+        return isSuccess;
     }
 
 }

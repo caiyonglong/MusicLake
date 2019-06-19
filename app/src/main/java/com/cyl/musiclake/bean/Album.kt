@@ -10,7 +10,6 @@ import java.io.Serializable
 
 class Album : LitePalSupport, Serializable, Comparable<Album> {
 
-
     var id: Int = 0
     var albumId: String? = null
     var name: String? = null

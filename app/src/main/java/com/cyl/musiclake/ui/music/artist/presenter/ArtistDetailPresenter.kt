@@ -38,10 +38,8 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
         if (artist.type == null || artist.type == Constants.LOCAL) {
             doAsync {
                 val data = SongLoader.getSongsForArtist(artist.name)
-                val albumData = SongLoader.getAllAlbums(artist.name)
                 uiThread {
                     mView.showPlaylistSongs(data)
-                    mView.showAllAlbum(albumData)
                 }
             }
             return
@@ -83,6 +81,38 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
                 ToastUtils.show(msg)
             }
         })
+    }
+
+    /**
+     * 加载歌手专辑列表
+     *
+     * 暂时只支持本地和百度
+     * TODO 增加其他平台的歌手专辑列表
+     */
+    override fun loadArtistAlbum(artist: Artist) {
+        if (artist.type == null || artist.type == Constants.LOCAL) {
+            doAsync {
+                val albumData = SongLoader.getAllAlbums(artist.name)
+                uiThread {
+                    mView.showAllAlbum(albumData)
+                }
+            }
+            return
+        } else if (artist.type == Constants.BAIDU) {
+            val observable = BaiduApiServiceImpl.getArtistAlbumList(artist.artistId.toString(), 0)
+            ApiManager.request(observable, object : RequestCallBack<MutableList<Album>> {
+                override fun success(result: MutableList<Album>) {
+                    mView?.showAllAlbum(result)
+                }
+
+                override fun error(msg: String) {
+                    LogUtil.e(TAG, msg)
+                    mView?.showError(msg, true)
+                    ToastUtils.show(msg)
+                }
+            })
+            return
+        }
     }
 
     /**

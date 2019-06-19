@@ -322,6 +322,36 @@ object BaiduApiServiceImpl {
                 }
     }
 
+    /**
+     * 获取歌手列表
+     */
+    fun getArtistAlbumList(artistId: String, offset: Int): Observable<MutableList<Album>> {
+        LogUtil.d(TAG, "artistId $artistId offset $offset")
+        return apiService.getArtistAlbumList(artistId, offset)
+                .flatMap {
+                    val albumList = mutableListOf<Album>()
+                    it.albumlist?.forEach {
+                        val album = Album()
+                        album.albumId = it.albumId
+                        album.artistId = it.artistTingUid
+                        album.artistName = it.author
+                        album.count = it.songsTotal.toInt()
+                        album.name = it.title
+                        album.type = Constants.BAIDU
+                        album.cover = it.picSmall
+                        albumList.add(album)
+                    }
+                    Observable.create(ObservableOnSubscribe<MutableList<Album>> { e ->
+                        try {
+                            e.onNext(albumList)
+                            e.onComplete()
+                        } catch (error: Exception) {
+                            e.onError(Throwable(error.message))
+                        }
+                    })
+                }
+    }
+
 
     /**
      * 获取专辑信息

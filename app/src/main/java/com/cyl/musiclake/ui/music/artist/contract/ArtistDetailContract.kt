@@ -39,6 +39,8 @@ interface ArtistDetailContract {
 
         fun loadArtistSongs(artist: Artist)
 
+        fun loadArtistAlbum(artist: Artist)
+
         fun loadAlbumSongs(album: Album)
 
         fun deletePlaylist(playlist: Playlist)

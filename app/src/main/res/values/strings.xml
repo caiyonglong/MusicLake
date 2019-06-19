@@ -492,4 +492,5 @@
     <string name="item_video">本地视频</string>
     <string name="share_playing_song">分享正在播放歌曲</string>
     <string name="mv_path_error">播放地址异常，请检查后重试</string>
+    <string name="support_and_donate">支持与捐赠</string>
 </resources>

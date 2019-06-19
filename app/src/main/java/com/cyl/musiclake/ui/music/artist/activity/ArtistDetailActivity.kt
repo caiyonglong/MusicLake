@@ -76,6 +76,7 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
         showLoading()
         mArtist?.let {
             mPresenter?.loadArtistSongs(it)
+            mPresenter?.loadArtistAlbum(it)
         }
         mAlbum?.let {
             mPresenter?.loadAlbumSongs(it)
@@ -189,6 +190,7 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
         super.retryLoading()
         showLoading()
         mArtist?.let {
+            mPresenter?.loadArtistSongs(it)
             mPresenter?.loadArtistSongs(it)
         }
         mAlbum?.let {
