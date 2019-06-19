@@ -10,8 +10,6 @@ public interface AlbumsContract {
     interface View extends BaseContract.BaseView {
 
         void showAlbums(List<Album> albumList);
-
-        void showEmptyView();
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {

@@ -20,9 +20,6 @@ constructor() : BasePresenter<AlbumsContract.View>(), AlbumsContract.Presenter {
             val data = SongLoader.getAllAlbums()
             uiThread {
                 mView?.showAlbums(data)
-                if (data.isEmpty()) {
-                    mView?.showEmptyView()
-                }
                 mView?.hideLoading()
             }
         }

@@ -32,6 +32,8 @@ class AlbumFragment : BaseFragment<AlbumPresenter>(), AlbumsContract.View {
     private var bottomDialogFragment: BottomDialogFragment? = null
 
     override fun loadData() {
+        showEmptyState()
+        emptyTextView?.text = "功能正在开发中..."
     }
 
     override fun getLayoutId(): Int {
@@ -73,10 +75,6 @@ class AlbumFragment : BaseFragment<AlbumPresenter>(), AlbumsContract.View {
 
     override fun hideLoading() {
         super.hideLoading()
-    }
-
-    override fun showEmptyView() {
-        mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 
     companion object {

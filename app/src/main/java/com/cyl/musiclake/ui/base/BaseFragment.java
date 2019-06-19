@@ -58,6 +58,9 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     @BindView(R.id.error_button_retry)
     public Button errorButtonRetry;
     @Nullable
+    @BindView(R.id.tv_empty)
+    public TextView emptyTextView;
+    @Nullable
     @BindView(R.id.error_message_view)
     public TextView errorTextView;
     @Nullable

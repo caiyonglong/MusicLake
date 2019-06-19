@@ -92,8 +92,4 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
         mAdapter.setNewData(albumList);
     }
 
-    @Override
-    public void showEmptyView() {
-        mAdapter.setEmptyView(R.layout.view_song_empty);
-    }
 }

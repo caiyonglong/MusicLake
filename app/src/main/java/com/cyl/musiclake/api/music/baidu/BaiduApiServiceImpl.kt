@@ -70,7 +70,7 @@ object BaiduApiServiceImpl {
                         music.album = songInfo.albumTitle
                         music.albumId = songInfo.albumId
                         music.artist = songInfo.artistName
-                        music.artistId = songInfo.artistId
+                        music.artistId = songInfo.allArtistTingUid
                         music.title = songInfo.title
                         music.isOnline = true
                         music.hasMv = songInfo.hasMv

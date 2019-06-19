@@ -50,7 +50,7 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
             ApiManager.request(observable, object : RequestCallBack<Artist> {
                 override fun success(result: Artist) {
                     mView?.showPlaylistSongs(result.songs)
-                    mView?.showArtistInfo(artist)
+                    mView?.showArtistInfo(result)
                 }
 
                 override fun error(msg: String) {

@@ -9,6 +9,7 @@ import com.cyl.musicapi.playlist.QualityBean
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.utils.LogUtil
 
 /**
  * Created by master on 2018/4/7.
@@ -233,12 +234,14 @@ object MusicUtils {
     }
 
     /**
-     * 获取歌手名
+     * 获取所有的歌手
      */
-    fun getArtistInfo(music: Music): Artist? {
-        val artistIds = music.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
-        val artistNames = music.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+    fun getArtistInfo(music: Music?): MutableList<Artist> {
+        LogUtil.d("getArtistInfo","music?.artistId = " + music?.artistId + ": artistNames =" + music?.artist)
+        val artistIds = music?.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+        val artistNames = music?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artists = mutableListOf<Artist>()
+        LogUtil.d("getArtistInfo","music?.artistId = " + artistIds.toString() + ": artistNames =" + artists.toString())
         if (artistNames != null && artistIds?.size ?: 0 == artistNames.size) {
             for (i in artistNames.indices) {
                 val artist = Artist()
@@ -250,10 +253,7 @@ object MusicUtils {
                 }
             }
         }
-        if (artists.size > 0) {
-            return artists[0]
-        }
-        return null
+        return artists
     }
 
 }
