@@ -17,11 +17,11 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deletePlaylist
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
@@ -204,7 +204,8 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 }
             }
             R.id.action_batch -> {
-                startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
+                EditSongListActivity.musicList = musicList
+                startActivity<EditSongListActivity>()
             }
             R.id.action_order_title -> {
                 musicList.sortBy { it.title }

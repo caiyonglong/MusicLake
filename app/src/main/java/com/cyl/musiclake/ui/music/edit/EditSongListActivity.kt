@@ -5,10 +5,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deleteLocalMusic
 import com.cyl.musiclake.ui.downloadBatchMusic
 import kotlinx.android.synthetic.main.activity_song_edit.*
@@ -20,7 +19,10 @@ import kotlinx.android.synthetic.main.activity_song_edit.*
  */
 class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
 
-    var musicList = mutableListOf<Music>()
+    companion object {
+        var musicList = mutableListOf<Music>()
+    }
+
     var mAdapter: EditSongAdapter? = null
 
     override fun getLayoutResID(): Int {
@@ -38,7 +40,6 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
     }
 
     override fun initData() {
-        musicList = intent.getParcelableArrayListExtra(Extras.SONG_LIST)
         mAdapter?.setNewData(musicList)
         musicList.forEach {
             if (it.type == Constants.LOCAL) {
@@ -105,4 +106,8 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        musicList.clear();
+    }
 }

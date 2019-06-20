@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
@@ -73,7 +73,8 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
                     .show(mFragmentComponent.activity as AppCompatActivity)
         }
         menuIv.setOnClickListener {
-            startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
+            EditSongListActivity.musicList = musicList
+            startActivity<EditSongListActivity>()
         }
     }
 

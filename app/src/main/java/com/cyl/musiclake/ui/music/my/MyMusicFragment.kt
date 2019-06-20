@@ -17,9 +17,9 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.*
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.edit.PlaylistManagerActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
@@ -117,7 +117,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
             dialog.successListener = {
                 PlaylistManagerUtils.createPlaylist(it, type = playlistTag) {
                     ToastUtils.show(MusicApp.getAppContext().getString(R.string.create_playlist_success))
-                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, null))
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, it))
                 }
             }
             if (playlistTag == Constants.PLAYLIST_CUSTOM_ID && !UserStatus.getLoginStatus()) {

@@ -3,14 +3,12 @@ package com.cyl.musiclake.ui.music.charts.activity
 import android.os.Build
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Html
-import android.view.*
-import android.widget.AbsListView
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -91,7 +89,8 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_batch -> {
-                startActivity<EditSongListActivity>(Extras.SONG_LIST to musicList)
+                EditSongListActivity.musicList = musicList
+                startActivity<EditSongListActivity>()
             }
         }
         return super.onOptionsItemSelected(item)

@@ -114,6 +114,7 @@ object PlaylistApiServiceImpl {
                     val json = it.string()
                     val data = Gson().fromJson<PlaylistInfo>(json.toString(), PlaylistInfo::class.java)
                     val playlist = Playlist(data?.id, data?.name)
+                    playlist.type = Constants.PLAYLIST_CUSTOM_ID
                     Observable.create(ObservableOnSubscribe<Playlist> {
                         if (data == null && json.contains("msg")) {
                             val msg = Gson().fromJson<ErrorInfo>(json.toString(), ErrorInfo::class.java)

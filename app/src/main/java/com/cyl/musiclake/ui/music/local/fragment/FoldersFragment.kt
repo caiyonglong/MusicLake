@@ -5,13 +5,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.bean.FolderInfo
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter
@@ -49,7 +49,8 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
 
     override fun listener() {
         menuIv.setOnClickListener {
-            startActivity<EditSongListActivity>(Extras.SONG_LIST to songList)
+            EditSongListActivity.musicList = songList
+            startActivity<EditSongListActivity>()
         }
     }
 
