@@ -131,9 +131,6 @@ public class Constants {
     public static final String FILENAME_LRC = ".lrc";
     public static final int MUSIC_LIST_SIZE = 10;
 
-    public static final String BASE_URL = "http://musicapi.leanapp.cn/";//"/ting";
-
-
     public static final String BASE_MUSIC_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?" +
             "from=android&version=5.8.2.0&channel=huwei&operator=1&method=baidu.ting.billboard.billCategory&format=json&kflag=2";
 
@@ -167,7 +164,7 @@ public class Constants {
     /**
      * 网易云音乐接口
      */
-    public static final String BASE_NETEASE_URL = "http://192.168.31.78:3000/";
+    public static final String BASE_NETEASE_URL = "http://musiclake.leanapp.cn";
     //bugly app_id
     public static final String BUG_APP_ID = "fd892b37ea";
 
