@@ -90,7 +90,7 @@ public class AllListFragment extends BaseFragment {
 
             mArtistAdapter.setOnItemClickListener((adapter, view, position) -> {
                 Artist artist = (Artist) adapter.getData().get(position);
-                NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), artist, new Pair<View, String>(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)));
+                NavigationHelper.INSTANCE.navigateToArtist(mFragmentComponent.getActivity(), artist, new Pair<View, String>(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)));
             });
         } else if (type.equals(Constants.BAIDU_RADIO_LIST)) {
             //适配器

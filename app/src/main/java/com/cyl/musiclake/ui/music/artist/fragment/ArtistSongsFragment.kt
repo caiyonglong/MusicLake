@@ -11,8 +11,10 @@ import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.artist.contract.ArtistSongContract
 import com.cyl.musiclake.ui.music.artist.presenter.ArtistSongsPresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
+import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
+import kotlinx.android.synthetic.main.frag_artist_songs.*
+import org.jetbrains.anko.support.v4.startActivity
 import java.util.*
 
 /**
@@ -25,7 +27,7 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
 
     var artistID: String? = "0"
     private var mAdapter: SongAdapter? = null
-    private var musicInfos: List<Music> = ArrayList()
+    private var musicInfos: MutableList<Music> = ArrayList()
 
     private var bottomDialogFragment: BottomDialogFragment? = null
 
@@ -33,7 +35,7 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_recyclerview_notoolbar
+        return R.layout.frag_artist_songs
     }
 
     public override fun initViews() {
@@ -41,6 +43,19 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
+
+        //播放按钮
+        playIv?.setOnClickListener {
+            PlayManager.play(0, musicInfos, artistID.toString())
+        }
+        //播放按钮
+        menuIv.setOnClickListener {
+        }
+        //批量管理
+        menuIv.setOnClickListener {
+            EditSongListActivity.musicList = musicInfos
+            startActivity<EditSongListActivity>()
+        }
     }
 
     override fun initInjector() {
@@ -74,7 +89,7 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
         mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 
-    override fun showSongs(songList: List<Music>) {
+    override fun showSongs(songList: MutableList<Music>) {
         musicInfos = songList
         mAdapter?.setNewData(songList)
         hideLoading()

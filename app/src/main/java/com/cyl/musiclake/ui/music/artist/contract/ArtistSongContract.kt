@@ -9,7 +9,7 @@ interface ArtistSongContract {
 
         fun showEmptyView()
 
-        fun showSongs(songList: List<Music>)
+        fun showSongs(songList: MutableList<Music>)
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {

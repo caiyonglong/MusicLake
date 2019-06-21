@@ -200,7 +200,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             mArtistListAdapter?.bindToRecyclerView(chartsArtistRcv)
             mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
                 val artist = adapter.data[position] as Artist
-                NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
+                NavigationHelper.navigateToArtist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
             }
         } else {
             mArtistListAdapter?.setNewData(artists)
