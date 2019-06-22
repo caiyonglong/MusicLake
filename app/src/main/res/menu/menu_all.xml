@@ -14,7 +14,6 @@
                 <item
                     android:id="@+id/nav_bind_wy"
                     android:icon="@drawable/netease"
-                    android:visible="false"
                     android:title="@string/bind_netease" />
                 <item
                     android:id="@+id/nav_menu_playQueue"

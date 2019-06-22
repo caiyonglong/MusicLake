@@ -242,6 +242,7 @@
     <string name="playlist_online">我的歌单</string>
     <string name="playlist_creator">创建者</string>
     <string name="playlist_rename">重命名歌单</string>
+    <string name="new_playlist_type_error">新建歌单类型异常（目前支持本地和在线歌单）</string>
 
 
     <!-- 在线音乐-->
@@ -367,7 +368,7 @@
     <string name="prompt">提示</string>
     <string name="async_songs">同步歌曲</string>
     <string name="import_playlist_song">导入到歌单</string>
-    <string name="import_playlist_tips">打开网易云、虾米歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!</string>
+    <string name="import_playlist_tips">打开QQ音乐、网易云音乐、虾米音乐的歌单页，先点击“分享按钮”，再点击“复制链接”，然后粘贴到当前界面即可!</string>
     <string name="song_operate">歌曲操作</string>
     <string name="about_feedback_more">意见反馈（bug、想法、功能等）</string>
     <string name="download_local_error">不能下载本地音乐!</string>

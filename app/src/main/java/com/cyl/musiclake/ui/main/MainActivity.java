@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     TextView mName;
     //    TextView mLoginTv;
     ImageView mShowBindIv;
-    View mBindNeteaseView;
+    CircleImageView mBindNeteaseView;
     TextView mOnlineNumTv;
 
     private static final String TAG = "MainActivity";
@@ -132,14 +132,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
         mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
-        mShowBindIv.setOnClickListener(v -> {
-            mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setVisible(!mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible());
-            if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
-                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
-            } else {
-                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
-            }
-        });
+//        mShowBindIv.setOnClickListener(v -> {
+//            mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setVisible(!mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible());
+//            if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
+//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
+//            } else {
+//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
+//            }
+//        });
 
     }
 

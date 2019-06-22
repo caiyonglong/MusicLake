@@ -19,6 +19,7 @@ import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
+import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_import_playlist.*
 
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_import_playlist.*
 @Suppress("UNUSED_ANONYMOUS_PARAMETER")
 class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
+    private val TAG = "ImportPlaylistActivity"
     var mAdapter: SongAdapter? = null
     var name: String? = null
     var vendor: String? = null
@@ -56,11 +58,13 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     override fun listener() {
         super.listener()
+        //同步歌单
         syncBtn.setOnClickListener {
             showLoading(true)
             val playlistLink = playlistInputView.editText?.text.toString()
             getPlaylistId(playlistLink)
         }
+        //导入歌单
         importBtn.setOnClickListener {
             if (name == null) {
                 ToastUtils.show("请先同步获取歌曲！")
@@ -71,24 +75,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 return@setOnClickListener
             }
             if (musicList.size == 0) return@setOnClickListener
-            MaterialDialog.Builder(this)
-                    .title("是否将${musicList.size}首歌导入到歌单")
-                    .positiveText(R.string.sure)
-                    .negativeText(R.string.cancel)
-                    .inputRangeRes(2, 20, R.color.red)
-                    .input(getString(R.string.input_playlist), name.toString(), false) { _, _ -> }
-                    .onPositive { dialog1, _ ->
-                        val title = dialog1.inputEditText?.text.toString()
-                        PlaylistManagerUtils.createPlaylist(title, success = {
-                            it.pid?.let { _ ->
-                                PlaylistManagerUtils.collectBatchMusic(it, vendor.toString(), musicList, success = {
-                                    this@ImportPlaylistActivity.finish()
-                                })
-                            }
-                        }, type = "")
-                    }.build()
-                    .show()
-
+            PlaylistManagerUtils.addToPlaylist(this,musicList)
         }
     }
 
@@ -136,18 +123,13 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     private fun importMusic(vendor: String, pid: String) {
         this.vendor = vendor
+        LogUtil.d(TAG, "正在导入歌单 $vendor $pid")
         val observable = MusicApiServiceImpl.getPlaylistSongs(vendor, pid)
         ApiManager.request(observable, object : RequestCallBack<Playlist> {
             override fun success(result: Playlist) {
                 showLoading(false)
                 musicList.clear()
                 musicList = result.musicList
-//                result.musicList.forEach {
-//                    if (!it.isCp) {
-//                        musicList.add(it)
-//                    }
-//                }
-//                result.musicList = musicList
                 showResultAdapter(result)
             }
 
@@ -162,6 +144,9 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
+    /**
+     * 显示结果
+     */
     fun showResultAdapter(result: Playlist) {
         mAdapter = SongAdapter(result.musicList)
         this.name = result.name

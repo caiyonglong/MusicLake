@@ -7,6 +7,8 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl.collectBatch2Music
+import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl.collectBatchMusic
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
@@ -122,9 +124,6 @@ object PlaylistManagerUtils {
                 "在线歌单" -> {
                     addToOnlinePlaylist(activity, musics)
                 }
-                "网易云歌单" -> {
-                    ToastUtils.show("暂不支持此功能")
-                }
             }
         })
     }
@@ -168,7 +167,7 @@ object PlaylistManagerUtils {
         }
         //获取在线歌单列表，显示对话框
         getOnlinePlaylist(success = {
-            showSelectDialog(activity, it, musicList = musics)
+            showSelectDialog(activity, it, musicList = musics, playlistType = Constants.PLAYLIST_CUSTOM_ID)
         }, fail = {
             ToastUtils.show(it)
         })
@@ -176,16 +175,13 @@ object PlaylistManagerUtils {
 
     /**
      * 显示本地歌单列表
+     * @param musicList 需要添加的歌曲列表
      */
-    private fun showLocalPlaylistDialog(activity: AppCompatActivity, music: Music? = null, musicList: MutableList<Music>? = null) {
+    private fun showLocalPlaylistDialog(activity: AppCompatActivity, musicList: MutableList<Music>) {
         doAsync {
             val playlist = PlaylistLoader.getAllPlaylist()
             uiThread {
-                if (playlist.size==0){
-                    ToastUtils.show("暂无本地歌单，请先创建哦😄")
-                }else{
-                    showSelectDialog(activity, playlist, music, musicList)
-                }
+                showSelectDialog(activity, playlist, musicList)
             }
         }
     }
@@ -193,32 +189,60 @@ object PlaylistManagerUtils {
     /**
      * 显示所有的歌单列表
      */
-    private fun showSelectDialog(activity: AppCompatActivity, playlists: MutableList<Playlist>, music: Music? = null, musicList: MutableList<Music>? = null) {
+    private fun showSelectDialog(activity: AppCompatActivity, playlists: MutableList<Playlist>, musicList: MutableList<Music>, playlistType: String = Constants.PLAYLIST_LOCAL_ID) {
         val items = mutableListOf<String>()
         playlists.forEach {
             it.name?.let { it1 -> items.add(it1) }
         }
+        items.add("新建歌单")
         MaterialDialog.Builder(activity)
                 .title(R.string.add_to_playlist)
                 .items(items)
                 .itemsCallback { _, _, which, _ ->
-                    if (playlists[which].pid == null) {
-                        playlists[which].pid = playlists[which].id.toString()
-                    }
-                    if (musicList != null) {
-                        collectBatch2Music(playlists[which], musicList)
+                    if (which == items.size - 1) {
+                        val playlist = Playlist()
+                        playlist.type = playlistType
+                        showNewPlaylistDialog(activity, playlist, musicList)
                     } else {
-                        collectMusic(playlists[which], music)
+                        if (playlists[which].pid == null) {
+                            playlists[which].pid = playlists[which].id.toString()
+                        }
+                        collectBatch2Music(playlists[which], musicList)
                     }
                 }
                 .build().show()
     }
 
     /**
+     * 显示所有的歌单列表
+     */
+    private fun showNewPlaylistDialog(activity: AppCompatActivity, playlist: Playlist, musicList: MutableList<Music>) {
+//            //新建歌单
+        MaterialDialog.Builder(activity)
+                .title("是否将${musicList.size}首歌导入到 新建歌单")
+                .positiveText(R.string.sure)
+                .negativeText(R.string.cancel)
+                .inputRangeRes(2, 20, R.color.red)
+                .input(activity.getString(R.string.input_playlist), playlist.name, false) { _, _ -> }
+                .onPositive { dialog1, _ ->
+                    val title = dialog1.inputEditText?.text.toString()
+                    createPlaylist(title, success = {
+                        it.pid?.let { _ ->
+                            collectBatch2Music(it, musicList, success = {
+                                ToastUtils.show("歌曲已成功添加到歌单 ${it.name}")
+                            })
+                        }
+                    }, type = playlist.type)
+                }.build()
+                .show()
+    }
+
+    /**
      * 显示歌单类型选择列表
+     * 默认本地歌单，在线歌单
      */
     private fun showPlaylistSelectDialog(activity: AppCompatActivity, callBack: ((String) -> Unit)) {
-        val items = mutableListOf("本地歌单", "在线歌单", "网易云歌单")
+        val items = mutableListOf("本地歌单", "在线歌单")
         MaterialDialog.Builder(activity)
                 .title(R.string.add_to_playlist)
                 .items(items)
@@ -255,7 +279,7 @@ object PlaylistManagerUtils {
 
     /**
      *
-     * 歌曲批量添加到在线歌单，同类型
+     * 歌曲批量添加到在线歌单，必须同类型
      * 目前支持网易，虾米，qq
      */
     fun collectBatchMusic(playlist: Playlist, vendor: String, musicList: MutableList<Music>?, success: (() -> Unit)? = null) {
@@ -282,19 +306,21 @@ object PlaylistManagerUtils {
 
     /**
      * 在线歌单
-     * 歌曲批量添加到在线歌单，不同类型
+     * 歌曲批量添加到在线歌单，支持不同类型
      * 目前支持网易，虾米，qq
      */
-    private fun collectBatch2Music(playlist: Playlist, musicList: MutableList<Music>?) {
+    private fun collectBatch2Music(playlist: Playlist, musicList: MutableList<Music>?, success: (() -> Unit)? = null) {
         if (playlist.type == Constants.PLAYLIST_LOCAL_ID) {
             playlist.pid?.let {
                 PlaylistLoader.addMusicList(it, musicList!!)
+                success?.invoke()
                 EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
             }
         } else if (playlist.type == Constants.PLAYLIST_CUSTOM_ID) {
-            ApiManager.request(PlaylistApiServiceImpl.collectBatch2Music(playlist.pid.toString(), musicList), object : RequestCallBack<String> {
+            ApiManager.request(collectBatch2Music(playlist.pid.toString(), musicList), object : RequestCallBack<String> {
                 override fun success(result: String) {
                     ToastUtils.show(result)
+                    success?.invoke()
                     EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
                 }
 
@@ -331,16 +357,21 @@ object PlaylistManagerUtils {
             } else {
                 ToastUtils.show(MusicApp.getAppContext().getString(R.string.un_login_tips))
             }
-        } else {
+        } else if (type == Constants.PLAYLIST_LOCAL_ID) {
             val pid = System.currentTimeMillis().toString()
             doAsync {
-                val success = PlaylistLoader.createPlaylist(pid, Constants.PLAYLIST_LOCAL_ID, name)
+                val isSuccess = PlaylistLoader.createPlaylist(pid, Constants.PLAYLIST_LOCAL_ID, name)
                 uiThread {
-                    if (success) {
-                        EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, Playlist()))
+                    if (isSuccess) {
+                        val playlist = Playlist(pid = pid, name = name)
+                        playlist.type = Constants.PLAYLIST_LOCAL_ID
+                        EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_ADD, playlist))
+                        success.invoke(playlist)
                     }
                 }
             }
+        } else {
+            ToastUtils.show(MusicApp.getAppContext().getString(R.string.new_playlist_type_error))
         }
     }
 

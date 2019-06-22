@@ -171,13 +171,15 @@ public class DWebView extends WebView {
                                 ret.put("data", retValue);
                                 //retValue = URLEncoder.encode(ret.toString(), "UTF-8").replaceAll("\\+", "%20");
                                 if (cb != null) {
-                                    //String script = String.format("%s(JSON.parse(decodeURIComponent(\"%s\")).data);", cb, retValue);
+//                                    String script = String.format("%s(JSON.parse(decodeURIComponent(\"%s\")).data);", cb, retValue);
                                     String script = String.format("%s(%s.data);", cb, ret.toString());
                                     if (complete) {
                                         script += "delete window." + cb;
                                     }
-                                    //Log.d(LOG_TAG, "complete " + script);
+                                    Log.d(LOG_TAG, "回调空complete " + script);
                                     evaluateJavascript(script);
+                                }else{
+                                    Log.d(LOG_TAG, "回调空");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

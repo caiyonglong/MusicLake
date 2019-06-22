@@ -39,7 +39,7 @@ object BaseApiImpl {
             mWebView?.addJavascriptObject(object : Any() {
                 @JavascriptInterface
                 fun onAjaxRequest(requestData: Any, handler: CompletionHandler<String>) {
-                    Log.e("TAG", "-----" + requestData.toString())
+                    Log.d("BaseApiImpl", "onAjaxRequest-----$requestData")
                     AjaxHandler.onAjaxRequest(requestData as JSONObject, handler)
                 }
             }, null)
@@ -214,7 +214,7 @@ object BaseApiImpl {
      * id，专辑ID
      */
     fun getAlbumSongs(vendor: String, id: String, success: (result: ArtistSongsData) -> Unit, fail: ((String) -> Unit)? = null) {
-        mWebView?.callHandler("api.getAlbumSongs", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
+        mWebView?.callHandler("api.getPlaylistDetail", arrayOf<Any>(vendor, id)) { retValue: JSONObject ->
             try {
                 val result = gson.fromJson<ArtistSongsData>(retValue.toString(), ArtistSongsData::class.java)
                 success.invoke(result)
