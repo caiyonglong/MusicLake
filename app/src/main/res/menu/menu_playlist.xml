@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_18dp"
+        android:title="@string/search_playlist"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_batch"
         android:title="@string/title_batch_operate"
         app:showAsAction="never" />

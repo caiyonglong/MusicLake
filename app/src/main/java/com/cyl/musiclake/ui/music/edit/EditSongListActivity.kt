@@ -106,8 +106,4 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        musicList.clear();
-    }
 }

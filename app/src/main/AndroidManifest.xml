@@ -245,6 +245,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_count_down"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.music.search.PlaylistSearchActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_count_down"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"  />
     </application>
 
 </manifest>

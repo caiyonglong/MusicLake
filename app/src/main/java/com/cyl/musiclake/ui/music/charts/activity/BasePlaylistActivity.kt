@@ -17,6 +17,7 @@ import com.cyl.musiclake.ui.music.charts.PlaylistPresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
+import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.FormatUtil
 import kotlinx.android.synthetic.main.activity_chart_playlist.*
@@ -91,6 +92,10 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
             R.id.action_batch -> {
                 EditSongListActivity.musicList = musicList
                 startActivity<EditSongListActivity>()
+            }
+            R.id.action_search -> {
+                PlaylistSearchActivity.musicList = musicList
+                startActivity<PlaylistSearchActivity>()
             }
         }
         return super.onOptionsItemSelected(item)

@@ -23,6 +23,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
+import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
 import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
@@ -220,9 +221,10 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 mAdapter?.notifyDataSetChanged()
             }
             R.id.action_search -> {
-                val intent = Intent(this, SearchActivity::class.java)
+                //设置歌单内搜索的歌曲
+                PlaylistSearchActivity.musicList = musicList;
+                val intent = Intent(this, PlaylistSearchActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-                intent.putExtra("is_playlist", true)
                 startActivity(intent)
             }
         }
