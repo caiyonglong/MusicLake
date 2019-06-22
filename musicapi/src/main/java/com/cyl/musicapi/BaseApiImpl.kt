@@ -30,18 +30,23 @@ object BaseApiImpl {
         initAssets()
         try {
             mWebView = DWebView(context)
-            mWebView?.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
-                    return false
-                }
-            }
             DWebView.setWebContentsDebuggingEnabled(true)
             mWebView?.addJavascriptObject(object : Any() {
+
+                /**
+                 * Note: This method is for Fly.js
+                 * In browser, Ajax requests are sent by browser, but Fly can
+                 * redirect requests to native, more about Fly see  https://github.com/wendux/fly
+                 * @param requestData passed by fly.js, more detail reference https://wendux.github.io/dist/#/doc/flyio-en/native
+                 * @param handler
+                 */
                 @JavascriptInterface
                 fun onAjaxRequest(requestData: Any, handler: CompletionHandler<String>) {
+                    // Handle ajax request redirected by Fly
                     Log.d("BaseApiImpl", "onAjaxRequest-----$requestData")
                     AjaxHandler.onAjaxRequest(requestData as JSONObject, handler)
                 }
+
             }, null)
             mWebView?.loadUrl("file:///android_asset/musicApi.html")
         } catch (e: Throwable) {

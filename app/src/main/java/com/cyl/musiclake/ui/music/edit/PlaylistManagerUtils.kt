@@ -207,7 +207,9 @@ object PlaylistManagerUtils {
                         if (playlists[which].pid == null) {
                             playlists[which].pid = playlists[which].id.toString()
                         }
-                        collectBatch2Music(playlists[which], musicList)
+                        collectBatch2Music(playlists[which], musicList,success = {
+                            ToastUtils.show("歌曲已成功添加到歌单 ${playlists[which].name}")
+                        })
                     }
                 }
                 .build().show()
