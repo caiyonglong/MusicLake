@@ -14,74 +14,126 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/qqlogin"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/cv"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:elevation="5dp"
-            android:transitionName="loginFab"
-            app:fab_colorNormal="@color/app_green"
-            app:fab_colorPressed="@color/app_green_dark"
-            app:fab_icon="@drawable/qq_login"
-            app:fab_size="normal"
-            app:layout_constraintBottom_toBottomOf="@+id/wbLogin"
-            app:layout_constraintEnd_toStartOf="@+id/wbLogin"
-            app:layout_constraintHorizontal_bias="0.058"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/wbLogin" />
-
-        <TextView
-            android:id="@+id/tips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/qqlogin"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/qq_login_tips"
-            app:layout_constraintEnd_toEndOf="@+id/qqlogin"
-            app:layout_constraintStart_toStartOf="@+id/qqlogin"
-            app:layout_constraintTop_toBottomOf="@+id/qqlogin" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/wbLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/cv"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:elevation="5dp"
-            android:transitionName="loginFab"
-            app:fab_colorNormal="@color/app_yellow"
-            app:fab_colorPressed="@color/app_red"
-            app:fab_icon="@drawable/weibo_logo_32"
-            app:fab_size="normal"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/moreTips"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/qqlogin"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/weibotips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/qqlogin"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/weibo_login"
-            app:layout_constraintEnd_toEndOf="@+id/wbLogin"
-            app:layout_constraintStart_toStartOf="@+id/wbLogin"
-            app:layout_constraintTop_toBottomOf="@+id/wbLogin" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/qqlogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_8"
+                    android:elevation="5dp"
+                    android:transitionName="loginFab"
+                    app:fab_colorNormal="@color/app_green"
+                    app:fab_colorPressed="@color/app_green_dark"
+                    app:fab_icon="@drawable/qq_login"
+                    app:fab_size="normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/wbLogin"
+                    app:layout_constraintEnd_toStartOf="@+id/wbLogin"
+                    app:layout_constraintHorizontal_bias="0.058"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/wbLogin" />
+
+                <TextView
+                    android:id="@+id/tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/qq_login_tips"
+                    app:layout_constraintEnd_toEndOf="@+id/qqlogin"
+                    app:layout_constraintStart_toStartOf="@+id/qqlogin"
+                    app:layout_constraintTop_toBottomOf="@+id/qqlogin" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/githubLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:elevation="5dp"
+                    android:transitionName="loginFab"
+                    app:fab_colorNormal="@color/white"
+                    app:fab_colorPressed="@color/app_red"
+                    app:fab_icon="@drawable/ic_github"
+                    app:fab_size="normal"
+                    app:layout_constraintBottom_toTopOf="@+id/moreTips"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.507" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/github_login"
+                    app:layout_constraintEnd_toEndOf="@+id/wbLogin"
+                    app:layout_constraintStart_toStartOf="@+id/wbLogin"
+                    app:layout_constraintTop_toBottomOf="@+id/wbLogin" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/wbLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:elevation="5dp"
+                    android:transitionName="loginFab"
+                    app:fab_colorNormal="@color/app_yellow"
+                    app:fab_colorPressed="@color/app_red"
+                    app:fab_icon="@drawable/weibo_logo_32"
+                    app:fab_size="normal"
+                    app:layout_constraintBottom_toTopOf="@+id/moreTips"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/qqlogin"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/weibotips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/weibo_login"
+                    app:layout_constraintEnd_toEndOf="@+id/wbLogin"
+                    app:layout_constraintStart_toStartOf="@+id/wbLogin"
+                    app:layout_constraintTop_toBottomOf="@+id/wbLogin" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/moreTips"

@@ -495,4 +495,5 @@
     <string name="mv_path_error">播放地址异常，请检查后重试</string>
     <string name="support_and_donate">支持与捐赠</string>
     <string name="search_playlist">歌单内搜索</string>
+    <string name="github_login">Github登录</string>
 </resources>

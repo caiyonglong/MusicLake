@@ -1,19 +1,21 @@
 package com.cyl.musiclake.ui.my;
 
 import android.content.Intent;
-import android.support.design.widget.TextInputLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cyl.musicapi.netease.LoginInfo;
+import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.my.user.User;
+import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
+import com.cyl.musiclake.utils.Tools;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -99,6 +101,19 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         mPresenter.loginByQQ(this);
     }
 
+    @OnClick(R.id.githubLogin)
+    public void toGihubLogin() {
+        String client_id = "05baa9742e6a72d662a6";
+        String redirect_uri = "musiclake://login";
+        String auth = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&state=" + BuildConfig.APPLICATION_ID;
+        Tools.INSTANCE.openBrowser(this, auth);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        LogUtil.d(TAG, "onNewIntent");
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

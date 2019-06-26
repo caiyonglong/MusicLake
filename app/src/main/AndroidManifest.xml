@@ -58,7 +58,18 @@
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.my.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--scheme 允许在浏览器中打开-->
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="login"
+                    android:scheme="musiclake" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.my.BindLoginActivity"
             android:screenOrientation="portrait" />
@@ -250,7 +261,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_count_down"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"  />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>
