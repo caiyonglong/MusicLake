@@ -6,6 +6,8 @@ import android.content.Intent
 import android.widget.Toast
 import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.api.github.GithubApiServiceImpl
+import com.cyl.musiclake.api.github.OauthToken
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
@@ -24,6 +26,7 @@ import com.tencent.tauth.Tencent
 import com.tencent.tauth.UiError
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -93,8 +96,23 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
     /**
      * github登录
      */
-    fun loginByGithub() {
+    fun loginByGithub(code: String, state: String) {
+        mView?.showLoading()
+        val observable = GithubApiServiceImpl.getAccessToken(code, state)
+        ApiManager.request(observable,
+                object : RequestCallBack<Response<OauthToken>> {
+                    override fun success(result: Response<OauthToken>?) {
+                        val token = result?.body()
+                        token?.accessToken?.let {
+                            loginServer(it, code.toString(), Constants.OAUTH_GITHUB)
+                        }
+                    }
 
+                    override fun error(msg: String?) {
+                        mView?.hideLoading()
+                        mView?.showErrorInfo(msg)
+                    }
+                })
     }
 
     /**
@@ -119,7 +137,6 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                     MusicApp.mTencent.setAccessToken(accessToken, expires)
                     MusicApp.mTencent.openId = openID
                     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, openID)
-                    SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, accessToken)
                     SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, accessToken)
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -159,7 +176,7 @@ constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
                                 userInfo.nick = nickName
                                 //保存用户信息
                                 UserStatus.saveUserInfo(userInfo)
-                                loginServer(MusicApp.mTencent.accessToken, MusicApp.mTencent.openId, Constants.QQ)
+                                loginServer(MusicApp.mTencent.accessToken, MusicApp.mTencent.openId, Constants.OAUTH_QQ)
                             } catch (e: JSONException) {
                                 ToastUtils.show("网络异常，请稍后重试！")
                                 e.printStackTrace()

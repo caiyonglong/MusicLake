@@ -82,18 +82,20 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
     var mTitle: TextView
     var mSizeSeekBar: SeekBar
     var mColorSeekBar: ColorSeekBar
-    private val mLockButton: MaterialIconView
-    private val mPreButton: MaterialIconView
-    private val mNextButton: MaterialIconView
-    private val mPlayButton: MaterialIconView
     private val mSettingsButton: MaterialIconView
     private val mCloseButton: ImageButton
     private val mMusicButton: ImageButton
     private val mSettingLinearLayout: LinearLayout
     private val mRelLyricView: LinearLayout
     private val mLinLyricView: LinearLayout
-    private val mFrameBackground: FrameLayout
-    private val mRootView: View?
+
+    private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.float_lyric_view, this) }
+    private val mPreButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_previous) }
+    private val mPlayButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_play) }
+    private val mNextButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_next) }
+    private val mLockButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_lock) }
+    private val mFrameBackground by lazy { mRootView?.findViewById<View>(R.id.small_bg) }
+
     private var mIsLock: Boolean = false
     private val mNotify: UnLockNotify
 
@@ -102,7 +104,6 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mNotify = UnLockNotify()
 
-        mRootView = LayoutInflater.from(context).inflate(R.layout.float_lyric_view, this)
         val view = findViewById<FrameLayout>(R.id.small_window_layout)
         viewWidth = view.layoutParams.width
         viewHeight = view.layoutParams.height
@@ -115,15 +116,10 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         mLyricText = findViewById(R.id.lyric)
         mCloseButton = findViewById(R.id.btn_close)
         mMusicButton = findViewById(R.id.music_app)
-        mLockButton = findViewById(R.id.btn_lock)
-        mPreButton = findViewById(R.id.btn_previous)
-        mPlayButton = findViewById(R.id.btn_play)
-        mNextButton = findViewById(R.id.btn_next)
         mSettingsButton = findViewById(R.id.btn_settings)
         mSettingLinearLayout = findViewById(R.id.ll_settings)
         mRelLyricView = findViewById(R.id.rl_layout)
         mLinLyricView = findViewById(R.id.ll_layout)
-        mFrameBackground = findViewById(R.id.small_bg)
 
         mCloseButton.setOnClickListener(this)
         mMusicButton.setOnClickListener(this)
@@ -137,9 +133,9 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         mLyricText.setFontSizeScale(mFontSize)
         mSizeSeekBar.progress = mFontSize.toInt()
 
-        if (mIsLock) {
-            toggleLyricView()
-        }
+        mIsLock = SPUtils.getAnyByKey(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false)
+
+        showLyricBackground()
 
         mFontColor = SPUtils.getFontColor()
         mLyricText.setFontColorScale(mFontColor)
@@ -190,7 +186,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
             MotionEvent.ACTION_UP ->
                 // 如果手指离开屏幕时，xDownInScreen和xInScreen相等，且yDownInScreen和yInScreen相等，则视为触发了单击事件。
                 if (xDownInScreen == xInScreen && yDownInScreen == yInScreen && mMovement) {
-                    toggleLyricView()
+                    showLyricBackground()
                 }
             else -> {
             }
@@ -218,11 +214,12 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
     }
 
     /**
-     * toggle背景
+     * 显示隐藏背景
      */
-    private fun toggleLyricView() {
+    private fun showLyricBackground() {
+        LogUtil.d("FloatLyricView", "桌面歌词状态：mIsLock:$mIsLock")
         if (mRootView != null) {
-            if (mRelLyricView.visibility == View.INVISIBLE) {
+            if (!mIsLock) {
                 mRelLyricView.visibility = View.VISIBLE
                 mLinLyricView.visibility = View.VISIBLE
                 mFrameBackground.visibility = View.VISIBLE
@@ -326,7 +323,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
                 mNotify.cancel()
                 params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             }
-            toggleLyricView()
+            showLyricBackground()
             windowManager.updateViewLayout(this, params)
         }
     }

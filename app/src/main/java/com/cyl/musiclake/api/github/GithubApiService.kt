@@ -1,10 +1,12 @@
 package com.cyl.musiclake.api.github
 
-
-import com.cyl.musicapi.playlist.UserInfo
+import com.google.gson.annotations.SerializedName
 import io.reactivex.Observable
-import retrofit2.http.GET
+import retrofit2.Response
+import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Query
+
 
 /**
  * Created by master on 2018/4/5.
@@ -14,15 +16,19 @@ import retrofit2.http.Query
 
 interface GithubApiService {
 
-    /**
-     * 获取用户信息
-     *
-     * @param token
-     * @param openid
-     * @return
-     */
-    @GET("login/oauth/authorize?scope=user:email")
-    fun login(@Query("client_id") client_id: String?,
-                     @Query("uid") openid: String): Observable<UserInfo>
+    @POST("login/oauth/access_token")
+    @Headers("Accept: application/json")
+    fun getAccessToken(
+            @Query("client_id") clientId: String,
+            @Query("client_secret") clientSecret: String,
+            @Query("code") code: String,
+            @Query("state") state: String
+    ): Observable<Response<OauthToken>>
+}
 
+class OauthToken {
+    @SerializedName("access_token")
+    var accessToken: String? = null
+
+    var scope: String? = null
 }

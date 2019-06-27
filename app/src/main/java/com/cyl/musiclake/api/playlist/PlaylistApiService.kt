@@ -154,7 +154,7 @@ interface PlaylistApiService {
 
 
     /**
-     * 获取用户信息
+     * 微博登录获取用户信息
      *
      * @param token
      * @param openid
@@ -165,7 +165,7 @@ interface PlaylistApiService {
                      @Query("uid") openid: String): Observable<UserInfo>
 
     /**
-     * 获取用户信息
+     * Github登录获取用户信息
      *
      * @param token
      * @param openid

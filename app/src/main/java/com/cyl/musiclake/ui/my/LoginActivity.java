@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.my;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -103,16 +104,26 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @OnClick(R.id.githubLogin)
     public void toGihubLogin() {
-        String client_id = "05baa9742e6a72d662a6";
-        String redirect_uri = "musiclake://login";
-        String auth = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&state=" + BuildConfig.APPLICATION_ID;
+        String auth = "https://github.com/login/oauth/authorize?client_id=" + Constants.GITHUB_CLIENT_ID + "&redirect_uri=" + Constants.GITHUB_REDIRECT_URI + "&state=" + BuildConfig.APPLICATION_ID;
         Tools.INSTANCE.openBrowser(this, auth);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        LogUtil.d(TAG, "onNewIntent");
+        Uri uri = intent.getData();
+        if (uri != null) {
+            String code = uri.getQueryParameter("code");
+            String state = uri.getQueryParameter("state");
+            if (mPresenter != null && code != null && state != null) {
+                LogUtil.d(TAG, "onNewIntent code=" + code + " state+" + state);
+                mPresenter.loginByGithub(code, state);
+            } else {
+                ToastUtils.show("Github 授权失败");
+            }
+        } else {
+            ToastUtils.show("Github 授权失败");
+        }
     }
 
     @Override
@@ -182,7 +193,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     private void updateTokenView(boolean b) {
         if (mPresenter != null) {
-            mPresenter.loginServer(mAccessToken.getToken(), mAccessToken.getUid(), Constants.WEIBO);
+            mPresenter.loginServer(mAccessToken.getToken(), mAccessToken.getUid(), Constants.OAUTH_WEIBO);
         }
     }
 

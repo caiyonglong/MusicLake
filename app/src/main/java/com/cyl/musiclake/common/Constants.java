@@ -197,4 +197,11 @@ public class Constants {
 
     //    public static final String SOCKET_URL = "http://39.108.214.63:15003";
     public static final String SOCKET_URL = "https://socket.zzsun.cc";
+    public static final String OAUTH_GITHUB = "oauth_github";
+    public static final String OAUTH_QQ = "oauth_qq";
+    public static final String OAUTH_WEIBO = "oauth_weibo";
+    public static final String GITHUB_BASE_URL = "https://github.com";
+    public static final String GITHUB_REDIRECT_URI = "musiclake://oauth";
+    public static final String GITHUB_CLIENT_ID = "05baa9742e6a72d662a6";
+    public static final String GITHUB_CLIENT_SECRET = "776c29a9eb0822505829483a1dfcd19812ac622f";
 }

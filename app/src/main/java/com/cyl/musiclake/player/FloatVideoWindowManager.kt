@@ -16,9 +16,9 @@ import com.cyl.musiclake.utils.SPUtils
 import com.google.android.exoplayer2.ExoPlayer
 
 /**
- * 悬浮窗管理类
+ * 视频播放悬浮窗管理类
  */
-object FloatWindowManager {
+object FloatVideoWindowManager {
 
 
     //悬浮窗控制
@@ -40,15 +40,15 @@ object FloatWindowManager {
      */
     fun createFloatPlayerWindow(context: Context, startView: View? = null, enableTouch: Boolean): Boolean {
         try {
-            removeFloatView(context)
             MusicApp.isShowingFloatView = true
             if (windowManager == null) {
                 windowManager = getWindowManager(context)
             }
             if (playerView == null) {
                 playerView = FloatPlayerView(context)
+            }else{
+                removeFloatView(context)
             }
-            playerView = FloatPlayerView(context)
             playerViewParams = getPlayerParams(context, startView)
             playerViewParams?.let {
                 if (position != null) {
@@ -142,7 +142,7 @@ object FloatWindowManager {
             playerViewParams?.x = SPUtils.getAnyByKey(Constants.FLOAT_VIEW_X, size.x - 500)
             playerViewParams?.y = SPUtils.getAnyByKey(Constants.FLOAT_VIEW_Y, 300)
             playerViewParams?.width = context.resources.getDimensionPixelOffset(R.dimen.dp_160)
-            playerViewParams!!.height = context.resources.getDimensionPixelOffset(R.dimen.dp_90)
+            playerViewParams?.height = context.resources.getDimensionPixelOffset(R.dimen.dp_90)
             playerView?.setParams(playerViewParams!!)
         }
         return playerViewParams

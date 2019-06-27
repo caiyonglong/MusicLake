@@ -34,6 +34,7 @@ object PlaylistApiServiceImpl {
         val url = "https://music-lake-android.zzsun.cc/notice.json"
         return playlistApiService.checkMusicLakeNotice(url)
     }
+
     /**
      * 获取全部歌单
      */
@@ -273,8 +274,13 @@ object PlaylistApiServiceImpl {
      * 用户登录
      */
     fun login(token: String, openid: String, method: String): Observable<User> {
-        val observable = if (method == Constants.QQ) playlistApiService.loginByQQ(token, openid)
-        else playlistApiService.loginByWeiBo(token, openid)
+
+        val observable = when (method) {
+            Constants.OAUTH_QQ -> playlistApiService.loginByQQ(token, openid)
+            Constants.OAUTH_WEIBO -> playlistApiService.loginByWeiBo(token, openid)
+            Constants.OAUTH_GITHUB -> playlistApiService.loginByGithub(token)
+            else -> playlistApiService.loginByGithub(token)
+        }
         return observable.flatMap { data ->
             val user = User()
             user.nick = data.nickname

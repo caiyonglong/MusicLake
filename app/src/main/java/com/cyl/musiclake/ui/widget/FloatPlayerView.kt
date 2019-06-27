@@ -12,7 +12,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.StatusChangedEvent
-import com.cyl.musiclake.player.FloatWindowManager
+import com.cyl.musiclake.player.FloatVideoWindowManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity
 import com.cyl.musiclake.utils.SPUtils
@@ -64,7 +64,7 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
         LayoutInflater.from(context).inflate(R.layout.float_player_view, this)
         viewHeight = playerView.layoutParams.height
         viewWidth = playerView.layoutParams.width
-        statusBarHeight = FloatWindowManager.getStatusBarHeight(context)
+        statusBarHeight = FloatVideoWindowManager.getStatusBarHeight(context)
 
         gestureDetector = GestureDetector(context, onGestureListener())
 //        exoPlayerView.hideController()
@@ -148,21 +148,21 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
                 xInScreen = event.rawX
                 yInScreen = event.rawY - statusBarHeight
                 // 手指移动的时候更新小悬浮窗的位置
-                FloatWindowManager.updateViewPosition(context, (xInScreen - xInView).toInt(), (yInScreen - yInView).toInt())
+                FloatVideoWindowManager.updateViewPosition(context, (xInScreen - xInView).toInt(), (yInScreen - yInView).toInt())
                 //创建上下悬浮窗
-                FloatWindowManager.createFloatControlWindow(MusicApp.getAppContext())
+                FloatVideoWindowManager.createFloatControlWindow(MusicApp.getAppContext())
                 //更新上下view状态
-                playerViewParams?.let { FloatWindowManager.updateControlViewStatus(it) }
+                playerViewParams?.let { FloatVideoWindowManager.updateControlViewStatus(it) }
             }
             MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                 //处理事件
                 responseEvent()
                 //移除上下悬浮窗
-                FloatWindowManager.removeFloatControlView(context)
+                FloatVideoWindowManager.removeFloatControlView(context)
             }
             else -> {
                 //移除上下悬浮窗
-                FloatWindowManager.removeFloatControlView(context)
+                FloatVideoWindowManager.removeFloatControlView(context)
             }
         }
         return true
@@ -170,7 +170,7 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
 
     private fun doubleClick() {
         //移除上下悬浮窗
-        FloatWindowManager.removeFloatControlView(context)
+        FloatVideoWindowManager.removeFloatControlView(context)
         val intent = Intent(context, PlayerActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         try {
@@ -248,7 +248,7 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
      */
     private fun moveToEdge() {
         //获取屏幕宽度
-        val size = FloatWindowManager.getWindowSize(context).x / 2
+        val size = FloatVideoWindowManager.getWindowSize(context).x / 2
         val positionX = playerViewParams!!.x + playerView.width / 2
         var newX = 0
         if (size < positionX) {
@@ -262,7 +262,7 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
         moveAnimator.addUpdateListener {
             val x = it.animatedValue as Int
             // 手指移动的时候更新小悬浮窗的位置
-            FloatWindowManager.updateViewPosition(context, x, playerViewParams!!.y)
+            FloatVideoWindowManager.updateViewPosition(context, x, playerViewParams!!.y)
         }
         moveAnimator.start()
     }
@@ -271,7 +271,7 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
      * 响应自定义事件
     //     */
     private fun responseEvent() {
-        val state = FloatWindowManager.getControlViewStatus()
+        val state = FloatVideoWindowManager.getControlViewStatus()
         when (state) {
             1 -> {
 //                val intent = Intent(context, PowerSavingActivity::class.java)
@@ -285,7 +285,7 @@ class FloatPlayerView(context: Context) : FrameLayout(context), View.OnTouchList
             }
             2 -> {
                 PlayManager.playPause()
-                FloatWindowManager.removeFloatView(context)
+                FloatVideoWindowManager.removeFloatView(context)
             }
             else -> moveToEdge()
         }
