@@ -46,11 +46,11 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         val params = window?.attributes
         params?.gravity = Gravity.BOTTOM
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
-        params?.height = MusicApp.screenSize.y / 7 * 5
+        params?.height = MusicApp.screenSize.y /7*4
         window.attributes = params
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        mBehavior?.peekHeight = params?.height ?: dip(350)
+        mBehavior?.peekHeight = params?.height ?: dip(300)
         //默认全屏展开
         mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -174,7 +174,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun showSongs(songs: List<Music>) {
         musicList = songs
-        songSumTv.text = songs.size.toString()
+        songSumTv.text = "(${songs.size})"
         updatePlayMode()
         mAdapter?.setNewData(songs)
         //滚动到正在播放的位置

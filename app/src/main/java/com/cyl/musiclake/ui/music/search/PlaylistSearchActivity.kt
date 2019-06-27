@@ -125,8 +125,8 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
         mAdapter.setOnItemClickListener { _, view, position ->
             if (musicList.size <= position) return@setOnItemClickListener
-
-            PlayManager.playOnline(musicList[position])
+            //播放歌单内搜索结果队列
+            PlayManager.play(position,searchResults,queryString.hashCode().toString())
             NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
         }
         mAdapter.setOnItemChildClickListener { _, _, position ->

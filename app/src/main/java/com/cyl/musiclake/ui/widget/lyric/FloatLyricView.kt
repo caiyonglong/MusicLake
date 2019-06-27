@@ -78,75 +78,65 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
     private var mMovement: Boolean = false
     private var isHiddenSettings: Boolean = false
 
-    var mLyricText: LyricTextView
-    var mTitle: TextView
-    var mSizeSeekBar: SeekBar
-    var mColorSeekBar: ColorSeekBar
-    private val mSettingsButton: MaterialIconView
-    private val mCloseButton: ImageButton
-    private val mMusicButton: ImageButton
-    private val mSettingLinearLayout: LinearLayout
-    private val mRelLyricView: LinearLayout
-    private val mLinLyricView: LinearLayout
 
     private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.float_lyric_view, this) }
     private val mPreButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_previous) }
     private val mPlayButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_play) }
     private val mNextButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_next) }
     private val mLockButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_lock) }
+    private val mSettingsButton by lazy { mRootView?.findViewById<MaterialIconView>(R.id.btn_settings) }
     private val mFrameBackground by lazy { mRootView?.findViewById<View>(R.id.small_bg) }
+    private val mSettingLinearLayout by lazy { mRootView?.findViewById<View>(R.id.ll_settings) }
+    private val mRelLyricView by lazy { mRootView?.findViewById<View>(R.id.rl_layout) }
+    private val mLinLyricView by lazy { mRootView?.findViewById<View>(R.id.ll_layout) }
+
+    private val mMusicButton by lazy { mRootView?.findViewById<ImageButton>(R.id.music_app) }
+    private val mCloseButton by lazy { mRootView?.findViewById<ImageButton>(R.id.btn_close) }
+    val mLyricText by lazy { mRootView?.findViewById<LyricTextView>(R.id.lyric) }
+    val mTitle by lazy { mRootView?.findViewById<TextView>(R.id.music_title) }
+    private val mSizeSeekBar by lazy { mRootView?.findViewById<SeekBar>(R.id.sb_size) }
+    private val mColorSeekBar by lazy { mRootView?.findViewById<ColorSeekBar>(R.id.sb_color) }
+    private val view by lazy { mRootView?.findViewById<FrameLayout>(R.id.small_window_layout) }
 
     private var mIsLock: Boolean = false
     private val mNotify: UnLockNotify
-
 
     init {
         windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mNotify = UnLockNotify()
 
-        val view = findViewById<FrameLayout>(R.id.small_window_layout)
-        viewWidth = view.layoutParams.width
-        viewHeight = view.layoutParams.height
+        viewWidth = view?.layoutParams?.width ?:0
+        viewHeight = view?.layoutParams?.height ?:0
         mMovement = true
         isHiddenSettings = true
 
-        mTitle = findViewById(R.id.music_title)
-        mSizeSeekBar = findViewById(R.id.sb_size)
-        mColorSeekBar = findViewById(R.id.sb_color)
-        mLyricText = findViewById(R.id.lyric)
-        mCloseButton = findViewById(R.id.btn_close)
-        mMusicButton = findViewById(R.id.music_app)
-        mSettingsButton = findViewById(R.id.btn_settings)
-        mSettingLinearLayout = findViewById(R.id.ll_settings)
-        mRelLyricView = findViewById(R.id.rl_layout)
-        mLinLyricView = findViewById(R.id.ll_layout)
 
-        mCloseButton.setOnClickListener(this)
-        mMusicButton.setOnClickListener(this)
-        mLockButton.setOnClickListener(this)
-        mPreButton.setOnClickListener(this)
-        mPlayButton.setOnClickListener(this)
-        mNextButton.setOnClickListener(this)
-        mSettingsButton.setOnClickListener(this)
+        mCloseButton?.setOnClickListener(this)
+        mMusicButton?.setOnClickListener(this)
+        mLockButton?.setOnClickListener(this)
+        mPreButton?.setOnClickListener(this)
+        mPlayButton?.setOnClickListener(this)
+        mNextButton?.setOnClickListener(this)
+        mSettingsButton?.setOnClickListener(this)
 
         mFontSize = SPUtils.getFontSize().toFloat()
-        mLyricText.setFontSizeScale(mFontSize)
-        mSizeSeekBar.progress = mFontSize.toInt()
+        mLyricText?.setFontSizeScale(mFontSize)
+        mSizeSeekBar?.progress = mFontSize.toInt()
 
         mIsLock = SPUtils.getAnyByKey(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false)
 
         showLyricBackground()
 
         mFontColor = SPUtils.getFontColor()
-        mLyricText.setFontColorScale(mFontColor)
-        mColorSeekBar.colorBarPosition = mFontColor
+        mLyricText?.setFontColorScale(mFontColor)
+        mColorSeekBar?.colorBarPosition = mFontColor
 
         setPlayStatus(MusicPlayerService.getInstance().isPlaying)
 
-        mSizeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        mSizeSeekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 LogUtil.e("TEST", "$progress---$fromUser")
-                mLyricText.setFontSizeScale(progress.toFloat())
+                mLyricText?.setFontSizeScale(progress.toFloat())
                 SPUtils.saveFontSize(progress)
             }
 
@@ -158,8 +148,8 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
 
             }
         })
-        mColorSeekBar.setOnColorChangeListener { colorBarPosition, alphaBarPosition, color ->
-            mLyricText.setFontColorScale(color)
+        mColorSeekBar?.setOnColorChangeListener { colorBarPosition, alphaBarPosition, color ->
+            mLyricText?.setFontColorScale(color)
             SPUtils.saveFontColor(color)
         }
 
@@ -220,17 +210,17 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         LogUtil.d("FloatLyricView", "桌面歌词状态：mIsLock:$mIsLock")
         if (mRootView != null) {
             if (!mIsLock) {
-                mRelLyricView.visibility = View.VISIBLE
-                mLinLyricView.visibility = View.VISIBLE
-                mFrameBackground.visibility = View.VISIBLE
+                mRelLyricView?.visibility = View.VISIBLE
+                mLinLyricView?.visibility = View.VISIBLE
+                mFrameBackground?.visibility = View.VISIBLE
             } else {
                 if (!isHiddenSettings) {
                     isHiddenSettings = true
                     updateSettingStatus(isHiddenSettings)
                 }
-                mLinLyricView.visibility = View.INVISIBLE
-                mRelLyricView.visibility = View.INVISIBLE
-                mFrameBackground.visibility = View.INVISIBLE
+                mLinLyricView?.visibility = View.INVISIBLE
+                mRelLyricView?.visibility = View.INVISIBLE
+                mFrameBackground?.visibility = View.INVISIBLE
             }
         }
     }
@@ -269,10 +259,10 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
             R.id.btn_lock -> {
                 mMovement = !mMovement
                 if (mMovement) {
-                    mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN)
+                    mLockButton?.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN)
                 } else {
                     saveLock(true, true)
-                    mLockButton.setIcon(MaterialDrawableBuilder.IconValue.LOCK)
+                    mLockButton?.setIcon(MaterialDrawableBuilder.IconValue.LOCK)
                 }
             }
             R.id.btn_previous -> MusicPlayerService.getInstance().prev()
@@ -290,17 +280,17 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
 
     fun setPlayStatus(isPlaying: Boolean) {
         if (isPlaying) {
-            mPlayButton.setIcon(MaterialDrawableBuilder.IconValue.PAUSE)
+            mPlayButton?.setIcon(MaterialDrawableBuilder.IconValue.PAUSE)
         } else {
-            mPlayButton.setIcon(MaterialDrawableBuilder.IconValue.PLAY)
+            mPlayButton?.setIcon(MaterialDrawableBuilder.IconValue.PLAY)
         }
     }
 
     fun updateSettingStatus(isHidden: Boolean) {
         if (isHidden) {
-            mSettingLinearLayout.visibility = View.GONE
+            mSettingLinearLayout?.visibility = View.GONE
         } else {
-            mSettingLinearLayout.visibility = View.VISIBLE
+            mSettingLinearLayout?.visibility = View.VISIBLE
         }
     }
 

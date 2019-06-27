@@ -77,7 +77,7 @@
         android:layout_marginEnd="16dp"
         android:contentDescription="@null"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_delete"
+        android:src="@drawable/ic_clear"
         android:tint="?iconColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

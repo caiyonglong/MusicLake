@@ -25,7 +25,8 @@ class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHol
     override fun convert(holder: BaseViewHolder, item: Music) {
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
-        if (PlayManager.getPlayingId() == item.mid) {
+        //选中正在播放的歌曲
+        if (PlayManager.getPlayingId() == item.mid && PlayManager.position() == holder.adapterPosition) {
             holder.setTextColor(R.id.tv_title, Color.parseColor("#0091EA"))
             holder.setTextColor(R.id.tv_artist, Color.parseColor("#01579B"))
         } else {

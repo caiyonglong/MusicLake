@@ -496,4 +496,5 @@
     <string name="support_and_donate">支持与捐赠</string>
     <string name="search_playlist">歌单内搜索</string>
     <string name="github_login">Github登录</string>
+    <string name="oauth_github_tip">使用浏览器登录(OAuth)</string>
 </resources>

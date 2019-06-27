@@ -4,75 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sheet"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="?windowBackground"
-    android:fitsSystemWindows="true">
-
+    android:fitsSystemWindows="true"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_play_mode"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="@dimen/dp_16"
+            android:src="@drawable/ic_repeat_one"
+            android:tint="?iconColor" />
 
-            <ImageView
-                android:id="@+id/iv_play_mode"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="@dimen/dp_16"
-                android:src="@drawable/ic_repeat_one"
-                android:tint="?iconColor" />
-
-            <TextView
-                android:id="@+id/tv_play_mode"
-                style="@style/TextAppearance.AppCompat.Body2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_16"
-                app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/play_mode_repeat" />
-
-
-            <TextView
-                android:id="@+id/tv_song_sum"
-                style="@style/TextAppearance.AppCompat.Body2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_8"
-                android:layout_weight="1"
-                android:textSize="@dimen/sp_16"
-                app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/play_mode_repeat" />
-
-            <ImageView
-                android:id="@+id/iv_clear_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_16"
-                android:src="@drawable/ic_delete"
-                android:tint="?iconColor" />
-        </LinearLayout>
-
-        <View
+        <TextView
+            android:id="@+id/tv_play_mode"
+            style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_05"
-            android:background="@color/translucent_white" />
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/play_mode_repeat" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcv_songs"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            app:layout_behavior="@string/bottom_sheet_behavior" />
+
+        <TextView
+            android:id="@+id/tv_song_sum"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/play_mode_repeat" />
+
+        <ImageView
+            android:id="@+id/iv_clear_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_16"
+            android:src="@drawable/ic_delete"
+            android:tint="?iconColor" />
     </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_05"
+        android:background="@color/translucent_white" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_songs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="@dimen/dp_200"
+        android:layout_weight="1"
+        app:layout_behavior="@string/bottom_sheet_behavior" />
 
 </LinearLayout>
 

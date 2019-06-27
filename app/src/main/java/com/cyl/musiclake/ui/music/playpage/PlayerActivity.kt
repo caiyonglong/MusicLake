@@ -282,9 +282,13 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
                     searchLyricIv.visibility = View.GONE
                     operateSongIv.visibility = View.VISIBLE
                     lyricFragment?.lyricTv?.setIndicatorShow(false)
+                    rightTv.isChecked = false
+                    leftTv.isChecked = true
                 } else {
                     searchLyricIv.visibility = View.VISIBLE
                     operateSongIv.visibility = View.GONE
+                    leftTv.isChecked = false
+                    rightTv.isChecked = true
                 }
             }
 

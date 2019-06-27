@@ -723,7 +723,7 @@ public class MusicPlayerService extends Service {
     }
 
     /**
-     * 【在线音乐】加入播放队列并播放音乐
+     * 【在线音乐，搜索的音乐】加入播放队列并播放音乐
      *
      * @param music
      */
@@ -1363,6 +1363,7 @@ public class MusicPlayerService extends Service {
     private void startFloatLyric() {
         if (SystemUtils.isOpenFloatWindow()) {
             showLyric = !showLyric;
+            SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, true);
             showDesktopLyric(showLyric);
         } else {
             SystemUtils.applySystemWindow();

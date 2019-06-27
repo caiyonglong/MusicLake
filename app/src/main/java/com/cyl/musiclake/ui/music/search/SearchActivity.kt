@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.search
 
-import android.app.PendingIntent.getActivity
 import android.preference.PreferenceManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
