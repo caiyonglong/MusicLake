@@ -39,7 +39,6 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun onStart() {
         super.onStart()
-        val dialog = dialog
         dialog.setCanceledOnTouchOutside(true)
         val window = dialog.window
 
@@ -47,8 +46,8 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         params?.gravity = Gravity.BOTTOM
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = MusicApp.screenSize.y /7*4
-        window.attributes = params
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.attributes = params
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         mBehavior?.peekHeight = params?.height ?: dip(300)
         //默认全屏展开
@@ -58,6 +57,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        setStyle(STYLE_NO_FRAME, 0)
         mPresenter = PlayQueuePresenter()
         mPresenter?.attachView(this)
         mAdapter = QueueAdapter(musicList)
@@ -78,6 +78,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         recyclerView.scrollToPosition(PlayManager.getCurrentPosition())
         initListener()
         dialog.setContentView(view)
+        (view.parent as View).setBackgroundColor(Color.TRANSPARENT)
         mPresenter?.loadSongs()
         mBehavior = BottomSheetBehavior.from(view.parent as View)
         return dialog

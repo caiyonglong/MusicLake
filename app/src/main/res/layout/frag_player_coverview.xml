@@ -60,7 +60,8 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_8">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civ_cover"
@@ -85,8 +86,8 @@
             android:layout_marginRight="30dp"
             android:elevation="10dp"
             android:src="@drawable/default_cover"
-            android:visibility="gone"
             android:transitionName="@string/transition_cover"
+            android:visibility="gone"
             app:civ_border_color="@color/black" />
     </RelativeLayout>
 </LinearLayout>

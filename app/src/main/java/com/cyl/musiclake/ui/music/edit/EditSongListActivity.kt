@@ -41,6 +41,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
 
     override fun initData() {
         mAdapter?.setNewData(musicList)
+        //是否支持批量删除
         musicList.forEach {
             if (it.type == Constants.LOCAL) {
                 deleteTv.visibility = View.VISIBLE
@@ -71,6 +72,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
             }
             downloadBatchMusic(selectMusic)
         }
+
         deleteTv.setOnClickListener {
             val selectMusic = mutableListOf<Music>()
             mAdapter?.checkedMap?.forEach {

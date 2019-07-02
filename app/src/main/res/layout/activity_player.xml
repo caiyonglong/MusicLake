@@ -124,17 +124,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="@dimen/dp_4">
 
             <CheckedTextView
                 android:id="@+id/leftTv"
                 android:layout_width="8dp"
-                android:padding="@dimen/dp_2"
                 android:layout_height="8dp"
                 android:layout_marginEnd="@dimen/dp_8"
                 android:background="@drawable/dots"
                 android:checked="true"
-                android:elevation="@dimen/dp_2" />
+                android:elevation="@dimen/dp_2"
+                android:padding="@dimen/dp_2" />
 
             <CheckedTextView
                 android:id="@+id/rightTv"
@@ -143,8 +144,8 @@
                 android:layout_marginEnd="@dimen/dp_8"
                 android:background="@drawable/dots"
                 android:checked="false"
-                android:padding="@dimen/dp_2"
-                android:elevation="@dimen/dp_2" />
+                android:elevation="@dimen/dp_2"
+                android:padding="@dimen/dp_2" />
 
         </LinearLayout>
 
@@ -176,6 +177,7 @@
                     android:layout_weight="1"
                     android:maxHeight="2dp"
                     android:progress="0"
+                    android:secondaryProgress="30"
                     android:tag="tint_accent_color" />
 
 

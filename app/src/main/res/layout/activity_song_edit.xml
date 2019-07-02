@@ -74,7 +74,8 @@
             android:lineSpacingExtra="2sp"
             android:text="@string/delete"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_12" />
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

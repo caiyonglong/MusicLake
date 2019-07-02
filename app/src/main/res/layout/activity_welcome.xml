@@ -4,7 +4,7 @@
     android:id="@+id/wel_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_launch"
+    android:background="@drawable/bg_launcher"
     android:fitsSystemWindows="true">
 
     <ImageView

@@ -46,7 +46,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/tv_title"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/song" />
+        tools:text="@string/artist_title" />
 
 
     <ImageView

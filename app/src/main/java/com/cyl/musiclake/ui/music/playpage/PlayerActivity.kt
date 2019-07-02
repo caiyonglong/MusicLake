@@ -321,6 +321,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     fun updatePlayStatus(event: StatusChangedEvent) {
         playPauseIv.setLoading(!event.isPrepared)
         updatePlayStatus(event.isPlaying)
+        progressSb?.secondaryProgress = event.percent.toInt()
     }
 
     override fun onBackPressed() {

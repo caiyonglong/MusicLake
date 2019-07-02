@@ -180,7 +180,8 @@ public class MusicPlayerService extends Service {
     //暂时失去焦点，会再次回去音频焦点
     private boolean mPausedByTransientLossOfFocus = false;
 
-    public static int totalTime = 0;
+    //播放缓存进度
+    private int percent = 0;
 
     boolean mServiceInUse = false;
     //工作线程和Handler
@@ -280,7 +281,7 @@ public class MusicPlayerService extends Service {
                         service.mWakeLock.release();
                         break;
                     case PREPARE_ASYNC_UPDATE:
-                        int percent = (int) msg.obj;
+                        percent = (int) msg.obj;
                         LogUtil.e(TAG, "PREPARE_ASYNC_UPDATE Loading ... " + percent);
                         notifyChange(PLAY_STATE_LOADING_CHANGED);
                         break;
@@ -498,11 +499,6 @@ public class MusicPlayerService extends Service {
      */
     public void next(Boolean isAuto) {
         synchronized (this) {
-            if (!NetworkUtils.isNetworkAvailable(this)) {
-                ToastUtils.show("网络不可用，请检查网络连接");
-                return;
-            }
-
             mPlayingPos = PlayQueueManager.INSTANCE.getNextPosition(isAuto, mPlayQueue.size(), mPlayingPos);
             LogUtil.e(TAG, "next: " + mPlayingPos);
             stop(false);
@@ -515,10 +511,10 @@ public class MusicPlayerService extends Service {
      */
     public void prev() {
         synchronized (this) {
-            if (!NetworkUtils.isNetworkAvailable(this)) {
-                ToastUtils.show("网络不可用，请检查网络连接");
-                return;
-            }
+//            if (!NetworkUtils.isNetworkAvailable(this)) {
+//                ToastUtils.show("网络不可用，请检查网络连接");
+//                return;
+//            }
 
             mPlayingPos = PlayQueueManager.INSTANCE.getPreviousPosition(mPlayQueue.size(), mPlayingPos);
             LogUtil.e(TAG, "prev: " + mPlayingPos);
@@ -546,22 +542,27 @@ public class MusicPlayerService extends Service {
 
             LogUtil.e(TAG, "playingSongInfo:" + mPlayingMusic.toString());
             if (mPlayingMusic.getUri() == null || !Objects.equals(mPlayingMusic.getType(), Constants.LOCAL) || mPlayingMusic.getUri().equals("") || mPlayingMusic.getUri().equals("null")) {
-                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
-                    @Override
-                    public void success(Music result) {
-                        LogUtil.e(TAG, "-----" + result.toString());
-                        mPlayingMusic = result;
-                        saveHistory();
-                        playErrorTimes = 0;
-                        mPlayer.setDataSource(mPlayingMusic.getUri());
-                    }
 
-                    @Override
-                    public void error(String msg) {
-                        LogUtil.e(TAG, "播放异常-----" + msg);
-                        checkPlayErrorTimes();
-                    }
-                });
+                if (!NetworkUtils.isNetworkAvailable(this)) {
+                    ToastUtils.show("网络不可用，请检查网络连接");
+                } else {
+                    ApiManager.request(MusicApi.INSTANCE.getMusicInfo(mPlayingMusic), new RequestCallBack<Music>() {
+                        @Override
+                        public void success(Music result) {
+                            LogUtil.e(TAG, "-----" + result.toString());
+                            mPlayingMusic = result;
+                            saveHistory();
+                            playErrorTimes = 0;
+                            mPlayer.setDataSource(mPlayingMusic.getUri());
+                        }
+
+                        @Override
+                        public void error(String msg) {
+                            LogUtil.e(TAG, "播放异常-----" + msg);
+                            checkPlayErrorTimes();
+                        }
+                    });
+                }
             }
             saveHistory();
             mHistoryPos.add(mPlayingPos);
@@ -981,15 +982,16 @@ public class MusicPlayerService extends Service {
             case PLAY_STATE_CHANGED:
                 updateWidget(ACTION_PLAY_PAUSE);
                 mediaSessionManager.updatePlaybackState();
-                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying()));
+                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(),percent*getDuration()));
                 break;
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
                 EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID, null));
                 break;
-//            case PLAY_STATE_LOADING_CHANGED:
-//                EventBus.getDefault().post(new StatusChangedEvent(false, isPlaying()));
-//                break;
+            case PLAY_STATE_LOADING_CHANGED:
+                //播放loading
+                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(), percent*getDuration()));
+                break;
         }
     }
 
