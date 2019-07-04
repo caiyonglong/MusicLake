@@ -2,7 +2,6 @@ package com.cyl.musiclake.ui.music.local.adapter
 
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
-import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.ImageView
@@ -17,10 +16,7 @@ import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.ui.widget.fastscroll.FastScrollRecyclerView
-import com.cyl.musiclake.utils.ConvertUtils
-import com.cyl.musiclake.utils.CoverLoader
-import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.ToastUtils
+import com.cyl.musiclake.utils.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -80,8 +76,16 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.grey))
             holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
         }
+        val layoutParams = holder.getView<ImageView>(R.id.iv_cover).layoutParams
+        //动态改变图片尺寸大小
+        if (item.type == Constants.YOUTUBE) {
+            layoutParams.width = SizeUtils.dp2px(mContext, 80f)
+        } else {
+            layoutParams.width = SizeUtils.dp2px(mContext, 45f)
+        }
+        holder.getView<ImageView>(R.id.iv_cover).layoutParams = layoutParams
 
-        //歌曲类型
+        //歌曲类型,改变左边小图标
         if (item.type == Constants.LOCAL) {
             holder.getView<View>(R.id.iv_resource).visibility = View.GONE
         } else {

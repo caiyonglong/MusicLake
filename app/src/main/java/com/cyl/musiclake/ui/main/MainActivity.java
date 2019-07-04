@@ -27,6 +27,7 @@ import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
+import com.cyl.musiclake.player.FloatVideoWindowManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
@@ -132,14 +133,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
         mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
-//        mShowBindIv.setOnClickListener(v -> {
-//            mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setVisible(!mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible());
-//            if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
-//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
-//            } else {
-//                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
-//            }
-//        });
+        mShowBindIv.setOnClickListener(v -> {
+            if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
+                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
+                FloatVideoWindowManager.INSTANCE.createFloatPlayerWindow(this, mImageView, true);
+            } else {
+                mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
+                FloatVideoWindowManager.INSTANCE.removeFloatView(this);
+            }
+        });
 
     }
 

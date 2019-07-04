@@ -20,8 +20,8 @@ import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.Tools
-import kotlinx.android.synthetic.main.acitvity_playlist_search.resultListRcv
-import kotlinx.android.synthetic.main.acitvity_playlist_search.searchToolbarContainer
+import kotlinx.android.synthetic.main.activity_playlist_search.resultListRcv
+import kotlinx.android.synthetic.main.activity_playlist_search.searchToolbarContainer
 import kotlinx.android.synthetic.main.toolbar_search_layout.*
 
 /**
@@ -53,7 +53,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
 
     override fun getLayoutResID(): Int {
-        return R.layout.acitvity_playlist_search
+        return R.layout.activity_playlist_search
     }
 
     override fun initView() {

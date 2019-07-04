@@ -8,41 +8,4 @@
         android:orderInCategory="1"
         android:title="@string/search"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_filter"
-        android:icon="@drawable/ic_filter_list_white_24dp"
-        android:orderInCategory="100"
-        android:title="@string/search"
-        app:showAsAction="ifRoom">
-        <menu>
-            <group
-                android:id="@+id/search_filter_group"
-                android:checkableBehavior="all">
-                <item
-                    android:id="@+id/menu_filter_qq"
-                    android:checked="true"
-                    android:title="@string/search_filter_qq" />
-                <item
-                    android:id="@+id/menu_filter_xiami"
-                    android:checked="true"
-                    android:title="@string/search_filter_xiami" />
-                <item
-                    android:id="@+id/menu_filter_netease"
-                    android:checked="true"
-                    android:title="@string/search_filter_netease" />
-                <item
-                    android:id="@+id/menu_filter_baidu"
-                    android:checked="true"
-                    android:title="@string/search_filter_baidu" />
-                <item
-                    android:id="@+id/menu_filter_repeat"
-                    android:checked="true"
-                    android:title="@string/search_filter_repeat" />
-                <item
-                    android:id="@+id/menu_filter_copyright"
-                    android:checked="true"
-                    android:title="@string/search_filter_cp" />
-            </group>
-        </menu>
-    </item>
 </menu>

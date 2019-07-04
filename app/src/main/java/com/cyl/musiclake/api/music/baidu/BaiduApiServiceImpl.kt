@@ -109,9 +109,10 @@ object BaiduApiServiceImpl {
 
     /**
      * 通过百度搜索,获取MusicInfo
+     * @param offset 页面
      */
-    fun getSearchMusicInfo(query: String, limit: Int, offset: Int): Observable<MutableList<Music>> {
-        return apiService.queryMerge(query, offset, limit)
+    fun searchBaiduMusic(query: String, limit: Int, offset: Int): Observable<MutableList<Music>> {
+        return apiService.queryMerge(query, offset + 1, limit)
                 .flatMap {
                     Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
                         val musicList = mutableListOf<Music>()

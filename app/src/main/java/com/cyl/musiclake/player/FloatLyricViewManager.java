@@ -12,9 +12,9 @@ import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.music.MusicApi;
 import com.cyl.musiclake.api.music.MusicApiServiceImpl;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.api.net.ApiManager;
 import com.cyl.musiclake.api.net.RequestCallBack;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.ui.widget.LyricView;
 import com.cyl.musiclake.ui.widget.lyric.FloatLyricView;
 import com.cyl.musiclake.ui.widget.lyric.LyricInfo;
@@ -26,6 +26,9 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
+/**
+ * 桌面歌词管理类
+ */
 public class FloatLyricViewManager {
     private static final String TAG = "FloatLyricViewManager";
     private static FloatLyricView mFloatLyricView;
@@ -235,7 +238,9 @@ public class FloatLyricViewManager {
         if (!isHome() && !isWindowShowing()) {
             handler.post(() -> createFloatLyricView(mContext));
         } else if (isHome() && isWindowShowing()) {
-            handler.post(() -> removeFloatLyricView(mContext));
+            handler.post(() -> {
+                removeFloatLyricView(mContext);
+            });
         } else if (isWindowShowing()) {
             handler.post(() -> {
                 if (mFloatLyricView != null) {
@@ -249,7 +254,6 @@ public class FloatLyricViewManager {
                 }
             });
         }
-
     }
 
     /**
