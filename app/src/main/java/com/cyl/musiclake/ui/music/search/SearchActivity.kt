@@ -18,6 +18,7 @@ import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.main.PageAdapter
+import com.cyl.musiclake.ui.music.search.fragment.SearchSongsFragment
 import com.cyl.musiclake.utils.AnimationUtils
 import com.cyl.musiclake.utils.Tools
 import com.google.android.flexbox.FlexDirection
@@ -276,10 +277,12 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
     private fun updateHistoryPanel(isShow: Boolean) {
         if (isShow) {
             tabs?.visibility = View.GONE
+            viewPager?.visibility = View.GONE
             historyPanel.visibility = View.VISIBLE
         } else {
             historyPanel.visibility = View.GONE
             tabs?.visibility = View.VISIBLE
+            viewPager?.visibility = View.VISIBLE
             tabs?.setupWithViewPager(viewPager)
             viewPager.currentItem = 0
         }
@@ -296,7 +299,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         mAdapter.addFragment(SearchSongsFragment.newInstance(queryString, SearchEngine.Filter.BAIDU), "百度")
         viewPager?.adapter = mAdapter
         viewPager?.offscreenPageLimit = 4
-
         hideLoading()
     }
 }

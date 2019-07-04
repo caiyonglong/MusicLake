@@ -1,4 +1,4 @@
-package com.cyl.musiclake.ui.music.search
+package com.cyl.musiclake.ui.music.search.fragment
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -9,10 +9,14 @@ import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
+import com.cyl.musiclake.ui.music.search.SearchContract
+import com.cyl.musiclake.ui.music.search.SearchEngine
+import com.cyl.musiclake.ui.music.search.SearchPresenter
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 
@@ -79,7 +83,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
             "NETEASE" -> SearchEngine.Filter.NETEASE
             else -> SearchEngine.Filter.ANY
         }
-        LogUtil.d(TAG, "初始化")
+        LogUtil.d(TAG, "初始化 $type")
         musicList.clear()
     }
 
@@ -109,21 +113,17 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
             mAdapter?.bindToRecyclerView(recyclerView)
             mAdapter?.setOnLoadMoreListener(listener, recyclerView)
 
-            mAdapter?.setOnItemClickListener { adapter, view, position ->
-                if (view.id != R.id.iv_more) {
-                    PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID)
-                    mAdapter?.notifyDataSetChanged()
-                }
+            mAdapter?.setOnItemClickListener { _, view, position ->
+                if (songList.size <= position) return@setOnItemClickListener
+
+                PlayManager.playOnline(songList[position])
+                activity?.let { NavigationHelper.navigateToPlaying(it, view.findViewById(R.id.iv_cover)) }
             }
-            mAdapter?.setOnItemChildClickListener { adapter, _, position ->
-                val music = adapter.getItem(position) as Music?
-                BottomDialogFragment.newInstance(music, Constants.PLAYLIST_LOCAL_ID)
-                        .apply {
-                            removeSuccessListener = {
-                                this@SearchSongsFragment.mAdapter?.notifyItemRemoved(position)
-                            }
-                        }.show(mFragmentComponent.activity as AppCompatActivity)
+            mAdapter?.setOnItemChildClickListener { _, _, position ->
+                val music = songList[position]
+                BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(activity as AppCompatActivity)
             }
+
         } else {
             mAdapter?.setNewData(musicList)
         }

@@ -270,6 +270,7 @@ public class MusicPlayerService extends Service {
                         break;
                     case TRACK_PLAY_ERROR://mPlayer播放错误
                         LogUtil.e(TAG, "TRACK_PLAY_ERROR " + msg.obj + "---");
+                        ToastUtils.show("歌曲播放地址异常，请切换其他歌曲");
                         playErrorTimes++;
                         if (playErrorTimes < MAX_ERROR_TIMES) {
                             mMainHandler.post(() -> service.next(true));
