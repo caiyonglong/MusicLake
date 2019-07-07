@@ -114,13 +114,13 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
             mAdapter?.setOnLoadMoreListener(listener, recyclerView)
 
             mAdapter?.setOnItemClickListener { _, view, position ->
-                if (songList.size <= position) return@setOnItemClickListener
+                if (musicList.size <= position) return@setOnItemClickListener
 
-                PlayManager.playOnline(songList[position])
+                PlayManager.playOnline(musicList[position])
                 activity?.let { NavigationHelper.navigateToPlaying(it, view.findViewById(R.id.iv_cover)) }
             }
             mAdapter?.setOnItemChildClickListener { _, _, position ->
-                val music = songList[position]
+                val music = musicList[position]
                 BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(activity as AppCompatActivity)
             }
 

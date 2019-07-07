@@ -40,11 +40,17 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
         transaction?.add(this, tag)?.commitAllowingStateLoss()
     }
 
+    override fun onStart() {
+        super.onStart()
+        (view?.parent as View).setBackgroundColor(Color.TRANSPARENT)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.all_category_dialog, container, false)
         }
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         return rootView
     }
 

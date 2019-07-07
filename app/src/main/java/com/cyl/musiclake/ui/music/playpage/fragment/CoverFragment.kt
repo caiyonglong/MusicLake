@@ -65,7 +65,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
         tv_quality.setOnClickListener {
             QualitySelectDialog.newInstance(PlayManager.getPlayingMusic()).apply {
                 changeSuccessListener = {
-                    tv_quality.text = it
+                    this@CoverFragment.tv_quality.text = it
                 }
                 isDownload = false
             }.show(activity as AppCompatActivity)
