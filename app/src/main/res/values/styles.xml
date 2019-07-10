@@ -17,7 +17,7 @@
 
     <style name="AppTheme.Welcome" parent="AppTheme">
         <!-- 设置开机过渡图，当然也能换成自定义的布局/图片 -->
-        <item name="android:windowBackground">@drawable/bg_launcher</item>
+        <item name="android:windowBackground">@color/window_background</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 

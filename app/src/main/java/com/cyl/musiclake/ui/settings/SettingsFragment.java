@@ -43,7 +43,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public SwitchPreference mWifiSwitch, mSocketSwitch, mNightSwitch;
     public CheckBoxPreference mLyricCheckBox;
     public ListPreference mMusicQualityPreference;
-    public MultiSelectListPreference mSearchFilterPreference;
     public EditTextPreference mMusicApiPreference;
     public EditTextPreference mNeteaseApiPreference;
 
@@ -102,7 +101,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mNightSwitch = (SwitchPreference) findPreference("key_night_mode");
         mLyricCheckBox = (CheckBoxPreference) findPreference("key_lyric");
         mMusicQualityPreference = (ListPreference) findPreference("key_music_quality");
-        mSearchFilterPreference = (MultiSelectListPreference) findPreference("key_search_filter");
         mMusicApiPreference = (EditTextPreference) findPreference("key_music_api");
         mNeteaseApiPreference = (EditTextPreference) findPreference("key_netease_api");
 
@@ -113,7 +111,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mPreferenceDownloadFile.setSummary(FileUtils.getMusicDir());
         mPreferenceCacheFile.setSummary(FileUtils.getMusicCacheDir());
 
-        initSearchFilterSettings(true);
         mMusicQualityPreference.setSummary(mMusicQualityPreference.getEntry());
         mMusicQualityPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             //把preference这个Preference强制转化为ListPreference类型
@@ -143,13 +140,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             return false;
         });
 
-        mSearchFilterPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (searchOptions != newValue) {
-                searchOptions = (Set<String>) newValue;
-            }
-            initSearchFilterSettings(false);
-            return false;
-        });
         initApiSettings();
     }
 
@@ -167,26 +157,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         getActivity().finish();
     }
 
-    /**
-     * 初始化搜索过滤
-     */
-    private void initSearchFilterSettings(boolean isInit) {
-        if (isInit) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            searchOptions = prefs.getStringSet("key_search_filter", null);
-            searchFilters = getResources().getStringArray(R.array.pref_search_filter_select);
-        }
-
-        if (searchOptions != null) {
-            StringBuilder info = new StringBuilder();
-            for (String t : searchOptions) {
-                info.append(searchFilters[Integer.valueOf(t) - 1]);
-                info.append("、");
-            }
-            info.deleteCharAt(info.length() - 1);
-            mSearchFilterPreference.setSummary(info);
-        }
-    }
 
     /**
      * 初始化Api设置

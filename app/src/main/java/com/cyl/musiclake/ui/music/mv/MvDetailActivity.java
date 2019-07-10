@@ -107,7 +107,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
             ll.height = ViewGroup.LayoutParams.MATCH_PARENT;
             isPortrait = false;
-            mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_exit_white_36dp);
+            mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_exit);
 
             mToolbar.setVisibility(View.GONE);
             mBrsIv.setVisibility(View.VISIBLE);

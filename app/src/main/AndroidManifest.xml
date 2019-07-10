@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cyl.musiclake">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" /> <!-- 手机震动 -->
-    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" /> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -37,7 +37,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -51,7 +50,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
+
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
@@ -62,9 +67,11 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <!--scheme 允许在浏览器中打开-->
+                <!-- scheme 允许在浏览器中打开 -->
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="oauth"
                     android:scheme="musiclake" />
@@ -74,7 +81,7 @@
             android:name=".ui.my.BindLoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.cyl.musiclake.ui.music.playlist.square.PlaylistSquareActivity"
+            android:name=".ui.music.playlist.square.PlaylistSquareActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.playlist.PlaylistActivity"

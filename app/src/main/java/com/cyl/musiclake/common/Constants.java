@@ -167,7 +167,9 @@ public class Constants {
      * 网易云音乐接口
      */
     public static final String BASE_NETEASE_URL = "http://musiclake.leanapp.cn";
-    //bugly app_id
+    /**
+     * Bugly app_id
+     */
     public static final String BUG_APP_ID = "fd892b37ea";
 
     /**

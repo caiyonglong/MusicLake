@@ -25,7 +25,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.media.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
@@ -72,7 +72,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static android.support.v4.app.NotificationCompat.Builder;
 
 /**
  * 作者：yonglong on 2016/8/11 19:16
@@ -172,7 +171,7 @@ public class MusicPlayerService extends Service {
 
 
     private NotificationManager mNotificationManager;
-    private Builder mNotificationBuilder;
+    private NotificationCompat.Builder mNotificationBuilder;
     private Notification mNotification;
     private IMusicServiceStub mBindStub = new IMusicServiceStub(this);
     private boolean isRunningForeground = false;
@@ -983,7 +982,7 @@ public class MusicPlayerService extends Service {
             case PLAY_STATE_CHANGED:
                 updateWidget(ACTION_PLAY_PAUSE);
                 mediaSessionManager.updatePlaybackState();
-                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(),percent*getDuration()));
+                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(), percent * getDuration()));
                 break;
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
@@ -991,7 +990,7 @@ public class MusicPlayerService extends Service {
                 break;
             case PLAY_STATE_LOADING_CHANGED:
                 //播放loading
-                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(), percent*getDuration()));
+                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(), percent * getDuration()));
                 break;
         }
     }
@@ -1116,8 +1115,9 @@ public class MusicPlayerService extends Service {
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
-        mNotificationBuilder = new Builder(this, initChannelId())
+        mNotificationBuilder = new NotificationCompat.Builder(this, initChannelId())
                 .setSmallIcon(R.drawable.ic_music)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTitle())
                 .setContentText(text)
@@ -1147,7 +1147,7 @@ public class MusicPlayerService extends Service {
             //线控
             isRunningForeground = true;
             mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
-            NotificationCompat.MediaStyle style = new NotificationCompat.MediaStyle()
+            android.support.v4.media.app.NotificationCompat.MediaStyle style = new android.support.v4.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSessionManager.getMediaSession())
                     .setShowActionsInCompactView(1, 0, 2, 3, 4);
             mNotificationBuilder.setStyle(style);
@@ -1271,6 +1271,7 @@ public class MusicPlayerService extends Service {
             mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_pause;
         else
             mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_play;
+
         mNotification = mNotificationBuilder.build();
         mFloatLyricViewManager.updatePlayStatus(isMusicPlaying);
 

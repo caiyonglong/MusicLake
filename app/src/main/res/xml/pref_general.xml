@@ -47,15 +47,6 @@
             android:title="@string/pref_title_cache" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/search_filter_title">
-        <MultiSelectListPreference
-            android:entries="@array/pref_search_filter_select"
-            android:entryValues="@array/pref_search_filter_values"
-            android:key="key_search_filter"
-            android:summary="@string/search_filter_summary"
-            android:title="@string/search_filter_title" />
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/pref_header_notifications">
         <EditTextPreference
             android:key="key_music_api"

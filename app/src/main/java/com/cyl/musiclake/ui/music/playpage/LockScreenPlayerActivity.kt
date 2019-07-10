@@ -54,7 +54,7 @@ class LockScreenPlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.Vie
     }
 
     override fun updatePlayStatus(isPlaying: Boolean) {
-        playPauseIv.setImageResource(if (isPlaying) R.drawable.ic_play_big else R.drawable.ic_pause_big);
+        playPauseIv.setImageResource(if (isPlaying) R.drawable.ic_play else R.drawable.ic_pause);
     }
 
     override fun getLayoutResID(): Int {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <shortcut
+        android:icon="@drawable/ic_search_black"
+        android:shortcutId="search"
+        android:shortcutLongLabel="@string/search"
+        android:shortcutShortLabel="@string/search">
+        <intent
+            android:action="com.cyl.musiclake.shortcut.ACTION_SEARCH"
+            android:targetClass="com.cyl.musiclake.ui.main.WelcomeActivity"
+            android:targetPackage="com.cyl.musiclake" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:icon="@drawable/ic_history_black"
+        android:shortcutId="history"
+        android:shortcutLongLabel="@string/item_history"
+        android:shortcutShortLabel="@string/item_history">
+        <intent
+            android:action="com.cyl.musiclake.shortcut.ACTION_HISTORY"
+            android:targetClass="com.cyl.musiclake.ui.main.WelcomeActivity"
+            android:targetPackage="com.cyl.musiclake" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:icon="@drawable/item_music"
+        android:shortcutId="local"
+        android:shortcutLongLabel="@string/item_local"
+        android:shortcutShortLabel="@string/item_local">
+        <intent
+            android:action="com.cyl.musiclake.ui.main.ACTION_LOCAL"
+            android:targetClass="com.cyl.musiclake.ui.main.WelcomeActivity"
+            android:targetPackage="com.cyl.musiclake" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

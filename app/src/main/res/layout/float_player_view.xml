@@ -38,21 +38,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_prev_white" />
+            android:src="@drawable/ic_skip_previous" />
 
         <ImageView
             android:id="@+id/playPauseIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pause_white" />
+            android:src="@drawable/ic_pause" />
 
         <ImageView
             android:id="@+id/nextIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_next_white" />
+            android:src="@drawable/ic_skip_next" />
 
     </LinearLayout>
 

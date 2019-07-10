@@ -48,6 +48,7 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -105,6 +106,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         disableNavigationViewScrollbars(mNavigationView);
         checkLoginStatus();
         initCountDownView();
+
+        //检查更新
+        Beta.checkUpgrade(false, false);
     }
 
 
@@ -169,13 +173,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void initData() {
         String from = getIntent().getAction();
-//        if (from != null && from.equals(Constants.DEAULT_NOTIFICATION)) {
-//            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
-//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-//        }
         updatePlaySongInfo(PlayManager.getPlayingMusic());
         //加载主fragment
-        navigateLibrary.run();
+        initShortCutsIntent();
+    }
+
+    /**
+     * 初始shortCuts点击事件
+     */
+    private void initShortCutsIntent() {
+        String action = getIntent().getAction();
+        if (action != null) {
+            LogUtil.d(TAG, "收到 启动ACTION  " + action);
+            if (action.contains("ACTION_SEARCH")) {
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            } else if (action.contains("ACTION_LOCAL")) {
+            } else if (action.contains("ACTION_HISTORY")) {
+            } else {
+                navigateLibrary.run();
+            }
+        }
     }
 
     @Override
@@ -280,11 +299,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTargetClass = null;
     }
 
+    /**
+     * 启动界面
+     */
     private Runnable navigateLibrary = () -> {
         Fragment fragment = MainFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
-
     };
 
     //返回键
@@ -449,7 +470,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.e(TAG, "onNewIntent");
-
+        initData();
     }
 
     @Override

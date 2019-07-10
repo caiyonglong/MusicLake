@@ -19,7 +19,6 @@ import com.cyl.musiclake.utils.ToastUtils
 import com.devbrackets.android.exomedia.listener.OnPreparedListener
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.google.android.exoplayer2.Player
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_video.video_view
 import kotlinx.android.synthetic.main.exomedia_default_controls_mobile.*
 
@@ -54,7 +53,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             ll.width = ViewGroup.LayoutParams.MATCH_PARENT
             ll.height = ViewGroup.LayoutParams.MATCH_PARENT
             isPortrait = false
-            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_exit_white_36dp)
+            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_exit)
         } else {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             val ll = video_view.getLayoutParams()

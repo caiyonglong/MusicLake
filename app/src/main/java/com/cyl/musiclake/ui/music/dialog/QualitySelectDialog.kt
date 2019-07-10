@@ -111,7 +111,7 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
             helper.setText(R.id.tv_title, item.name)
             helper.getView<ImageView>(R.id.iv_check).visibility = if (item.quality == music?.quality) View.VISIBLE else View.GONE
             helper.itemView.setOnClickListener {
-                QualitySelectDialog.music?.quality = item.quality
+                music?.quality = item.quality
                 notifyDataSetChanged()
                 changeSuccessListener?.invoke(item.name)
                 if (!isDownload) {

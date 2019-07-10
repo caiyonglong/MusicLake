@@ -121,21 +121,21 @@
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
                 android:layout_weight="1"
-                android:src="@drawable/ic_prev_big" />
+                android:src="@drawable/ic_skip_previous" />
 
 
             <ImageView
                 android:id="@+id/playPauseIv"
                 android:layout_width="@dimen/dp_48"
                 android:layout_height="@dimen/dp_48"
-                android:src="@drawable/ic_play_big" />
+                android:src="@drawable/ic_play" />
 
             <ImageView
                 android:id="@+id/nextIv"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
                 android:layout_weight="1"
-                android:src="@drawable/ic_next_big" />
+                android:src="@drawable/ic_skip_next" />
 
         </LinearLayout>
 

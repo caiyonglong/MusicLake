@@ -135,4 +135,48 @@ public class NotifyManager {
         stopForeground(true);
     }
 
+
+    /**
+     * The unique identifier for this type of notification.
+     */
+    private static final String NOTIFICATION_TAG = "NewMessage";
+
+    /**
+     * Shows the notification, or updates a previously shown notification of
+     * this type, with the given parameters.
+     * <p>
+     * TODO: Customize this method's arguments to present relevant content in
+     * the notification.
+     * <p>
+     * TODO: Customize the contents of this method to tweak the behavior and
+     * presentation of new message notifications. Make
+     * sure to follow the
+     * <a href="https://developer.android.com/design/patterns/notifications.html">
+     * Notification design guidelines</a> when doing so.
+     *
+     * @see #cancel(Context)
+     */
+    public static void notify(final Context context,
+                              final String exampleString, final int number) {
+
+//        notify(context, builder.build());
+    }
+
+    private static void notify(final Context context, final Notification notification) {
+        final NotificationManager nm = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(NOTIFICATION_TAG.hashCode(), notification);
+    }
+
+    /**
+     * Cancels any notifications of this type previously shown using
+     * {@link #notify(Context, String, int)}.
+     */
+    public static void cancel(final Context context) {
+        final NotificationManager nm = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+
+        nm.cancel(NOTIFICATION_TAG.hashCode());
+    }
+
 }

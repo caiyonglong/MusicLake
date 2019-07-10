@@ -1,9 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
 import android.Manifest;
-import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
@@ -11,11 +8,9 @@ import android.support.design.widget.Snackbar;
 import android.widget.ImageView;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
-import com.cyl.musiclake.utils.Tools;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
@@ -104,6 +99,7 @@ public class WelcomeActivity extends BaseActivity {
      */
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction(getIntent().getAction());
         startActivity(intent);
         overridePendingTransition(0, 0);
         finish();
