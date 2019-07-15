@@ -207,4 +207,5 @@ public class Constants {
     public static final String GITHUB_REDIRECT_URI = "musiclake://oauth";
     public static final String GITHUB_CLIENT_ID = "05baa9742e6a72d662a6";
     public static final String GITHUB_CLIENT_SECRET = "776c29a9eb0822505829483a1dfcd19812ac622f";
+    public static final String GOOGLE_DEVELOPER_KEY = "AIzaSyCVdXoMhAPa1UdAyxKUK5Xp-uxWG612OEg";
 }

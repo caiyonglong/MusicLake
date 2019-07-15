@@ -7,11 +7,15 @@ import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.api.youtube.YoutubeDataApi
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.SearchResult
 import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.LogUtil
+import com.google.api.services.youtube.model.SearchListResponse
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -22,6 +26,40 @@ import javax.inject.Inject
 
 class SearchPresenter @Inject
 constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
+
+    /**
+     * 搜索Youtube返回的结果
+     */
+    fun searchByYouTube(query: String, pageToken: String, success: (SearchResult) -> Unit, fail: () -> Unit) {
+        doAsync {
+            val startTime = System.currentTimeMillis()
+            val result: SearchListResponse? = YoutubeDataApi.search(query, pageToken)
+            uiThread {
+                result?.let {
+                    val searchResult = SearchResult()
+                    val songs = mutableListOf<Music>()
+                    result.items.mapTo(songs) { t ->
+                        val song = Music()
+                        song.title = t.snippet.title
+                        song.artist = t.snippet.channelTitle
+                        song.artistId = t.snippet.channelId
+                        song.mid = t.id.videoId
+                        song.coverUri = t.snippet.thumbnails.high.url
+                        song.type = Constants.YOUTUBE
+                        song
+                    }
+                    searchResult.nextPager = result.nextPageToken
+                    searchResult.songs = songs
+                    searchResult.duration = System.currentTimeMillis() - startTime
+                    success(searchResult)
+                }
+                if (result == null) {
+                    fail.invoke()
+                }
+            }
+        }
+    }
+
     override fun searchByType(key: String, offset: Int, type: Int) {
         ApiManager.request(NeteaseApiServiceImpl.searchMoreInfo(key, 10, offset, type),
                 object : RequestCallBack<SearchInfo> {

@@ -19,6 +19,7 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.search.fragment.SearchSongsFragment
+import com.cyl.musiclake.ui.music.search.fragment.YoutubeSearchFragment
 import com.cyl.musiclake.utils.AnimationUtils
 import com.cyl.musiclake.utils.Tools
 import com.google.android.flexbox.FlexDirection
@@ -297,6 +298,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         mAdapter.addFragment(SearchSongsFragment.newInstance(queryString, SearchEngine.Filter.NETEASE), "网易云")
         mAdapter.addFragment(SearchSongsFragment.newInstance(queryString, SearchEngine.Filter.XIAMI), "虾米")
         mAdapter.addFragment(SearchSongsFragment.newInstance(queryString, SearchEngine.Filter.BAIDU), "百度")
+        mAdapter.addFragment(YoutubeSearchFragment.newInstance(queryString), "Youtube")
         viewPager?.adapter = mAdapter
         viewPager?.offscreenPageLimit = 4
         hideLoading()

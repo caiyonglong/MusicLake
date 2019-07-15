@@ -30,6 +30,7 @@ import com.cyl.musiclake.ui.download.ui.DownloadedFragment;
 import com.cyl.musiclake.ui.music.playlist.square.TopPlaylistFragment;
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment;
 import com.cyl.musiclake.ui.music.search.fragment.SearchSongsFragment;
+import com.cyl.musiclake.ui.music.search.fragment.YoutubeSearchFragment;
 import com.cyl.musiclake.ui.my.BindLoginActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -101,4 +102,6 @@ public interface FragmentComponent {
     void inject(@NotNull com.cyl.musiclake.ui.music.artist.fragment.AlbumFragment albumFragment);
 
     void inject(@NotNull SearchSongsFragment searchSongsFragment);
+
+    void inject(@NotNull YoutubeSearchFragment youtubeSearchFragment);
 }
