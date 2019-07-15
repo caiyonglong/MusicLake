@@ -1,11 +1,13 @@
-package com.cyl.musiclake.ui.music.youtube;
+package com.cyl.musiclake.ui.youtube;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.utils.LogUtil;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
@@ -20,6 +22,7 @@ public class YoutubeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube);
         videoId = getIntent().getStringExtra("videoId");
+        LogUtil.d("YoutubeActivity", "|videoId " + videoId);
         YouTubePlayerView youTubePlayerView = findViewById(R.id.youtube_player_view);
         getLifecycle().addObserver(youTubePlayerView);
 

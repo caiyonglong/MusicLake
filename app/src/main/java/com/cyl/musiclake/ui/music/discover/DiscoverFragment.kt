@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.discover
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.View
 import com.cyl.musicapi.netease.BannerBean
@@ -170,7 +170,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         if (mNeteaseAdapter == null) {
             //适配器
             mNeteaseAdapter = TopPlaylistAdapter(playlist)
-            wangChartsRv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
+            wangChartsRv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             wangChartsRv?.adapter = mNeteaseAdapter
             wangChartsRv?.isFocusable = false
             wangChartsRv?.isNestedScrollingEnabled = false
@@ -191,7 +191,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     override fun showArtistCharts(charts: MutableList<Artist>) {
         this.artists = charts
         if (mArtistListAdapter == null) {
-            chartsArtistRcv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            chartsArtistRcv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
             //适配器
             mArtistListAdapter = TopArtistListAdapter(artists)
             chartsArtistRcv?.adapter = mNeteaseAdapter
@@ -217,7 +217,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
             //适配器
             mRadioAdapter = BaiduRadioAdapter(this.channels)
             //电台列表
-            radioRsv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            radioRsv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
             radioRsv?.adapter = mRadioAdapter
             radioRsv?.isFocusable = false
             radioRsv?.isNestedScrollingEnabled = false
@@ -245,7 +245,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         if (mPlaylistAdapter == null) {
             mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
             //推荐列表
-            recommendPlaylistRsv.layoutManager = GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
+            recommendPlaylistRsv.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             recommendPlaylistRsv.adapter = mPlaylistAdapter
             recommendPlaylistRsv.isFocusable = false
             recommendPlaylistRsv.isNestedScrollingEnabled = false
@@ -270,7 +270,7 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         if (mMusicAdapter == null) {
             mMusicAdapter = SongAdapter(recommend)
             //推荐列表
-            recommendRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            recommendRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             recommendRsv.adapter = mMusicAdapter
             recommendRsv.isFocusable = false
             recommendRsv.isNestedScrollingEnabled = false

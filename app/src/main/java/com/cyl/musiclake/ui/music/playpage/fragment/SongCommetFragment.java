@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.playpage.fragment;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;

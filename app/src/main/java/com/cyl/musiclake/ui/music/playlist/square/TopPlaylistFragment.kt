@@ -1,9 +1,9 @@
 package com.cyl.musiclake.ui.music.playlist.square
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
@@ -37,7 +37,7 @@ class TopPlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.
         if (mNeteaseAdapter == null) {
             //适配器
             mNeteaseAdapter = TopPlaylistAdapter(playlist)
-            playlistRcv?.layoutManager = GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
+            playlistRcv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             playlistRcv?.adapter = mNeteaseAdapter
             playlistRcv?.isFocusable = false
             playlistRcv?.isNestedScrollingEnabled = false
@@ -72,7 +72,7 @@ class TopPlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.
             allCategoryFragment.successListener = {
                 updateTag(it)
             }
-            allCategoryFragment.showIt(context as FragmentActivity)
+            allCategoryFragment.showIt(context as androidx.fragment.app.FragmentActivity)
         }
     }
 

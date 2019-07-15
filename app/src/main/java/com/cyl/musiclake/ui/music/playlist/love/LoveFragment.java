@@ -1,11 +1,11 @@
 package com.cyl.musiclake.ui.music.playlist.love;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
@@ -102,7 +102,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.newInstance(musicInfos.get(position))
+                        AddPlaylistDialog.Companion.newInstance(musicInfos.get(position))
                                 .show(getChildFragmentManager(), "ADD_PLAYLIST");
                         break;
 

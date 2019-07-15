@@ -13,9 +13,18 @@
     <dimen name="dp_48">48dp</dimen>
     <dimen name="dp_32">32dp</dimen>
     <dimen name="dp_36">36dp</dimen>
+    <dimen name="dp_72">78dp</dimen>
     <dimen name="dp_120">120dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_05">0.5dp</dimen>
+    <dimen name="dp_35">35dp</dimen>
+    <dimen name="dp_160">160</dimen>
+    <dimen name="dp_90">90</dimen>
+
+    <dimen name="sp_48">48sp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="sp_12">12sp</dimen>
+
 
     <dimen name="bottom_player_height">65dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
@@ -59,10 +68,6 @@
 
     <dimen name="tab_text_size">15sp</dimen>
     <dimen name="tab_height">48dp</dimen>
-    <dimen name="dp_35">35dp</dimen>
-    <dimen name="sp_48">48sp</dimen>
-    <dimen name="dp_160">160</dimen>
-    <dimen name="dp_90">90</dimen>
 
 
     <dimen name="channelHeight">40dp</dimen>

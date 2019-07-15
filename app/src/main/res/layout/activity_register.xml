@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cv_add"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                     android:paddingStart="30dp"
                     android:paddingEnd="30dp">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/emailWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -77,7 +77,7 @@
                             android:inputType="textEmailAddress"
                             android:textColor="@color/black"
                             android:textSize="13sp" />
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
 
@@ -88,7 +88,7 @@
                     android:paddingStart="30dp"
                     android:paddingEnd="30dp">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/userNameWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -101,7 +101,7 @@
                             android:inputType="text"
                             android:textColor="@color/black"
                             android:textSize="13sp" />
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -111,7 +111,7 @@
                     android:paddingStart="30dp"
                     android:paddingEnd="30dp">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/passWordWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -123,7 +123,7 @@
                             android:inputType="textPassword"
                             android:textColor="@color/black"
                             android:textSize="13sp" />
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <Button
@@ -139,7 +139,7 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -167,4 +167,4 @@
     </RelativeLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

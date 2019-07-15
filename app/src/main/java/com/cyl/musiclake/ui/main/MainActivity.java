@@ -1,14 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.internal.NavigationMenuView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +9,13 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
@@ -48,6 +46,8 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
+import com.google.android.material.internal.NavigationMenuView;
+import com.google.android.material.navigation.NavigationView;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +55,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import static com.cyl.musiclake.ui.UIUtilsKt.logout;
 import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
@@ -240,13 +242,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (item.getItemId()) {
             case R.id.nav_login_status:
                 if (mIsLogin) {
-                    new MaterialDialog.Builder(this)
-                            .title(R.string.app_name)
-                            .content(R.string.logout_prompt)
-                            .positiveText(android.R.string.yes)
-                            .onPositive((materialDialog, dialogAction) -> {
-                                logout();
-                            }).negativeText(android.R.string.cancel).show();
+                    UIUtilsKt.showInfoDialog(this, getString(R.string.app_name), getString(R.string.logout_prompt), new Function1<String, Unit>() {
+                        @Override
+                        public Unit invoke(String s) {
+                            logout();
+
+                            return null;
+                        }
+                    });
                 } else {
                     mTargetClass = LoginActivity.class;
                 }

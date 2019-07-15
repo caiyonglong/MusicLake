@@ -7,8 +7,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
-import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
@@ -47,7 +50,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         playControlSwitch.isChecked = CountDownUtils.isOpenSleepSwitch
         //显示提示文字
         closeAppTipsTv.setText(if (playControlSwitch.isChecked) R.string.switch_minutes_open_desc else R.string.switch_minutes_close_desc)
-        
+
         playControlSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             CountDownUtils.isOpenSleepSwitch = isChecked
             //显示提示文字
@@ -120,23 +123,24 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         customIv.visibility = View.VISIBLE
         customTv.visibility = View.VISIBLE
         view?.let {
-            MaterialDialog.Builder(this)
-                    .title(getString(R.string.custom_count_down_time))
-                    .inputType(InputType.TYPE_CLASS_NUMBER)//可以输入的类型-电话号码
-                    .input(getString(R.string.count_down_minutes), "") { dialog1, input ->
-                        val time = (input ?: 0).toString().toInt()
-                        dialog1.getActionButton(DialogAction.POSITIVE).isEnabled = time <= 24 * 60
+            MaterialDialog(this).show {
+                title(R.string.custom_count_down_time)
+                input(inputType = InputType.TYPE_CLASS_NUMBER,
+                        maxLength = 4, hintRes = R.string.count_down_minutes) { dialog, input ->
+                    val isValid = (input ?: 0).toString().toInt() <= 24 * 60
+                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, isValid)
+                }
+                positiveButton {
+                    val time = (it.getInputField().text
+                            ?: 0).toString().toInt()
+                    if (time == 0 || time > 24 * 60) {
+                        ToastUtils.show(getString(R.string.down_time_more))
+                    } else {
+                        CountDownUtils.starCountDownByTime(time)
                     }
-                    .inputRange(1, 4)
-                    .onPositive { dialog12, _ ->
-                        val time = (dialog12.inputEditText?.text
-                                ?: 0).toString().toInt()
-                        if (time == 0 || time > 24 * 60) {
-                            ToastUtils.show(getString(R.string.down_time_more))
-                        } else {
-                            CountDownUtils.starCountDownByTime(time)
-                        }
-                    }.show()
+                }
+                positiveButton(R.string.sure)
+            }
             //            BaseSystemDialog().apply {
 //                val view = View.inflate(this@SleepTimerActivity, R.layout.dialog_select_sleep_time, null)
 //                val selectHour = view.findViewById<NumberPicker>(R.id.selectHour)

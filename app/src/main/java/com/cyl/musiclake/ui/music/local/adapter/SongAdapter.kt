@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.local.adapter
 
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView

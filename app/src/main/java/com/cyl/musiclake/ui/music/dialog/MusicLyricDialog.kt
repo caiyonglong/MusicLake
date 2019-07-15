@@ -1,10 +1,10 @@
 package com.cyl.musiclake.ui.music.dialog
 
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +31,7 @@ import org.jetbrains.anko.support.v4.toast
  * 版本：2.5
  * 歌词搜索
  */
-class MusicLyricDialog : DialogFragment() {
+class MusicLyricDialog : androidx.fragment.app.DialogFragment() {
 
     private val rootView by lazy { LayoutInflater.from(context).inflate(R.layout.dialog_lyric_manager, null) }
     private val controlsView by lazy { rootView.findViewById<View>(R.id.controlsView) }
@@ -43,7 +43,7 @@ class MusicLyricDialog : DialogFragment() {
     private val formatColorSb by lazy { rootView.findViewById<ColorSeekBar>(R.id.formatColorSb) }
     private val formatSizeSb by lazy { rootView.findViewById<SeekBar>(R.id.formatSizeSb) }
     private val loadingView by lazy { rootView.findViewById<ProgressBar>(R.id.loadingView) }
-    private val lyricRecyclerView by lazy { rootView.findViewById<RecyclerView>(R.id.lyricRecyclerView) }
+    private val lyricRecyclerView by lazy { rootView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.lyricRecyclerView) }
     private val lyricResultView by lazy { rootView.findViewById<View>(R.id.lyricResultView) }
 
     var searchListener: (() -> Unit)? = null
@@ -74,7 +74,7 @@ class MusicLyricDialog : DialogFragment() {
      */
     private fun initLyricList(candidates: MutableList<Candidates>?) {
         lyricRecyclerView.adapter = candidates?.let { ItemAdapter(it) }
-        lyricRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        lyricRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         lyricResultView.visibility = View.VISIBLE
         loadingView.visibility = View.GONE
         controlsView.visibility = View.GONE
@@ -144,7 +144,7 @@ class MusicLyricDialog : DialogFragment() {
     }
 
 
-    inner class ItemAdapter(private val candidates: MutableList<Candidates>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+    inner class ItemAdapter(private val candidates: MutableList<Candidates>) : androidx.recyclerview.widget.RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
         var selectId = -1
 
@@ -203,7 +203,7 @@ class MusicLyricDialog : DialogFragment() {
             return candidates.size
         }
 
-        inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class ItemViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
             var titleTv: TextView = itemView.findViewById(R.id.titleTv)
             var subTitleTv: TextView = itemView.findViewById(R.id.subTitleTv)
             var selectTv: CheckBox = itemView.findViewById(R.id.selectTv)

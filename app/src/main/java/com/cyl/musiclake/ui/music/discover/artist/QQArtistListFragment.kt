@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.discover.artist
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import com.cyl.musicapi.bean.SingerTag
 import com.cyl.musiclake.R
@@ -46,12 +46,12 @@ class QQArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListCont
 
     public override fun initViews() {
         //初始化列表
-        areaRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        indexRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        sexRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        genreRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        areaRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        indexRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        sexRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        genreRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
 
-        resultRsv.layoutManager = LinearLayoutManager(activity)
+        resultRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
     }
 
     override fun initInjector() {

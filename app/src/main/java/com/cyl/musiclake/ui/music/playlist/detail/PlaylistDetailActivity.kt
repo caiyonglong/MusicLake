@@ -1,11 +1,12 @@
 package com.cyl.musiclake.ui.music.playlist.detail
 
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
@@ -24,7 +25,6 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
-import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
@@ -126,7 +126,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun initView() {
         mAdapter = SongAdapter(musicList)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.addItemDecoration(ItemDecoration(this, ItemDecoration.VERTICAL_LIST))
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
@@ -185,23 +185,22 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             }
             R.id.action_rename_playlist -> {
                 LogUtil.e("action_rename_playlist")
-                mPlaylist?.let {
-                    MaterialDialog.Builder(this)
-                            .title(R.string.playlist_rename)
-                            .positiveText(R.string.sure)
-                            .negativeText(R.string.cancel)
-                            .inputRangeRes(2, 10, R.color.red)
-                            .inputType(InputType.TYPE_CLASS_TEXT)
-                            .input(getString(R.string.input_playlist), it.name, false) { _, input -> LogUtil.e("=====", input.toString()) }
-                            .onPositive { dialog, _ ->
-                                val title = dialog.inputEditText?.text.toString()
-                                if (title != mPlaylist?.name) {
-                                    mPresenter?.renamePlaylist(it, title)
-                                }
+                mPlaylist?.let { playlist ->
+                    MaterialDialog(this).show {
+                        title(R.string.playlist_rename)
+                        positiveButton(R.string.sure)
+                        negativeButton(R.string.cancel)
+                        input(hintRes = R.string.input_playlist, maxLength = 10, prefill = playlist.name,
+                                inputType = InputType.TYPE_CLASS_TEXT) { dialog, input ->
+                            LogUtil.e("=====", input.toString())
+                        }
+                        positiveButton {
+                            val title = it.getInputField().text.toString()
+                            if (title != mPlaylist?.name) {
+                                mPresenter?.renamePlaylist(playlist, title)
                             }
-                            .positiveText(R.string.sure)
-                            .negativeText(R.string.cancel)
-                            .show()
+                        }
+                    }
                 }
             }
             R.id.action_batch -> {

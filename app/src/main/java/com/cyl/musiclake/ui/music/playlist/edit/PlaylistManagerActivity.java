@@ -1,11 +1,11 @@
 package com.cyl.musiclake.ui.music.playlist.edit;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.cyl.musiclake.R;
@@ -13,6 +13,7 @@ import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.bean.data.PlaylistLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils;
 
@@ -105,22 +106,17 @@ public class PlaylistManagerActivity extends BaseActivity {
     }
 
     public void delete(View view) {
-        new MaterialDialog.Builder(this)
-                .title("提示")
-                .content("是否删除歌单？")
-                .onPositive((dialog, which) -> {
-                    for (String key : mAdapter.getCheckedMap().keySet()) {
-                        PlaylistManagerUtils.INSTANCE.deletePlaylist(mAdapter.getCheckedMap().get(key), s -> {
-                            playlists.remove(mAdapter.getCheckedMap().get(key));
-                            mAdapter.setNewData(playlists);
-                            return null;
-                        });
-                    }
-                    mAdapter.getCheckedMap().clear();
-                    finish();
-                })
-                .positiveText("确定")
-                .negativeText("取消")
-                .show();
+        UIUtilsKt.showTipsDialog(this, "是否删除歌单？", () -> {
+            for (String key : mAdapter.getCheckedMap().keySet()) {
+                PlaylistManagerUtils.INSTANCE.deletePlaylist(mAdapter.getCheckedMap().get(key), s -> {
+                    playlists.remove(mAdapter.getCheckedMap().get(key));
+                    mAdapter.setNewData(playlists);
+                    return null;
+                });
+            }
+            mAdapter.getCheckedMap().clear();
+            finish();
+            return null;
+        });
     }
 }

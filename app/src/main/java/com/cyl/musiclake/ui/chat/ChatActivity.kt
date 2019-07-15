@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.chat
 
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -9,17 +8,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.socket.SocketListener
 import com.cyl.musiclake.socket.SocketManager
-import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.widget.NoticeView
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
 import org.jetbrains.anko.startActivity
@@ -44,7 +46,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
     override fun initView() {
         mAdapter = ChatListAdapter(messages)
-        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         linearLayoutManager.stackFromEnd = true
         messageRsv.layoutManager = linearLayoutManager
         messageRsv.adapter = mAdapter
@@ -151,12 +153,13 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         })
         addIv.setOnClickListener {
             //            updateUserStatus(MusicApp.socketManager.onlineUsers[0], true)
-            MaterialDialog.Builder(this)
-                    .items(getString(R.string.share_playing_song))
-                    .itemsCallback { _, _, _, _ ->
-                        sendMusicMessage()
-                    }
-                    .show()
+            MaterialDialog(this).show {
+                title(R.string.share_playing_song)
+                listItems { dialog, index, text ->
+                    sendMusicMessage()
+
+                }
+            }
         }
         messageInputView.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -219,11 +222,11 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         if (item?.itemId == R.id.action_detail) {
             startActivity<ChatDetailActivity>()
         } else if (item?.itemId == R.id.action_about) {
-            MaterialDialog.Builder(this)
-                    .title(R.string.chat_about)
-                    .content(R.string.about_music_lake)
-                    .positiveText(R.string.sure)
-                    .show()
+            MaterialDialog(this).show {
+                title(R.string.chat_about)
+                message(R.string.about_music_lake)
+                positiveButton(R.string.sure)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

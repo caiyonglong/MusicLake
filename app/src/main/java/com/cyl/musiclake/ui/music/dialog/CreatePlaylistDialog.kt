@@ -2,9 +2,10 @@ package com.cyl.musiclake.ui.music.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.text.InputType
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.utils.LogUtil
@@ -14,25 +15,26 @@ import com.cyl.musiclake.utils.LogUtil
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class CreatePlaylistDialog : DialogFragment() {
-    var successListener:((String)->Unit)?=null
+class CreatePlaylistDialog : androidx.fragment.app.DialogFragment() {
+    var successListener: ((String) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val music = arguments!!.getParcelable<Music>(TAG_MUSIC)
-        return MaterialDialog.Builder(activity!!)
+        return MaterialDialog(activity!!)
                 .title(R.string.create_playlist)
-                .positiveText(R.string.sure)
-                .negativeText(R.string.cancel)
-                .inputRangeRes(2, 20, R.color.red)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(R.string.input_playlist, R.string.playlist_name, false) { dialog, input -> LogUtil.e(TAG, input.toString()) }
-                .onPositive { dialog, which ->
-                    val title = dialog.inputEditText!!.text.toString()
+                .positiveButton(R.string.sure)
+                .negativeButton(R.string.cancel)
+                .input(hintRes = R.string.input_playlist, prefillRes = R.string.playlist_name,
+                        inputType = InputType.TYPE_CLASS_TEXT) { dialog, text ->
+                    LogUtil.e(TAG, text.toString())
+                }
+                .positiveButton {
+                    val title = it.getInputField().text.toString()
                     LogUtil.d(TAG, title)
-                    if(successListener!=null){
+                    if (successListener != null) {
                         successListener?.invoke(title)
                     }
-                }.build()
+                }
     }
 
     companion object {

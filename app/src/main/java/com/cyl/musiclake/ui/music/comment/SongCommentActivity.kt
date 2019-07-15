@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.comment
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musicapi.bean.SongComment
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
@@ -30,7 +30,7 @@ class SongCommentActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
 
     override fun initView() {
 //        hotCommentRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        newCommentRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        newCommentRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
     }
 
     override fun initData() {

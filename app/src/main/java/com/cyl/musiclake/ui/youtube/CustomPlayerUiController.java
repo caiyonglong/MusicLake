@@ -1,9 +1,9 @@
-package com.cyl.musiclake.ui.music.youtube;
+package com.cyl.musiclake.ui.youtube;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,7 +19,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 
 /**
  * 作者：yonglong
- * 包名：com.cyl.musiclake.ui.music.youtube
+ * 包名：com.cyl.musiclake.ui.youtube
  * 时间：2019/7/15 11:45
  * 描述：
  */

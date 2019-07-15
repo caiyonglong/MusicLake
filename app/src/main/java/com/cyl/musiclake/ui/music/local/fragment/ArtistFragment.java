@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseLazyFragment;

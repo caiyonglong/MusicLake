@@ -3,7 +3,7 @@ package com.cyl.musiclake.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 

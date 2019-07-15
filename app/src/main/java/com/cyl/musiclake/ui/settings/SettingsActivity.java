@@ -23,7 +23,7 @@ public class SettingsActivity extends BaseActivity {
     protected void initData() {
         android.app.FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, SettingsFragment.newInstance()).commit();
+                .replace(R.id.container, SettingsFragment.Companion.newInstance()).commit();
     }
 
     @Override

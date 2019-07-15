@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.charts.fragment
 
 import android.animation.Animator
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Playlist
@@ -37,8 +37,8 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
         chartsType = arguments?.getString("type") ?: Constants.BAIDU
 
         //初始化列表
-        val layoutManager = LinearLayoutManager(activity)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         recyclerView.layoutManager = layoutManager
 
         //适配器

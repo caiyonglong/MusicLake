@@ -3,8 +3,8 @@ package com.cyl.musiclake.ui.music.playlist.square
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import android.view.*
 import android.widget.ImageView
 import com.cyl.musicapi.netease.CatListBean
@@ -25,7 +25,7 @@ import org.jetbrains.anko.support.v4.startActivity
  * Author : master.
  * Date   : 2018/8/23 .
  */
-class AllPlaylistCatFragment : DialogFragment(), ChannelView.OnChannelListener {
+class AllPlaylistCatFragment : androidx.fragment.app.DialogFragment(), ChannelView.OnChannelListener {
     private var rootView: View? = null
     private val backIv by lazy { rootView?.findViewById<ImageView>(com.cyl.musiclake.R.id.backIv) }
     private val TAG = javaClass.simpleName
@@ -172,7 +172,7 @@ class AllPlaylistCatFragment : DialogFragment(), ChannelView.OnChannelListener {
     /**
      *显示出对话框
      */
-    fun showIt(context: FragmentActivity?) {
+    fun showIt(context: androidx.fragment.app.FragmentActivity?) {
         if (dialog != null) {
             dialog.dismiss()
         }

@@ -8,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.utils.rom.FloatUtil;

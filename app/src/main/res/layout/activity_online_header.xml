@@ -19,7 +19,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_16"
@@ -34,7 +34,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/default_cover" />
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
         <LinearLayout

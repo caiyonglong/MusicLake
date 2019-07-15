@@ -1,23 +1,24 @@
 package com.cyl.musiclake.ui.music.playlist.history;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.bean.data.PlayHistoryLoader;
 import com.cyl.musiclake.bean.Music;
+import com.cyl.musiclake.bean.data.PlayHistoryLoader;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.UIUtilsKt;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -117,7 +120,7 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.newInstance(musicInfos.get(position))
+                        AddPlaylistDialog.Companion.newInstance(musicInfos.get(position))
                                 .show(getChildFragmentManager(), "ADD_PLAYLIST");
                         break;
 
@@ -141,18 +144,18 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
         int id = item.getItemId();
         switch (id) {
             case R.id.action_delete_playlist:
-                new MaterialDialog.Builder(getContext())
-                        .title("提示")
-                        .content("是否清空播放历史？")
-                        .onPositive((dialog, which) -> {
+                if (getActivity() != null) {
+                    UIUtilsKt.showInfoDialog((AppCompatActivity) getActivity(), getString(R.string.tips), getString(R.string.clear_history_playlist_tips), new Function1<String, Unit>() {
+                        @Override
+                        public Unit invoke(String s) {
                             PlayHistoryLoader.INSTANCE.clearPlayHistory();
                             musicInfos.clear();
                             mAdapter.notifyDataSetChanged();
                             showEmptyView();
-                        })
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .show();
+                            return null;
+                        }
+                    });
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

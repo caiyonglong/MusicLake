@@ -5,10 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PagerSnapHelper
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.SeekBar
 import com.cyl.musiclake.R
@@ -194,16 +194,16 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
      */
     private fun initSongList() {
         if (mAdapter == null) {
-            bottomPlayRcv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            bottomPlayRcv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
             mAdapter = BottomMusicAdapter(musicList)
-            val snap = PagerSnapHelper()
+            val snap = androidx.recyclerview.widget.PagerSnapHelper()
             snap.attachToRecyclerView(bottomPlayRcv)
             bottomPlayRcv.adapter = mAdapter
-            bottomPlayRcv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            bottomPlayRcv.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: androidx.recyclerview.widget.RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        val manager = recyclerView?.layoutManager as LinearLayoutManager
+                    if (newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE) {
+                        val manager = recyclerView?.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
                         val first = manager.findFirstVisibleItemPosition()
                         val last = manager.findLastVisibleItemPosition()
                         LogUtil.e("Scroll", "$first-$last")

@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.artist.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Music
@@ -46,7 +46,7 @@ class AlbumFragment : BaseFragment<AlbumPresenter>(), AlbumsContract.View {
         }
         albumList?.let {
             mAdapter = AlbumAdapter(it)
-            recyclerView.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false);
+            recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 3, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false);
             recyclerView.adapter = mAdapter
             mAdapter?.bindToRecyclerView(recyclerView)
         }

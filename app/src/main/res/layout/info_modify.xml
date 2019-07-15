@@ -16,7 +16,7 @@
         android:paddingEnd="30dp"
         android:paddingStart="30dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/userNameWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -28,7 +28,7 @@
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -38,7 +38,7 @@
         android:paddingEnd="30dp"
         android:paddingStart="30dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nickWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -50,7 +50,7 @@
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
         android:paddingEnd="30dp"
         android:paddingStart="30dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phoneWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -71,7 +71,7 @@
                 android:inputType="phone"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 
@@ -82,7 +82,7 @@
         android:paddingEnd="30dp"
         android:paddingStart="30dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -94,7 +94,7 @@
                 android:inputType="textEmailAddress"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 

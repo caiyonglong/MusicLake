@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.search
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -78,8 +78,8 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     override fun initData() {
         mAdapter.setEnableLoadMore(true)
         //初始化列表
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         resultListRcv.layoutManager = layoutManager
         resultListRcv.adapter = mAdapter
         mAdapter.bindToRecyclerView(resultListRcv)

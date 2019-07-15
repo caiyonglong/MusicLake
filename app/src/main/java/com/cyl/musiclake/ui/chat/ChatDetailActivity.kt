@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.chat
 
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -27,10 +27,10 @@ class ChatDetailActivity : BaseActivity<ChatPresenter>() {
     override fun initView() {
         //用户头像列表
         mUserAdapter = OnlineUserListAdapter(MusicApp.socketManager.onlineUsers)
-        usersRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        usersRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         usersRsv.adapter = mUserAdapter
         usersRsv.isNestedScrollingEnabled = false
-        usersRsv.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        usersRsv.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(this, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         mUserAdapter?.bindToRecyclerView(usersRsv)
         onlineUserTv.text = getString(R.string.online_users, MusicApp.socketManager.onlineUsers.size)
     }

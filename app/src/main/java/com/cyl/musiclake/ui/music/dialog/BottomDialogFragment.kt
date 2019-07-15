@@ -3,18 +3,19 @@ package com.cyl.musiclake.ui.music.dialog
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicUtils
@@ -38,7 +39,7 @@ import org.jetbrains.anko.support.v4.startActivity
 class BottomDialogFragment : BottomSheetDialogFragment() {
     lateinit var mContext: AppCompatActivity
     private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false) }
-    private val recyclerView by lazy { mRootView.findViewById<RecyclerView>(R.id.bottomSheetRv) }
+    private val recyclerView by lazy { mRootView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.bottomSheetRv) }
     private val titleTv by lazy { mRootView.findViewById<TextView>(R.id.titleTv) }
     private val subTitleTv by lazy { mRootView.findViewById<TextView>(R.id.subTitleTv) }
 
@@ -100,7 +101,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             type = it
         }
         mAdapter = ItemAdapter(type)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
     }
 
@@ -136,12 +137,13 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                         val artistNames = music?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toList() }
                         context?.let {
                             artistNames?.let { it2 ->
-                                MaterialDialog.Builder(it)
-                                        .title("选择歌手")
-                                        .items(it2)
-                                        .itemsCallback { dialog, itemView, position, text ->
-                                            NavigationHelper.navigateToArtist(mContext, artist[position], null)
-                                        }.show()
+                                MaterialDialog(it).show {
+                                    title(R.string.choose_singer)
+                                    listItems(items = it2)
+                                    listItems { dialog, position, text ->
+                                        NavigationHelper.navigateToArtist(mContext, artist[position], null)
+                                    }
+                                }
                             }
                         }
                     } else {
@@ -171,7 +173,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     /**
      * 下拉列表适配器
      */
-    inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+    inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : androidx.recyclerview.widget.RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
         private var itemData = mutableMapOf(
                 R.string.popup_play_next to R.drawable.ic_queue_play_next,
                 R.string.popup_add_to_playlist to R.drawable.ic_playlist_add,
@@ -273,7 +275,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             return data.size
         }
 
-        inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class ItemViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
             var textView: TextView = itemView.findViewById(R.id.tv_title)
             var icon: ImageView = itemView.findViewById(R.id.iv_icon)
         }

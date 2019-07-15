@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.playlist.square
 
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
@@ -12,7 +12,7 @@ import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_all_playlist.*
 
 class PlaylistSquareActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
-    var mViewPager: ViewPager? = null
+    var mViewPager: androidx.viewpager.widget.ViewPager? = null
     var mTabLayout: TabLayout? = null
 
     private val TAG = javaClass.simpleName

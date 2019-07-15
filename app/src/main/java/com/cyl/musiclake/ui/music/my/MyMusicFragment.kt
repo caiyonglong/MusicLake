@@ -2,8 +2,8 @@ package com.cyl.musiclake.ui.music.my
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.MusicApp
@@ -70,10 +70,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         downloadView.visibility = if (BuildConfig.HAS_DOWNLOAD) View.VISIBLE else View.GONE
 
         //初始化歌单列表
-        val linearLayoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         linearLayoutManager.isSmoothScrollbarEnabled = false
 
-        playlistRcv.layoutManager = LinearLayoutManager(context)
+        playlistRcv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         playlistRcv.isNestedScrollingEnabled = false
 
         mAdapter = PlaylistAdapter(playlists)

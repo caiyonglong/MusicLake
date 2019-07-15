@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.edit
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -35,7 +35,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
 
     override fun initView() {
         mAdapter = EditSongAdapter(musicList)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         mAdapter?.bindToRecyclerView(recyclerView)
     }
 

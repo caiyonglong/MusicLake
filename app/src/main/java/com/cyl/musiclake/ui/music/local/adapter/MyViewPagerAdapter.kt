@@ -1,15 +1,15 @@
 package com.cyl.musiclake.ui.music.local.adapter
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 /**
  * Created by yonglong on 2015/6/29.
  */
-class MyViewPagerAdapter(fm: FragmentManager, private var mFragments: MutableList<Fragment>) : FragmentStatePagerAdapter(fm) {
+class MyViewPagerAdapter(fm: androidx.fragment.app.FragmentManager, private var mFragments: MutableList<androidx.fragment.app.Fragment>) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return mFragments[position]
     }
 
@@ -17,7 +17,7 @@ class MyViewPagerAdapter(fm: FragmentManager, private var mFragments: MutableLis
         return mFragments.size
     }
 
-    fun setFragments(mFragments: MutableList<Fragment>) {
+    fun setFragments(mFragments: MutableList<androidx.fragment.app.Fragment>) {
         this.mFragments = mFragments
     }
 }

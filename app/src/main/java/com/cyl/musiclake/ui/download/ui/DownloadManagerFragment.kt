@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.download.ui
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.bean.Music
@@ -71,7 +71,7 @@ class DownloadManagerFragment : BaseFragment<DownloadPresenter>(), DownloadContr
         hideLoading()
         if (mAdapter == null) {
             mAdapter = TaskItemAdapter(context, list)
-            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             recyclerView.adapter = mAdapter
         } else {
             mAdapter?.models = list

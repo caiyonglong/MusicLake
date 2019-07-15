@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.playlist
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.View
 import com.cyl.musiclake.R
@@ -36,7 +36,7 @@ class PlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.Vie
         if (mNeteaseAdapter == null) {
             //适配器
             mNeteaseAdapter = TopPlaylistAdapter(playlist)
-            recyclerView?.layoutManager = GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
+            recyclerView?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             recyclerView?.adapter = mNeteaseAdapter
             recyclerView?.isFocusable = false
             recyclerView?.isNestedScrollingEnabled = false

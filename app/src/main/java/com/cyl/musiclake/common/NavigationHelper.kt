@@ -6,10 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.net.Uri
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Pair
 import android.view.View
 import com.cyl.musiclake.R
@@ -39,7 +39,7 @@ import java.io.File
 object NavigationHelper {
     fun navigateToLocalMusic(context: Activity, transitionViews: Pair<View, String>?) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
+        val fragment: androidx.fragment.app.Fragment
 
         if (transitionViews != null) {
             transaction.addSharedElement(transitionViews.first, transitionViews.second)
@@ -56,7 +56,7 @@ object NavigationHelper {
 
     fun navigateToVideo(context: Activity, transitionViews: Pair<View, String>?) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
+        val fragment: androidx.fragment.app.Fragment
 
         if (transitionViews != null) {
             transaction.addSharedElement(transitionViews.first, transitionViews.second)
@@ -84,7 +84,7 @@ object NavigationHelper {
 
     fun navigateToFolderSongs(context: Activity, path: String) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
+        val fragment: androidx.fragment.app.Fragment
 
         fragment = LocalVideoFragment.newInstance(path)
         context.supportFragmentManager.findFragmentById(R.id.fragment_container)?.let { transaction.hide(it) }
@@ -94,7 +94,7 @@ object NavigationHelper {
 
     fun navigateRecentlyMusic(context: Activity) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
+        val fragment: androidx.fragment.app.Fragment
         fragment = RecentlyFragment.newInstance()
         transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
         transaction.add(R.id.fragment_container, fragment)
@@ -111,7 +111,7 @@ object NavigationHelper {
 
     fun navigateToLoveMusic(context: Activity, transitionViews: Pair<View, String>) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
+        val fragment: androidx.fragment.app.Fragment
 
         fragment = LoveFragment.newInstance()
         transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
@@ -121,7 +121,7 @@ object NavigationHelper {
 
     fun navigateToDownload(context: Activity, isCache: Boolean = false, transitionViews: Pair<View, String>? = null) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        val fragment: Fragment
+        val fragment: androidx.fragment.app.Fragment
 
         if (transitionViews != null) {
             transaction.addSharedElement(transitionViews.first, transitionViews.second)
@@ -185,7 +185,7 @@ object NavigationHelper {
     }
 
 
-    fun navigateFragment(context: Activity, fragment: Fragment) {
+    fun navigateFragment(context: Activity, fragment: androidx.fragment.app.Fragment) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         transaction.hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
         transaction.add(R.id.fragment_container, fragment)

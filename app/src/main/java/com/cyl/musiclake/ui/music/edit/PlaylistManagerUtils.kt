@@ -1,14 +1,17 @@
 package com.cyl.musiclake.ui.music.edit
 
-import android.support.v7.app.AppCompatActivity
+import android.text.InputType
+import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItems
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl.collectBatch2Music
-import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl.collectBatchMusic
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
@@ -16,6 +19,7 @@ import com.cyl.musiclake.bean.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.ui.my.user.UserStatus
+import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
@@ -195,24 +199,24 @@ object PlaylistManagerUtils {
             it.name?.let { it1 -> items.add(it1) }
         }
         items.add("新建歌单")
-        MaterialDialog.Builder(activity)
-                .title(R.string.add_to_playlist)
-                .items(items)
-                .itemsCallback { _, _, which, _ ->
-                    if (which == items.size - 1) {
-                        val playlist = Playlist()
-                        playlist.type = playlistType
-                        showNewPlaylistDialog(activity, playlist, musicList)
-                    } else {
-                        if (playlists[which].pid == null) {
-                            playlists[which].pid = playlists[which].id.toString()
-                        }
-                        collectBatch2Music(playlists[which], musicList,success = {
-                            ToastUtils.show("歌曲已成功添加到歌单 ${playlists[which].name}")
-                        })
+
+        MaterialDialog(activity).show {
+            title(R.string.add_to_playlist)
+            listItems(items = items) { dialog, index, text ->
+                if (index == items.size - 1) {
+                    val playlist = Playlist()
+                    playlist.type = playlistType
+                    showNewPlaylistDialog(activity, playlist, musicList)
+                } else {
+                    if (playlists[index].pid == null) {
+                        playlists[index].pid = playlists[index].id.toString()
                     }
+                    collectBatch2Music(playlists[index], musicList, success = {
+                        ToastUtils.show("歌曲已成功添加到歌单 ${playlists[index].name}")
+                    })
                 }
-                .build().show()
+            }
+        }
     }
 
     /**
@@ -220,23 +224,25 @@ object PlaylistManagerUtils {
      */
     private fun showNewPlaylistDialog(activity: AppCompatActivity, playlist: Playlist, musicList: MutableList<Music>) {
 //            //新建歌单
-        MaterialDialog.Builder(activity)
-                .title("是否将${musicList.size}首歌导入到 新建歌单")
-                .positiveText(R.string.sure)
-                .negativeText(R.string.cancel)
-                .inputRangeRes(2, 20, R.color.red)
-                .input(activity.getString(R.string.input_playlist), playlist.name, false) { _, _ -> }
-                .onPositive { dialog1, _ ->
-                    val title = dialog1.inputEditText?.text.toString()
-                    createPlaylist(title, success = {
-                        it.pid?.let { _ ->
-                            collectBatch2Music(it, musicList, success = {
-                                ToastUtils.show("歌曲已成功添加到歌单 ${it.name}")
-                            })
-                        }
-                    }, type = playlist.type)
-                }.build()
-                .show()
+        MaterialDialog(activity).show {
+            title(text = "是否将${musicList.size}首歌导入到 新建歌单")
+            positiveButton(R.string.sure)
+            negativeButton(R.string.cancel)
+            input(hintRes = R.string.input_playlist, maxLength = 20, prefill = playlist.name,
+                    inputType = InputType.TYPE_CLASS_TEXT) { dialog, input ->
+                LogUtil.e("=====", input.toString())
+            }
+            positiveButton {
+                val title = it.getInputField().text.toString()
+                createPlaylist(title, success = {
+                    it.pid?.let { _ ->
+                        collectBatch2Music(it, musicList, success = {
+                            ToastUtils.show("歌曲已成功添加到歌单 ${it.name}")
+                        })
+                    }
+                }, type = playlist.type)
+            }
+        }
     }
 
     /**
@@ -245,13 +251,12 @@ object PlaylistManagerUtils {
      */
     private fun showPlaylistSelectDialog(activity: AppCompatActivity, callBack: ((String) -> Unit)) {
         val items = mutableListOf("本地歌单", "在线歌单")
-        MaterialDialog.Builder(activity)
-                .title(R.string.add_to_playlist)
-                .items(items)
-                .itemsCallback { _, _, which, _ ->
-                    callBack.invoke(items[which])
-                }
-                .build().show()
+        MaterialDialog(activity).show {
+            title(R.string.add_to_playlist)
+            listItems(items = items) { dialog, index, text ->
+                callBack.invoke(items[index])
+            }
+        }
     }
 
     /**

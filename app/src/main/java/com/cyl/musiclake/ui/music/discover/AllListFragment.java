@@ -2,8 +2,8 @@ package com.cyl.musiclake.ui.music.discover;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.View;
 

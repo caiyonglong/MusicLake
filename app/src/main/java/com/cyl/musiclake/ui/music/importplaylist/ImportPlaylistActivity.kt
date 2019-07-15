@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.importplaylist
 
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
@@ -151,7 +151,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         mAdapter = SongAdapter(result.musicList)
         this.name = result.name
         resultRsv.adapter = mAdapter
-        resultRsv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        resultRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         mAdapter?.bindToRecyclerView(resultRsv)
 
         mAdapter?.setOnItemClickListener { adapter, view, position ->

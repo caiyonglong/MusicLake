@@ -3,11 +3,16 @@ package com.cyl.musiclake.ui
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.widget.ImageView
-import com.afollestad.materialdialogs.DialogAction
+import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.cyl.musicapi.netease.LoginInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -18,7 +23,6 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.PlayHistoryLoader
 import com.cyl.musiclake.bean.data.SongLoader
 import com.cyl.musiclake.bean.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
@@ -123,27 +127,26 @@ object UIUtils {
 fun Context.deletePlaylist(playlist: Playlist, success: (() -> Unit)?, fail: (() -> Unit)? = null) {
     when (playlist.pid) {
         Constants.PLAYLIST_HISTORY_ID -> {
-            MaterialDialog.Builder(this)
-                    .title("提示")
-                    .content("是否清空播放历史？")
-                    .onPositive { _, _ ->
-                        PlayHistoryLoader.clearPlayHistory()
-                        success?.invoke()
-                    }
-                    .positiveText("确定")
-                    .negativeText("取消")
-                    .show()
+            MaterialDialog(this).show {
+                title(R.string.prompt)
+                message(R.string.clear_history_playlist_tips)
+                positiveButton {
+                    success?.invoke()
+                }
+                positiveButton(R.string.sure)
+                negativeButton(R.string.cancel)
+            }
         }
         else -> {
-            MaterialDialog.Builder(this)
-                    .title("提示")
-                    .content("是否删除这个歌单？")
-                    .onPositive { _, _ ->
-                        success?.invoke()
-                    }
-                    .positiveText("确定")
-                    .negativeText("取消")
-                    .show()
+            MaterialDialog(this).show {
+                title(R.string.prompt)
+                message(R.string.delete_playlist_tips)
+                positiveButton {
+                    success?.invoke()
+                }
+                positiveButton(R.string.sure)
+                negativeButton(R.string.cancel)
+            }
         }
     }
 }
@@ -181,16 +184,16 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
             }
             if (result.isNotEmpty() && result.startsWith("http")) {
                 val titleId = if (isCache) R.string.popup_cache else R.string.popup_download
-                MaterialDialog.Builder(this@downloadMusic)
-                        .title(titleId)
-                        .content(R.string.download_content, music.title)
-                        .onPositive { _, _ ->
-                            music.uri = result
-                            addDownloadQueue(music, isCache = isCache)
-                        }
-                        .positiveText(R.string.sure)
-                        .negativeText(R.string.cancel)
-                        .show()
+                MaterialDialog(this@downloadMusic).show {
+                    title(titleId)
+                    message(text = getString(R.string.download_content, music.title))
+                    positiveButton {
+                        music.uri = result
+                        addDownloadQueue(music, isCache = isCache)
+                    }
+                    positiveButton(R.string.sure)
+                    negativeButton(R.string.cancel)
+                }
                 return
             }
             ToastUtils.show(getString(R.string.download_error))
@@ -306,31 +309,31 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: 
  */
 fun showTipsDialog(context: AppCompatActivity, content: String, success: (() -> Unit)? = null) {
     if (context.isDestroyed || context.isFinishing) return
-    MaterialDialog.Builder(context)
-            .title(R.string.prompt)
-            .content(content)
-            .onPositive { _, _ ->
-                success?.invoke()
-            }
-            .positiveText(R.string.sure)
-            .negativeText(R.string.cancel)
-            .show()
+    MaterialDialog(context).show {
+        title(R.string.prompt)
+        message(text = content)
+        positiveButton {
+            success?.invoke()
+        }
+        positiveButton(R.string.sure)
+        negativeButton(R.string.cancel)
+    }
 }
 
 /**
  * 对话框显示tip
  */
-fun showTipsDialog(context: AppCompatActivity, content: Int, success: (() -> Unit)? = null) {
+fun showTipsDialog(context: AppCompatActivity, contentId: Int? = null, content: String? = null, success: (() -> Unit)? = null) {
     if (context.isDestroyed || context.isFinishing) return
-    MaterialDialog.Builder(context)
-            .title(R.string.warning)
-            .content(content)
-            .onPositive { _, _ ->
-                success?.invoke()
-            }
-            .positiveText(R.string.sure)
-            .negativeText(R.string.cancel)
-            .show()
+    MaterialDialog(context).show {
+        title(R.string.prompt)
+        message(contentId, content)
+        positiveButton {
+            success?.invoke()
+        }
+        positiveButton(R.string.sure)
+        negativeButton(R.string.cancel)
+    }
 }
 
 
@@ -402,47 +405,44 @@ fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
     if (this is MainActivity && (this.isDestroyed || this.isFinishing)) {
         return
     }
-    MaterialDialog.Builder(this)
-            .title("定时关闭")
-            .items(CountDownUtils.selectItems)
-            .itemsCallbackSingleChoice(CountDownUtils.type) { dialog, _, which, _ ->
-                CountDownUtils.type = which
-                when (which) {
-                    0 -> {
-                        CountDownUtils.totalTime = 0
-                        CountDownUtils.cancel()
-                    }
-                    5 -> {
-                        dialog.cancel()
-                        MaterialDialog.Builder(this)
-                                .title(getString(R.string.custom_count_down_time))
-                                .inputType(InputType.TYPE_CLASS_NUMBER)//可以输入的类型-电话号码
-                                .input(getString(R.string.count_down_minutes), "") { dialog1, input ->
-                                    val time = (input ?: 0).toString().toInt()
-                                    dialog1.getActionButton(DialogAction.POSITIVE).isEnabled = time <= 24 * 60
-                                }
-                                .inputRange(1, 4)
-                                .onPositive { dialog12, _ ->
-                                    val time = (dialog12.inputEditText?.text
-                                            ?: 0).toString().toInt()
-                                    if (time == 0 || time > 24 * 60) {
-                                        ToastUtils.show(getString(R.string.down_time_more))
-                                    } else {
-                                        CountDownUtils.starCountDownByTime(time)
-                                    }
-                                }.show()
-                    }
-                    else -> {
-                        CountDownUtils.starCountDownById(which)
+    MaterialDialog(this).show {
+        title(R.string.setting_timing)
+        listItemsSingleChoice(CountDownUtils.type, items = CountDownUtils.selectItems) { dialog, index, text ->
+            CountDownUtils.type = index
+            when (index) {
+                0 -> {
+                    CountDownUtils.totalTime = 0
+                    CountDownUtils.cancel()
+                }
+                5 -> {
+                    dialog.cancel()
+                    MaterialDialog(this@showCountDown).show {
+                        title(R.string.custom_count_down_time)
+                        input(hintRes = R.string.count_down_minutes,
+                                maxLength = 4,
+                                inputType = InputType.TYPE_CLASS_NUMBER) { dialog, text ->
+                            val isValid = text.toString().toInt() <= 24 * 60
+                            dialog.setActionButtonEnabled(WhichButton.POSITIVE, isValid)
+                        }
+                        positiveButton {
+                            val time = (it.getInputField().text ?: 0).toString().toInt()
+                            if (time == 0 || time > 24 * 60) {
+                                ToastUtils.show(getString(R.string.down_time_more))
+                            } else {
+                                CountDownUtils.starCountDownByTime(time)
+                            }
+                        }
                     }
                 }
-                false
+                else -> {
+                    CountDownUtils.starCountDownById(index)
+                }
             }
-            .dismissListener {
-                dismissListener.invoke(CountDownUtils.type != 0)
-            }
-            .build()
-            .show()
+        }
+        onDismiss {
+            dismissListener.invoke(CountDownUtils.type != 0)
+        }
+    }
 }
 
 fun getNeteaseLoginStatus(success: ((User) -> Unit)?, fail: (() -> Unit)?) {
@@ -467,3 +467,43 @@ fun getNeteaseLoginStatus(success: ((User) -> Unit)?, fail: (() -> Unit)?) {
     })
 }
 
+
+/**
+ * 歌单重命名
+ */
+fun AppCompatActivity.showPlaylistRenameDialog(title: String? = null, success: ((String) -> Unit)? = null) {
+    MaterialDialog(this@showPlaylistRenameDialog).show {
+        title(R.string.playlist_rename)
+        positiveButton(R.string.sure)
+        negativeButton(R.string.cancel)
+        input(hintRes = R.string.input_playlist, maxLength = 10, prefill = title,
+                inputType = InputType.TYPE_CLASS_TEXT) { dialog, input ->
+            LogUtil.e("=====", input.toString())
+        }
+        positiveButton {
+            val newTitle = it.getInputField().text.toString()
+            if (newTitle != title) {
+                success?.invoke(newTitle)
+            }
+        }
+    }
+}
+
+
+/**
+ * 歌单重命名
+ */
+fun AppCompatActivity.showInfoDialog(title: String? = null, message: String? = null, success: ((String) -> Unit)? = null) {
+    MaterialDialog(this@showInfoDialog).show {
+        title(text = title)
+        message(text = message)
+        positiveButton(R.string.sure)
+        negativeButton(R.string.cancel)
+        positiveButton {
+            val newTitle = it.getInputField().text.toString()
+            if (newTitle != title) {
+                success?.invoke(newTitle)
+            }
+        }
+    }
+}

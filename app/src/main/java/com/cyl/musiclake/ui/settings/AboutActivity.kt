@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.settings
 
 import android.graphics.BitmapFactory
-import android.support.annotation.ColorRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager

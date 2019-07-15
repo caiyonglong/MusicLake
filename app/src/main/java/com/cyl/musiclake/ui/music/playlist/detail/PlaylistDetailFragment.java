@@ -3,18 +3,16 @@ package com.cyl.musiclake.ui.music.playlist.detail;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.bean.Artist;
@@ -25,14 +23,15 @@ import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.widget.ItemDecoration;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +41,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * 作者：yonglong on 2016/8/15 19:54
@@ -195,20 +196,16 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                 break;
             case R.id.action_rename_playlist:
                 LogUtil.e("action_rename_playlist");
-                new MaterialDialog.Builder(getActivity())
-                        .title("重命名歌单")
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .inputRangeRes(2, 10, R.color.red)
-                        .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input("输入歌单名", mPlaylist.getName(), false, (dialog, input) -> LogUtil.e("=====", input.toString()))
-                        .onPositive((dialog, which) -> {
-                            String title = dialog.getInputEditText().getText().toString();
-                            mPresenter.renamePlaylist(mPlaylist, title);
-                        })
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .show();
+                if (getActivity() != null) {
+                    UIUtilsKt.showPlaylistRenameDialog((AppCompatActivity) getActivity(), mPlaylist.getName(), new Function1<String, Unit>() {
+                        @Override
+                        public Unit invoke(String title) {
+                            if (mPresenter != null)
+                                mPresenter.renamePlaylist(mPlaylist, title);
+                            return null;
+                        }
+                    });
+                }
                 break;
 //            case R.id.action_share:
 //                Intent intent3 = new Intent(getActivity(), EditActivity.class);
@@ -304,7 +301,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         musicList.addAll(songList);
         mAdapter.setNewData(musicList);
         if (mPlaylist != null && mPlaylist.getCoverUrl() != null) {
-            CoverLoader.INSTANCE.loadBigImageView(getContext(), mPlaylist.getCoverUrl(),mPlaylist.getType(), album_art);
+            CoverLoader.INSTANCE.loadBigImageView(getContext(), mPlaylist.getCoverUrl(), mPlaylist.getType(), album_art);
         } else if (musicList.size() >= 1) {
             CoverLoader.INSTANCE.loadBigImageView(getContext(), musicList.get(0).getCoverUri(), musicList.get(0).getType(), album_art);
         }

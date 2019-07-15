@@ -2,10 +2,12 @@ package com.cyl.musiclake.ui.music.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
+import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 
 /**
@@ -40,11 +42,10 @@ public class ShowDetailDialog extends DialogFragment {
                 .append("专辑：")
                 .append(music.getAlbum());
 
-        return new MaterialDialog.Builder(getActivity())
-                .title("歌曲详情")
-                .content(sb.toString())
-                .positiveText("确定")
-                .build();
+        return new AlertDialog.Builder(getContext())
+                .setTitle(R.string.artist_detail)
+                .setMessage(sb.toString())
+                .create();
     }
 
 

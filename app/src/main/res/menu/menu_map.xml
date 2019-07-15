@@ -29,7 +29,7 @@
         android:icon="@drawable/ic_search"
         android:orderInCategory="1"
         app:showAsAction="ifRoom"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="" />
 
 

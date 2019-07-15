@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.local.fragment
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.FolderInfo
@@ -39,7 +39,7 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     }
 
     override fun initViews() {
-        recyclerView?.layoutManager = LinearLayoutManager(activity)
+        recyclerView?.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         initHeader()
     }
 

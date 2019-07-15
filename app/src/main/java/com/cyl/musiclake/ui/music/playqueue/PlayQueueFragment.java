@@ -2,33 +2,36 @@ package com.cyl.musiclake.ui.music.playqueue;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
-import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.UIUtilsKt;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -141,17 +144,16 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
         int id = item.getItemId();
         switch (id) {
             case R.id.action_delete_playlist:
-                new MaterialDialog.Builder(mFragmentComponent.getActivityContext())
-                        .title(R.string.playlist_queue_clear)
-                        .positiveText(R.string.sure)
-                        .negativeText(R.string.cancel)
-                        .onPositive((dialog, which) -> {
-                            if (mPresenter != null) {
-                                mPresenter.clearQueue();
-                                mPresenter.loadSongs();
-                            }
-                        })
-                        .show();
+                UIUtilsKt.showInfoDialog((AppCompatActivity) mFragmentComponent.getActivity(), getString(R.string.playlist_queue_clear), null, new Function1<String, Unit>() {
+                    @Override
+                    public Unit invoke(String s) {
+                        if (mPresenter != null) {
+                            mPresenter.clearQueue();
+                            mPresenter.loadSongs();
+                        }
+                        return null;
+                    }
+                });
                 break;
         }
         return super.onOptionsItemSelected(item);

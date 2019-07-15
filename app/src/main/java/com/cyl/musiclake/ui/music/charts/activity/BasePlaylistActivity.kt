@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.charts.activity
 
 import android.os.Build
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
@@ -50,8 +50,8 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     override fun initView() {
         mAdapter = SongAdapter(musicList)
         mAdapter?.setEnableLoadMore(setEnableMore())
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         recyclerView?.layoutManager = layoutManager
         recyclerView?.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)

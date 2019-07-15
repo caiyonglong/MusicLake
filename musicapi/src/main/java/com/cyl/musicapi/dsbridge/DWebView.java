@@ -11,8 +11,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Keep;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Keep;
+import androidx.appcompat.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,7 +22,6 @@ import android.webkit.JavascriptInterface;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.cyl.musicapi.dsbridge.OnReturnValue;
 import com.tencent.smtt.export.external.interfaces.ConsoleMessage;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
@@ -40,7 +39,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;

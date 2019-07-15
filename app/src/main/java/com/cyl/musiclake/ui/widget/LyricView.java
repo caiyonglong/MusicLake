@@ -17,7 +17,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;

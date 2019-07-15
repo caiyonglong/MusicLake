@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.search.fragment
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
@@ -16,9 +16,11 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.SearchContract
 import com.cyl.musiclake.ui.music.search.SearchPresenter
+import com.cyl.musiclake.ui.youtube.YoutubeActivity
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
+import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 功能：本地歌曲列表
@@ -114,9 +116,7 @@ class YoutubeSearchFragment : BaseLazyFragment<SearchPresenter>(), SearchContrac
 
             mAdapter?.setOnItemClickListener { _, view, position ->
                 if (musicList.size <= position) return@setOnItemClickListener
-
-                PlayManager.playOnline(musicList[position])
-                activity?.let { NavigationHelper.navigateToPlaying(it, view.findViewById(R.id.iv_cover)) }
+                startActivity<YoutubeActivity>("videoId" to musicList[position].mid)
             }
             mAdapter?.setOnItemChildClickListener { _, _, position ->
                 val music = musicList[position]

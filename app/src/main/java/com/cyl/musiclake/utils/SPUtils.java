@@ -3,7 +3,7 @@ package com.cyl.musiclake.utils;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;

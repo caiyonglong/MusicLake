@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.search.fragment
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
@@ -108,7 +108,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
 
         if (mAdapter == null) {
             mAdapter = SongAdapter(musicList)
-            recyclerView.layoutManager = LinearLayoutManager(activity)
+            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
             recyclerView.adapter = mAdapter
             mAdapter?.bindToRecyclerView(recyclerView)
             mAdapter?.setOnLoadMoreListener(listener, recyclerView)

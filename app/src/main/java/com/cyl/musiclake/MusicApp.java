@@ -6,7 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 import android.view.WindowManager;
 
 import com.cyl.musicapi.BaseApiImpl;

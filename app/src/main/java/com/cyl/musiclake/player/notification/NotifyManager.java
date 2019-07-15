@@ -5,8 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IntRange;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.IntRange;
+import androidx.core.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.cyl.musiclake.BuildConfig;

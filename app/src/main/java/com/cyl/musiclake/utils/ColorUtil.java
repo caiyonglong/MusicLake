@@ -1,9 +1,9 @@
 package com.cyl.musiclake.utils;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.Nullable;
-import android.support.v7.graphics.Palette;
+import androidx.annotation.ColorInt;
+import androidx.annotation.Nullable;
+import androidx.palette.graphics.Palette;
 
 /**
  * Created by D22434 on 2017/9/26.

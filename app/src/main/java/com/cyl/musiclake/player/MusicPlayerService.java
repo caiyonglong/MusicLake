@@ -23,30 +23,32 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.media.session.MediaButtonReceiver;
+
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.api.music.MusicApi;
+import com.cyl.musiclake.api.net.ApiManager;
+import com.cyl.musiclake.api.net.RequestCallBack;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.bean.data.PlayHistoryLoader;
 import com.cyl.musiclake.bean.data.PlayQueueLoader;
+import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.event.StatusChangedEvent;
-import com.cyl.musiclake.api.net.ApiManager;
-import com.cyl.musiclake.api.net.RequestCallBack;
 import com.cyl.musiclake.player.playback.PlayProgressListener;
 import com.cyl.musiclake.player.playqueue.PlayQueueManager;
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
+import com.cyl.musiclake.ui.widget.appwidgets.StandardWidget;
 import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
@@ -54,7 +56,6 @@ import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.cyl.musiclake.ui.widget.appwidgets.StandardWidget;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -1146,8 +1147,8 @@ public class MusicPlayerService extends Service {
         if (SystemUtils.isLollipop()) {
             //线控
             isRunningForeground = true;
-            mNotificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
-            android.support.v4.media.app.NotificationCompat.MediaStyle style = new android.support.v4.media.app.NotificationCompat.MediaStyle()
+            mNotificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+            androidx.media.app.NotificationCompat.MediaStyle style = new androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSessionManager.getMediaSession())
                     .setShowActionsInCompactView(1, 0, 2, 3, 4);
             mNotificationBuilder.setStyle(style);

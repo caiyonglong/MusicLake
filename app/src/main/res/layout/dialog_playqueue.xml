@@ -61,7 +61,7 @@
         android:layout_height="@dimen/dp_05"
         android:background="@color/translucent_white" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_songs"
         android:layout_width="match_parent"
         android:layout_height="0dp"

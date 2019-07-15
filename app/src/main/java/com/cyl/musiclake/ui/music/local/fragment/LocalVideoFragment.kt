@@ -2,9 +2,9 @@ package com.cyl.musiclake.ui.music.local.fragment
 
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
@@ -28,7 +28,7 @@ import org.jetbrains.anko.support.v4.startActivity
 
 class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContract.View {
 
-    val mRecyclerView by lazy { rootView?.findViewById<RecyclerView>(R.id.recyclerView) }
+    val mRecyclerView by lazy { rootView?.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView) }
 
     private var mAdapter: SongAdapter? = null
     private var path: String? = null
@@ -51,7 +51,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
 
     public override fun initViews() {
         mAdapter = SongAdapter(musicList)
-        mRecyclerView?.layoutManager = LinearLayoutManager(activity)
+        mRecyclerView?.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         mRecyclerView?.adapter = mAdapter
         mRecyclerView?.addItemDecoration(ItemDecoration(mFragmentComponent.activity, ItemDecoration.VERTICAL_LIST))
         mAdapter?.bindToRecyclerView(mRecyclerView)

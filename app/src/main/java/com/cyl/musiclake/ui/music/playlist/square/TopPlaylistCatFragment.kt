@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +32,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
     /**
      *显示出对话框
      */
-    fun showIt(context: FragmentActivity?) {
+    fun showIt(context: androidx.fragment.app.FragmentActivity?) {
         if (dialog != null) {
             dialog.dismiss()
         }
@@ -67,7 +67,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
     private fun initRecyclerView(list: MutableList<String>) {
         if (mAdapter == null) {
             mAdapter = context?.let { AllCateAdapter(it, list.toMutableList()) }
-            val layoutManager = GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
+            val layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 4, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
             cateTagRcv?.layoutManager = layoutManager
             cateTagRcv?.adapter = mAdapter
             mAdapter?.clickListener = {
@@ -87,7 +87,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
     /**
      * 标签适配器
      */
-    class AllCateAdapter(val context: Context, val list: MutableList<Any>) : RecyclerView.Adapter<AllCateAdapter.TagViewHolder>() {
+    class AllCateAdapter(val context: Context, val list: MutableList<Any>) : androidx.recyclerview.widget.RecyclerView.Adapter<AllCateAdapter.TagViewHolder>() {
 
         var clickListener: ((Int) -> Unit)? = null
         var tag: String? = null
@@ -114,7 +114,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
             return list.size
         }
 
-        inner class TagViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class TagViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
             var tagTv = itemView.findViewById<TextView>(R.id.tagTv)
         }
 

@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.edit
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.CheckBox
 import com.chad.library.adapter.base.BaseItemDraggableAdapter

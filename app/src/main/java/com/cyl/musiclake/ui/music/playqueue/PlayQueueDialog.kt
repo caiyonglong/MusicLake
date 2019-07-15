@@ -4,15 +4,10 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -20,6 +15,9 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.UIUtils
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.trello.rxlifecycle2.LifecycleTransformer
 import org.jetbrains.anko.support.v4.dip
 import java.util.*
@@ -30,7 +28,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     private lateinit var songSumTv: TextView
     private lateinit var playModeIv: ImageView
     private lateinit var clearAllIv: ImageView
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     private var mPresenter: PlayQueuePresenter? = null
     private var musicList: List<Music> = ArrayList()
     private var mAdapter: QueueAdapter? = null
@@ -45,7 +43,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         val params = window?.attributes
         params?.gravity = Gravity.BOTTOM
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
-        params?.height = MusicApp.screenSize.y /7*4
+        params?.height = MusicApp.screenSize.y / 7 * 4
         window?.attributes = params
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -72,7 +70,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         playModeIv = view.findViewById(R.id.iv_play_mode)
         clearAllIv = view.findViewById(R.id.iv_clear_all)
 
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
         recyclerView.scrollToPosition(PlayManager.getCurrentPosition())
@@ -101,16 +99,14 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
             playModeTv.text = PlayQueueManager.getPlayMode()
         }
         clearAllIv.setOnClickListener { v ->
-            MaterialDialog.Builder(context!!)
-                    .title(R.string.playlist_queue_clear)
-                    .positiveText(R.string.sure)
-                    .negativeText(R.string.cancel)
-                    .onPositive { _, _ ->
-                        mPresenter?.clearQueue()
-                        dismiss()
-                    }
-                    .onNegative { dialog, which -> dialog.dismiss() }
-                    .show()
+            MaterialDialog(context!!).show {
+                title(R.string.playlist_queue_clear)
+                positiveButton(R.string.sure) {
+                    mPresenter?.clearQueue()
+                    dismiss()
+                }
+                negativeButton(R.string.cancel)
+            }
         }
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_love && view.id != R.id.iv_more) {

@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.artist.fragment
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.NavigationHelper
@@ -40,7 +40,7 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
 
     public override fun initViews() {
         mAdapter = SongAdapter(musicInfos)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
 

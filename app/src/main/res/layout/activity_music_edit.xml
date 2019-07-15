@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include layout="@layout/item_toolbar" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -24,7 +24,7 @@
                 android:layout_marginEnd="@dimen/dp_16"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/titleInputView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -35,7 +35,7 @@
                         android:hint="@string/song_title"
                         android:inputType="text"
                         android:textSize="16sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -46,7 +46,7 @@
                 android:layout_marginEnd="@dimen/dp_16"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/artistInputView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -57,7 +57,7 @@
                         android:hint="@string/song_artist"
                         android:inputType="text"
                         android:textSize="16sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -68,7 +68,7 @@
                 android:layout_marginEnd="@dimen/dp_16"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/albumInputView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -79,7 +79,7 @@
                         android:hint="@string/album"
                         android:inputType="text"
                         android:textSize="16sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <Button
@@ -92,8 +92,8 @@
                 android:text="@string/save" />
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

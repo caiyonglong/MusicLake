@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.search
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -244,7 +244,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
         searchHistory = result
         if (historyAdapter == null) {
             historyAdapter = SearchHistoryAdapter(searchHistory)
-            historyRcv.layoutManager = LinearLayoutManager(this)
+            historyRcv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
             historyRcv.adapter = historyAdapter
             historyAdapter?.bindToRecyclerView(historyRcv)
             historyAdapter?.setOnItemLongClickListener { _, _, _ -> false }

@@ -37,7 +37,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.music.youtube.YoutubeActivity"></activity>
+        <activity android:name=".ui.youtube.YoutubeActivity"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -202,7 +202,7 @@
         </receiver>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
