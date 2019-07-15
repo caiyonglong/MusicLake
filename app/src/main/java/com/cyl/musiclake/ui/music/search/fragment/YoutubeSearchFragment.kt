@@ -86,6 +86,7 @@ class YoutubeSearchFragment : BaseLazyFragment<SearchPresenter>(), SearchContrac
         searchInfo = arguments?.getString("searchInfo") ?: ""
         LogUtil.d(TAG, "初始化 $searchInfo")
         musicList.clear()
+        showError("YouTube必须翻墙", false)
     }
 
 
@@ -119,8 +120,8 @@ class YoutubeSearchFragment : BaseLazyFragment<SearchPresenter>(), SearchContrac
                 startActivity<YoutubeActivity>("videoId" to musicList[position].mid)
             }
             mAdapter?.setOnItemChildClickListener { _, _, position ->
-                val music = musicList[position]
-                BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(activity as AppCompatActivity)
+                //                val midusic = musicList[position]
+//                BottomDialogFragmenttomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(activity as AppCompatActivity)
             }
 
         } else {

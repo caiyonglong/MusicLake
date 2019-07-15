@@ -103,4 +103,10 @@ interface NeteaseApiService {
     @GET("/user/playlist")
     fun getUserPlaylist(@Query("uid") uid: String): Observable<NeteasePlaylist>
 
+    /**
+     * 获取音乐榜单
+     */
+    @GET("/toplist")
+    fun getTopList(): Observable<TopList>
+
 }

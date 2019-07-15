@@ -23,6 +23,8 @@ class Playlist() : LitePalSupport(), Parcelable {
     var total: Long = 0
     //更新日期
     var updateDate: Long = 0
+    //更新频率
+    var updateFrequency: String? = null
     //创建日期
     var date: Long = 0
     //描述

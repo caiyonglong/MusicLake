@@ -62,6 +62,9 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
     @BindView(R.id.error_message_view)
     public TextView errorTextView;
     @Nullable
+    @BindView(R.id.tv_empty)
+    public TextView emptyTextView;
+    @Nullable
     @BindView(R.id.loading_progress_bar)
     public ProgressBar loadingProgressBar;
     @Nullable

@@ -1,7 +1,14 @@
 package com.cyl.musiclake.ui.music.charts
 
+import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.cyl.musiclake.MusicApp.mContext
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.utils.CoverLoader
@@ -29,47 +36,48 @@ class OnlineAdapter(playlist: List<Playlist>) : BaseQuickAdapter<Playlist, BaseV
     }
 }
 
-//class ChartsAdapter(val playlist: List<Playlist>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-//    private val viewIds = arrayListOf(R.id.tv_music_1, R.id.tv_music_2, R.id.tv_music_3)
-//    private val stringIds = arrayListOf(R.string.song_list_item_title_1, R.string.song_list_item_title_2, R.string.song_list_item_title_3)
-//
-//
-//    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-//    }
-//
-//    override fun getItemCount(): Int {
-//    }
-//
-//    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//
-//    }
-//
-//    override fun getItemViewType(position: Int): Int {
-//        when (playlist[position].type) {
-//            Constants.BAIDU -> {
-//
-//            }
-//            Constants.BAIDU -> {
-//
-//            }
-//            Constants.BAIDU -> {
-//
-//            }
-//        }
-//        return super.getItemViewType(position)
-//    }
-//
-//
-//    override fun convert(helper: BaseViewHolder, playlist: Playlist) {
-//        CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
-//        helper.setText(R.id.title, playlist.name)
-//        for (i in 0 until viewIds.size) {
-//            if (playlist.musicList.size <= i) continue
-//            val music = playlist.musicList[i]
-//            helper.setText(viewIds[i], mContext.getString(stringIds[i],
-//                    music.title, music.artist))
-//        }
-//    }
-//
-//
-//}
+class ChartsAdapter(val context: Context, val playlist: List<Playlist>) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+    var clickListener: ((Int) -> Unit)? = null
+    var tag: String? = null
+
+    private val ITEM_TITLE = 1
+    private val ITEM_CHART = 2
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+        val mInflater = LayoutInflater.from(context)
+        return if (viewType == ITEM_TITLE) {
+            val view = mInflater.inflate(R.layout.item_charts_title, parent, false)
+            TitleViewHolder(view)
+        } else {
+            val view = mInflater.inflate(R.layout.item_charts, parent, false)
+            ChartViewHolder(view)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return playlist.size
+    }
+
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
+        if (holder is TitleViewHolder) {
+
+        } else if (holder is ChartViewHolder) {
+
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
+    }
+
+    inner class TitleViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        var titleTv = itemView.findViewById<TextView>(R.id.tv_title)
+    }
+
+    inner class ChartViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        var titleTv = itemView.findViewById<TextView>(R.id.tv_title)
+        var updateFrequencyTv = itemView.findViewById<TextView>(R.id.tv_title)
+        var coverIv = itemView.findViewById<TextView>(R.id.iv_cover)
+    }
+
+}

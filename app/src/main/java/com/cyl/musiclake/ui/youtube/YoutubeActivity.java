@@ -34,7 +34,6 @@ public class YoutubeActivity extends AppCompatActivity {
                 CustomPlayerUiController customPlayerUiController = new CustomPlayerUiController(YoutubeActivity.this, customPlayerUi, youTubePlayer, youTubePlayerView);
                 youTubePlayer.addListener(customPlayerUiController);
                 youTubePlayerView.addFullScreenListener(customPlayerUiController);
-
                 YouTubePlayerUtils.loadOrCueVideo(
                         youTubePlayer, getLifecycle(),
                         videoId, 0f

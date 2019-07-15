@@ -52,6 +52,7 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
                     searchResult.songs = songs
                     searchResult.duration = System.currentTimeMillis() - startTime
                     success(searchResult)
+                    mView?.hideLoading()
                 }
                 if (result == null) {
                     fail.invoke()
