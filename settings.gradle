@@ -1,1 +1,1 @@
-include ':app', ':musicapi'
+include ':app'//, ':musicapi'
