@@ -211,7 +211,11 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             }
 
             override fun error(msg: String) {
-                mView?.showErrorTips(msg, hasTry = true)
+                if (msg == "需要登录") {
+                    mView?.showErrorTips("需要绑定网易云音乐账号", hasTry = true)
+                } else {
+                    mView?.showErrorTips(msg, hasTry = true)
+                }
             }
         })
     }

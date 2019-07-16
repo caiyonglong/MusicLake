@@ -37,7 +37,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.youtube.YoutubeActivity"></activity>
+        <activity
+            android:name=".ui.youtube.YoutubeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:hardwareAccelerated="true"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true" />
 
         <uses-library
             android:name="org.apache.http.legacy"

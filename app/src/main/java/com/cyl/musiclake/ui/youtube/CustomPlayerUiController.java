@@ -2,22 +2,17 @@ package com.cyl.musiclake.ui.youtube;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.TimeUtils;
-
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.utils.ConvertUtils;
 import com.cyl.musiclake.utils.FormatUtil;
 import com.cyl.musiclake.utils.LogUtil;
-import com.cyl.musiclake.utils.SizeUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;

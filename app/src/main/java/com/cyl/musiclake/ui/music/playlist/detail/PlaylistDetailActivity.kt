@@ -309,7 +309,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             } else {
                 mPresenter?.loadPlaylistSongs(it)
             }
-
         }
         mArtist?.let {
             mPresenter?.loadArtistSongs(it)
