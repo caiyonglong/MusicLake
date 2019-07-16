@@ -139,8 +139,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                             artistNames?.let { it2 ->
                                 MaterialDialog(it).show {
                                     title(R.string.choose_singer)
-                                    listItems(items = it2)
-                                    listItems { dialog, position, text ->
+                                    listItems(items = it2){ dialog, position, text ->
                                         NavigationHelper.navigateToArtist(mContext, artist[position], null)
                                     }
                                 }
