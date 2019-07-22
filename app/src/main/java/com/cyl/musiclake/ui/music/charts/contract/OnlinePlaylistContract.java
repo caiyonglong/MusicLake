@@ -11,12 +11,18 @@ public interface OnlinePlaylistContract {
     interface View extends BaseContract.BaseView {
         void showErrorInfo(String msg);
 
-        void showCharts(List<Playlist> charts);
+        void showNeteaseCharts(List<Playlist> charts);
+
+        void showQQCharts(List<Playlist> charts);
+
+        void showBaiduCharts(List<Playlist> charts);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {
         void loadBaiDuPlaylist();
+
         void loadTopList();
+
         void loadQQList();
     }
 }

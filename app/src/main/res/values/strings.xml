@@ -247,8 +247,9 @@
 
     <!-- 在线音乐-->
     <string name="playlist_num">%1$s("%2$d")</string>
-    <string name="charts_baidu">百度排行榜</string>
-    <string name="charts_netease">网友精选碟</string>
+    <string name="charts_baidu">百度音乐排行榜</string>
+    <string name="charts_qq">QQ音乐排行榜</string>
+    <string name="charts_netease">网易云音乐排行榜</string>
     <string name="cate_huayu">华语</string>
     <string name="cate_gufeng">古风</string>
     <string name="cate_select">选择分类</string>

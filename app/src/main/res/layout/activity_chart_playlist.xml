@@ -50,9 +50,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_16"
-                        app:cardBackgroundColor="?cardColor"
+                        app:cardBackgroundColor="@color/black"
                         app:cardCornerRadius="@dimen/dp_2"
-                        app:cardElevation="@dimen/dp_2">
+                        app:cardElevation="@dimen/dp_1">
 
                         <ImageView
                             android:id="@+id/coverIv"
@@ -94,8 +94,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_56"
                     app:elevation="5dp"
-                    app:popupTheme="?android:popupMenuStyle"
-                    app:layout_collapseMode="pin" />
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="?android:popupMenuStyle" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

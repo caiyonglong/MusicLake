@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_4"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
 
-    <ImageView
-        android:id="@+id/iv_cover"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/default_cover"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="?selectableItemBackground"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="@dimen/dp_2"
+        app:elevation="@dimen/dp_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?selectableItemBackground"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_cover" />
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/tv_update_frequency"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_4"
-        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:maxLines="2"
         android:text="榜单"
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_cover"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/iv_cover" />
+        app:layout_constraintBottom_toBottomOf="@+id/card_view"
+        app:layout_constraintEnd_toEndOf="@+id/card_view"
+        app:layout_constraintStart_toStartOf="@+id/card_view" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -45,8 +56,8 @@
         android:text="榜单"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/card_view"
+        app:layout_constraintStart_toStartOf="@+id/card_view"
         app:layout_constraintTop_toBottomOf="@+id/tv_update_frequency" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

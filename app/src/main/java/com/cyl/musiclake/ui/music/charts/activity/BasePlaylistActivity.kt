@@ -3,9 +3,11 @@ package com.cyl.musiclake.ui.music.charts.activity
 import android.os.Build
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Html
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
@@ -20,6 +22,7 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.FormatUtil
+import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_chart_playlist.*
 import org.jetbrains.anko.startActivity
 
@@ -50,8 +53,8 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     override fun initView() {
         mAdapter = SongAdapter(musicList)
         mAdapter?.setEnableLoadMore(setEnableMore())
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = RecyclerView.VERTICAL
         recyclerView?.layoutManager = layoutManager
         recyclerView?.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
@@ -112,12 +115,13 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
                 coverIv.setImageBitmap(it)
                 coverBgIv.setImageDrawable(CoverLoader.createBlurredImageFromBitmap(it))
             }
-            if (playlist.date != 0L) {
-                dateTv.visibility = View.VISIBLE
-                dateTv.text = getString(R.string.recent_update, FormatUtil.distime(playlist.date))
-            } else {
-                dateTv.visibility = View.GONE
-            }
+            //接口未返回date，暂时注释
+//            if (playlist.date != 0L) {
+//                dateTv.visibility = View.VISIBLE
+//                dateTv.text = getString(R.string.recent_update, FormatUtil.distime(playlist.date))
+//            } else {
+//                dateTv.visibility = View.GONE
+//            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 descTv.text = Html.fromHtml(playlist.des, Html.FROM_HTML_MODE_LEGACY)
             } else {

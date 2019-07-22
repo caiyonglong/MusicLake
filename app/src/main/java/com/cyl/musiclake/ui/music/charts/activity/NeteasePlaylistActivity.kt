@@ -4,6 +4,8 @@ import android.os.Bundle
 
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.ui.base.BaseActivity
+import com.cyl.musiclake.utils.LogUtil
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
@@ -23,6 +25,7 @@ class NeteasePlaylistActivity : BasePlaylistActivity() {
         mPlaylist?.pid?.let {
             mPresenter?.loadPlaylist(it, mPlaylist?.type)
         }
+        LogUtil.d(TAG,"mPlaylist "+mPlaylist.toString())
     }
 
     override fun retryLoading() {

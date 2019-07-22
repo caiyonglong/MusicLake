@@ -23,7 +23,7 @@ constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistCont
         val observable = PlaylistApiServiceImpl.getQQRank(3)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
-                mView?.showCharts(result)
+                mView?.showQQCharts(result)
             }
 
             override fun error(msg: String) {
@@ -43,7 +43,7 @@ constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistCont
                     }
 
                     override fun onNext(result: List<Playlist>) {
-                        mView.showCharts(result)
+                        mView.showBaiduCharts(result)
                     }
 
                     override fun onError(e: Throwable) {
@@ -62,7 +62,7 @@ constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistCont
         val observable = PlaylistApiServiceImpl.getNeteaseRank(IntArray(22) { i -> i }, 3)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
-                mView?.showCharts(result)
+                mView?.showNeteaseCharts(result)
             }
 
             override fun error(msg: String) {

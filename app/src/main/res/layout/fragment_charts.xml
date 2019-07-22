@@ -15,75 +15,49 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/playlistView"
-                android:visibility="gone"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text="@string/charts_netease"
-                        android:textColor="@color/black" />
-
-                    <ImageView
-                        android:id="@+id/iv_toggle_charts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/dp_8"
-                        android:src="@drawable/ic_arrow_down"
-                        android:tint="@color/black" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_1"
-                    android:background="@color/divider_line" />
-
-                <LinearLayout
-                    android:id="@+id/select_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="@dimen/dp_8"
-                        android:text="@string/res_wangyi" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="@dimen/dp_8"
-                        android:text="@string/res_qq" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="@dimen/dp_8"
-                        android:text="@string/res_baidu" />
-                </LinearLayout>
-
-
-            </LinearLayout>
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/dp_8"
+                android:text="@string/charts_netease"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/neteaseChartsRcv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingTop="@dimen/dp_8" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/dp_8"
+                android:text="@string/charts_qq"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/qqChartsRcv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingTop="@dimen/dp_8" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/dp_8"
+                android:text="@string/charts_baidu"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/baiduChartsRcv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"

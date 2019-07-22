@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -36,14 +37,14 @@ class OnlineAdapter(playlist: List<Playlist>) : BaseQuickAdapter<Playlist, BaseV
     }
 }
 
-class ChartsAdapter(val context: Context, val playlist: List<Playlist>) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+class ChartsAdapter(val context: Context, val playlist: List<Playlist>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var clickListener: ((Int) -> Unit)? = null
     var tag: String? = null
 
     private val ITEM_TITLE = 1
     private val ITEM_CHART = 2
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val mInflater = LayoutInflater.from(context)
         return if (viewType == ITEM_TITLE) {
             val view = mInflater.inflate(R.layout.item_charts_title, parent, false)
@@ -58,26 +59,31 @@ class ChartsAdapter(val context: Context, val playlist: List<Playlist>) : androi
         return playlist.size
     }
 
-    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is TitleViewHolder) {
 
         } else if (holder is ChartViewHolder) {
-
+            CoverLoader.loadImageView(mContext, playlist[position].coverUrl, holder.coverIv)
+            holder.titleTv.text = playlist[position].name
+            holder.updateFrequencyTv.text = playlist[position].updateFrequency
+            holder.coverIv.setOnClickListener {
+                clickListener?.invoke(position)
+            }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
+        return ITEM_CHART
     }
 
-    inner class TitleViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    inner class TitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var titleTv = itemView.findViewById<TextView>(R.id.tv_title)
     }
 
-    inner class ChartViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    inner class ChartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var titleTv = itemView.findViewById<TextView>(R.id.tv_title)
-        var updateFrequencyTv = itemView.findViewById<TextView>(R.id.tv_title)
-        var coverIv = itemView.findViewById<TextView>(R.id.iv_cover)
+        var updateFrequencyTv = itemView.findViewById<TextView>(R.id.tv_update_frequency)
+        var coverIv = itemView.findViewById<ImageView>(R.id.iv_cover)
     }
 
 }
