@@ -2,6 +2,7 @@ package com.cyl.musiclake.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -17,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;

@@ -169,4 +169,6 @@ dependencies {
     //Android音乐接口Api
     implementation 'com.github.caiyonglong:musicapi:1.0.3'
 
+    implementation 'com.danikula:videocache:2.7.1'
+
 }

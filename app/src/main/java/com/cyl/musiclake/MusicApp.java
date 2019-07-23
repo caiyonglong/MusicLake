@@ -6,8 +6,9 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
-import androidx.multidex.MultiDex;
 import android.view.WindowManager;
+
+import androidx.multidex.MultiDex;
 
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
@@ -17,10 +18,13 @@ import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.player.cache.CacheFileNameGenerator;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
 import com.cyl.musiclake.ui.theme.ThemeStore;
+import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
@@ -31,6 +35,7 @@ import com.tencent.tauth.Tencent;
 
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -216,6 +221,23 @@ public class MusicApp extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+
+    /**
+     * AndroidVideoCache缓存设置
+     */
+    private HttpProxyCacheServer proxy;
+
+    public static HttpProxyCacheServer getProxy() {
+        return MusicApp.getInstance().proxy == null ? (MusicApp.getInstance().proxy = MusicApp.getInstance().newProxy()) : MusicApp.getInstance().proxy;
+    }
+
+    private HttpProxyCacheServer newProxy() {
+        return new HttpProxyCacheServer.Builder(this)
+                .cacheDirectory(new File(FileUtils.getMusicCacheDir()))
+                .fileNameGenerator(new CacheFileNameGenerator())
+                .build();
     }
 
 }

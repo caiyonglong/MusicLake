@@ -6,9 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.utils.LogUtil;
+import com.danikula.videocache.HttpProxyCacheServer;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import static com.cyl.musiclake.player.MusicPlayerService.PLAYER_PREPARED;
@@ -53,10 +54,15 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             if (player.isPlaying()) player.stop();
             mIsPrepared = false;
             player.reset();
+
             if (path.startsWith("content://")) {
                 player.setDataSource(mService.get(), Uri.parse(path));
             } else {
-                player.setDataSource(path);
+                //读取缓存
+                HttpProxyCacheServer proxy = MusicApp.getProxy();
+                String proxyUrl = proxy.getProxyUrl(path);
+                LogUtil.d(TAG, "设置缓存,缓存地址：proxyUrl=" + proxyUrl);
+                player.setDataSource(proxyUrl);
             }
             player.prepareAsync();
             player.setOnPreparedListener(this);
