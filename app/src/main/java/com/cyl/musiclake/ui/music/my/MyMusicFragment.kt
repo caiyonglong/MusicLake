@@ -70,10 +70,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         downloadView.visibility = if (BuildConfig.HAS_DOWNLOAD) View.VISIBLE else View.GONE
 
         //初始化歌单列表
-        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.isSmoothScrollbarEnabled = false
 
-        playlistRcv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        playlistRcv.layoutManager = LinearLayoutManager(context)
         playlistRcv.isNestedScrollingEnabled = false
 
         mAdapter = PlaylistAdapter(playlists)

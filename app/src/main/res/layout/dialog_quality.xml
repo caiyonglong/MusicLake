@@ -28,12 +28,8 @@
             android:gravity="center"
             android:padding="@dimen/dp_16"
             android:text="@string/item_cached_music"
-            android:textColor="@color/white" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="@dimen/dp_32"
-            android:background="@color/translucent_white" />
+            android:textColor="@color/white"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/downloadTv"

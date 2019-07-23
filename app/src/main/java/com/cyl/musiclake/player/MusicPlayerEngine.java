@@ -5,8 +5,11 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 
 import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.LogUtil;
 import com.danikula.videocache.HttpProxyCacheServer;
 
@@ -54,15 +57,20 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             if (player.isPlaying()) player.stop();
             mIsPrepared = false;
             player.reset();
-
-            if (path.startsWith("content://")) {
+            boolean cacheSetting = PreferenceManager.getDefaultSharedPreferences(MusicApp.getAppContext()).getBoolean("key_cache_mode", true);
+            LogUtil.d(TAG, "缓存设置：" + cacheSetting);
+            //本地歌曲无需缓存
+            if (path.startsWith("content://") || path.startsWith("/storage")) {
                 player.setDataSource(mService.get(), Uri.parse(path));
-            } else {
-                //读取缓存
+            } else if (cacheSetting) {
+                //缓存开启，读取缓存
                 HttpProxyCacheServer proxy = MusicApp.getProxy();
                 String proxyUrl = proxy.getProxyUrl(path);
                 LogUtil.d(TAG, "设置缓存,缓存地址：proxyUrl=" + proxyUrl);
                 player.setDataSource(proxyUrl);
+            } else {
+                //不缓存
+                player.setDataSource(path);
             }
             player.prepareAsync();
             player.setOnPreparedListener(this);

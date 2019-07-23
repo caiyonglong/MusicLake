@@ -44,7 +44,7 @@
     <string name="item_local">本地歌曲</string>
     <string name="item_history">播放历史</string>
     <string name="item_favorite">我的收藏</string>
-    <string name="item_download">下载缓存</string>
+    <string name="item_download">下载</string>
     <string name="item_cached">缓存下载</string>
     <string name="item_cached_music">缓存歌曲</string>
     <string name="local_music">本地歌曲</string>
@@ -101,8 +101,8 @@
     <string name="pref_title_social">不公开自己的基本信息</string>
 
     <string name="pref_title_info">完善基本信息</string>
-    <string name="pref_title_download">文件下载位置</string>
-    <string name="pref_title_cache">文件缓存位置</string>
+    <string name="pref_title_download">下载目录</string>
+    <string name="pref_title_cache">缓存目录</string>
 
 
     <!-- Example settings for Data & Sync -->
@@ -116,6 +116,8 @@
     <string name="pref_title_about">关于</string>
     <string name="pref_title_update">检查更新</string>
     <string name="pref_title_clear">清除缓存</string>
+    <string name="pref_title_cache_switch">是否开启边听边缓存</string>
+    <string name="pref_summary_cache_switch">播放在线歌曲时会自动缓存到指定的缓存目录下</string>
 
 
     <string name="title_warning">警告</string>

@@ -26,13 +26,12 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
     lateinit var mWifiSwitch: SwitchPreference
     lateinit var mSocketSwitch: SwitchPreference
     lateinit var mNightSwitch: SwitchPreference
+    lateinit var mCacheSwitch: SwitchPreference
     lateinit var mLyricCheckBox: CheckBoxPreference
     lateinit var mMusicQualityPreference: ListPreference
     lateinit var mMusicApiPreference: EditTextPreference
     lateinit var mNeteaseApiPreference: EditTextPreference
 
-    private val searchOptions: Set<String>? = null
-    private val searchFilters: Array<String>? = null
     private var musicApi: String? = null// = SPUtils.getAnyByKey(SPUtils.SP_KEY_PLATER_API_URL, Constants.BASE_PLAYER_URL);
     private var neteaseApi: String? = null// = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL);
 
@@ -71,6 +70,7 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
         mWifiSwitch = findPreference("wifi_mode") as SwitchPreference
         mSocketSwitch = findPreference("key_socket") as SwitchPreference
         mNightSwitch = findPreference("key_night_mode") as SwitchPreference
+        mCacheSwitch = findPreference("key_cache_mode") as SwitchPreference
         mLyricCheckBox = findPreference("key_lyric") as CheckBoxPreference
         mMusicQualityPreference = findPreference("key_music_quality") as ListPreference
         mMusicApiPreference = findPreference("key_music_api") as EditTextPreference
@@ -111,8 +111,19 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
             }
             false
         }
+        initCacheSettings()
 
         initApiSettings()
+    }
+
+    private fun initCacheSettings() {
+        mPreferenceCacheFile?.isEnabled = mCacheSwitch.isChecked
+        mCacheSwitch.setOnPreferenceChangeListener { preference, newValue ->
+            val isChecked = newValue as Boolean
+            mCacheSwitch.isChecked = isChecked
+            mPreferenceCacheFile?.isEnabled = isChecked
+            false
+        }
     }
 
     /**
