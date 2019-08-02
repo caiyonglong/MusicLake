@@ -491,19 +491,16 @@ fun AppCompatActivity.showPlaylistRenameDialog(title: String? = null, success: (
 
 
 /**
- * 歌单重命名
+ * 信息兑换框
  */
-fun AppCompatActivity.showInfoDialog(title: String? = null, message: String? = null, success: ((String) -> Unit)? = null) {
+fun AppCompatActivity.showInfoDialog(title: String? = null, message: String? = null, success: (() -> Unit)? = null) {
     MaterialDialog(this@showInfoDialog).show {
         title(text = title)
         message(text = message)
         positiveButton(R.string.sure)
         negativeButton(R.string.cancel)
         positiveButton {
-            val newTitle = it.getInputField().text.toString()
-            if (newTitle != title) {
-                success?.invoke(newTitle)
-            }
+            success?.invoke()
         }
     }
 }

@@ -145,15 +145,12 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
         switch (id) {
             case R.id.action_delete_playlist:
                 if (getActivity() != null) {
-                    UIUtilsKt.showInfoDialog((AppCompatActivity) getActivity(), getString(R.string.tips), getString(R.string.clear_history_playlist_tips), new Function1<String, Unit>() {
-                        @Override
-                        public Unit invoke(String s) {
-                            PlayHistoryLoader.INSTANCE.clearPlayHistory();
-                            musicInfos.clear();
-                            mAdapter.notifyDataSetChanged();
-                            showEmptyView();
-                            return null;
-                        }
+                    UIUtilsKt.showInfoDialog((AppCompatActivity) getActivity(), getString(R.string.tips), getString(R.string.clear_history_playlist_tips), () -> {
+                        PlayHistoryLoader.INSTANCE.clearPlayHistory();
+                        musicInfos.clear();
+                        mAdapter.notifyDataSetChanged();
+                        showEmptyView();
+                        return null;
                     });
                 }
                 break;

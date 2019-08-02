@@ -144,15 +144,12 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
         int id = item.getItemId();
         switch (id) {
             case R.id.action_delete_playlist:
-                UIUtilsKt.showInfoDialog((AppCompatActivity) mFragmentComponent.getActivity(), getString(R.string.playlist_queue_clear), null, new Function1<String, Unit>() {
-                    @Override
-                    public Unit invoke(String s) {
-                        if (mPresenter != null) {
-                            mPresenter.clearQueue();
-                            mPresenter.loadSongs();
-                        }
-                        return null;
+                UIUtilsKt.showInfoDialog((AppCompatActivity) mFragmentComponent.getActivity(), getString(R.string.playlist_queue_clear), null, () -> {
+                    if (mPresenter != null) {
+                        mPresenter.clearQueue();
+                        mPresenter.loadSongs();
                     }
+                    return null;
                 });
                 break;
         }

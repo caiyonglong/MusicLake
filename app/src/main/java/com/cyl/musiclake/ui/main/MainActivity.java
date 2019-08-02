@@ -56,6 +56,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
 import static com.cyl.musiclake.ui.UIUtilsKt.logout;
@@ -242,13 +243,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (item.getItemId()) {
             case R.id.nav_login_status:
                 if (mIsLogin) {
-                    UIUtilsKt.showInfoDialog(this, getString(R.string.app_name), getString(R.string.logout_prompt), new Function1<String, Unit>() {
-                        @Override
-                        public Unit invoke(String s) {
-                            logout();
-
-                            return null;
-                        }
+                    UIUtilsKt.showInfoDialog(this, getString(R.string.app_name), getString(R.string.logout_prompt), () -> {
+                        logout();
+                        return null;
                     });
                 } else {
                     mTargetClass = LoginActivity.class;
