@@ -1208,6 +1208,7 @@ public class MusicPlayerService extends Service {
 
     /**
      * 显示桌面歌词
+     * 开个定时器定时刷新桌面歌词
      *
      * @param show
      */
@@ -1219,7 +1220,10 @@ public class MusicPlayerService extends Service {
                 lyricTimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
-                        mFloatLyricViewManager.updateLyric(getCurrentPosition(), getDuration());
+                        if (isMusicPlaying){
+                            //正在播放时刷新
+                            mFloatLyricViewManager.updateLyric(getCurrentPosition(), getDuration());
+                        }
                     }
                 }, 0, 1);
             }
@@ -1368,7 +1372,7 @@ public class MusicPlayerService extends Service {
     private void startFloatLyric() {
         if (SystemUtils.isOpenFloatWindow()) {
             showLyric = !showLyric;
-            SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, true);
+            SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false);
             showDesktopLyric(showLyric);
         } else {
             SystemUtils.applySystemWindow();

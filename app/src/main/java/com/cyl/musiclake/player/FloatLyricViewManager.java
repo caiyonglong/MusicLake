@@ -184,9 +184,12 @@ public class FloatLyricViewManager {
             windowManager.getDefaultDisplay().getSize(size);
             int screenWidth = size.x;
             int screenHeight = size.y;
+            LogUtil.d(TAG, "开始创建悬浮歌词");
             if (mFloatLyricView == null) {
+                LogUtil.d(TAG, "创建悬浮歌词 创建mFloatLyricView");
                 mFloatLyricView = new FloatLyricView(context);
                 if (mFloatLyricViewParams == null) {
+                    LogUtil.d(TAG, "创建悬浮歌词 创建mFloatLyricViewParams");
                     mFloatLyricViewParams = new WindowManager.LayoutParams();
                     mFloatLyricViewParams.type = WindowManager.LayoutParams.TYPE_PHONE;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -196,18 +199,22 @@ public class FloatLyricViewManager {
                     }
 
                     mFloatLyricViewParams.format = PixelFormat.RGBA_8888;
-                    mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                            | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
                     mFloatLyricViewParams.gravity = Gravity.START | Gravity.TOP;
                     mFloatLyricViewParams.width = mFloatLyricView.getViewWidth();
                     mFloatLyricViewParams.height = mFloatLyricView.getViewHeight();
                     mFloatLyricViewParams.x = screenWidth;
                     mFloatLyricViewParams.y = screenHeight / 2;
                 }
+                //设置可触摸可点击
+                mFloatLyricViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                //设置布局属性
                 mFloatLyricView.setParams(mFloatLyricViewParams);
                 windowManager.addView(mFloatLyricView, mFloatLyricViewParams);
                 setLyric(lyricInfo);
             }
+            LogUtil.d(TAG, "创建悬浮歌词 创建完成");
         } catch (Exception e) {
             e.printStackTrace();
         }

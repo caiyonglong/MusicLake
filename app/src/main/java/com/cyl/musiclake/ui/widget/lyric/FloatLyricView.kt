@@ -105,8 +105,8 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mNotify = UnLockNotify()
 
-        viewWidth = view?.layoutParams?.width ?:0
-        viewHeight = view?.layoutParams?.height ?:0
+        viewWidth = view?.layoutParams?.width ?: 0
+        viewHeight = view?.layoutParams?.height ?: 0
         mMovement = true
         isHiddenSettings = true
 
@@ -125,7 +125,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
 
         mIsLock = SPUtils.getAnyByKey(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false)
 
-        showLyricBackground()
+        saveLock(mIsLock, false)
 
         mFontColor = SPUtils.getFontColor()
         mLyricText?.setFontColorScale(mFontColor)
@@ -262,7 +262,6 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
                     mLockButton?.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN)
                 } else {
                     saveLock(true, true)
-                    mLockButton?.setIcon(MaterialDrawableBuilder.IconValue.LOCK)
                 }
             }
             R.id.btn_previous -> MusicPlayerService.getInstance().prev()
@@ -294,24 +293,31 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         }
     }
 
-
+    /**
+     * 更新歌词锁定状态
+     * @param lock 锁定
+     * @param toast 是否弹出提示
+     */
     fun saveLock(lock: Boolean, toast: Boolean) {
         mIsLock = lock
+        LogUtil.d("FloatLyricView", "桌面歌词状态：mIsLock:$mIsLock$lock")
         SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, mIsLock)
         if (toast) {
             ToastUtils.show(MusicApp.getAppContext(), if (!mIsLock) R.string.float_unlock else R.string.float_lock)
         }
-        val params = layoutParams as WindowManager.LayoutParams
-        if (params != null) {
+        if (layoutParams != null) {
+            val params = layoutParams as WindowManager.LayoutParams
             if (lock) {
                 //锁定后点击通知栏解锁
                 mNotify.notifyToUnlock()
                 params.flags = (WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                mLockButton?.setIcon(MaterialDrawableBuilder.IconValue.LOCK)
             } else {
                 mMovement = true
                 mNotify.cancel()
                 params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                mLockButton?.setIcon(MaterialDrawableBuilder.IconValue.LOCK_OPEN)
             }
             showLyricBackground()
             windowManager.updateViewLayout(this, params)

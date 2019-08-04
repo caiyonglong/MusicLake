@@ -56,10 +56,16 @@ class UnLockNotify {
         mNotificationManager.notify(UNLOCK_NOTIFICATION_ID, notification)
     }
 
+    /**
+     * 取消通知
+     */
     fun cancel() {
         mNotificationManager.cancel(UNLOCK_NOTIFICATION_ID)
     }
 
+    /**
+     * 发送歌词解锁广播
+     */
     private fun buildPendingIntent(): PendingIntent {
         val intent = Intent(MusicPlayerService.SERVICE_CMD)
         intent.putExtra(MusicPlayerService.CMD_NAME, MusicPlayerService.UNLOCK_DESKTOP_LYRIC)
