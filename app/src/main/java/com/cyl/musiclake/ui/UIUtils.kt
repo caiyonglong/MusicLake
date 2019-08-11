@@ -399,6 +399,24 @@ fun logout() {
 }
 
 /**
+ * 取消绑定网易云音乐
+ */
+fun logoutNetease(success: (() -> Unit)?) {
+    val observer = NeteaseApiServiceImpl.logout()
+    ApiManager.request(observer, object : RequestCallBack<Any> {
+        override fun error(msg: String?) {
+        }
+
+        override fun success(result: Any?) {
+            LogUtil.d("logoutNetease = " + result.toString())
+            //重置本地用户ID
+            SPUtils.putAnyCommit(SPUtils.SP_KEY_NETEASE_UID, "")
+            success?.invoke()
+        }
+    })
+}
+
+/**
  * 倒计时弹窗
  */
 fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
@@ -445,6 +463,9 @@ fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
     }
 }
 
+/**
+ * 获取网易云音乐账号绑定状态
+ */
 fun getNeteaseLoginStatus(success: ((User) -> Unit)?, fail: (() -> Unit)?) {
     val observer = NeteaseApiServiceImpl.getLoginStatus();
     ApiManager.request(observer, object : RequestCallBack<LoginInfo> {

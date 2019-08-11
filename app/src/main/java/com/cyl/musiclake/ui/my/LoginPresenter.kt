@@ -35,6 +35,9 @@ import javax.inject.Inject
 
 class LoginPresenter @Inject
 constructor() : BasePresenter<LoginContract.View>(), LoginContract.Presenter {
+    /**
+     * 绑定网易云音乐
+     */
     override fun bindNetease(userName: String, pwd: String) {
         if (userName.isEmpty()) return
         if (pwd.isEmpty()) return

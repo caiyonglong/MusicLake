@@ -456,6 +456,7 @@
     <!--登录界面-->
     <string name="login_title">用户登录</string>
     <string name="logout_prompt">您确定要退出或切换其他账号吗？</string>
+    <string name="logout_netease_prompt">您确定要取消绑定网易云音乐账号吗？</string>
 
     <string name="sound_quality_standard">标准</string>
     <string name="sound_quality_high">较高品质</string>

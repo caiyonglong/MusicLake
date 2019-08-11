@@ -90,6 +90,9 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         )
     }
 
+    /**
+     * 获取在线歌单
+     */
     override fun loadPlaylist(playlist: Playlist?) {
         if (UserStatus.getLoginStatus() && UserStatus.getTokenStatus()) {
             val mIsLogin = UserStatus.getLoginStatus()
@@ -112,6 +115,9 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         loadWyUserPlaylist()
     }
 
+    /**
+     * 获取本地歌单
+     */
     fun loadLocalPlaylist() {
         doAsync {
             val playlist = PlaylistLoader.getAllPlaylist()
@@ -127,7 +133,11 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         }
     }
 
-    private fun loadWyUserPlaylist() {
+
+    /**
+     * 加载网易云歌单
+     */
+    fun loadWyUserPlaylist() {
         val uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "")
         LogUtil.d("MyMusic", "uid = $uid")
         if (uid.isEmpty()) return

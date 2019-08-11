@@ -1,9 +1,11 @@
 package com.cyl.musiclake.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.engine.cache.MemorySizeCalculator;
 import com.bumptech.glide.module.AppGlideModule;
 import com.cyl.musiclake.api.net.ExternalCacheDiskFactory;
 
@@ -21,11 +23,8 @@ public class MyAppGlideModule extends AppGlideModule {
         // 定义缓存大小和位置
 //        builder.setDiskCache(new InternalCacheDiskCacheFactory(context, mDiskSize));  //内存中
         builder.setDiskCache(new ExternalCacheDiskFactory(context)); //sd卡中
-
+//        builder.setLogLevel(Log.DEBUG);
         // 默认内存和图片池大小
-//        MemorySizeCalculator calculator = new MemorySizeCalculator(context);
-//        int defaultMemoryCacheSize = calculator.getMemoryCacheSize(); // 默认内存大小
-//        int defaultBitmapPoolSize = calculator.getBitmapPoolSize(); // 默认图片池大小
 //        builder.setMemoryCache(new LruResourceCache(defaultMemoryCacheSize)); // 该两句无需设置，是默认的
 //        builder.setBitmapPool(new LruBitmapPool(defaultBitmapPoolSize));
 

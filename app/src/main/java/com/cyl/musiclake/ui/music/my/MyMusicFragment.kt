@@ -174,6 +174,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
                 playlistManagerIv.visibility = View.VISIBLE
             }
             Constants.PLAYLIST_WY_ID -> {
+                if (wyPlaylists.size == 0) {
+                    //加载网易云音乐歌单
+                    mPresenter?.loadWyUserPlaylist()
+                }
                 mAdapter?.setNewData(wyPlaylists)
                 playlistAddIv.visibility = View.INVISIBLE
                 playlistManagerIv.visibility = View.INVISIBLE

@@ -78,6 +78,7 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
             player.setOnErrorListener(this);
             player.setOnCompletionListener(this);
         } catch (Exception todo) {
+            todo.printStackTrace();
             return false;
         }
         return true;
@@ -174,11 +175,12 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
                 final TrackErrorInfo errorInfo = new TrackErrorInfo(service.getAudioId(),
                         service.getTitle());
                 mIsInitialized = false;
+                //播放错误，需要重新释放mediaPlayer
                 mCurrentMediaPlayer.release();
                 mCurrentMediaPlayer = new MediaPlayer();
                 mCurrentMediaPlayer.setWakeMode(service, PowerManager.PARTIAL_WAKE_LOCK);
                 Message msg = mHandler.obtainMessage(TRACK_PLAY_ERROR, errorInfo);
-                mHandler.sendMessageDelayed(msg, 2000);
+                mHandler.sendMessageDelayed(msg, 500);
                 return true;
             default:
                 break;

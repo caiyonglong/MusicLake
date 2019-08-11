@@ -255,8 +255,18 @@ object NeteaseApiServiceImpl {
             apiService.loginPhone(username, pwd)
     }
 
+    /**
+     * 获取登录状态
+     */
     fun getLoginStatus(): Observable<LoginInfo> {
         return apiService.getLoginStatus()
+    }
+
+    /**
+     * 注销绑定
+     */
+    fun logout(): Observable<Any> {
+       return apiService.logout()
     }
 
     /**

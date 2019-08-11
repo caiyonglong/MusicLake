@@ -55,9 +55,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function1;
 
 import static com.cyl.musiclake.ui.UIUtilsKt.logout;
 import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
@@ -152,9 +149,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    private void checkBindStatus(Boolean isInit) {
+    /**
+     * 检查是否绑定网易云音乐
+     *
+     * @param isInit
+     */
+    private void checkBindNeteaseStatus(Boolean isInit) {
         UIUtilsKt.getNeteaseLoginStatus(user -> {
             ToastUtils.show("已绑定网易云音乐");
+            LogUtil.d(TAG, "success " + user.getId());
             if (isInit) {
                 mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setTitle("已绑定网易云音乐(" + user.getName() + ")");
                 CoverLoader.INSTANCE.loadDrawable(this, user.getAvatar(), drawable -> {
@@ -162,8 +165,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     return null;
                 });
             }
+//            else {
+            //注销网易云音乐账号，不会实时生效
+//                UIUtilsKt.showInfoDialog(this, getString(R.string.app_name), getString(R.string.logout_netease_prompt), () -> {
+//                    logoutNetease(() -> {
+//                        return null;
+//                    });
+//                    return null;
+//                });
+//            }
             return null;
+
         }, () -> {
+            LogUtil.d(TAG, "fail ");
             if (!isInit) {
                 Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
                 startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
@@ -256,7 +270,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 NavigationHelper.INSTANCE.navigatePlayQueue(this);
                 break;
             case R.id.nav_bind_wy:
-                checkBindStatus(false);
+                checkBindNeteaseStatus(false);
                 break;
             case R.id.nav_menu_import:
                 mTargetClass = ImportPlaylistActivity.class;
@@ -311,10 +325,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //返回键
     @Override
     public void onBackPressed() {
-//        if (mSlidingUpPaneLayout != null &&
-//                (mSlidingUpPaneLayout.getPanelState() == PanelState.EXPANDED || mSlidingUpPaneLayout.getPanelState() == PanelState.ANCHORED)) {
-//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
-//        } else
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         } else if (isNavigatingMain()) {
@@ -415,7 +425,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (UserStatus.getLoginStatus()) {
             updateUserInfo(new LoginEvent(true, UserStatus.getUserInfo()));
         }
-        checkBindStatus(true);
+        checkBindNeteaseStatus(true);
     }
 
     /**
@@ -477,10 +487,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CODE_LOGIN) {
+            //绑定网易云音乐成功。刷新UI
             String uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
             if (uid != null && uid.length() > 0) {
-                LogUtil.d(TAG, "uid = " + uid);
+                LogUtil.d(TAG, "绑定成功 uid = " + uid);
 //                mBindNeteaseView.setVisibility(View.GONE);
+                checkBindNeteaseStatus(true);
             }
         }
     }
