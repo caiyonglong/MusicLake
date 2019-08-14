@@ -19,8 +19,11 @@
 - 网易云热门歌手，百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式、歌词翻译
 - 精力有限，需求不饱和都会逐步完善
-- [PC端](https://github.com/sunzongzheng/music)
-- [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ)
+- [PC端](你能https://github.com/sunzongzheng/music)
+- [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ) 加群需要问题验证，正确回答：github
+
+![功能](screenshots/features.png)
+
 
 ### 开源不易，有兴趣可给个star，支持一下哦！
 持续更新，有什么问题可以提[issues](https://github.com/caiyonglong/MusicLake/issues)！
