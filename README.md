@@ -8,6 +8,7 @@
 - [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) ，为了提供更好的体验，目前暂时部署在leanCloud上面，因为是leanCloud的体验实例，所以有每天 6 小时的强制休眠时间，而且每天的请求次数也有
 限制，所以不稳定。如果有服务器的可以自己搭建，部署一下 NeteaseCloudMusicApi。
 - 进入软件设置界面，可设置音乐湖后台API，和NeteaseCloudMusicApi 的API，然后重启ok👌
+- 关于YouTube，只有音乐视频，基于科学上网的前提，才能搜索到YouTube音乐视频。
 
 
 # 功能版本
@@ -20,6 +21,7 @@
 - 酷狗歌词搜索、修改歌词样式、歌词翻译
 - 精力有限，需求不饱和都会逐步完善
 - [PC端](你能https://github.com/sunzongzheng/music)
+
 - [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ) 加群需要问题验证，正确回答：github
 
 ![功能](screenshots/features.png)
@@ -37,9 +39,10 @@
 - [ ] 代码重构
  
 # 相关项目|音乐API
-- [音乐API](https://github.com/sunzongzheng/musicApi)
-- [云歌单API](https://github.com/sunzongzheng/player-be)
-- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+- [客户端音乐API](https://github.com/caiyonglong/MusicApi)
+- [客户端/PC音乐共用API](https://github.com/sunzongzheng/musicApi)
+- [后台/云歌单API](https://github.com/sunzongzheng/player-be)
+- [三方/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 # 第三方库
 
@@ -98,9 +101,9 @@ QQ音乐享有对其平台授权音乐的版权，请勿随意下载，复制版
 网易云音乐享有对其平台授权音乐的版权，请勿随意下载，复制版权内容。具体内容请参考网易云音乐用户协议。
 
 ## :moneybag: 支持&捐赠
-捐赠会有两个用途
-- 请允许我买杯咖啡 :coffee:
-- 服务器日常费用
+开源不易，请大佬打赏点^V^ :moneybag:
+- 用于服务器日常费用
+- 加点油
 - 微信:
 <img src="screenshots/donate_wechat.png" width="225" height="225"/>
 

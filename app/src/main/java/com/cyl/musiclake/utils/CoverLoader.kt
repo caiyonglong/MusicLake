@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.cyl.musiclake.R
@@ -89,7 +90,11 @@ object CoverLoader {
                 .load(url ?: R.drawable.default_cover)
                 .error(coverUriByRandom)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into<SimpleTarget<Bitmap>>(object : SimpleTarget<Bitmap>() {
+                .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {
+
+                    }
+
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (callBack != null && resource != null) {
                             callBack.invoke(resource)
@@ -173,7 +178,11 @@ object CoverLoader {
                 .load(url ?: coverUriByRandom)
                 .error(coverUriByRandom)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into<SimpleTarget<Bitmap>>(object : SimpleTarget<Bitmap>() {
+                .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {
+
+                    }
+
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         callBack?.invoke(resource)
                     }
@@ -194,7 +203,11 @@ object CoverLoader {
                 .load(url ?: coverUriByRandom)
                 .error(coverUriByRandom)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into<SimpleTarget<Bitmap>>(object : SimpleTarget<Bitmap>() {
+                .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {
+
+                    }
+
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         callBack?.invoke(BitmapDrawable(mContext.resources, resource))
                     }

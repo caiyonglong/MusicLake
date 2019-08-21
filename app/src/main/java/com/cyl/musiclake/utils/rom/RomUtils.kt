@@ -246,7 +246,7 @@ object MiuiUtils {
      * 小米 V5 版本 ROM权限申请
      */
     private fun goToMiuiPermissionActivity_V5(context: Context) {
-        var intent: Intent? = null
+        var intent: Intent?
         val packageName = context.packageName
         intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", packageName, null)
