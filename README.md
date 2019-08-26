@@ -2,15 +2,9 @@
 
 # 因收到网易云音乐和QQ音乐的官方警告函，我们已关闭app的相关api服务,不再提供任何apk。
 
-# 服务器部署
-- 音乐湖在线云歌单后台（主要是负责云歌单，音乐榜单和登录相关），项目地址：[云歌单API](https://github.com/sunzongzheng/player-be)，
-如果想接登录相关的，需要接入QQ互联，以及微博登录接口（具体方法百度都有），注：登录需要重新生成新的应用签名
-- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) ，为了提供更好的体验，目前暂时部署在leanCloud上面，因为是leanCloud的体验实例，所以有每天 6 小时的强制休眠时间，而且每天的请求次数也有
-限制，所以不稳定。如果有服务器的可以自己搭建，部署一下 NeteaseCloudMusicApi。
-- 进入软件设置界面，可设置音乐湖后台API，和NeteaseCloudMusicApi 的API，然后重启ok👌
-- 关于YouTube，只有音乐视频，基于科学上网的前提，才能搜索到YouTube音乐视频。
-
-
+# 编译&服务器部署 
+ [build.md](BUILD.md)
+  
 # 功能版本
 - Android 音乐播放器(本地/在线播放) （最低支持Android版本5.0）
 - 支持多平台音乐源，百度音乐，虾米音乐、网易云音乐、Youtube（需要翻墙）
@@ -20,7 +14,7 @@
 - 网易云热门歌手，百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式、歌词翻译
 - 精力有限，需求不饱和都会逐步完善
-- [PC端](你能https://github.com/sunzongzheng/music)
+- [PC端](https://github.com/sunzongzheng/music)
 
 - [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ) 加群需要问题验证，正确回答：github
 

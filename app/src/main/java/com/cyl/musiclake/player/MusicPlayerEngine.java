@@ -72,12 +72,13 @@ public class MusicPlayerEngine implements MediaPlayer.OnErrorListener,
                 //不缓存
                 player.setDataSource(path);
             }
-            player.prepareAsync();
             player.setOnPreparedListener(this);
             player.setOnBufferingUpdateListener(this);
             player.setOnErrorListener(this);
             player.setOnCompletionListener(this);
+            player.prepareAsync();
         } catch (Exception todo) {
+            LogUtil.e(TAG, "Exception:" + todo.getMessage());
             todo.printStackTrace();
             return false;
         }
