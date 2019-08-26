@@ -106,9 +106,9 @@ object MusicUtils {
             music.mid = it.id.toString()
             music.title = it.name
             music.type = Constants.NETEASE
-            music.album = it.al.name
+            music.album = it.al?.name
             music.isOnline = true
-            music.albumId = it.al.id.toString()
+            music.albumId = it.al?.id.toString()
             if (it.ar != null) {
                 var artistIds = it.ar?.get(0)?.id.toString()
                 var artistNames = it.ar?.get(0)?.name
@@ -119,9 +119,9 @@ object MusicUtils {
                 music.artist = artistNames
                 music.artistId = artistIds
             }
-            music.coverUri = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
-            music.coverBig = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
-            music.coverSmall = getAlbumPic(it.al.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
+            music.coverUri = getAlbumPic(it.al?.picUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
+            music.coverBig = getAlbumPic(it.al?.picUrl, Constants.NETEASE, PIC_SIZE_BIG)
+            music.coverSmall = getAlbumPic(it.al?.picUrl, Constants.NETEASE, PIC_SIZE_SMALL)
 //            if (it.cp != 0) {
             musicList.add(music)
 //            }

@@ -177,25 +177,24 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
         CountDownUtils.isOpenSleepSwitch = playControlSwitch.isChecked
     }
 
-    private fun setNumberPickerDividerColor(numberPicker: NumberPicker) {
-        val pickerFields = NumberPicker::class.java.declaredFields
-        for (pf in pickerFields) {
-            if (pf.name == "mSelectionDivider") {
-                pf.isAccessible = true
-                try {
-                    //设置分割线的颜色值 透明
-                    pf.set(numberPicker, ColorDrawable(this.resources.getColor(R.color.whiteAlpha54)))
-                } catch (e: IllegalArgumentException) {
-                    e.printStackTrace()
-                } catch (e: Resources.NotFoundException) {
-                    e.printStackTrace()
-                } catch (e: IllegalAccessException) {
-                    e.printStackTrace()
-                }
-
-                break
-            }
-        }
+//    private fun setNumberPickerDividerColor(numberPicker: NumberPicker) {
+//        val pickerFields = NumberPicker::class.java.declaredFields
+//        for (pf in pickerFields) {
+//            if (pf.name == "mSelectionDivider") {
+//                pf.isAccessible = true
+//                try {
+//                    //设置分割线的颜色值 透明
+//                    pf.set(numberPicker, ColorDrawable(this.resources.getColor(R.color.whiteAlpha54)))
+//                } catch (e: IllegalArgumentException) {
+//                    e.printStackTrace()
+//                } catch (e: Resources.NotFoundException) {
+//                    e.printStackTrace()
+//                } catch (e: IllegalAccessException) {
+//                    e.printStackTrace()
+//                }
+//                break
+//            }
+//        }
 
 //        // 分割线高度
 //        for (pf2 in pickerFields) {
@@ -212,7 +211,7 @@ class SleepTimerActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() 
 //            }
 //        }
 
-    }
+//    }
 
     private fun initStatus() {
         shiwuIv.visibility = View.GONE

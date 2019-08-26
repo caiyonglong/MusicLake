@@ -1,1 +1,2 @@
 include ':app'//, ':musicapi'
+//project (':musicapi').projectDir = new File('../MusicClientApi/musicapi')

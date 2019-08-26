@@ -24,7 +24,7 @@ public interface PlaylistContract {
 
         void loadPlaylist(String idx, String type);
 
-        void loadMorePlaylist(String tag, Context context);
+        void loadNeteasePlaylist(String id);
 
         void loadOnlineMusicList(String type, int limit, int mOffset);
     }

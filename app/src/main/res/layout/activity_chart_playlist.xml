@@ -37,57 +37,55 @@
                     android:scaleType="centerCrop"
                     android:transitionName="@string/transition_album" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/dp_40"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:layout_gravity="center"
                     android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/coverIv"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_cover"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/descTv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/descTv"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_16"
-                        app:cardBackgroundColor="@color/black"
-                        app:cardCornerRadius="@dimen/dp_2"
-                        app:cardElevation="@dimen/dp_1">
+                        android:layout_marginEnd="8dp"
+                        android:maxLines="5"
+                        android:scrollbars="vertical"
+                        android:textSize="@dimen/sp_16"
+                        app:layout_constraintBottom_toTopOf="@+id/dateTv"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.866"
+                        app:layout_constraintStart_toEndOf="@+id/coverIv"
+                        app:layout_constraintTop_toTopOf="@+id/coverIv"
+                        tools:text="该榜单是根据百度音乐平台歌曲每周播放量自动生成的数据榜单，统计范围为百度音乐平台上的全部歌曲，每日更新一次" />
 
-                        <ImageView
-                            android:id="@+id/coverIv"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/default_cover" />
-                    </androidx.cardview.widget.CardView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/dateTv"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/dp_16"
-                        android:orientation="vertical">
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/coverIv"
+                        app:layout_constraintStart_toStartOf="@+id/descTv"
+                        app:layout_constraintTop_toBottomOf="@+id/descTv"
+                        tools:text="最近更新：2016-01-03" />
 
-                        <TextView
-                            android:id="@+id/dateTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:visibility="gone"
-                            tools:text="最近更新：2016-01-03" />
-
-                        <TextView
-                            android:id="@+id/descTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:maxLines="5"
-                            android:scrollbars="vertical"
-                            android:textSize="@dimen/sp_16"
-                            tools:text="该榜单是根据百度音乐平台歌曲每周播放量自动生成的数据榜单，统计范围为百度音乐平台上的全部歌曲，每日更新一次" />
-                    </LinearLayout>
-
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -97,10 +95,10 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="?android:popupMenuStyle" />
 
+
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -109,6 +107,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <include layout="@layout/item_loading" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

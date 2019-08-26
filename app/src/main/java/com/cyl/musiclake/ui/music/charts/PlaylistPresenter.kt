@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.charts
 
-import android.content.Context
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
@@ -8,6 +7,7 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BasePresenter
 import javax.inject.Inject
 
@@ -17,10 +17,12 @@ import javax.inject.Inject
 
 class PlaylistPresenter @Inject
 constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Presenter {
+
+
     /**
      *根据歌单id获取歌单详情
      */
-    override fun loadMorePlaylist(id: String, context: Context?) {
+    override fun loadNeteasePlaylist(id: String) {
         mView?.showLoading()
         val observable = NeteaseApiServiceImpl.getPlaylistDetail(id)
         ApiManager.request(observable, object : RequestCallBack<Playlist> {
@@ -37,9 +39,15 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
     }
 
     /**
+     * 自身的服务器
      * 获取排行榜歌单
      */
     override fun loadPlaylist(idx: String, type: String?) {
+        if (type == Constants.PLAYLIST_WY_ID) {
+            loadNeteasePlaylist(idx)
+            return
+        }
+
         mView?.showLoading()
         val observable = PlaylistApiServiceImpl.getRankDetailInfo(intArrayOf(idx.toInt()), null, type)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
