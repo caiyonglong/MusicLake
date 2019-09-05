@@ -226,7 +226,7 @@ object NeteaseApiServiceImpl {
      * 搜索
      */
     fun searchMoreInfo(keywords: String, limit: Int, offset: Int, type: Int): Observable<SearchInfo> {
-        val url = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL) + "search?keywords= $keywords&limit=$limit&offset=$offset&type=$type"
+        val url = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_API_URL, Constants.BASE_NETEASE_URL) + "/search?keywords= $keywords&limit=$limit&offset=$offset&type=$type"
 //        return apiService.searchNetease(url)
 //        @Query("keywords") keywords: String, @Query("limit") limit: Int, @Query("offset") offset: Int, @Query("type") type: Int
         return apiService.searchNetease(url)
