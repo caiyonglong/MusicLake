@@ -8,6 +8,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.utils.*
@@ -204,7 +205,7 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
             "key_socket" -> {
                 MusicApp.isOpenSocket = !MusicApp.isOpenSocket
                 mSocketSwitch.isChecked = MusicApp.isOpenSocket
-                MusicApp.socketManager.toggleSocket(MusicApp.isOpenSocket)
+                SocketManager.toggleSocket(MusicApp.isOpenSocket)
             }
             "key_lyric" -> checkLyricPermission()
         }

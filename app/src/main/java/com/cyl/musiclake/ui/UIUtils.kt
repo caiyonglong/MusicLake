@@ -29,6 +29,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
+import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.download.TasksManager
 import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.ui.main.MainActivity
@@ -392,7 +393,7 @@ fun logout() {
     UserStatus.saveLoginStatus(false)
     SPUtils.putAnyCommit(SPUtils.QQ_ACCESS_TOKEN, "")
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
-    MusicApp.socketManager.toggleSocket(false)
+    SocketManager.toggleSocket(false)
     MusicApp.mTencent.logout(MusicApp.getAppContext())
     AccessTokenKeeper.clear(MusicApp.getAppContext())
     EventBus.getDefault().post(LoginEvent(false, null))

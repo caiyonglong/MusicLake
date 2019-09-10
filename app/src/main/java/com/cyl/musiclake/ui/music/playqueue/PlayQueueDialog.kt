@@ -1,28 +1,28 @@
 package com.cyl.musiclake.ui.music.playqueue
 
-import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.UIUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.trello.rxlifecycle2.LifecycleTransformer
-import org.jetbrains.anko.support.v4.dip
 import java.util.*
 
 class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
+    private var rootView: View? = null
 
     private lateinit var playModeTv: TextView
     private lateinit var songSumTv: TextView
@@ -37,17 +37,19 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun onStart() {
         super.onStart()
-        dialog.setCanceledOnTouchOutside(true)
-        val window = dialog.window
+        (view?.parent as View).setBackgroundColor(Color.TRANSPARENT)
 
-        val params = window?.attributes
-        params?.gravity = Gravity.BOTTOM
-        params?.width = WindowManager.LayoutParams.MATCH_PARENT
-        params?.height = MusicApp.screenSize.y / 7 * 4
-        window?.attributes = params
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        mBehavior?.peekHeight = params?.height ?: dip(300)
+//        dialog?.setCanceledOnTouchOutside(true)
+//        val window = dialog?.window
+//
+//        val params = window?.attributes
+//        params?.gravity = Gravity.BOTTOM
+//        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+//        params?.height = MusicApp.screenSize.y / 7 * 4
+//        window?.attributes = params
+//        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//
+//        mBehavior?.peekHeight = params?.height ?: dip(300)
         //默认全屏展开
         mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -61,31 +63,48 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         mAdapter = QueueAdapter(musicList)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_playqueue, null)
-        recyclerView = view.findViewById(R.id.rcv_songs)
-        playModeTv = view.findViewById(R.id.tv_play_mode)
-        songSumTv = view.findViewById(R.id.tv_song_sum)
-        playModeIv = view.findViewById(R.id.iv_play_mode)
-        clearAllIv = view.findViewById(R.id.iv_clear_all)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
         recyclerView.scrollToPosition(PlayManager.getCurrentPosition())
         initListener()
-        dialog.setContentView(view)
-        (view.parent as View).setBackgroundColor(Color.TRANSPARENT)
         mPresenter?.loadSongs()
-        mBehavior = BottomSheetBehavior.from(view.parent as View)
-        return dialog
+        mBehavior = BottomSheetBehavior.from(rootView?.parent as View)
     }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.dialog_playqueue, container, false)
+        }
+        rootView?.let {
+            recyclerView = it.findViewById(R.id.rcv_songs)
+            playModeTv = it.findViewById(R.id.tv_play_mode)
+            songSumTv = it.findViewById(R.id.tv_song_sum)
+            playModeIv = it.findViewById(R.id.iv_play_mode)
+            clearAllIv = it.findViewById(R.id.iv_clear_all)
+        }
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        return rootView
+    }
+//
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+//        val view = LayoutInflater.from(context).inflate(R.layout.dialog_playqueue, null)
+//        recyclerView = view.findViewById(R.id.rcv_songs)
+//        playModeTv = view.findViewById(R.id.tv_play_mode)
+//        songSumTv = view.findViewById(R.id.tv_song_sum)
+//        playModeIv = view.findViewById(R.id.iv_play_mode)
+//        clearAllIv = view.findViewById(R.id.iv_clear_all)
+//
+//        return dialog
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-
+        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
 
@@ -135,7 +154,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     }
 
     override fun dismiss() {
-        dialog.dismiss()
+        dialog?.dismiss()
     }
 
 

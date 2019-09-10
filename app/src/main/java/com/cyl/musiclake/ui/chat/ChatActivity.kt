@@ -172,7 +172,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         mAdapter?.setUpFetchListener {
             startUpFetch()
         }
-        MusicApp.socketManager.addSocketListener(listener)
+        SocketManager.addSocketListener(listener)
     }
 
     /**
@@ -201,7 +201,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     private fun sendMessage() {
         val content = messageInputView?.text.toString()
         if (content.isNotEmpty()) {
-            MusicApp.socketManager.sendSocketMessage(content, SocketManager.MESSAGE_BROADCAST)
+            SocketManager.sendSocketMessage(content, SocketManager.MESSAGE_BROADCAST)
             messageInputView?.setText("")
         }
     }
@@ -266,7 +266,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        MusicApp.socketManager.removeSocketListener(listener)
+        SocketManager.removeSocketListener(listener)
     }
 
 }

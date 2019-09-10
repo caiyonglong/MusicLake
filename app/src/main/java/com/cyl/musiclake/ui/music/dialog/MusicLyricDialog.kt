@@ -56,15 +56,17 @@ class MusicLyricDialog : androidx.fragment.app.DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val lp = dialog.window.attributes
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT
-        dialog.window.attributes = lp
+        dialog?.let {
+            val lp = it.window?.attributes
+            lp?.width = WindowManager.LayoutParams.MATCH_PARENT
+            lp?.height = WindowManager.LayoutParams.MATCH_PARENT
+            it.window?.attributes = lp
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialog.window.setBackgroundDrawableResource(R.color.translucent)
-        dialog.setCanceledOnTouchOutside(true)
+        dialog?.window?.setBackgroundDrawableResource(R.color.translucent)
+        dialog?.setCanceledOnTouchOutside(true)
         initListener()
         return rootView
     }
@@ -190,7 +192,7 @@ class MusicLyricDialog : androidx.fragment.app.DialogFragment() {
                             }
 
                             override fun error(msg: String?) {
-                                msg?.let { it1 -> toast(msg) }
+                                msg?.let { toast(msg) }
                                 loadingView.visibility = View.GONE
                             }
 

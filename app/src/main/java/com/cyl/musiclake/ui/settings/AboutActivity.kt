@@ -47,7 +47,7 @@ class AboutActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
     override fun initData() {
         tv_about_version?.text = getString(R.string.about_version, BuildConfig.VERSION_NAME)
-        realTimeUserTv?.text = MusicApp.socketManager.realUsersNum.toString()
+//        realTimeUserTv?.text = MusicApp.socketManager.realUsersNum.toString()
     }
 
     override fun initInjector() {

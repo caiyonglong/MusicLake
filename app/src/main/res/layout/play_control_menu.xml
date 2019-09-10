@@ -1,12 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/top_container"
     android:layout_width="match_parent"
     android:layout_height="57dp"
     android:layout_gravity="top"
-    android:background="?cardColor"
-    android:elevation="5dp">
+    android:background="?cardColor">
+
+    <ImageButton
+        android:id="@+id/playQueueIv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/play_next"
+        android:padding="@dimen/dp_16"
+        android:src="@drawable/ic_queue_music"
+        android:tint="?iconColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/title"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:ellipsize="marquee"-->
+    <!--        android:focusable="true"-->
+    <!--        android:marqueeRepeatLimit="marquee_forever"-->
+    <!--        android:singleLine="true"-->
+    <!--        android:text="@string/app_name"-->
+    <!--        android:textSize="15sp" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/artist"-->
+    <!--        style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:ellipsize="marquee"-->
+    <!--        android:marqueeRepeatLimit="marquee_forever"-->
+    <!--        android:maxLength="20"-->
+    <!--        android:singleLine="true"-->
+    <!--        android:text="@string/app_name"-->
+    <!--        android:textSize="13sp" />-->
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -15,86 +52,43 @@
         android:layout_height="2dp"
         android:layout_gravity="top"
         android:progress="10"
-        android:tag="tint_accent_color" />
+        android:tag="tint_accent_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!--    <de.hdodenhof.circleimageview.CircleImageView-->
+    <!--        android:id="@+id/album"-->
+    <!--        android:layout_width="45dp"-->
+    <!--        android:layout_height="45dp"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:layout_margin="@dimen/dp_8"-->
+    <!--        android:src="@drawable/default_cover"-->
+    <!--        android:transitionName="@string/transition_cover"-->
+    <!--        android:visibility="gone" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottomPlayRcv"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/playPauseView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bottomPlayRcv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clipToPadding="false" />
+    <com.cyl.musiclake.ui.widget.PlayPauseView
+        android:id="@+id/playPauseView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        app:anim_duration="200"
+        app:bg_color="@color/translucent"
+        app:btn_color="?iconColor"
+        app:gap_width="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/playQueueIv"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/album"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/dp_8"
-            android:src="@drawable/default_cover"
-            android:transitionName="@string/transition_cover"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:text="@string/app_name"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/artist"
-                style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:maxLength="20"
-                android:singleLine="true"
-                android:text="@string/app_name"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <com.cyl.musiclake.ui.widget.PlayPauseView
-            android:id="@+id/playPauseView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            app:anim_duration="200"
-            app:bg_color="@color/translucent"
-            app:btn_color="?iconColor"
-            app:gap_width="10" />
-
-
-        <ImageButton
-            android:id="@+id/playQueueIv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/play_next"
-            android:padding="@dimen/dp_16"
-            android:src="@drawable/ic_queue_music"
-            android:tint="?iconColor" />
-    </LinearLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

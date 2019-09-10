@@ -134,31 +134,31 @@ object FormatUtil {
 
         return s
     }
-
-    fun Distance(long1: Double, lat1: Double, long2: Double,
-                 lat2: Double): Float {
-        var lat1 = lat1
-        var lat2 = lat2
-        val a: Double
-        val b: Double
-        val R: Double
-        R = 6378137.0 // 地球半径
-        lat1 = lat1 * Math.PI / 180.0
-        lat2 = lat2 * Math.PI / 180.0
-        a = lat1 - lat2
-        b = (long1 - long2) * Math.PI / 180.0
-        val d: Double
-        val sa2: Double
-        val sb2: Double
-        sa2 = Math.sin(a / 2.0)
-        sb2 = Math.sin(b / 2.0)
-        d = (2.0
-                * R
-                * Math.asin(Math.sqrt(sa2 * sa2 + (Math.cos(lat1)
-                * Math.cos(lat2) * sb2 * sb2))))
-
-        return Math.ceil(d).toFloat()
-    }
+//
+//    fun Distance(long1: Double, lat1: Double, long2: Double,
+//                 lat2: Double): Float {
+//        var lat1 = lat1
+//        var lat2 = lat2
+//        val a: Double
+//        val b: Double
+//        val R: Double
+//        R = 6378137.0 // 地球半径
+//        lat1 = lat1 * Math.PI / 180.0
+//        lat2 = lat2 * Math.PI / 180.0
+//        a = lat1 - lat2
+//        b = (long1 - long2) * Math.PI / 180.0
+//        val d: Double
+//        val sa2: Double
+//        val sb2: Double
+//        sa2 = Math.sin(a / 2.0)
+//        sb2 = Math.sin(b / 2.0)
+//        d = (2.0
+//                * R
+//                * Math.asin(Math.sqrt(sa2 * sa2 + (Math.cos(lat1)
+//                * Math.cos(lat2) * sb2 * sb2))))
+//
+//        return Math.ceil(d).toFloat()
+//    }
 
     fun getTimeDifference(starTime: String): String {
         var timeString = ""
@@ -175,8 +175,6 @@ object FormatUtil {
             val hour = diff / (60 * 60 * 1000) - day * 24
             val min = diff / (60 * 1000) - day * 24 * 60 - hour * 60
             val s = diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60
-            val ms = (diff - day * 24 * 60 * 60 * 1000 - hour * 60 * 60 * 1000
-                    - min * 60 * 1000 - s * 1000)
 
             //距当前时间大于15天时输出年月日
             if (day > 15) {
@@ -247,7 +245,7 @@ object FormatUtil {
 
     }
 
-    fun formatFor(pattern: String): SimpleDateFormat {
+    private fun formatFor(pattern: String): SimpleDateFormat {
         val ref = THREADLOCAL_FORMATS.get()
         var formats: MutableMap<String, SimpleDateFormat>? = ref.get() as MutableMap<String, SimpleDateFormat>
         if (formats == null) {

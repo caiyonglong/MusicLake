@@ -33,9 +33,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
      *显示出对话框
      */
     fun showIt(context: androidx.fragment.app.FragmentActivity?) {
-        if (dialog != null) {
-            dialog.dismiss()
-        }
+        dialog?.dismiss()
         val transaction = context?.supportFragmentManager?.beginTransaction()
         transaction?.add(this, tag)?.commitAllowingStateLoss()
     }
@@ -49,7 +47,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.all_category_dialog, container, false)
         }
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         return rootView
     }
@@ -67,7 +65,7 @@ class TopPlaylistCatFragment : BottomSheetDialogFragment() {
     private fun initRecyclerView(list: MutableList<String>) {
         if (mAdapter == null) {
             mAdapter = context?.let { AllCateAdapter(it, list.toMutableList()) }
-            val layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 4, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
+            val layoutManager = GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
             cateTagRcv?.layoutManager = layoutManager
             cateTagRcv?.adapter = mAdapter
             mAdapter?.clickListener = {

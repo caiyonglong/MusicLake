@@ -38,7 +38,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     }
 
     private var coverAnimator: ObjectAnimator? = null
-    private var currentPlayTime: Long = 0
 
     private var mAdapter: BottomMusicAdapter? = null
     private val musicList = ArrayList<Music>()
@@ -194,16 +193,16 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
      */
     private fun initSongList() {
         if (mAdapter == null) {
-            bottomPlayRcv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+            bottomPlayRcv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             mAdapter = BottomMusicAdapter(musicList)
-            val snap = androidx.recyclerview.widget.PagerSnapHelper()
+            val snap = PagerSnapHelper()
             snap.attachToRecyclerView(bottomPlayRcv)
             bottomPlayRcv.adapter = mAdapter
-            bottomPlayRcv.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: androidx.recyclerview.widget.RecyclerView, newState: Int) {
+            bottomPlayRcv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    if (newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE) {
-                        val manager = recyclerView?.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val manager = recyclerView?.layoutManager as LinearLayoutManager
                         val first = manager.findFirstVisibleItemPosition()
                         val last = manager.findLastVisibleItemPosition()
                         LogUtil.e("Scroll", "$first-$last")

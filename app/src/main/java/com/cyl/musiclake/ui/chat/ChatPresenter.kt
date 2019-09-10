@@ -69,11 +69,11 @@ constructor() : BasePresenter<ChatContract.View>(), ChatContract.Presenter {
         when {
             music?.type == Constants.LOCAL -> {
                 val message = MusicApp.getAppContext().getString(R.string.share_local_song, music.artist, music.title)
-                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_BROADCAST)
+                SocketManager.sendSocketMessage(message, SocketManager.MESSAGE_BROADCAST)
             }
             music?.mid != null -> {
                 val message = MusicApp.GSON.toJson(MusicUtils.getMusicInfo(music))
-                MusicApp.socketManager.sendSocketMessage(message, SocketManager.MESSAGE_SHARE)
+                SocketManager.sendSocketMessage(message, SocketManager.MESSAGE_SHARE)
             }
             else -> ToastUtils.show(MusicApp.getAppContext().getString(R.string.playing_empty))
         }

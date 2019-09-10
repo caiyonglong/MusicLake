@@ -16,14 +16,14 @@ import com.cyl.musiclake.common.Constants
 class AddPlaylistDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val music = arguments!!.getParcelable<Music>("music")
-        return if (music.type === Constants.LOCAL) {
+        val music = arguments?.getParcelable<Music>("music")
+        return if (music?.type === Constants.LOCAL) {
             showInfoDialog(getString(R.string.add_to_playlist), getString(R.string.add_un_support_local))
-        } else Dialog(activity)
+        } else Dialog(context!!)
     }
 
 
-    fun showInfoDialog(title1: String, msg1: String): MaterialDialog {
+    private fun showInfoDialog(title1: String, msg1: String): MaterialDialog {
         var title = title1
         var msg = msg1
         if (title.isEmpty()) {

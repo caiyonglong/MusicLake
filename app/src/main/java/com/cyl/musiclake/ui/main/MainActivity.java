@@ -27,6 +27,7 @@ import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.player.FloatVideoWindowManager;
 import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
@@ -375,7 +376,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void setUserStatusInfo(Boolean isLogin, User user) {
         mIsLogin = isLogin;
         if (mIsLogin && user != null) {
-            MusicApp.socketManager.toggleSocket(true);
+            SocketManager.INSTANCE.toggleSocket(true);
             String url = user.getAvatar();
             CoverLoader.INSTANCE.loadImageView(this, url, R.drawable.ic_account_circle, mAvatarIcon);
             mName.setText(user.getNick());
@@ -383,7 +384,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mNavigationView.getMenu().findItem(R.id.nav_login_status).setTitle(getResources().getString(R.string.logout_hint))
                     .setIcon(R.drawable.ic_exit);
         } else {
-            MusicApp.socketManager.toggleSocket(false);
+            SocketManager.INSTANCE.toggleSocket(false);
             mAvatarIcon.setImageResource(R.drawable.ic_account_circle);
             mName.setText(getResources().getString(R.string.app_name));
 //            mShowBindIv.setVisibility(View.GONE);

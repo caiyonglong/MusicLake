@@ -41,13 +41,15 @@ class AllPlaylistCatFragment : androidx.fragment.app.DialogFragment(), ChannelVi
     var successListener: ((String) -> Unit?)? = null
 
     override fun onStart() {
-        val lp = dialog.window?.attributes
-        lp?.width = WindowManager.LayoutParams.MATCH_PARENT
-        lp?.height = WindowManager.LayoutParams.MATCH_PARENT
-        lp?.windowAnimations = com.cyl.musiclake.R.style.dialogAnim
-        lp?.gravity = Gravity.BOTTOM
-        dialog.window.attributes = lp
-        dialog.setCanceledOnTouchOutside(true)
+        dialog?.let {
+            val lp = it.window?.attributes
+            lp?.width = WindowManager.LayoutParams.MATCH_PARENT
+            lp?.height = WindowManager.LayoutParams.MATCH_PARENT
+            lp?.windowAnimations = com.cyl.musiclake.R.style.dialogAnim
+            lp?.gravity = Gravity.BOTTOM
+            it.window.attributes = lp
+            it.setCanceledOnTouchOutside(true)
+        }
         super.onStart()
     }
 
@@ -55,7 +57,7 @@ class AllPlaylistCatFragment : androidx.fragment.app.DialogFragment(), ChannelVi
         if (rootView == null) {
             rootView = inflater.inflate(com.cyl.musiclake.R.layout.frag_playlist_category, container, false)
         }
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return rootView
     }
 
@@ -172,10 +174,8 @@ class AllPlaylistCatFragment : androidx.fragment.app.DialogFragment(), ChannelVi
     /**
      *显示出对话框
      */
-    fun showIt(context: androidx.fragment.app.FragmentActivity?) {
-        if (dialog != null) {
-            dialog.dismiss()
-        }
+    fun showIt(context: FragmentActivity?) {
+        dialog?.dismiss()
         val transaction = context?.supportFragmentManager?.beginTransaction()
         transaction?.add(this, tag)?.commitAllowingStateLoss()
     }

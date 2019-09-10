@@ -1,73 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@drawable/bg_bottom_popup_container"
-    android:elevation="@dimen/dp_4"
-    android:fitsSystemWindows="true"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_play_mode"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dp_16"
+        android:src="@drawable/ic_repeat_one"
+        android:tint="?iconColor"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_play_mode"
+        app:layout_constraintEnd_toStartOf="@+id/tv_play_mode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_play_mode" />
+
+    <ImageView
+        android:id="@+id/iv_clear_all"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_margin="@dimen/dp_16"
+        android:src="@drawable/ic_delete"
+        android:tint="?iconColor"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_song_sum"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_play_mode"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="@dimen/dp_16"
-            android:src="@drawable/ic_repeat_one"
-            android:tint="?iconColor" />
+    <TextView
+        android:id="@+id/tv_song_sum"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_play_mode"
+        app:layout_constraintEnd_toStartOf="@+id/iv_clear_all"
+        app:layout_constraintStart_toEndOf="@+id/tv_play_mode"
+        app:layout_constraintTop_toTopOf="@+id/tv_play_mode"
+        tools:text="@string/play_mode_repeat" />
 
-        <TextView
-            android:id="@+id/tv_play_mode"
-            style="@style/TextAppearance.AppCompat.Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_16"
-            app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/play_mode_repeat" />
-
-
-        <TextView
-            android:id="@+id/tv_song_sum"
-            style="@style/TextAppearance.AppCompat.Body2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/sp_16"
-            app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/play_mode_repeat" />
-
-        <ImageView
-            android:id="@+id/iv_clear_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_16"
-            android:src="@drawable/ic_delete"
-            android:tint="?iconColor" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_play_mode"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintEnd_toStartOf="@+id/tv_song_sum"
+        app:layout_constraintStart_toEndOf="@+id/iv_play_mode"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/play_mode_repeat" />
 
     <View
+        android:id="@+id/view3"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_05"
-        android:background="@color/translucent_white" />
+        android:layout_marginTop="16dp"
+        android:background="@color/translucent_white"
+        app:layout_constraintBottom_toTopOf="@+id/rcv_songs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_play_mode" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_songs"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="360dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:minHeight="@dimen/dp_200"
-        app:layout_behavior="@string/bottom_sheet_behavior" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_play_mode" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 

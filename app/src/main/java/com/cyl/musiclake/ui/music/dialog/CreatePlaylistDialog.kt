@@ -19,7 +19,6 @@ class CreatePlaylistDialog : androidx.fragment.app.DialogFragment() {
     var successListener: ((String) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val music = arguments!!.getParcelable<Music>(TAG_MUSIC)
         return MaterialDialog(activity!!)
                 .title(R.string.create_playlist)
                 .positiveButton(R.string.sure)

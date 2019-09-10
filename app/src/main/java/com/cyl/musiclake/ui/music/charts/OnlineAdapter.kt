@@ -146,7 +146,7 @@ class ChartsAdapter(val context: Context, val data: List<GroupItemData>) : Recyc
 @SuppressLint("ParcelCreator")
 class GroupItemData() : Parcelable {
     var itemType = ITEM_TITLE
-    var title: String = ""
+    var title: String? = ""
     var data: Any? = null
 
     constructor(parcel: Parcel) : this() {
