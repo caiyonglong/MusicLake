@@ -3,6 +3,8 @@ package com.cyl.musiclake.ui
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.text.InputType
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,9 +25,10 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.SongLoader
-import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
@@ -259,7 +262,7 @@ fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
 }
 
 /**
- * 批量删除歌曲
+ * 删除单个歌曲
  */
 fun AppCompatActivity.deleteSingleMusic(music: Music?, success: (() -> Unit)? = null) {
     if (this.isFinishing || this.isDestroyed) return
@@ -271,8 +274,8 @@ fun AppCompatActivity.deleteSingleMusic(music: Music?, success: (() -> Unit)? = 
         doAsync {
             SongLoader.removeSong(music)
             uiThread {
+                NavigationHelper.scanFileAsync(this@deleteSingleMusic)
                 ToastUtils.show(MusicApp.getAppContext().getString(R.string.delete_song_success))
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
                 success?.invoke()
             }
         }
@@ -296,8 +299,8 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: 
         doAsync {
             SongLoader.removeMusicList(deleteList)
             uiThread {
+                NavigationHelper.scanFileAsync(this@deleteLocalMusic)
                 ToastUtils.show(getString(R.string.delete_song_success))
-                EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
                 success?.invoke()
             }
         }

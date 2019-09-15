@@ -4,9 +4,10 @@ import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.PlayHistoryLoader
-import com.cyl.musiclake.bean.data.PlaylistLoader
-import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.data.PlayHistoryLoader
+import com.cyl.musiclake.data.PlaylistLoader
+import com.cyl.musiclake.data.SongLoader
+import com.cyl.musiclake.data.VideoLoader
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.download.DownloadLoader
@@ -62,7 +63,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
 
 
     /**
-     * 更新本地歌单
+     * 更新下载歌曲
      */
     fun updateDownload() {
         doAsync {
@@ -73,11 +74,24 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
         }
     }
 
+    /**
+     * 更新下载歌曲
+     */
+    fun updateLocalVideo() {
+        doAsync {
+            val musicList = VideoLoader.getAllLocalVideos(mView.context)
+            uiThread {
+                mView?.showVideoList(musicList)
+            }
+        }
+    }
+
 
     override fun loadSongs() {
         updateLocal()
         updateHistory()
         updateFavorite()
+        updateLocalVideo()
         updateDownload()
     }
 
@@ -86,8 +100,7 @@ constructor() : BasePresenter<MyMusicContract.View>(), MyMusicContract.Presenter
                 success = {
                     mView?.showNoticeInfo(it)
                 }, fail = {
-        }
-        )
+        })
     }
 
     /**

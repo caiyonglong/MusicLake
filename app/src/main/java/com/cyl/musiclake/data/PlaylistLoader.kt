@@ -1,8 +1,8 @@
-package com.cyl.musiclake.bean.data
+package com.cyl.musiclake.data
 
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 
 /**

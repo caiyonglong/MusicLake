@@ -17,18 +17,6 @@
         android:src="@drawable/ic_shuffle_black"
         android:tint="?iconColor" />
 
-    <TextView
-        android:id="@+id/songNumTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_8"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="@string/random_play"
-        app:layout_constraintEnd_toStartOf="@+id/reloadIv"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/reloadIv"
         android:layout_width="wrap_content"
@@ -40,8 +28,21 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_autorenew_black"
         android:tint="?iconColor"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/songNumTv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/songNumTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_8"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="@string/random_play"
+        app:layout_constraintEnd_toStartOf="@+id/reloadIv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -58,5 +59,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/songNumTv"
         app:layout_constraintTop_toTopOf="parent" />
-
 </LinearLayout>

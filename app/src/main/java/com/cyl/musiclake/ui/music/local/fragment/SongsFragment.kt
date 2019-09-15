@@ -14,9 +14,17 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter
+import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
+import com.google.android.exoplayer2.util.Log
+import kotlinx.android.synthetic.main.frag_local_song.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
+import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.recyclerView
 import kotlinx.android.synthetic.main.header_local_list.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.uiThread
+import java.lang.Thread.sleep
 import java.util.*
 
 /**
@@ -45,10 +53,19 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
     override fun initViews() {
         mAdapter = SongAdapter(musicList)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
         initHeaderView()
+        swipe_refresh.setOnRefreshListener {
+            ToastUtils.show("刷新测试")
+            mPresenter?.loadSongs(true)
+        }
+        iconIv.setOnClickListener { v ->
+            if (musicList.size == 0) return@setOnClickListener
+            val id = Random().nextInt(musicList.size)
+            PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID)
+        }
     }
 
     override fun initInjector() {
@@ -56,7 +73,7 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun listener() {
-        mAdapter?.setOnItemClickListener { adapter, view, position ->
+        mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID)
                 mAdapter?.notifyDataSetChanged()
@@ -67,6 +84,9 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_LOCAL_ID)
                     .apply {
                         removeSuccessListener = {
+                            LogUtil.d("SongsFragment", "position = $position")
+                            musicList.removeAt(position)
+                            initHeaderView()
                             this@SongsFragment.mAdapter?.notifyItemRemoved(position)
                         }
                     }
@@ -79,27 +99,24 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun onLazyLoad() {
-        mPresenter?.loadSongs(false)
+        mPresenter?.loadSongs(true)
     }
 
 
     private fun initHeaderView() {
-        reloadIv?.setOnClickListener { v ->
-            showLoading()
-            mPresenter?.loadSongs(true)
-        }
-        iconIv.setOnClickListener { v ->
-            if (musicList.size == 0) return@setOnClickListener
-            val id = Random().nextInt(musicList.size)
-            PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID)
+        songNumTv?.text = getString(R.string.random_play_num, musicList.size)
+        if (musicList.size == 0) {
+            setEmptyView()
         }
     }
 
     override fun showSongs(songList: MutableList<Music>) {
+        LogUtil.d("SongsFragment", "showSongs = ${songList.size}")
         musicList.clear()
+        swipe_refresh.isRefreshing = false
         musicList.addAll(songList)
-        mAdapter?.setNewData(songList)
-        songNumTv?.text = getString(R.string.random_play_num, songList.size)
+        mAdapter?.setNewData(musicList)
+        songNumTv?.text = getString(R.string.random_play_num, musicList.size)
         hideLoading()
     }
 
@@ -112,6 +129,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun setEmptyView() {
-        mAdapter?.setEmptyView(R.layout.view_song_empty)
+        mAdapter?.setEmptyView(R.layout.view_song_empty, recyclerView)
     }
 }

@@ -20,7 +20,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
 
     private TaskItemAdapter.TaskItemViewHolder checkCurrentHolder(final BaseDownloadTask task) {
         final TaskItemAdapter.TaskItemViewHolder tag = (TaskItemAdapter.TaskItemViewHolder) task.getTag();
-        if (tag != null && tag.id != task.getId()) {
+        if (tag != null && tag.getId() != task.getId()) {
             return null;
         }
         return tag;
@@ -37,7 +37,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
 
         tag.updateDownloading(FileDownloadStatus.pending, soFarBytes
                 , totalBytes);
-        tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_pending);
+        tag.getTaskStatusTv().setText(R.string.tasks_manager_demo_status_pending);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
         if (tag == null) {
             return;
         }
-        tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_started);
+        tag.getTaskStatusTv().setText(R.string.tasks_manager_demo_status_started);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
 
         tag.updateDownloading(FileDownloadStatus.connected, soFarBytes
                 , totalBytes);
-        tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_connected);
+        tag.getTaskStatusTv().setText(R.string.tasks_manager_demo_status_connected);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
         }
 
         tag.updateNotDownloaded(FileDownloadStatus.paused, soFarBytes, totalBytes);
-        tag.taskStatusTv.setText(R.string.tasks_manager_demo_status_paused);
+        tag.getTaskStatusTv().setText(R.string.tasks_manager_demo_status_paused);
         TasksManager.INSTANCE.removeTaskForViewHolder(task.getId());
     }
 

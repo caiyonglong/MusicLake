@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.download.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
@@ -70,15 +71,18 @@ class DownloadManagerFragment : BaseFragment<DownloadPresenter>(), DownloadContr
     private fun updateDownLoadList(list: List<TasksManagerModel>) {
         hideLoading()
         if (mAdapter == null) {
-            mAdapter = TaskItemAdapter(context, list)
-            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            mAdapter = context?.let { TaskItemAdapter(it, list) }
+            recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.adapter = mAdapter
         } else {
             mAdapter?.models = list
             mAdapter?.notifyDataSetChanged()
         }
         if (list.isEmpty()) {
+            emptyStateView?.visibility = View.VISIBLE
             showEmptyState()
+        } else {
+            emptyStateView?.visibility = View.GONE
         }
     }
 

@@ -1,4 +1,4 @@
-package com.cyl.musiclake.bean.data
+package com.cyl.musiclake.data
 
 import android.content.Context
 import android.provider.MediaStore

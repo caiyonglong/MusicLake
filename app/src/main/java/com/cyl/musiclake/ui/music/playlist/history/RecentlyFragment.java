@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.bean.data.PlayHistoryLoader;
+import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Monkey on 2015/6/29.

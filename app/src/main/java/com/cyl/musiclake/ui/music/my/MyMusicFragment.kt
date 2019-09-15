@@ -11,7 +11,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.PlaylistLoader
+import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
@@ -142,8 +142,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         mPresenter?.loadSongs()
         mPresenter?.loadPlaylist()
         mPresenter?.loadLocalPlaylist()
-
-        showVideoList(mutableListOf())
+        mPresenter?.updateLocalVideo()
     }
 
 
@@ -255,9 +254,9 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     /**
      * 显示video列表
      */
-    fun showVideoList(musicList: MutableList<Music>) {
-        videoView.setSongsNum(musicList.size, 3)
-        videoView.setOnItemClickListener { view, position ->
+    override fun showVideoList(videoList: MutableList<Music>) {
+        videoView.setSongsNum(videoList.size, 3)
+        videoView.setOnItemClickListener { _, position ->
             toFragment(position)
         }
     }

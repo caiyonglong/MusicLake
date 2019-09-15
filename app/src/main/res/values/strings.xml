@@ -346,7 +346,7 @@
     <string name="cache_complete">已缓存的歌</string>
     <string name="download_processing">下载中</string>
     <string name="cache_processing">缓存中</string>
-    <string name="download_content">是否将 %1$s 添加到缓存下载队列</string>
+    <string name="download_content">是否将 %1$s 添加到下载队列</string>
     <string name="dd">暂无歌词</string>
     <string name="recently_update">最近更新：%1$s</string>
     <string name="float_settings">请在设置中，打开悬浮窗设置</string>

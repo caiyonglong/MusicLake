@@ -1,4 +1,4 @@
-package com.cyl.musiclake.bean.data.db
+package com.cyl.musiclake.data.db
 
 import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.common.Constants
@@ -125,9 +125,9 @@ object DaoLitepal {
         if (FileUtils.exists(music.uri)) {
             FileUtils.delFile(music.uri)
         }
-        LitePal.deleteAll(Music::class.java, "mid = ? ", music.mid)
-        LitePal.deleteAll(TasksManagerModel::class.java, "mid = ?", music.mid)
-        LitePal.deleteAll(MusicToPlaylist::class.java, "mid = ?", music.mid)
+        LitePal.deleteAll(Music::class.java, "mid=?", music.mid)
+        LitePal.deleteAll(TasksManagerModel::class.java, "mid=?", music.mid)
+        LitePal.deleteAll(MusicToPlaylist::class.java, "mid=?", music.mid)
     }
 
     /**

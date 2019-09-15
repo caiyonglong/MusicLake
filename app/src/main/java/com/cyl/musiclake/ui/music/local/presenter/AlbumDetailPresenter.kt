@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

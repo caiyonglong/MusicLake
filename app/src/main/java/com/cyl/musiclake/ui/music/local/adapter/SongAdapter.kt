@@ -78,7 +78,7 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         }
         val layoutParams = holder.getView<ImageView>(R.id.iv_cover).layoutParams
         //动态改变图片尺寸大小
-        if (item.type == Constants.YOUTUBE) {
+        if (item.type == Constants.YOUTUBE || item.type == Constants.VIDEO) {
             layoutParams.width = SizeUtils.dp2px(mContext, 80f)
         } else {
             layoutParams.width = SizeUtils.dp2px(mContext, 45f)

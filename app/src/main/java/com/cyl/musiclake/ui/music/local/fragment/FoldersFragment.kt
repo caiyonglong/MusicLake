@@ -18,6 +18,7 @@ import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract
 import com.cyl.musiclake.ui.music.local.presenter.FoldersPresenter
+import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.frag_local_song.*
 import kotlinx.android.synthetic.main.header_local_list.*
 import org.jetbrains.anko.support.v4.startActivity
@@ -51,6 +52,10 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
         menuIv.setOnClickListener {
             EditSongListActivity.musicList = songList
             startActivity<EditSongListActivity>()
+        }
+        swipe_refresh.setOnRefreshListener {
+            ToastUtils.show("刷新测试")
+            mPresenter?.loadFolders()
         }
     }
 
@@ -119,6 +124,7 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     }
 
     private fun updateHeader(isFolderMode: Boolean, curFolder: String? = null) {
+        swipe_refresh.isRefreshing = false
         if (isFolderMode) {
             songNumTv.text = "..."
             reloadIv.visibility = View.GONE

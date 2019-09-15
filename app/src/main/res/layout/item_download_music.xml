@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_8"
-            android:layout_weight="1.0"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -48,12 +48,10 @@
 
         <Button
             android:id="@+id/task_action_btn"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/btn_bg"
-            android:padding="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_8"
             android:text="开始"
             android:textSize="14sp" />
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.local.fragment;
 
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -90,6 +91,9 @@ public class AlbumFragment extends BaseLazyFragment<AlbumPresenter> implements A
     @Override
     public void showAlbums(List<Album> albumList) {
         mAdapter.setNewData(albumList);
+        if (albumList.size() == 0) {
+            mAdapter.setEmptyView(R.layout.view_song_empty, mRecyclerView);
+        }
     }
 
 }

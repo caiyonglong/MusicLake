@@ -1,6 +1,6 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
-import com.cyl.musiclake.bean.data.VideoLoader
+import com.cyl.musiclake.data.VideoLoader
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract
 import org.jetbrains.anko.doAsync

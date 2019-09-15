@@ -10,8 +10,8 @@ import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.PlaylistLoader
-import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.data.PlaylistLoader
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.ui.base.BasePresenter

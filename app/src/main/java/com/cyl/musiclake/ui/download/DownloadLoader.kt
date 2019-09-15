@@ -3,10 +3,8 @@ package com.cyl.musiclake.ui.download
 import android.text.TextUtils
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Mp3Util
 import com.cyl.musiclake.utils.ToastUtils
@@ -41,6 +39,7 @@ object DownloadLoader {
         }
         return musicList
     }
+
     /**
      * 获取已下载列表
      */
@@ -72,6 +71,14 @@ object DownloadLoader {
      */
     fun getDownloadingList(): MutableList<TasksManagerModel> {
         return LitePal.where("finish = 0").find(TasksManagerModel::class.java)
+    }
+
+    /**
+     * 清空下载列表
+     */
+    fun clearDownloadList(): MutableList<Music> {
+        LitePal.deleteAll(TasksManagerModel::class.java)
+        return getDownloadList()
     }
 
     /**
@@ -120,6 +127,5 @@ object DownloadLoader {
                 Mp3Util.getTagInfo(it1)
             }
         }
-        NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicCacheDir())
     }
 }

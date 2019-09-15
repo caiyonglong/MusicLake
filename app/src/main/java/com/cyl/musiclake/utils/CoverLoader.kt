@@ -137,6 +137,7 @@ object CoverLoader {
         if (imageView == null) return
         GlideApp.with(mContext)
                 .load(url)
+                .placeholder(R.drawable.holder_with_bg)
                 .error(R.drawable.holder_with_bg)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

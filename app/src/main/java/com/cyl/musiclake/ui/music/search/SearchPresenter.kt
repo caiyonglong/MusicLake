@@ -11,7 +11,7 @@ import com.cyl.musiclake.api.youtube.YoutubeDataApi
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchResult
-import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.LogUtil

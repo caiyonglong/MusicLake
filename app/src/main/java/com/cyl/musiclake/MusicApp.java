@@ -12,8 +12,9 @@ import androidx.multidex.MultiDex;
 
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
-import com.cyl.musiclake.bean.data.PlaylistLoader;
+import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
@@ -135,6 +136,7 @@ public class MusicApp extends Application {
     }
 
     private void initDB() {
+        NavigationHelper.INSTANCE.scanFileAsync(this);
         //线程初始化数据库，优化启动速度
         new Thread(() -> {
             PlaylistLoader.INSTANCE.createDefaultPlaylist(Constants.PLAYLIST_QUEUE_ID, getString(R.string.playlist_queue));

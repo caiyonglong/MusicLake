@@ -28,7 +28,7 @@ import org.jetbrains.anko.support.v4.startActivity
 
 class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContract.View {
 
-    val mRecyclerView by lazy { rootView?.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView) }
+    val mRecyclerView by lazy { rootView?.findViewById<RecyclerView>(R.id.recyclerView) }
 
     private var mAdapter: SongAdapter? = null
     private var path: String? = null
@@ -36,7 +36,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
 
 
     override fun showEmptyView() {
-        mAdapter?.setEmptyView(R.layout.view_song_empty)
+        mAdapter?.setEmptyView(R.layout.view_song_empty, mRecyclerView)
     }
 
 
@@ -51,7 +51,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
 
     public override fun initViews() {
         mAdapter = SongAdapter(musicList)
-        mRecyclerView?.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        mRecyclerView?.layoutManager = LinearLayoutManager(activity)
         mRecyclerView?.adapter = mAdapter
         mRecyclerView?.addItemDecoration(ItemDecoration(mFragmentComponent.activity, ItemDecoration.VERTICAL_LIST))
         mAdapter?.bindToRecyclerView(mRecyclerView)

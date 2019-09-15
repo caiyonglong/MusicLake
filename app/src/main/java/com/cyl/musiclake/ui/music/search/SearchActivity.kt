@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.search
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -14,7 +13,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
-import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.main.PageAdapter

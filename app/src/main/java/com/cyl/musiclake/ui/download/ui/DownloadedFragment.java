@@ -1,10 +1,17 @@
 package com.cyl.musiclake.ui.download.ui;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.bean.Music;
@@ -50,8 +57,11 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = (Music) adapter.getItem(position);
-            BottomDialogFragment.Companion.newInstance(music).show((AppCompatActivity) mFragmentComponent.getActivity());
+            BottomDialogFragment.Companion.newInstance(music, Constants.PLAYLIST_DOWNLOAD_ID).show((AppCompatActivity) mFragmentComponent.getActivity());
         });
+        mAdapter.setOnItemLongClickListener((adapter, view, position) ->
+                false
+        );
     }
 
     @Override
@@ -91,11 +101,28 @@ public class DownloadedFragment extends BaseFragment<DownloadPresenter> implemen
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        if (getActivity() != null) {
+            getActivity().getMenuInflater().inflate(R.menu.menu_download, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_delete_all) {
+            if (mPresenter != null) {
+                mPresenter.deleteAll();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void showSongs(List<Music> musicList) {
         this.musicList = musicList;
         mAdapter.setNewData(musicList);
         if (musicList.size() == 0) {
-            showEmptyState();
+            mAdapter.setEmptyView(R.layout.view_song_empty, mRecyclerView);
         }
     }
 

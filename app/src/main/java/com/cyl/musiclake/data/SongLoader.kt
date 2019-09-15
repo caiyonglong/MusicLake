@@ -1,4 +1,4 @@
-package com.cyl.musiclake.bean.data
+package com.cyl.musiclake.data
 
 import android.content.Context
 import android.database.Cursor
@@ -7,9 +7,10 @@ import android.text.TextUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.data.db.DaoLitepal
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.CoverLoader
+import com.cyl.musiclake.utils.LogUtil
 import org.litepal.LitePal
 
 
@@ -21,11 +22,7 @@ object SongLoader {
      * @return
      */
     fun getAllArtists(): MutableList<Artist> {
-        val result = DaoLitepal.getAllArtist()
-        if (result.size == 0) {
-            return DaoLitepal.updateArtistList()
-        }
-        return result
+        return DaoLitepal.updateArtistList()
     }
 
     /**
@@ -55,11 +52,7 @@ object SongLoader {
      * @return
      */
     fun getAllAlbums(): MutableList<Album> {
-        val result = DaoLitepal.getAllAlbum()
-        if (result.size == 0) {
-            return DaoLitepal.updateAlbumList()
-        }
-        return result
+        return DaoLitepal.updateAlbumList()
     }
 
     /**
@@ -131,19 +124,23 @@ object SongLoader {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOVE_ID)
     }
 
-    fun getSongsForDB(): MutableList<Music> {
+    /**
+     * 获取本地歌曲
+     */
+    private fun getSongsForDB(): MutableList<Music> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOCAL_ID)
     }
 
-    fun getLocalMusic(context: Context, isReload: Boolean = false): MutableList<Music> {
+    fun getLocalMusic(context: Context, isReload: Boolean = true): MutableList<Music> {
+        LogUtil.d("SongLoader", "getLocalMusic =$isReload")
         val data = getSongsForDB()
         if (data.size == 0 || isReload) {
             data.clear()
             val musicLists = getAllLocalSongs(context)
-            if (isReload) {
-                DaoLitepal.updateAlbumList()
-                DaoLitepal.updateArtistList()
-            }
+//            if (isReload) {
+//                DaoLitepal.updateAlbumList()
+//                DaoLitepal.updateArtistList()
+//            }
             musicLists.forEach {
                 data.add(it)
             }
@@ -222,5 +219,6 @@ object SongLoader {
                 arrayOf("_id", "title", "artist", "album", "duration", "track", "artist_id", "album_id", MediaStore.Audio.Media.DATA, "is_music"),
                 selectionStatement, paramArrayOfString, sortOrder)
     }
+
 
 }

@@ -3,6 +3,8 @@ package com.cyl.musiclake.ui.download.ui
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.download.DownloadLoader
 import com.cyl.musiclake.event.DownloadEvent
+import com.cyl.musiclake.utils.LogUtil
+import com.google.android.exoplayer2.offline.Downloader
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -55,6 +57,18 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
             val data = DownloadLoader.getDownloadingList()
             uiThread {
                 mView?.showDownloadList(data)
+                mView?.hideLoading()
+            }
+        }
+    }
+
+    fun deleteAll() {
+        mView?.showLoading()
+        doAsync {
+            val data = DownloadLoader.clearDownloadList()
+            uiThread {
+                LogUtil.d("DownloadLoader", "data =${data.size}")
+                mView?.showSongs(data)
                 mView?.hideLoading()
             }
         }

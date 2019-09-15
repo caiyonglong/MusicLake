@@ -1,19 +1,15 @@
 package com.cyl.musiclake.ui.music.dialog
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.cyl.musiclake.BuildConfig
@@ -34,14 +30,17 @@ import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import com.cyl.musiclake.utils.Tools
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.jetbrains.anko.support.v4.startActivity
 
-class BottomDialogFragment : BottomSheetDialogFragment() {
-    lateinit var mContext: AppCompatActivity
-    private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false) }
-    private val recyclerView by lazy { mRootView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.bottomSheetRv) }
-    private val titleTv by lazy { mRootView.findViewById<TextView>(R.id.titleTv) }
-    private val subTitleTv by lazy { mRootView.findViewById<TextView>(R.id.subTitleTv) }
+/**
+ * 歌曲操作类
+ *
+ */
+class BottomDialogFragment : BaseBottomSheetDialogFragment() {
+    private val recyclerView by lazy { mRootView?.findViewById<RecyclerView>(R.id.bottomSheetRv) }
+    private val titleTv by lazy { mRootView?.findViewById<TextView>(R.id.titleTv) }
+    private val subTitleTv by lazy { mRootView?.findViewById<TextView>(R.id.subTitleTv) }
 
     var mAdapter: ItemAdapter? = null
     var type: String = Constants.PLAYLIST_LOCAL_ID
@@ -74,35 +73,32 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    fun show(context: AppCompatActivity) {
-        mContext = context
-        val ft = context.supportFragmentManager.beginTransaction()
-        ft.add(this, tag)
-        ft.commitAllowingStateLoss()
+    override fun getLayoutResId(): Int {
+        return R.layout.dialog_layout
     }
+
 
     private var mBehavior: BottomSheetBehavior<*>? = null
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        mBehavior = BottomSheetBehavior.from(mRootView?.parent as View)
         initItems()
-        dialog.setContentView(mRootView)
-        mBehavior = BottomSheetBehavior.from(mRootView.parent as View)
-        return dialog
     }
+
 
     /**
      * 初始化items
      */
     private fun initItems() {
-        titleTv.text = music?.title
-        subTitleTv.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
+        titleTv?.text = music?.title
+        subTitleTv?.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
         arguments?.getString(Extras.PLAYLIST_TYPE, Constants.PLAYLIST_LOCAL_ID)?.let {
             type = it
         }
         mAdapter = ItemAdapter(type)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
-        recyclerView.adapter = mAdapter
+        recyclerView?.layoutManager = LinearLayoutManager(activity)
+        recyclerView?.adapter = mAdapter
     }
 
     /**
@@ -139,7 +135,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                             artistNames?.let { it2 ->
                                 MaterialDialog(it).show {
                                     title(R.string.choose_singer)
-                                    listItems(items = it2){ dialog, position, text ->
+                                    listItems(items = it2) { dialog, position, text ->
                                         NavigationHelper.navigateToArtist(mContext, artist[position], null)
                                     }
                                 }
@@ -153,10 +149,16 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+    /**
+     * 跳转编辑
+     */
     private fun turnToEdit() {
         startActivity<EditMusicActivity>(Extras.SONG to music)
     }
 
+    /**
+     *去删除
+     */
     private fun turnToDelete(music: Music?) {
         if (music?.type == Constants.LOCAL || music?.isOnline == false) {
             (activity as AppCompatActivity?)?.deleteSingleMusic(music) {
@@ -172,7 +174,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
     /**
      * 下拉列表适配器
      */
-    inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : androidx.recyclerview.widget.RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+    inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
         private var itemData = mutableMapOf(
                 R.string.popup_play_next to R.drawable.ic_queue_play_next,
                 R.string.popup_add_to_playlist to R.drawable.ic_playlist_add,
@@ -191,7 +193,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
                 itemData.clear()
             }
             //是否显示下载歌曲Item
-            if (!BuildConfig.HAS_DOWNLOAD) {
+            if (!BuildConfig.HAS_DOWNLOAD || type == Constants.PLAYLIST_DOWNLOAD_ID) {
                 itemData.remove(R.string.popup_download)
             }
             //是否有mv
@@ -202,8 +204,9 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             if (music?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
-            } else {
+            } else if (type != Constants.PLAYLIST_DOWNLOAD_ID) {
                 itemData.remove(R.string.popup_detail_edit)
+
                 if (music?.isDl == false || music?.isOnline == false) {
                     itemData.remove(R.string.popup_download)
                 }
@@ -274,7 +277,7 @@ class BottomDialogFragment : BottomSheetDialogFragment() {
             return data.size
         }
 
-        inner class ItemViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var textView: TextView = itemView.findViewById(R.id.tv_title)
             var icon: ImageView = itemView.findViewById(R.id.iv_icon)
         }

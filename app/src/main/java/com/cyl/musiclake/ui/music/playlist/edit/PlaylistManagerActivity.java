@@ -10,7 +10,7 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.bean.data.PlaylistLoader;
+import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.ui.UIUtilsKt;

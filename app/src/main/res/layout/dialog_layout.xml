@@ -4,7 +4,7 @@
     android:id="@+id/sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?windowBackground"
+    android:background="@drawable/bg_bottom_popup_container"
     android:orientation="vertical">
 
     <LinearLayout

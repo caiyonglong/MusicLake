@@ -2,8 +2,8 @@ package com.cyl.musiclake.ui.music.local.presenter
 
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.FolderInfo
-import com.cyl.musiclake.bean.data.AppRepository
-import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.data.AppRepository
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers

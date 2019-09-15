@@ -15,7 +15,7 @@ import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl.collectBatch2Music
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.bean.data.PlaylistLoader
+import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.ui.my.user.UserStatus

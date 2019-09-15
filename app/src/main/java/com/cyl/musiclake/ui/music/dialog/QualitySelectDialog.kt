@@ -24,14 +24,17 @@ import com.cyl.musiclake.ui.downloadMusic
 /**
  * 音质选择器
  */
-class QualitySelectDialog : BottomSheetDialogFragment() {
-    lateinit var mContext: AppCompatActivity
+class QualitySelectDialog : BaseBottomSheetDialogFragment() {
+    override fun getLayoutResId(): Int {
+        return R.layout.dialog_quality
+    }
+
+    private var mBehavior: BottomSheetBehavior<*>? = null
     var mAdapter: QualityDAdapter? = null
-    private val mRootView by lazy { LayoutInflater.from(context).inflate(R.layout.dialog_quality, null, false) }
-    private val recyclerView by lazy { mRootView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.bottomSheetRv) }
-    private val downloadTv by lazy { mRootView.findViewById<TextView>(R.id.downloadTv) }
-    private val cacheTv by lazy { mRootView.findViewById<TextView>(R.id.cacheTv) }
-    private val downloadView by lazy { mRootView.findViewById<View>(R.id.downloadView) }
+    private val recyclerView by lazy { mRootView?.findViewById<RecyclerView>(R.id.bottomSheetRv) }
+    private val downloadTv by lazy { mRootView?.findViewById<TextView>(R.id.downloadTv) }
+    private val cacheTv by lazy { mRootView?.findViewById<TextView>(R.id.cacheTv) }
+    private val downloadView by lazy { mRootView?.findViewById<View>(R.id.downloadView) }
 
     var isDownload = false
     var changeSuccessListener: ((String) -> Unit)? = null
@@ -47,21 +50,10 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
         }
     }
 
-    fun show(context: AppCompatActivity) {
-        mContext = context
-        val ft = context.supportFragmentManager.beginTransaction()
-        ft.add(this, tag)
-        ft.commitAllowingStateLoss()
-    }
-
-    private var mBehavior: BottomSheetBehavior<*>? = null
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        mBehavior = BottomSheetBehavior.from(mRootView?.parent as View)
         initItems()
-        dialog.setContentView(mRootView)
-        mBehavior = BottomSheetBehavior.from(mRootView.parent as View)
-        return dialog
     }
 
     private fun initItems() {
@@ -80,26 +72,26 @@ class QualitySelectDialog : BottomSheetDialogFragment() {
         }
 
         mAdapter = QualityDAdapter(qualities)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
-        recyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
-        recyclerView.adapter = mAdapter
+        recyclerView?.layoutManager = LinearLayoutManager(activity)
+        recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recyclerView?.adapter = mAdapter
 
         if (isDownload) {
-            downloadView.visibility = View.VISIBLE
+            downloadView?.visibility = View.VISIBLE
         }
         if (music?.isDl == false) {
-            downloadTv.isClickable = false
-            downloadTv.setTextColor(Color.GRAY)
+            downloadTv?.isClickable = false
+            downloadTv?.setTextColor(Color.GRAY)
         } else {
-            downloadTv.isClickable = true
-            downloadTv.setTextColor(Color.WHITE)
+            downloadTv?.isClickable = true
+            downloadTv?.setTextColor(Color.WHITE)
         }
 
-        downloadTv.setOnClickListener {
+        downloadTv?.setOnClickListener {
             mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             (activity as AppCompatActivity).downloadMusic(music)
         }
-        cacheTv.setOnClickListener {
+        cacheTv?.setOnClickListener {
             mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             (activity as AppCompatActivity).downloadMusic(music, true)
         }

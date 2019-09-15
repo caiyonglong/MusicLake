@@ -7,7 +7,7 @@ import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_SMALL
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.bean.*
-import com.cyl.musiclake.bean.data.SongLoader
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil

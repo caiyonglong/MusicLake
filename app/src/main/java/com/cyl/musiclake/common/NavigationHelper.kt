@@ -4,18 +4,20 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.media.audiofx.AudioEffect
 import android.net.Uri
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Pair
 import android.view.View
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.MusicPlayerService
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.download.ui.DownloadFragment
@@ -28,7 +30,10 @@ import com.cyl.musiclake.ui.music.playlist.history.RecentlyFragment
 import com.cyl.musiclake.ui.music.playlist.love.LoveFragment
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
+import com.cyl.musiclake.utils.FileUtils
+import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 /**
@@ -258,8 +263,37 @@ object NavigationHelper {
      * @param filePath
      */
     fun scanFileAsync(ctx: Context, filePath: String) {
+        LogUtil.d("NavigationHelper", "ACTION_MEDIA_SCANNER_SCAN_FILE$filePath")
         val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         scanIntent.data = Uri.fromFile(File(filePath))
         ctx.sendBroadcast(scanIntent)
+        scanFileAsync(ctx)
+    }
+
+    /**
+     * 扫描文件夹
+     *
+     * @param ctx
+     * @param filePath
+     */
+    fun scanFileAsync(ctx: Context) {
+        //MediaScannerConnectionClient 是媒体扫描服务在MediaScannerConnection类中返回新添加文件的 uri  和 path
+        val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        scanIntent.data = Uri.fromFile(File(FileUtils.getMusicDir()))
+        ctx.sendBroadcast(scanIntent)
+
+        MediaScannerConnection.scanFile(MusicApp.mContext, arrayOf(FileUtils.getMusicDir()), null,
+                object : MediaScannerConnection.MediaScannerConnectionClient {
+                    override fun onMediaScannerConnected() {
+                        // MediaScanner service 创建后回调
+                        LogUtil.d("NavigationHelper", "MediaScannerConnection onMediaScannerConnected ${FileUtils.getMusicDir()}")
+                    }
+
+                    override fun onScanCompleted(path: String?, uri: Uri?) {
+                        // 当MediaScanner完成文件扫描后回调
+                        LogUtil.d("NavigationHelper", "MediaScannerConnection onScanCompleted $path")
+                        EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOCAL_ID))
+                    }
+                })
     }
 }

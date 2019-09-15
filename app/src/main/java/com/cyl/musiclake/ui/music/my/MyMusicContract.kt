@@ -11,6 +11,8 @@ interface MyMusicContract {
 
         fun showSongs(songList: MutableList<Music>)
 
+        fun showVideoList(videoList: MutableList<Music>)
+
         fun showLocalPlaylist(playlists: MutableList<Playlist>)
 
         fun showPlaylist(playlists: MutableList<Playlist>)

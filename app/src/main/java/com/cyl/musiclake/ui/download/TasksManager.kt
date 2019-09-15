@@ -2,9 +2,12 @@ package com.cyl.musiclake.ui.download
 
 import android.text.TextUtils
 import android.util.SparseArray
+import com.cyl.musiclake.MusicApp
+import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.download.ui.DownloadManagerFragment
 import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
 import com.cyl.musiclake.event.DownloadEvent
+import com.cyl.musiclake.utils.FileUtils
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadConnectListener
 import com.liulishuo.filedownloader.FileDownloader
@@ -143,6 +146,7 @@ object TasksManager {
      * @param tid :下载任务唯一ID
      */
     fun finishTask(tid: Int) {
+        NavigationHelper.scanFileAsync(MusicApp.mContext, FileUtils.getMusicCacheDir())
         doAsync {
             DownloadLoader.updateTask(tid)
             val data = DownloadLoader.getDownloadingList()
