@@ -160,7 +160,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      *去删除
      */
     private fun turnToDelete(music: Music?) {
-        if (music?.type == Constants.LOCAL || music?.isOnline == false) {
+        if (music?.type == Constants.LOCAL || music?.isOnline == false || type == Constants.PLAYLIST_DOWNLOAD_ID) {
             (activity as AppCompatActivity?)?.deleteSingleMusic(music) {
                 removeSuccessListener?.invoke(music)
             }
