@@ -12,9 +12,9 @@ import androidx.multidex.MultiDex;
 
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
-import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
@@ -106,7 +106,7 @@ public class MusicApp extends Application {
         WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
         //腾讯
         mTencent = Tencent.createInstance(Constants.APP_ID, this);
-        //初始化socket
+        //初始化socket，因后台服务器压力大，暂时注释
 //        SocketManager.INSTANCE.initSocket();
     }
 

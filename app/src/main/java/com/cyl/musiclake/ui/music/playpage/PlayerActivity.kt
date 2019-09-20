@@ -41,13 +41,10 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
-    override fun showLyric(lyric: String?, init: Boolean) {
-    }
-
     private var playingMusic: Music? = null
     private var coverFragment: CoverFragment? = null
     private var lyricFragment: LyricFragment? = null
-    private val fragments = mutableListOf<androidx.fragment.app.Fragment>()
+    private val fragments = mutableListOf<Fragment>()
 
     /***
      * 显示当前正在播放
@@ -59,8 +56,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //更新标题
         titleIv.text = music?.title
         subTitleTv.text = music?.artist
-        //更新图片
-//        CoverLoader.loadBigImageView(this, music, coverView?.findViewById<ImageView>(R.id.civ_cover))
         //更新类型
         music?.let { coverFragment?.updateMusicType(it) }
         //更新收藏状态
@@ -68,11 +63,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
         //更新下载状态
-//        music?.isDl?.let {
-        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD) View.VISIBLE else View.GONE
-//        }
-        //隐藏显示歌曲评论
-//        songCommentTv.visibility = if (playingMusic?.type == Constants.XIAMI || playingMusic?.type == Constants.QQ || playingMusic?.type == Constants.NETEASE) View.VISIBLE else View.GONE
+        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD && !music?.isDl!!) View.VISIBLE else View.GONE
         LogUtil.d("PlayerActivity", "showNowPlaying 开始旋转动画")
         //开始旋转动画
         coverFragment?.startRotateAnimation()
@@ -120,7 +111,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         setupViewPager(viewPager)
         coverFragment?.initAlbumPic()
         mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic(), true)
-        //初始加載歌詞
         //更新播放状态
         PlayManager.isPlaying().let {
             updatePlayStatus(it)
@@ -212,6 +202,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     /**
      * 分享歌曲
+     * TODO 增加海报，截屏分享
      */
     fun shareMusic(view: View?) {
         Tools.qqShare(this, PlayManager.getPlayingMusic())
@@ -298,6 +289,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         })
     }
 
+    /**
+     * 底部上移动画效果
+     */
     private fun moveToViewLocation(): TranslateAnimation {
         val mHiddenAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
                 Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_SELF,
@@ -328,7 +322,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         closeActivity()
     }
 
-
+    /**
+     * 关闭当前界面
+     */
     private fun closeActivity() {
         super.onBackPressed()
 //        finish()

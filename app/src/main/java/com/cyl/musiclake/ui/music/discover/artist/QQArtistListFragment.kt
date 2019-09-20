@@ -46,12 +46,12 @@ class QQArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListCont
 
     public override fun initViews() {
         //初始化列表
-        areaRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-        indexRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-        sexRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-        genreRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        areaRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        indexRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        sexRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        genreRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
-        resultRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        resultRsv.layoutManager = LinearLayoutManager(activity)
     }
 
     override fun initInjector() {

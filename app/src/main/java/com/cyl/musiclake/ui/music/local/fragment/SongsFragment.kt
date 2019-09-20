@@ -57,10 +57,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
         initHeaderView()
-        swipe_refresh.setOnRefreshListener {
-            ToastUtils.show("刷新测试")
-            mPresenter?.loadSongs(true)
-        }
         iconIv.setOnClickListener { v ->
             if (musicList.size == 0) return@setOnClickListener
             val id = Random().nextInt(musicList.size)

@@ -97,7 +97,6 @@ object MusicApiServiceImpl {
                             LogUtil.e("search", e.message)
                         }
                         LogUtil.e("search", "结果：" + musicList.size)
-
                     } else {
                         LogUtil.e("search", it.msg)
 //                        result.onError(Throwable(it.msg))

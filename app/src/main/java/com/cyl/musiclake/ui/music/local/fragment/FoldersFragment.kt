@@ -53,10 +53,6 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
             EditSongListActivity.musicList = songList
             startActivity<EditSongListActivity>()
         }
-        swipe_refresh.setOnRefreshListener {
-            ToastUtils.show("刷新测试")
-            mPresenter?.loadFolders()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

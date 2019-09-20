@@ -48,7 +48,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     public override fun initViews() {
         //初始化控件
-        showLyric(FloatLyricViewManager.lyricInfo, true)
         updatePlayStatus(PlayManager.isPlaying())
         musicList.clear()
         musicList.addAll(PlayManager.getPlayList())
@@ -92,11 +91,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     }
 
 
-    override fun showLyric(lyricInfo: String?, isFilePath: Boolean) {
-
-    }
-
-
     override fun showLoading() {
     }
 
@@ -105,9 +99,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
 
     override fun setPlayingBitmap(albumArt: Bitmap?) {
-
     }
-
 
     override fun updatePlayStatus(isPlaying: Boolean) {
         if (isPlaying && !playPauseView.isPlaying) {
@@ -171,12 +163,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-//        mAdapter?.notifyDataSetChanged()
-//        bottomPlayRcv.scrollToPosition(PlayManager.position())
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
@@ -218,7 +204,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         }
         bottomPlayRcv.scrollToPosition(PlayManager.position())
     }
-
 
     companion object {
 

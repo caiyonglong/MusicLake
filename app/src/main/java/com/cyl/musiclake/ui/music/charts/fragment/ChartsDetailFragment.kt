@@ -3,8 +3,6 @@ package com.cyl.musiclake.ui.music.charts.fragment
 import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
@@ -12,7 +10,6 @@ import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.charts.ChartsAdapter
 import com.cyl.musiclake.ui.music.charts.GroupItemData
-import com.cyl.musiclake.ui.music.charts.OnlineAdapter
 import com.cyl.musiclake.ui.music.charts.activity.BaiduMusicListActivity
 import com.cyl.musiclake.ui.music.charts.activity.NeteasePlaylistActivity
 import com.cyl.musiclake.ui.music.charts.contract.OnlinePlaylistContract
@@ -44,7 +41,6 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
         if (mNeteaseAdapter == null) {
             mNeteaseAdapter = charts?.let { activity?.let { it1 -> ChartsAdapter(it1, it) } }
             //初始化列表
-//            val layoutManager = LinearLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
             val layoutManager = GridLayoutManager(activity, 3)
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -106,7 +102,6 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
 
             mBaiduAdapter = charts?.let { activity?.let { it1 -> ChartsAdapter(it1, it) } }
             //初始化列表
-//            val layoutManager = LinearLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
             val layoutManager = GridLayoutManager(activity, 3)
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -143,11 +138,6 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
         mPresenter?.loadBaiDuPlaylist()
         mPresenter?.loadQQList()
         mPresenter?.loadNeteaseTopList()
-//        when (chartsType) {
-//            Constants.BAIDU -> mPresenter?.loadBaiDuPlaylist()
-//            Constants.QQ -> mPresenter?.loadQQList()
-//            Constants.NETEASE -> mPresenter?.loadTopList()
-//        }
     }
 
     override fun loadData() {

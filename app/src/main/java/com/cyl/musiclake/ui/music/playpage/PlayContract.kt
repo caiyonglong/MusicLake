@@ -16,8 +16,6 @@ interface PlayContract {
 
 //        fun setPalette(palette: Palette?)
 
-        fun showLyric(lyric: String?, init: Boolean)
-
         fun updatePlayStatus(isPlaying: Boolean)
 
         fun updatePlayMode() {}

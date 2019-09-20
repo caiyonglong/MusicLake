@@ -2,11 +2,15 @@ package com.cyl.musiclake.ui.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.di.component.DaggerFragmentComponent;
 import com.cyl.musiclake.di.component.FragmentComponent;
 import com.cyl.musiclake.di.module.FragmentModule;
+import com.cyl.musiclake.utils.AnimationUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -91,7 +96,15 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
 
     private void initSwipeLayout() {
         if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
+            mSwipeRefreshLayout.setEnabled(true);
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                LogUtil.d("下拉刷新");
+                new Handler().postDelayed(() -> {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    lazyLoad();
+                }, 1000);
+            });
         }
     }
 
@@ -166,6 +179,7 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
 
     @Override
     public void showLoading() {
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
         if (emptyStateView != null) animateView(emptyStateView, false, 150);
         if (loadingProgressBar != null) animateView(loadingProgressBar, true, 400);
         animateView(errorPanelRoot, false, 150);
@@ -173,6 +187,7 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
 
     @Override
     public void hideLoading() {
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
         if (emptyStateView != null) animateView(emptyStateView, false, 150);
         if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
         animateView(errorPanelRoot, false, 150);

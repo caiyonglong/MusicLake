@@ -11,6 +11,12 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
@@ -34,16 +40,17 @@
                 <ImageView
                     android:id="@+id/album_art"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="210dp"
+                    android:background="#22000000"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:transitionName="@string/transition_album"
                     app:layout_collapseMode="parallax" />
 
                 <View
+                    android:id="@+id/view4"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#22000000"
+                    android:layout_height="0dp"
                     android:fitsSystemWindows="true" />
 
                 <androidx.appcompat.widget.Toolbar
@@ -70,12 +77,6 @@
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <include layout="@layout/item_loading" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -37,21 +37,21 @@ class LockScreenPlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.Vie
         }
     }
 
-    override fun showLyric(lyric: String?, init: Boolean) {
-        if (init) {
-            //初始化歌词配置
-            lyricView?.setTextSize(SPUtils.getFontSize())
-            lyricView?.setHighLightTextColor(SPUtils.getFontColor())
-            lyricView?.setTouchable(false)
-            lyricView?.setOnPlayerClickListener { progress, _ ->
-                PlayManager.seekTo(progress.toInt())
-                if (!PlayManager.isPlaying()) {
-                    PlayManager.playPause()
-                }
-            }
-        }
-        lyricView?.setLyricContent(lyric)
-    }
+//    override fun showLyric(lyric: String?, init: Boolean) {
+//        if (init) {
+//            //初始化歌词配置
+//            lyricView?.setTextSize(SPUtils.getFontSize())
+//            lyricView?.setHighLightTextColor(SPUtils.getFontColor())
+//            lyricView?.setTouchable(false)
+//            lyricView?.setOnPlayerClickListener { progress, _ ->
+//                PlayManager.seekTo(progress.toInt())
+//                if (!PlayManager.isPlaying()) {
+//                    PlayManager.playPause()
+//                }
+//            }
+//        }
+//        lyricView?.setLyricContent(lyric)
+//    }
 
     override fun updatePlayStatus(isPlaying: Boolean) {
         playPauseIv.setImageResource(if (isPlaying) R.drawable.ic_play else R.drawable.ic_pause);

@@ -16,7 +16,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
@@ -25,7 +24,6 @@ import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
-import com.cyl.musiclake.player.FloatVideoWindowManager;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
@@ -141,10 +139,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mShowBindIv.setOnClickListener(v -> {
             if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
                 mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
-                FloatVideoWindowManager.INSTANCE.createFloatPlayerWindow(this, mImageView, true);
+//                FloatVideoWindowManager.INSTANCE.createFloatPlayerWindow(this, mImageView, true);
             } else {
                 mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
-                FloatVideoWindowManager.INSTANCE.removeFloatView(this);
+//                FloatVideoWindowManager.INSTANCE.removeFloatView(this);
             }
         });
 

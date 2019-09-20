@@ -14,6 +14,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
+import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.discover.artist.QQArtistListFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.square.PlaylistSquareActivity
@@ -28,7 +29,7 @@ import org.jetbrains.anko.support.v4.startActivity
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
+class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
     private val TAG = "DiscoverFragment"
     /**
@@ -104,12 +105,15 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
         mFragmentComponent.inject(this)
     }
 
-    override fun loadData() {
+    override fun onLazyLoad() {
 //        mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
 //        mPresenter?.loadRecommendSongs()
         mPresenter?.loadPersonalizedPlaylist()
+    }
+
+    override fun loadData() {
     }
 
     override fun listener() {
@@ -237,9 +241,9 @@ class DiscoverFragment : BaseFragment<DiscoverPresenter>(), DiscoverContract.Vie
     override fun showRecommendPlaylist(playlists: MutableList<Playlist>) {
         LogUtil.d(TAG, "获取推荐歌单 songs：" + playlists.size)
         recommendPlaylistView.visibility = if (playlists.size == 0) View.GONE else View.VISIBLE
-        if(playlists.size>6){
-            this.recommendPlaylist = playlists.subList(0,6)
-        }else{
+        if (playlists.size > 6) {
+            this.recommendPlaylist = playlists.subList(0, 6)
+        } else {
             this.recommendPlaylist = playlists
         }
         if (mPlaylistAdapter == null) {
