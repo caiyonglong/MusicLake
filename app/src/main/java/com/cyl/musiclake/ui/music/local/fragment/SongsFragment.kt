@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -15,16 +14,9 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter
 import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.ToastUtils
-import com.google.android.exoplayer2.util.Log
-import kotlinx.android.synthetic.main.frag_local_song.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
-import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.recyclerView
 import kotlinx.android.synthetic.main.header_local_list.*
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.uiThread
-import java.lang.Thread.sleep
 import java.util.*
 
 /**
@@ -109,7 +101,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     override fun showSongs(songList: MutableList<Music>) {
         LogUtil.d("SongsFragment", "showSongs = ${songList.size}")
         musicList.clear()
-        swipe_refresh.isRefreshing = false
         musicList.addAll(songList)
         mAdapter?.setNewData(musicList)
         songNumTv?.text = getString(R.string.random_play_num, musicList.size)

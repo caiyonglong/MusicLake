@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.View
 import com.cyl.musicapi.netease.BannerBean
+import com.cyl.musicapi.netease.NeteaseApiService
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -86,6 +87,9 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             R.id.seeAllRadioTv, R.id.radioTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST, artists, channels)) }
             }
+            R.id.personalFmTv->{
+                mPresenter?.loadPersonalFM()
+            }
             R.id.catTag1Tv -> {
                 updateCate("华语")
             }
@@ -106,7 +110,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun onLazyLoad() {
-//        mPresenter?.loadNetease("全部")
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
 //        mPresenter?.loadRecommendSongs()
@@ -124,6 +127,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         singerListTv.setOnClickListener(this)
         hotSingerTv.setOnClickListener(this)
         radioTv.setOnClickListener(this)
+        personalFmTv.setOnClickListener(this)
         seeAllRadioTv.setOnClickListener(this)
         seeAllArtistTv.setOnClickListener(this)
         recommendSongsTv.setOnClickListener(this)
@@ -174,7 +178,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         if (mNeteaseAdapter == null) {
             //适配器
             mNeteaseAdapter = TopPlaylistAdapter(playlist)
-            wangChartsRv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            wangChartsRv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
             wangChartsRv?.adapter = mNeteaseAdapter
             wangChartsRv?.isFocusable = false
             wangChartsRv?.isNestedScrollingEnabled = false
@@ -195,7 +199,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     override fun showArtistCharts(charts: MutableList<Artist>) {
         this.artists = charts
         if (mArtistListAdapter == null) {
-            chartsArtistRcv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+            chartsArtistRcv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
             //适配器
             mArtistListAdapter = TopArtistListAdapter(artists)
             chartsArtistRcv?.adapter = mNeteaseAdapter
@@ -221,7 +225,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             //适配器
             mRadioAdapter = BaiduRadioAdapter(this.channels)
             //电台列表
-            radioRsv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+            radioRsv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
             radioRsv?.adapter = mRadioAdapter
             radioRsv?.isFocusable = false
             radioRsv?.isNestedScrollingEnabled = false
@@ -249,7 +253,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         if (mPlaylistAdapter == null) {
             mPlaylistAdapter = TopPlaylistAdapter(recommendPlaylist)
             //推荐列表
-            recommendPlaylistRsv.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            recommendPlaylistRsv.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
             recommendPlaylistRsv.adapter = mPlaylistAdapter
             recommendPlaylistRsv.isFocusable = false
             recommendPlaylistRsv.isNestedScrollingEnabled = false
@@ -274,7 +278,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         if (mMusicAdapter == null) {
             mMusicAdapter = SongAdapter(recommend)
             //推荐列表
-            recommendRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            recommendRsv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             recommendRsv.adapter = mMusicAdapter
             recommendRsv.isFocusable = false
             recommendRsv.isNestedScrollingEnabled = false
@@ -290,6 +294,14 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             mMusicAdapter?.setNewData(recommend)
         }
     }
+
+    /**
+     * 播放私人FM
+     */
+    override fun showPersonalFm(playlist: Playlist) {
+        PlayManager.play(0,playlist.musicList,playlist.pid)
+    }
+
 
     companion object {
         fun newInstance(): DiscoverFragment {

@@ -234,14 +234,13 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
         loadData();
         isPrepared = true;
         //只有Fragment onCreateView好了，
-        //另外这里调用一次lazyLoad(）
-        lazyLoad();
     }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        LogUtil.d("TAG", getClass().getName() + " setUserVisibleHint() --> isVisibleToUser = " + isVisibleToUser);
+        LogUtil.d("BaseLazy", getClass().getName() + "isVisibleToUser = " + isVisibleToUser);
         if (isVisibleToUser) {
             lazyLoad();
         }
@@ -255,6 +254,7 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
         // 用户可见Fragment && 没有加载过数据 && 视图已经准备完毕
         if (getUserVisibleHint() && isPrepared && !isLazyLoaded) {
             onLazyLoad();
+            LogUtil.d("BaseLazy", getClass().getName() + "getLifecycle() =" + getLifecycle().getCurrentState() + "isPrepared =" + isPrepared + " isLazyLoaded " + getUserVisibleHint());
             isLazyLoaded = true;
         }
     }

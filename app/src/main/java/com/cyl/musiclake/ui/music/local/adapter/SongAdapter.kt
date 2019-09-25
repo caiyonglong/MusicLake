@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
 import com.cyl.musiclake.bean.Music
@@ -123,7 +124,7 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             item.title?.let {
                 MusicApi.getMusicAlbumPic(item.title.toString(), success = {
                     item.coverUri = it
-                    CoverLoader.loadImageView(mContext, it, holder.getView(R.id.iv_cover))
+                    CoverLoader.loadImageView(MusicApp.getAppContext(), it, holder.getView(R.id.iv_cover))
                 })
             }
         }

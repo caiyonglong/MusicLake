@@ -71,7 +71,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     Switch mSwitchCountDown;
-    Switch mNightModeSw;
     CountDownTimerTextView mSwitchCountDownTv;
 
     public ImageView mImageView;
@@ -97,7 +96,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initView() {
-//        transparentStatusBar(this);
         //菜单栏的头部控件初始化
         initNavView();
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -117,13 +115,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void updatePlaySongInfo(Music music) {
-//        if (mSlidingUpPaneLayout == null) return;
         if (music != null) {
-//            mSlidingUpPaneLayout.setPanelHeight(getResources().getDimensionPixelOffset(R.dimen.dp_56));
             CoverLoader.INSTANCE.loadBigImageView(this, music, mImageView);
-        } else {
-//            mSlidingUpPaneLayout.setPanelHeight(0);
-//            mSlidingUpPaneLayout.setPanelState(PanelState.COLLAPSED);
         }
     }
 
@@ -132,17 +125,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mImageView = mHeaderView.findViewById(R.id.header_bg);
         mAvatarIcon = mHeaderView.findViewById(R.id.header_face);
         mName = mHeaderView.findViewById(R.id.header_name);
-//        mLoginTv = mHeaderView.findViewById(R.id.user_login_tv);
-//        mBindNeteaseView = mHeaderView.findViewById(R.id.nav_sync_netease);
         mBindNeteaseView = mHeaderView.findViewById(R.id.heard_netease);
         mShowBindIv = mHeaderView.findViewById(R.id.show_sync_iv);
         mShowBindIv.setOnClickListener(v -> {
             if (mNavigationView.getMenu().findItem(R.id.nav_bind_wy).isVisible()) {
                 mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_up);
-//                FloatVideoWindowManager.INSTANCE.createFloatPlayerWindow(this, mImageView, true);
             } else {
                 mShowBindIv.setImageResource(R.drawable.ic_arrow_drop_down);
-//                FloatVideoWindowManager.INSTANCE.removeFloatView(this);
             }
         });
 
@@ -188,7 +177,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initData() {
-        String from = getIntent().getAction();
         updatePlaySongInfo(PlayManager.getPlayingMusic());
         //加载主fragment
         initShortCutsIntent();
@@ -465,7 +453,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         View numItem = mNavigationView.getMenu().findItem(R.id.nav_menu_online_num).getActionView();
         mOnlineNumTv = numItem.findViewById(R.id.msg_num_tv);
         mOnlineNumTv.setText("0");
-
         View item = mNavigationView.getMenu().findItem(R.id.nav_menu_count_down).getActionView();
         mSwitchCountDown = item.findViewById(R.id.count_down_switch);
         mSwitchCountDownTv = item.findViewById(R.id.count_down_tv);
@@ -490,7 +477,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             String uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
             if (uid != null && uid.length() > 0) {
                 LogUtil.d(TAG, "绑定成功 uid = " + uid);
-//                mBindNeteaseView.setVisibility(View.GONE);
                 checkBindNeteaseStatus(true);
             }
         }

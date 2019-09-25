@@ -486,4 +486,47 @@ object NeteaseApiServiceImpl {
                 }
     }
 
+    /**
+     * 获取私人FM
+     */
+//    fun getPersonalFm(): Observable<Playlist> {
+//        return apiService.getPersonlFM()
+//                .flatMap { it ->
+//                    Observable.create(ObservableOnSubscribe<Playlist> { e ->
+//                        try {
+//                            if (it.code == 200) {
+//                                val playlist = Playlist().apply {
+//                                    name = "私人FM"
+//                                    pid = "personal_fm"
+//                                }
+//                                val musicList = mutableListOf<Music>()
+//                                it.data?.forEach {
+//                                    val music = Music()
+//                                    music.mid = it.id.toString()
+//                                    music.title = it.name
+//                                    it.artists?.forEach { item ->
+//                                        music.artist += item.name
+//                                        music.artistId += item.id
+//                                    }
+//                                    music.coverUri = it.album.picUrl
+//                                    music.album = it.album.name
+//                                    music.albumId = it.album.id
+//                                    music.type = Constants.NETEASE
+//                                    musicList.add(music)
+//                                }
+//                                playlist.musicList = musicList
+//                                e.onNext(playlist)
+//                                e.onComplete()
+//                            } else {
+//                                LogUtil.d(TAG, "getPersonalFm 网络异常= $it")
+//                                e.onError(Throwable("网络异常"))
+//                            }
+//                        } catch (ep: Exception) {
+//                            LogUtil.d(TAG, "Exception= ${ep.message}")
+//                            e.onError(ep)
+//                        }
+//                    })
+//                }
+//    }
+
 }

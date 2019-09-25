@@ -76,7 +76,6 @@ public class MainFragment extends BaseFragment {
         mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), getContext().getString(R.string.discover));
         mAdapter.addFragment(ChartsDetailFragment.Companion.newInstance(), getContext().getString(R.string.charts));
         mAdapter.addFragment(MvFragment.newInstance(), getContext().getString(R.string.mv));
-//        mAdapter.addFragment(MvListFragment.newInstance("recently"), "最新MV");
         mViewPager.setAdapter(mAdapter);
     }
 

@@ -57,6 +57,17 @@
                         tools:visibility="visible">
 
                         <TextView
+                            android:visibility="gone"
+                            android:id="@+id/personalFmTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:drawableTop="@drawable/ic_radio"
+                            android:gravity="center"
+                            android:text="@string/personal_fm" />
+
+                        <TextView
                             android:id="@+id/recommendSongsTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

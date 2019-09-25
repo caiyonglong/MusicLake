@@ -19,10 +19,9 @@ import java.util.*
  */
 class BindLoginActivity : BaseActivity<LoginPresenter>(), LoginContract.View {
 
-
     private var username = ""
     private var password = ""
-    private var isLogining = false;
+    private var isBinding = false
 
     override fun getLayoutResID(): Int {
         return R.layout.activity_bind_login
@@ -52,8 +51,8 @@ class BindLoginActivity : BaseActivity<LoginPresenter>(), LoginContract.View {
     /**
      * 点击登录
      */
-    fun loginTo() {
-        if (isLogining) return
+    private fun loginTo() {
+        if (isBinding) return
 
         username = usernameWrapper.editText!!.text.toString()
         password = passwordWrapper.editText!!.text.toString()
@@ -72,7 +71,6 @@ class BindLoginActivity : BaseActivity<LoginPresenter>(), LoginContract.View {
             passwordWrapper.isErrorEnabled = false
             //TODO:登录
             progressBar.visibility = View.VISIBLE
-            isLogining = true
 
             val params = HashMap<String, String>()
             params[Constants.USER_EMAIL] = username
@@ -99,6 +97,7 @@ class BindLoginActivity : BaseActivity<LoginPresenter>(), LoginContract.View {
     }
 
     override fun showErrorInfo(msg: String) {
+        isBinding = false
         ToastUtils.show(msg)
     }
 
@@ -109,6 +108,7 @@ class BindLoginActivity : BaseActivity<LoginPresenter>(), LoginContract.View {
      * 保存绑定的账号密码
      */
     override fun bindSuccess(loginInfo: LoginInfo?) {
+        isBinding = true
         SPUtils.putAnyCommit(SPUtils.SP_KEY_NETEASE_UID, loginInfo?.profile?.userId.toString() + "")
         SPUtils.putAnyCommit(SPUtils.SP_KEY_USER_NAME, username)
         SPUtils.putAnyCommit(SPUtils.SP_KEY_PASSWORD, password)

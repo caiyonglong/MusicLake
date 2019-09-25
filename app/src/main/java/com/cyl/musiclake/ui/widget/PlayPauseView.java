@@ -10,11 +10,15 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+
 import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.cyl.musicapi.netease.L;
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.utils.LogUtil;
 
 /**
  * 自定义暂停播放按钮，包括自定义进度条
@@ -34,7 +38,7 @@ public class PlayPauseView extends View {
     private RectF mRingRect;
     private boolean isPlaying;
     private boolean isLoading;
-    private float startAngle, sweepAngle;
+    private float startAngle, sweepAngle, newAngle;
     private float mRectWidth;  //圆内矩形宽度
     private float mRectHeight; //圆内矩形高度
     private int mRectLT;  //矩形左侧上侧坐标
@@ -166,8 +170,15 @@ public class PlayPauseView extends View {
         mPaint.setColor(mBgColor);
         canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
 //        canvas.drawRect(mRect, mPaint);
-        if (isLoading) {
-            canvas.drawArc(mRingRect, startAngle, sweepAngle, false, mRingPaint); //
+
+        if (mBorderWidth > 0) {
+            //周边底部颜色 一般为白色
+            //设置了周边弧度的宽度 每次重新绘制都要画上边上的弧度
+            if (isLoading) {
+                canvas.drawArc(mRingRect, startAngle, sweepAngle, false, mRingPaint); //
+            } else {
+                canvas.drawArc(mRingRect, -90, newAngle, false, mRingPaint); //
+            }
         }
 
         float distance = mGapWidth * (1 - mProgress);  //暂停时左右两边矩形距离
@@ -275,6 +286,14 @@ public class PlayPauseView extends View {
         }
     }
 
+    public void setProgress(float progress) {
+        this.newAngle = (int) (progress * 360);
+        if (isLoading && progress > 0) {
+            isLoading = false;
+        }
+        LogUtil.d("playPauseView ", "newAngle =" + newAngle);
+        postInvalidate();
+    }
 
     public void play() {
         if (getPlayPauseAnim() != null) {

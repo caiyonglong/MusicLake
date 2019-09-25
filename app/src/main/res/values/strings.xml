@@ -263,6 +263,7 @@
     <string name="all_artist">歌手列表</string>
     <string name="genes">流派</string>
     <string name="radio_list">电台</string>
+    <string name="personal_fm">私人FM</string>
 
 
     <!--通知栏-->

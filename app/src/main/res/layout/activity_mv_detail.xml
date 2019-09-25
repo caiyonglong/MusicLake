@@ -5,20 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/top"
-        layout="@layout/item_toolbar" />
-
-    <com.devbrackets.android.exomedia.ui.widget.VideoView
-        android:id="@+id/video_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_200"
-        android:background="@color/black"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/top"
-        app:useDefaultControls="true"
-        app:useTextureViewBacking="true"
-        app:videoScale="fitCenter" />
+    <ProgressBar
+        android:id="@+id/loading_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -26,7 +28,7 @@
         android:layout_height="0dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/video_view"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar"
         tools:visibility="visible">
 
         <RelativeLayout
@@ -36,6 +38,62 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="?cardColor"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dp_4"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_similar_mv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_mv_detail">
+
+
+                    <TextView
+                        android:id="@+id/tv_like_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_thumb_up"
+                        android:drawableTint="?iconColor"
+                        android:gravity="center"
+                        tools:text="10" />
+
+                    <TextView
+                        android:id="@+id/tv_collect_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_bookmark_black"
+                        android:drawableTint="?iconColor"
+                        android:gravity="center"
+                        tools:text="10" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_comment_black"
+                        android:drawableTint="?iconColor"
+                        android:gravity="center"
+                        tools:text="10" />
+
+                    <TextView
+                        android:id="@+id/tv_share_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_share_black"
+                        android:drawableTint="?iconColor"
+                        android:gravity="center"
+                        tools:text="10" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_title"
@@ -103,71 +161,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_artist"
                     tools:text="@string/mv_detail" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="?cardColor"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/dp_4"
-                    app:layout_constraintBottom_toTopOf="@+id/rv_similar_mv"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_mv_detail">
-
-
-                    <TextView
-                        android:id="@+id/tv_like_count"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_thumb_up"
-                        android:drawableTint="?iconColor"
-                        android:gravity="center"
-                        tools:text="10" />
-
-                    <TextView
-                        android:id="@+id/tv_collect_count"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_bookmark_black"
-                        android:drawableTint="?iconColor"
-                        android:gravity="center"
-                        tools:text="10" />
-
-                    <TextView
-                        android:id="@+id/tv_comment_count"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_comment_black"
-                        android:drawableTint="?iconColor"
-                        android:gravity="center"
-                        tools:text="10" />
-
-                    <TextView
-                        android:id="@+id/tv_share_count"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_share_black"
-                        android:drawableTint="?iconColor"
-                        android:gravity="center"
-                        tools:text="10" />
-                </LinearLayout>
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_similar_mv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_comment1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
                 <TextView
                     android:id="@+id/tv_comment1"
@@ -185,18 +178,6 @@
 
                     />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_hot_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/rv_comment"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_comment1" />
-
-
                 <TextView
                     android:id="@+id/tv_comment2"
                     android:layout_width="match_parent"
@@ -211,6 +192,27 @@
                     app:layout_constraintTop_toBottomOf="@+id/rv_hot_comment"
 
                     />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_similar_mv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_comment1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_hot_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_comment"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_comment1" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_comment"
@@ -228,6 +230,53 @@
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="?android:popupMenuStyle">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:collapsedTitleGravity="center"
+            app:contentScrim="?colorPrimary"
+            app:expandedTitleTextAppearance="@style/TextApperance.Album.Title"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:scrimVisibleHeightTrigger="@dimen/dp_20"
+            app:titleEnabled="false">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="@dimen/dp_64"
+                android:elevation="5dp"
+                app:layout_collapseMode="none"
+                app:popupTheme="?android:popupMenuStyle" />
+
+            <com.devbrackets.android.exomedia.ui.widget.VideoView
+                android:id="@+id/video_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_200"
+                android:background="@color/black"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:useDefaultControls="true"
+                app:useTextureViewBacking="true"
+                app:videoScale="fitCenter" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <LinearLayout
         android:id="@+id/singerView"
         android:layout_width="match_parent"
@@ -236,8 +285,9 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@+id/nestedScrollView">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar">
 
         <TextView
             android:layout_width="wrap_content"
@@ -255,22 +305,6 @@
             tools:text="1231" />
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/loading_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
 
     <!--ERROR PANEL-->
     <include

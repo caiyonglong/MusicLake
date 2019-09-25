@@ -25,6 +25,7 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
+import com.cyl.musiclake.ui.my.BindLoginActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
@@ -163,8 +164,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        when (id) {
+        when (item.itemId) {
             R.id.action_delete_playlist -> {
                 LogUtil.e("action_delete_playlist")
                 mPlaylist?.let {
@@ -302,6 +302,11 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
      */
     override fun retryLoading() {
         super.retryLoading()
+        if (mPlaylist?.type == Constants.PLAYLIST_WY_RECOMMEND_ID) {
+            val intent = Intent(this, BindLoginActivity::class.java)
+            startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN)
+            return
+        }
         showLoading()
         mPlaylist?.let {
             if (it.musicList.size > 0) {

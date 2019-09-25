@@ -19,8 +19,8 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     private List<String> mFragmentTitles = new ArrayList<>();
 
     public PageAdapter(FragmentManager fm) {
-        super(fm);
-        notifyDataSetChanged();
+        super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+//        notifyDataSetChanged();
     }
 
     public void addFragment(Fragment fragment, String title) {

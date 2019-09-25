@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.preference.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.cyl.musiclake.Config
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
@@ -58,7 +59,7 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
             false
         }
         mLyricCheckBox.isChecked = SystemUtils.isOpenFloatWindow()
-        mSocketSwitch.isChecked = MusicApp.isOpenSocket
+        mSocketSwitch.isChecked = Config.isOpenSocket
     }
 
     /**
@@ -203,9 +204,9 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
                     }
                 }
             "key_socket" -> {
-                MusicApp.isOpenSocket = !MusicApp.isOpenSocket
-                mSocketSwitch.isChecked = MusicApp.isOpenSocket
-                SocketManager.toggleSocket(MusicApp.isOpenSocket)
+                Config.isOpenSocket = !Config.isOpenSocket
+                mSocketSwitch.isChecked = Config.isOpenSocket
+                SocketManager.toggleSocket(Config.isOpenSocket)
             }
             "key_lyric" -> checkLyricPermission()
         }

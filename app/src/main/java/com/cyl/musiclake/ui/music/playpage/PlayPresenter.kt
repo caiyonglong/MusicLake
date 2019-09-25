@@ -35,7 +35,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
         mView?.showNowPlaying(music)
         CoverLoader.loadBigImageView(mView?.context, music) { bitmap ->
             doAsync {
-                val blur = ImageUtils.createBlurredImageFromBitmap(bitmap, 12)
+                val blur = ImageUtils.createBlurredImageFromBitmap(bitmap, 10)
                 uiThread {
                     mView?.setPlayingBg(blur, isInit)
                     mView?.setPlayingBitmap(bitmap)

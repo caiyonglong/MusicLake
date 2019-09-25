@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.FrameLayout
+import com.cyl.musiclake.Config
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import kotlinx.android.synthetic.main.float_control_view.view.*
@@ -44,7 +45,7 @@ class FloatControlView(context: Context) : FrameLayout(context) {
      */
     fun updateViewStatus(params: WindowManager.LayoutParams) {
         //屏幕尺寸
-        val size = MusicApp.screenSize
+        val size = Config.screenSize
         //播放悬浮窗的状态值
         val playerViewX = params.x
         val playerViewY = params.y

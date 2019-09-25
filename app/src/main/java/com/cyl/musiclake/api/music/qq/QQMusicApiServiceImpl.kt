@@ -42,7 +42,7 @@ object QQMusicApiServiceImpl {
         )
         LogUtil.d(TAG, MusicApp.GSON.toJson(data))
         return apiService.getQQArtists(data = MusicApp.GSON.toJson(data))
-                .flatMap { it ->
+                .flatMap {
                     Observable.create(ObservableOnSubscribe<Artists> { e ->
                         try {
                             LogUtil.d("QQMusicApiServiceImpl", it.toString())

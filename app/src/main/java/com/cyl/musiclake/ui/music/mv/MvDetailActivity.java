@@ -1,16 +1,20 @@
 package com.cyl.musiclake.ui.music.mv;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -109,12 +113,10 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             isPortrait = false;
             mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_exit);
 
-            mToolbar.setVisibility(View.GONE);
             mBrsIv.setVisibility(View.VISIBLE);
             //设置全屏
             getWindow().getDecorView().setSystemUiVisibility(getFullscreenUiFlags());
         } else {
-            mToolbar.setVisibility(View.VISIBLE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             ViewGroup.LayoutParams ll = mVideoView.getLayoutParams();
             ll.height = DisplayUtils.dp2px(200f);
@@ -122,7 +124,6 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             isPortrait = true;
             mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_white);
 
-            mToolbar.setVisibility(View.VISIBLE);
             mBrsIv.setVisibility(View.GONE);
             //设置全屏
             getWindow().getDecorView().setSystemUiVisibility(getStableUiFlags());
@@ -132,12 +133,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     @Override
     public void onBackPressed() {
         if (!isPortrait) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            ViewGroup.LayoutParams ll = mVideoView.getLayoutParams();
-            ll.height = DisplayUtils.dp2px(200f);
-            ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            isPortrait = true;
-            mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_white);
+            fullscreen();
         } else {
             super.onBackPressed();
         }
@@ -351,7 +347,9 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
 
     @Override
     public void onPrepared() {
-        mVideoView.start();
+        if (mVideoView != null) {
+            mVideoView.start();
+        }
     }
 
 

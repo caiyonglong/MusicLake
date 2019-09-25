@@ -26,6 +26,8 @@ interface DiscoverContract {
 
         fun showRecommendSongs(songs: MutableList<Music>)
 
+        fun showPersonalFm(playlist: Playlist)
+
     }
 
     interface Presenter : BaseContract.BasePresenter<View> {

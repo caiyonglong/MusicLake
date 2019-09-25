@@ -1,5 +1,6 @@
 package com.cyl.musiclake.socket
 
+import com.cyl.musiclake.Config
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
@@ -64,7 +65,7 @@ object SocketManager {
             ToastUtils.show("请登录")
             return
         }
-        if (!MusicApp.isOpenSocket) {
+        if (!Config.isOpenSocket) {
             ToastUtils.show(MusicApp.getAppContext().getString(R.string.open_socket_tips))
             return
         }
@@ -174,7 +175,7 @@ object SocketManager {
      * 开关
      */
     fun toggleSocket(open: Boolean) {
-        if (MusicApp.isOpenSocket) {
+        if (Config.isOpenSocket) {
             if (open) {
                 socket?.open()
             } else {

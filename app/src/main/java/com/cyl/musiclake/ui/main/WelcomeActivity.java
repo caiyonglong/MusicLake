@@ -3,15 +3,27 @@ package com.cyl.musiclake.ui.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.cyl.musicapi.BaseApiImpl;
+import com.cyl.musiclake.BuildConfig;
+import com.cyl.musiclake.MusicApp;
+import com.cyl.musiclake.common.Constants;
 import com.google.android.material.snackbar.Snackbar;
+
 import android.widget.ImageView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.tauth.Tencent;
 
 import butterknife.BindView;
 
@@ -51,12 +63,37 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        //初始化WebView
+        BaseApiImpl.INSTANCE.initWebView(MusicApp.getInstance());
+        initFileDownload();
+        initLogin();
+
         rxPermissions = new RxPermissions(this);
         if (SystemUtils.isMarshmallow()) {
             checkPermissionAndThenLoad();
         } else {
             initWelcome();
         }
+    }
+
+
+
+    private void initLogin() {
+        //创建微博实例
+        WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
+        //腾讯
+        MusicApp.mTencent = Tencent.createInstance(Constants.APP_ID, this);
+        //初始化socket，因后台服务器压力大，暂时注释
+//        SocketManager.INSTANCE.initSocket();
+    }
+
+
+    /**
+     * 初始化文件下载
+     */
+    private void initFileDownload() {
+        FileDownloadLog.NEED_LOG = BuildConfig.DEBUG;
+        FileDownloader.setup(this);
     }
 
     @Override

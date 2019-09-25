@@ -9,6 +9,8 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.ToastUtils
 import javax.inject.Inject
 
 /**
@@ -127,5 +129,22 @@ constructor() : BasePresenter<DiscoverContract.View>(), DiscoverContract.Present
                 mView?.showRecommendPlaylist(mutableListOf())
             }
         })
+    }
+
+    /**
+     * 获取私人电台
+     */
+    fun loadPersonalFM() {
+//        val observable = NeteaseApiServiceImpl.getPersonalFm()
+//        ApiManager.request(observable, object : RequestCallBack<Playlist> {
+//            override fun success(result: Playlist) {
+//                mView?.showPersonalFm(result)
+//                LogUtil.d(result.toString())
+//            }
+//
+//            override fun error(msg: String) {
+//                ToastUtils.show(msg)
+//            }
+//        })
     }
 }
