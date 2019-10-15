@@ -9,14 +9,12 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
-import android.widget.TextView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.base.BasePresenter
@@ -30,6 +28,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     val TAG = "CoverFragment"
     val coverView by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover) }
+    val cover2View by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover_2) }
 
     //当前专辑图片
     var currentBitmap: Bitmap? = null
@@ -121,11 +120,12 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
      * 设置Bitmap
      */
     fun setImageBitmap(bm: Bitmap?) {
-        civ_cover?.setImageBitmap(bm)
-        LogUtil.d(TAG, "civ_cover 设置Bitmap")
+        civ_cover.setImageBitmap(bm)
+        LogUtil.d(TAG, "coverView =${civ_cover == null} rootView =${rootView == null} 设置Bitmap bm =${bm == null}")
         if (currentBitmap == null) {
             LogUtil.d(TAG, "civ_cover2 设置Bitmap")
-            civ_cover_2?.setImageBitmap(bm)
+            cover2View?.visibility = View.GONE
+            cover2View?.setImageBitmap(bm)
         }
         currentBitmap = bm
     }
@@ -134,26 +134,25 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
      * 初始化旋转动画
      */
     fun initAlbumPic() {
-        if (civ_cover == null) return
-
-        coverAnimator = ObjectAnimator.ofFloat(civ_cover, "rotation", 0F, 359F).apply {
+        LogUtil.d(TAG, "initAlbumPic")
+        //旋转动画
+        coverAnimator = ObjectAnimator.ofFloat(coverView, "rotation", 0F, 359F).apply {
             duration = (20 * 1000).toLong()
             repeatCount = -1
             repeatMode = ObjectAnimator.RESTART
             interpolator = LinearInterpolator()
             addUpdateListener {
                 //同时更新civ_cover_2
-                civ_cover_2?.rotation = it.animatedValue as Float
+                cover2View?.rotation = it.animatedValue as Float
             }
         }
-
         //缩放动画
-        objectAnimator1 = ObjectAnimator.ofFloat(civ_cover_2, "scaleX", 1f, 0.7f).apply {
+        objectAnimator1 = ObjectAnimator.ofFloat(cover2View, "scaleX", 1f, 0.7f).apply {
             duration = 500L
             interpolator = AccelerateInterpolator()
             interpolator = AccelerateInterpolator()
             addUpdateListener {
-                civ_cover_2?.scaleY = it.animatedValue as Float
+                cover2View?.scaleY = it.animatedValue as Float
             }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
@@ -166,8 +165,8 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
                 override fun onAnimationStart(animation: Animator?) {
                     //开始时，初始化状态
                     coverView?.alpha = 0f
-                    civ_cover_2?.translationY = 0f
-                    civ_cover_2?.visibility = View.VISIBLE
+                    cover2View?.translationY = 0f
+                    cover2View?.visibility = View.VISIBLE
                     LogUtil.d("objectAnimator", "objectAnimator1 动画开始")
                 }
 
@@ -175,7 +174,6 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
                 }
             })
         }
-
         //coverView 由透明变成不透明
         objectAnimator3 = ObjectAnimator.ofFloat(coverView, "alpha", 0f, 1F).apply {
             duration = 300L
@@ -196,16 +194,15 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
                 }
             })
         }
-
         //civ_cover_2 上移动画
-        objectAnimator2 = ObjectAnimator.ofFloat(civ_cover_2, "translationY", 0f, -1000f).apply {
+        objectAnimator2 = ObjectAnimator.ofFloat(cover2View, "translationY", 0f, -1000f).apply {
             duration = 300L
             interpolator = AccelerateInterpolator()
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
-                    civ_cover_2?.translationY = 0f
-                    civ_cover_2?.setImageBitmap(currentBitmap)
-                    civ_cover_2?.visibility = View.GONE
+                    cover2View?.translationY = 0f
+                    cover2View?.setImageBitmap(currentBitmap)
+                    cover2View?.visibility = View.GONE
                     LogUtil.d("objectAnimator", "objectAnimator2 onAnimationEnd")
                 }
 
@@ -221,7 +218,6 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
                 }
             })
         }
-
         animatorSet = AnimatorSet()
         animatorSet?.play(objectAnimator2)?.with(objectAnimator3)?.after(objectAnimator1)
     }
@@ -229,17 +225,21 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
     /**
      * 切换歌曲，开始旋转动画
      */
-    fun startRotateAnimation() {
-        coverAnimator?.cancel()
-        coverAnimator?.start()
-
+    fun startRotateAnimation(isPlaying: Boolean = false) {
+        LogUtil.d(TAG, "startRotateAnimation ，isInitAnimator=$isInitAnimator")
+        if (isPlaying) {
+            coverAnimator?.cancel()
+            coverAnimator?.start()
+        }
         if (isInitAnimator) {
+            cover2View?.visibility = View.VISIBLE
+            //组合动画
             animatorSet?.cancel()
             animatorSet?.start()
         } else {
             //第一次进入不播放切换动画
             isInitAnimator = true
-            civ_cover_2?.visibility = View.GONE
+            cover2View?.visibility = View.GONE
         }
     }
 

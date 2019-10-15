@@ -101,7 +101,9 @@ public abstract class BaseLazyFragment<T extends BaseContract.BasePresenter> ext
             mSwipeRefreshLayout.setOnRefreshListener(() -> {
                 LogUtil.d("下拉刷新");
                 new Handler().postDelayed(() -> {
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    if (mSwipeRefreshLayout != null) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                     lazyLoad();
                 }, 1000);
             });

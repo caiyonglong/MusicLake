@@ -23,6 +23,7 @@ import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.playlist.PlaylistAdapter
 import com.cyl.musiclake.ui.music.playlist.edit.PlaylistManagerActivity
 import com.cyl.musiclake.ui.my.user.UserStatus
+import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.frag_local.*
@@ -352,8 +353,10 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun updateDownloadEvent(event: DownloadEvent) {
+    fun updateDownloadEvent(event: FileEvent) {
+        LogUtil.d(TAG, "updateDownloadEvent cache${event.isCache}")
         mPresenter?.updateDownload()
+        mPresenter?.loadSongs()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -369,6 +372,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     companion object {
 
         private val TAG_CREATE = "create_playlist"
+        private val TAG = "MyMusicFragment"
 
         fun newInstance(): MyMusicFragment {
             val args = Bundle()

@@ -288,7 +288,7 @@ object PlaylistApiServiceImpl {
             user.avatar = data.avatar
             user.token = data.token
             Observable.create(ObservableOnSubscribe<User> {
-                if (!user.token.isEmpty()) {
+                if (user.token != null) {
                     it.onNext(user)
                     it.onComplete()
                 } else {

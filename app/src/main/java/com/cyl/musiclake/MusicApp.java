@@ -81,6 +81,7 @@ public class MusicApp extends MultiDexApplication {
         registerListener();
         initApplicationComponent();
         initSDK();
+        initFileDownload();
     }
 
     private void initSDK() {
@@ -93,6 +94,13 @@ public class MusicApp extends MultiDexApplication {
 //        }
     }
 
+    /**
+     * 初始化文件下载
+     */
+    private void initFileDownload() {
+        FileDownloadLog.NEED_LOG = BuildConfig.DEBUG;
+        FileDownloader.setupOnApplicationOnCreate(this);
+    }
 
     /**
      * 初始化bugly
@@ -188,13 +196,6 @@ public class MusicApp extends MultiDexApplication {
             }
         });
     }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
-
 
     /**
      * AndroidVideoCache缓存设置

@@ -21,30 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/title"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:ellipsize="marquee"-->
-    <!--        android:focusable="true"-->
-    <!--        android:marqueeRepeatLimit="marquee_forever"-->
-    <!--        android:singleLine="true"-->
-    <!--        android:text="@string/app_name"-->
-    <!--        android:textSize="15sp" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/artist"-->
-    <!--        style="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:ellipsize="marquee"-->
-    <!--        android:marqueeRepeatLimit="marquee_forever"-->
-    <!--        android:maxLength="20"-->
-    <!--        android:singleLine="true"-->
-    <!--        android:text="@string/app_name"-->
-    <!--        android:textSize="13sp" />-->
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -56,16 +32,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--    <de.hdodenhof.circleimageview.CircleImageView-->
-    <!--        android:id="@+id/album"-->
-    <!--        android:layout_width="45dp"-->
-    <!--        android:layout_height="45dp"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:layout_margin="@dimen/dp_8"-->
-    <!--        android:src="@drawable/default_cover"-->
-    <!--        android:transitionName="@string/transition_cover"-->
-    <!--        android:visibility="gone" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bottomPlayRcv"

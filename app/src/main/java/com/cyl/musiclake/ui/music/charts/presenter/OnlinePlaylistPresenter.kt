@@ -125,7 +125,7 @@ constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistCont
             }
 
             override fun error(msg: String) {
-                mView.hideLoading()
+                mView?.hideLoading()
             }
         })
     }

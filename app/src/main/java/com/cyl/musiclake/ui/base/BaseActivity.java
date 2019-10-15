@@ -31,6 +31,7 @@ import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.theme.ThemeStore;
+import com.cyl.musiclake.utils.LogUtil;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -288,6 +289,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
         mService = null;
+        LogUtil.d("BaseActivity", "onServiceDisconnected");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

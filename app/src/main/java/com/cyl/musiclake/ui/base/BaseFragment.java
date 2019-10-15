@@ -5,10 +5,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,8 +84,11 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(getLayoutId(), container, false);
-        unbinder = ButterKnife.bind(this, rootView);
+//        rootView = super.onCreateView(inflater, container, savedInstanceState)
+        if (rootView == null) {
+            rootView = inflater.inflate(getLayoutId(), container, false);
+            unbinder = ButterKnife.bind(this, rootView);
+        }
         return rootView;
     }
 
@@ -102,7 +107,8 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
             mSwipeRefreshLayout.setOnRefreshListener(() -> {
                 LogUtil.d("下拉刷新");
                 new Handler().postDelayed(() -> {
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    if (mSwipeRefreshLayout != null)
+                        mSwipeRefreshLayout.setRefreshing(false);
                     loadData();
                 }, 2000);
             });

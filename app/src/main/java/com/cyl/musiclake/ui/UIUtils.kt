@@ -29,6 +29,7 @@ import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.event.FileEvent
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
@@ -167,10 +168,10 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_local_error))
         return
     }
-    if (!music.isDl && !isCache) {
-        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
-        return
-    }
+//    if (!music.isDl && !isCache) {
+//        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
+//        return
+//    }
     ApiManager.request(MusicApi.getMusicDownloadUrl(music, isCache), object : RequestCallBack<String> {
         override fun success(result: String) {
             LogUtil.e(javaClass.simpleName, "-----$result")
@@ -276,6 +277,8 @@ fun AppCompatActivity.deleteSingleMusic(music: Music?, success: (() -> Unit)? = 
             uiThread {
                 NavigationHelper.scanFileAsync(this@deleteSingleMusic)
                 ToastUtils.show(MusicApp.getAppContext().getString(R.string.delete_song_success))
+                //发送文件删除消息
+                EventBus.getDefault().post(FileEvent())
                 success?.invoke()
             }
         }
@@ -301,6 +304,8 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: 
             uiThread {
                 NavigationHelper.scanFileAsync(this@deleteLocalMusic)
                 ToastUtils.show(getString(R.string.delete_song_success))
+                //发送文件删除消息
+                EventBus.getDefault().post(FileEvent())
                 success?.invoke()
             }
         }
@@ -345,10 +350,16 @@ fun showTipsDialog(context: AppCompatActivity, contentId: Int? = null, content: 
  * 增加到增加到下载队列
  */
 fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: Boolean = false) {
-    LogUtil.e(javaClass.simpleName, "-----${result.uri}")
+    LogUtil.e(javaClass.simpleName, "addDownloadQueue -----${result.uri}")
 
     if (result.uri == null) {
         ToastUtils.show(this@addDownloadQueue, "${result.title} 下载地址异常！")
+        getMusicDownloadUrl(result) { url ->
+            if (url.isNotEmpty()) {
+                result.uri = url
+                addDownloadQueue(result, isBatch, isCache)
+            }
+        }
         return
     }
     if (!isBatch) {
@@ -367,7 +378,22 @@ fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: B
         TasksManager.addTaskForViewHolder(task)
         task.start()
     }
+}
 
+/**
+ * 获取音乐播放地址/下载地址
+ */
+fun getMusicDownloadUrl(music: Music, success: ((String) -> Unit)?) {
+    ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
+        override fun success(result: Music) {
+            LogUtil.e("Download", "-----$result")
+            result.uri?.let { success?.invoke(it) }
+        }
+
+        override fun error(msg: String) {
+            LogUtil.e("Download", "播放异常-----$msg")
+        }
+    })
 }
 
 /**

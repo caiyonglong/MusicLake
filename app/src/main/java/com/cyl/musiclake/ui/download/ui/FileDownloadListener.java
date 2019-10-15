@@ -1,12 +1,15 @@
 package com.cyl.musiclake.ui.download.ui;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.event.FileEvent;
 import com.cyl.musiclake.ui.download.TasksManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadSampleListener;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Author   : D22434
@@ -29,7 +32,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
         super.pending(task, soFarBytes, totalBytes);
-        LogUtil.d(TAG, "pending:" + task.getId() );
+        LogUtil.d(TAG, "pending:" + task.getId());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -43,7 +46,7 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void started(BaseDownloadTask task) {
         super.started(task);
-        LogUtil.d(TAG, "started:" + task.getId() );
+        LogUtil.d(TAG, "started:" + task.getId());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
@@ -108,8 +111,9 @@ public class FileDownloadListener extends FileDownloadSampleListener {
     @Override
     protected void completed(BaseDownloadTask task) {
         super.completed(task);
-        LogUtil.d(TAG, "completed:" +task.getId() + "-" + task.getStatus());
+        LogUtil.d(TAG, "completed:" + task.getId() + "-" + task.getStatus());
         ToastUtils.show(task.getFilename() + " 下载完成");
+        EventBus.getDefault().post(new FileEvent());
         final TaskItemAdapter.TaskItemViewHolder tag = checkCurrentHolder(task);
         if (tag == null) {
             return;
