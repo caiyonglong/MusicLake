@@ -57,10 +57,10 @@ class BindLoginActivity : BaseActivity<LoginPresenter>(), LoginContract.View {
         username = usernameWrapper.editText!!.text.toString()
         password = passwordWrapper.editText!!.text.toString()
         // TODO: 检查　
-        if (!validatePassword(username)) {
+        if (username == "") {
             usernameWrapper.isErrorEnabled = false
             passwordWrapper.isErrorEnabled = false
-            usernameWrapper.error = "网易云绑定的手机号"
+            usernameWrapper.error = "网易云绑定的手机号或邮箱"
         } else if (!validatePassword(password)) {
             usernameWrapper.isErrorEnabled = false
             passwordWrapper.isErrorEnabled = false
