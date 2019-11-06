@@ -52,6 +52,18 @@ public class SPUtils {
     public static final String QQ_ACCESS_TOKEN = "qq_access_token";
     public static final String QQ_EXPIRES_IN = "expires_in";
 
+    /**
+     * 歌单详情页
+     */
+    public static final String PLAYLIST_ORDER_REVERSE = "playlist_order_reverse";
+
+    public static boolean getPlaylistOrderReverse() {
+        return getAnyByKey(PLAYLIST_ORDER_REVERSE, false);
+    }
+    public static void setPlaylistOrderReverse(boolean isReversed) {
+        putAnyCommit(PLAYLIST_ORDER_REVERSE, isReversed);
+    }
+
     public static int getPlayPosition() {
         return getAnyByKey(PLAY_POSITION, -1);
     }

@@ -29,6 +29,13 @@
 
         <menu>
             <item
+                android:id="@+id/action_order_reverse"
+                android:title="逆序"
+                app:showAsAction="never"
+                android:checkable="true"
+                android:checked="false"/>
+
+            <item
                 android:id="@+id/action_order_title"
                 android:title="@string/title_order_title"
                 app:showAsAction="never" />

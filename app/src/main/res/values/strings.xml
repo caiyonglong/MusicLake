@@ -34,6 +34,7 @@
     <string name="playlist_manager">歌单管理</string>
     <string name="title_batch_operate">批量操作</string>
     <string name="title_order">排序</string>
+    <string name="title_order_reverse">逆序</string>
     <string name="title_order_title">按歌曲名</string>
     <string name="title_order_artist">按歌手名</string>
     <string name="title_order_album">按专辑名</string>

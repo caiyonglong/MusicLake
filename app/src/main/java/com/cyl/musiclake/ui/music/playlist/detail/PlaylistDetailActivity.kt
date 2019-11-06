@@ -29,6 +29,7 @@ import com.cyl.musiclake.ui.my.BindLoginActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
+import com.cyl.musiclake.utils.SPUtils
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -76,12 +77,18 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     private var bottomDialogFragment: BottomDialogFragment? = null
 
+    // 控制 CheckBox 状态
+    private var isMusicListReversed: Boolean = false
+    // 控制是否需要反转List
+    private var needMusicListReversed: Boolean = false
+
     override fun getLayoutResID(): Int {
         return R.layout.frag_playlist_detail
     }
 
     override fun initData() {
         showLoading()
+        needMusicListReversed = SPUtils.getPlaylistOrderReverse()
         mPlaylist?.let {
             if (it.musicList.size > 0) {
                 showPlaylistSongs(it.musicList)
@@ -163,6 +170,11 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.getItem(4)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_delete_playlist -> {
@@ -207,15 +219,35 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 EditSongListActivity.musicList = musicList
                 startActivity<EditSongListActivity>()
             }
+
+            // TODO 记住排序方法
+            R.id.action_order_reverse -> {
+                item.isChecked = !item.isChecked
+                isMusicListReversed = false
+                needMusicListReversed = true
+                SPUtils.setPlaylistOrderReverse(item.isChecked)
+            }
             R.id.action_order_title -> {
+                if (isMusicListReversed) {
+                    isMusicListReversed = false
+                    needMusicListReversed = true
+                }
                 musicList.sortBy { it.title }
                 mAdapter?.notifyDataSetChanged()
             }
             R.id.action_order_album -> {
+                if (isMusicListReversed) {
+                    isMusicListReversed = false
+                    needMusicListReversed = true
+                }
                 musicList.sortBy { it.album }
                 mAdapter?.notifyDataSetChanged()
             }
             R.id.action_order_artist -> {
+                if (isMusicListReversed) {
+                    isMusicListReversed = false
+                    needMusicListReversed = true
+                }
                 musicList.sortBy { it.artist }
                 mAdapter?.notifyDataSetChanged()
             }
@@ -226,6 +258,12 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                 intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(intent)
             }
+        }
+        if (needMusicListReversed) {
+            needMusicListReversed = false
+            isMusicListReversed = true
+            musicList.reverse()
+            mAdapter?.notifyDataSetChanged()
         }
         return super.onOptionsItemSelected(item)
 
@@ -265,6 +303,11 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         hideLoading()
         songList?.let {
             musicList.addAll(songList)
+        }
+        if (needMusicListReversed) {
+            musicList.reverse()
+            needMusicListReversed = !needMusicListReversed
+            isMusicListReversed = true
         }
         mAdapter?.setNewData(musicList)
         if (coverUrl == null) {
