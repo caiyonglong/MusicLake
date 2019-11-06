@@ -29,8 +29,10 @@ import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.event.FileEvent
 import com.cyl.musiclake.event.LoginEvent
+import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.socket.SocketManager
@@ -306,6 +308,32 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: 
                 ToastUtils.show(getString(R.string.delete_song_success))
                 //发送文件删除消息
                 EventBus.getDefault().post(FileEvent())
+                success?.invoke()
+            }
+        }
+    }
+}
+
+/**
+ * 批量移除歌单列表歌曲
+ */
+fun AppCompatActivity.deleteLocalPlayListMusic(playlist: Playlist, deleteList: MutableList<Music>, success: (() -> Unit)? = null) {
+    if (deleteList.size == 0) {
+        showTipsDialog(this@deleteLocalPlayListMusic, R.string.remove_playlist_song_empty)
+        return
+    }
+    val tips = if (deleteList.size == 0) {
+        getString(R.string.remove_playlist_song_empty)
+    } else {
+        getString(R.string.remove_playlist_song_list, deleteList.size)
+    }
+    showTipsDialog(this@deleteLocalPlayListMusic, tips) {
+        doAsync {
+            PlaylistLoader.removeMusicList(playlist, deleteList)
+            uiThread {
+                NavigationHelper.scanFileAsync(this@deleteLocalPlayListMusic)
+                ToastUtils.show(getString(R.string.remove_song_success))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
                 success?.invoke()
             }
         }

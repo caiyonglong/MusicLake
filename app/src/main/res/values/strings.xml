@@ -193,7 +193,7 @@
     <string name="play_mode_repeat">单曲播放</string>
     <string name="play_mode_loop">顺序播放</string>
 
-
+    <string name="remove">移除</string>
     <string name="delete">删除</string>
     <string name="pause">暂停</string>
     <string name="start">开始</string>
@@ -383,6 +383,11 @@
     <string name="download_list_tips">已自动过滤掉版权歌曲，可下载歌曲%1$s首，是否继续?</string>
     <string name="download_list_empty_tips">已自动过滤掉版权歌曲，当前无可下载歌曲</string>
     <string name="download_network_error">网络异常，请检查数据是否连接！</string>
+    <string name="remove_playlist_song_empty">请选择需要移除的音乐!</string>
+    <string name="remove_playlist_song">是否确定移除当前歌曲?</string>
+    <string name="remove_playlist_song_warning">是否继续移除!</string>
+    <string name="remove_playlist_song_list">是否移除选中的%1$d首歌曲？</string>
+    <string name="remove_song_success">移除成功</string>
     <string name="delete_local_song_empty">请选择需要删除的本地音乐!</string>
     <string name="delete_local_song">是否确定删除当前本地歌曲?</string>
     <string name="delete_local_song_warning">是否继续删除!</string>

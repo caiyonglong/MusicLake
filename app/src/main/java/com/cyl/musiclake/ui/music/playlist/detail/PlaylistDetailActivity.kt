@@ -64,6 +64,9 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     override fun showDescInfo(title: String) {
 
     }
+    companion object {
+        var isRemovedSongs: Boolean = false
+    }
 
     private var mAdapter: SongAdapter? = null
     private val musicList = mutableListOf<Music>()
@@ -222,6 +225,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             }
             R.id.action_batch -> {
                 EditSongListActivity.musicList = musicList
+                EditSongListActivity.playlist = mPlaylist
                 startActivity<EditSongListActivity>()
             }
 
@@ -369,6 +373,15 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
         mAlbum?.let {
             mPresenter?.loadAlbumSongs(it)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 移出列表歌曲返回后要更新歌曲列表
+        if (isRemovedSongs) {
+            mAdapter?.notifyDataSetChanged()
+            isRemovedSongs = false
         }
     }
 }

@@ -124,6 +124,14 @@ object PlaylistLoader {
             e.printStackTrace()
         }
     }
+    /**
+     * 移除歌曲列表歌曲
+     */
+    fun removeMusicList(playlist: Playlist, musicList: MutableList<Music>) {
+        musicList.forEach {
+            removeSong(playlist.pid.toString(), it.mid.toString())
+        }
+    }
 
     /**
      * 删除歌单

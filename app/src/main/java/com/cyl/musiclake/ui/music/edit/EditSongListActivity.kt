@@ -6,10 +6,13 @@ import android.view.MenuItem
 import android.view.View
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deleteLocalMusic
+import com.cyl.musiclake.ui.deleteLocalPlayListMusic
 import com.cyl.musiclake.ui.downloadBatchMusic
+import com.cyl.musiclake.ui.music.playlist.detail.PlaylistDetailActivity
 import kotlinx.android.synthetic.main.activity_song_edit.*
 
 /**
@@ -21,6 +24,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
 
     companion object {
         var musicList = mutableListOf<Music>()
+        var playlist: Playlist? = null
     }
 
     var mAdapter: EditSongAdapter? = null
@@ -47,6 +51,10 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
                 deleteTv.visibility = View.VISIBLE
                 return@forEach
             }
+        }
+        //是否支持批量移除
+        if (playlist?.type == Constants.LOCAL) {
+            removeTv.visibility = View.VISIBLE
         }
     }
 
@@ -83,6 +91,18 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
             deleteLocalMusic(selectMusic) {
                 musicList.removeAll(selectMusic)
                 mAdapter?.notifyDataSetChanged()
+            }
+        }
+
+        removeTv.setOnClickListener {
+            val selectMusic = mutableListOf<Music>()
+            mAdapter?.checkedMap?.forEach {
+                selectMusic.add(it.value)
+            }
+            deleteLocalPlayListMusic(playlist!!, selectMusic) {
+                musicList.removeAll(selectMusic)
+                mAdapter?.notifyDataSetChanged()
+                PlaylistDetailActivity.isRemovedSongs = true
             }
         }
     }
