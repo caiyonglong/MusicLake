@@ -49,6 +49,7 @@ import com.google.android.material.internal.NavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 import com.tencent.bugly.beta.Beta;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -147,23 +148,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             ToastUtils.show("已绑定网易云音乐");
             LogUtil.d(TAG, "success " + user.getId());
             if (isInit) {
-                mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setTitle("已绑定网易云音乐(" + user.getName() + ")");
-                CoverLoader.INSTANCE.loadDrawable(this, user.getAvatar(), drawable -> {
-                    mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setIcon(drawable);
-                    return null;
-                });
+                User user1 = new User();
+                user1.setType(Constants.NETEASE);
+                user1.setAvatar(user.getAvatar());
+                user1.setName(user.getName());
+                EventBus.getDefault().post(new LoginEvent(true, user1));
             }
-//            else {
-            //注销网易云音乐账号，不会实时生效
-//                UIUtilsKt.showInfoDialog(this, getString(R.string.app_name), getString(R.string.logout_netease_prompt), () -> {
-//                    logoutNetease(() -> {
-//                        return null;
-//                    });
-//                    return null;
-//                });
-//            }
             return null;
-
         }, () -> {
             LogUtil.d(TAG, "fail ");
             if (!isInit) {
@@ -382,13 +373,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
-     * 登陆成功重新设置用户新
+     * 登陆成功重新设置用户
+     * 绑定成功更新menu
      *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginEvent event) {
+        if (event.getUser() != null) {
+            //更新绑定UI
+            if (event.getStatus() && event.getUser().getType().equals(Constants.NETEASE)) {
+                mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setTitle("已绑定网易云音乐(" + event.getUser().getName() + ")");
+                if (event.getUser().getAvatar().length() > 0) {
+                    CoverLoader.INSTANCE.loadDrawable(this, event.getUser().getAvatar(), drawable -> {
+                        mNavigationView.getMenu().findItem(R.id.nav_bind_wy).setIcon(drawable);
+                        return null;
+                    });
+                }
+                return;
+            }
+        }
+        //更新用户头像
         setUserStatusInfo(event.getStatus(), event.getUser());
+
     }
 
     /**

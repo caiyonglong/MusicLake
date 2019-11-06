@@ -65,7 +65,6 @@ public class WelcomeActivity extends BaseActivity {
     protected void initData() {
         //初始化WebView
         BaseApiImpl.INSTANCE.initWebView(MusicApp.getInstance());
-        initFileDownload();
         initLogin();
 
         rxPermissions = new RxPermissions(this);
@@ -77,7 +76,6 @@ public class WelcomeActivity extends BaseActivity {
     }
 
 
-
     private void initLogin() {
         //创建微博实例
         WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
@@ -87,14 +85,6 @@ public class WelcomeActivity extends BaseActivity {
 //        SocketManager.INSTANCE.initSocket();
     }
 
-
-    /**
-     * 初始化文件下载
-     */
-    private void initFileDownload() {
-        FileDownloadLog.NEED_LOG = BuildConfig.DEBUG;
-        FileDownloader.setup(this);
-    }
 
     @Override
     protected void initInjector() {

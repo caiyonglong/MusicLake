@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.music.playpage
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
@@ -42,8 +41,9 @@ import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var playingMusic: Music? = null
-    private var coverFragment: CoverFragment? = null
-    private var lyricFragment: LyricFragment? = null
+    private var coverFragment: CoverFragment? = CoverFragment()
+    private var lyricFragment: LyricFragment? = LyricFragment()
+
     private val fragments = mutableListOf<Fragment>()
 
     /***
@@ -63,10 +63,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
         //更新下载状态
-        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD && !music?.isDl!!) View.VISIBLE else View.GONE
+//        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD && !music?.isDl!!) View.VISIBLE else View.GONE
         LogUtil.d("PlayerActivity", "showNowPlaying 开始旋转动画")
         //开始旋转动画
-        coverFragment?.startRotateAnimation()
+        coverFragment?.startRotateAnimation(PlayManager.isPlaying())
     }
 
     override fun getLayoutResID(): Int {
@@ -116,7 +116,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             updatePlayStatus(it)
         }
         lyricFragment?.showLyric(FloatLyricViewManager.lyricInfo, true)
-
+        LogUtil.d("CoverFragment", "playingMusic =${playingMusic == null}")
         playingMusic?.let { coverFragment?.updateMusicType(it) }
     }
 
@@ -208,6 +208,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         Tools.qqShare(this, PlayManager.getPlayingMusic())
     }
 
+    /**
+     * 歌曲下载
+     */
     fun downloadMusic(view: View?) {
         QualitySelectDialog.newInstance(playingMusic).apply {
             isDownload = true
@@ -249,8 +252,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     private fun setupViewPager(viewPager: MultiTouchViewPager) {
-        coverFragment = CoverFragment()
-        lyricFragment = LyricFragment()
         fragments.clear()
         coverFragment?.let {
             fragments.add(it)

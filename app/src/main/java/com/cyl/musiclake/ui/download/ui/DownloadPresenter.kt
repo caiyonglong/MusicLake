@@ -1,12 +1,11 @@
 package com.cyl.musiclake.ui.download.ui
 
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.event.FileEvent
+import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.download.DownloadLoader
-import com.cyl.musiclake.event.DownloadEvent
-import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.utils.LogUtil
-import com.google.android.exoplayer2.offline.Downloader
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,7 +30,7 @@ constructor() : BasePresenter<DownloadContract.View>(), DownloadContract.Present
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun reloadDownloadMusic(event: DownloadEvent) {
+    fun reloadDownloadMusic(event: FileEvent) {
         loadDownloadMusic(isCache)
         loadDownloading()
     }

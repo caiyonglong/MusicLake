@@ -32,10 +32,10 @@ object DaoLitepal {
     /**
      * 增加搜索
      */
-    fun addSearchInfo(info: String) :Boolean{
+    fun addSearchInfo(info: String): Boolean {
         val id = System.currentTimeMillis()
         val queryInfo = SearchHistoryBean(id, info)
-       return queryInfo.saveOrUpdate("title = ?", info)
+        return queryInfo.saveOrUpdate("title = ?", info)
     }
 
 
@@ -125,25 +125,25 @@ object DaoLitepal {
         if (FileUtils.exists(music.uri)) {
             FileUtils.delFile(music.uri)
         }
-        LitePal.deleteAll(Music::class.java, "mid=?", music.mid)
-        LitePal.deleteAll(TasksManagerModel::class.java, "mid=?", music.mid)
-        LitePal.deleteAll(MusicToPlaylist::class.java, "mid=?", music.mid)
+        LitePal.deleteAll(Music::class.java, "mid=?", music.mid.toString())
+        LitePal.deleteAll(TasksManagerModel::class.java, "mid=?", music.mid.toString())
+        LitePal.deleteAll(MusicToPlaylist::class.java, "mid=?", music.mid.toString())
     }
 
     /**
      * 删除歌单
      * 先删除歌单歌曲，然后删除歌单
      */
-    fun deletePlaylist(playlist: Playlist):Int {
-       LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", playlist.pid)
-       return LitePal.deleteAll(Playlist::class.java, "pid=?", playlist.pid)
+    fun deletePlaylist(playlist: Playlist): Int {
+        LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", playlist.pid)
+        return LitePal.deleteAll(Playlist::class.java, "pid=?", playlist.pid)
     }
 
     /**
      * 清空歌单歌曲
      */
-    fun clearPlaylist(pid: String):Int{
-        return  LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", pid)
+    fun clearPlaylist(pid: String): Int {
+        return LitePal.deleteAll(MusicToPlaylist::class.java, "pid=?", pid)
     }
 
     /**
@@ -216,7 +216,7 @@ object DaoLitepal {
         if (cursor != null && cursor.count > 0) {
             while (cursor.moveToNext()) {
                 val artist = MusicCursorWrapper(cursor).artists
-                artist.saveOrUpdate("artistId = ?", artist.artistId.toString())
+//                artist.saveOrUpdate("artistId = ?", artist.artistId.toString())
                 results.add(artist)
             }
         }
@@ -233,7 +233,7 @@ object DaoLitepal {
         if (cursor != null && cursor.count > 0) {
             while (cursor.moveToNext()) {
                 val album = MusicCursorWrapper(cursor).album
-                album.saveOrUpdate("albumId = ?", album.albumId)
+//                album.saveOrUpdate("albumId = ?", album.albumId)
                 results.add(album)
             }
         }

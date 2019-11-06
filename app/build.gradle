@@ -43,6 +43,7 @@ android {
 //            signingConfig signingConfigs.release
             //自定义配置参数
             buildConfigField "boolean", "HAS_DOWNLOAD", "true"//是否屏蔽下载功能
+            buildConfigField "boolean", "IS_LOCAL", "true"//是否屏蔽下载功能
         }
     }
     lintOptions {
@@ -105,7 +106,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     //下载
-    implementation 'com.liulishuo.filedownloader:library:1.7.4'
+    implementation 'com.liulishuo.filedownloader:library:1.7.6'
     implementation 'com.github.rtugeek:ColorSeekBar:1.6.2'
     implementation 'com.just.agentweb:agentweb:4.0.2'
     implementation 'com.blankj:utilcode:1.15.1'
@@ -148,8 +149,8 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     //bugly的仓库
-    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.1'
-    implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
+    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.2'
+//    implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
 
     //微博
     implementation 'com.sina.weibo.sdk:core:4.3.0:openDefaultRelease@aar'
@@ -167,7 +168,7 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.3'
 
     //Android音乐接口Api
-    implementation 'com.github.caiyonglong:musicapi:1.0.6'
+    implementation 'com.github.caiyonglong:musicapi:1.0.7'
 //    implementation project(':musicapi')
     //缓存
     implementation 'com.danikula:videocache:2.7.1'

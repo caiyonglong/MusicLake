@@ -6,13 +6,11 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.download.ui.DownloadManagerFragment
 import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
-import com.cyl.musiclake.event.DownloadEvent
 import com.cyl.musiclake.utils.FileUtils
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadConnectListener
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.model.FileDownloadStatus
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.ref.WeakReference
@@ -73,7 +71,6 @@ object TasksManager {
                 activityWeakReference.get()?.postNotifyDataChanged()
             }
         }
-
         FileDownloader.getImpl().addServiceConnectListener(listener)
     }
 
@@ -151,8 +148,7 @@ object TasksManager {
             DownloadLoader.updateTask(tid)
             val data = DownloadLoader.getDownloadingList()
             uiThread {
-                modelList= data
-                EventBus.getDefault().post(DownloadEvent())
+                modelList = data
             }
         }
     }
