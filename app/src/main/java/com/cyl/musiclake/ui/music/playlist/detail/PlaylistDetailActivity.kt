@@ -229,26 +229,26 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
             }
             R.id.action_order_title -> {
                 if (isMusicListReversed) {
-                    isMusicListReversed = false
-                    needMusicListReversed = true
+                    musicList.sortByDescending { it.title }
+                } else {
+                    musicList.sortBy { it.title }
                 }
-                musicList.sortBy { it.title }
                 mAdapter?.notifyDataSetChanged()
             }
             R.id.action_order_album -> {
                 if (isMusicListReversed) {
-                    isMusicListReversed = false
-                    needMusicListReversed = true
+                    musicList.sortBy { it.album }
+                } else {
+                    musicList.sortByDescending { it.album }
                 }
-                musicList.sortBy { it.album }
                 mAdapter?.notifyDataSetChanged()
             }
             R.id.action_order_artist -> {
                 if (isMusicListReversed) {
-                    isMusicListReversed = false
-                    needMusicListReversed = true
+                    musicList.sortBy { it.artist }
+                } else {
+                    musicList.sortByDescending { it.artist }
                 }
-                musicList.sortBy { it.artist }
                 mAdapter?.notifyDataSetChanged()
             }
             R.id.action_search -> {
@@ -261,7 +261,8 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         }
         if (needMusicListReversed) {
             needMusicListReversed = false
-            isMusicListReversed = true
+            // 这里不能直接等于true，要更新为 CheckBox 的 checked 状态，否则菜单上的 checked 状态会错误
+            isMusicListReversed = SPUtils.getPlaylistOrderReverse()
             musicList.reverse()
             mAdapter?.notifyDataSetChanged()
         }
