@@ -141,6 +141,7 @@ object PlaylistLoader {
             // 移除播放队列歌曲
             removeSong(Constants.PLAYLIST_QUEUE_ID, it.mid.toString())
             PlayManager.removeFromQueue(playQueue.indexOf(it))
+            playQueue.remove(it)
         }
     }
 
