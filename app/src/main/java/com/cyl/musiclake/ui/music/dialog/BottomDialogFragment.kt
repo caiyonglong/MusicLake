@@ -18,6 +18,7 @@ import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
@@ -72,6 +73,16 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
             args.putString(Extras.PLAYLIST_TYPE, type)
             return fragment
         }
+
+        fun newInstance(music: Music?, playlist: Playlist?): BottomDialogFragment {
+            val args = Bundle()
+            this.music = music
+            val fragment = BottomDialogFragment()
+            fragment.arguments = args
+            args.putString(Extras.PLAYLIST_TYPE, playlist?.type)
+            args.putString(Extras.PLAYLIST_ID, playlist?.pid)
+            return fragment
+        }
     }
 
     override fun getLayoutResId(): Int {
@@ -96,6 +107,9 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
         subTitleTv?.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
         arguments?.getString(Extras.PLAYLIST_TYPE, Constants.PLAYLIST_LOCAL_ID)?.let {
             type = it
+        }
+        arguments?.getString(Extras.PLAYLIST_ID, Constants.PLAYLIST_LOCAL_ID)?.let {
+            pid = it
         }
         mAdapter = ItemAdapter(type)
         recyclerView?.layoutManager = LinearLayoutManager(activity)
@@ -157,6 +171,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
         startActivity<EditMusicActivity>(Extras.SONG to music)
     }
 
+    // TODO 整合删除（在线/本地删文件）和移除（本地非删文件）功能
     /**
      *去删除
      */
@@ -175,9 +190,15 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
     /**
      *去移除
      */
-    private fun turnToRemove(pid: String, music: Music?) {
-        (activity as AppCompatActivity?)?.removeSingleMusic(pid, music) {
-            removeSuccessListener?.invoke(music)
+    private fun turnToRemove(music: Music?) {
+        if (music?.isOnline == false) {
+            (activity as AppCompatActivity?)?.removeSingleMusic(pid, music) {
+                removeSuccessListener?.invoke(music)
+            }
+        } else {
+            PlaylistManagerUtils.disCollectMusic(pid, music) {
+                removeSuccessListener?.invoke(music)
+            }
         }
     }
 
@@ -226,7 +247,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                     itemData.remove(R.string.popup_delete)
                 }
 
-                if (type != Constants.PLAYLIST_LOCAL_ID) {
+                if (type != Constants.PLAYLIST_LOCAL_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true) {
                     itemData.remove(R.string.popup_remove)
                 }
             }
@@ -266,7 +287,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                         turnToDelete(music)
                     }
                     R.drawable.ic_clear -> {
-                        turnToRemove(pid, music)
+                        turnToRemove(music)
                     }
                     R.drawable.ic_video_label -> {
                         if (music?.type == Constants.BAIDU || music?.type == Constants.VIDEO) {

@@ -90,7 +90,7 @@
             android:text="@string/remove"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_12"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
