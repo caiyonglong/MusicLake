@@ -76,7 +76,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
                         Extras.MV_TITLE to musicList[position].title)
             }
         }
-        mAdapter?.setOnItemChildClickListener { adapter, view, position -> BottomDialogFragment.newInstance(musicList[position]).show(mFragmentComponent.activity as AppCompatActivity) }
+        mAdapter?.setOnItemChildClickListener { adapter, view, position -> BottomDialogFragment.newInstance(musicList[position], Constants.PLAYLIST_LOCAL_VIDEO_ID).show(mFragmentComponent.activity as AppCompatActivity) }
     }
 
     override fun showLoading() {

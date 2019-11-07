@@ -174,11 +174,13 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     }
 
     // TODO 逆序选择分开每个歌单存储
+    // null/love2-0 history3-0 local4-0 custom_online4-0 playlist_wy_*4-0
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (mPlaylist?.type != "queue" && mPlaylist?.type != "history" && mPlaylist?.type != "love") {
-            menu?.getItem(4)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
-        } else {
-            menu?.getItem(3)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
+        when {
+            mPlaylist == null -> menu?.getItem(2)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
+            mPlaylist?.type == "history" -> menu?.getItem(3)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
+            mPlaylist?.type == "love" -> menu?.getItem(2)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
+            else -> menu?.getItem(4)?.subMenu?.getItem(0)?.isChecked = isMusicListReversed
         }
         return super.onPrepareOptionsMenu(menu)
     }

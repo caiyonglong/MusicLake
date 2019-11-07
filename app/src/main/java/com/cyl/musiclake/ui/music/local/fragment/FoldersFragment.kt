@@ -106,7 +106,7 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
                 }
             }
             mSongAdapter?.setOnItemChildClickListener { _, _, position ->
-                BottomDialogFragment.newInstance(songList[position]).apply {
+                BottomDialogFragment.newInstance(songList[position], Constants.PLAYLIST_FOLDERS_ID).apply {
                     removeSuccessListener = {
                         this@FoldersFragment.mAdapter?.notifyItemRemoved(position)
                     }

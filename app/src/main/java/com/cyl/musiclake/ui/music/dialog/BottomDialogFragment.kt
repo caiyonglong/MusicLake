@@ -236,6 +236,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
             if (music?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
+                itemData.remove(R.string.popup_remove)
             } else if (type != Constants.PLAYLIST_DOWNLOAD_ID) {
                 itemData.remove(R.string.popup_detail_edit)
 
@@ -250,6 +251,8 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                 if (type != Constants.PLAYLIST_LOCAL_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true) {
                     itemData.remove(R.string.popup_remove)
                 }
+            } else {
+                itemData.remove(R.string.popup_remove)
             }
 
             itemData.forEach {

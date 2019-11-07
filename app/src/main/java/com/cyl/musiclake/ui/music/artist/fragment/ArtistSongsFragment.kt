@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
@@ -71,7 +72,7 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            bottomDialogFragment = BottomDialogFragment.newInstance(musicInfos[position]).apply {
+            bottomDialogFragment = BottomDialogFragment.newInstance(musicInfos[position], Constants.PLAYLIST_ARTIST_SONGS_ID).apply {
             }
             bottomDialogFragment?.show(activity as AppCompatActivity)
         }

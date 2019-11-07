@@ -166,7 +166,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Music music = musicList.get(position);
-            BottomDialogFragment.Companion.newInstance(music)
+            BottomDialogFragment.Companion.newInstance(music, Constants.PLAYLIST_DETAIL_ID)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }

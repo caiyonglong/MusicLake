@@ -20,11 +20,10 @@ import org.greenrobot.eventbus.EventBus
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class EditSongAdapter(list: MutableList<Music>, playlist: Playlist) : BaseItemDraggableAdapter<Music, BaseViewHolder>(R.layout.item_music_edit, list) {
+class EditSongAdapter(list: MutableList<Music>, playlist: Playlist?) : BaseItemDraggableAdapter<Music, BaseViewHolder>(R.layout.item_music_edit, list) {
     var checkedMap = mutableMapOf<String, Music>()
     private var mPlaylist = playlist
     private var mMusicList = list
-    private var bottomDialogFragment: BottomDialogFragment? = null
     override fun convert(holder: BaseViewHolder, item: Music) {
         holder.setText(R.id.tv_title, item.title)
         holder.setText(R.id.tv_artist, item.artist)
@@ -39,14 +38,19 @@ class EditSongAdapter(list: MutableList<Music>, playlist: Playlist) : BaseItemDr
             notifyItemChanged(holder.adapterPosition)
         }
         holder.getView<View>(R.id.iv_more).setOnClickListener {
-            bottomDialogFragment = BottomDialogFragment.newInstance(item, mPlaylist)
-            bottomDialogFragment?.removeSuccessListener = {
-                mMusicList.remove(item)
-                notifyItemRemoved(holder.adapterPosition)
-                PlaylistDetailActivity.isRemovedSongs = true
-                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, mPlaylist))
+            var bottomDialogFragment : BottomDialogFragment? = null
+            if (mPlaylist != null) {
+                bottomDialogFragment = BottomDialogFragment.newInstance(item, mPlaylist)
+                bottomDialogFragment.removeSuccessListener = {
+                    mMusicList.remove(item)
+                    notifyItemRemoved(holder.adapterPosition)
+                    PlaylistDetailActivity.isRemovedSongs = true
+                    EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, mPlaylist))
+                }
+            } else {
+                bottomDialogFragment = BottomDialogFragment.newInstance(item)
             }
-            bottomDialogFragment?.show(mContext as AppCompatActivity)
+            bottomDialogFragment.show(mContext as AppCompatActivity)
         }
 
         if (item.isCp) {
