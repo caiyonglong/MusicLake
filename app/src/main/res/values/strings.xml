@@ -307,6 +307,7 @@
     <string name="popup_download">下载歌曲</string>
     <string name="popup_mv">相关MV</string>
     <string name="popup_cache">缓存歌曲</string>
+    <string name="popup_remove">移除</string>
     <string name="popup_delete">删除</string>
     <string name="popup_detail_edit">编辑歌曲信息</string>
     <string name="popup_artist">查看歌手</string>

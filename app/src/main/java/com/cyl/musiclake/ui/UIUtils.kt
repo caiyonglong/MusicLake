@@ -314,7 +314,29 @@ fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: 
         }
     }
 }
-
+/**
+ * 移除单个歌曲
+ */
+fun AppCompatActivity.removeSingleMusic(pid: String, music: Music?, success: (() -> Unit)? = null) {
+    if (this.isFinishing || this.isDestroyed) return
+    if (music == null) {
+        showTipsDialog(this@removeSingleMusic, R.string.remove_playlist_song_empty)
+        return
+    }
+    showTipsDialog(this@removeSingleMusic, R.string.remove_playlist_song) {
+        doAsync {
+            val mPlayQueue = PlayQueueLoader.getPlayQueue()
+            val playlist = PlaylistLoader.getPlaylist(pid)
+            PlaylistLoader.removeSong(playlist , music, mPlayQueue.toMutableList())
+            uiThread {
+                NavigationHelper.scanFileAsync(this@removeSingleMusic)
+                ToastUtils.show(MusicApp.getAppContext().getString(R.string.remove_song_success))
+                EventBus.getDefault().post(MyPlaylistEvent(Constants.PLAYLIST_UPDATE, playlist))
+                success?.invoke()
+            }
+        }
+    }
+}
 /**
  * 批量移除歌单列表歌曲
  */

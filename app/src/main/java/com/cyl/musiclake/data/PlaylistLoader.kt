@@ -125,6 +125,12 @@ object PlaylistLoader {
             e.printStackTrace()
         }
     }
+    fun removeSong(playlist: Playlist, music: Music, playQueue: MutableList<Music>) {
+        removeSong(playlist.pid.toString(), music.mid.toString())
+        // 移除播放队列歌曲
+        removeSong(Constants.PLAYLIST_QUEUE_ID, music.mid.toString())
+        PlayManager.removeFromQueue(playQueue.indexOf(music))
+    }
     /**
      * 移除歌曲列表歌曲
      */

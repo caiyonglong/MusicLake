@@ -26,6 +26,7 @@ import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
+import com.cyl.musiclake.ui.removeSingleMusic
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
@@ -172,6 +173,15 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
     }
 
     /**
+     *去移除
+     */
+    private fun turnToRemove(pid: String, music: Music?) {
+        (activity as AppCompatActivity?)?.removeSingleMusic(pid, music) {
+            removeSuccessListener?.invoke(music)
+        }
+    }
+
+    /**
      * 下拉列表适配器
      */
     inner class ItemAdapter(type: String = Constants.PLAYLIST_LOCAL_ID) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
@@ -184,6 +194,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                 R.string.popup_download to R.drawable.item_download,
                 R.string.popup_mv to R.drawable.ic_video_label,
                 R.string.popup_delete to R.drawable.ic_delete,
+                R.string.popup_remove to R.drawable.ic_clear,
                 R.string.popup_share to R.drawable.ic_share_black)
         val data = mutableListOf<PopupItemBean>()
 
@@ -213,6 +224,10 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
 
                 if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true) {
                     itemData.remove(R.string.popup_delete)
+                }
+
+                if (type != Constants.PLAYLIST_LOCAL_ID) {
+                    itemData.remove(R.string.popup_remove)
                 }
             }
 
@@ -249,6 +264,9 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                     }
                     R.drawable.ic_delete -> {
                         turnToDelete(music)
+                    }
+                    R.drawable.ic_clear -> {
+                        turnToRemove(pid, music)
                     }
                     R.drawable.ic_video_label -> {
                         if (music?.type == Constants.BAIDU || music?.type == Constants.VIDEO) {
