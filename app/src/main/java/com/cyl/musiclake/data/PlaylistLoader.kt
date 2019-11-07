@@ -4,6 +4,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.player.PlayManager
 
 /**
  * 作者：yonglong on 2016/11/6 17:02
@@ -127,9 +128,13 @@ object PlaylistLoader {
     /**
      * 移除歌曲列表歌曲
      */
-    fun removeMusicList(playlist: Playlist, musicList: MutableList<Music>) {
+    fun removeMusicList(playlist: Playlist, musicList: MutableList<Music>, playQueue : MutableList<Music>) {
         musicList.forEach {
+            // 移除歌单歌曲
             removeSong(playlist.pid.toString(), it.mid.toString())
+            // 移除播放队列歌曲
+            removeSong(Constants.PLAYLIST_QUEUE_ID, it.mid.toString())
+            PlayManager.removeFromQueue(playQueue.indexOf(it))
         }
     }
 

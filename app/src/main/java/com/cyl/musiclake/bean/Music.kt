@@ -155,5 +155,11 @@ class Music() : LitePalSupport(), Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Music) {
+            this.mid.equals(other.mid)
+        } else super.equals(other)
+    }
 }
 

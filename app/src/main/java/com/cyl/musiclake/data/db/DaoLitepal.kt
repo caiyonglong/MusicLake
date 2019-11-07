@@ -192,6 +192,7 @@ object DaoLitepal {
         return LitePal.where("mid = ? ", mid).findFirst(Music::class.java)
     }
 
+    // TODO 当删除的音乐在所有列表中的状态为只有一个，连同对应的 music 记录也删除
     fun removeSong(pid: String, mid: String) {
         LitePal.deleteAll(MusicToPlaylist::class.java, "pid=? and mid=?", pid, mid)
     }

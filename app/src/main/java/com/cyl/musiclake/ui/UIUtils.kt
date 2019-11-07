@@ -29,6 +29,7 @@ import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.PlayQueueLoader
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.event.FileEvent
 import com.cyl.musiclake.event.LoginEvent
@@ -329,7 +330,8 @@ fun AppCompatActivity.deleteLocalPlayListMusic(playlist: Playlist, deleteList: M
     }
     showTipsDialog(this@deleteLocalPlayListMusic, tips) {
         doAsync {
-            PlaylistLoader.removeMusicList(playlist, deleteList)
+            val mPlayQueue = PlayQueueLoader.getPlayQueue()
+            PlaylistLoader.removeMusicList(playlist, deleteList, mPlayQueue.toMutableList())
             uiThread {
                 NavigationHelper.scanFileAsync(this@deleteLocalPlayListMusic)
                 ToastUtils.show(getString(R.string.remove_song_success))
