@@ -3,15 +3,15 @@ package com.cyl.musiclake.ui
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.media.MediaScannerConnection
-import android.net.Uri
 import android.text.InputType
 import android.widget.ImageView
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
 import com.afollestad.materialdialogs.actions.setActionButtonEnabled
 import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
@@ -55,6 +55,16 @@ object UIUtils {
      * 防止快速点击却换歌曲
      */
     private var lastClickTime: Long = 0
+
+    var mOnCheckedChangeListener: OnCheckedChangeListener? = null
+
+    interface OnCheckedChangeListener {
+        fun onCheckedChanged(isChecked: Boolean)
+    }
+
+    fun setOnCheckedChangeListener(@Nullable listener: OnCheckedChangeListener) {
+        mOnCheckedChangeListener = listener
+    }
 
     @Synchronized
     fun isFastClick(): Boolean {
@@ -323,11 +333,23 @@ fun AppCompatActivity.removeSingleMusic(pid: String, music: Music?, success: (()
         showTipsDialog(this@removeSingleMusic, R.string.remove_playlist_song_empty)
         return
     }
-    showTipsDialog(this@removeSingleMusic, R.string.remove_playlist_song) {
+    var needQueueDel = false
+    val mOnCheckedChangeListener = object : UIUtils.OnCheckedChangeListener {
+        override fun onCheckedChanged(isChecked: Boolean) {
+            needQueueDel = isChecked
+            ToastUtils.show("移除单个歌曲$needQueueDel")
+        }
+    }
+    showCheckBoxTipsDialog(this@removeSingleMusic, R.string.remove_playlist_song, null, mOnCheckedChangeListener) {
         doAsync {
-            val mPlayQueue = PlayQueueLoader.getPlayQueue()
             val playlist = PlaylistLoader.getPlaylist(pid)
-            PlaylistLoader.removeSong(playlist , music, mPlayQueue.toMutableList())
+            if (needQueueDel) {
+                val mPlayQueue = PlayQueueLoader.getPlayQueue()
+                PlaylistLoader.removeSong(playlist, music, mPlayQueue.toMutableList())
+            } else {
+                PlaylistLoader.removeSong(playlist, music, ArrayList())
+            }
+            needQueueDel = false
             uiThread {
                 NavigationHelper.scanFileAsync(this@removeSingleMusic)
                 ToastUtils.show(MusicApp.getAppContext().getString(R.string.remove_song_success))
@@ -350,10 +372,22 @@ fun AppCompatActivity.deleteLocalPlayListMusic(playlist: Playlist, deleteList: M
     } else {
         getString(R.string.remove_playlist_song_list, deleteList.size)
     }
-    showTipsDialog(this@deleteLocalPlayListMusic, tips) {
+    var needQueueDel = false
+    val mOnCheckedChangeListener = object : UIUtils.OnCheckedChangeListener {
+        override fun onCheckedChanged(isChecked: Boolean) {
+            needQueueDel = isChecked
+            ToastUtils.show("批量移除歌单列表歌曲$needQueueDel")
+        }
+    }
+    showCheckBoxTipsDialog(this@deleteLocalPlayListMusic, null, tips, mOnCheckedChangeListener) {
         doAsync {
-            val mPlayQueue = PlayQueueLoader.getPlayQueue()
-            PlaylistLoader.removeMusicList(playlist, deleteList, mPlayQueue.toMutableList())
+            if (needQueueDel) {
+                val mPlayQueue = PlayQueueLoader.getPlayQueue()
+                PlaylistLoader.removeMusicList(playlist, deleteList, mPlayQueue.toMutableList())
+            } else {
+                PlaylistLoader.removeMusicList(playlist, deleteList, ArrayList())
+            }
+            needQueueDel = false
             uiThread {
                 NavigationHelper.scanFileAsync(this@deleteLocalPlayListMusic)
                 ToastUtils.show(getString(R.string.remove_song_success))
@@ -397,6 +431,24 @@ fun showTipsDialog(context: AppCompatActivity, contentId: Int? = null, content: 
     }
 }
 
+/**
+ * CheckBox提示对话框显示tip
+ */
+fun showCheckBoxTipsDialog(context: AppCompatActivity, contentId: Int? = null, content: String? = null, onCheckedChangeListener: UIUtils.OnCheckedChangeListener?, success: (() -> Unit)? = null) {
+    if (context.isDestroyed || context.isFinishing) return
+    MaterialDialog(context).show {
+        title(R.string.prompt)
+        message(contentId, content)
+        checkBoxPrompt(R.string.remove_playlist_song_in_queue) { mChecked ->
+            onCheckedChangeListener?.onCheckedChanged(mChecked)
+        }
+        positiveButton {
+            success?.invoke()
+        }
+        positiveButton(R.string.sure)
+        negativeButton(R.string.cancel)
+    }
+}
 
 /**
  * 增加到增加到下载队列

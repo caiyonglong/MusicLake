@@ -127,21 +127,25 @@ object PlaylistLoader {
     }
     fun removeSong(playlist: Playlist, music: Music, playQueue: MutableList<Music>) {
         removeSong(playlist.pid.toString(), music.mid.toString())
-        // 移除播放队列歌曲
-        removeSong(Constants.PLAYLIST_QUEUE_ID, music.mid.toString())
-        PlayManager.removeFromQueue(playQueue.indexOf(music))
+        if (playQueue.size > 0) {
+            // 移除播放队列歌曲
+            removeSong(Constants.PLAYLIST_QUEUE_ID, music.mid.toString())
+            PlayManager.removeFromQueue(playQueue.indexOf(music))
+        }
     }
     /**
      * 移除歌曲列表歌曲
      */
-    fun removeMusicList(playlist: Playlist, musicList: MutableList<Music>, playQueue : MutableList<Music>) {
+    fun removeMusicList(playlist: Playlist, musicList: MutableList<Music>, playQueue: MutableList<Music>) {
         musicList.forEach {
             // 移除歌单歌曲
             removeSong(playlist.pid.toString(), it.mid.toString())
-            // 移除播放队列歌曲
-            removeSong(Constants.PLAYLIST_QUEUE_ID, it.mid.toString())
-            PlayManager.removeFromQueue(playQueue.indexOf(it))
-            playQueue.remove(it)
+            if (playQueue.size > 0) {
+                // 移除播放队列歌曲
+                removeSong(Constants.PLAYLIST_QUEUE_ID, it.mid.toString())
+                PlayManager.removeFromQueue(playQueue.indexOf(it))
+                playQueue.remove(it)
+            }
         }
     }
 

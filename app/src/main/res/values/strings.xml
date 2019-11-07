@@ -360,6 +360,9 @@
     <string name="about_update">检查更新</string>
     <string name="download_exits">%1$s已在下载列表中…</string>
 
+    <string name="remove_playlist_song_in_queue">同时从播放队列中移除</string>
+    <string name="remove_playlist_song_in_file">同时删除文件</string>
+
     <!--编辑TAG-->
     <string name="tag_title">编辑音乐标签</string>
     <string name="tag_edit_tips">是否修改歌曲信息？</string>
