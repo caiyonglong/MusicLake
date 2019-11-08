@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextWatcher;
 
-import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
@@ -21,16 +18,12 @@ import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.player.cache.CacheFileNameGenerator;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
-import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
-import com.sina.weibo.sdk.WbSdk;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
