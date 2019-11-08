@@ -101,6 +101,11 @@
 -keep class com.cyl.musiclake.api.music.doupan.DoubanMusic {
     *;
 }
+-dontwarn com.cyl.musicapi.**
+-keep class com.cyl.musicapi.** { *; }
+
+# httpclient混淆规则，不开启的话项目开启混淆后使用QQ的SDK时SDK初始化会导致应用
+-keep class org.apache.http.** { *; }
 
 #第三方jar包jaudiotagger
 -dontwarn org.jaudiotagger.**
