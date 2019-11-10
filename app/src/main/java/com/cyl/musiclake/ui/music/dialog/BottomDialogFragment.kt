@@ -235,7 +235,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                     itemData.remove(R.string.popup_delete)
                 }
 
-                if (type != Constants.PLAYLIST_LOCAL_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true) {
+                if (type != Constants.PLAYLIST_LOCAL_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true || pid == Constants.PLAYLIST_LOCAL_ID) {
                     itemData.remove(R.string.popup_remove)
                 }
             } else {
