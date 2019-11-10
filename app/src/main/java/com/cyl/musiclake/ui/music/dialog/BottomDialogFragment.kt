@@ -73,16 +73,6 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
             args.putString(Extras.PLAYLIST_TYPE, type)
             return fragment
         }
-
-        fun newInstance(music: Music?, playlist: Playlist?): BottomDialogFragment {
-            val args = Bundle()
-            this.music = music
-            val fragment = BottomDialogFragment()
-            fragment.arguments = args
-            args.putString(Extras.PLAYLIST_TYPE, playlist?.type)
-            args.putString(Extras.PLAYLIST_ID, playlist?.pid)
-            return fragment
-        }
     }
 
     override fun getLayoutResId(): Int {
@@ -107,9 +97,6 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
         subTitleTv?.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
         arguments?.getString(Extras.PLAYLIST_TYPE, Constants.PLAYLIST_LOCAL_ID)?.let {
             type = it
-        }
-        arguments?.getString(Extras.PLAYLIST_ID, Constants.PLAYLIST_LOCAL_ID)?.let {
-            pid = it
         }
         mAdapter = ItemAdapter(type)
         recyclerView?.layoutManager = LinearLayoutManager(activity)
@@ -191,7 +178,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      *去移除
      */
     private fun turnToRemove(music: Music?) {
-        if (music?.isOnline == false) {
+        if (type == Constants.PLAYLIST_LOCAL_ID) {
             (activity as AppCompatActivity?)?.removeSingleMusic(pid, music) {
                 removeSuccessListener?.invoke(music)
             }

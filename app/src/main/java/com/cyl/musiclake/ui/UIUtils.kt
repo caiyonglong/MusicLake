@@ -337,7 +337,6 @@ fun AppCompatActivity.removeSingleMusic(pid: String, music: Music?, success: (()
     val mOnCheckedChangeListener = object : UIUtils.OnCheckedChangeListener {
         override fun onCheckedChanged(isChecked: Boolean) {
             needQueueDel = isChecked
-            ToastUtils.show("移除单个歌曲$needQueueDel")
         }
     }
     showCheckBoxTipsDialog(this@removeSingleMusic, R.string.remove_playlist_song, null, mOnCheckedChangeListener) {
@@ -376,7 +375,6 @@ fun AppCompatActivity.deleteLocalPlayListMusic(playlist: Playlist, deleteList: M
     val mOnCheckedChangeListener = object : UIUtils.OnCheckedChangeListener {
         override fun onCheckedChanged(isChecked: Boolean) {
             needQueueDel = isChecked
-            ToastUtils.show("批量移除歌单列表歌曲$needQueueDel")
         }
     }
     showCheckBoxTipsDialog(this@deleteLocalPlayListMusic, null, tips, mOnCheckedChangeListener) {

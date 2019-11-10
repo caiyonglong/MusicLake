@@ -40,7 +40,11 @@ class EditSongAdapter(list: MutableList<Music>, playlist: Playlist?) : BaseItemD
         holder.getView<View>(R.id.iv_more).setOnClickListener {
             var bottomDialogFragment : BottomDialogFragment? = null
             if (mPlaylist != null) {
-                bottomDialogFragment = BottomDialogFragment.newInstance(item, mPlaylist)
+                bottomDialogFragment = BottomDialogFragment.newInstance(item, mPlaylist?.type).apply {
+                    mPlaylist?.pid?.let {
+                        pid = it
+                    }
+                }
                 bottomDialogFragment.removeSuccessListener = {
                     mMusicList.remove(item)
                     notifyItemRemoved(holder.adapterPosition)
