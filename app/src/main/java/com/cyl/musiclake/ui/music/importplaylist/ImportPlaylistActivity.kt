@@ -158,7 +158,6 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, result.musicList, Constants.PLAYLIST_DOWNLOAD_ID + result.pid)
                 mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this@ImportPlaylistActivity, view.findViewById(R.id.iv_cover))
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->

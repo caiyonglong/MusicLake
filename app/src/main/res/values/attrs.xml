@@ -3,8 +3,10 @@
     <declare-styleable name="PlayPauseView">
         <attr name="bg_color" format="color" />
         <attr name="btn_color" format="color" />
-        <attr name="gap_width" format="float" />
-        <attr name="border_width" format="float|reference" />
+        <attr name="loadingColor" format="color|reference" />
+        <attr name="gap_width" format="dimension" />
+        <attr name="border_width" format="dimension|reference" />
+        <attr name="hasProgress" format="boolean|reference" />
         <attr name="space_padding" format="float" />
         <attr name="anim_duration" format="integer" />
         <attr name="anim_direction">

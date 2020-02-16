@@ -1,11 +1,12 @@
 package com.cyl.musiclake.ui.main;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
+import android.view.View;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
@@ -13,6 +14,7 @@ import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
 import com.cyl.musiclake.ui.music.mv.MvFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 
@@ -63,6 +65,28 @@ public class MainFragment extends BaseFragment {
         mViewPager.setCurrentItem(0);
         setupViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 3) {
+                    mTabLayout.setVisibility(View.GONE);
+                    mToolbar.setTitle("音乐MV");
+                } else {
+                    mTabLayout.setVisibility(View.VISIBLE);
+                    mToolbar.setTitle("音乐湖");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override

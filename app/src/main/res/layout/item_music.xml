@@ -7,7 +7,6 @@
     android:layout_height="@dimen/dp_72"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
     tools:layout_editor_absoluteY="25dp">
 
     <View
@@ -49,7 +48,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:text="@string/song"
-        android:textColor="?textColorPrimary"
+        android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/text_size_common"
         app:layout_constraintBottom_toTopOf="@+id/tv_artist"
         app:layout_constraintEnd_toStartOf="@+id/view_tag"
@@ -143,6 +142,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

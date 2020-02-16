@@ -1,17 +1,14 @@
 package com.cyl.musiclake.ui.music.charts.activity
 
 import android.os.Build
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Html
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.music.charts.PlaylistContract
@@ -21,8 +18,6 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
 import com.cyl.musiclake.utils.CoverLoader
-import com.cyl.musiclake.utils.FormatUtil
-import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_chart_playlist.*
 import org.jetbrains.anko.startActivity
 
@@ -79,8 +74,6 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicList, mPlaylist?.name + mPlaylist?.pid)
-                mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->

@@ -1,15 +1,12 @@
 package com.cyl.musiclake.ui.music.local.fragment
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.FolderInfo
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -18,7 +15,6 @@ import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract
 import com.cyl.musiclake.ui.music.local.presenter.FoldersPresenter
-import com.cyl.musiclake.utils.ToastUtils
 import kotlinx.android.synthetic.main.frag_local_song.*
 import kotlinx.android.synthetic.main.header_local_list.*
 import org.jetbrains.anko.support.v4.startActivity
@@ -102,7 +98,6 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
                 if (view.id != R.id.iv_more) {
                     PlayManager.play(position, songList, Constants.PLAYLIST_DOWNLOAD_ID + curFolderName)
                     mSongAdapter?.notifyDataSetChanged()
-                    NavigationHelper.navigateToPlaying(mFragmentComponent.activity, view.findViewById(R.id.iv_cover))
                 }
             }
             mSongAdapter?.setOnItemChildClickListener { _, _, position ->

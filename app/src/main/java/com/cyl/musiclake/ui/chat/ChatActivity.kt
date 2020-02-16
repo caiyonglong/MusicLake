@@ -10,9 +10,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.DialogCallback
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItems
-import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
@@ -73,7 +72,6 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
     override fun initInjector() {
         mActivityComponent.inject(this)
     }
-
     /**
      * socket监听事件
      */
@@ -155,10 +153,11 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
             //            updateUserStatus(MusicApp.socketManager.onlineUsers[0], true)
             MaterialDialog(this).show {
                 title(R.string.share_playing_song)
-                listItems { dialog, index, text ->
-                    sendMusicMessage()
-
-                }
+                positiveButton(R.string.sure, null, object : DialogCallback {
+                    override fun invoke(p1: MaterialDialog) {
+                        sendMusicMessage()
+                    }
+                })
             }
         }
         messageInputView.setOnEditorActionListener { _, actionId, _ ->

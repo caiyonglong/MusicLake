@@ -4,10 +4,10 @@
     <item
         android:id="@+id/action_detail"
         android:title="@string/chat_detail"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_about"
         android:title="@string/chat_about"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="never" />
 
 </menu>

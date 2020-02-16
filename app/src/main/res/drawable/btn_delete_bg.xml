@@ -12,9 +12,8 @@
     <item android:state_pressed="false">
 
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="?backgroundColor" />
             <size android:width="3dp" android:height="1dp" />
-
         </shape>
     </item>
 

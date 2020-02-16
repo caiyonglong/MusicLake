@@ -1,370 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/discoverContainerView"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?windowBackground"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/containerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <com.zhouwei.mzbanner.MZBannerView
+                android:id="@+id/mzBannerView"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:background="?cardColor"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_8"
+                android:visibility="gone"
+                app:canLoop="true"
+                app:indicatorAlign="center"
+                app:indicatorPaddingLeft="8dp"
+                app:open_mz_mode="false"
+                tools:visibility="visible" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.zhouwei.mzbanner.MZBannerView
-                    android:id="@+id/mzBannerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="@dimen/dp_4"
-                    android:background="?cardColor"
-                    android:paddingTop="@dimen/dp_8"
-                    android:paddingBottom="@dimen/dp_8"
-                    android:visibility="gone"
-                    app:canLoop="true"
-                    app:indicatorAlign="center"
-                    app:indicatorPaddingLeft="8dp"
-                    app:open_mz_mode="false"
-                    tools:visibility="visible" />
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_4"
-                    app:cardBackgroundColor="?cardColor"
-                    app:cardCornerRadius="@dimen/dp_2"
-                    app:cardElevation="@dimen/dp_4">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_8"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dp_16"
-                        tools:visibility="visible">
-
-                        <TextView
-                            android:visibility="gone"
-                            android:id="@+id/personalFmTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:drawableTop="@drawable/ic_radio"
-                            android:gravity="center"
-                            android:text="@string/personal_fm" />
-
-                        <TextView
-                            android:id="@+id/recommendSongsTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:drawableTop="@drawable/ic_hot"
-                            android:gravity="center"
-                            android:text="@string/recommend_song" />
-
-                        <TextView
-                            android:id="@+id/hotSingerTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:drawableTop="@drawable/ic_hot"
-                            android:gravity="center"
-                            android:text="@string/hot_artist" />
-
-                        <TextView
-                            android:id="@+id/singerListTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:drawableTop="@drawable/ic_supervisor_account"
-                            android:gravity="center"
-                            android:text="@string/all_artist" />
-
-                        <TextView
-                            android:id="@+id/radioTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:drawableTop="@drawable/ic_radio"
-                            android:gravity="center"
-                            android:text="@string/radio_list" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
+                android:layout_margin="@dimen/dp_4"
+                app:cardBackgroundColor="?cardColor"
+                app:cardCornerRadius="@dimen/dp_2"
+                app:cardElevation="@dimen/dp_4"
+                tools:visibility="visible">
 
                 <LinearLayout
-                    android:id="@+id/artistView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="?cardColor"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dp_16">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/personalFmTv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:drawableTop="@drawable/ic_radio"
+                        android:gravity="center"
+                        android:text="@string/personal_fm"
+                        android:visibility="gone" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="10dp"
-                            android:text="@string/hot_artist"
-                            android:textSize="@dimen/sp_16" />
-
-                        <TextView
-                            android:id="@+id/seeAllArtistTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="@string/see_all"
-                            android:textColor="?accentColor" />
-                    </LinearLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/chartsArtistRcv"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/recommendSongsTv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_8"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:drawableTop="@drawable/ic_hot"
+                        android:gravity="center"
+                        android:text="@string/recommend_song" />
+
+                    <TextView
+                        android:id="@+id/hotSingerTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:drawableTop="@drawable/ic_hot"
+                        android:gravity="center"
+                        android:text="@string/hot_artist" />
+
+                    <TextView
+                        android:id="@+id/singerListTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:drawableTop="@drawable/ic_supervisor_account"
+                        android:gravity="center"
+                        android:text="@string/all_artist" />
+
+                    <TextView
+                        android:id="@+id/radioTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:drawableTop="@drawable/ic_radio"
+                        android:gravity="center"
+                        android:text="@string/radio_list" />
+
                 </LinearLayout>
 
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/artistView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="?cardColor"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <LinearLayout
-                    android:id="@+id/recommendView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="?cardColor"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text="@string/hot_artist"
+                        android:textSize="@dimen/sp_16" />
+
+                    <TextView
+                        android:id="@+id/seeAllArtistTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@string/see_all"
+                        android:textColor="?accentColor" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/chartsArtistRcv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/recommendView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="?cardColor"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/recommend_song" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendRsv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:clipToPadding="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/recommendPlaylistView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="?cardColor"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
-                        android:text="@string/recommend_song" />
+                        android:text="@string/recommend_song_list" />
 
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recommendRsv"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/cateTagTv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_8"
-                        android:clipToPadding="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dp_8"
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:background="@drawable/btn_more_bg"
+                        android:drawableEnd="@drawable/ic_navigate_next"
+                        android:drawableTint="?iconColor"
+                        android:gravity="center"
                         android:paddingStart="@dimen/dp_8"
-                        android:paddingEnd="@dimen/dp_8" />
-                </LinearLayout>
+                        android:paddingTop="@dimen/dp_2"
+                        android:paddingEnd="@dimen/dp_8"
+                        android:paddingBottom="@dimen/dp_2"
+                        android:text="@string/playlist_square"
+                        android:textColor="@color/colorAccent" />
+                </RelativeLayout>
 
-
-                <LinearLayout
-                    android:id="@+id/recommendPlaylistView"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendPlaylistRsv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="?cardColor"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="gone">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="@string/recommend_song_list" />
-
-                        <TextView
-                            android:id="@+id/cateTagTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/dp_8"
-                            android:layout_marginEnd="@dimen/dp_8"
-                            android:background="@drawable/btn_more_bg"
-                            android:drawableEnd="@drawable/ic_navigate_next"
-                            android:drawableTint="?iconColor"
-                            android:gravity="center"
-                            android:paddingStart="@dimen/dp_8"
-                            android:paddingTop="@dimen/dp_2"
-                            android:paddingEnd="@dimen/dp_8"
-                            android:paddingBottom="@dimen/dp_2"
-                            android:text="@string/playlist_square"
-                            android:textColor="@color/colorAccent" />
-                    </RelativeLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recommendPlaylistRsv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_8"
-                        android:clipToPadding="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:paddingStart="@dimen/dp_8"
-                        android:paddingEnd="@dimen/dp_8" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/radioView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="?cardColor"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="10dp"
-                            android:text="@string/radio"
-                            android:textSize="@dimen/sp_16" />
-
-                        <TextView
-                            android:id="@+id/seeAllRadioTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="@string/see_all"
-                            android:textColor="?accentColor" />
-                    </LinearLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/radioRsv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_8"
-                        android:clipToPadding="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:paddingStart="@dimen/dp_8"
-                        android:paddingEnd="@dimen/dp_8" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/playlistView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="?cardColor"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="10dp"
-                            android:text="@string/charts_netease" />
-
-                        <TextView
-                            android:id="@+id/catTag1Tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:padding="10dp"
-                            android:text="@string/cate_huayu"
-                            android:textColor="?colorAccent"
-                            android:textSize="@dimen/sp_12" />
-
-                        <View
-                            android:layout_width="@dimen/dp_1"
-                            android:layout_height="@dimen/dp_20"
-                            android:background="@color/divider_line" />
-
-                        <TextView
-                            android:id="@+id/catTag2Tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:padding="10dp"
-                            android:text="@string/cate_liuxing"
-                            android:textColor="?colorAccent"
-                            android:textSize="@dimen/sp_12" />
-
-                        <View
-                            android:layout_width="@dimen/dp_1"
-                            android:layout_height="@dimen/dp_20"
-                            android:background="@color/divider_line" />
-
-                        <TextView
-                            android:id="@+id/catTag3Tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
-                            android:padding="10dp"
-                            android:text="@string/cate_gufeng"
-                            android:textColor="?colorAccent"
-                            android:textSize="@dimen/sp_12" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_1"
-                        android:background="@color/divider_line" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/wangChartsRv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_8"
-                        android:clipToPadding="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:paddingStart="@dimen/dp_8"
-                        android:paddingEnd="@dimen/dp_8" />
-                </LinearLayout>
-
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:clipToPadding="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/radioView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="?cardColor"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-        </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text="@string/radio"
+                        android:textSize="@dimen/sp_16" />
+
+                    <TextView
+                        android:id="@+id/seeAllRadioTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@string/see_all"
+                        android:textColor="?accentColor" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/radioRsv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:clipToPadding="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/playlistView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="?cardColor"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text="@string/charts_netease" />
+
+                    <TextView
+                        android:id="@+id/catTag1Tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
+                        android:text="@string/cate_huayu"
+                        android:textColor="?colorAccent"
+                        android:textSize="@dimen/sp_12" />
+
+                    <View
+                        android:layout_width="@dimen/dp_1"
+                        android:layout_height="@dimen/dp_20"
+                        android:background="@color/divider_line" />
+
+                    <TextView
+                        android:id="@+id/catTag2Tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
+                        android:text="@string/cate_liuxing"
+                        android:textColor="?colorAccent"
+                        android:textSize="@dimen/sp_12" />
+
+                    <View
+                        android:layout_width="@dimen/dp_1"
+                        android:layout_height="@dimen/dp_20"
+                        android:background="@color/divider_line" />
+
+                    <TextView
+                        android:id="@+id/catTag3Tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
+                        android:text="@string/cate_gufeng"
+                        android:textColor="?colorAccent"
+                        android:textSize="@dimen/sp_12" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/divider_line" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/wangChartsRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:clipToPadding="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

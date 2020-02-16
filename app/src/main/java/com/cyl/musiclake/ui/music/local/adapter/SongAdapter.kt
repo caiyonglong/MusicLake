@@ -2,10 +2,10 @@ package com.cyl.musiclake.ui.music.local.adapter
 
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.MusicApp
@@ -151,6 +151,9 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         return bitmap;
     }
 
+    /**
+     * 适配器内部监听刷新item，外部不需要调用刷新机制
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateUserInfo(event: MetaChangedEvent) {
         notifyDataSetChanged()

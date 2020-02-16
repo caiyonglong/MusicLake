@@ -12,10 +12,9 @@ import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -30,7 +29,6 @@ import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
-import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
@@ -146,8 +144,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                     mArtist != null -> PlayManager.play(position, musicList, mArtist?.artistId.toString())
                     mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.albumId.toString())
                 }
-                mAdapter?.notifyDataSetChanged()
-                NavigationHelper.navigateToPlaying(this, view.findViewById(R.id.iv_cover))
+//                mAdapter?.notifyDataSetChanged()
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->

@@ -1,12 +1,10 @@
 package com.cyl.musiclake.ui.music.discover
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musicapi.netease.BannerBean
-import com.cyl.musicapi.netease.NeteaseApiService
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Music
@@ -14,7 +12,6 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.discover.artist.QQArtistListFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
@@ -87,7 +84,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             R.id.seeAllRadioTv, R.id.radioTv -> {
                 activity?.let { NavigationHelper.navigateFragment(it, AllListFragment.newInstance(Constants.BAIDU_RADIO_LIST, artists, channels)) }
             }
-            R.id.personalFmTv->{
+            R.id.personalFmTv -> {
                 mPresenter?.loadPersonalFM()
             }
             R.id.catTag1Tv -> {
@@ -154,6 +151,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     override fun showBannerView(banners: MutableList<BannerBean>) {
         if (banners.size > 0) {
             mzBannerView.visibility = View.VISIBLE
+            containerView.visibility = View.VISIBLE
             mzBannerView.setPages(banners as List<Nothing>) { activity?.let { BannerViewHolder(it) } }
         } else {
             mzBannerView.visibility = View.GONE
@@ -236,7 +234,12 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         } else {
             mRadioAdapter?.setNewData(this.channels)
         }
-        radioView.visibility = if (channels.size <= 0) View.GONE else View.VISIBLE
+        if (channels.size > 0) {
+            containerView.visibility = View.VISIBLE
+            radioView.visibility = View.VISIBLE
+        } else {
+            radioView.visibility = View.GONE
+        }
     }
 
     /**
@@ -299,7 +302,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
      * 播放私人FM
      */
     override fun showPersonalFm(playlist: Playlist) {
-        PlayManager.play(0,playlist.musicList,playlist.pid)
+        PlayManager.play(0, playlist.musicList, playlist.pid)
     }
 
 

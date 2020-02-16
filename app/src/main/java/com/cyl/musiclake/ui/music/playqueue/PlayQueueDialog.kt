@@ -38,26 +38,12 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     override fun onStart() {
         super.onStart()
         (view?.parent as View).setBackgroundColor(Color.TRANSPARENT)
-
-//        dialog?.setCanceledOnTouchOutside(true)
-//        val window = dialog?.window
-//
-//        val params = window?.attributes
-//        params?.gravity = Gravity.BOTTOM
-//        params?.width = WindowManager.LayoutParams.MATCH_PARENT
-//        params?.height = MusicApp.screenSize.y / 7 * 4
-//        window?.attributes = params
-//        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//
-//        mBehavior?.peekHeight = params?.height ?: dip(300)
         //默认全屏展开
         mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setStyle(STYLE_NO_FRAME, 0)
         mPresenter = PlayQueuePresenter()
         mPresenter?.attachView(this)
         mAdapter = QueueAdapter(musicList)
@@ -89,24 +75,11 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return rootView
     }
-//
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-//        val view = LayoutInflater.from(context).inflate(R.layout.dialog_playqueue, null)
-//        recyclerView = view.findViewById(R.id.rcv_songs)
-//        playModeTv = view.findViewById(R.id.tv_play_mode)
-//        songSumTv = view.findViewById(R.id.tv_song_sum)
-//        playModeIv = view.findViewById(R.id.iv_play_mode)
-//        clearAllIv = view.findViewById(R.id.iv_clear_all)
-//
-//        return dialog
-//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
     }
-
 
     private fun initListener() {
         playModeTv.setOnClickListener { view ->

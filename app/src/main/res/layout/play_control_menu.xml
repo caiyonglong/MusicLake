@@ -29,6 +29,7 @@
         android:layout_gravity="top"
         android:progress="10"
         android:tag="tint_accent_color"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,16 +46,19 @@
 
     <com.cyl.musiclake.ui.widget.PlayPauseView
         android:id="@+id/playPauseView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
         android:layout_gravity="center"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         app:anim_duration="200"
         app:bg_color="@color/translucent"
+        app:border_width="2dp"
         app:btn_color="?iconColor"
-        app:gap_width="10"
+        app:gap_width="2dp"
+        app:hasProgress="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/playQueueIv"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:loadingColor="?iconColor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

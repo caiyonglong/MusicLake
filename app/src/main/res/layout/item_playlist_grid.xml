@@ -7,7 +7,7 @@
     android:layout_margin="@dimen/dp_4"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?cardColor"
     app:cardCornerRadius="@dimen/card_recycler_corner_radius"
     app:cardElevation="@dimen/card_recycler_elevation">
 
@@ -22,7 +22,6 @@
             android:layout_height="@dimen/dp_120"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_cover"
             android:transitionName="@string/transition_album"
             app:layout_constraintBottom_toTopOf="@+id/name"
             app:layout_constraintEnd_toEndOf="parent"

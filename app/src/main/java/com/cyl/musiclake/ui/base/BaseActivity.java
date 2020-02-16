@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -12,8 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -66,19 +67,15 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     protected ActivityComponent mActivityComponent;
 
     @Nullable
-    @BindView(R.id.empty_state_view)
+    @BindView(R.id.loadingView)
+    public ViewStub loadingStubView;
+
+    public View loadingView;
+
     public View emptyStateView;
-    @Nullable
-    @BindView(R.id.error_panel)
     public View errorPanelRoot;
-    @Nullable
-    @BindView(R.id.error_button_retry)
     public Button errorButtonRetry;
-    @Nullable
-    @BindView(R.id.error_message_view)
     public TextView errorTextView;
-    @Nullable
-    @BindView(R.id.loading_progress_bar)
     public ProgressBar loadingProgressBar;
 
     @Nullable
@@ -99,19 +96,32 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setUpTheme();
-//        setCustomDensity(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);
-        setContentView(getLayoutResID());
+        setContentView(R.layout.activity_base);
+        View view = LayoutInflater.from(this).inflate(getLayoutResID(), findViewById(R.id.rootParent));
+//        //初始化黄油刀控件绑定框架
+//        unbinder = ButterKnife.bind(this, view);
+        //初始化黄油刀控件绑定框架
+        unbinder = ButterKnife.bind(this);
         mHandler = new Handler();
         initActivityComponent();
         initInjector();
-        //初始化黄油刀控件绑定框架
-        unbinder = ButterKnife.bind(this);
         initToolBar();
         attachView();
         initView();
+    }
+
+    private void initLoading() {
+        if (loadingView == null && loadingStubView != null) {
+            loadingView = loadingStubView.inflate();
+            emptyStateView = loadingView.findViewById(R.id.empty_state_view);
+            errorPanelRoot = loadingView.findViewById(R.id.error_panel);
+            errorButtonRetry = loadingView.findViewById(R.id.error_button_retry);
+            errorTextView = loadingView.findViewById(R.id.error_message_view);
+            loadingProgressBar = loadingView.findViewById(R.id.loading_progress_bar);
+        }
     }
 
     /**
@@ -215,6 +225,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     @Override
     public void showLoading() {
+        initLoading();
         if (emptyStateView != null) animateView(emptyStateView, false, 150);
         if (loadingProgressBar != null) animateView(loadingProgressBar, true, 400);
         animateView(errorPanelRoot, false, 150);
@@ -229,6 +240,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     @Override
     public void showEmptyState() {
+        initLoading();
         if (emptyStateView != null) animateView(emptyStateView, true, 200);
         if (loadingProgressBar != null) animateView(loadingProgressBar, false, 0);
         animateView(errorPanelRoot, false, 150);
@@ -236,6 +248,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     @Override
     public void showError(String message, boolean showRetryButton) {
+        initLoading();
         hideLoading();
         if (errorTextView != null)
             errorTextView.setText(message);

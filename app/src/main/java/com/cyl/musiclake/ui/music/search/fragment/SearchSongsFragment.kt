@@ -2,14 +2,12 @@ package com.cyl.musiclake.ui.music.search.fragment
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.SearchHistoryBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -115,9 +113,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
 
             mAdapter?.setOnItemClickListener { _, view, position ->
                 if (musicList.size <= position) return@setOnItemClickListener
-
                 PlayManager.playOnline(musicList[position])
-                activity?.let { NavigationHelper.navigateToPlaying(it, view.findViewById(R.id.iv_cover)) }
             }
             mAdapter?.setOnItemChildClickListener { _, _, position ->
                 val music = musicList[position]

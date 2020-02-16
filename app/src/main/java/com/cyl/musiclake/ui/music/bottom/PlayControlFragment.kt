@@ -5,12 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-import android.widget.SeekBar
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
@@ -19,7 +19,6 @@ import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.event.StatusChangedEvent
-import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.playpage.PlayContract
@@ -116,6 +115,8 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     override fun updateProgress(progress: Long, max: Long) {
         progressBar.progress = progress.toInt()
         progressBar.max = max.toInt()
+        LogUtil.d(TAG, "progress : " + 1.0f * progress / max);
+        playPauseView.setProgress(1.0f * progress / max)
     }
 
 

@@ -10,18 +10,19 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
-import androidx.annotation.Nullable;
-
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.cyl.musicapi.netease.L;
+import androidx.annotation.Nullable;
+
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.SizeUtils;
 
 /**
  * 自定义暂停播放按钮，包括自定义进度条
+ * 1、自定义圆环进度条
+ * 2、中间状态播放监听
  */
 public class PlayPauseView extends View {
 
@@ -29,6 +30,7 @@ public class PlayPauseView extends View {
     private int mHeight; //View高度
     private Paint mPaint;
     private Paint mRingPaint; //圆弧
+    private Paint mProgressPaint; //圆弧
     private Path mLeftPath; //暂停时左侧竖条Path
     private Path mRightPath; //暂停时右侧竖条Path
     private float mBorderWidth; //两个暂停竖条中间的空隙,默认为两侧竖条的宽度
@@ -36,8 +38,10 @@ public class PlayPauseView extends View {
     private float mProgress; //动画Progress
     private Rect mRect;
     private RectF mRingRect;
+    private RectF mProgressRect;
     private boolean isPlaying;
     private boolean isLoading;
+    private boolean hasProgress;
     private float startAngle, sweepAngle, newAngle;
     private float mRectWidth;  //圆内矩形宽度
     private float mRectHeight; //圆内矩形高度
@@ -45,6 +49,7 @@ public class PlayPauseView extends View {
     private int mRadius;  //圆的半径
     private int mBgColor = Color.WHITE;
     private int mBtnColor = Color.BLACK;
+    private int mLoadingColor;
     private int mDirection = Direction.POSITIVE.value;
     private float mPadding;
     private int mAnimDuration = 200;//动画时间
@@ -67,11 +72,13 @@ public class PlayPauseView extends View {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseView);
         mBgColor = ta.getColor(R.styleable.PlayPauseView_bg_color, Color.WHITE);
         mBtnColor = ta.getColor(R.styleable.PlayPauseView_btn_color, Color.BLACK);
-        mGapWidth = ta.getFloat(R.styleable.PlayPauseView_gap_width, 0);
-        mBorderWidth = ta.getFloat(R.styleable.PlayPauseView_border_width, 20);
+        mGapWidth = SizeUtils.dp2px(context, ta.getDimension(R.styleable.PlayPauseView_gap_width, 0));
+        mBorderWidth = SizeUtils.dp2px(context, ta.getDimension(R.styleable.PlayPauseView_border_width, 2));
         mDirection = ta.getInt(R.styleable.PlayPauseView_anim_direction, Direction.POSITIVE.value);
         mPadding = ta.getFloat(R.styleable.PlayPauseView_space_padding, 0);
         mAnimDuration = ta.getInt(R.styleable.PlayPauseView_anim_duration, 200);
+        hasProgress = ta.getBoolean(R.styleable.PlayPauseView_hasProgress, false);
+        mLoadingColor = ta.getColor(R.styleable.PlayPauseView_loadingColor, Color.parseColor("#e91e63"));
         ta.recycle();
 
         mPaint = new Paint();
@@ -81,16 +88,23 @@ public class PlayPauseView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mRingPaint = new Paint();
         mRingPaint.setAntiAlias(true);
-        mRingPaint.setColor(Color.parseColor("#e91e63"));
+        mRingPaint.setColor(mLoadingColor);
         mRingPaint.setStrokeWidth(mBorderWidth);
         mRingPaint.setStyle(Paint.Style.STROKE);
-        mRingPaint.setStrokeCap(Paint.Cap.ROUND);
-        mRingPaint.setStrokeJoin(Paint.Join.ROUND);
+
+//        mRingPaint.setStrokeCap(Paint.Cap.ROUND);
+//        mRingPaint.setStrokeJoin(Paint.Join.ROUND);
+
+        mProgressPaint = new Paint();
+        mProgressPaint.setAntiAlias(true);
+        mProgressPaint.setColor(Color.parseColor("#809E9E9E"));
+        mProgressPaint.setStyle(Paint.Style.STROKE);
 
         mLeftPath = new Path();
         mRightPath = new Path();
         mRect = new Rect();
         mRingRect = new RectF();
+        mProgressRect = new RectF();
     }
 
     @SuppressWarnings("unused")
@@ -142,11 +156,17 @@ public class PlayPauseView extends View {
         mRect.bottom = rectRB;
         mRect.left = mRectLT;
         mRect.right = rectRB;
-        mRingRect.top = mRadius - space * 2;
-        mRingRect.bottom = mRadius + space * 2;
-        mRingRect.left = mRadius - space * 2;
-        mRingRect.right = mRadius + space * 2;
-//        mRectWidth = mRect.width();
+        mRingRect.top = mBorderWidth / 4;
+        mRingRect.bottom = mWidth - mBorderWidth / 4;
+        mRingRect.left = mBorderWidth / 4;
+        mRingRect.right = mWidth - mBorderWidth / 4;
+
+        mProgressRect.top = mBorderWidth / 4;
+        mProgressRect.bottom = mWidth - mBorderWidth / 4;
+        mProgressRect.left = mBorderWidth / 4;
+        mProgressRect.right = mWidth - mBorderWidth / 4;
+
+        //        mRectWidth = mRect.width();
 //        mRectHeight = mRect.height();
         mRectWidth = 2 * space + 2; //改为float类型，否则动画有抖动。并增加一像素防止三角形之间有缝隙
         mRectHeight = 2 * space + 2;
@@ -155,7 +175,8 @@ public class PlayPauseView extends View {
         mAnimDuration = getAnimDuration() < 0 ? 200 : getAnimDuration();
         startAngle = -90;
         sweepAngle = 120;
-        mRingPaint.setStrokeWidth(space / 2);
+        mRingPaint.setStrokeWidth(mBorderWidth / 2);
+        mProgressPaint.setStrokeWidth(mBorderWidth / 2);
     }
 
     @Override
@@ -169,7 +190,11 @@ public class PlayPauseView extends View {
 //        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(mBgColor);
         canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
-//        canvas.drawRect(mRect, mPaint);
+
+        //是否显示进度条
+        if (hasProgress) {
+            canvas.drawArc(mProgressRect, -90, 360, false, mProgressPaint); //
+        }
 
         if (mBorderWidth > 0) {
             //周边底部颜色 一般为白色

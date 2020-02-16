@@ -36,7 +36,6 @@
 
     <TextView
         android:id="@+id/tv_song_sum"
-        style="@style/TextAppearance.AppCompat.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -49,7 +48,6 @@
 
     <TextView
         android:id="@+id/tv_play_mode"
-        style="@style/TextAppearance.AppCompat.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp_16"

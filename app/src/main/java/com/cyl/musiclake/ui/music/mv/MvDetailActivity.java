@@ -1,24 +1,21 @@
 package com.cyl.musiclake.ui.music.mv;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
-
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cyl.musicapi.netease.CommentsItemInfo;
 import com.cyl.musicapi.netease.MvInfoDetail;
@@ -112,7 +109,6 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             ll.height = ViewGroup.LayoutParams.MATCH_PARENT;
             isPortrait = false;
             mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_exit);
-
             mBrsIv.setVisibility(View.VISIBLE);
             //设置全屏
             getWindow().getDecorView().setSystemUiVisibility(getFullscreenUiFlags());
@@ -123,7 +119,6 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             ll.width = ViewGroup.LayoutParams.MATCH_PARENT;
             isPortrait = true;
             mFullScreenIv.setImageResource(R.drawable.ic_fullscreen_white);
-
             mBrsIv.setVisibility(View.GONE);
             //设置全屏
             getWindow().getDecorView().setSystemUiVisibility(getStableUiFlags());

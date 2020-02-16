@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.chat
 
-import android.app.Activity
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -11,7 +10,6 @@ import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -78,7 +76,6 @@ class ChatListAdapter(val list: List<MessageInfoBean>) : BaseQuickAdapter<Messag
                     }
                     holder.getView<View>(R.id.include_music).setOnClickListener {
                         PlayManager.playOnline(music)
-                        NavigationHelper.navigateToPlaying(mContext as Activity)
                     }
                     holder.getView<View>(R.id.iv_more).setOnClickListener {
                         BottomDialogFragment.newInstance(music).show(mContext as ChatActivity)

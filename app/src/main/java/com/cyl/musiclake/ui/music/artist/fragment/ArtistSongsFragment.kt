@@ -2,10 +2,8 @@ package com.cyl.musiclake.ui.music.artist.fragment
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.artist.contract.ArtistSongContract
@@ -66,8 +64,6 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicInfos, artistID.toString())
-                mAdapter?.notifyDataSetChanged()
-                activity?.let { NavigationHelper.navigateToPlaying(it, view.findViewById(R.id.iv_cover)) }
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->

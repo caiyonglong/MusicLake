@@ -30,8 +30,6 @@
             app:layout_constraintVertical_bias="0.0" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/item_loading" />
-
     <LinearLayout
         android:id="@+id/userNoticeContainerView"
         android:layout_width="0dp"

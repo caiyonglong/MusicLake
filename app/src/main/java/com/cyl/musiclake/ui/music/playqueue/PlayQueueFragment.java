@@ -20,7 +20,6 @@ import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Monkey on 2015/6/29.
@@ -127,8 +124,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
                 PlayManager.play(position);
-                mAdapter.notifyDataSetChanged();
-                NavigationHelper.INSTANCE.navigateToPlaying(mFragmentComponent.getActivity(), view.findViewById(R.id.iv_cover));
+                mAdapter.notifyItemChanged(position);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

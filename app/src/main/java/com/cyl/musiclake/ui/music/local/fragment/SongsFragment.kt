@@ -64,7 +64,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID)
-                mAdapter?.notifyDataSetChanged()
             }
         }
         mAdapter?.setOnItemChildClickListener { adapter, _, position ->

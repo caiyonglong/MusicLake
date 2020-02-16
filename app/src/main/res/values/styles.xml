@@ -1,13 +1,16 @@
 <resources>
     <!--夜间模式的基本属性-->
+    <!--界面背景色-->
     <attr name="windowBackground" format="reference" />
     <attr name="accentColor" format="reference" />
     <attr name="cardColor" format="reference" />
+    <!--背景色-->
+    <attr name="backgroundColor" format="reference" />
+    <!--通用图标色-->
     <attr name="iconColor" format="reference" />
     <attr name="progressBackgroundColor" format="reference" />
     <attr name="progressDrawable" format="reference" />
     <attr name="progressDrawableWithBackground" format="reference" />
-    <attr name="textColorPrimary" format="reference" />
     <!--<attr name="textColor" format="reference" />-->
     <attr name="ripple_color" format="reference" />
     <!--分割颜色-->
@@ -21,23 +24,24 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
     <!-- 为主色调 -->
-    <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MyThemeBlue" parent="BaseTheme">
         <!--选中状态icon的颜色和字体颜色-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/orange</item>
         <!--正常状态下字体颜色和icon颜色-->
-        <item name="textColorPrimary">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/black</item>
         <item name="subtitleTextColor">@color/half_black</item>
         <item name="android:actionMenuTextColor">@color/black</item>
 
         <item name="deliverColor">@color/main_background</item>
-
         <item name="android:windowBackground">@color/background</item>
         <item name="windowBackground">@color/background</item>
+        <item name="backgroundColor">@color/white</item>
         <item name="accentColor">@color/black</item>
         <item name="iconColor">@color/black</item>
         <item name="cardColor">@android:color/white</item>
@@ -50,16 +54,23 @@
 
         <item name="android:popupMenuStyle">@style/PopupMenuDayStyle</item>
         <item name="android:tabWidgetStyle">@style/CustomTabLayout.Light</item>
+
+
+        <item name="md_background_color">@color/white</item>
+        <item name="md_ripple_color">@color/orange</item>
+        <item name="md_color_title">@color/black</item>
+        <item name="md_color_content">@color/black</item>
+        <item name="md_color_button_text">@color/colorPrimary</item>
     </style>
 
     <!--夜间模式-->
-    <style name="MyThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MyThemeDark" parent="BaseTheme">
         <!--选中状态icon的颜色和字体颜色-->
         <item name="colorPrimary">@color/colorPrimaryDarkTheme</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkDarkTheme</item>
         <item name="colorAccent">@color/colorAccentDarkTheme</item>
         <!--正常状态下字体颜色和icon颜色-->
-        <item name="textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorSecondary">@color/white_translucent</item>
         <item name="android:textColorHint">@color/white_translucent</item>
@@ -70,6 +81,7 @@
         <item name="accentColor">@color/colorAccentDarkTheme</item>
         <item name="iconColor">@color/colorAccentDarkTheme</item>
         <item name="cardColor">@color/colorPrimaryDarkTheme</item>
+        <item name="backgroundColor">@color/black</item>
 
         <item name="progressBackgroundColor">@color/progressBackgroundColorLight</item>
         <item name="progressDrawable">@drawable/progress_drawable</item>
@@ -81,8 +93,11 @@
         <item name="android:popupMenuStyle">@style/PopupMenuNightStyle</item>
         <item name="android:tabWidgetStyle">@style/CustomTabLayout.Dark</item>
 
-        <item name="android:textColorPrimary">@color/white_translucent</item>
-
+        <item name="md_background_color">@color/window_background_dark</item>
+        <item name="md_ripple_color">@color/colorAccentDarkTheme</item>
+        <item name="md_color_title">@color/white</item>
+        <item name="md_color_content">@color/white</item>
+        <item name="md_color_button_text">@color/colorAccentDarkTheme</item>
     </style>
 
     <style name="FullScreen" parent="MyThemeBlue">
@@ -183,5 +198,9 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="MyMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:popupBackground">?windowBackground</item>
+    </style>
 
 </resources>
