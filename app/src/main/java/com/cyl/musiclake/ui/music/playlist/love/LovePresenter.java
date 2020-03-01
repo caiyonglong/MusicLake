@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.playlist.love;
 
 import com.cyl.musiclake.ui.base.BasePresenter;
 import com.cyl.musiclake.data.SongLoader;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class LovePresenter extends BasePresenter<LoveContract.View> implements L
 
     @Override
     public void loadSongs() {
-        List<Music> songs = SongLoader.INSTANCE.getFavoriteSong();
+        List<BaseMusicInfo> songs = SongLoader.INSTANCE.getFavoriteSong();
         mView.showSongs(songs);
     }
 

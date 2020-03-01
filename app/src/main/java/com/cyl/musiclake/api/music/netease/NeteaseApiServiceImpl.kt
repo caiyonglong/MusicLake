@@ -5,7 +5,7 @@ import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.HotSearchBean
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.LogUtil
@@ -273,13 +273,13 @@ object NeteaseApiServiceImpl {
     /**
      *推荐歌曲
      */
-    fun recommendSongs(): Observable<MutableList<Music>> {
+    fun recommendSongs(): Observable<MutableList<BaseMusicInfo>> {
         return apiService.recommendSongs()
                 .flatMap {
-                    Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
+                    Observable.create(ObservableOnSubscribe<MutableList<BaseMusicInfo>> { e ->
                         try {
                             if (it.code == 200) {
-                                val list = mutableListOf<Music>()
+                                val list = mutableListOf<BaseMusicInfo>()
                                 list.addAll(MusicUtils.getNeteaseRecommendMusic(it.recommend))
                                 e.onNext(list)
                                 e.onComplete()
@@ -460,9 +460,9 @@ object NeteaseApiServiceImpl {
                                     playlist.type = Constants.PLAYLIST_WY_ID
                                     if (it.ToplistType != null) {
                                         LogUtil.d(TAG, "type = ${it.ToplistType} ${it.tracks} ")
-                                        val musicList = mutableListOf<Music>()
+                                        val musicList = mutableListOf<BaseMusicInfo>()
                                         it.tracks?.forEach { track ->
-                                            val music = Music()
+                                            val music = BaseMusicInfo()
                                             music.title = track.first
                                             music.artist = track.second
                                             musicList.add(music)

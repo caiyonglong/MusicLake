@@ -1,6 +1,6 @@
 package com.cyl.musiclake.utils
 
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
@@ -21,9 +21,9 @@ object Mp3Util {
     /**
      * 修改音乐名、歌手名和专辑名
      */
-    fun updateTagInfo(path: String, music: Music): Boolean {
+    fun updateTagInfo(path: String, baseMusicInfoInfo: BaseMusicInfo): Boolean {
         try {
-            val file = saveInfo(MP3File(path), music.title, music.artist, music.album)
+            val file = saveInfo(MP3File(path), baseMusicInfoInfo.title, baseMusicInfoInfo.artist, baseMusicInfoInfo.album)
             file.commit()
             return true
         } catch (e: IOException) {

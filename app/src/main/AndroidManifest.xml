@@ -255,28 +255,28 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name=".player.MediaButtonIntentReceiver">
+        <receiver android:name="com.music.lake.musiclib.player.MediaButtonIntentReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".ui.widget.appwidgets.StandardWidget"
-            android:label="@string/widget_standard">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.cyl.music_lake.metachanged" />
-                <action android:name="com.cyl.music_lake.notify.play_state" />
-            </intent-filter>
+<!--        <receiver-->
+<!--            android:name=".ui.widget.appwidgets.StandardWidget"-->
+<!--            android:label="@string/widget_standard">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--                <action android:name="com.cyl.music_lake.metachanged" />-->
+<!--                <action android:name="com.cyl.music_lake.notify.play_state" />-->
+<!--            </intent-filter>-->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_standard" />
-        </receiver>
+<!--            <meta-data-->
+<!--                android:name="android.appwidget.provider"-->
+<!--                android:resource="@xml/widget_standard" />-->
+<!--        </receiver>-->
 
         <service
-            android:name=".player.MusicPlayerService"
+            android:name="com.music.lake.musiclib.player.MusicPlayerService"
             android:enabled="true"
             android:exported="true" />
         <uses-library

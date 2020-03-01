@@ -1,10 +1,8 @@
 package com.cyl.musiclake.ui.music.charts;
 
 
-import android.content.Context;
-
 import com.cyl.musiclake.ui.base.BaseContract;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.bean.Playlist;
 
 import java.util.List;
@@ -15,7 +13,7 @@ public interface PlaylistContract {
 
         void showPlayList(Playlist playlist);
 
-        void showOnlineMusicList(List<Music> musicList);
+        void showOnlineMusicList(List<BaseMusicInfo> baseMusicInfoInfoList);
 
         void showNeteaseCharts(List<Playlist> playlistList);
     }

@@ -11,7 +11,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.cyl.musiclake.player.PlayManager;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 import com.cyl.musiclake.utils.LogUtil;
 
 public class LyricTextView extends View {
@@ -142,7 +142,7 @@ public class LyricTextView extends View {
                 mStartMillis = mLyricInfo.songLines.get(mCurrentPlayLine).start;
                 content = mLyricInfo.songLines.get(mCurrentPlayLine).content;
                 if (mCurrentPlayLine >= mLyricInfo.songLines.size() - 1) {
-                    mEndMillis = PlayManager.getDuration();
+                    mEndMillis = MusicPlayerManager.getInstance().getDuration();
                     nextContent = "";
                 } else {
                     mEndMillis = mLyricInfo.songLines.get(mCurrentPlayLine + 1).start;

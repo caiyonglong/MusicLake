@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.cyl.musiclake.ui.base.BaseContract;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface AlbumDetailContract {
 
         void showEmptyView();
 
-        void showAlbumSongs(List<Music> songList);
+        void showAlbumSongs(List<BaseMusicInfo> songList);
 
         void showAlbumArt(Drawable albumArt);
 

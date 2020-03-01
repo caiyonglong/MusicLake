@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.edit
 
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_music_edit.*
  */
 class EditMusicActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
-    var music: Music? = null
+    var baseMusicInfoInfo: BaseMusicInfo? = null
 
     override fun getLayoutResID(): Int {
         return R.layout.activity_music_edit
@@ -36,10 +36,10 @@ class EditMusicActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
                 title(R.string.warning)
                 message(R.string.tag_edit_tips)
                 positiveButton(R.string.sure) {
-                    music?.title = titleInputView.editText?.text.toString()
-                    music?.artist = artistInputView.editText?.text.toString()
-                    music?.album = albumInputView.editText?.text.toString()
-                    music?.let { it1 ->
+                    baseMusicInfoInfo?.title = titleInputView.editText?.text.toString()
+                    baseMusicInfoInfo?.artist = artistInputView.editText?.text.toString()
+                    baseMusicInfoInfo?.album = albumInputView.editText?.text.toString()
+                    baseMusicInfoInfo?.let { it1 ->
                         if (updateTagInfo(it1)) {
                             ToastUtils.show(getString(R.string.tag_edit_success))
                         } else {
@@ -53,23 +53,23 @@ class EditMusicActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun initData() {
-        music = intent.getParcelableExtra(Extras.SONG)
-        titleInputView.editText?.setText(music?.title)
-        artistInputView.editText?.setText(music?.artist)
-        albumInputView.editText?.setText(music?.album)
+        baseMusicInfoInfo = intent.getParcelableExtra(Extras.SONG)
+        titleInputView.editText?.setText(baseMusicInfoInfo?.title)
+        artistInputView.editText?.setText(baseMusicInfoInfo?.artist)
+        albumInputView.editText?.setText(baseMusicInfoInfo?.album)
 
-        music?.uri?.let { Mp3Util.getTagInfo(it) }
+        baseMusicInfoInfo?.uri?.let { Mp3Util.getTagInfo(it) }
     }
 
     override fun initInjector() {
     }
 
-    private fun updateTagInfo(music: Music): Boolean {
-        if (music.uri == null) return false
-        val result = Mp3Util.updateTagInfo(music.uri!!, music)
-        Mp3Util.getTagInfo(music.uri!!)
+    private fun updateTagInfo(baseMusicInfoInfo: BaseMusicInfo): Boolean {
+        if (baseMusicInfoInfo.uri == null) return false
+        val result = Mp3Util.updateTagInfo(baseMusicInfoInfo.uri!!, baseMusicInfoInfo)
+        Mp3Util.getTagInfo(baseMusicInfoInfo.uri!!)
         if (result) {
-            DaoLitepal.saveOrUpdateMusic(music)
+            DaoLitepal.saveOrUpdateMusic(baseMusicInfoInfo)
         }
         return result
     }

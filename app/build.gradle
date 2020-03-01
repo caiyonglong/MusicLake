@@ -7,14 +7,14 @@ repositories {
     mavenCentral()
 }
 android {
-//    signingConfigs {
-//        release {
-//            keyAlias 'musiclake'
-//            keyPassword '123123'
-//            storeFile file('../app/musiclake.jks')
-//            storePassword '123123'
-//        }
-//    }
+    signingConfigs {
+        release {
+            keyAlias 'musiclake'
+            keyPassword '123123'
+            storeFile file('../app/musiclake.jks')
+            storePassword '123123'
+        }
+    }
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.cyl.musiclake"
@@ -27,7 +27,7 @@ android {
         android.compileOptions.targetCompatibility 1.8
         ndk {
             //设置支持的SO库架构
-            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
     }
     buildTypes {
@@ -35,13 +35,13 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             //自定义配置参数
             buildConfigField "boolean", "HAS_DOWNLOAD", "true"//是否屏蔽下载功能
             buildConfigField "boolean", "IS_LOCAL", "true"//是否屏蔽下载功能
         }
         debug {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             //自定义配置参数
             buildConfigField "boolean", "HAS_DOWNLOAD", "true"//是否屏蔽下载功能
             buildConfigField "boolean", "IS_LOCAL", "true"//是否屏蔽下载功能
@@ -68,7 +68,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
@@ -122,7 +122,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
     implementation 'com.amitshekhar.android:debug-db:1.0.3'
-    implementation 'com.devbrackets.android:exomedia:4.3.0'
+
+//    implementation 'com.devbrackets.android:exomedia:4.3.0'
 
     //Eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
@@ -169,9 +170,8 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.3'
 
     //Android音乐接口Api
-    implementation 'com.github.caiyonglong:musicapi:1.0.7'
-//    implementation project(':musicapi')
-    //缓存
-    implementation 'com.danikula:videocache:2.7.1'
+//    implementation 'com.github.caiyonglong:musicapi:1.0.7'
 
+    implementation project(path: ':musiclib')
+    implementation project(':musicapi')
 }

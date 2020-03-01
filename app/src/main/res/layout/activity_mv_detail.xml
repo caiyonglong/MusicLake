@@ -254,7 +254,7 @@
                 app:layout_collapseMode="none"
                 app:popupTheme="?android:popupMenuStyle" />
 
-            <com.devbrackets.android.exomedia.ui.widget.VideoView
+            <com.google.android.exoplayer2.ui.PlayerView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_200"
@@ -263,9 +263,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:useDefaultControls="true"
-                app:useTextureViewBacking="true"
-                app:videoScale="fitCenter" />
+                app:show_buffering="when_playing"
+                app:show_shuffle_button="true" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

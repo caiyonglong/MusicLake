@@ -11,7 +11,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.SearchHistoryBean
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Extras
@@ -42,11 +42,11 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
     /**
      * 搜索结果
      */
-    private val searchResults = mutableListOf<Music>()
+    private val searchResults = mutableListOf<BaseMusicInfo>()
     /**
      * 歌曲列表
      */
-    private var songList = mutableListOf<Music>()
+    private var songList = mutableListOf<BaseMusicInfo>()
 
     /**
      * 适配器
@@ -202,7 +202,7 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
     /**
      * 显示搜索记录
      */
-    override fun showSearchResult(list: MutableList<Music>) {
+    override fun showSearchResult(list: MutableList<BaseMusicInfo>) {
 
     }
 

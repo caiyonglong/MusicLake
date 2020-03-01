@@ -4,9 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
@@ -14,6 +13,7 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import kotlinx.android.synthetic.main.header_local_list.*
 import org.jetbrains.anko.support.v4.startActivity
@@ -28,7 +28,7 @@ import java.util.*
 class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
     private var mAdapter: SongAdapter? = null
-    private val musicList = ArrayList<Music>()
+    private val musicList = ArrayList<BaseMusicInfo>()
 
     companion object {
         fun newInstance(): SongsFragment {
@@ -52,7 +52,7 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         iconIv.setOnClickListener { v ->
             if (musicList.size == 0) return@setOnClickListener
             val id = Random().nextInt(musicList.size)
-            PlayManager.play(id, musicList, Constants.PLAYLIST_LOCAL_ID)
+            MusicPlayerManager.getInstance().playMusic(musicList, id)
         }
     }
 
@@ -63,11 +63,11 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     override fun listener() {
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
-                PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID)
+                MusicPlayerManager.getInstance().playMusic(musicList, position)
             }
         }
         mAdapter?.setOnItemChildClickListener { adapter, _, position ->
-            val music = adapter.getItem(position) as Music?
+            val music = adapter.getItem(position) as BaseMusicInfo?
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_LOCAL_ID)
                     .apply {
                         removeSuccessListener = {
@@ -97,7 +97,7 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         }
     }
 
-    override fun showSongs(songList: MutableList<Music>) {
+    override fun showSongs(songList: MutableList<BaseMusicInfo>) {
         LogUtil.d("SongsFragment", "showSongs = ${songList.size}")
         musicList.clear()
         musicList.addAll(songList)

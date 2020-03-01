@@ -1,10 +1,6 @@
 package com.cyl.musiclake.ui.music.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +9,14 @@ import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.cyl.musicapi.kugou.Candidates
 import com.cyl.musicapi.kugou.KugouLyric
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.kugou.KuGouApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
-import com.cyl.musiclake.player.FloatLyricViewManager
+import com.cyl.musiclake.utils.FloatLyricViewManager
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import com.rtugeek.android.colorseekbar.ColorSeekBar

@@ -7,10 +7,10 @@ import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_NORMAL
 import com.cyl.musiclake.api.music.MusicUtils.PIC_SIZE_SMALL
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.bean.*
-import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 
@@ -35,9 +35,9 @@ object BaiduApiServiceImpl {
                 playlist.type = Constants.PLAYLIST_BD_ID
                 playlist.pid = item.type.toString()
                 playlist.coverUrl = item.picS192
-                val musicList = mutableListOf<Music>()
+                val musicList = mutableListOf<BaseMusicInfo>()
                 for (itemMusic in item.content!!) {
-                    val music = Music()
+                    val music = BaseMusicInfo()
                     music.title = itemMusic.title
                     music.album = itemMusic.albumTitle
                     music.artist = itemMusic.author
@@ -58,12 +58,12 @@ object BaiduApiServiceImpl {
     /**
      * 获取歌单歌曲
      */
-    fun getOnlineSongs(type: String, limit: Int, mOffset: Int): Observable<MutableList<Music>> {
+    fun getOnlineSongs(type: String, limit: Int, mOffset: Int): Observable<MutableList<BaseMusicInfo>> {
         return apiService.getBillMusicList(type, limit, mOffset)
                 .flatMap { baiduSongList ->
-                    val musicList = mutableListOf<Music>()
+                    val musicList = mutableListOf<BaseMusicInfo>()
                     for (songInfo in baiduSongList.songList!!) {
-                        val music = Music()
+                        val music = BaseMusicInfo()
                         music.type = Constants.BAIDU
                         music.isOnline = true
                         music.mid = songInfo.songId
@@ -79,7 +79,7 @@ object BaiduApiServiceImpl {
                         music.coverBig = MusicUtils.getAlbumPic(songInfo.picSmall, Constants.BAIDU, PIC_SIZE_BIG)
                         musicList.add(music)
                     }
-                    Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
+                    Observable.create(ObservableOnSubscribe<MutableList<BaseMusicInfo>> { e ->
                         try {
                             e.onNext(musicList)
                             e.onComplete()
@@ -111,15 +111,15 @@ object BaiduApiServiceImpl {
      * 通过百度搜索,获取MusicInfo
      * @param offset 页面
      */
-    fun searchBaiduMusic(query: String, limit: Int, offset: Int): Observable<MutableList<Music>> {
+    fun searchBaiduMusic(query: String, limit: Int, offset: Int): Observable<MutableList<BaseMusicInfo>> {
         return apiService.queryMerge(query, offset + 1, limit)
                 .flatMap {
-                    Observable.create(ObservableOnSubscribe<MutableList<Music>> { e ->
-                        val musicList = mutableListOf<Music>()
+                    Observable.create(ObservableOnSubscribe<MutableList<BaseMusicInfo>> { e ->
+                        val musicList = mutableListOf<BaseMusicInfo>()
                         try {
                             if (it.errorCode == 22000) {
                                 it.result.songInfo.songList?.forEach { song ->
-                                    val musicInfo = Music()
+                                    val musicInfo = BaseMusicInfo()
                                     musicInfo.mid = song.songId
                                     musicInfo.type = Constants.BAIDU
                                     musicInfo.title = song.title
@@ -145,32 +145,32 @@ object BaiduApiServiceImpl {
      * 获取歌曲详情
      * "http://music.baidu.com/data/music/links?songIds=$mid"
      */
-    fun getTingSongInfo(music: Music): Observable<Music> {
-        val url = Constants.URL_GET_SONG_INFO + music.mid
+    fun getTingSongInfo(baseMusicInfo: BaseMusicInfo): Observable<BaseMusicInfo> {
+        val url = Constants.URL_GET_SONG_INFO + baseMusicInfo.mid
         return apiService.getTingSongInfo(url)
                 .flatMap { data ->
                     val songInfo = data.data.songList?.get(0)
                     songInfo?.let {
-                        music.type = Constants.BAIDU
-                        music.isOnline = true
-                        music.mid = songInfo.songId.toString()
-                        music.album = songInfo.albumName
-                        music.albumId = songInfo.albumId.toString()
-                        music.artistId = songInfo.artistId
-                        music.artist = songInfo.artistName
-                        music.title = songInfo.songName
-                        music.uri = songInfo.songLink
-                        music.fileSize = songInfo.size.toLong()
-                        music.lyric = songInfo.lrcLink
-                        music.coverSmall = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_SMALL)
-                        music.coverUri = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_NORMAL)
-                        music.coverBig = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_BIG)
+                        baseMusicInfo.type = Constants.BAIDU
+                        baseMusicInfo.isOnline = true
+                        baseMusicInfo.mid = songInfo.songId.toString()
+                        baseMusicInfo.album = songInfo.albumName
+                        baseMusicInfo.albumId = songInfo.albumId.toString()
+                        baseMusicInfo.artistId = songInfo.artistId
+                        baseMusicInfo.artist = songInfo.artistName
+                        baseMusicInfo.title = songInfo.songName
+                        baseMusicInfo.uri = songInfo.songLink
+                        baseMusicInfo.fileSize = songInfo.size.toLong()
+                        baseMusicInfo.lyric = songInfo.lrcLink
+                        baseMusicInfo.coverSmall = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_SMALL)
+                        baseMusicInfo.coverUri = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_NORMAL)
+                        baseMusicInfo.coverBig = MusicUtils.getAlbumPic(songInfo.songPicSmall, Constants.BAIDU, MusicUtils.PIC_SIZE_BIG)
 
                     }
-                    Observable.create(ObservableOnSubscribe<Music> { e ->
-                        if (music.uri != null) {
-                            SongLoader.updateMusic(music)
-                            e.onNext(music)
+                    Observable.create(ObservableOnSubscribe<BaseMusicInfo> { e ->
+                        if (baseMusicInfo.uri != null) {
+//                            SongLoader.updateMusic(musicInfo)
+                            e.onNext(baseMusicInfo as BaseMusicInfo)
                             e.onComplete()
                         } else {
                             e.onError(Throwable())
@@ -182,11 +182,11 @@ object BaiduApiServiceImpl {
     /**
      * 获取歌词
      */
-    fun getBaiduLyric(music: Music): Observable<String>? {
+    fun getBaiduLyric(baseMusicInfoInfo: BaseMusicInfo): Observable<String>? {
         //本地歌词路径
-        val mLyricPath = FileUtils.getLrcDir() + music.title + "-" + music.artist + ".lrc"
+        val mLyricPath = FileUtils.getLrcDir() + baseMusicInfoInfo.title + "-" + baseMusicInfoInfo.artist + ".lrc"
         //网络歌词
-        val mLyricUrl = music.lyric
+        val mLyricUrl = baseMusicInfoInfo.lyric
         return if (FileUtils.exists(mLyricPath)) {
             Observable.create { emitter ->
                 try {
@@ -251,11 +251,11 @@ object BaiduApiServiceImpl {
     fun getRadioChannelInfo(playlist: Playlist): Observable<Playlist> {
         return apiService.getRadioChannelSongs(playlist.pid!!)
                 .flatMap {
-                    val songs = mutableListOf<Music>()
+                    val songs = mutableListOf<BaseMusicInfo>()
                     if (it.errorCode == 22000) {
                         it.result.songlist?.forEach {
                             if (it.songid != null) {
-                                val music = Music()
+                                val music = BaseMusicInfo()
                                 music.type = Constants.BAIDU
                                 music.title = it.title
                                 music.artist = it.artist
@@ -288,10 +288,10 @@ object BaiduApiServiceImpl {
         return apiService.getArtistSongList(artistId, offset)
                 .flatMap {
                     val artist = Artist()
-                    val songs = mutableListOf<Music>()
+                    val songs = mutableListOf<BaseMusicInfo>()
                     if (it.errorCode == 22000) {
                         it.songList?.forEach {
-                            val music = Music()
+                            val music = BaseMusicInfo()
                             music.type = Constants.BAIDU
                             music.title = it.title
                             music.artist = it.artistName
@@ -361,9 +361,9 @@ object BaiduApiServiceImpl {
         return apiService.getAlbumInfo(albumId)
                 .flatMap {
                     val album = Album()
-                    val songs = mutableListOf<Music>()
+                    val songs = mutableListOf<BaseMusicInfo>()
                     it.songlist?.forEach {
-                        val music = Music()
+                        val music = BaseMusicInfo()
                         music.type = Constants.BAIDU
                         music.title = it.title
                         music.artist = it.artistName

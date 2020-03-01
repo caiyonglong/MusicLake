@@ -5,8 +5,8 @@ import android.widget.TextView;
 import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseActivity;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.player.PlayManager;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,21 +56,11 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test5)
     void test5() {
-        Music music = PlayManager.getPlayingMusic();
-        if (music != null) {
-            String type = music.getType();
-            String mid = music.getMid();
-//            searchApi.getComment(type, mid, songComment -> {
-//                statusTv.setText("getComment");
-//                resultTv.setText(songComment.toString());
-//                return null;
-//            });
-        }
     }
 
     @OnClick(R.id.btn_test6)
     void test6() {
-        Music music = PlayManager.getPlayingMusic();
+        BaseMusicInfo music = MusicPlayerManager.getInstance().getNowPlayingMusic();
         if (music != null) {
             String type = music.getType();
             String mid = music.getMid();

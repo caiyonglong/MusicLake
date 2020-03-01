@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.music.lake.musiclib" >
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+</manifest>

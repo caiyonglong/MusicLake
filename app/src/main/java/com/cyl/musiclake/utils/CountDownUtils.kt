@@ -2,7 +2,7 @@ package com.cyl.musiclake.utils
 
 import android.os.CountDownTimer
 import android.widget.TextView
-import com.cyl.musiclake.player.PlayManager
+import com.music.lake.musiclib.player.MusicPlayerManager
 
 /**
  * Des    :倒计时工具类
@@ -64,8 +64,8 @@ object CountDownUtils {
                         it?.text = null
                     }
                     //如果正在播放暂停播放
-                    if (PlayManager.isPlaying() && !isOpenSleepSwitch) {
-                        PlayManager.playPause()
+                    if (MusicPlayerManager.getInstance().isPlaying() && !isOpenSleepSwitch) {
+                        MusicPlayerManager.getInstance().pausePlay()
                     }
                     this@CountDownUtils.type = -1
                 }

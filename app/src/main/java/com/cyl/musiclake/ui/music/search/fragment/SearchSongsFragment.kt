@@ -5,10 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.SearchHistoryBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
@@ -16,6 +15,7 @@ import com.cyl.musiclake.ui.music.search.SearchContract
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.ui.music.search.SearchPresenter
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 
 /**
@@ -30,7 +30,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
     /**
      * 歌曲列表
      */
-    private val musicList = mutableListOf<Music>()
+    private val musicList = mutableListOf<BaseMusicInfo>()
     /**
      * 分页偏移量
      */
@@ -101,7 +101,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
     /**
      * 更新歌曲列表
      */
-    fun updateMusicList(songList: MutableList<Music>) {
+    fun updateMusicList(songList: MutableList<BaseMusicInfo>) {
         musicList.addAll(songList)
 
         if (mAdapter == null) {
@@ -113,7 +113,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
 
             mAdapter?.setOnItemClickListener { _, view, position ->
                 if (musicList.size <= position) return@setOnItemClickListener
-                PlayManager.playOnline(musicList[position])
+                MusicPlayerManager.getInstance().playMusic(musicList[position])
             }
             mAdapter?.setOnItemChildClickListener { _, _, position ->
                 val music = musicList[position]
@@ -126,7 +126,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
         hideLoading()
     }
 
-    override fun showSearchResult(list: MutableList<Music>) {
+    override fun showSearchResult(list: MutableList<BaseMusicInfo>) {
         if (list.size != 0) {
             mOffset++
         } else {

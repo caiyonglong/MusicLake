@@ -4,25 +4,26 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.common.Extras;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.player.PlayManager;
+import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumDetailPresenter;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
 
     @OnClick(R.id.fab)
     void onPlayAll() {
-        PlayManager.play(0, musicInfos, albumID);
+        MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, 0);
     }
 
     String albumID;
@@ -60,7 +61,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
     String title;
 
     private SongAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
+    private List<BaseMusicInfo> baseMusicInfoInfoInfos = new ArrayList<>();
 
     public static AlbumDetailFragment newInstance(String id, String title, String transitionName) {
         Bundle args = new Bundle();
@@ -105,7 +106,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
             appCompatActivity.setSupportActionBar(mToolbar);
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mAdapter = new SongAdapter(musicInfos);
+        mAdapter = new SongAdapter(baseMusicInfoInfoInfos);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -120,7 +121,7 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.play(position, musicInfos, albumID);
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, position);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -128,14 +129,14 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.play(position, musicInfos, albumID);
+                        MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, position);
                         break;
                     case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                        ShowDetailDialog.newInstance((BaseMusicInfo) adapter.getItem(position))
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.Companion.newInstance(musicInfos.get(position))
+                        AddPlaylistDialog.Companion.newInstance(baseMusicInfoInfoInfos.get(position))
                                 .show(getChildFragmentManager(), "ADD_PLAYLIST");
                         break;
 
@@ -163,9 +164,9 @@ public class AlbumDetailFragment extends BaseFragment<AlbumDetailPresenter> impl
     }
 
     @Override
-    public void showAlbumSongs(List<Music> songList) {
-        musicInfos = songList;
-        mAdapter.setNewData(musicInfos);
+    public void showAlbumSongs(List<BaseMusicInfo> songList) {
+        baseMusicInfoInfoInfos = songList;
+        mAdapter.setNewData(baseMusicInfoInfoInfos);
         hideLoading();
     }
 

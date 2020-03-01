@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.music.lake.musiclib.bean.BaseMusicInfo
 
 /**
  * 作者：yonglong on 2016/9/14 15:24
@@ -16,7 +16,7 @@ import com.cyl.musiclake.common.Constants
 class AddPlaylistDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val music = arguments?.getParcelable<Music>("music")
+        val music = arguments?.getParcelable<BaseMusicInfo>("music")
         return if (music?.type === Constants.LOCAL) {
             showInfoDialog(getString(R.string.add_to_playlist), getString(R.string.add_un_support_local))
         } else Dialog(context!!)
@@ -43,7 +43,7 @@ class AddPlaylistDialog : DialogFragment() {
         private val TAG_CREATE = "create_playlist"
         private val result = false
 
-        fun newInstance(song: Music): AddPlaylistDialog {
+        fun newInstance(song: BaseMusicInfo): AddPlaylistDialog {
             val dialog = AddPlaylistDialog()
             val bundle = Bundle()
             bundle.putParcelable("music", song)

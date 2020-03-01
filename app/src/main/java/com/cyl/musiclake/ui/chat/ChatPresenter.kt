@@ -3,12 +3,12 @@ package com.cyl.musiclake.ui.chat
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicUtils
-import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketManager
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.player.MusicPlayerManager
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -65,7 +65,7 @@ constructor() : BasePresenter<ChatContract.View>(), ChatContract.Presenter {
      * 发送正在播放的音乐
      */
     override fun sendMusicMessage() {
-        val music = PlayManager.getPlayingMusic()
+        val music = MusicPlayerManager.getInstance().getNowPlayingMusic()
         when {
             music?.type == Constants.LOCAL -> {
                 val message = MusicApp.getAppContext().getString(R.string.share_local_song, music.artist, music.title)

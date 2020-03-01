@@ -1,13 +1,12 @@
 package com.cyl.musiclake.ui.music.comment
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musicapi.bean.SongComment
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Extras
 import kotlinx.android.synthetic.main.activity_song_comment.*
 
@@ -34,7 +33,7 @@ class SongCommentActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
     }
 
     override fun initData() {
-        val music = intent.getParcelableExtra<Music>(Extras.SONG)
+        val music = intent.getParcelableExtra<BaseMusicInfo>(Extras.SONG)
         MusicApi.getMusicCommentInfo(music, success = {
             updateSongComment(it)
         }, fail = {

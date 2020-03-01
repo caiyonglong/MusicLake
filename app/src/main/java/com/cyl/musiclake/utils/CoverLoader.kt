@@ -8,12 +8,11 @@ import android.net.Uri
 import android.widget.ImageView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.GlideApp
 import com.cyl.musiclake.api.music.MusicUtils
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 
 
 /**
@@ -48,17 +47,17 @@ object CoverLoader {
     /**
      * 获取专辑图url，
      *
-     * @param music 音乐
+     * @param baseMusicInfo 音乐
      * @param isBig 是否是大图
      * @return
      */
-    private fun getCoverUriByMusic(music: Music, isBig: Boolean): String? {
-        return if (music.coverBig != null && isBig) {
-            music.coverBig
-        } else if (music.coverUri != null) {
-            music.coverUri
+    private fun getCoverUriByMusic(baseMusicInfo: com.music.lake.musiclib.bean.BaseMusicInfo, isBig: Boolean): String? {
+        return if (baseMusicInfo.coverBig != null && isBig) {
+            baseMusicInfo.coverBig
+        } else if (baseMusicInfo.coverUri != null) {
+            baseMusicInfo.coverUri
         } else {
-            music.coverSmall
+            baseMusicInfo.coverSmall
         }
     }
 
@@ -67,12 +66,12 @@ object CoverLoader {
      * 显示小图
      *
      * @param mContext
-     * @param music
+     * @param baseMusicInfoInfo
      * @param callBack
      */
-    fun loadImageViewByMusic(mContext: Context, music: Music?, callBack: ((Bitmap) -> Unit)?) {
-        if (music == null) return
-        val url = getCoverUriByMusic(music, false)
+    fun loadImageViewByMusic(mContext: Context, baseMusicInfoInfo: BaseMusicInfo?, callBack: ((Bitmap) -> Unit)?) {
+        if (baseMusicInfoInfo == null) return
+        val url = getCoverUriByMusic(baseMusicInfoInfo, false)
         loadBitmap(mContext, url, callBack)
     }
 
@@ -81,10 +80,10 @@ object CoverLoader {
      *
      * @param mContext
      */
-    fun loadBigImageView(mContext: Context?, music: Music?, callBack: ((Bitmap) -> Unit)?) {
-        if (music == null) return
+    fun loadBigImageView(mContext: Context?, baseMusicInfo: com.music.lake.musiclib.bean.BaseMusicInfo?, callBack: ((Bitmap) -> Unit)?) {
+        if (baseMusicInfo == null) return
         if (mContext == null) return
-        val url = MusicUtils.getAlbumPic(music.coverUri, music.type, MusicUtils.PIC_SIZE_BIG)
+        val url = MusicUtils.getAlbumPic(baseMusicInfo.coverUri, baseMusicInfo.type, MusicUtils.PIC_SIZE_BIG)
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(url ?: R.drawable.default_cover)
@@ -103,9 +102,9 @@ object CoverLoader {
                 })
     }
 
-    fun loadBigImageView(mContext: Context, music: Music?, imageView: ImageView?) {
-        if (music == null || imageView == null) return
-        val url = getCoverUriByMusic(music, true)
+    fun loadBigImageView(mContext: Context, baseMusicInfo: com.music.lake.musiclib.bean.BaseMusicInfo?, imageView: ImageView?) {
+        if (baseMusicInfo == null || imageView == null) return
+        val url = getCoverUriByMusic(baseMusicInfo, true)
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(url ?: R.drawable.default_cover)

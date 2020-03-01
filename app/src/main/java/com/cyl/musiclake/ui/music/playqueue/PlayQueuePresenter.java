@@ -1,8 +1,8 @@
 package com.cyl.musiclake.ui.music.playqueue;
 
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.ui.base.BasePresenter;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.player.PlayManager;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 
 import java.util.List;
 
@@ -31,12 +31,12 @@ public class PlayQueuePresenter extends BasePresenter<PlayQueueContract.View> im
 
     @Override
     public void loadSongs() {
-        List<Music> musicList = PlayManager.getPlayList();
-        mView.showSongs(musicList);
+        List<BaseMusicInfo> baseMusicInfoList = MusicPlayerManager.getInstance().getPlayList();
+        mView.showSongs(baseMusicInfoList);
     }
 
     @Override
     public void clearQueue() {
-        PlayManager.clearQueue();
+        MusicPlayerManager.getInstance().clearPlaylist();
     }
 }

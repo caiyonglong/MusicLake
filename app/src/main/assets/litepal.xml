@@ -3,7 +3,7 @@
     <dbname value="musiclake1" />
     <version value="11" />
     <list>
-        <mapping class="com.cyl.musiclake.bean.Music" />
+        <mapping class="com.music.lake.musiclib.bean.BaseMusicInfo" />
         <mapping class="com.cyl.musiclake.bean.Playlist" />
         <mapping class="com.cyl.musiclake.bean.MusicToPlaylist" />
         <mapping class="com.cyl.musiclake.bean.Album" />

@@ -5,10 +5,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
+import com.music.lake.musiclib.bean.BaseMusicInfo
 
 
 /**
@@ -17,8 +17,8 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class BottomMusicAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_bottom_music, musicList) {
-    override fun convert(holder: BaseViewHolder, item: Music) {
+class BottomMusicAdapter(baseMusicInfoList: List<BaseMusicInfo>) : BaseQuickAdapter<BaseMusicInfo, BaseViewHolder>(R.layout.item_bottom_music, baseMusicInfoList) {
+    override fun convert(holder: BaseViewHolder, item: BaseMusicInfo) {
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
         //设置歌手专辑名

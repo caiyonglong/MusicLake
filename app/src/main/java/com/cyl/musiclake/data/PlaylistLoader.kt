@@ -1,6 +1,6 @@
 package com.cyl.musiclake.data
 
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
@@ -87,7 +87,7 @@ object PlaylistLoader {
     /**
      * 扫描歌单歌曲
      */
-    fun getMusicForPlaylist(pid: String, order: String? = null): MutableList<Music> {
+    fun getMusicForPlaylist(pid: String, order: String? = null): MutableList<BaseMusicInfo> {
         return if (order == null) {
             DaoLitepal.getMusicList(pid)
         } else {
@@ -95,8 +95,8 @@ object PlaylistLoader {
         }
     }
 
-    fun addMusicList(pid: String, musicList: List<Music>): Boolean {
-        for (music in musicList) {
+    fun addMusicList(pid: String, baseMusicInfoInfoList: List<BaseMusicInfo>): Boolean {
+        for (music in baseMusicInfoInfoList) {
             addToPlaylist(pid, music)
         }
         return true
@@ -105,9 +105,9 @@ object PlaylistLoader {
     /**
      * 添加歌曲到歌单
      */
-    fun addToPlaylist(pid: String, music: Music): Boolean {
+    fun addToPlaylist(pid: String, baseMusicInfoInfo: BaseMusicInfo): Boolean {
         try {
-            return DaoLitepal.addToPlaylist(music, pid)
+            return DaoLitepal.addToPlaylist(baseMusicInfoInfo, pid)
         } catch (e: Throwable) {
             e.printStackTrace()
         }

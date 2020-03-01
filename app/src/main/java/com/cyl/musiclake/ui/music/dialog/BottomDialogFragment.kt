@@ -17,11 +17,10 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
@@ -31,6 +30,7 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import com.cyl.musiclake.utils.Tools
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.music.lake.musiclib.player.MusicPlayerManager
 import org.jetbrains.anko.support.v4.startActivity
 
 /**
@@ -49,23 +49,23 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      */
     var pid: String = Constants.PLAYLIST_LOCAL_ID
 
-    var removeSuccessListener: ((music: Music?) -> Unit)? = null
+    var removeSuccessListener: ((baseMusicInfoInfo: BaseMusicInfo?) -> Unit)? = null
 
     companion object {
-        var music: Music? = null
+        var baseMusicInfoInfo: BaseMusicInfo? = null
         var TAG: String = "BottomDialogFragment"
 
-        fun newInstance(music: Music?): BottomDialogFragment {
+        fun newInstance(baseMusicInfoInfo: BaseMusicInfo?): BottomDialogFragment {
             val args = Bundle()
-            this.music = music
+            this.baseMusicInfoInfo = baseMusicInfoInfo
             val fragment = BottomDialogFragment()
             fragment.arguments = args
             return fragment
         }
 
-        fun newInstance(music: Music?, type: String?): BottomDialogFragment {
+        fun newInstance(baseMusicInfoInfo: BaseMusicInfo?, type: String?): BottomDialogFragment {
             val args = Bundle()
-            this.music = music
+            this.baseMusicInfoInfo = baseMusicInfoInfo
             val fragment = BottomDialogFragment()
             fragment.arguments = args
             args.putString(Extras.PLAYLIST_TYPE, type)
@@ -91,8 +91,8 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      * 初始化items
      */
     private fun initItems() {
-        titleTv?.text = music?.title
-        subTitleTv?.text = ConvertUtils.getArtistAndAlbum(music?.artist, music?.album)
+        titleTv?.text = baseMusicInfoInfo?.title
+        subTitleTv?.text = ConvertUtils.getArtistAndAlbum(baseMusicInfoInfo?.artist, baseMusicInfoInfo?.album)
         arguments?.getString(Extras.PLAYLIST_TYPE, Constants.PLAYLIST_LOCAL_ID)?.let {
             type = it
         }
@@ -106,9 +106,9 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      */
     private fun turnToAlbum() {
         val album = Album()
-        album.albumId = music?.albumId
-        album.name = music?.album
-        album.type = music?.type
+        album.albumId = baseMusicInfoInfo?.albumId
+        album.name = baseMusicInfoInfo?.album
+        album.type = baseMusicInfoInfo?.type
         NavigationHelper.navigateToPlaylist(mContext, album, null)
     }
 
@@ -117,20 +117,20 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      */
     private fun turnToArtist() {
         activity?.let { it1 ->
-            if (music != null && music?.artistId != null && music?.artist != null) {
-                if (music!!.type == Constants.LOCAL) {
+            if (baseMusicInfoInfo != null && baseMusicInfoInfo?.artistId != null && baseMusicInfoInfo?.artist != null) {
+                if (baseMusicInfoInfo!!.type == Constants.LOCAL) {
                     val artist = Artist()
-                    artist.artistId = music?.artistId
-                    artist.name = music?.artist
-                    artist.type = music?.type
+                    artist.artistId = baseMusicInfoInfo?.artistId
+                    artist.name = baseMusicInfoInfo?.artist
+                    artist.type = baseMusicInfoInfo?.type
                     NavigationHelper.navigateToArtist(it1, artist, null)
-                } else if (music != null) {
-                    LogUtil.e(TAG, music?.toString())
-                    val artist = MusicUtils.getArtistInfo(music)
+                } else if (baseMusicInfoInfo != null) {
+                    LogUtil.e(TAG, baseMusicInfoInfo?.toString())
+                    val artist = MusicUtils.getArtistInfo(baseMusicInfoInfo)
                     if (artist.size == 1) {
                         NavigationHelper.navigateToArtist(mContext, artist[0], null)
                     } else if (artist.size > 1) {
-                        val artistNames = music?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toList() }
+                        val artistNames = baseMusicInfoInfo?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toList() }
                         context?.let {
                             artistNames?.let { it2 ->
                                 MaterialDialog(it).show {
@@ -153,20 +153,20 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
      * 跳转编辑
      */
     private fun turnToEdit() {
-        startActivity<EditMusicActivity>(Extras.SONG to music)
+        startActivity<EditMusicActivity>(Extras.SONG to baseMusicInfoInfo)
     }
 
     /**
      *去删除
      */
-    private fun turnToDelete(music: Music?) {
-        if (music?.type == Constants.LOCAL || music?.isOnline == false || type == Constants.PLAYLIST_DOWNLOAD_ID) {
-            (activity as AppCompatActivity?)?.deleteSingleMusic(music) {
-                removeSuccessListener?.invoke(music)
+    private fun turnToDelete(baseMusicInfoInfo: BaseMusicInfo?) {
+        if (baseMusicInfoInfo?.type == Constants.LOCAL || baseMusicInfoInfo?.isOnline == false || type == Constants.PLAYLIST_DOWNLOAD_ID) {
+            (activity as AppCompatActivity?)?.deleteSingleMusic(baseMusicInfoInfo) {
+                removeSuccessListener?.invoke(baseMusicInfoInfo)
             }
         } else {
-            PlaylistManagerUtils.disCollectMusic(pid, music) {
-                removeSuccessListener?.invoke(music)
+            PlaylistManagerUtils.disCollectMusic(pid, baseMusicInfoInfo) {
+                removeSuccessListener?.invoke(baseMusicInfoInfo)
             }
         }
     }
@@ -189,7 +189,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
 
         init {
             //是否是本地视频
-            if (music?.type == Constants.VIDEO) {
+            if (baseMusicInfoInfo?.type == Constants.VIDEO) {
                 itemData.clear()
             }
             //是否显示下载歌曲Item
@@ -197,21 +197,21 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                 itemData.remove(R.string.popup_download)
             }
             //是否有mv
-            if (music?.hasMv == 0) {
+            if (baseMusicInfoInfo?.hasMv == 0) {
                 itemData.remove(R.string.popup_mv)
             }
 
-            if (music?.type == Constants.LOCAL) {
+            if (baseMusicInfoInfo?.type == Constants.LOCAL) {
                 itemData.remove(R.string.popup_download)
                 itemData.remove(R.string.popup_add_to_playlist)
             } else if (type != Constants.PLAYLIST_DOWNLOAD_ID) {
                 itemData.remove(R.string.popup_detail_edit)
 
-                if (music?.isDl == false || music?.isOnline == false) {
+                if (baseMusicInfoInfo?.isDl == false || baseMusicInfoInfo?.isOnline == false) {
                     itemData.remove(R.string.popup_download)
                 }
 
-                if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID && music?.isOnline == true) {
+                if (type != Constants.PLAYLIST_CUSTOM_ID && type != Constants.PLAYLIST_IMPORT_ID && baseMusicInfoInfo?.isOnline == true) {
                     itemData.remove(R.string.popup_delete)
                 }
             }
@@ -232,10 +232,10 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
             holder.icon.setColorFilter(Color.parseColor("#0091EA"))
             holder.itemView.setOnClickListener {
                 when (data[position].icon) {
-                    R.drawable.ic_queue_play_next -> PlayManager.nextPlay(music)
+//                    R.drawable.ic_queue_play_next -> MusicPlayerManager.nextPlay(music)
                     R.drawable.ic_playlist_add -> {
-                        if (music?.type != Constants.LOCAL) {
-                            PlaylistManagerUtils.addToPlaylist(mContext, music)
+                        if (baseMusicInfoInfo?.type != Constants.LOCAL) {
+                            PlaylistManagerUtils.addToPlaylist(mContext, baseMusicInfoInfo)
                         }
                     }
                     R.drawable.ic_art_track -> {
@@ -248,24 +248,24 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                         turnToEdit()
                     }
                     R.drawable.ic_delete -> {
-                        turnToDelete(music)
+                        turnToDelete(baseMusicInfoInfo)
                     }
                     R.drawable.ic_video_label -> {
-                        if (music?.type == Constants.BAIDU || music?.type == Constants.VIDEO) {
-                            startActivity<BaiduMvDetailActivity>(Extras.MV_ID to music?.mid)
+                        if (baseMusicInfoInfo?.type == Constants.BAIDU || baseMusicInfoInfo?.type == Constants.VIDEO) {
+                            startActivity<BaiduMvDetailActivity>(Extras.MV_ID to baseMusicInfoInfo?.mid)
                         } else {
 
                         }
                     }
                     R.drawable.item_download -> {
-                        if (music?.type != Constants.LOCAL) {
-                            QualitySelectDialog.newInstance(music).apply {
+                        if (baseMusicInfoInfo?.type != Constants.LOCAL) {
+                            QualitySelectDialog.newInstance(baseMusicInfoInfo).apply {
                                 isDownload = true
                             }.show(mContext)
                         }
                     }
                     R.drawable.ic_share_black -> {
-                        Tools.qqShare(mContext, PlayManager.getPlayingMusic())
+                        Tools.qqShare(mContext, MusicPlayerManager.getInstance().getNowPlayingMusic())
                     }
                 }
                 mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN

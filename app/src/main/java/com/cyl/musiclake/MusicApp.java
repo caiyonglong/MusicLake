@@ -3,35 +3,41 @@ package com.cyl.musiclake;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.cyl.musiclake.api.music.MusicApi;
+import com.cyl.musiclake.api.net.ApiManager;
+import com.cyl.musiclake.api.net.RequestCallBack;
 import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
+import com.cyl.musiclake.common.MPBroadcastReceiver;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
-import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.player.cache.CacheFileNameGenerator;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
-import com.cyl.musiclake.utils.FileUtils;
 import com.cyl.musiclake.utils.LogUtil;
-import com.danikula.videocache.HttpProxyCacheServer;
+import com.cyl.musiclake.utils.NetworkUtils;
+import com.cyl.musiclake.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
+import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.player.MusicPlayerService;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
 import org.litepal.LitePal;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * tinker热更新需要
@@ -39,8 +45,6 @@ import java.util.List;
 public class MusicApp extends MultiDexApplication {
     @SuppressLint("StaticFieldLeak")
     private static MusicApp sInstance;
-
-    private PlayManager.ServiceToken mToken;
 
     @SuppressLint("StaticFieldLeak")
     public static Context mContext;
@@ -66,6 +70,8 @@ public class MusicApp extends MultiDexApplication {
     public static int ActivityCount = 0;
     private ApplicationComponent mApplicationComponent;
 
+    private MPBroadcastReceiver mpBroadcastReceiver;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -78,6 +84,31 @@ public class MusicApp extends MultiDexApplication {
     }
 
     private void initSDK() {
+        MusicPlayerManager.getInstance().init(this);
+        MusicPlayerManager.getInstance().setMusicRequestListener((musicInfo, call) -> {
+            if (musicInfo.getUri() == null || !Objects.equals(musicInfo.getType(), Constants.LOCAL) || musicInfo.getUri().equals("") || musicInfo.getUri().equals("null")) {
+                if (!NetworkUtils.isNetworkAvailable(this)) {
+                    ToastUtils.show("网络不可用，请检查网络连接");
+                } else {
+                    ApiManager.request(MusicApi.INSTANCE.getMusicInfo(musicInfo), new RequestCallBack<BaseMusicInfo>() {
+                        @Override
+                        public void success(BaseMusicInfo result) {
+                            LogUtil.e("MusicApp", "-----" + result.toString());
+                            if (result.getUri() != null) {
+                                call.onMusicValid(result.getUri());
+                            }
+                        }
+
+                        @Override
+                        public void error(String msg) {
+                            LogUtil.e("MusicApp", "播放异常-----" + msg);
+                        }
+                    });
+                }
+            } else {
+                call.onActionDirect();
+            }
+        });
         LitePal.initialize(this);
         initBugly();
         initDB();
@@ -85,6 +116,13 @@ public class MusicApp extends MultiDexApplication {
 //        if (BuildConfig.DEBUG) {
 //            LeakCanary.install(this);
 //        }
+
+        mpBroadcastReceiver = new MPBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(MusicPlayerService.ACTION_SERVICE);
+        intentFilter.addAction(MusicPlayerService.META_CHANGED);
+        intentFilter.addAction(MusicPlayerService.PLAY_QUEUE_CHANGE);
+        //注册广播
+        registerReceiver(mpBroadcastReceiver, intentFilter);
     }
 
     /**
@@ -188,22 +226,6 @@ public class MusicApp extends MultiDexApplication {
                 }
             }
         });
-    }
-
-    /**
-     * AndroidVideoCache缓存设置
-     */
-    private HttpProxyCacheServer proxy;
-
-    public static HttpProxyCacheServer getProxy() {
-        return MusicApp.getInstance().proxy == null ? (MusicApp.getInstance().proxy = MusicApp.getInstance().newProxy()) : MusicApp.getInstance().proxy;
-    }
-
-    private HttpProxyCacheServer newProxy() {
-        return new HttpProxyCacheServer.Builder(this)
-                .cacheDirectory(new File(FileUtils.getMusicCacheDir()))
-                .fileNameGenerator(new CacheFileNameGenerator())
-                .build();
     }
 
 }

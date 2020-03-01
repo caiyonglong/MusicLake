@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.playlist.history
 
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.data.AppRepository
 
 import javax.inject.Inject
@@ -24,12 +24,12 @@ constructor() : BasePresenter<RecentlyContract.View>(), RecentlyContract.Present
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mView.bindToLife())
-                .subscribe(object : Observer<List<Music>> {
+                .subscribe(object : Observer<List<BaseMusicInfo>> {
                     override fun onSubscribe(d: Disposable) {
 
                     }
 
-                    override fun onNext(songs: List<Music>) {
+                    override fun onNext(songs: List<BaseMusicInfo>) {
                         mView.showSongs(songs)
                         if (songs.isEmpty()) {
                             mView?.showEmptyView()

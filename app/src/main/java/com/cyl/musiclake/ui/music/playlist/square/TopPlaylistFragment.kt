@@ -1,12 +1,9 @@
 package com.cyl.musiclake.ui.music.playlist.square
 
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.base.BaseFragment
@@ -55,7 +52,7 @@ class TopPlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.
     override fun showPlayList(playlist: Playlist?) {
     }
 
-    override fun showOnlineMusicList(musicList: MutableList<Music>?) {
+    override fun showOnlineMusicList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>?) {
 
     }
 

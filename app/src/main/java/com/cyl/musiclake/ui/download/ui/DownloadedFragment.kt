@@ -4,27 +4,20 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseFragment
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.event.PlaylistEvent
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.download.TasksManagerModel
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-
-import java.util.ArrayList
-
-import butterknife.BindView
-import com.cyl.musiclake.event.PlaylistEvent
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus
+import java.util.*
 
 /**
  * Created by yonglong on 2016/11/26.
@@ -34,17 +27,17 @@ class DownloadedFragment : BaseFragment<DownloadPresenter>(), DownloadContract.V
 
     private var mAdapter: SongAdapter? = null
     private var isCache: Boolean? = null
-    private var musicList: List<Music> = ArrayList()
+    private var baseMusicInfoInfoList: List<BaseMusicInfo> = ArrayList()
 
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {
-                PlayManager.play(position, musicList, Constants.PLAYLIST_DOWNLOAD_ID)
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoList, position)
                 mAdapter?.notifyDataSetChanged()
             }
         }
         mAdapter?.setOnItemChildClickListener { adapter, _, position ->
-            val music = adapter.getItem(position) as Music?
+            val music = adapter.getItem(position) as BaseMusicInfo?
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_DOWNLOAD_ID).apply {
                 removeSuccessListener = {
                     EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_DOWNLOAD_ID))
@@ -64,7 +57,7 @@ class DownloadedFragment : BaseFragment<DownloadPresenter>(), DownloadContract.V
     }
 
     public override fun initViews() {
-        mAdapter = SongAdapter(musicList)
+        mAdapter = SongAdapter(baseMusicInfoInfoList)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
@@ -92,10 +85,10 @@ class DownloadedFragment : BaseFragment<DownloadPresenter>(), DownloadContract.V
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showSongs(musicList: List<Music>) {
-        this.musicList = musicList
-        mAdapter?.setNewData(musicList)
-        if (musicList.isEmpty()) {
+    override fun showSongs(baseMusicInfoInfoList: List<BaseMusicInfo>) {
+        this.baseMusicInfoInfoList = baseMusicInfoInfoList
+        mAdapter?.setNewData(baseMusicInfoInfoList)
+        if (baseMusicInfoInfoList.isEmpty()) {
             mAdapter?.setEmptyView(R.layout.view_song_empty, recyclerView)
         }
     }

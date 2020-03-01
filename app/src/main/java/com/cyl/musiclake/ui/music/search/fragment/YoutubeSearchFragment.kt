@@ -1,18 +1,13 @@
 package com.cyl.musiclake.ui.music.search.fragment
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.SearchHistoryBean
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
-import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.SearchContract
 import com.cyl.musiclake.ui.music.search.SearchPresenter
@@ -34,7 +29,7 @@ class YoutubeSearchFragment : BaseLazyFragment<SearchPresenter>(), SearchContrac
     /**
      * 歌曲列表
      */
-    private val musicList = mutableListOf<Music>()
+    private val musicList = mutableListOf<BaseMusicInfo>()
     /**
      * 分页偏移量
      */
@@ -105,7 +100,7 @@ class YoutubeSearchFragment : BaseLazyFragment<SearchPresenter>(), SearchContrac
     /**
      * 更新歌曲列表
      */
-    fun updateMusicList(songList: MutableList<Music>) {
+    fun updateMusicList(songList: MutableList<BaseMusicInfo>) {
         musicList.addAll(songList)
 
         if (mAdapter == null) {
@@ -130,7 +125,7 @@ class YoutubeSearchFragment : BaseLazyFragment<SearchPresenter>(), SearchContrac
         hideLoading()
     }
 
-    override fun showSearchResult(list: MutableList<Music>) {
+    override fun showSearchResult(list: MutableList<BaseMusicInfo>) {
         if (list.size != 0) {
         } else {
             mAdapter?.loadMoreComplete()

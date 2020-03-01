@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.music.mv;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.Menu;
@@ -30,9 +29,8 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.DisplayUtils;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
-import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.PlayerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +46,7 @@ import butterknife.OnClick;
  * 版本：2.5
  */
 @SuppressWarnings("ConstantConditions")
-public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements MvDetailContract.View, OnPreparedListener {
+public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements MvDetailContract.View {
 
     private static final String TAG = "MvDetailActivity";
     private List<MvInfoDetail> mvInfoDetails = new ArrayList<>();
@@ -73,7 +71,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
     TextView mTvSinger;
 
     @BindView(R.id.video_view)
-    VideoView mVideoView;
+    PlayerView mVideoView;
     @BindView(R.id.tv_title)
     TextView mTvName;
     @BindView(R.id.tv_artist)
@@ -268,9 +266,6 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
                 ToastUtils.show("播放地址异常，请稍后重试！");
             } else {
                 initPlayer();
-                //For now we just picked an arbitrary item to play
-                mVideoView.setPreviewImage(Uri.parse(mvInfoDetailInfo.getCover()));
-                mVideoView.setVideoURI(Uri.parse(url));
                 updateMvInfo(mvInfoDetailInfo);
             }
         }
@@ -336,17 +331,9 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
 
     private void initPlayer() {
         mVideoView.setVisibility(View.VISIBLE);
-        mVideoView.setOnPreparedListener(this);
-        mVideoView.setRepeatMode(Player.REPEAT_MODE_ONE);
+        SimpleExoPlayer player = new SimpleExoPlayer.Builder(this).build();
+        mVideoView.setPlayer(player);
     }
-
-    @Override
-    public void onPrepared() {
-        if (mVideoView != null) {
-            mVideoView.start();
-        }
-    }
-
 
     /**
      * Listens to the system to determine when to show the default controls
@@ -364,7 +351,7 @@ public class MvDetailActivity extends BaseActivity<MvDetailPresenter> implements
             // the visibility off for use in the ControlsVisibilityListener for verification
             lastVisibility = visibility;
             if (visibility == 0 && View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                mVideoView.showControls();
+                mVideoView.showController();
             }
         }
     }

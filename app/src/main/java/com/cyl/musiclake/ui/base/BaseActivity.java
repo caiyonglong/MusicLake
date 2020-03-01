@@ -1,15 +1,12 @@
 package com.cyl.musiclake.ui.base;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,16 +20,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.cyl.musiclake.IMusicService;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.di.component.ActivityComponent;
 import com.cyl.musiclake.di.component.DaggerActivityComponent;
 import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.event.MetaChangedEvent;
-import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.theme.ThemeStore;
-import com.cyl.musiclake.utils.LogUtil;
+import com.music.lake.musiclib.listener.BindServiceCallBack;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -50,7 +46,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
-import static com.cyl.musiclake.player.PlayManager.mService;
 import static com.cyl.musiclake.utils.AnimationUtils.animateView;
 
 /**
@@ -59,7 +54,7 @@ import static com.cyl.musiclake.utils.AnimationUtils.animateView;
  * @author yonglong
  * @date 2016/8/3
  */
-public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends RxAppCompatActivity implements ServiceConnection, BaseContract.BaseView {
+public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends RxAppCompatActivity implements BaseContract.BaseView {
 
     @Nullable
     @Inject
@@ -88,8 +83,8 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
 
     protected Handler mHandler;
     private Unbinder unbinder;
-    private PlayManager.ServiceToken mToken;
     public Boolean isPause = true;
+    private MusicPlayerManager.ServiceToken mToken;
 
     private List<Disposable> disposables = new ArrayList<>();
 
@@ -98,11 +93,23 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         setUpTheme();
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        mToken = PlayManager.bindToService(this, this);
         setContentView(R.layout.activity_base);
         View view = LayoutInflater.from(this).inflate(getLayoutResID(), findViewById(R.id.rootParent));
 //        //初始化黄油刀控件绑定框架
 //        unbinder = ButterKnife.bind(this, view);
+        mToken = MusicPlayerManager.getInstance().initialize(this, new BindServiceCallBack() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
+
         //初始化黄油刀控件绑定框架
         unbinder = ButterKnife.bind(this);
         mHandler = new Handler();
@@ -111,6 +118,9 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         initToolBar();
         attachView();
         initView();
+
+        listener();
+        initData();
     }
 
     private void initLoading() {
@@ -190,13 +200,13 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mToken != null) {
+            MusicPlayerManager.getInstance().unInitialize(mToken);
+            mToken = null;
+        }
         EventBus.getDefault().unregister(this);
         if (unbinder != null) {
             unbinder.unbind();
-        }
-        if (mToken != null) {
-            PlayManager.unbindFromService(mToken);
-            mToken = null;
         }
         for (Disposable disposable : disposables) {
             disposable.dispose();
@@ -292,18 +302,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         isPause = true;
     }
 
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        mService = IMusicService.Stub.asInterface(iBinder);
-        listener();
-        initData();
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-        mService = null;
-        LogUtil.d("BaseActivity", "onServiceDisconnected");
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDefaultEvent(MetaChangedEvent event) {

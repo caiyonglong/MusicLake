@@ -17,7 +17,6 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.annotation.IntDef;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -30,12 +29,14 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import androidx.annotation.IntDef;
+
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.player.FloatLyricViewManager;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.ui.widget.lyric.LyricInfo;
 import com.cyl.musiclake.ui.widget.lyric.LyricInfo.LineInfo;
 import com.cyl.musiclake.ui.widget.lyric.LyricParseUtils;
+import com.cyl.musiclake.utils.FloatLyricViewManager;
+import com.cyl.musiclake.utils.LogUtil;
 
 import java.io.File;
 import java.lang.annotation.Retention;

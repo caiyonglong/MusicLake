@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.discover.artist.QQArtistListFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.square.PlaylistSquareActivity
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_discover.*
 import org.jetbrains.anko.support.v4.startActivity
 
@@ -45,7 +45,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     private var playlist = mutableListOf<Playlist>()
     private var artists = mutableListOf<Artist>()
     private var channels = mutableListOf<Playlist>()
-    private var recommend = mutableListOf<Music>()
+    private var recommend = mutableListOf<BaseMusicInfo>()
     private var recommendPlaylist = mutableListOf<Playlist>()
 
     /**
@@ -274,7 +274,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     /**
      * 显示推荐歌曲
      */
-    override fun showRecommendSongs(songs: MutableList<Music>) {
+    override fun showRecommendSongs(songs: MutableList<BaseMusicInfo>) {
         LogUtil.d(TAG, "获取推荐歌曲 songs：" + songs.size)
         recommendView.visibility = if (songs.size == 0) View.GONE else View.VISIBLE
         this.recommend = songs
@@ -288,7 +288,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
 
             mMusicAdapter?.setOnItemClickListener { _, view, position ->
                 if (view.id != R.id.iv_more) {
-                    PlayManager.play(position, recommend, Constants.PLAYLIST_LOVE_ID)
+                    MusicPlayerManager.getInstance().playMusic(recommend, position)
                     mMusicAdapter?.notifyDataSetChanged()
                 }
             }
@@ -302,7 +302,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
      * 播放私人FM
      */
     override fun showPersonalFm(playlist: Playlist) {
-        PlayManager.play(0, playlist.musicList, playlist.pid)
+        MusicPlayerManager.getInstance().playMusic(playlist.musicList, 0)
     }
 
 

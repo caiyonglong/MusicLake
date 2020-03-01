@@ -1,7 +1,7 @@
 package com.cyl.musiclake.data
 
 import android.content.Context
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.FolderInfo
 import io.reactivex.Observable
 
@@ -11,7 +11,7 @@ import io.reactivex.Observable
 
 object AppRepository {
 
-    fun getPlayHistoryRepository(): Observable<List<Music>> {
+    fun getPlayHistoryRepository(): Observable<List<BaseMusicInfo>> {
         return Observable.create { PlayHistoryLoader.getPlayHistory() }
     }
 
@@ -19,7 +19,7 @@ object AppRepository {
         return FolderLoader.getFoldersWithSong(mContext)
     }
 
-    fun getFolderSongsRepository(mContext: Context, path: String): Observable<List<Music>> {
+    fun getFolderSongsRepository(mContext: Context, path: String): Observable<List<BaseMusicInfo>> {
         return Observable.create { SongLoader.getSongListInFolder(mContext, path) }
     }
 

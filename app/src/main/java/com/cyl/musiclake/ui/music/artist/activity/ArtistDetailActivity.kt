@@ -5,7 +5,7 @@ import android.view.MenuItem
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.main.PageAdapter
@@ -57,7 +57,7 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
 
     }
 
-    private val musicList = mutableListOf<Music>()
+    private val musicList = mutableListOf<BaseMusicInfo>()
     private var mArtist: Artist? = null
     private var pid: String? = null
     private var mAlbum: Album? = null
@@ -149,7 +149,7 @@ class ArtistDetailActivity : BaseActivity<ArtistDetailPresenter>(), ArtistDetail
     }
 
 
-    override fun showPlaylistSongs(songList: MutableList<Music>?) {
+    override fun showPlaylistSongs(songList: MutableList<BaseMusicInfo>?) {
         hideLoading()
         songList?.let {
             musicList.addAll(songList)

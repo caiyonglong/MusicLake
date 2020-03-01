@@ -8,17 +8,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.Tools
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.activity_playlist_search.*
 import kotlinx.android.synthetic.main.toolbar_search_layout.*
 
@@ -35,13 +34,13 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     /**
      * 搜索结果
      */
-    private val searchResults = mutableListOf<Music>()
+    private val searchResults = mutableListOf<BaseMusicInfo>()
 
     companion object {
         /**
          * 歌曲列表
          */
-        var musicList = mutableListOf<Music>()
+        var musicList = mutableListOf<BaseMusicInfo>()
     }
 
     /**
@@ -124,7 +123,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         mAdapter.setOnItemClickListener { _, view, position ->
             if (musicList.size <= position) return@setOnItemClickListener
             //播放歌单内搜索结果队列
-            PlayManager.play(position,searchResults,queryString.hashCode().toString())
+            MusicPlayerManager.getInstance().playMusic(searchResults, position)
         }
         mAdapter.setOnItemChildClickListener { _, _, position ->
             val music = musicList[position]

@@ -3,12 +3,9 @@ package com.cyl.musiclake.data
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
-import com.cyl.musiclake.bean.Album
-import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
-import org.litepal.LitePal
 
 
 object VideoLoader {
@@ -20,8 +17,8 @@ object VideoLoader {
      * @param cursor
      * @return
      */
-    private fun getVideosForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
-        val results = mutableListOf<Music>()
+    private fun getVideosForMedia(context: Context, cursor: Cursor?): MutableList<BaseMusicInfo> {
+        val results = mutableListOf<BaseMusicInfo>()
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -32,7 +29,7 @@ object VideoLoader {
                     val duration = cursor.getInt(4)
                     val size = cursor.getLong(5)
                     val path = cursor.getString(6)
-                    val music = Music()
+                    val music = BaseMusicInfo()
                     music.type = Constants.VIDEO
                     music.isOnline = false
                     music.mid = id.toString()
@@ -55,16 +52,16 @@ object VideoLoader {
     }
 
 
-    fun getAllLocalVideos(context: Context): MutableList<Music> {
+    fun getAllLocalVideos(context: Context): MutableList<BaseMusicInfo> {
         return getVideosForMedia(context, makeVideoCursor(context, null, null))
     }
 
-    fun searchVideos(context: Context, searchString: String): MutableList<Music> {
+    fun searchVideos(context: Context, searchString: String): MutableList<BaseMusicInfo> {
         return getVideosForMedia(context, makeVideoCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 arrayOf("%$searchString%", "%$searchString%", "%$searchString%")))
     }
 
-    fun getVideoListInFolder(context: Context, path: String): MutableList<Music> {
+    fun getVideoListInFolder(context: Context, path: String): MutableList<BaseMusicInfo> {
         val whereArgs = arrayOf("$path%")
         return getVideosForMedia(context, makeVideoCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null))
     }

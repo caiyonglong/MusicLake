@@ -2,21 +2,19 @@ package com.cyl.musiclake.ui.music.my
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.NoticeInfo
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
+import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.event.*
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.CreatePlaylistDialog
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
@@ -26,6 +24,8 @@ import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
+import com.google.android.material.tabs.TabLayout
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_local.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -147,11 +147,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     }
 
 
-    override fun showSongs(songList: MutableList<Music>) {
+    override fun showSongs(songList: MutableList<BaseMusicInfo>) {
         localView.setSongsNum(songList.size, 0)
         localView.setOnItemClickListener { view, position ->
             if (view.id == R.id.iv_play) {
-                PlayManager.play(0, songList, Constants.PLAYLIST_LOCAL_ID)
+                MusicPlayerManager.getInstance().playMusic(songList, 0)
             } else {
                 toFragment(position)
             }
@@ -213,11 +213,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         updatePlaylist()
     }
 
-    override fun showHistory(musicList: MutableList<Music>) {
-        historyView.setSongsNum(musicList.size, 1)
+    override fun showHistory(baseMusicInfoInfoList: MutableList<BaseMusicInfo>) {
+        historyView.setSongsNum(baseMusicInfoInfoList.size, 1)
         historyView.setOnItemClickListener { view, position ->
             if (view.id == R.id.iv_play) {
-                PlayManager.play(0, musicList, Constants.PLAYLIST_HISTORY_ID)
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoList, 0)
             } else {
                 toFragment(position)
             }
@@ -227,11 +227,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     /**
      * 显示收藏列表
      */
-    override fun showLoveList(musicList: MutableList<Music>) {
-        favoriteView.setSongsNum(musicList.size, 2)
+    override fun showLoveList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>) {
+        favoriteView.setSongsNum(baseMusicInfoInfoList.size, 2)
         favoriteView.setOnItemClickListener { view, position ->
             if (view.id == R.id.iv_play) {
-                PlayManager.play(0, musicList, Constants.PLAYLIST_LOVE_ID)
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoList, 0)
             } else {
                 toFragment(position)
             }
@@ -241,11 +241,11 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     /**
      * 显示下载列表
      */
-    override fun showDownloadList(musicList: MutableList<Music>) {
-        downloadView.setSongsNum(musicList.size, 4)
+    override fun showDownloadList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>) {
+        downloadView.setSongsNum(baseMusicInfoInfoList.size, 4)
         downloadView.setOnItemClickListener { view, position ->
             if (view.id == R.id.iv_play) {
-                PlayManager.play(0, musicList, Constants.PLAYLIST_DOWNLOAD_ID)
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoList, 0)
             } else {
                 toFragment(position)
             }
@@ -255,7 +255,7 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     /**
      * 显示video列表
      */
-    override fun showVideoList(videoList: MutableList<Music>) {
+    override fun showVideoList(videoList: MutableList<BaseMusicInfo>) {
         videoView.setSongsNum(videoList.size, 3)
         videoView.setOnItemClickListener { _, position ->
             toFragment(position)

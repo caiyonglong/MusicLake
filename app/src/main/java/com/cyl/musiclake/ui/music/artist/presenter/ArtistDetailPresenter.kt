@@ -8,7 +8,7 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.SongLoader
@@ -221,8 +221,8 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
             Constants.PLAYLIST_WY_RECOMMEND_ID -> {
                 loadRecommendSongs()
             }
-            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
-                override fun success(result: MutableList<Music>) {
+            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<BaseMusicInfo>> {
+                override fun success(result: MutableList<BaseMusicInfo>) {
                     mView?.showPlaylistSongs(result)
                 }
 
@@ -240,8 +240,8 @@ constructor() : BasePresenter<ArtistDetailContract.View>(), ArtistDetailContract
      */
     private fun loadRecommendSongs() {
         val observable = NeteaseApiServiceImpl.recommendSongs()
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
+        ApiManager.request(observable, object : RequestCallBack<MutableList<BaseMusicInfo>> {
+            override fun success(result: MutableList<BaseMusicInfo>) {
                 mView?.showPlaylistSongs(result)
             }
 

@@ -6,9 +6,9 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.data.db.DaoLitepal
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
 import org.litepal.LitePal
@@ -31,8 +31,8 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getSongsForArtist(artistName: String?): MutableList<Music> {
-        return LitePal.where("isonline =0 and artist like ?", "%$artistName%").find(Music::class.java)
+    fun getSongsForArtist(artistName: String?): MutableList<BaseMusicInfo> {
+        return LitePal.where("isonline =0 and artist like ?", "%$artistName%").find(BaseMusicInfo::class.java)
     }
 
     /**
@@ -41,8 +41,8 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getSongsForAlbum(albumName: String?): MutableList<Music> {
-        return LitePal.where("isonline =0 and album like ?", "%$albumName%").find(Music::class.java)
+    fun getSongsForAlbum(albumName: String?): MutableList<BaseMusicInfo> {
+        return LitePal.where("isonline =0 and album like ?", "%$albumName%").find(BaseMusicInfo::class.java)
     }
 
     /**
@@ -73,8 +73,8 @@ object SongLoader {
      * @param cursor
      * @return
      */
-    private fun getSongsForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
-        val results = mutableListOf<Music>()
+    private fun getSongsForMedia(context: Context, cursor: Cursor?): MutableList<BaseMusicInfo> {
+        val results = mutableListOf<BaseMusicInfo>()
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -88,7 +88,7 @@ object SongLoader {
                     val albumId = cursor.getString(7)
                     val path = cursor.getString(8)
                     val coverUri = CoverLoader.getCoverUri(context, albumId)
-                    val music = Music()
+                    val music = BaseMusicInfo()
                     music.type = Constants.LOCAL
                     music.isOnline = false
                     music.mid = id.toString()
@@ -120,18 +120,18 @@ object SongLoader {
      * @param context
      * @return
      */
-    fun getFavoriteSong(): MutableList<Music> {
+    fun getFavoriteSong(): MutableList<BaseMusicInfo> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOVE_ID)
     }
 
     /**
      * 获取本地歌曲
      */
-    private fun getSongsForDB(): MutableList<Music> {
+    private fun getSongsForDB(): MutableList<BaseMusicInfo> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_LOCAL_ID)
     }
 
-    fun getLocalMusic(context: Context, isReload: Boolean = true): MutableList<Music> {
+    fun getLocalMusic(context: Context, isReload: Boolean = true): MutableList<BaseMusicInfo> {
         LogUtil.d("SongLoader", "getLocalMusic =$isReload")
         val data = getSongsForDB()
         if (data.size == 0 || isReload) {
@@ -148,55 +148,55 @@ object SongLoader {
         return data
     }
 
-    fun getMusicInfo(mid: String): Music? {
+    fun getMusicInfo(mid: String): BaseMusicInfo? {
         return DaoLitepal.getMusicInfo(mid)
     }
 
 
-    fun updateFavoriteSong(music: Music): Boolean {
-        music.isLove = !music.isLove
-        DaoLitepal.saveOrUpdateMusic(music)
-        return music.isLove
+    fun updateFavoriteSong(baseMusicInfoInfo: BaseMusicInfo): Boolean {
+        baseMusicInfoInfo.isLove = !baseMusicInfoInfo.isLove
+        DaoLitepal.saveOrUpdateMusic(baseMusicInfoInfo)
+        return baseMusicInfoInfo.isLove
     }
 
     /**
      * 本地歌曲
      * 添加歌曲
      */
-    private fun insertSongs(musics: List<Music>) {
+    private fun insertSongs(baseMusicInfos: List<BaseMusicInfo>) {
     }
 
     /**
      * 本地歌曲
      * 添加歌曲
      */
-    fun updateMusic(music: Music) {
-        DaoLitepal.saveOrUpdateMusic(music)
+    fun updateMusic(baseMusicInfoInfo: BaseMusicInfo) {
+        DaoLitepal.saveOrUpdateMusic(baseMusicInfoInfo)
     }
 
     /**
      * 删除歌曲
      */
-    fun removeSong(music: Music) {
-        DaoLitepal.deleteMusic(music)
+    fun removeSong(baseMusicInfoInfo: BaseMusicInfo) {
+        DaoLitepal.deleteMusic(baseMusicInfoInfo)
     }
 
-    fun removeMusicList(musicList: MutableList<Music>) {
-        musicList.forEach {
+    fun removeMusicList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>) {
+        baseMusicInfoInfoList.forEach {
             removeSong(it)
         }
     }
 
-    fun getAllLocalSongs(context: Context): MutableList<Music> {
+    fun getAllLocalSongs(context: Context): MutableList<BaseMusicInfo> {
         return getSongsForMedia(context, makeSongCursor(context, null, null))
     }
 
-    fun searchSongs(context: Context, searchString: String): MutableList<Music> {
+    fun searchSongs(context: Context, searchString: String): MutableList<BaseMusicInfo> {
         return getSongsForMedia(context, makeSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 arrayOf("%$searchString%", "%$searchString%", "%$searchString%")))
     }
 
-    fun getSongListInFolder(context: Context, path: String): MutableList<Music> {
+    fun getSongListInFolder(context: Context, path: String): MutableList<BaseMusicInfo> {
         val whereArgs = arrayOf("$path%")
         return getSongsForMedia(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null))
     }

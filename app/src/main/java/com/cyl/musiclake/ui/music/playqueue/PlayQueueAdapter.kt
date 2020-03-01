@@ -1,29 +1,28 @@
 package com.cyl.musiclake.ui.music.playqueue
 
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.TextView
-
+import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.player.MusicPlayerManager
 import org.jetbrains.anko.dip
 
 /**
  * Created by D22434 on 2017/9/26.ß
  */
 
-class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music, BaseViewHolder>(R.layout.item_play_queue, musicList) {
+class PlayQueueAdapter(baseMusicInfoInfoList: List<BaseMusicInfo>) : BaseItemDraggableAdapter<BaseMusicInfo, BaseViewHolder>(R.layout.item_play_queue, baseMusicInfoInfoList) {
 
-    override fun convert(holder: BaseViewHolder, item: Music) {
+    override fun convert(holder: BaseViewHolder, item: BaseMusicInfo) {
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
 
@@ -40,7 +39,7 @@ class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music,
         //设置歌手专辑名
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
         //设置播放状态
-        if (PlayManager.getPlayingId() == item.mid) {
+        if (MusicPlayerManager.getInstance().getNowPlayingMusic()?.mid == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
             holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.app_green))
             holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.app_green))

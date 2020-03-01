@@ -10,11 +10,11 @@ import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
 import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
+import com.music.lake.musiclib.player.MusicPlayerManager
 
 /**
  * 作者：yonglong on 2016/8/10 21:36
@@ -75,7 +75,7 @@ class ChatListAdapter(val list: List<MessageInfoBean>) : BaseQuickAdapter<Messag
                         CoverLoader.loadImageView(mContext, music.coverUri, holder.getView(R.id.iv_cover))
                     }
                     holder.getView<View>(R.id.include_music).setOnClickListener {
-                        PlayManager.playOnline(music)
+                        MusicPlayerManager.getInstance().playMusic(music)
                     }
                     holder.getView<View>(R.id.iv_more).setOnClickListener {
                         BottomDialogFragment.newInstance(music).show(mContext as ChatActivity)

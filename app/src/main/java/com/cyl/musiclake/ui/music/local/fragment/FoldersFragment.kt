@@ -5,9 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.FolderInfo
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.player.PlayManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.edit.EditSongListActivity
@@ -15,6 +13,7 @@ import com.cyl.musiclake.ui.music.local.adapter.FolderAdapter
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.FoldersContract
 import com.cyl.musiclake.ui.music.local.presenter.FoldersPresenter
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_local_song.*
 import kotlinx.android.synthetic.main.header_local_list.*
 import org.jetbrains.anko.support.v4.startActivity
@@ -28,7 +27,7 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     private var mAdapter: FolderAdapter? = null
     private var mSongAdapter: SongAdapter? = null
     var folderInfos = mutableListOf<FolderInfo>()
-    var songList = mutableListOf<Music>()
+    var songList = mutableListOf<BaseMusicInfo>()
     var curFolderName: String? = null
 
     override fun getLayoutId(): Int {
@@ -85,18 +84,18 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     }
 
 
-    override fun showSongs(musicList: MutableList<Music>?) {
+    override fun showSongs(baseMusicInfoInfoList: MutableList<BaseMusicInfo>?) {
         songList.clear()
-        musicList?.let { songList = it }
+        baseMusicInfoInfoList?.let { songList = it }
         if (mSongAdapter == null) {
-            mSongAdapter = musicList?.let {
+            mSongAdapter = baseMusicInfoInfoList?.let {
                 SongAdapter(it)
             }
             recyclerView?.adapter = mSongAdapter
             mSongAdapter?.bindToRecyclerView(recyclerView)
             mSongAdapter?.setOnItemClickListener { adapter, view, position ->
                 if (view.id != R.id.iv_more) {
-                    PlayManager.play(position, songList, Constants.PLAYLIST_DOWNLOAD_ID + curFolderName)
+                    MusicPlayerManager.getInstance().playMusic(songList, position)
                     mSongAdapter?.notifyDataSetChanged()
                 }
             }

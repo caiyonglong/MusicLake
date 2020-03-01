@@ -19,10 +19,10 @@ import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.music.mv.MvDetailActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.Tools
+import com.music.lake.musiclib.player.MusicPlayerManager
 import com.zhouwei.mzbanner.holder.MZViewHolder
 import org.jetbrains.anko.startActivity
 
@@ -102,7 +102,7 @@ class BannerViewHolder(val activity: Activity) : MZViewHolder<BannerBean> {
                 data?.targetType == "1" -> {
                     //单曲
                     MusicApi.loadSongDetailInfo(Constants.NETEASE, data.targetId) { result ->
-                        PlayManager.playOnline(result)
+                        result?.let { it1 -> MusicPlayerManager.getInstance().playMusic(it1) }
                     }
                 }
             }

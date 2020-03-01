@@ -16,13 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Album;
 import com.cyl.musiclake.bean.Artist;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.cyl.musiclake.player.PlayManager;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
@@ -62,11 +62,11 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
 
     @OnClick(R.id.fab)
     void onPlayAll() {
-        PlayManager.play(0, musicList, mPlaylist.getPid());
+        MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoList, 0);
     }
 
     private SongAdapter mAdapter;
-    private List<Music> musicList = new ArrayList<>();
+    private List<BaseMusicInfo> baseMusicInfoInfoList = new ArrayList<>();
     private Playlist mPlaylist;
     private Artist mArtist;
     private Album mAlbum;
@@ -127,7 +127,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                 album_art.setTransitionName(getArguments().getString("transition_name"));
             }
         }
-        mAdapter = new SongAdapter(musicList);
+        mAdapter = new SongAdapter(baseMusicInfoInfoList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new ItemDecoration(mFragmentComponent.getActivity(), ItemDecoration.VERTICAL_LIST));
         mRecyclerView.setAdapter(mAdapter);
@@ -154,19 +154,13 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                if (mPlaylist != null) {
-                    PlayManager.play(position, musicList, mPlaylist.getPid());
-                } else if (mArtist != null) {
-                    PlayManager.play(position, musicList, String.valueOf(mArtist.getArtistId()));
-                } else if (mAlbum != null) {
-                    PlayManager.play(position, musicList, String.valueOf(mAlbum.getAlbumId()));
-                }
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoList, position);
                 mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            Music music = musicList.get(position);
-            BottomDialogFragment.Companion.newInstance(music)
+            BaseMusicInfo baseMusicInfo = baseMusicInfoInfoList.get(position);
+            BottomDialogFragment.Companion.newInstance(baseMusicInfo)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }
@@ -180,7 +174,7 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
                 LogUtil.e("action_delete_playlist");
                 UIUtilsKt.deletePlaylist(mFragmentComponent.getActivity(), mPlaylist, () -> {
                     if (mPlaylist.getType().equals(Constants.PLAYLIST_HISTORY_ID)) {
-                        musicList.clear();
+                        baseMusicInfoInfoList.clear();
                         PlayHistoryLoader.INSTANCE.clearPlayHistory();
                         mAdapter.notifyDataSetChanged();
                         showEmptyState();
@@ -296,23 +290,23 @@ public class PlaylistDetailFragment extends BaseFragment<PlaylistDetailPresenter
     }
 
     @Override
-    public void showPlaylistSongs(List<Music> songList) {
+    public void showPlaylistSongs(List<BaseMusicInfo> songList) {
         hideLoading();
-        musicList.addAll(songList);
-        mAdapter.setNewData(musicList);
+        baseMusicInfoInfoList.addAll(songList);
+        mAdapter.setNewData(baseMusicInfoInfoList);
         if (mPlaylist != null && mPlaylist.getCoverUrl() != null) {
             CoverLoader.INSTANCE.loadBigImageView(getContext(), mPlaylist.getCoverUrl(), mPlaylist.getType(), album_art);
-        } else if (musicList.size() >= 1) {
-            CoverLoader.INSTANCE.loadBigImageView(getContext(), musicList.get(0).getCoverUri(), musicList.get(0).getType(), album_art);
+        } else if (baseMusicInfoInfoList.size() >= 1) {
+            CoverLoader.INSTANCE.loadBigImageView(getContext(), baseMusicInfoInfoList.get(0).getCoverUri(), baseMusicInfoInfoList.get(0).getType(), album_art);
         }
-        if (musicList.size() == 0) {
+        if (baseMusicInfoInfoList.size() == 0) {
             showEmptyState();
         }
     }
 
     @Override
     public void removeMusic(int position) {
-        musicList.remove(position);
+        baseMusicInfoInfoList.remove(position);
         mAdapter.notifyDataSetChanged();
     }
 

@@ -8,15 +8,15 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.PlaylistLoader
 import com.cyl.musiclake.data.SongLoader
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MyPlaylistEvent
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -186,8 +186,8 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
             Constants.PLAYLIST_WY_RECOMMEND_ID -> {
                 loadRecommendSongs()
             }
-            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<Music>> {
-                override fun success(result: MutableList<Music>) {
+            else -> ApiManager.request(playlist.pid?.let { PlaylistApiServiceImpl.getMusicList(it) }, object : RequestCallBack<MutableList<BaseMusicInfo>> {
+                override fun success(result: MutableList<BaseMusicInfo>) {
                     mView?.showPlaylistSongs(result)
                 }
 
@@ -205,8 +205,8 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
      */
     private fun loadRecommendSongs() {
         val observable = NeteaseApiServiceImpl.recommendSongs()
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Music>> {
-            override fun success(result: MutableList<Music>) {
+        ApiManager.request(observable, object : RequestCallBack<MutableList<BaseMusicInfo>> {
+            override fun success(result: MutableList<BaseMusicInfo>) {
                 mView?.showPlaylistSongs(result)
             }
 

@@ -12,12 +12,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.ui.UIUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.music.lake.musiclib.player.MusicPlayerManager
 import com.trello.rxlifecycle2.LifecycleTransformer
 import java.util.*
 
@@ -30,7 +29,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     private lateinit var clearAllIv: ImageView
     private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     private var mPresenter: PlayQueuePresenter? = null
-    private var musicList: List<Music> = ArrayList()
+    private var baseMusicInfoInfoList: List<BaseMusicInfo> = ArrayList()
     private var mAdapter: QueueAdapter? = null
 
     private var mBehavior: BottomSheetBehavior<*>? = null
@@ -46,7 +45,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         super.onCreate(savedInstanceState)
         mPresenter = PlayQueuePresenter()
         mPresenter?.attachView(this)
-        mAdapter = QueueAdapter(musicList)
+        mAdapter = QueueAdapter(baseMusicInfoInfoList)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,7 +54,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
-        recyclerView.scrollToPosition(PlayManager.getCurrentPosition())
+        recyclerView.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
         initListener()
         mPresenter?.loadSongs()
         mBehavior = BottomSheetBehavior.from(rootView?.parent as View)
@@ -83,12 +82,10 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     private fun initListener() {
         playModeTv.setOnClickListener { view ->
-            UIUtils.updatePlayMode(playModeIv, true)
-            playModeTv.text = PlayQueueManager.getPlayMode()
+            UIUtils.updatePlayMode(playModeIv, playModeTv, true)
         }
         playModeIv.setOnClickListener { view ->
-            UIUtils.updatePlayMode(view as ImageView, true)
-            playModeTv.text = PlayQueueManager.getPlayMode()
+            UIUtils.updatePlayMode(view as ImageView, playModeTv, true)
         }
         clearAllIv.setOnClickListener { v ->
             MaterialDialog(context!!).show {
@@ -102,19 +99,19 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         }
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_love && view.id != R.id.iv_more) {
-                PlayManager.play(position)
+                MusicPlayerManager.getInstance().playMusicById(position)
                 mAdapter?.notifyDataSetChanged()
             }
         }
         mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             when (view.id) {
                 R.id.iv_more -> {
-                    PlayManager.removeFromQueue(position)
-                    musicList = PlayManager.getPlayList()
-                    if (musicList.size == 0)
+                    MusicPlayerManager.getInstance().removeFromPlaylist(position)
+                    baseMusicInfoInfoList = MusicPlayerManager.getInstance().getPlayList() as List<BaseMusicInfo>
+                    if (baseMusicInfoInfoList.isEmpty())
                         dismiss()
                     else
-                        mAdapter?.setNewData(musicList)
+                        mAdapter?.setNewData(baseMusicInfoInfoList)
                 }
             }
         }
@@ -130,10 +127,8 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         dialog?.dismiss()
     }
 
-
-    fun updatePlayMode() {
-        UIUtils.updatePlayMode(playModeIv, false)
-        playModeTv.text = PlayQueueManager.getPlayMode()
+    private fun updatePlayMode() {
+        UIUtils.updatePlayMode(playModeIv, playModeTv, false)
     }
 
     override fun showLoading() {
@@ -161,13 +156,13 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         return null
     }
 
-    override fun showSongs(songs: List<Music>) {
-        musicList = songs
+    override fun showSongs(songs: List<BaseMusicInfo>) {
+        baseMusicInfoInfoList = songs
         songSumTv.text = "(${songs.size})"
         updatePlayMode()
         mAdapter?.setNewData(songs)
         //滚动到正在播放的位置
-        recyclerView.scrollToPosition(PlayManager.position())
+        recyclerView.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
 
         if (songs.isEmpty()) {
             mAdapter?.setEmptyView(R.layout.view_queue_empty)

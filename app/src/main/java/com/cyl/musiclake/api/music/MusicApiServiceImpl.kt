@@ -9,13 +9,13 @@ import com.cyl.musiclake.api.music.doupan.DoubanApiServiceImpl
 import com.cyl.musiclake.api.music.qq.QQMusicApiServiceImpl
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.music.search.SearchEngine
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import io.reactivex.Observable
 import io.reactivex.Observable.create
 
@@ -36,11 +36,11 @@ object MusicApiServiceImpl {
      * @param page
      * @return
      */
-    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<Music>> {
+    fun searchMusic(key: String, type: SearchEngine.Filter, limit: Int, page: Int): Observable<MutableList<BaseMusicInfo>> {
         return create { result ->
             if (type == SearchEngine.Filter.ANY) {
                 BaseApiImpl.searchSong(key, limit, page, success = {
-                    val musicList = mutableListOf<Music>()
+                    val musicList = mutableListOf<BaseMusicInfo>()
                     if (it.status) {
                         try {
                             val neteaseSize = it.data.netease.songs?.size ?: 0
@@ -85,7 +85,7 @@ object MusicApiServiceImpl {
                 })
             } else {
                 BaseApiImpl.searchSongSingle(key, type.toString(), limit, page, success = {
-                    val musicList = mutableListOf<Music>()
+                    val musicList = mutableListOf<BaseMusicInfo>()
                     if (it.status) {
                         try {
                             LogUtil.e("search type", type.toString().toLowerCase())
@@ -121,10 +121,10 @@ object MusicApiServiceImpl {
      * 批量獲取歌曲信息
      *
      */
-    fun getBatchMusic(vendor: String, ids: Array<String>): Observable<MutableList<Music>> {
+    fun getBatchMusic(vendor: String, ids: Array<String>): Observable<MutableList<BaseMusicInfo>> {
         return create { result ->
             BaseApiImpl.getBatchSongDetail(vendor, ids) {
-                val musicList = mutableListOf<Music>()
+                val musicList = mutableListOf<BaseMusicInfo>()
                 if (it.status) {
                     val songList = it.data
                     songList.forEach {
@@ -168,7 +168,7 @@ object MusicApiServiceImpl {
      * 获取歌曲详细信息
      *
      */
-    fun getSongDetail(vendor: String, mid: String): Observable<Music> {
+    fun getSongDetail(vendor: String, mid: String): Observable<BaseMusicInfo> {
         return create { result ->
             BaseApiImpl.getSongDetail(vendor, mid, {
                 if (it.status) {
@@ -284,7 +284,7 @@ object MusicApiServiceImpl {
                     .getArtistSongs(vendor, id, offset, limit, {
                         if (it.status) {
                             LogUtil.d(TAG, it.toString())
-                            val musicList = arrayListOf<Music>()
+                            val musicList = arrayListOf<BaseMusicInfo>()
                             it.data.songs.forEach {
                                 if (!it.cp) {
                                     it.vendor = vendor
@@ -318,7 +318,7 @@ object MusicApiServiceImpl {
             BaseApiImpl.getAlbumDetail(vendor, id, {
                 if (it.status) {
                     val album = Album()
-                    val musicList = arrayListOf<Music>()
+                    val musicList = arrayListOf<BaseMusicInfo>()
                     it.data.songs.forEach {
                         it.vendor = vendor
                         musicList.add(MusicUtils.getMusic(it))
@@ -372,7 +372,7 @@ object MusicApiServiceImpl {
     /**
      * 获取详细信息
      */
-    fun getAnyVendorSongDetail(list: MutableList<Music>): Observable<MutableList<Music>> {
+    fun getAnyVendorSongDetail(list: MutableList<BaseMusicInfo>): Observable<MutableList<BaseMusicInfo>> {
         return create { result ->
             val array = mutableListOf<Map<String, String?>>()
             list.forEach {
@@ -382,7 +382,7 @@ object MusicApiServiceImpl {
                 array.add(t)
             }
             BaseApiImpl.getAnyVendorSongDetail(array, { data ->
-                val musicList = mutableListOf<Music>()
+                val musicList = mutableListOf<BaseMusicInfo>()
                 for (i in 0 until data.size) {
                     data[i].vendor = array[i]["vendor"]
                     musicList.add(MusicUtils.getMusic(data[i]))
@@ -408,11 +408,11 @@ object MusicApiServiceImpl {
      * 获取歌词
      *
      */
-    fun getLyricInfo(music: Music): Observable<String>? {
+    fun getLyricInfo(baseMusicInfoInfo: BaseMusicInfo): Observable<String>? {
         try {
-            val mLyricPath = FileUtils.getLrcDir() + "${music.title}-${music.artist}" + ".lrc"
-            val vendor = music.type!!
-            val mid = music.mid!!
+            val mLyricPath = FileUtils.getLrcDir() + "${baseMusicInfoInfo.title}-${baseMusicInfoInfo.artist}" + ".lrc"
+            val vendor = baseMusicInfoInfo.type!!
+            val mid = baseMusicInfoInfo.mid!!
             //网络歌词
             return if (FileUtils.exists(mLyricPath)) {
                 MusicApi.getLocalLyricInfo(mLyricPath)
@@ -449,8 +449,8 @@ object MusicApiServiceImpl {
     /**
      * 获取本地歌词
      */
-    fun getLocalLyricInfo(music: Music): Observable<String> {
-        val mLyricPath = FileUtils.getLrcDir() + music.title + "-" + music.artist + ".lrc"
+    fun getLocalLyricInfo(baseMusicInfoInfo: BaseMusicInfo): Observable<String> {
+        val mLyricPath = FileUtils.getLrcDir() + baseMusicInfoInfo.title + "-" + baseMusicInfoInfo.artist + ".lrc"
         //网络歌词
         return MusicApi.getLocalLyricInfo(mLyricPath)
     }

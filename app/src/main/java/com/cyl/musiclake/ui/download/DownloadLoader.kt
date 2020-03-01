@@ -4,7 +4,7 @@ import android.text.TextUtils
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Mp3Util
 import com.cyl.musiclake.utils.ToastUtils
@@ -17,8 +17,8 @@ object DownloadLoader {
     /**
      * 获取已下载列表
      */
-    fun getDownloadList(isCached: Boolean = false): MutableList<Music> {
-        val musicList = mutableListOf<Music>()
+    fun getDownloadList(isCached: Boolean = false): MutableList<BaseMusicInfo> {
+        val musicList = mutableListOf<BaseMusicInfo>()
         val data = LitePal.where("finish = 1 and cache = ?", if (isCached) "1" else "0").find(TasksManagerModel::class.java)
         data.forEach {
             val music = it.mid?.let { it1 ->
@@ -43,8 +43,8 @@ object DownloadLoader {
     /**
      * 获取已下载列表
      */
-    fun getDownloadList(): MutableList<Music> {
-        val musicList = mutableListOf<Music>()
+    fun getDownloadList(): MutableList<BaseMusicInfo> {
+        val musicList = mutableListOf<BaseMusicInfo>()
         val data = LitePal.where("finish = 1").find(TasksManagerModel::class.java)
         data.forEach {
             val music = it.mid?.let { it1 ->
@@ -76,7 +76,7 @@ object DownloadLoader {
     /**
      * 清空下载列表
      */
-    fun clearDownloadList(): MutableList<Music> {
+    fun clearDownloadList(): MutableList<BaseMusicInfo> {
         LitePal.deleteAll(TasksManagerModel::class.java)
         return getDownloadList()
     }

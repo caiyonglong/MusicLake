@@ -9,7 +9,7 @@ import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.youtube.YoutubeDataApi
 import com.cyl.musiclake.bean.HotSearchBean
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.SearchResult
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.common.Constants
@@ -37,9 +37,9 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
             uiThread {
                 result?.let {
                     val searchResult = SearchResult()
-                    val songs = mutableListOf<Music>()
+                    val songs = mutableListOf<BaseMusicInfo>()
                     result.items.mapTo(songs) { t ->
-                        val song = Music()
+                        val song = BaseMusicInfo()
                         song.title = t.snippet.title
                         song.artist = t.snippet.channelTitle
                         song.artistId = t.snippet.channelId
@@ -102,8 +102,8 @@ constructor() : BasePresenter<SearchContract.View>(), SearchContract.Presenter {
             else -> MusicApiServiceImpl.searchMusic(key, type, limit, page)
         }
         ApiManager.request(observable,
-                object : RequestCallBack<MutableList<Music>> {
-                    override fun success(result: MutableList<Music>) {
+                object : RequestCallBack<MutableList<BaseMusicInfo>> {
+                    override fun success(result: MutableList<BaseMusicInfo>) {
                         LogUtil.e("searchSuccess", result.toString())
                         mView?.hideLoading()
                         mView?.showSearchResult(result)

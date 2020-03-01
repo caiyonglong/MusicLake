@@ -7,19 +7,17 @@ import android.content.Intent
 import android.media.MediaScannerConnection
 import android.media.audiofx.AudioEffect
 import android.net.Uri
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Pair
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.player.MusicPlayerService
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.download.ui.DownloadFragment
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.music.artist.activity.ArtistDetailActivity
@@ -33,6 +31,8 @@ import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.player.MusicPlayerService
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -79,7 +79,7 @@ object NavigationHelper {
     fun navigateToSoundEffect(context: Activity) {
         try {
             val effects = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
-            effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, PlayManager.getAudioSessionId())
+            effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MusicPlayerManager.getInstance().AudioSessionId())
             context.startActivityForResult(effects, 666)
         } catch (e: Exception) {
             ToastUtils.show("设备不支持均衡！")

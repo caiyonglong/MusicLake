@@ -5,7 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseFragment
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.ui.download.TasksManager
 import com.cyl.musiclake.ui.download.TasksManagerModel
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
@@ -60,7 +60,7 @@ class DownloadManagerFragment : BaseFragment<DownloadPresenter>(), DownloadContr
 
     }
 
-    override fun showSongs(musicList: List<Music>) {
+    override fun showSongs(baseMusicInfoInfoList: List<BaseMusicInfo>) {
 
     }
 

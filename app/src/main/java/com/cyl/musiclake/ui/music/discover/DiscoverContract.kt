@@ -4,7 +4,7 @@ import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 
 
 interface DiscoverContract {
@@ -24,7 +24,7 @@ interface DiscoverContract {
 
         fun showRecommendPlaylist(playlists: MutableList<Playlist>)
 
-        fun showRecommendSongs(songs: MutableList<Music>)
+        fun showRecommendSongs(songs: MutableList<BaseMusicInfo>)
 
         fun showPersonalFm(playlist: Playlist)
 

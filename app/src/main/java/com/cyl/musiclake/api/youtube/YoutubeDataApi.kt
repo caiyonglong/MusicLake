@@ -1,6 +1,6 @@
 package com.cyl.musiclake.api.youtube
 
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.google.api.client.http.HttpRequestInitializer
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -96,14 +96,14 @@ object YoutubeDataApi {
     /**
      * 根据id 获取Youtube歌曲信息
      */
-    fun getYoutubeSongInfo(ids: List<String>, result: (resultList: MutableList<Music>) -> Unit) {
+    fun getYoutubeSongInfo(ids: List<String>, result: (resultList: MutableList<BaseMusicInfo>) -> Unit) {
 
         val count = if (ids.size % 50 == 0) {
             ids.size / 50
         } else {
             (ids.size / 50) + 1
         }
-        val songlist = mutableListOf<Music>()
+        val songlist = mutableListOf<BaseMusicInfo>()
         val map = mutableMapOf<Int, List<String>>()
         repeat(count) {
             if (it == count - 1) {
@@ -117,7 +117,7 @@ object YoutubeDataApi {
             val list = getSongInfo(id)
             list?.let {
                 list.items.mapTo(songlist) {
-                    val song = Music()
+                    val song = BaseMusicInfo()
                     song.title = it.snippet.title
                     song.artist = it.snippet.channelTitle
                     song.artistId = it.snippet.channelId
@@ -139,7 +139,7 @@ object YoutubeDataApi {
      * 获取相似推荐（当获取的他上传的视频数量为0的时候可以获取到此数据）
      */
     fun getUpListBySinger(singerId: String, pageToken: String?,
-                          resultList: (String?, MutableList<Music>) -> Unit) {
+                          resultList: (String?, MutableList<BaseMusicInfo>) -> Unit) {
         try {
             // 获取YouTube数据API请求对象
             val youtube = YouTube.Builder(NetHttpTransport(), JSON_FACTORY, HttpRequestInitializer { })
@@ -150,7 +150,7 @@ object YoutubeDataApi {
             list.maxResults = 10
             list.key = Constants.GOOGLE_DEVELOPER_KEY
             val result = list.execute()
-            val songList = mutableListOf<Music>()
+            val songList = mutableListOf<BaseMusicInfo>()
             result.items?.forEach {
                 it.contentDetails?.let { detail ->
                     val id: String? = when {
@@ -166,7 +166,7 @@ object YoutubeDataApi {
                     }
                     val snippet = it.snippet
                     id?.let {
-                        val song = Music()
+                        val song = BaseMusicInfo()
                         song.title = snippet.title
                         song.artist = snippet.channelTitle
                         song.artistId = snippet.channelId

@@ -1,12 +1,9 @@
 package com.cyl.musiclake.ui.music.playlist
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Pair
-import android.view.View
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.base.BaseFragment
@@ -54,7 +51,7 @@ class PlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.Vie
     override fun showPlayList(playlist: Playlist?) {
     }
 
-    override fun showOnlineMusicList(musicList: MutableList<Music>?) {
+    override fun showOnlineMusicList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>?) {
 
     }
 

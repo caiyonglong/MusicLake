@@ -6,15 +6,18 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.SeekBar
+import android.widget.TextView
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.player.MusicPlayerService
-import com.cyl.musiclake.player.UnLockNotify
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
+import com.cyl.musiclake.utils.UnLockNotify
+import com.music.lake.musiclib.player.MusicPlayerService
 import com.rtugeek.android.colorseekbar.ColorSeekBar
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder
 import net.steamcrafted.materialiconlib.MaterialIconView
@@ -131,7 +134,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
         mLyricText?.setFontColorScale(mFontColor)
         mColorSeekBar?.colorBarPosition = mFontColor
 
-        setPlayStatus(MusicPlayerService.getInstance().isPlaying)
+        setPlayStatus(MusicPlayerService.getInstance().isPlaying())
 
         mSizeSeekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -255,7 +258,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
                 intent.flags = FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
-            R.id.btn_close -> MusicPlayerService.getInstance().showDesktopLyric(false)
+//            R.id.btn_close -> MusicPlayerService.getInstance().showDesktopLyric(false)
             R.id.btn_lock -> {
                 mMovement = !mMovement
                 if (mMovement) {
@@ -267,7 +270,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
             R.id.btn_previous -> MusicPlayerService.getInstance().prev()
             R.id.btn_play -> {
                 MusicPlayerService.getInstance().playPause()
-                setPlayStatus(MusicPlayerService.getInstance().isPlaying)
+                setPlayStatus(MusicPlayerService.getInstance().isPlaying())
             }
             R.id.btn_next -> MusicPlayerService.getInstance().next(false)
             R.id.btn_settings -> {

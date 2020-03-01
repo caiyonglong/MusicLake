@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.text.InputType
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
@@ -21,7 +22,6 @@ import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
@@ -30,7 +30,6 @@ import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.event.FileEvent
 import com.cyl.musiclake.event.LoginEvent
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.player.playqueue.PlayQueueManager
 import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.download.TasksManager
 import com.cyl.musiclake.ui.download.ui.TaskItemAdapter
@@ -39,6 +38,9 @@ import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
+import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.music.lake.musiclib.manager.PlayListManager
+import com.music.lake.musiclib.player.MusicPlayerManager
 import com.sina.weibo.sdk.auth.AccessTokenKeeper
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
@@ -64,21 +66,27 @@ object UIUtils {
     /**
      * 改变播放模式
      */
-    fun updatePlayMode(imageView: ImageView, isChange: Boolean = false) {
+    fun updatePlayMode(imageView: ImageView, textView: TextView? = null, isChange: Boolean = false) {
         try {
-            var playMode = PlayQueueManager.getPlayModeId()
-            if (isChange) playMode = PlayQueueManager.updatePlayMode()
+            var playMode = MusicPlayerManager.getInstance().getLoopMode()
+            if (isChange) {
+                playMode = (playMode + 1) % 3
+                MusicPlayerManager.getInstance().setLoopMode(playMode)
+            }
             when (playMode) {
-                PlayQueueManager.PLAY_MODE_LOOP -> {
+                PlayListManager.PLAY_MODE_LOOP -> {
                     imageView.setImageResource(R.drawable.ic_repeat)
+                    textView?.setText(R.string.play_mode_loop)
                     if (isChange) ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.play_mode_loop))
                 }
-                PlayQueueManager.PLAY_MODE_REPEAT -> {
+                PlayListManager.PLAY_MODE_REPEAT -> {
                     imageView.setImageResource(R.drawable.ic_repeat_one)
+                    textView?.setText(R.string.play_mode_repeat)
                     if (isChange) ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.play_mode_repeat))
                 }
-                PlayQueueManager.PLAY_MODE_RANDOM -> {
+                PlayListManager.PLAY_MODE_RANDOM -> {
                     imageView.setImageResource(R.drawable.ic_shuffle)
+                    textView?.setText(R.string.play_mode_random)
                     if (isChange) ToastUtils.show(MusicApp.getAppContext().resources.getString(R.string.play_mode_random))
                 }
             }
@@ -90,8 +98,8 @@ object UIUtils {
     /**
      * 收藏歌曲
      */
-    fun collectMusic(imageView: ImageView, music: Music?) {
-        music?.let {
+    fun collectMusic(imageView: ImageView, baseMusicInfoInfo: BaseMusicInfo?) {
+        baseMusicInfoInfo?.let {
             imageView.setImageResource(if (!it.isLove) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
         ValueAnimator.ofFloat(1f, 1.3f, 0.8f, 1f).apply {
@@ -105,7 +113,7 @@ object UIUtils {
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
-                    music?.let {
+                    baseMusicInfoInfo?.let {
                         it.isLove = SongLoader.updateFavoriteSong(it)
                         EventBus.getDefault().post(PlaylistEvent(Constants.PLAYLIST_LOVE_ID, null))
                     }
@@ -157,12 +165,12 @@ fun Context.deletePlaylist(playlist: Playlist, success: (() -> Unit)?, fail: (()
 /**
  * 下载歌曲
  */
-fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
-    if (music == null) {
+fun AppCompatActivity.downloadMusic(baseMusicInfo: com.music.lake.musiclib.bean.BaseMusicInfo?, isCache: Boolean = false) {
+    if (baseMusicInfo == null) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
         return
     }
-    if (music.type == Constants.LOCAL) {
+    if (baseMusicInfo.type == Constants.LOCAL) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_local_error))
         return
     }
@@ -170,7 +178,7 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
 //        ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_ban))
 //        return
 //    }
-    ApiManager.request(MusicApi.getMusicDownloadUrl(music, isCache), object : RequestCallBack<String> {
+    ApiManager.request(MusicApi.getMusicDownloadUrl(baseMusicInfo as BaseMusicInfo, isCache), object : RequestCallBack<String> {
         override fun success(result: String) {
             LogUtil.e(javaClass.simpleName, "-----$result")
             /**
@@ -180,8 +188,8 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
 
             if (!NetworkUtils.isWifiAvaliable(MusicApp.getAppContext()) && SPUtils.getWifiMode()) {
                 showTipsDialog(this@downloadMusic, R.string.download_network_tips) {
-                    music.uri = result
-                    addDownloadQueue(music, isCache = isCache)
+                    baseMusicInfo.uri = result
+//                    addDownloadQueue(music, isCache = isCache)
                 }
                 return
             }
@@ -189,10 +197,10 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
                 val titleId = if (isCache) R.string.popup_cache else R.string.popup_download
                 MaterialDialog(this@downloadMusic).show {
                     title(titleId)
-                    message(text = getString(R.string.download_content, music.title))
+                    message(text = getString(R.string.download_content, baseMusicInfo.title))
                     positiveButton {
-                        music.uri = result
-                        addDownloadQueue(music, isCache = isCache)
+                        baseMusicInfo.uri = result
+//                        addDownloadQueue(music, isCache = isCache)
                     }
                     positiveButton(R.string.sure)
                     negativeButton(R.string.cancel)
@@ -212,17 +220,17 @@ fun AppCompatActivity.downloadMusic(music: Music?, isCache: Boolean = false) {
 /**
  * 删除歌曲
  */
-fun AppCompatActivity.deleteMusic(music: Music?) {
-    if (music == null) {
+fun AppCompatActivity.deleteMusic(baseMusicInfoInfo: BaseMusicInfo?) {
+    if (baseMusicInfoInfo == null) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.download_empty_error))
         return
     }
-    if (music.type != Constants.LOCAL) {
+    if (baseMusicInfoInfo.type != Constants.LOCAL) {
         ToastUtils.show(MusicApp.getAppContext(), getString(R.string.delete_local_song_error))
         return
     }
     doAsync {
-        val result = FileUtils.delFile(music.uri)
+        val result = FileUtils.delFile(baseMusicInfoInfo.uri)
         uiThread {
             if (result) {
                 ToastUtils.show(getString(R.string.delete_song_success))
@@ -234,7 +242,7 @@ fun AppCompatActivity.deleteMusic(music: Music?) {
 /**
  * 批量下载
  */
-fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
+fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<BaseMusicInfo>) {
     val tips = if (downloadList.size == 0) {
         getString(R.string.download_list_empty_tips)
     } else {
@@ -263,15 +271,15 @@ fun AppCompatActivity.downloadBatchMusic(downloadList: MutableList<Music>) {
 /**
  * 删除单个歌曲
  */
-fun AppCompatActivity.deleteSingleMusic(music: Music?, success: (() -> Unit)? = null) {
+fun AppCompatActivity.deleteSingleMusic(baseMusicInfoInfo: BaseMusicInfo?, success: (() -> Unit)? = null) {
     if (this.isFinishing || this.isDestroyed) return
-    if (music == null) {
+    if (baseMusicInfoInfo == null) {
         showTipsDialog(this@deleteSingleMusic, R.string.delete_local_song_empty)
         return
     }
     showTipsDialog(this@deleteSingleMusic, R.string.delete_local_song) {
         doAsync {
-            SongLoader.removeSong(music)
+            SongLoader.removeSong(baseMusicInfoInfo)
             uiThread {
                 NavigationHelper.scanFileAsync(this@deleteSingleMusic)
                 ToastUtils.show(MusicApp.getAppContext().getString(R.string.delete_song_success))
@@ -286,7 +294,7 @@ fun AppCompatActivity.deleteSingleMusic(music: Music?, success: (() -> Unit)? = 
 /**
  * 批量删除歌曲
  */
-fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<Music>, success: (() -> Unit)? = null) {
+fun AppCompatActivity.deleteLocalMusic(deleteList: MutableList<BaseMusicInfo>, success: (() -> Unit)? = null) {
     if (deleteList.size == 0) {
         showTipsDialog(this@deleteLocalMusic, R.string.delete_local_song_empty)
         return
@@ -347,7 +355,7 @@ fun showTipsDialog(context: AppCompatActivity, contentId: Int? = null, content: 
 /**
  * 增加到增加到下载队列
  */
-fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: Boolean = false) {
+fun Context.addDownloadQueue(result: BaseMusicInfo, isBatch: Boolean = false, isCache: Boolean = false) {
     LogUtil.e(javaClass.simpleName, "addDownloadQueue -----${result.uri}")
 
     if (result.uri == null) {
@@ -381,9 +389,9 @@ fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: B
 /**
  * 获取音乐播放地址/下载地址
  */
-fun getMusicDownloadUrl(music: Music, success: ((String) -> Unit)?) {
-    ApiManager.request(MusicApi.getMusicInfo(music), object : RequestCallBack<Music> {
-        override fun success(result: Music) {
+fun getMusicDownloadUrl(baseMusicInfoInfo: BaseMusicInfo, success: ((String) -> Unit)?) {
+    ApiManager.request(MusicApi.getMusicInfo(baseMusicInfoInfo), object : RequestCallBack<BaseMusicInfo> {
+        override fun success(result: BaseMusicInfo) {
             LogUtil.e("Download", "-----$result")
             result.uri?.let { success?.invoke(it) }
         }

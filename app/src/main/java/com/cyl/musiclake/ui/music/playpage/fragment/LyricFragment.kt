@@ -1,12 +1,12 @@
 package com.cyl.musiclake.ui.music.playpage.fragment
 
 import com.cyl.musiclake.R
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.widget.LyricView
 import com.cyl.musiclake.utils.SPUtils
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_player_lrcview.*
 
 class LyricFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
@@ -35,9 +35,9 @@ class LyricFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
             lyricShow?.setHighLightTextColor(SPUtils.getFontColor())
             lyricShow?.setTouchable(true)
             lyricShow?.setOnPlayerClickListener { progress, _ ->
-                PlayManager.seekTo(progress.toInt())
-                if (!PlayManager.isPlaying()) {
-                    PlayManager.playPause()
+                MusicPlayerManager.getInstance().seekTo(progress)
+                if (!MusicPlayerManager.getInstance().isPlaying()) {
+                    MusicPlayerManager.getInstance().pausePlay()
                 }
             }
         }

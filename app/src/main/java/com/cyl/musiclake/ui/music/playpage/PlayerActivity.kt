@@ -2,45 +2,44 @@ package com.cyl.musiclake.ui.music.playpage
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
-import com.cyl.musiclake.BuildConfig
+import androidx.fragment.app.Fragment
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.TransitionAnimationUtils
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.StatusChangedEvent
-import com.cyl.musiclake.player.FloatLyricViewManager
-import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.UIUtils
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.music.comment.SongCommentActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
+import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 import com.cyl.musiclake.ui.music.local.adapter.MyViewPagerAdapter
 import com.cyl.musiclake.ui.music.playpage.fragment.CoverFragment
 import com.cyl.musiclake.ui.music.playpage.fragment.LyricFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.ui.widget.DepthPageTransformer
 import com.cyl.musiclake.ui.widget.MultiTouchViewPager
+import com.cyl.musiclake.utils.FloatLyricViewManager
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Tools
+import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.activity_player.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
-    private var playingMusic: Music? = null
+    private var playingBaseMusicInfoInfo: BaseMusicInfo? = null
     private var coverFragment: CoverFragment? = CoverFragment()
     private var lyricFragment: LyricFragment? = LyricFragment()
 
@@ -49,24 +48,24 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     /***
      * 显示当前正在播放
      */
-    override fun showNowPlaying(music: Music?) {
-        if (music == null) finish()
+    override fun showNowPlaying(baseMusicInfo: BaseMusicInfo?) {
+        if (baseMusicInfo == null) finish()
 
-        playingMusic = music
+        playingBaseMusicInfoInfo = baseMusicInfo as BaseMusicInfo?
         //更新标题
-        titleIv.text = music?.title
-        subTitleTv.text = music?.artist
+        titleIv.text = baseMusicInfo?.title
+        subTitleTv.text = baseMusicInfo?.artist
         //更新类型
-        music?.let { coverFragment?.updateMusicType(it) }
+        playingBaseMusicInfoInfo?.let { coverFragment?.updateMusicType(it) }
         //更新收藏状态
-        music?.isLove?.let {
+        baseMusicInfo?.isLove?.let {
             collectIv.setImageResource(if (it) R.drawable.item_favorite_love else R.drawable.item_favorite)
         }
         //更新下载状态
 //        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD && !music?.isDl!!) View.VISIBLE else View.GONE
         LogUtil.d("PlayerActivity", "showNowPlaying 开始旋转动画")
         //开始旋转动画
-        coverFragment?.startRotateAnimation(PlayManager.isPlaying())
+        coverFragment?.startRotateAnimation(MusicPlayerManager.getInstance().isPlaying())
     }
 
     override fun getLayoutResID(): Int {
@@ -84,9 +83,9 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         //歌词搜索
         searchLyricIv.setOnClickListener {
             MusicLyricDialog().apply {
-                title = playingMusic?.title
-                artist = playingMusic?.artist
-                duration = PlayManager.getDuration().toLong()
+                title = playingBaseMusicInfoInfo?.title
+                artist = playingBaseMusicInfoInfo?.artist
+                duration = MusicPlayerManager.getInstance().getDuration()
                 searchListener = {
                 }
                 textSizeListener = {
@@ -104,20 +103,20 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     }
 
     override fun updatePlayMode() {
-        UIUtils.updatePlayMode(playModeIv, false)
+        UIUtils.updatePlayMode(playModeIv, isChange = false)
     }
 
     override fun initData() {
         setupViewPager(viewPager)
         coverFragment?.initAlbumPic()
-        mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic(), true)
+        mPresenter?.updateNowPlaying(MusicPlayerManager.getInstance().getNowPlayingMusic(), true)
         //更新播放状态
-        PlayManager.isPlaying().let {
+        MusicPlayerManager.getInstance().isPlaying().let {
             updatePlayStatus(it)
         }
         lyricFragment?.showLyric(FloatLyricViewManager.lyricInfo, true)
-        LogUtil.d("CoverFragment", "playingMusic =${playingMusic == null}")
-        playingMusic?.let { coverFragment?.updateMusicType(it) }
+        LogUtil.d("CoverFragment", "playingMusic =${playingBaseMusicInfoInfo == null}")
+        playingBaseMusicInfoInfo?.let { coverFragment?.updateMusicType(it) }
     }
 
     override fun listener() {
@@ -134,21 +133,25 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar?.progress?.let {
-                    PlayManager.seekTo(it)
+                    MusicPlayerManager.getInstance().seekTo(it.toLong())
                     lyricFragment?.setCurrentTimeMillis(it.toLong())
                 }
             }
 
         })
         playPauseIv.setOnClickListener {
-            PlayManager.playPause()
+            if (MusicPlayerManager.getInstance().isPlaying()) {
+                MusicPlayerManager.getInstance().pausePlay()
+            } else {
+                MusicPlayerManager.getInstance().restorePlay()
+            }
         }
 
         /**
          * 歌曲操作
          */
         operateSongIv.setOnClickListener {
-            BottomDialogFragment.newInstance(playingMusic)
+            BottomDialogFragment.newInstance(playingBaseMusicInfoInfo)
                     .show(this)
         }
     }
@@ -160,16 +163,16 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     fun nextPlay(view: View?) {
         if (UIUtils.isFastClick()) return
-        PlayManager.next()
+        MusicPlayerManager.getInstance().playNextMusic()
     }
 
     fun prevPlay(view: View?) {
         if (UIUtils.isFastClick()) return
-        PlayManager.prev()
+        MusicPlayerManager.getInstance().playPrevMusic()
     }
 
     fun changePlayMode(view: View?) {
-        UIUtils.updatePlayMode(view as ImageView, true)
+        UIUtils.updatePlayMode(view as ImageView, isChange = true)
     }
 
     /**
@@ -183,21 +186,21 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * 歌曲收藏
      */
     fun collectMusic(view: View?) {
-        UIUtils.collectMusic(view as ImageView, playingMusic)
+        UIUtils.collectMusic(view as ImageView, playingBaseMusicInfoInfo)
     }
 
     /**
      * 添加到歌單
      */
     fun addToPlaylist(view: View?) {
-        PlaylistManagerUtils.addToPlaylist(this, playingMusic)
+        PlaylistManagerUtils.addToPlaylist(this, playingBaseMusicInfoInfo)
     }
 
     /**
      * 添加到歌單
      */
     fun showSongComment(view: View?) {
-        startActivity<SongCommentActivity>(Extras.SONG to playingMusic)
+        startActivity<SongCommentActivity>(Extras.SONG to playingBaseMusicInfoInfo)
     }
 
     /**
@@ -205,14 +208,14 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
      * TODO 增加海报，截屏分享
      */
     fun shareMusic(view: View?) {
-        Tools.qqShare(this, PlayManager.getPlayingMusic())
+        Tools.qqShare(this, MusicPlayerManager.getInstance().getNowPlayingMusic())
     }
 
     /**
      * 歌曲下载
      */
     fun downloadMusic(view: View?) {
-        QualitySelectDialog.newInstance(playingMusic).apply {
+        QualitySelectDialog.newInstance(playingBaseMusicInfoInfo).apply {
             isDownload = true
         }.show(this)
     }
@@ -309,7 +312,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMetaChangedEvent(event: MetaChangedEvent) {
-        mPresenter?.updateNowPlaying(event.music)
+        mPresenter?.updateNowPlaying(event.baseMusicInfoInfo)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

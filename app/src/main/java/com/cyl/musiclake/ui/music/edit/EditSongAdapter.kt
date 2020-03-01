@@ -6,7 +6,7 @@ import android.widget.CheckBox
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.utils.CoverLoader
@@ -16,10 +16,10 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class EditSongAdapter(list: MutableList<Music>) : BaseItemDraggableAdapter<Music, BaseViewHolder>(R.layout.item_music_edit, list) {
-    var checkedMap = mutableMapOf<String, Music>()
+class EditSongAdapter(list: MutableList<BaseMusicInfo>) : BaseItemDraggableAdapter<BaseMusicInfo, BaseViewHolder>(R.layout.item_music_edit, list) {
+    var checkedMap = mutableMapOf<String, BaseMusicInfo>()
 
-    override fun convert(holder: BaseViewHolder, item: Music) {
+    override fun convert(holder: BaseViewHolder, item: BaseMusicInfo) {
         holder.setText(R.id.tv_title, item.title)
         holder.setText(R.id.tv_artist, item.artist)
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))

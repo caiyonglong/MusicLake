@@ -11,14 +11,14 @@
 //import android.widget.SeekBar
 //import com.cyl.musiclake.BuildConfig
 //import com.cyl.musiclake.R
-//import com.cyl.musiclake.bean.Music
+//import com.music.lake.musiclib.bean.Music
 //import com.cyl.musiclake.common.Extras
 //import com.cyl.musiclake.common.TransitionAnimationUtils
 //import com.cyl.musiclake.event.MetaChangedEvent
 //import com.cyl.musiclake.event.PlayModeEvent
 //import com.cyl.musiclake.event.StatusChangedEvent
-//import com.cyl.musiclake.player.FloatLyricViewManager
-//import com.cyl.musiclake.player.PlayManager
+//import com.music.lake.musiclib.player.FloatLyricViewManager
+//import com.music.lake.musiclib.player.MusicPlayerManager
 //import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 //import com.cyl.musiclake.ui.UIUtils
 //import com.cyl.musiclake.ui.base.BaseActivity
@@ -95,7 +95,7 @@
 //            MusicLyricDialog().apply {
 //                title = playingMusic?.title
 //                artist = playingMusic?.artist
-//                duration = PlayManager.getDuration().toLong()
+//                duration = MusicPlayerManager.getDuration().toLong()
 //                searchListener = {
 //                }
 //                textSizeListener = {
@@ -119,10 +119,10 @@
 //    override fun initData() {
 //        setupViewPager(viewPager)
 //        coverFragment?.initAlbumPic()
-//        mPresenter?.updateNowPlaying(PlayManager.getPlayingMusic(), true)
+//        mPresenter?.updateNowPlaying(MusicPlayerManager.getPlayingMusic(), true)
 //        //初始加載歌詞
 //        //更新播放状态
-//        PlayManager.isPlaying().let {
+//        MusicPlayerManager.isPlaying().let {
 //            updatePlayStatus(it)
 //        }
 //        lyricFragment?.showLyric(FloatLyricViewManager.lyricInfo, true)
@@ -144,14 +144,14 @@
 //
 //            override fun onStopTrackingTouch(seekBar: SeekBar?) {
 //                seekBar?.progress?.let {
-//                    PlayManager.seekTo(it)
+//                    MusicPlayerManager.seekTo(it)
 //                    lyricFragment?.setCurrentTimeMillis(it.toLong())
 //                }
 //            }
 //
 //        })
 //        playPauseIv.setOnClickListener {
-//            PlayManager.playPause()
+//            MusicPlayerManager.playPause()
 //        }
 //
 //        /**
@@ -170,12 +170,12 @@
 //
 //    fun nextPlay(view: View?) {
 //        if (UIUtils.isFastClick()) return
-//        PlayManager.next()
+//        MusicPlayerManager.next()
 //    }
 //
 //    fun prevPlay(view: View?) {
 //        if (UIUtils.isFastClick()) return
-//        PlayManager.prev()
+//        MusicPlayerManager.prev()
 //    }
 //
 //    fun changePlayMode(view: View?) {
@@ -214,7 +214,7 @@
 //     * 分享歌曲
 //     */
 //    fun shareMusic(view: View?) {
-//        Tools.qqShare(this, PlayManager.getPlayingMusic())
+//        Tools.qqShare(this, MusicPlayerManager.getPlayingMusic())
 //    }
 //
 //    fun downloadMusic(view: View?) {

@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.charts.presenter
 
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.ui.base.BasePresenter
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.ui.music.charts.contract.BaiduListContract
@@ -17,13 +17,13 @@ class BaiduListPresenter @Inject
 constructor() : BasePresenter<BaiduListContract.View>(), BaiduListContract.Presenter {
 
     override fun loadOnlineMusicList(type: String, limit: Int, mOffset: Int) {
-        ApiManager.request(BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset), object : RequestCallBack<MutableList<Music>> {
+        ApiManager.request(BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset), object : RequestCallBack<MutableList<BaseMusicInfo>> {
             override fun error(msg: String?) {
                 mView?.hideLoading()
                 mView?.showErrorInfo(msg)
             }
 
-            override fun success(result: MutableList<Music>?) {
+            override fun success(result: MutableList<BaseMusicInfo>?) {
                 result?.forEach {
                     if (it.isCp)
                         result.remove(it)

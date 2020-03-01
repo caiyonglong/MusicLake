@@ -10,13 +10,12 @@ import com.afollestad.materialdialogs.input.input
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.data.PlayHistoryLoader
 import com.cyl.musiclake.event.PlaylistEvent
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deletePlaylist
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -28,6 +27,7 @@ import com.cyl.musiclake.ui.my.BindLoginActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -63,7 +63,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     }
 
     private var mAdapter: SongAdapter? = null
-    private val musicList = mutableListOf<Music>()
+    private val musicList = mutableListOf<BaseMusicInfo>()
     private var mPlaylist: Playlist? = null
     private var mArtist: Artist? = null
     private var pid: String? = null
@@ -129,7 +129,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         recyclerView.addItemDecoration(ItemDecoration(this, ItemDecoration.VERTICAL_LIST))
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
-        fab.setOnClickListener { PlayManager.play(0, musicList, pid) }
+        fab.setOnClickListener { MusicPlayerManager.getInstance().playMusic(musicList, 0) }
     }
 
     override fun initInjector() {
@@ -140,9 +140,9 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
                 when {
-                    mPlaylist != null -> PlayManager.play(position, musicList, mPlaylist?.pid)
-                    mArtist != null -> PlayManager.play(position, musicList, mArtist?.artistId.toString())
-                    mAlbum != null -> PlayManager.play(position, musicList, mAlbum?.albumId.toString())
+                    mPlaylist != null -> MusicPlayerManager.getInstance().playMusic(musicList, position)
+                    mArtist != null -> MusicPlayerManager.getInstance().playMusic(musicList, position)
+                    mAlbum != null -> MusicPlayerManager.getInstance().playMusic(musicList, position)
                 }
 //                mAdapter?.notifyDataSetChanged()
             }
@@ -258,7 +258,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     }
 
 
-    override fun showPlaylistSongs(songList: MutableList<Music>?) {
+    override fun showPlaylistSongs(songList: MutableList<BaseMusicInfo>?) {
         hideLoading()
         songList?.let {
             musicList.addAll(songList)

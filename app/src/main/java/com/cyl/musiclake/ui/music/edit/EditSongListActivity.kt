@@ -1,11 +1,10 @@
 package com.cyl.musiclake.ui.music.edit
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.deleteLocalMusic
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_song_edit.*
 class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
 
     companion object {
-        var musicList = mutableListOf<Music>()
+        var musicList = mutableListOf<BaseMusicInfo>()
     }
 
     var mAdapter: EditSongAdapter? = null
@@ -57,14 +56,14 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
     override fun listener() {
         super.listener()
         playlistAddIv.setOnClickListener {
-            val selectMusic = mutableListOf<Music>()
+            val selectMusic = mutableListOf<BaseMusicInfo>()
             mAdapter?.checkedMap?.forEach {
                 selectMusic.add(it.value)
             }
             PlaylistManagerUtils.addToPlaylist(this, selectMusic)
         }
         downloadTv.setOnClickListener {
-            val selectMusic = mutableListOf<Music>()
+            val selectMusic = mutableListOf<BaseMusicInfo>()
             mAdapter?.checkedMap?.forEach {
                 if (it.value.isDl && it.value.type != Constants.LOCAL) {
                     selectMusic.add(it.value)
@@ -74,7 +73,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
         }
 
         deleteTv.setOnClickListener {
-            val selectMusic = mutableListOf<Music>()
+            val selectMusic = mutableListOf<BaseMusicInfo>()
             mAdapter?.checkedMap?.forEach {
                 if (it.value.type == Constants.LOCAL) {
                     selectMusic.add(it.value)

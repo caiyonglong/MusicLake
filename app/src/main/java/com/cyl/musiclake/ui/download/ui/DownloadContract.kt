@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.download.ui
 
 
 import com.cyl.musiclake.ui.base.BaseContract
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.ui.download.TasksManagerModel
 
 interface DownloadContract {
@@ -10,7 +10,7 @@ interface DownloadContract {
     interface View : BaseContract.BaseView {
         fun showErrorInfo(msg: String)
 
-        fun showSongs(musicList: List<Music>)
+        fun showSongs(baseMusicInfoInfoList: List<BaseMusicInfo>)
 
         fun showDownloadList(modelList: List<TasksManagerModel>)
     }

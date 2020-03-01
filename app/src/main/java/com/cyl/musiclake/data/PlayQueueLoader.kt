@@ -2,7 +2,7 @@ package com.cyl.musiclake.data
 
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.DaoLitepal
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.jetbrains.anko.doAsync
 
 /**
@@ -16,17 +16,17 @@ object PlayQueueLoader {
     /**
      * 获取播放队列
      */
-    fun getPlayQueue(): List<Music> {
+    fun getPlayQueue(): List<BaseMusicInfo> {
         return DaoLitepal.getMusicList(Constants.PLAYLIST_QUEUE_ID)
     }
 
     /**
      * 添加歌曲到歌单
      */
-    fun updateQueue(musics: List<Music>) {
+    fun updateQueue(baseMusicInfoInfos: List<BaseMusicInfo>) {
         doAsync {
             clearQueue()
-            musics.forEach {
+            baseMusicInfoInfos.forEach {
                 DaoLitepal.addToPlaylist(it, Constants.PLAYLIST_QUEUE_ID)
             }
         }

@@ -1,25 +1,21 @@
 package com.cyl.musiclake.ui.music.dialog
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.downloadMusic
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.music.lake.musiclib.player.MusicPlayerManager
 
 /**
  * 音质选择器
@@ -40,10 +36,10 @@ class QualitySelectDialog : BaseBottomSheetDialogFragment() {
     var changeSuccessListener: ((String) -> Unit)? = null
 
     companion object {
-        var music: Music? = null
-        fun newInstance(music: Music?): QualitySelectDialog {
+        var baseMusic: BaseMusicInfo? = null
+        fun newInstance(baseMusic: BaseMusicInfo?): QualitySelectDialog {
             val args = Bundle()
-            this.music = music
+            this.baseMusic = baseMusic
             val fragment = QualitySelectDialog()
             fragment.arguments = args
             return fragment
@@ -59,7 +55,7 @@ class QualitySelectDialog : BaseBottomSheetDialogFragment() {
     private fun initItems() {
         val qualities = mutableListOf(
                 QualityItem(name = "标准品质", quality = 128000))
-        music?.let {
+        baseMusic?.let {
             if (it.high) {
                 qualities.add(QualityItem(name = "较高品质", quality = 192000))
             }
@@ -79,7 +75,7 @@ class QualitySelectDialog : BaseBottomSheetDialogFragment() {
         if (isDownload) {
             downloadView?.visibility = View.VISIBLE
         }
-        if (music?.isDl == false) {
+        if (baseMusic?.isDl == false) {
             downloadTv?.isClickable = false
             downloadTv?.setTextColor(Color.GRAY)
         } else {
@@ -89,11 +85,11 @@ class QualitySelectDialog : BaseBottomSheetDialogFragment() {
 
         downloadTv?.setOnClickListener {
             mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-            (activity as AppCompatActivity).downloadMusic(music)
+            (activity as AppCompatActivity).downloadMusic(baseMusic)
         }
         cacheTv?.setOnClickListener {
             mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-            (activity as AppCompatActivity).downloadMusic(music, true)
+            (activity as AppCompatActivity).downloadMusic(baseMusic, true)
         }
     }
 
@@ -101,14 +97,14 @@ class QualitySelectDialog : BaseBottomSheetDialogFragment() {
 
         override fun convert(helper: BaseViewHolder, item: QualityItem) {
             helper.setText(R.id.tv_title, item.name)
-            helper.getView<ImageView>(R.id.iv_check).visibility = if (item.quality == music?.quality) View.VISIBLE else View.GONE
+            helper.getView<ImageView>(R.id.iv_check).visibility = if (item.quality == baseMusic?.quality) View.VISIBLE else View.GONE
             helper.itemView.setOnClickListener {
-                music?.quality = item.quality
+                baseMusic?.quality = item.quality
                 notifyDataSetChanged()
                 changeSuccessListener?.invoke(item.name)
                 if (!isDownload) {
                     mBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-                    PlayManager.play(PlayManager.position())
+                    MusicPlayerManager.getInstance().playMusicById(MusicPlayerManager.getInstance().getNowPlayingIndex())
                 }
             }
         }

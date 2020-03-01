@@ -1,10 +1,9 @@
 package com.cyl.musiclake.ui.music.artist.fragment
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -27,7 +26,7 @@ class AlbumFragment : BaseFragment<AlbumPresenter>(), AlbumsContract.View {
     private var transitionName: String? = null
     private var title: String? = null
     private var mAdapter: AlbumAdapter? = null
-    private var musicInfos: List<Music> = ArrayList()
+    private var baseMusicInfoInfoInfos: List<BaseMusicInfo> = ArrayList()
 
     private var bottomDialogFragment: BottomDialogFragment? = null
 

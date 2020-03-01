@@ -5,7 +5,7 @@ import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BasePresenter
@@ -68,13 +68,13 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
      */
     override fun loadOnlineMusicList(type: String, limit: Int, mOffset: Int) {
         mView?.showLoading()
-        ApiManager.request(BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset), object : RequestCallBack<MutableList<Music>> {
+        ApiManager.request(BaiduApiServiceImpl.getOnlineSongs(type, limit, mOffset), object : RequestCallBack<MutableList<BaseMusicInfo>> {
             override fun error(msg: String?) {
                 mView?.hideLoading()
                 mView?.showError(msg, true)
             }
 
-            override fun success(result: MutableList<Music>?) {
+            override fun success(result: MutableList<BaseMusicInfo>?) {
                 result?.forEach {
                     if (it.isCp)
                         result.remove(it)

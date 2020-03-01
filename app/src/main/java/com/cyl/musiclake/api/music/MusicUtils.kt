@@ -7,9 +7,9 @@ import com.cyl.musicapi.playlist.ArtistsItem
 import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musicapi.playlist.QualityBean
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.bean.BaseMusicInfo
 
 /**
  * Created by master on 2018/4/7.
@@ -19,8 +19,8 @@ object MusicUtils {
     /**
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体
      */
-    fun getMusic(musicInfo: MusicInfo): Music {
-        val music = Music()
+    fun getMusic(musicInfo: MusicInfo): BaseMusicInfo {
+        val music = BaseMusicInfo()
         if (musicInfo.songId != null) {
             music.mid = musicInfo.songId
         } else if (musicInfo.id != null) {
@@ -59,10 +59,10 @@ object MusicUtils {
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体(即可)
      * (网易云歌曲)
      */
-    fun getMusicList(musicInfo: MutableList<MusicInfo>?, type: String): MutableList<Music> {
-        val musicList = mutableListOf<Music>()
+    fun getMusicList(musicInfo: MutableList<MusicInfo>?, type: String): MutableList<BaseMusicInfo> {
+        val musicList = mutableListOf<BaseMusicInfo>()
         musicInfo?.forEach {
-            val music = Music()
+            val music = BaseMusicInfo()
             it.id?.let { id ->
                 music.mid = id
             }
@@ -99,10 +99,10 @@ object MusicUtils {
     }
 
 
-    fun getNeteaseMusicList(tracks: MutableList<TracksItem>?): MutableList<Music> {
-        val musicList = mutableListOf<Music>()
+    fun getNeteaseMusicList(tracks: MutableList<TracksItem>?): MutableList<BaseMusicInfo> {
+        val musicList = mutableListOf<BaseMusicInfo>()
         tracks?.forEach {
-            val music = Music()
+            val music = BaseMusicInfo()
             music.mid = it.id.toString()
             music.title = it.name
             music.type = Constants.NETEASE
@@ -129,10 +129,10 @@ object MusicUtils {
         return musicList
     }
 
-    fun getNeteaseRecommendMusic(tracks: MutableList<RecommendItem>?): MutableList<Music> {
-        val musicList = mutableListOf<Music>()
+    fun getNeteaseRecommendMusic(tracks: MutableList<RecommendItem>?): MutableList<BaseMusicInfo> {
+        val musicList = mutableListOf<BaseMusicInfo>()
         tracks?.forEach {
-            val music = Music()
+            val music = BaseMusicInfo()
             music.mid = it.id
             music.title = it.name
             music.type = Constants.NETEASE
@@ -218,9 +218,9 @@ object MusicUtils {
     /**
      * 本地歌曲实体转化成在线歌单歌曲实体
      */
-    fun getMusicInfo(music: Music): MusicInfo {
-        val artistIds = music.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
-        val artists = music.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+    fun getMusicInfo(baseMusicInfo: BaseMusicInfo): MusicInfo {
+        val artistIds = baseMusicInfo.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+        val artists = baseMusicInfo.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artistsBeans = mutableListOf<ArtistsItem>()
         if (artists != null) {
             for (i in artists.indices) {
@@ -228,18 +228,18 @@ object MusicUtils {
                 artistsBean?.let { artistsBeans.add(it) }
             }
         }
-        val album = Album(music.albumId, music.album, music.coverUri)
-        if (music.type == Constants.BAIDU) music.isCp = false
-        return MusicInfo(music.mid, music.mid, music.title, artistsBeans, album, music.type, cp = music.isCp, dl = music.isDl, quality = QualityBean(hq = music.hq, sq = music.sq, high = music.high))
+        val album = Album(baseMusicInfo.albumId, baseMusicInfo.album, baseMusicInfo.coverUri)
+        if (baseMusicInfo.type == Constants.BAIDU) baseMusicInfo.isCp = false
+        return MusicInfo(baseMusicInfo.mid, baseMusicInfo.mid, baseMusicInfo.title, artistsBeans, album, baseMusicInfo.type, cp = baseMusicInfo.isCp, dl = baseMusicInfo.isDl, quality = QualityBean(hq = baseMusicInfo.hq, sq = baseMusicInfo.sq, high = baseMusicInfo.high))
     }
 
     /**
      * 获取所有的歌手
      */
-    fun getArtistInfo(music: Music?): MutableList<Artist> {
-        LogUtil.d("getArtistInfo","music?.artistId = " + music?.artistId + ": artistNames =" + music?.artist)
-        val artistIds = music?.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
-        val artistNames = music?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+    fun getArtistInfo(baseMusicInfoInfo: BaseMusicInfo?): MutableList<Artist> {
+        LogUtil.d("getArtistInfo","music?.artistId = " + baseMusicInfoInfo?.artistId + ": artistNames =" + baseMusicInfoInfo?.artist)
+        val artistIds = baseMusicInfoInfo?.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
+        val artistNames = baseMusicInfoInfo?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artists = mutableListOf<Artist>()
         LogUtil.d("getArtistInfo","music?.artistId = " + artistIds.toString() + ": artistNames =" + artists.toString())
         if (artistNames != null && artistIds?.size ?: 0 == artistNames.size) {
@@ -248,7 +248,7 @@ object MusicUtils {
                 artistIds?.get(i)?.let {
                     artist.artistId = it
                     artist.name = artistNames[i]
-                    artist.type = music.type
+                    artist.type = baseMusicInfoInfo.type
                     artists.add(artist)
                 }
             }

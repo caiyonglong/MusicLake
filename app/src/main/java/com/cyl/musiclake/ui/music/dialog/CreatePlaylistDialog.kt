@@ -7,7 +7,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.utils.LogUtil
 
 /**
@@ -41,10 +41,10 @@ class CreatePlaylistDialog : androidx.fragment.app.DialogFragment() {
         private val TAG_MUSIC = "music"
 
         @JvmOverloads
-        fun newInstance(music: Music? = null): CreatePlaylistDialog {
+        fun newInstance(baseMusicInfoInfo: BaseMusicInfo? = null): CreatePlaylistDialog {
             val dialog = CreatePlaylistDialog()
             val bundle = Bundle()
-            bundle.putParcelable(TAG_MUSIC, music)
+            bundle.putParcelable(TAG_MUSIC, baseMusicInfoInfo)
             dialog.arguments = bundle
             return dialog
         }

@@ -12,19 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.event.PlayModeEvent
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.event.StatusChangedEvent
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.playpage.PlayContract
 import com.cyl.musiclake.ui.music.playpage.PlayPresenter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.play_control_menu.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -39,7 +39,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     private var coverAnimator: ObjectAnimator? = null
 
     private var mAdapter: BottomMusicAdapter? = null
-    private val musicList = ArrayList<Music>()
+    private val musicList = ArrayList<BaseMusicInfo>()
 
     override fun getLayoutId(): Int {
         return R.layout.play_control_menu
@@ -47,9 +47,11 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     public override fun initViews() {
         //初始化控件
-        updatePlayStatus(PlayManager.isPlaying())
+        updatePlayStatus(MusicPlayerManager.getInstance().isPlaying())
         musicList.clear()
-        musicList.addAll(PlayManager.getPlayList())
+        if (MusicPlayerManager.getInstance().getPlayList() != null) {
+            musicList.addAll(MusicPlayerManager.getInstance().getPlayList())
+        }
         initSongList()
     }
 
@@ -63,13 +65,15 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
             PlayQueueDialog.newInstance().showIt((activity as AppCompatActivity))
         }
         playPauseView.setOnClickListener {
-            PlayManager.playPause()
+            MusicPlayerManager.getInstance().pausePlay()
         }
     }
 
     override fun loadData() {
-        val music = PlayManager.getPlayingMusic()
-        mPresenter?.updateNowPlaying(music, true)
+        val music = MusicPlayerManager.getInstance().getNowPlayingMusic()
+        music?.let {
+            mPresenter?.updateNowPlaying(it, true)
+        }
     }
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -81,9 +85,9 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
-        if (PlayManager.isPlaying() || PlayManager.isPause()) {
+        if (MusicPlayerManager.getInstance().isPlaying()) {
             val progress = seekBar.progress
-            PlayManager.seekTo(progress)
+            MusicPlayerManager.getInstance().seekTo(progress.toLong())
         } else {
             seekBar.progress = 0
         }
@@ -120,8 +124,8 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     }
 
 
-    override fun showNowPlaying(music: Music?) {
-        if (music != null) {
+    override fun showNowPlaying(baseMusicInfo: com.music.lake.musiclib.bean.BaseMusicInfo?) {
+        if (baseMusicInfo != null) {
             rootView.visibility = View.VISIBLE
         } else {
             rootView.visibility = View.GONE
@@ -136,14 +140,14 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMetaChangedEvent(event: MetaChangedEvent) {
-        mPresenter?.updateNowPlaying(event.music, false)
+        mPresenter?.updateNowPlaying(event.baseMusicInfoInfo, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            progressBar.setProgress(PlayManager.getCurrentPosition(), true)
+            progressBar.setProgress(MusicPlayerManager.getInstance().getPlayingPosition().toInt(), true)
         } else {
-            progressBar.progress = PlayManager.getCurrentPosition()
+            progressBar.progress = MusicPlayerManager.getInstance().getPlayingPosition().toInt()
         }
-        progressBar.max = PlayManager.getDuration()
-        bottomPlayRcv.scrollToPosition(PlayManager.position())
+        progressBar.max = MusicPlayerManager.getInstance().getDuration().toInt()
+        bottomPlayRcv.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -158,9 +162,9 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         if (event.type == Constants.PLAYLIST_QUEUE_ID) {
             LogUtil.d(TAG, "播放列表已改变")
             musicList.clear()
-            musicList.addAll(PlayManager.getPlayList())
+            musicList.addAll(MusicPlayerManager.getInstance().getPlayList())
             mAdapter?.notifyDataSetChanged()
-            bottomPlayRcv.scrollToPosition(PlayManager.position())
+            bottomPlayRcv.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
         }
     }
 
@@ -193,8 +197,8 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
                         val first = manager.findFirstVisibleItemPosition()
                         val last = manager.findLastVisibleItemPosition()
                         LogUtil.e("Scroll", "$first-$last")
-                        if (first == last && first != PlayManager.position()) {
-                            PlayManager.play(first)
+                        if (first == last && first != MusicPlayerManager.getInstance().getNowPlayingIndex()) {
+                            MusicPlayerManager.getInstance().playMusicById(first)
                         }
                     }
                 }
@@ -203,7 +207,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         } else {
             mAdapter?.notifyDataSetChanged()
         }
-        bottomPlayRcv.scrollToPosition(PlayManager.position())
+        bottomPlayRcv.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
     }
 
     companion object {

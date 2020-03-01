@@ -1,21 +1,21 @@
 package com.cyl.musiclake.ui.music.playlist.love;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cyl.musiclake.R;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.ui.base.BaseFragment;
-import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.bean.Music;
-import com.cyl.musiclake.player.PlayManager;
-import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
 import com.cyl.musiclake.ui.music.dialog.AddPlaylistDialog;
 import com.cyl.musiclake.ui.music.dialog.ShowDetailDialog;
+import com.cyl.musiclake.ui.music.local.adapter.SongAdapter;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
     Toolbar mToolbar;
 
     private SongAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
+    private List<BaseMusicInfo> baseMusicInfoInfoInfos = new ArrayList<>();
 
     @Override
     public int getLayoutId() {
@@ -57,7 +57,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mAdapter = new SongAdapter(musicInfos);
+        mAdapter = new SongAdapter(baseMusicInfoInfoInfos);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
@@ -77,8 +77,8 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
 
 
     @Override
-    public void showSongs(List<Music> songs) {
-        musicInfos = songs;
+    public void showSongs(List<BaseMusicInfo> songs) {
+        baseMusicInfoInfoInfos = songs;
         mAdapter.setNewData(songs);
     }
 
@@ -86,7 +86,7 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.play(position, musicInfos, Constants.PLAYLIST_LOVE_ID);
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, position);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -95,14 +95,14 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.popup_song_play:
-                        PlayManager.play(position, musicInfos, Constants.PLAYLIST_LOVE_ID);
+                        MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, position);
                         break;
                     case R.id.popup_song_detail:
-                        ShowDetailDialog.newInstance((Music) adapter.getItem(position))
+                        ShowDetailDialog.newInstance((BaseMusicInfo) adapter.getItem(position))
                                 .show(getChildFragmentManager(), getTag());
                         break;
                     case R.id.popup_song_addto_queue:
-                        AddPlaylistDialog.Companion.newInstance(musicInfos.get(position))
+                        AddPlaylistDialog.Companion.newInstance(baseMusicInfoInfoInfos.get(position))
                                 .show(getChildFragmentManager(), "ADD_PLAYLIST");
                         break;
 

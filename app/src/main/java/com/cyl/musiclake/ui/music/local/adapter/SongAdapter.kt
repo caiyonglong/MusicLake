@@ -11,13 +11,13 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.event.MetaChangedEvent
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.ui.widget.fastscroll.FastScrollRecyclerView
 import com.cyl.musiclake.utils.*
+import com.music.lake.musiclib.player.MusicPlayerManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -30,8 +30,8 @@ import org.jetbrains.anko.dip
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList), FastScrollRecyclerView.SectionedAdapter {
-    override fun convert(holder: BaseViewHolder, item: Music) {
+class SongAdapter(val baseMusicInfoInfoList: List<BaseMusicInfo>) : BaseQuickAdapter<BaseMusicInfo, BaseViewHolder>(R.layout.item_music, baseMusicInfoInfoList), FastScrollRecyclerView.SectionedAdapter {
+    override fun convert(holder: BaseViewHolder, item: BaseMusicInfo) {
         CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
 
@@ -48,7 +48,7 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         //设置歌手专辑名
         holder.setText(R.id.tv_artist, ConvertUtils.getArtistAndAlbum(item.artist, item.album))
         //设置播放状态
-        if (PlayManager.getPlayingId() == item.mid) {
+        if (MusicPlayerManager.getInstance().getNowPlayingMusic()?.mid == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
             holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.app_green))
             holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.app_green))
@@ -161,7 +161,7 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
 
 
     override fun getSectionName(position: Int): String {
-        return musicList[position].title?.get(0).toString()
+        return baseMusicInfoInfoList[position].title?.get(0).toString()
     }
 
     override fun onViewAttachedToWindow(holder: BaseViewHolder) {

@@ -18,9 +18,9 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.common.Constants;
-import com.cyl.musiclake.player.PlayManager;
+import com.music.lake.musiclib.player.MusicPlayerManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
@@ -41,7 +41,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
     Toolbar mToolbar;
 
     private PlayQueueAdapter mAdapter;
-    private List<Music> musicInfos = new ArrayList<>();
+    private List<BaseMusicInfo> baseMusicInfoInfoInfos = new ArrayList<>();
 
     @Override
     public int getLayoutId() {
@@ -66,7 +66,7 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mAdapter = new PlayQueueAdapter(musicInfos);
+        mAdapter = new PlayQueueAdapter(baseMusicInfoInfoInfos);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
@@ -111,8 +111,8 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
     }
 
     @Override
-    public void showSongs(List<Music> songs) {
-        musicInfos = songs;
+    public void showSongs(List<BaseMusicInfo> songs) {
+        baseMusicInfoInfoInfos = songs;
         mAdapter.setNewData(songs);
         if (songs.size() == 0) {
             mAdapter.setEmptyView(R.layout.view_song_empty);
@@ -123,13 +123,13 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.iv_more) {
-                PlayManager.play(position);
+                MusicPlayerManager.getInstance().playMusicById(position);
                 mAdapter.notifyItemChanged(position);
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            Music music = musicInfos.get(position);
-            BottomDialogFragment.Companion.newInstance(music, Constants.PLAYLIST_QUEUE_ID)
+            BaseMusicInfo baseMusicInfo = baseMusicInfoInfoInfos.get(position);
+            BottomDialogFragment.Companion.newInstance(baseMusicInfo, Constants.PLAYLIST_QUEUE_ID)
                     .show((AppCompatActivity) mFragmentComponent.getActivity());
         });
     }

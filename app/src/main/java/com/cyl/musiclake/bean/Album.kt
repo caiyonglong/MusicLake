@@ -1,6 +1,7 @@
 package com.cyl.musiclake.bean
 
 import com.cyl.musiclake.common.Constants
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
 
@@ -20,7 +21,7 @@ class Album : LitePalSupport, Serializable, Comparable<Album> {
     var info: String? = null
     var count: Int = 0
 
-    var songs = mutableListOf<Music>()
+    var songs = mutableListOf<BaseMusicInfo>()
 
     constructor() {}
 

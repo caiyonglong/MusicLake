@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.music.mv
 
 import android.content.pm.ActivityInfo
-import android.net.Uri
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,18 +15,15 @@ import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.utils.DisplayUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
-import com.devbrackets.android.exomedia.listener.OnPreparedListener
-import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
-import com.google.android.exoplayer2.Player
-import kotlinx.android.synthetic.main.activity_video.video_view
-import kotlinx.android.synthetic.main.exomedia_default_controls_mobile.*
+import kotlinx.android.synthetic.main.activity_video.*
+import kotlinx.android.synthetic.main.exo_player_control_view.*
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.View, OnPreparedListener {
+class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.View {
 
 
     private val fullScreenListener = FullScreenListener()
@@ -84,8 +80,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     }
 
     override fun initView() {
-
-        video_view.videoControls?.setVisibilityListener(ControlsVisibilityListener())
+        video_view.controllerHideOnTouch = true//?.setVisibilityListener(ControlsVisibilityListener())
     }
 
     override fun setToolbarTitle(): String? {
@@ -103,11 +98,11 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
         intent.getStringExtra(Extras.VIDEO_PATH)?.let {
             initPlayer()
             LogUtil.d(TAG, "url = $it")
-            video_view.setVideoURI(Uri.parse(it))
-            video_view.setOnPreparedListener {
-                video_view.start()
-                hideLoading()
-            }
+//            video_view.setVideoURI(Uri.parse(it))
+//            video_view.setOnPreparedListener {
+//                video_view.start()
+//                hideLoading()
+//            }
         }
     }
 
@@ -127,8 +122,8 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             LogUtil.d(TAG, "url = ${mvInfoBean.uri}")
             initPlayer()
             //For now we just picked an arbitrary item to play
-            video_view.setPreviewImage(Uri.parse(mvInfoBean.picUrl))
-            video_view.setVideoURI(Uri.parse(mvInfoBean.uri))
+//            video_view.setPreviewImage(Uri.parse(mvInfoBean.picUrl))
+//            video_view.setVideoURI(Uri.parse(mvInfoBean.uri))
         }
 
     }
@@ -185,8 +180,8 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             LogUtil.d(TAG, "url = $url")
             initPlayer()
             //For now we just picked an arbitrary item to play
-            video_view.setPreviewImage(Uri.parse(mvInfoDetailInfo.cover))
-            video_view.setVideoURI(Uri.parse(url))
+//            video_view.setPreviewImage(Uri.parse(mvInfoDetailInfo.cover))
+//            video_view.setVideoURI(Uri.parse(url))
         }
     }
 
@@ -200,8 +195,8 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
 
     private fun initPlayer() {
         video_view.visibility = View.VISIBLE
-        video_view.setOnPreparedListener(this)
-        video_view.setRepeatMode(Player.REPEAT_MODE_ONE)
+//        video_view.setOnPreparedListener(this)
+//        video_view.setRepeatMode(Player.REPEAT_MODE_ONE)
     }
 
     /**
@@ -232,11 +227,6 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
         setUiFlags(false)
     }
 
-    override fun onPrepared() {
-        video_view.start()
-    }
-
-
     /**
      * Listens to the system to determine when to show the default controls
      * for the [VideoView]
@@ -253,7 +243,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             // the visibility off for use in the ControlsVisibilityListener for verification
             lastVisibility = visibility
             if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                video_view.showControls()
+                video_view.showController()
             }
         }
     }
@@ -262,17 +252,17 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
      * A Listener for the [VideoControls]
      * so that we can re-enter fullscreen mode when the controls are hidden.
      */
-    private inner class ControlsVisibilityListener : VideoControlsVisibilityListener {
-        override fun onControlsShown() {
-            if (fullScreenListener.lastVisibility != View.SYSTEM_UI_FLAG_VISIBLE) {
-                exitFullscreen()
-            }
-        }
-
-        override fun onControlsHidden() {
-            goFullscreen()
-        }
-    }
+//    private inner class ControlsVisibilityListener : VideoControlsVisibilityListener {
+//        override fun onControlsShown() {
+//            if (fullScreenListener.lastVisibility != View.SYSTEM_UI_FLAG_VISIBLE) {
+//                exitFullscreen()
+//            }
+//        }
+//
+//        override fun onControlsHidden() {
+//            goFullscreen()
+//        }
+//    }
 
 
     public override fun onDestroy() {

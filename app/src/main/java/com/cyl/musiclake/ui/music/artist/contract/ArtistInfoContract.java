@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.artist.contract;
 
 
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.ui.base.BaseContract;
 
 public interface ArtistInfoContract {
@@ -12,7 +12,7 @@ public interface ArtistInfoContract {
 
     interface Presenter extends BaseContract.BasePresenter<View> {
 
-        void loadArtistInfo(Music music);
+        void loadArtistInfo(BaseMusicInfo baseMusicInfo);
     }
 
 }

@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 
 /**
  * 作者：yonglong on 2016/9/14 15:24
@@ -20,7 +20,7 @@ public class ShowDetailDialog extends DialogFragment {
 
     private static boolean result = false;
 
-    public static ShowDetailDialog newInstance(Music song) {
+    public static ShowDetailDialog newInstance(BaseMusicInfo song) {
         ShowDetailDialog dialog = new ShowDetailDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelable("music", song);
@@ -31,16 +31,16 @@ public class ShowDetailDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Music music = getArguments().getParcelable("music");
+        final BaseMusicInfo baseMusicInfo = getArguments().getParcelable("music");
         StringBuilder sb = new StringBuilder();
         sb.append("歌名：")
-                .append(music.getTitle())
+                .append(baseMusicInfo.getTitle())
                 .append("\n\n")
                 .append("歌手：")
-                .append(music.getArtist())
+                .append(baseMusicInfo.getArtist())
                 .append("\n\n")
                 .append("专辑：")
-                .append(music.getAlbum());
+                .append(baseMusicInfo.getAlbum());
 
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.artist_detail)

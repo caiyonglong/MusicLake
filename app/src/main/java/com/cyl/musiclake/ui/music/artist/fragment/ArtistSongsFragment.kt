@@ -3,8 +3,8 @@ package com.cyl.musiclake.ui.music.artist.fragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.player.PlayManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.music.lake.musiclib.player.MusicPlayerManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.artist.contract.ArtistSongContract
 import com.cyl.musiclake.ui.music.artist.presenter.ArtistSongsPresenter
@@ -25,7 +25,7 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
 
     var artistID: String? = "0"
     private var mAdapter: SongAdapter? = null
-    private var musicInfos: MutableList<Music> = ArrayList()
+    private var baseMusicInfoInfoInfos: MutableList<BaseMusicInfo> = ArrayList()
 
     private var bottomDialogFragment: BottomDialogFragment? = null
 
@@ -37,21 +37,21 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
     }
 
     public override fun initViews() {
-        mAdapter = SongAdapter(musicInfos)
+        mAdapter = SongAdapter(baseMusicInfoInfoInfos)
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
         mAdapter?.bindToRecyclerView(recyclerView)
 
         //播放按钮
         playIv?.setOnClickListener {
-            PlayManager.play(0, musicInfos, artistID.toString())
+            MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, 0)
         }
         //播放按钮
         menuIv.setOnClickListener {
         }
         //批量管理
         menuIv.setOnClickListener {
-            EditSongListActivity.musicList = musicInfos
+            EditSongListActivity.musicList = baseMusicInfoInfoInfos
             startActivity<EditSongListActivity>()
         }
     }
@@ -63,11 +63,11 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
     override fun listener() {
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
-                PlayManager.play(position, musicInfos, artistID.toString())
+                MusicPlayerManager.getInstance().playMusic(baseMusicInfoInfoInfos, position)
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
-            bottomDialogFragment = BottomDialogFragment.newInstance(musicInfos[position]).apply {
+            bottomDialogFragment = BottomDialogFragment.newInstance(baseMusicInfoInfoInfos[position]).apply {
             }
             bottomDialogFragment?.show(activity as AppCompatActivity)
         }
@@ -85,8 +85,8 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
         mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 
-    override fun showSongs(songList: MutableList<Music>) {
-        musicInfos = songList
+    override fun showSongs(songList: MutableList<BaseMusicInfo>) {
+        baseMusicInfoInfoInfos = songList
         mAdapter?.setNewData(songList)
         hideLoading()
     }

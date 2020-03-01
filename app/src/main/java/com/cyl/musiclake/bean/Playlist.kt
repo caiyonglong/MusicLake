@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.cyl.musiclake.common.Constants
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.litepal.crud.LitePalSupport
 
 @SuppressLint("ParcelCreator")
@@ -38,7 +39,7 @@ class Playlist() : LitePalSupport(), Parcelable {
     //播放次数
     var playCount: Long = 0
     //歌曲集合
-    var musicList = mutableListOf<Music>()
+    var musicList = mutableListOf<BaseMusicInfo>()
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()

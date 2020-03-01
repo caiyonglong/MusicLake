@@ -7,9 +7,8 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.music.charts.PlaylistContract
 import com.cyl.musiclake.ui.music.charts.PlaylistPresenter
@@ -18,6 +17,7 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
 import com.cyl.musiclake.utils.CoverLoader
+import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.activity_chart_playlist.*
 import org.jetbrains.anko.startActivity
 
@@ -30,7 +30,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
 
     var mPlaylist: Playlist? = null
     var mAdapter: SongAdapter? = null
-    var musicList = mutableListOf<Music>()
+    var musicList = mutableListOf<BaseMusicInfo>()
 
     var mOffset = 0
     var mCurrentCounter = 0
@@ -73,7 +73,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     override fun listener() {
         mAdapter?.setOnItemClickListener { _, view, position ->
             if (view.id != R.id.iv_more) {
-                PlayManager.play(position, musicList, mPlaylist?.name + mPlaylist?.pid)
+                MusicPlayerManager.getInstance().playMusic(musicList, position)
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->
@@ -130,8 +130,8 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mAdapter?.setNewData(playlist.musicList)
     }
 
-    override fun showOnlineMusicList(musicList: MutableList<Music>) {
-        this.musicList.addAll(musicList)
+    override fun showOnlineMusicList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>) {
+        this.musicList.addAll(baseMusicInfoInfoList)
         mAdapter?.setNewData(this.musicList)
         mOffset += limit
         mCurrentCounter = mAdapter?.data?.size ?: 0

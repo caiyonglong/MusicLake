@@ -9,7 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import com.cyl.musiclake.BuildConfig
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Music
+import com.music.lake.musiclib.bean.BaseMusicInfo
 
 
 /**
@@ -36,14 +36,14 @@ object Tools {
     /**
      * 分享到QQ
      */
-    fun qqShare(activity: Activity, music: Music?) {
-        if (music == null) {
+    fun qqShare(activity: Activity, baseMusic: BaseMusicInfo?) {
+        if (baseMusic == null) {
             ToastUtils.show(MusicApp.getAppContext(), "暂无音乐播放!")
             return
         }
         val stringBuilder = StringBuilder()
         stringBuilder.append(activity.getString(R.string.share_content))
-        stringBuilder.append(activity.getString(R.string.share_song_content, music.artist, music.title))
+        stringBuilder.append(activity.getString(R.string.share_song_content, baseMusic.artist, baseMusic.title))
         val textIntent = Intent(Intent.ACTION_SEND)
         textIntent.type = "text/plain"
         textIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString())

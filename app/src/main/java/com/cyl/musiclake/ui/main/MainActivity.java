@@ -17,14 +17,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.bean.Music;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.NavigationHelper;
 import com.cyl.musiclake.event.CountDownEvent;
 import com.cyl.musiclake.event.LoginEvent;
 import com.cyl.musiclake.event.MetaChangedEvent;
-import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
@@ -112,12 +111,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMetaChangedEvent(MetaChangedEvent event) {
-        updatePlaySongInfo(event.getMusic());
+        updatePlaySongInfo(event.getBaseMusicInfoInfo());
     }
 
-    private void updatePlaySongInfo(Music music) {
-        if (music != null) {
-            CoverLoader.INSTANCE.loadBigImageView(this, music, mImageView);
+    private void updatePlaySongInfo(BaseMusicInfo baseMusicInfo) {
+        if (baseMusicInfo != null) {
+            CoverLoader.INSTANCE.loadBigImageView(this, baseMusicInfo, mImageView);
         }
     }
 
@@ -168,7 +167,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initData() {
-        updatePlaySongInfo(PlayManager.getPlayingMusic());
+//        updatePlaySongInfo(MusicPlayerManager.getInstance().getPlayingMusic());
         //加载主fragment
         initShortCutsIntent();
     }
