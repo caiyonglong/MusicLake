@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.RemoteViews
 import com.music.lake.musiclib.R
+import com.music.lake.musiclib.notification.NotifyManager
 import com.music.lake.musiclib.player.MusicPlayerService
 import com.music.lake.musiclib.utils.LogUtil
 
@@ -30,7 +31,7 @@ class StandardWidget : BaseWidget() {
                     context,
                     REQUEST_NEXT,
                     Intent(context, MusicPlayerService::class.java)
-                            .setAction(MusicPlayerService.ACTION_NEXT)
+                            .setAction(NotifyManager.ACTION_NEXT)
                             .setComponent(serviceName),
                     0
             ))
@@ -38,7 +39,7 @@ class StandardWidget : BaseWidget() {
                     context,
                     REQUEST_PREV,
                     Intent(context, MusicPlayerService::class.java)
-                            .setAction(MusicPlayerService.ACTION_PREV)
+                            .setAction(NotifyManager.ACTION_PREV)
                             .setComponent(serviceName),
                     0
             ))
@@ -46,7 +47,7 @@ class StandardWidget : BaseWidget() {
                     context,
                     REQUEST_PLAYPAUSE,
                     Intent(context, MusicPlayerService::class.java)
-                            .setAction(MusicPlayerService.ACTION_PLAY_PAUSE)
+                            .setAction(NotifyManager.ACTION_PLAY_PAUSE)
                             .setComponent(serviceName),
                     PendingIntent.FLAG_UPDATE_CURRENT
             ))

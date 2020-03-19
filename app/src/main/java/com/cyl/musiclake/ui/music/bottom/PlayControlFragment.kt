@@ -29,7 +29,10 @@ import kotlinx.android.synthetic.main.play_control_menu.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.support.v4.runOnUiThread
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChangeListener, PlayContract.View {
     override fun setPlayingBg(albumArt: Drawable?, isInit: Boolean?) {
@@ -116,15 +119,18 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     }
 
-    override fun updateProgress(progress: Long, max: Long) {
-        progressBar.progress = progress.toInt()
-        progressBar.max = max.toInt()
-        LogUtil.d(TAG, "progress : " + 1.0f * progress / max);
-        playPauseView.setProgress(1.0f * progress / max)
+    override fun updateProgress(progress: Long, max: Long, bufferPercent: Int) {
+        runOnUiThread {
+            progressBar.progress = if (max <= 0) 0 else max(0, min((progress * 100 / max).toInt(), 100))
+            progressBar.secondaryProgress = bufferPercent
+            progressBar.max = 100
+            LogUtil.d(TAG, "progress : " + 1.0f * progress / max);
+            playPauseView.setProgress(1.0f * progress / max)
+        }
     }
 
 
-    override fun showNowPlaying(baseMusicInfo: com.music.lake.musiclib.bean.BaseMusicInfo?) {
+    override fun showNowPlaying(baseMusicInfo: BaseMusicInfo?) {
         if (baseMusicInfo != null) {
             rootView.visibility = View.VISIBLE
         } else {

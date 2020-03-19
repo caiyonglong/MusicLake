@@ -1,4 +1,4 @@
-package com.music.lake.musiclib.player;
+package com.music.lake.musiclib.manager;
 
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -9,6 +9,8 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.session.MediaSession;
 
+import com.music.lake.musiclib.player.MediaButtonIntentReceiver;
+import com.music.lake.musiclib.player.MusicPlayerService;
 import com.music.lake.musiclib.utils.LogUtil;
 import com.music.lake.musiclib.utils.SystemUtils;
 

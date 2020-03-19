@@ -1,156 +1,182 @@
 package com.music.lake.musiclib.notification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
-import android.widget.RemoteViews;
+import android.content.Intent;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.core.app.NotificationCompat;
+import androidx.media.session.MediaButtonReceiver;
+
+import com.music.lake.musiclib.R;
+import com.music.lake.musiclib.player.BasePlayer;
+import com.music.lake.musiclib.utils.LogUtil;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by master on 2018/5/14.
  * 通知栏管理类
  */
-
 public class NotifyManager {
-
     private static final int NOTIFICATION_ID = 123789;
     private long mNotificationPostTime = 0;
-    private static final String setAlphaMethodName = "setImageAlpha";
+    private static final String TAG = "NotifyManager";
+
+    /**
+     * 通知栏
+     */
+    public static final String ACTION_NEXT = "com.cyl.music_lake.notify.next";// 下一首广播标志
+    public static final String ACTION_PREV = "com.cyl.music_lake.notify.prev";// 上一首广播标志
+    public static final String ACTION_PLAY_PAUSE = "com.cyl.music_lake.notify.play_state";// 播放暂停广播
+    public static final String ACTION_CLOSE = "com.cyl.music_lake.notify.close";// 播放暂停广播
+    public static final String ACTION_IS_WIDGET = "ACTION_IS_WIDGET";// 播放暂停广播
+
+    public static final String ACTION_LYRIC = "com.cyl.music_lake.notify.lyric";// 播放暂停广播
+
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mNotificationBuilder;
+
+    private androidx.media.app.NotificationCompat.MediaStyle mediaStyle;
+    private boolean showWhen;
+
     private Notification mNotification;
 
-
-    private RemoteViews notRemoteView;
-    private RemoteViews bigNotRemoteView;
     private Service mService;
-    private Player basePlayerImpl;
+    private Context mContext;
+    private BasePlayer basePlayerImpl;
 
     public NotifyManager(Service service) {
         this.mService = service;
+        this.mContext = service;
     }
 
- /*//////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////
     // Notification
     //////////////////////////////////////////////////////////////////////////*/
 
-//    private void resetNotification() {
-//        mNotificationBuilder = createNotification();
-//    }
-//
-//    private NotificationCompat.Builder createNotification() {
-//        notRemoteView = new RemoteViews(BuildConfig.APPLICATION_ID, R.layout.player_notification);
-//        bigNotRemoteView = new RemoteViews(BuildConfig.APPLICATION_ID, R.layout.player_notification_expanded);
-//
-//        setupNotification(notRemoteView);
-//        setupNotification(bigNotRemoteView);
-//
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, mContext.getString(R.string.notification_channel_id))
-//                .setOngoing(true)
-//                .setSmallIcon(R.drawable.ic_icon)
-//                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//                .setCustomContentView(notRemoteView)
-//                .setCustomBigContentView(bigNotRemoteView)
-//                .setPriority(NotificationCompat.PRIORITY_MAX);
-//        return builder;
-//    }
-//
-//    private void setupNotification(RemoteViews remoteViews) {
-//        if (basePlayerImpl == null) return;
-//
-////        remoteViews.setTextViewText(R.id.notificationSongName, basePlayerImpl.getVideoTitle());
-////        remoteViews.setTextViewText(R.id.notificationArtist, basePlayerImpl.getUploaderName());
-//
-//        remoteViews.setOnClickPendingIntent(R.id.notificationPlayPause,
-//                PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_PLAY_PAUSE), PendingIntent.FLAG_UPDATE_CURRENT));
-//        remoteViews.setOnClickPendingIntent(R.id.notificationStop,
-//                PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_CLOSE), PendingIntent.FLAG_UPDATE_CURRENT));
-//
-//        // Starts background player activity -- attempts to unlock lockscreen
-//        final Intent intent = NavigationHelper.INSTANCE.getNowPlayingIntent(mContext);
-//        remoteViews.setOnClickPendingIntent(R.id.notificationContent,
-//                PendingIntent.getActivity(mContext, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT));
-//
-//        if (true) {
-//            remoteViews.setOnClickPendingIntent(R.id.notificationFRewind,
-//                    PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_PREV), PendingIntent.FLAG_UPDATE_CURRENT));
-//            remoteViews.setOnClickPendingIntent(R.id.notificationFForward,
-//                    PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT));
-//        } else {
-//            remoteViews.setOnClickPendingIntent(R.id.notificationFRewind,
-//                    PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_PREV), PendingIntent.FLAG_UPDATE_CURRENT));
-//            remoteViews.setOnClickPendingIntent(R.id.notificationFForward,
-//                    PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, new Intent(ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT));
-//        }
-//
-//    }
-//    private synchronized void updateNotification(int drawableId) {
-//        //if (DEBUG) LogUtil.d(TAG, "updateNotification() called with: drawableId = [" + drawableId + "]");
-//        if (mNotificationBuilder == null) return;
-//        if (drawableId != -1) {
-//            if (notRemoteView != null)
-//                notRemoteView.setImageViewResource(R.id.notificationPlayPause, drawableId);
-//            if (bigNotRemoteView != null)
-//                bigNotRemoteView.setImageViewResource(R.id.notificationPlayPause, drawableId);
-//        }
-//        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
-//    }
-//
-//    private void setControlsOpacity(@IntRange(from = 0, to = 255) int opacity) {
-//        if (notRemoteView != null)
-//            notRemoteView.setInt(R.id.notificationPlayPause, setAlphaMethodName, opacity);
-//        if (bigNotRemoteView != null)
-//            bigNotRemoteView.setInt(R.id.notificationPlayPause, setAlphaMethodName, opacity);
-//        if (notRemoteView != null)
-//            notRemoteView.setInt(R.id.notificationFForward, setAlphaMethodName, opacity);
-//        if (bigNotRemoteView != null)
-//            bigNotRemoteView.setInt(R.id.notificationFForward, setAlphaMethodName, opacity);
-//        if (notRemoteView != null)
-//            notRemoteView.setInt(R.id.notificationFRewind, setAlphaMethodName, opacity);
-//        if (bigNotRemoteView != null)
-//            bigNotRemoteView.setInt(R.id.notificationFRewind, setAlphaMethodName, opacity);
-//    }
-//
-//    public void close() {
-//        if (mNotificationManager != null) mNotificationManager.cancel(NOTIFICATION_ID);
-//
-//        stopForeground(true);
-//    }
-
-
-
-
-
-    /**
-     * The unique identifier for this type of notification.
-     */
-    private static final String NOTIFICATION_TAG = "NewMessage";
-
-
-    public static void notify(final Context context,
-                              final String exampleString, final int number) {
-
-//        notify(context, builder.build());
+    private void resetNotification() {
+        mNotificationBuilder = createNotification();
     }
 
-    private static void notify(final Context context, final Notification notification) {
-        final NotificationManager nm = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(NOTIFICATION_TAG.hashCode(), notification);
+    private NotificationCompat.Builder createNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, initChannelId())
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_music)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+//                .setContentIntent(clickIntent)
+                .setContentTitle(basePlayerImpl.getTitle())
+                .setContentText(basePlayerImpl.getArtistName())
+                .setWhen(mNotificationPostTime)
+                .addAction(R.drawable.ic_play, "",
+                        retrievePlaybackAction(ACTION_PLAY_PAUSE))
+                .addAction(R.drawable.ic_skip_previous,
+                        "",
+                        retrievePlaybackAction(ACTION_PREV))
+                .addAction(R.drawable.ic_skip_next,
+                        "",
+                        retrievePlaybackAction(ACTION_NEXT))
+                .addAction(R.drawable.ic_clear,
+                        "",
+                        retrievePlaybackAction(ACTION_LYRIC))
+                .addAction(R.drawable.ic_clear,
+                        "",
+                        retrievePlaybackAction(ACTION_CLOSE))
+                .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
+                        mContext, PlaybackStateCompat.ACTION_STOP));
+        builder.setShowWhen(showWhen);
+        if (mediaStyle != null) {
+            builder.setStyle(mediaStyle);
+        }
+        return builder;
+    }
+
+    public void setupNotification() {
+        if (basePlayerImpl == null) return;
+        mNotificationManager = (NotificationManager) mService.getSystemService(NOTIFICATION_SERVICE);
+        if (mNotificationPostTime == 0) {
+            mNotificationPostTime = System.currentTimeMillis();
+        }
+        resetNotification();
+//        CoverLoader.INSTANCE.loadBitmap(mContext, basePlayerImpl.mNowPlayingMusic.getCoverUri(), bitmap -> {
+//            mNotificationBuilder.setLargeIcon(bitmap);
+//            mNotification = mNotificationBuilder.build();
+//            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+//            return null;
+//        });
+        mNotification = mNotificationBuilder.build();
+    }
+
+    public synchronized void updateNotification(boolean isPlaying, boolean isChange) {
+        LogUtil.d(TAG, "updateNotification() called with: drawableId = [" + isPlaying + "]");
+        if (mNotificationBuilder == null) return;
+        if (isChange) {
+//            CoverLoader.INSTANCE.loadBitmap(mContext, basePlayerImpl.mNowPlayingMusic.getCoverUri(), bitmap -> {
+//                mNotificationBuilder.setLargeIcon(bitmap);
+//                mNotification = mNotificationBuilder.build();
+//                mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+//                return null;
+//            });
+            mNotificationBuilder.setContentTitle(basePlayerImpl.getTitle());
+            mNotificationBuilder.setContentText(basePlayerImpl.getArtistName());
+            mNotificationBuilder.setTicker(basePlayerImpl.getTitle() + "-" + basePlayerImpl.getArtistName());
+        }
+        mNotificationBuilder.mActions.get(0).icon = isPlaying ? R.drawable.ic_pause : R.drawable.ic_play;
+        //前台服务
+        mService.startForeground(NOTIFICATION_ID, mNotification);
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    }
+
+    public void close() {
+        if (mNotificationManager != null) mNotificationManager.cancel(NOTIFICATION_ID);
+        mService.stopForeground(true);
+    }
+
+
+    private PendingIntent retrievePlaybackAction(final String action) {
+        Intent intent = new Intent(action);
+        return PendingIntent.getBroadcast(mContext, 0, intent, 0);
     }
 
     /**
-     * Cancels any notifications of this type previously shown using
-     * {@link #notify(Context, String, int)}.
+     * 创建Notification ChannelID
+     *
+     * @return 频道id
      */
-    public static void cancel(final Context context) {
-        final NotificationManager nm = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        nm.cancel(NOTIFICATION_TAG.hashCode());
+    private String initChannelId() {
+        // 通知渠道的id
+        String id = "music_lake_01";
+        // 用户可以看到的通知渠道的名字.
+        CharSequence name = "音乐湖";
+        // 用户可以看到的通知渠道的描述
+        String description = "通知栏播放控制";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel mChannel;
+            mChannel = new NotificationChannel(id, name, importance);
+            mChannel.setDescription(description);
+            mChannel.enableLights(false);
+            mChannel.enableVibration(false);
+            //最后在notificationmanager中创建该通知渠道
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+        return id;
     }
 
+    public void setBasePlayerImpl(BasePlayer basePlayerImpl) {
+        this.basePlayerImpl = basePlayerImpl;
+    }
+
+    public void setShowWhen(boolean showWhen) {
+        this.showWhen = showWhen;
+    }
+
+    public void setStyle(androidx.media.app.NotificationCompat.MediaStyle style) {
+        this.mediaStyle = style;
+    }
 }

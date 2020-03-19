@@ -5,15 +5,14 @@ import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ImageUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.music.lake.musiclib.bean.BaseMusicInfo
-import com.music.lake.musiclib.playback.PlayProgressListener
-import com.music.lake.musiclib.player.MusicPlayerService
+import com.music.lake.musiclib.listener.MusicPlayEventListener
+import com.music.lake.musiclib.player.MusicPlayerManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -22,30 +21,18 @@ import javax.inject.Inject
  */
 
 class PlayPresenter @Inject
-constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, PlayProgressListener {
-
+constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, MusicPlayEventListener {
     private var disposable: Disposable? = null
-    override fun onProgressUpdate(position: Long, duration: Long) {
-    }
 
     override fun attachView(view: PlayContract.View) {
         super.attachView(view)
-        if (disposable == null) {
-            disposable = Observable
-                    .interval(500, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        LogUtil.d("PlayerActivity ", "disposable");
-                        mView?.updateProgress(MusicPlayerService.getInstance().getPlayingPosition(),
-                                MusicPlayerService.getInstance().getDuration())
-                    };
-        }
+        MusicPlayerManager.getInstance().addMusicPlayerEventListener(this)
     }
 
     override fun detachView() {
         super.detachView()
         disposable?.dispose()
+        MusicPlayerManager.getInstance().removeMusicPlayerEventListener(this)
     }
 
     override fun updateNowPlaying(baseMusic: BaseMusicInfo?, isInit: Boolean?) {
@@ -60,4 +47,36 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Play
             }
         }
     }
+
+    override fun onLoading(isLoading: Boolean) {
+    }
+
+    override fun onPlaybackProgress(curPosition: Long, duration: Long, bufferPercent: Int) {
+        LogUtil.e("MusicPlayerService", " id =" + Thread.currentThread().id)
+        mView?.updateProgress(MusicPlayerManager.getInstance().getPlayingPosition(), MusicPlayerManager.getInstance().getDuration(), bufferPercent)
+    }
+
+    override fun onAudioSessionId(audioSessionId: Int) {
+    }
+
+    override fun onPlayCompletion() {
+    }
+
+    override fun onPlayStart() {
+    }
+
+    override fun onPlayerStateChanged(isPlaying: Boolean) {
+        Observable.create<Boolean> { sub -> sub.onNext(true) }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    mView?.updatePlayStatus(isPlaying)
+                }
+    }
+
+    override fun onPlayStop() {
+    }
+
+    override fun onPlayerError(error: Throwable?) {
+    }
+
 }

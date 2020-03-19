@@ -1,4 +1,4 @@
-package com.music.lake.musiclib.player;
+package com.music.lake.musiclib.manager;
 
 import android.content.Context;
 import android.os.Build;
@@ -8,6 +8,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.music.lake.musiclib.bean.BaseMusicInfo;
+import com.music.lake.musiclib.player.MusicServiceBinder;
 
 /**
  * MediaSession管理类

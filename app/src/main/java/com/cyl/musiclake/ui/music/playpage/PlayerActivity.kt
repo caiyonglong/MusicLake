@@ -37,6 +37,8 @@ import kotlinx.android.synthetic.main.activity_player.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
+import kotlin.math.max
+import kotlin.math.min
 
 class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     private var playingBaseMusicInfoInfo: BaseMusicInfo? = null
@@ -106,14 +108,26 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         UIUtils.updatePlayMode(playModeIv, isChange = false)
     }
 
+    override fun updateProgress(progress: Long, max: Long, bufferPercent: Int) {
+        runOnUiThread {
+            if (!isPause) {
+                progressSb.max = 100
+                progressSb.progress = if (max <= 0) 0 else max(0, min((progress * 100 / max).toInt(), 100))
+                progressSb.secondaryProgress = bufferPercent
+
+                progressTv.text = FormatUtil.formatTime(progress)
+                durationTv.text = FormatUtil.formatTime(max)
+                lyricFragment?.setCurrentTimeMillis(progress)
+            }
+        }
+    }
+
     override fun initData() {
         setupViewPager(viewPager)
         coverFragment?.initAlbumPic()
         mPresenter?.updateNowPlaying(MusicPlayerManager.getInstance().getNowPlayingMusic(), true)
         //更新播放状态
-        MusicPlayerManager.getInstance().isPlaying().let {
-            updatePlayStatus(it)
-        }
+        updatePlayStatus(MusicPlayerManager.getInstance().isPlaying())
         lyricFragment?.showLyric(FloatLyricViewManager.lyricInfo, true)
         LogUtil.d("CoverFragment", "playingMusic =${playingBaseMusicInfoInfo == null}")
         playingBaseMusicInfoInfo?.let { coverFragment?.updateMusicType(it) }
@@ -140,11 +154,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 
         })
         playPauseIv.setOnClickListener {
-            if (MusicPlayerManager.getInstance().isPlaying()) {
-                MusicPlayerManager.getInstance().pausePlay()
-            } else {
-                MusicPlayerManager.getInstance().restorePlay()
-            }
+            MusicPlayerManager.getInstance().pausePlay()
         }
 
         /**
@@ -240,17 +250,6 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         } else if (!isPlaying && playPauseIv.isPlaying) {
             coverFragment?.stopRotateAnimation()
             playPauseIv.pause()
-        }
-    }
-
-    override fun updateProgress(progress: Long, max: Long) {
-        if (!isPause) {
-            progressSb.progress = progress.toInt()
-            progressSb.max = max.toInt()
-            progressTv.text = FormatUtil.formatTime(progress)
-            durationTv.text = FormatUtil.formatTime(max)
-
-            lyricFragment?.setCurrentTimeMillis(progress)
         }
     }
 

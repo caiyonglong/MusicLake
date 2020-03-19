@@ -158,14 +158,17 @@ public class MusicServiceBinder extends Binder {
 
 
     public void addMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
-
+        if (controller != null) {
+            controller.addMusicPlayerEventListener(listener);
+        }
     }
 
 
     public void removeMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
-
+        if (controller != null) {
+            controller.removeMusicPlayerEventListener(listener);
+        }
     }
-
 
     public void showDesktopLyric(boolean show) {
 

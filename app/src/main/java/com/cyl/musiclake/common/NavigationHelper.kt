@@ -31,6 +31,7 @@ import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.notification.NotifyManager
 import com.music.lake.musiclib.player.MusicPlayerManager
 import com.music.lake.musiclib.player.MusicPlayerService
 import org.greenrobot.eventbus.EventBus
@@ -224,7 +225,7 @@ object NavigationHelper {
     }
 
     fun getLyricIntent(context: Context): Intent {
-        val intent = Intent(MusicPlayerService.ACTION_LYRIC)
+        val intent = Intent(NotifyManager.ACTION_LYRIC)
         intent.component = ComponentName(context, MusicPlayerService::class.java)
         return intent
     }
@@ -233,7 +234,7 @@ object NavigationHelper {
      * 下一首
      */
     fun getNextIntent(context: Context): Intent {
-        val intent = Intent(MusicPlayerService.ACTION_NEXT)
+        val intent = Intent(NotifyManager.ACTION_NEXT)
         intent.component = ComponentName(context, MusicPlayerService::class.java)
         return intent
     }
@@ -242,7 +243,7 @@ object NavigationHelper {
      * 上一首
      */
     fun getPrevIntent(context: Context): Intent {
-        val intent = Intent(MusicPlayerService.ACTION_PREV)
+        val intent = Intent(NotifyManager.ACTION_PREV)
         intent.component = ComponentName(context, MusicPlayerService::class.java)
         return intent
     }
@@ -251,7 +252,7 @@ object NavigationHelper {
      * 暂停
      */
     fun getPlayPauseIntent(context: Context): Intent {
-        val intent = Intent(MusicPlayerService.ACTION_PREV)
+        val intent = Intent(NotifyManager.ACTION_PREV)
         intent.component = ComponentName(context, MusicPlayerService::class.java)
         return intent
     }

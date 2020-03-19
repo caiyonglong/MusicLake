@@ -203,7 +203,7 @@ public class MusicPlayerManager implements MusicPlayerController {
     @Override
     public int getLoopMode() {
         if (mBinder != null) {
-            mBinder.getLoopMode();
+            return mBinder.getLoopMode();
         }
         return 0;
     }
@@ -248,12 +248,16 @@ public class MusicPlayerManager implements MusicPlayerController {
 
     @Override
     public void addMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
-
+        if (mBinder != null) {
+            mBinder.addMusicPlayerEventListener(listener);
+        }
     }
 
     @Override
     public void removeMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
-
+        if (mBinder != null) {
+            mBinder.removeMusicPlayerEventListener(listener);
+        }
     }
 
 
@@ -289,6 +293,9 @@ public class MusicPlayerManager implements MusicPlayerController {
 
     @Override
     public boolean isPlaying() {
+        if (mBinder != null) {
+            return mBinder.isPlaying();
+        }
         return false;
     }
 
@@ -322,13 +329,21 @@ public class MusicPlayerManager implements MusicPlayerController {
      */
     private HttpProxyCacheServer proxy;
     private String musicFilelCacheDir = null;
+    private boolean mHasCache;
+
+    public boolean isHasCache() {
+        return mHasCache;
+    }
+
+    public void setHasCache(boolean mHasCache) {
+        this.mHasCache = mHasCache;
+    }
 
     public static HttpProxyCacheServer getProxy() {
         return MusicPlayerManager.getInstance().proxy == null ? (MusicPlayerManager.getInstance().proxy = MusicPlayerManager.getInstance().newProxy()) : MusicPlayerManager.getInstance().proxy;
     }
 
     private HttpProxyCacheServer newProxy() {
-
         return new HttpProxyCacheServer.Builder(application)
                 .cacheDirectory(new File(musicFilelCacheDir))
                 .fileNameGenerator(new CacheFileNameGenerator())

@@ -40,6 +40,13 @@ class LockScreenPlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.Vie
         playPauseIv.setImageResource(if (isPlaying) R.drawable.ic_play else R.drawable.ic_pause);
     }
 
+    override fun updateProgress(progress: Long, max: Long, bufferPercent: Int) {
+        runOnUiThread {
+            //获取当前时间
+            timeTv.text = simpleDateFormat?.format(Date(System.currentTimeMillis()))
+        }
+    }
+
     override fun getLayoutResID(): Int {
         return R.layout.activity_lock_screen
     }
@@ -58,12 +65,6 @@ class LockScreenPlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.Vie
 
     override fun initInjector() {
         mActivityComponent.inject(this)
-    }
-
-
-    override fun updateProgress(progress: Long, max: Long) {
-        //获取当前时间
-        timeTv.text = simpleDateFormat?.format(Date(System.currentTimeMillis()))
     }
 
     override fun showNowPlaying(baseMusic: BaseMusicInfo?) {

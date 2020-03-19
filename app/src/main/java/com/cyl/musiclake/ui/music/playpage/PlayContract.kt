@@ -20,7 +20,7 @@ interface PlayContract {
 
         fun updatePlayMode() {}
 
-        fun updateProgress(progress: Long, max: Long)
+        fun updateProgress(progress: Long, max: Long, bufferPercent: Int)
 
         fun showNowPlaying(baseMusic: BaseMusicInfo?)
     }
