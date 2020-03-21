@@ -6,11 +6,12 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.music.lake.musiclib.bean.BaseMusicInfo
+import com.cyl.musiclake.bean.SongInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.data.db.DaoLitepal
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.litepal.LitePal
 
 
@@ -32,7 +33,12 @@ object SongLoader {
      * @return
      */
     fun getSongsForArtist(artistName: String?): MutableList<BaseMusicInfo> {
-        return LitePal.where("isonline =0 and artist like ?", "%$artistName%").find(BaseMusicInfo::class.java)
+        val data = LitePal.where("isonline =0 and artist like ?", "%$artistName%").find(SongInfo::class.java)
+        val musicList = mutableListOf<BaseMusicInfo>()
+        data.forEach {
+            musicList.add(it.convertToMusicInfo())
+        }
+        return musicList;
     }
 
     /**
@@ -42,7 +48,12 @@ object SongLoader {
      * @return
      */
     fun getSongsForAlbum(albumName: String?): MutableList<BaseMusicInfo> {
-        return LitePal.where("isonline =0 and album like ?", "%$albumName%").find(BaseMusicInfo::class.java)
+        val data = LitePal.where("isonline =0 and album like ?", "%$albumName%").find(SongInfo::class.java)
+        val musicList = mutableListOf<BaseMusicInfo>()
+        data.forEach {
+            musicList.add(it.convertToMusicInfo())
+        }
+        return musicList;
     }
 
     /**
@@ -177,8 +188,8 @@ object SongLoader {
     /**
      * 删除歌曲
      */
-    fun removeSong(baseMusicInfoInfo: BaseMusicInfo) {
-        DaoLitepal.deleteMusic(baseMusicInfoInfo)
+    fun removeSong(music: BaseMusicInfo) {
+        DaoLitepal.deleteMusic(music)
     }
 
     fun removeMusicList(baseMusicInfoInfoList: MutableList<BaseMusicInfo>) {

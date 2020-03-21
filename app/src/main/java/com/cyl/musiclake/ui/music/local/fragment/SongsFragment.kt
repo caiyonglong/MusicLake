@@ -13,7 +13,7 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
 import com.cyl.musiclake.ui.music.local.presenter.SongsPresenter
 import com.cyl.musiclake.utils.LogUtil
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import kotlinx.android.synthetic.main.header_local_list.*
 import org.jetbrains.anko.support.v4.startActivity

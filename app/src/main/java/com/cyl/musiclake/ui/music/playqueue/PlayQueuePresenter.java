@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.music.playqueue;
 
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.ui.base.BasePresenter;
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 
 import java.util.List;
 

@@ -22,7 +22,7 @@ import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.music.mv.MvDetailActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.Tools
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import com.zhouwei.mzbanner.holder.MZViewHolder
 import org.jetbrains.anko.startActivity
 

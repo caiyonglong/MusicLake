@@ -16,7 +16,7 @@ import com.cyl.musiclake.ui.music.discover.artist.QQArtistListFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.playlist.square.PlaylistSquareActivity
 import com.cyl.musiclake.utils.LogUtil
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_discover.*
 import org.jetbrains.anko.support.v4.startActivity
 

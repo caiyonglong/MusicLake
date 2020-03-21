@@ -48,7 +48,7 @@
                     android:background="?cardColor"
                     android:orientation="horizontal"
                     android:padding="@dimen/dp_8"
-                    app:layout_constraintBottom_toTopOf="@+id/rv_similar_mv"
+                    app:layout_constraintBottom_toTopOf="@+id/similarMvRcv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_mv_detail">
@@ -95,32 +95,32 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/titleTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_artist"
+                    app:layout_constraintEnd_toStartOf="@+id/artistTv"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/song_title" />
 
                 <TextView
-                    android:id="@+id/tv_artist"
+                    android:id="@+id/artistTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tv_title"
+                    app:layout_constraintStart_toEndOf="@+id/titleTv"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/song_title" />
 
                 <TextView
-                    android:id="@+id/tv_publish_time"
+                    android:id="@+id/publishTimeTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -129,7 +129,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/tv_mv_detail"
                     app:layout_constraintEnd_toStartOf="@+id/tv_play_count"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@+id/titleTv"
                     tools:text="@string/publish_time" />
 
                 <TextView
@@ -142,8 +142,8 @@
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/tv_mv_detail"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tv_publish_time"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_artist"
+                    app:layout_constraintStart_toEndOf="@+id/publishTimeTv"
+                    app:layout_constraintTop_toBottomOf="@+id/artistTv"
                     tools:text="@string/play_count" />
 
                 <TextView
@@ -157,7 +157,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_artist"
+                    app:layout_constraintTop_toBottomOf="@+id/artistTv"
                     tools:text="@string/mv_detail" />
 
 
@@ -168,10 +168,10 @@
                     android:background="?backgroundColor"
                     android:padding="@dimen/dp_4"
                     android:text="@string/mv_hot_comment"
-                    app:layout_constraintBottom_toTopOf="@+id/rv_hot_comment"
+                    app:layout_constraintBottom_toTopOf="@+id/hotCommentRcv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_similar_mv" />
+                    app:layout_constraintTop_toBottomOf="@+id/similarMvRcv" />
 
                 <TextView
                     android:id="@+id/tv_comment2"
@@ -184,10 +184,10 @@
                     app:layout_constraintBottom_toTopOf="@+id/rv_comment"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_hot_comment" />
+                    app:layout_constraintTop_toBottomOf="@+id/hotCommentRcv" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_similar_mv"
+                    android:id="@+id/similarMvRcv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toTopOf="@+id/tv_comment1"
@@ -197,7 +197,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_hot_comment"
+                    android:id="@+id/hotCommentRcv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -249,6 +249,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:layout_marginTop="@dimen/dp_24"
                 android:layout_marginBottom="@dimen/dp_64"
                 android:elevation="5dp"
                 app:layout_collapseMode="none"
@@ -264,7 +265,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:show_buffering="when_playing"
-                app:show_shuffle_button="true" />
+                app:show_shuffle_button="true"
+                app:use_controller="true" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

@@ -20,7 +20,7 @@ import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
 import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.utils.LogUtil
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_player_coverview.*
 import org.jetbrains.anko.support.v4.startActivity
 

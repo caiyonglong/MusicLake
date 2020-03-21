@@ -14,7 +14,7 @@ import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.download.TasksManagerModel
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*

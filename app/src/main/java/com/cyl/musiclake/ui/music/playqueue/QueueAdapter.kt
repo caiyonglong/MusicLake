@@ -9,7 +9,7 @@ import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.utils.ConvertUtils
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 
 /**
  * 功能：本地歌曲item

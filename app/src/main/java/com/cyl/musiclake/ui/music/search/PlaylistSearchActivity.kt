@@ -17,7 +17,7 @@ import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.Tools
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.activity_playlist_search.*
 import kotlinx.android.synthetic.main.toolbar_search_layout.*
 

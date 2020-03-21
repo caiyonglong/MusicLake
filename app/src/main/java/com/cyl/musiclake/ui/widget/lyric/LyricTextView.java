@@ -11,7 +11,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 import com.cyl.musiclake.utils.LogUtil;
 
 public class LyricTextView extends View {

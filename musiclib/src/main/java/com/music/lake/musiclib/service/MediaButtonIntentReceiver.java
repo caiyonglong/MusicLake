@@ -1,4 +1,4 @@
-package com.music.lake.musiclib.player;
+package com.music.lake.musiclib.service;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;

@@ -1,4 +1,4 @@
-package com.music.lake.musiclib.player;
+package com.music.lake.musiclib;
 
 import android.app.Activity;
 import android.app.Application;
@@ -14,8 +14,9 @@ import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.cache.CacheFileNameGenerator;
 import com.music.lake.musiclib.listener.BindServiceCallBack;
 import com.music.lake.musiclib.listener.MusicPlayEventListener;
-import com.music.lake.musiclib.listener.MusicPlayerController;
 import com.music.lake.musiclib.listener.MusicRequest;
+import com.music.lake.musiclib.service.MusicPlayerService;
+import com.music.lake.musiclib.service.MusicServiceBinder;
 import com.music.lake.musiclib.utils.LogUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,9 +29,9 @@ import java.util.WeakHashMap;
  * Created by D22434 on 2017/9/20.
  */
 
-public class MusicPlayerManager implements MusicPlayerController {
-
+public class MusicPlayerManager {
     private MusicServiceBinder mBinder = null;
+    private MusicPlayerConfig config;
     private Application application;
     private ServiceToken mToken;
 
@@ -58,8 +59,9 @@ public class MusicPlayerManager implements MusicPlayerController {
     private MusicPlayerManager() {
     }
 
-    public void init(Application application) {
+    public void init(Application application, MusicPlayerConfig config) {
         this.application = application;
+        this.request = config.request;
     }
 
     public Context getAppContext() {
@@ -144,63 +146,54 @@ public class MusicPlayerManager implements MusicPlayerController {
     ///////////////////////////////////////////////////////////////////
 
 
-    @Override
     public void playMusicById(int index) {
         if (mBinder != null) {
             mBinder.playMusicById(index);
         }
     }
 
-    @Override
     public void playMusic(@NotNull BaseMusicInfo song) {
         if (mBinder != null) {
             mBinder.playMusic(song);
         }
     }
 
-    @Override
     public void playMusic(List<BaseMusicInfo> songs, int index) {
         if (mBinder != null) {
             mBinder.playMusic(songs, index);
         }
     }
 
-    @Override
     public void playNextMusic() {
         if (mBinder != null) {
             mBinder.playNextMusic();
         }
     }
 
-    @Override
     public void playPrevMusic() {
         if (mBinder != null) {
             mBinder.playPrevMusic();
         }
     }
 
-    @Override
     public void restorePlay() {
         if (mBinder != null) {
             mBinder.restorePlay();
         }
     }
 
-    @Override
     public void pausePlay() {
         if (mBinder != null) {
             mBinder.pausePlay();
         }
     }
 
-    @Override
     public void stopPlay() {
         if (mBinder != null) {
             mBinder.stopPlay();
         }
     }
 
-    @Override
     public int getLoopMode() {
         if (mBinder != null) {
             return mBinder.getLoopMode();
@@ -208,7 +201,6 @@ public class MusicPlayerManager implements MusicPlayerController {
         return 0;
     }
 
-    @Override
     public BaseMusicInfo getNowPlayingMusic() {
         if (mBinder != null) {
             return mBinder.getNowPlayingMusic();
@@ -216,7 +208,6 @@ public class MusicPlayerManager implements MusicPlayerController {
         return null;
     }
 
-    @Override
     public int getNowPlayingIndex() {
         if (mBinder != null) {
             return mBinder.getNowPlayingIndex();
@@ -224,21 +215,18 @@ public class MusicPlayerManager implements MusicPlayerController {
         return 0;
     }
 
-    @Override
     public void removeFromPlaylist(int position) {
         if (mBinder != null) {
             mBinder.removeFromPlaylist(position);
         }
     }
 
-    @Override
     public void clearPlaylist() {
         if (mBinder != null) {
             mBinder.clearPlaylist();
         }
     }
 
-    @Override
     public long getPlayingPosition() {
         if (mBinder != null) {
             return mBinder.getPlayingPosition();
@@ -246,22 +234,18 @@ public class MusicPlayerManager implements MusicPlayerController {
         return 0;
     }
 
-    @Override
     public void addMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
         if (mBinder != null) {
             mBinder.addMusicPlayerEventListener(listener);
         }
     }
 
-    @Override
     public void removeMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
         if (mBinder != null) {
             mBinder.removeMusicPlayerEventListener(listener);
         }
     }
 
-
-    @Override
     public int AudioSessionId() {
         if (mBinder != null) {
             return mBinder.AudioSessionId();
@@ -269,21 +253,18 @@ public class MusicPlayerManager implements MusicPlayerController {
         return 0;
     }
 
-    @Override
     public void setLoopMode(int mode) {
         if (mBinder != null) {
             mBinder.setLoopMode(mode);
         }
     }
 
-    @Override
     public void seekTo(long ms) {
         if (mBinder != null) {
             mBinder.seekTo(ms);
         }
     }
 
-    @Override
     public List<BaseMusicInfo> getPlayList() {
         if (mBinder != null) {
             return mBinder.getPlayList();
@@ -291,7 +272,6 @@ public class MusicPlayerManager implements MusicPlayerController {
         return null;
     }
 
-    @Override
     public boolean isPlaying() {
         if (mBinder != null) {
             return mBinder.isPlaying();
@@ -299,7 +279,6 @@ public class MusicPlayerManager implements MusicPlayerController {
         return false;
     }
 
-    @Override
     public long getDuration() {
         if (mBinder != null) {
             return mBinder.getDuration();
@@ -307,16 +286,9 @@ public class MusicPlayerManager implements MusicPlayerController {
         return 0;
     }
 
-    @Override
     public void showDesktopLyric(boolean show) {
 
     }
-
-    @Override
-    public void setMusicRequestListener(@NotNull MusicRequest request) {
-        this.request = request;
-    }
-
 
     //////////////////////////////////////////////////////////////////
     //* End

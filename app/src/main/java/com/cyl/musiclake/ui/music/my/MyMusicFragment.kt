@@ -25,7 +25,7 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import com.google.android.material.tabs.TabLayout
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_local.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

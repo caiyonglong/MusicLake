@@ -23,7 +23,7 @@ import com.cyl.musiclake.ui.music.local.contract.AlbumDetailContract;
 import com.cyl.musiclake.ui.music.local.presenter.AlbumDetailPresenter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;

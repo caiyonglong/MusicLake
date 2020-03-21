@@ -18,7 +18,7 @@
 //import com.cyl.musiclake.event.PlayModeEvent
 //import com.cyl.musiclake.event.StatusChangedEvent
 //import com.music.lake.musiclib.player.FloatLyricViewManager
-//import com.music.lake.musiclib.player.MusicPlayerManager
+//import com.music.lake.musiclib.MusicPlayerManager
 //import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
 //import com.cyl.musiclake.ui.UIUtils
 //import com.cyl.musiclake.ui.base.BaseActivity

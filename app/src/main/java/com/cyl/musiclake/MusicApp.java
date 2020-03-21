@@ -27,9 +27,10 @@ import com.cyl.musiclake.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.music.lake.musiclib.MusicPlayerConfig;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
-import com.music.lake.musiclib.player.MusicPlayerManager;
-import com.music.lake.musiclib.player.MusicPlayerService;
+import com.music.lake.musiclib.MusicPlayerManager;
+import com.music.lake.musiclib.service.MusicPlayerService;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
@@ -84,31 +85,34 @@ public class MusicApp extends MultiDexApplication {
     }
 
     private void initSDK() {
-        MusicPlayerManager.getInstance().init(this);
-        MusicPlayerManager.getInstance().setMusicRequestListener((musicInfo, call) -> {
-            if (musicInfo.getUri() == null || !Objects.equals(musicInfo.getType(), Constants.LOCAL) || musicInfo.getUri().equals("") || musicInfo.getUri().equals("null")) {
-                if (!NetworkUtils.isNetworkAvailable(this)) {
-                    ToastUtils.show("网络不可用，请检查网络连接");
-                } else {
-                    ApiManager.request(MusicApi.INSTANCE.getMusicInfo(musicInfo), new RequestCallBack<BaseMusicInfo>() {
-                        @Override
-                        public void success(BaseMusicInfo result) {
-                            LogUtil.e("MusicApp", "-----" + result.toString());
-                            if (result.getUri() != null) {
-                                call.onMusicValid(result.getUri());
-                            }
-                        }
+        MusicPlayerConfig config = new MusicPlayerConfig.Builder()
+                .setUseCache(true)
+                .setUrlRequest((musicInfo, call) -> {
+                    if (musicInfo.getUri() == null || !Objects.equals(musicInfo.getType(), Constants.LOCAL) || musicInfo.getUri().equals("") || musicInfo.getUri().equals("null")) {
+                        if (!NetworkUtils.isNetworkAvailable(this)) {
+                            ToastUtils.show("网络不可用，请检查网络连接");
+                        } else {
+                            ApiManager.request(MusicApi.INSTANCE.getMusicInfo(musicInfo), new RequestCallBack<BaseMusicInfo>() {
+                                @Override
+                                public void success(BaseMusicInfo result) {
+                                    LogUtil.e("MusicApp", "-----" + result.toString());
+                                    if (result.getUri() != null) {
+                                        call.onMusicValid(result.getUri());
+                                    }
+                                }
 
-                        @Override
-                        public void error(String msg) {
-                            LogUtil.e("MusicApp", "播放异常-----" + msg);
+                                @Override
+                                public void error(String msg) {
+                                    LogUtil.e("MusicApp", "播放异常-----" + msg);
+                                }
+                            });
                         }
-                    });
-                }
-            } else {
-                call.onActionDirect();
-            }
-        });
+                    } else {
+                        call.onActionDirect();
+                    }
+                })
+                .create();
+        MusicPlayerManager.getInstance().init(this, config);
         LitePal.initialize(this);
         initBugly();
         initDB();

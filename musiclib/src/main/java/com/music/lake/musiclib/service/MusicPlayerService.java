@@ -1,4 +1,4 @@
-package com.music.lake.musiclib.player;
+package com.music.lake.musiclib.service;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -36,6 +36,7 @@ import com.music.lake.musiclib.manager.MediaSessionManager;
 import com.music.lake.musiclib.manager.PlayListManager;
 import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.playback.PlaybackListener;
+import com.music.lake.musiclib.player.ExoPlayer;
 import com.music.lake.musiclib.utils.Constants;
 import com.music.lake.musiclib.utils.LogUtil;
 import com.music.lake.musiclib.utils.SystemUtils;
@@ -69,8 +70,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     public static final String ACTION_SERVICE = "com.cyl.music_lake.service";// 广播标志
 
     public static final String PLAY_STATE_CHANGED = "com.cyl.music_lake.play_state";// 播放暂停广播
-
-    public static final String PLAY_STATE_LOADING_CHANGED = "com.cyl.music_lake.play_state_loading";// 播放loading
 
     public static final String DURATION_CHANGED = "com.cyl.music_lake.duration";// 播放时长
 
@@ -181,8 +180,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
     @Override
     public void playMusic(List<BaseMusicInfo> songs, int index) {
-        mPlaylist.clear();
-        mPlaylist.addAll(songs);
         play(songs, index, "");
     }
 
@@ -245,7 +242,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
     @Override
     public void removeFromPlaylist(int position) {
-        mPlaylist.remove(position);
+        removeFromQueue(position);
     }
 
     @Override
@@ -318,7 +315,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
         LogUtil.e(TAG, "PREPARE_ASYNC_UPDATE Loading ... " + percent);
         this.percent = percent;
-        notifyChange(PLAY_STATE_LOADING_CHANGED);
     }
 
     @Override
@@ -535,7 +531,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      */
     private void initMediaPlayer() {
         mPlayer = new ExoPlayer(this);
-        LogUtil.d(TAG, "initMediaPlayer " + Thread.currentThread().getId());
+        mPlayer.setPlayBackListener(this);
         mPlayerTask = new TimerTask() {
             public void run() {
                 mMainHandler.post(() -> {
@@ -989,7 +985,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 //    }
 
     /**
-     * 获取正在播放的歌曲[本地|网络]
+     * 从歌单移除歌曲
      */
     public void removeFromQueue(int position) {
         try {
@@ -1003,14 +999,17 @@ public class MusicPlayerService extends Service implements MusicPlayerController
                 }
             } else if (position > mNowPlayingIndex) {
                 mPlaylist.remove(position);
-            } else if (position < mNowPlayingIndex) {
+            } else {
                 mPlaylist.remove(position);
+                LogUtil.e(TAG, position + "--remove-" + mNowPlayingIndex + "---" + mPlaylist.size());
                 mNowPlayingIndex = mNowPlayingIndex - 1;
+                LogUtil.e(TAG, position + "--remove-" + mNowPlayingIndex + "---" + mPlaylist.size());
             }
             notifyChange(PLAY_QUEUE_CLEAR);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LogUtil.e(TAG, position + "---" + mNowPlayingIndex + "---" + mPlaylist.size());
     }
 
     /**
@@ -1084,11 +1083,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
                 updateWidget(PLAY_QUEUE_CHANGE);
-//                EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID, null));
-                break;
-            case PLAY_STATE_LOADING_CHANGED:
-                //播放loading
-//                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(), percent * getDuration()));
                 break;
         }
     }
@@ -1465,5 +1459,4 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         if (mWakeLock.isHeld())
             mWakeLock.release();
     }
-
 }

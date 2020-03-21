@@ -17,7 +17,7 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
 import com.cyl.musiclake.utils.ToastUtils
 import com.cyl.musiclake.utils.UnLockNotify
-import com.music.lake.musiclib.player.MusicPlayerService
+import com.music.lake.musiclib.service.MusicPlayerService
 import com.rtugeek.android.colorseekbar.ColorSeekBar
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder
 import net.steamcrafted.materialiconlib.MaterialIconView
@@ -155,7 +155,6 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
             mLyricText?.setFontColorScale(color)
             SPUtils.saveFontColor(color)
         }
-
     }
 
 

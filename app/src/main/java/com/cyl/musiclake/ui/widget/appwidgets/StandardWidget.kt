@@ -9,7 +9,7 @@
 //import com.cyl.musiclake.R
 //import com.cyl.musiclake.common.Extras
 //import com.cyl.musiclake.common.NavigationHelper
-//import com.music.lake.musiclib.player.MusicPlayerService
+//import com.music.lake.musiclib.service.MusicPlayerService
 //import com.cyl.musiclake.utils.CoverLoader
 //import com.cyl.musiclake.utils.LogUtil
 //

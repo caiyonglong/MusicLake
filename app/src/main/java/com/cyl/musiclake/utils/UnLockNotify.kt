@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
-import com.music.lake.musiclib.player.MusicPlayerService
+import com.music.lake.musiclib.service.MusicPlayerService
 
 /**
  * 作者：yonglong

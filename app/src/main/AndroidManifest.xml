@@ -255,7 +255,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name="com.music.lake.musiclib.player.MediaButtonIntentReceiver">
+        <receiver android:name="com.music.lake.musiclib.service.MediaButtonIntentReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -276,7 +276,7 @@
 <!--        </receiver>-->
 
         <service
-            android:name="com.music.lake.musiclib.player.MusicPlayerService"
+            android:name="com.music.lake.musiclib.service.MusicPlayerService"
             android:enabled="true"
             android:exported="true" />
         <uses-library

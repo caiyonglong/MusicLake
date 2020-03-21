@@ -8,7 +8,7 @@ import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.ToastUtils
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject

@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
  * Created by master on 2018/5/14.
  * 播放回调
  */
-
 public interface PlaybackListener {
     /**
      * 完成下一首

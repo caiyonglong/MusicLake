@@ -38,9 +38,9 @@ import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
+import com.music.lake.musiclib.MusicPlayerManager
 import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.music.lake.musiclib.manager.PlayListManager
-import com.music.lake.musiclib.player.MusicPlayerManager
 import com.sina.weibo.sdk.auth.AccessTokenKeeper
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync

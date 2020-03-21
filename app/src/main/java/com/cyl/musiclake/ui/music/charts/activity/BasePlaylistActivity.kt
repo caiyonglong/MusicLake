@@ -17,7 +17,7 @@ import com.cyl.musiclake.ui.music.edit.EditSongListActivity
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.search.PlaylistSearchActivity
 import com.cyl.musiclake.utils.CoverLoader
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.activity_chart_playlist.*
 import org.jetbrains.anko.startActivity
 

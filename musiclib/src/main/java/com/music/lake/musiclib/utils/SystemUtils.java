@@ -11,7 +11,7 @@ import android.provider.Settings;
 
 import androidx.annotation.RequiresApi;
 
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 
 import java.util.List;
 

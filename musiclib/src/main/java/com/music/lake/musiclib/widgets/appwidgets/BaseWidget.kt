@@ -8,7 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.annotation.LayoutRes
-import com.music.lake.musiclib.player.MusicPlayerService
+import com.music.lake.musiclib.service.MusicPlayerService
 import com.music.lake.musiclib.utils.LogUtil
 
 

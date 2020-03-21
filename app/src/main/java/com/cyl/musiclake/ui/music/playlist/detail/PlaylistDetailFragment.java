@@ -22,7 +22,7 @@ import com.cyl.musiclake.data.PlayHistoryLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.event.PlaylistEvent;
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;

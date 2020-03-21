@@ -32,8 +32,8 @@ import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import com.music.lake.musiclib.notification.NotifyManager
-import com.music.lake.musiclib.player.MusicPlayerManager
-import com.music.lake.musiclib.player.MusicPlayerService
+import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.service.MusicPlayerService
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 

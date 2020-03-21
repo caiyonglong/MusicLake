@@ -9,12 +9,12 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.session.MediaSession;
 
-import com.music.lake.musiclib.player.MediaButtonIntentReceiver;
-import com.music.lake.musiclib.player.MusicPlayerService;
+import com.music.lake.musiclib.service.MediaButtonIntentReceiver;
+import com.music.lake.musiclib.service.MusicPlayerService;
 import com.music.lake.musiclib.utils.LogUtil;
 import com.music.lake.musiclib.utils.SystemUtils;
 
-import static com.music.lake.musiclib.player.MusicPlayerService.AUDIO_FOCUS_CHANGE;
+import static com.music.lake.musiclib.service.MusicPlayerService.AUDIO_FOCUS_CHANGE;
 
 /**
  * 音频管理类

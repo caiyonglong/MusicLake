@@ -98,7 +98,6 @@ object MusicUtils {
         return musicList
     }
 
-
     fun getNeteaseMusicList(tracks: MutableList<TracksItem>?): MutableList<BaseMusicInfo> {
         val musicList = mutableListOf<BaseMusicInfo>()
         tracks?.forEach {
@@ -237,11 +236,11 @@ object MusicUtils {
      * 获取所有的歌手
      */
     fun getArtistInfo(baseMusicInfoInfo: BaseMusicInfo?): MutableList<Artist> {
-        LogUtil.d("getArtistInfo","music?.artistId = " + baseMusicInfoInfo?.artistId + ": artistNames =" + baseMusicInfoInfo?.artist)
+        LogUtil.d("getArtistInfo", "music?.artistId = " + baseMusicInfoInfo?.artistId + ": artistNames =" + baseMusicInfoInfo?.artist)
         val artistIds = baseMusicInfoInfo?.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artistNames = baseMusicInfoInfo?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artists = mutableListOf<Artist>()
-        LogUtil.d("getArtistInfo","music?.artistId = " + artistIds.toString() + ": artistNames =" + artists.toString())
+        LogUtil.d("getArtistInfo", "music?.artistId = " + artistIds.toString() + ": artistNames =" + artists.toString())
         if (artistNames != null && artistIds?.size ?: 0 == artistNames.size) {
             for (i in artistNames.indices) {
                 val artist = Artist()

@@ -6,7 +6,7 @@ import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;

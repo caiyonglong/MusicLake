@@ -2,7 +2,7 @@ package com.cyl.musiclake.utils
 
 import android.os.CountDownTimer
 import android.widget.TextView
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 
 /**
  * Des    :倒计时工具类

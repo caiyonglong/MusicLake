@@ -32,7 +32,7 @@ import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Tools
 import com.music.lake.musiclib.bean.BaseMusicInfo
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.activity_player.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

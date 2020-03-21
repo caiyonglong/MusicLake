@@ -17,7 +17,7 @@ import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.ui.widget.fastscroll.FastScrollRecyclerView
 import com.cyl.musiclake.utils.*
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

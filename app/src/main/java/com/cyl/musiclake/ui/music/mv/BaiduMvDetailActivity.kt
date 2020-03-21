@@ -42,23 +42,23 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-    private fun fullscreen() {
-        if (isPortrait) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            val ll = video_view.getLayoutParams()
-            ll.width = ViewGroup.LayoutParams.MATCH_PARENT
-            ll.height = ViewGroup.LayoutParams.MATCH_PARENT
-            isPortrait = false
-            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_exit)
-        } else {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            val ll = video_view.getLayoutParams()
-            ll.height = DisplayUtils.dp2px(200f)
-            ll.width = ViewGroup.LayoutParams.MATCH_PARENT
-            isPortrait = true
-            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_white)
-        }
-    }
+//    private fun fullscreen() {
+//        if (isPortrait) {
+//            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+//            val ll = video_view.getLayoutParams()
+//            ll.width = ViewGroup.LayoutParams.MATCH_PARENT
+//            ll.height = ViewGroup.LayoutParams.MATCH_PARENT
+//            isPortrait = false
+//            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_exit)
+//        } else {
+//            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//            val ll = video_view.getLayoutParams()
+//            ll.height = DisplayUtils.dp2px(200f)
+//            ll.width = ViewGroup.LayoutParams.MATCH_PARENT
+//            isPortrait = true
+//            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_white)
+//        }
+//    }
 
     override fun onBackPressed() {
         if (!isPortrait) {
@@ -67,7 +67,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
             ll.height = DisplayUtils.dp2px(200f)
             ll.width = ViewGroup.LayoutParams.MATCH_PARENT
             isPortrait = true
-            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_white)
+//            fullscreenIv.setImageResource(R.drawable.ic_fullscreen_white)
             exitFullscreen()
         } else {
             super.onBackPressed()
@@ -111,10 +111,9 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     }
 
     override fun listener() {
-        fullscreenIv.setOnClickListener {
-            fullscreen()
-        }
-
+//        fullscreenIv.setOnClickListener {
+//            fullscreen()
+//        }
     }
 
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {

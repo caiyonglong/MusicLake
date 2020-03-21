@@ -27,7 +27,7 @@ import com.cyl.musiclake.ui.my.BindLoginActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import kotlinx.android.synthetic.main.frag_playlist_detail.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity

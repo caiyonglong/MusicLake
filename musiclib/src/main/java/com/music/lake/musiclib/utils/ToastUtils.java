@@ -3,7 +3,7 @@ package com.music.lake.musiclib.utils;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 
 
 /**

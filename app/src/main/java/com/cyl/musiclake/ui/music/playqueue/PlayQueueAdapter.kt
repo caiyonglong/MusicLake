@@ -13,7 +13,7 @@ import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ToastUtils
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 import org.jetbrains.anko.dip
 
 /**

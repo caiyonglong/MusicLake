@@ -17,7 +17,6 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
@@ -30,7 +29,8 @@ import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import com.cyl.musiclake.utils.Tools
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import org.jetbrains.anko.support.v4.startActivity
 
 /**

@@ -14,8 +14,8 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.downloadMusic
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.music.lake.musiclib.MusicPlayerManager
 import com.music.lake.musiclib.bean.BaseMusicInfo
-import com.music.lake.musiclib.player.MusicPlayerManager
 
 /**
  * 音质选择器

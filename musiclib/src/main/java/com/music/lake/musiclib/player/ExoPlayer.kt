@@ -48,7 +48,10 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
 
     init {
         initPlayer(true)
-        playbackListener = context as PlaybackListener;
+    }
+
+    fun setPlayBackListener(listener: PlaybackListener?) {
+        playbackListener = listener;
     }
 
     /**
@@ -119,6 +122,7 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
      */
     fun setDataSource(uri: String) {
         val mediaSource = buildMediaSource(uri)
+        exoPlayer?.playWhenReady = true
         //准备播放来源。
         mediaSource?.let { exoPlayer?.prepare(it) }
     }
@@ -159,7 +163,6 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
     override fun stop() {
         super.stop()
         exoPlayer?.stop(true)
-        destroyPlayer()
     }
 
     override fun pause() {
@@ -237,7 +240,9 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
         }
     }
 
-    fun destory() {
+
+    override fun release() {
+        super.release()
         destroyPlayer()
         exoPlayer = null
     }

@@ -23,8 +23,8 @@ import com.cyl.musiclake.ui.music.playpage.PlayContract
 import com.cyl.musiclake.ui.music.playpage.PlayPresenter
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.MusicPlayerManager
 import com.music.lake.musiclib.bean.BaseMusicInfo
-import com.music.lake.musiclib.player.MusicPlayerManager
 import kotlinx.android.synthetic.main.play_control_menu.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -124,11 +124,9 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
             progressBar.progress = if (max <= 0) 0 else max(0, min((progress * 100 / max).toInt(), 100))
             progressBar.secondaryProgress = bufferPercent
             progressBar.max = 100
-            LogUtil.d(TAG, "progress : " + 1.0f * progress / max);
             playPauseView.setProgress(1.0f * progress / max)
         }
     }
-
 
     override fun showNowPlaying(baseMusicInfo: BaseMusicInfo?) {
         if (baseMusicInfo != null) {
@@ -136,7 +134,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         } else {
             rootView.visibility = View.GONE
         }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -166,7 +163,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlayListChange(event: PlaylistEvent) {
         if (event.type == Constants.PLAYLIST_QUEUE_ID) {
-            LogUtil.d(TAG, "播放列表已改变")
+            LogUtil.d(TAG, "播放列表已改变" + MusicPlayerManager.getInstance().getPlayList().size + " - " + MusicPlayerManager.getInstance().getNowPlayingIndex())
             musicList.clear()
             musicList.addAll(MusicPlayerManager.getInstance().getPlayList())
             mAdapter?.notifyDataSetChanged()

@@ -3,10 +3,9 @@ package com.cyl.musiclake.ui.music.playpage
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ImageUtils
-import com.cyl.musiclake.utils.LogUtil
+import com.music.lake.musiclib.MusicPlayerManager
 import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.music.lake.musiclib.listener.MusicPlayEventListener
-import com.music.lake.musiclib.player.MusicPlayerManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -52,7 +51,6 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Musi
     }
 
     override fun onPlaybackProgress(curPosition: Long, duration: Long, bufferPercent: Int) {
-        LogUtil.e("MusicPlayerService", " id =" + Thread.currentThread().id)
         mView?.updateProgress(MusicPlayerManager.getInstance().getPlayingPosition(), MusicPlayerManager.getInstance().getDuration(), bufferPercent)
     }
 

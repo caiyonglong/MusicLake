@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import com.music.lake.musiclib.R
 import com.music.lake.musiclib.notification.NotifyManager
-import com.music.lake.musiclib.player.MusicPlayerService
+import com.music.lake.musiclib.service.MusicPlayerService
 import com.music.lake.musiclib.utils.LogUtil
 
 

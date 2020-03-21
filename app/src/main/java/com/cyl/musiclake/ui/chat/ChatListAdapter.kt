@@ -14,7 +14,7 @@ import com.cyl.musiclake.socket.SocketManager
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.CoverLoader
-import com.music.lake.musiclib.player.MusicPlayerManager
+import com.music.lake.musiclib.MusicPlayerManager
 
 /**
  * 作者：yonglong on 2016/8/10 21:36

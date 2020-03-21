@@ -20,7 +20,7 @@ import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.cyl.musiclake.R;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.common.Constants;
-import com.music.lake.musiclib.player.MusicPlayerManager;
+import com.music.lake.musiclib.MusicPlayerManager;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment;
