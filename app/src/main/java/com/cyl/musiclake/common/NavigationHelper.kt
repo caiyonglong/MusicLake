@@ -31,8 +31,8 @@ import com.cyl.musiclake.ui.music.playqueue.PlayQueueFragment
 import com.cyl.musiclake.utils.FileUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
-import com.music.lake.musiclib.notification.NotifyManager
 import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.notification.NotifyManager
 import com.music.lake.musiclib.service.MusicPlayerService
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -200,15 +200,11 @@ object NavigationHelper {
 
 
     fun navigateToPlaying(context: Activity, transitionView: View? = null) {
-        val intent = Intent(context, PlayerActivity::class.java)
-        if (transitionView != null) {
-            val compat = ActivityOptionsCompat.makeScaleUpAnimation(transitionView,
-                    transitionView.width / 2, transitionView.height / 2, 0, 0)
-//            val compat = ActivityOptionsCompat.makeSceneTransitionAnimation(context,
-//                    transitionView, MusicApp.getAppContext().getString(R.string.transition_cover))
-            ActivityCompat.startActivity(context, intent, compat.toBundle())
-        } else {
+        if (MusicPlayerManager.getInstance().nowPlayingMusic != null) {
+            val intent = Intent(context, PlayerActivity::class.java)
             context.startActivity(intent)
+        } else {
+            ToastUtils.show("当前暂无播放歌曲")
         }
     }
 

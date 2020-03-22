@@ -14,7 +14,8 @@ object PlayHistoryLoader {
     /**
      * 添加歌曲到播放历史
      */
-    fun addSongToHistory(baseMusicInfoInfo: BaseMusicInfo) {
+    fun addSongToHistory(baseMusicInfoInfo: BaseMusicInfo?) {
+        if (baseMusicInfoInfo == null) return
         try {
             DaoLitepal.addToPlaylist(baseMusicInfoInfo, Constants.PLAYLIST_HISTORY_ID)
         } catch (e: Throwable) {

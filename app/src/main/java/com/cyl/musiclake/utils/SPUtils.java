@@ -3,6 +3,7 @@ package com.cyl.musiclake.utils;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.Nullable;
 
 import com.cyl.musiclake.MusicApp;
@@ -53,7 +54,7 @@ public class SPUtils {
     public static final String QQ_EXPIRES_IN = "expires_in";
 
     public static int getPlayPosition() {
-        return getAnyByKey(PLAY_POSITION, -1);
+        return getAnyByKey(PLAY_POSITION, 0);
     }
 
     public static void setPlayPosition(int position) {

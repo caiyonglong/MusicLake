@@ -15,9 +15,14 @@ interface MusicPlayerController {
     fun playMusic(song: BaseMusicInfo)
 
     /**
-     * 根据歌曲列表
+     * 播放歌曲列表
      */
     fun playMusic(songs: List<BaseMusicInfo>, index: Int)
+
+    /**
+     * 更新歌曲列表
+     */
+    fun updatePlaylist(songs: List<BaseMusicInfo>, index: Int)
 
     /**
      * 播放下一首
@@ -75,6 +80,11 @@ interface MusicPlayerController {
     fun getPlayList(): List<BaseMusicInfo>
 
     /**
+     * 更新播放列表
+     */
+//    fun updatePlayList(songs: List<BaseMusicInfo>, index: Int)
+
+    /**
      * 移除播放列表的某条歌曲
      */
     fun removeFromPlaylist(position: Int)
@@ -112,7 +122,7 @@ interface MusicPlayerController {
     /**
      * 移除播放监听事件
      */
-    fun setMusicRequestListener(request: MusicRequest)
+    fun setMusicRequestListener(urlRequest: MusicUrlRequest)
 
 
     fun showDesktopLyric(show: Boolean)

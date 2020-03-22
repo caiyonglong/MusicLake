@@ -1,6 +1,5 @@
 package com.cyl.musiclake.ui.music.mv
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -12,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.OnClick
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musicapi.netease.CommentsItemInfo
 import com.cyl.musicapi.netease.MvInfoDetail
@@ -28,10 +26,9 @@ import com.cyl.musiclake.utils.DisplayUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import com.music.lake.musiclib.playback.PlaybackListener
-import com.music.lake.musiclib.player.ExoPlayer
+import com.music.lake.musiclib.player.MusicExoPlayer
 import kotlinx.android.synthetic.main.activity_mv_detail.*
 import kotlinx.android.synthetic.main.exo_player_control_view.*
-import kotlinx.android.synthetic.main.float_player_view.view.*
 import java.util.*
 
 /**
@@ -48,7 +45,7 @@ class MvDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract.Vi
     //是否是横屏
     var isPortrait = true
 
-    private var exoPlayer: ExoPlayer? = null
+    private var musicExoPlayer: MusicExoPlayer? = null
 
     fun fullscreen() {
         if (isPortrait) {
@@ -207,7 +204,7 @@ class MvDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract.Vi
     }
 
     private fun playVideo(url: String) {
-        exoPlayer?.setDataSource(url)
+        musicExoPlayer?.setDataSource(url)
     }
 
     override fun showMvHotComment(mvHotCommentInfo: List<CommentsItemInfo>) {
@@ -262,10 +259,10 @@ class MvDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract.Vi
     }
 
     private fun initPlayer() {
-        exoPlayer = ExoPlayer(this)
+        musicExoPlayer = MusicExoPlayer(this)
         video_view.visibility = View.VISIBLE
-        exoPlayer?.bindView(video_view)
-        exoPlayer?.setPlayBackListener(this)
+        musicExoPlayer?.bindView(video_view)
+        musicExoPlayer?.setPlayBackListener(this)
     }
 
 
@@ -306,14 +303,10 @@ class MvDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract.Vi
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-    companion object {
-        private const val TAG = "MvDetailActivity"
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        exoPlayer?.setPlayBackListener(null)
-        exoPlayer?.release()
+        musicExoPlayer?.setPlayBackListener(null)
+        musicExoPlayer?.release()
     }
 
     override fun onPlayerStateChanged(isPlaying: Boolean) {

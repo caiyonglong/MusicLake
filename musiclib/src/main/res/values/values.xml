@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="widget_standard" type="layout" />
+    <item name="app_widgets_progress" type="id" />
+    <item name="app_widgets_play_pause" type="id" />
+    <item name="app_widgets_lyric" type="id" />
+    <item name="app_widgets_next" type="id" />
+    <item name="app_widgets_prev" type="id" />
+    <item name="app_widgets_cover" type="id" />
+    <item name="app_widgets_title" type="id" />
+</resources>

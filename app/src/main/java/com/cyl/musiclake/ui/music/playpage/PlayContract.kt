@@ -10,13 +10,13 @@ interface PlayContract {
 
     interface View : BaseContract.BaseView {
 
-        fun setPlayingBitmap(albumArt: Bitmap?)
+        fun setPlayingBitmap(albumArt: Bitmap?) {}
 
-        fun setPlayingBg(albumArt: Drawable?, isInit: Boolean? = false)
-
-//        fun setPalette(palette: Palette?)
+        fun setPlayingBg(albumArt: Drawable?, isInit: Boolean? = false) {}
 
         fun updatePlayStatus(isPlaying: Boolean)
+
+        fun updateLoading(isLoading: Boolean)
 
         fun updatePlayMode() {}
 

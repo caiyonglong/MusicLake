@@ -10,7 +10,6 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.cyl.musiclake.R
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
@@ -21,6 +20,7 @@ import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
 import com.cyl.musiclake.ui.music.search.SearchActivity
 import com.cyl.musiclake.utils.LogUtil
 import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import kotlinx.android.synthetic.main.frag_player_coverview.*
 import org.jetbrains.anko.support.v4.startActivity
 
@@ -62,7 +62,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
         //音质点击
         tv_quality.setOnClickListener {
-            QualitySelectDialog.newInstance(MusicPlayerManager.getInstance().getNowPlayingMusic()).apply {
+            QualitySelectDialog.newInstance(MusicPlayerManager.getInstance().nowPlayingMusic).apply {
                 changeSuccessListener = {
                     this@CoverFragment.tv_quality.text = it
                 }

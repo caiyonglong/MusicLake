@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.core.app.NotificationCompat;
@@ -30,14 +31,14 @@ public class NotifyManager {
     /**
      * 通知栏
      */
+    public static final String ACTION_MUSIC_NOTIFY = "com.cyl.music_lake.notify";//通知栏广播标志
+    public static final String ACTION_LYRIC = "com.cyl.music_lake.notify.lyric";// 歌词广播标志
     public static final String ACTION_NEXT = "com.cyl.music_lake.notify.next";// 下一首广播标志
     public static final String ACTION_PREV = "com.cyl.music_lake.notify.prev";// 上一首广播标志
     public static final String ACTION_PLAY_PAUSE = "com.cyl.music_lake.notify.play_state";// 播放暂停广播
-    public static final String ACTION_CLOSE = "com.cyl.music_lake.notify.close";// 播放暂停广播
-    public static final String ACTION_IS_WIDGET = "ACTION_IS_WIDGET";// 播放暂停广播
+    public static final String ACTION_CLOSE = "com.cyl.music_lake.notify.close";// 关闭
 
-    public static final String ACTION_LYRIC = "com.cyl.music_lake.notify.lyric";// 播放暂停广播
-
+    public static final String ACTION_IS_WIDGET = "ACTION_IS_WIDGET";// 是否是桌面小控件
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mNotificationBuilder;
@@ -65,11 +66,13 @@ public class NotifyManager {
     }
 
     private NotificationCompat.Builder createNotification() {
+
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, initChannelId())
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_music)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//                .setContentIntent(clickIntent)
+                .setContentIntent(retrievePlaybackAction(ACTION_MUSIC_NOTIFY))
                 .setContentTitle(basePlayerImpl.getTitle())
                 .setContentText(basePlayerImpl.getArtistName())
                 .setWhen(mNotificationPostTime)
@@ -81,7 +84,7 @@ public class NotifyManager {
                 .addAction(R.drawable.ic_skip_next,
                         "",
                         retrievePlaybackAction(ACTION_NEXT))
-                .addAction(R.drawable.ic_clear,
+                .addAction(R.drawable.ic_lyric,
                         "",
                         retrievePlaybackAction(ACTION_LYRIC))
                 .addAction(R.drawable.ic_clear,
@@ -103,25 +106,14 @@ public class NotifyManager {
             mNotificationPostTime = System.currentTimeMillis();
         }
         resetNotification();
-//        CoverLoader.INSTANCE.loadBitmap(mContext, basePlayerImpl.mNowPlayingMusic.getCoverUri(), bitmap -> {
-//            mNotificationBuilder.setLargeIcon(bitmap);
-//            mNotification = mNotificationBuilder.build();
-//            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-//            return null;
-//        });
         mNotification = mNotificationBuilder.build();
     }
 
-    public synchronized void updateNotification(boolean isPlaying, boolean isChange) {
+    public synchronized void updateNotification(boolean isPlaying, boolean isChange, Bitmap bitmap) {
         LogUtil.d(TAG, "updateNotification() called with: drawableId = [" + isPlaying + "]");
         if (mNotificationBuilder == null) return;
         if (isChange) {
-//            CoverLoader.INSTANCE.loadBitmap(mContext, basePlayerImpl.mNowPlayingMusic.getCoverUri(), bitmap -> {
-//                mNotificationBuilder.setLargeIcon(bitmap);
-//                mNotification = mNotificationBuilder.build();
-//                mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-//                return null;
-//            });
+            mNotificationBuilder.setLargeIcon(bitmap);
             mNotificationBuilder.setContentTitle(basePlayerImpl.getTitle());
             mNotificationBuilder.setContentText(basePlayerImpl.getArtistName());
             mNotificationBuilder.setTicker(basePlayerImpl.getTitle() + "-" + basePlayerImpl.getArtistName());
@@ -136,7 +128,6 @@ public class NotifyManager {
         if (mNotificationManager != null) mNotificationManager.cancel(NOTIFICATION_ID);
         mService.stopForeground(true);
     }
-
 
     private PendingIntent retrievePlaybackAction(final String action) {
         Intent intent = new Intent(action);

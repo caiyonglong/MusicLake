@@ -17,7 +17,6 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.music.lake.musiclib.playback.PlaybackListener
 import com.music.lake.musiclib.utils.LogUtil
 
@@ -25,7 +24,7 @@ import com.music.lake.musiclib.utils.LogUtil
  * Created by cyl on 2018/5/11.
  */
 
-class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
+class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
 
     private val TAG = "ExoPlayer"
 
@@ -50,7 +49,8 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
         initPlayer(true)
     }
 
-    fun setPlayBackListener(listener: PlaybackListener?) {
+    override fun setPlayBackListener(listener: PlaybackListener?) {
+        super.setPlayBackListener(listener)
         playbackListener = listener;
     }
 
@@ -70,23 +70,7 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
         exoPlayer?.addListener(this)
     }
 
-
-    fun setMusicInfo(baseMusicInfo: BaseMusicInfo?) {
-        mNowPlayingMusic = baseMusicInfo
-    }
-
-    fun isInitialized(): Boolean {
-        return true
-    }
-
-
-    fun initPlayback(playOnReady: Boolean) {
-        destroyPlayer()
-        initPlayer(playOnReady)
-    }
-
     fun bindView(playerView: PlayerView) {
-        // Bind the players to the view.
         playerView.player = exoPlayer
     }
 
@@ -102,12 +86,13 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
         playbackListener = null
     }
 
-    fun start() {
+    override fun start() {
+        super.start()
         exoPlayer?.playWhenReady = true
     }
 
-
-    fun setVolume(vol: Float) {
+    override fun setVolume(vol: Float) {
+        super.setVolume(vol)
         LogUtil.e("Volume", "vol = $vol")
         try {
             exoPlayer?.volume = vol
@@ -116,13 +101,10 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
         }
     }
 
-
-    /**
-     * 加载播放地址
-     */
-    fun setDataSource(uri: String) {
-        val mediaSource = buildMediaSource(uri)
-        exoPlayer?.playWhenReady = true
+    override fun setDataSource(uri: String?) {
+        super.setDataSource(uri)
+        val mediaSource = uri?.let { buildMediaSource(it) }
+        exoPlayer?.playWhenReady = playWhenReady
         //准备播放来源。
         mediaSource?.let { exoPlayer?.prepare(it) }
     }
@@ -177,21 +159,19 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
         return 0
     }
 
-    /**
-     * 判断播放器状态 STATE_IDLE 暂无音频播放
-     */
-    fun isPrepared(): Boolean {
+    override fun isPrepared(): Boolean {
         exoPlayer?.let {
             return it.playbackState != Player.STATE_IDLE
         }
-        return false
+        return super.isPrepared()
     }
 
 
     /**
      * 滑动播放位置
      */
-    fun seekTo(positionMillis: Long) {
+    override fun seekTo(positionMillis: Long) {
+        super.seekTo(positionMillis)
         exoPlayer?.let {
             LogUtil.e(TAG, "seekTo $positionMillis ${it.duration}")
             if (positionMillis < 0 || positionMillis > it.duration)
@@ -210,7 +190,8 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
     /**
      * 播放位置
      */
-    fun bufferedPercentage(): Int {
+    override fun bufferedPercentage(): Int {
+        super.bufferedPercentage()
         exoPlayer?.bufferedPercentage.let {
             if (it == null || it <= 0) return 0
             return it
@@ -221,7 +202,7 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
     /**
      * 播放sessionId
      */
-    fun getAudioSessionId(): Int {
+    override fun getAudioSessionId(): Int {
         exoPlayer?.audioSessionId.let {
             if (it == null || it <= 0) return 0
             return it
@@ -287,8 +268,9 @@ class ExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
             LogUtil.d(TAG, "onPlayerStateChanged ${eventTime.realtimeMs} $playWhenReady $state")
             if (state == Player.STATE_ENDED) {
                 playbackListener?.onCompletionNext()
+            } else if (state == Player.STATE_READY) {
+                playbackListener?.onPlayerStateChanged(playWhenReady)
             }
-            playbackListener?.onPlayerStateChanged(playWhenReady)
         }
 
         override fun onPlayerError(eventTime: AnalyticsListener.EventTime, error: ExoPlaybackException) {

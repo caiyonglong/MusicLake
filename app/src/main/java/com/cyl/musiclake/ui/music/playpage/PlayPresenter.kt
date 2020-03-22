@@ -1,5 +1,6 @@
 package com.cyl.musiclake.ui.music.playpage
 
+import android.annotation.SuppressLint
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.ImageUtils
@@ -47,7 +48,13 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Musi
         }
     }
 
+    @SuppressLint("CheckResult")
     override fun onLoading(isLoading: Boolean) {
+        Observable.create<Boolean> { sub -> sub.onNext(isLoading) }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    mView?.updateLoading(it)
+                }
     }
 
     override fun onPlaybackProgress(curPosition: Long, duration: Long, bufferPercent: Int) {
@@ -63,6 +70,7 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Musi
     override fun onPlayStart() {
     }
 
+    @SuppressLint("CheckResult")
     override fun onPlayerStateChanged(isPlaying: Boolean) {
         Observable.create<Boolean> { sub -> sub.onNext(true) }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

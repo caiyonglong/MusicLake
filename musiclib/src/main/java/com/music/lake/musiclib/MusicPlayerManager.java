@@ -1,6 +1,5 @@
 package com.music.lake.musiclib;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,7 +13,7 @@ import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.cache.CacheFileNameGenerator;
 import com.music.lake.musiclib.listener.BindServiceCallBack;
 import com.music.lake.musiclib.listener.MusicPlayEventListener;
-import com.music.lake.musiclib.listener.MusicRequest;
+import com.music.lake.musiclib.listener.MusicUrlRequest;
 import com.music.lake.musiclib.service.MusicPlayerService;
 import com.music.lake.musiclib.service.MusicServiceBinder;
 import com.music.lake.musiclib.utils.LogUtil;
@@ -30,12 +29,13 @@ import java.util.WeakHashMap;
  */
 
 public class MusicPlayerManager {
+    private final String TAG = "MusicPlayerManager";
     private MusicServiceBinder mBinder = null;
     private MusicPlayerConfig config;
     private Application application;
     private ServiceToken mToken;
 
-    private MusicRequest request;
+    private MusicUrlRequest request;
 
     private static final WeakHashMap<Context, ServiceBinder> mConnectionMap;
 
@@ -68,28 +68,26 @@ public class MusicPlayerManager {
         return application.getApplicationContext();
     }
 
-
     public ServiceToken initialize(Context context, BindServiceCallBack callBack) {
-        if (context instanceof Activity) {
-            mToken = bindToService(context, new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                    mBinder = (MusicServiceBinder) iBinder;
-                    mBinder.setMusicRequestListener(request);
+        mToken = bindToService(context, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                mBinder = (MusicServiceBinder) iBinder;
+                mBinder.setMusicRequestListener(request);
+                if (callBack != null) {
                     callBack.onSuccess();
                 }
+            }
 
-                @Override
-                public void onServiceDisconnected(ComponentName componentName) {
-                    mBinder = null;
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                mBinder = null;
+                if (callBack != null) {
                     callBack.onFailed();
-                    LogUtil.d("BaseActivity", "onServiceDisconnected");
                 }
-            });
-        }
-//        else {
-//            new IllegalStateException("Must pass in Activity type Context!");
-//    }
+                LogUtil.d("BaseActivity", "onServiceDisconnected");
+            }
+        });
         return mToken;
     }
 
@@ -101,13 +99,13 @@ public class MusicPlayerManager {
 
     public final ServiceToken bindToService(final Context context,
                                             final ServiceConnection callback) {
-        Activity realActivity = ((Activity) context).getParent();
-        if (realActivity == null) {
-            realActivity = (Activity) context;
-        }
+//        Activity realActivity = ((Activity) context).getParent();
+//        if (realActivity == null) {
+//            realActivity = (Activity) context;
+//        }
         try {
             //TODO 修复Android 8.0启动service异常报错 Not allowed to start service Intent { cmp=com.cyl.musiclake/.player.MusicPlayerService }: app is in background uid UidRecord{f44b6ce u0a208 TPSL idle procs:1 seq(0,0,0)}
-            final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
+            final ContextWrapper contextWrapper = new ContextWrapper(context);
             contextWrapper.startService(new Intent(contextWrapper, MusicPlayerService.class));
             final ServiceBinder binder = new ServiceBinder(callback, contextWrapper.getApplicationContext());
             if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicPlayerService.class), binder, 0)) {
@@ -139,12 +137,10 @@ public class MusicPlayerManager {
         return mBinder != null;
     }
 
-
     //////////////////////////////////////////////////////////////////
     //* Start
     //* 播放相关接口
     ///////////////////////////////////////////////////////////////////
-
 
     public void playMusicById(int index) {
         if (mBinder != null) {
@@ -159,8 +155,20 @@ public class MusicPlayerManager {
     }
 
     public void playMusic(List<BaseMusicInfo> songs, int index) {
+        if (songs.equals(getPlayList())) {
+            if (mBinder != null) {
+                mBinder.playMusicById(index);
+            }
+        } else {
+            if (mBinder != null) {
+                mBinder.playMusic(songs, index);
+            }
+        }
+    }
+
+    public void updatePlaylist(List<BaseMusicInfo> songs, int index) {
         if (mBinder != null) {
-            mBinder.playMusic(songs, index);
+            mBinder.updatePlaylist(songs, index);
         }
     }
 

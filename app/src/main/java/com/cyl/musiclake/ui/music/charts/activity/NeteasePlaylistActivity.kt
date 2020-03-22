@@ -46,8 +46,4 @@ class NeteasePlaylistActivity : BasePlaylistActivity() {
         }
         return mPlaylist
     }
-
-    companion object {
-        private val TAG = "NeteasePlaylistActivity"
-    }
 }

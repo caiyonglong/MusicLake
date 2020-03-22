@@ -25,14 +25,18 @@ abstract class BaseWidget : AppWidgetProvider() {
     abstract fun getLayoutRes(): Int
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        onUpdate(context, appWidgetManager, appWidgetIds, null)
+        onUpdate(context, appWidgetManager, appWidgetIds, null, MusicPlayerService.META_CHANGED)
     }
 
-    private fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray, extras: Bundle?) {
+    private fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray, extras: Bundle?, action: String) {
         val serviceName = ComponentName(context, MusicPlayerService::class.java)
         val remoteViews = RemoteViews(context.packageName, getLayoutRes())
         try {
-            onViewsUpdate(context, remoteViews, serviceName, extras)
+            if (MusicPlayerService.META_CHANGED == action) {
+                onViewsUpdate(context, remoteViews, serviceName, extras)
+            } else {
+                onViewsPlayStatus(context, remoteViews, serviceName, extras)
+            }
             appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -51,12 +55,14 @@ abstract class BaseWidget : AppWidgetProvider() {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val thisAppWidget = ComponentName(context.packageName, this.javaClass.name)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget)
-            onUpdate(context, appWidgetManager, appWidgetIds, intent.extras)
+            onUpdate(context, appWidgetManager, appWidgetIds, intent.extras, action)
         } else {
             super.onReceive(context, intent)
         }
     }
 
-    internal abstract fun onViewsUpdate(context: Context, remoteViews: RemoteViews, serviceName: ComponentName, extras: Bundle?)
+    abstract fun onViewsPlayStatus(context: Context, remoteViews: RemoteViews, serviceName: ComponentName, extras: Bundle?)
+
+    abstract fun onViewsUpdate(context: Context, remoteViews: RemoteViews, serviceName: ComponentName, extras: Bundle?)
 
 }

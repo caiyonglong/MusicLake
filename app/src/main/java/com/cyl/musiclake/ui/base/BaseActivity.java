@@ -27,7 +27,6 @@ import com.cyl.musiclake.di.component.DaggerActivityComponent;
 import com.cyl.musiclake.di.module.ActivityModule;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.ui.theme.ThemeStore;
-import com.music.lake.musiclib.listener.BindServiceCallBack;
 import com.music.lake.musiclib.MusicPlayerManager;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -86,6 +85,8 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     public Boolean isPause = true;
     private MusicPlayerManager.ServiceToken mToken;
 
+    public final String TAG = getClass().getSimpleName();
+
     private List<Disposable> disposables = new ArrayList<>();
 
     @Override
@@ -96,20 +97,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         setContentView(R.layout.activity_base);
         View view = LayoutInflater.from(this).inflate(getLayoutResID(), findViewById(R.id.rootParent));
 //        //初始化黄油刀控件绑定框架
-//        unbinder = ButterKnife.bind(this, view);
-        mToken = MusicPlayerManager.getInstance().initialize(this, new BindServiceCallBack() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onFailed() {
-
-            }
-        });
-
-
+//        mToken = MusicPlayerManager.getInstance().initialize(this, null);
         //初始化黄油刀控件绑定框架
         unbinder = ButterKnife.bind(this);
         mHandler = new Handler();

@@ -159,7 +159,7 @@
             android:name=".ui.main.WebActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.mv.BaiduMvDetailActivity"
+            android:name=".ui.music.mv.VideoPlayerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -210,20 +210,20 @@
             android:name=".ui.chat.ChatActivity"
             android:label="@string/title_activity_chat"
             android:theme="@style/MainActivityTheme" />
-<!--        <activity-->
-<!--            android:name=".ui.chat.ChatActivity"-->
-<!--            android:configChanges="keyboardHidden|orientation|screenSize"-->
-<!--            android:label="@string/title_activity_chat"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:windowSoftInputMode="adjustPan|stateHidden">-->
-<!--            &lt;!&ndash;            <intent-filter>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <action android:name="android.intent.action.SEND" />&ndash;&gt;-->
+        <!--        <activity-->
+        <!--            android:name=".ui.chat.ChatActivity"-->
+        <!--            android:configChanges="keyboardHidden|orientation|screenSize"-->
+        <!--            android:label="@string/title_activity_chat"-->
+        <!--            android:screenOrientation="portrait"-->
+        <!--            android:windowSoftInputMode="adjustPan|stateHidden">-->
+        <!--            &lt;!&ndash;            <intent-filter>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <action android:name="android.intent.action.SEND" />&ndash;&gt;-->
 
-<!--            &lt;!&ndash;                <category android:name="android.intent.category.DEFAULT" />&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <category android:name="android.intent.category.DEFAULT" />&ndash;&gt;-->
 
-<!--            &lt;!&ndash;                <data android:mimeType="text/plain" />&ndash;&gt;-->
-<!--            &lt;!&ndash;            </intent-filter>&ndash;&gt;-->
-<!--        </activity> &lt;!&ndash; <meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" /> &ndash;&gt;-->
+        <!--            &lt;!&ndash;                <data android:mimeType="text/plain" />&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </intent-filter>&ndash;&gt;-->
+        <!--        </activity> &lt;!&ndash; <meta-data android:value="6090a1a7c1c3df8bde8f916df96ce91d" android:name="BUG_HD_SDK_GENERAL_KEY" /> &ndash;&gt;-->
         <activity
             android:name=".ui.music.playpage.LockScreenPlayerActivity"
             android:launchMode="singleTask"
@@ -261,24 +261,29 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-<!--        <receiver-->
-<!--            android:name=".ui.widget.appwidgets.StandardWidget"-->
-<!--            android:label="@string/widget_standard">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-<!--                <action android:name="com.cyl.music_lake.metachanged" />-->
-<!--                <action android:name="com.cyl.music_lake.notify.play_state" />-->
-<!--            </intent-filter>-->
 
-<!--            <meta-data-->
-<!--                android:name="android.appwidget.provider"-->
-<!--                android:resource="@xml/widget_standard" />-->
-<!--        </receiver>-->
+        <receiver
+            android:name="com.music.lake.musiclib.widgets.appwidgets.StandardWidget"
+            android:label="@string/widget_standard">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.cyl.music_lake.meta_changed" />
+                <action android:name="com.cyl.music_lake.play_state" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_standard" />
+        </receiver>
 
         <service
             android:name="com.music.lake.musiclib.service.MusicPlayerService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.cyl.music_lake.meta_changed" />
+            </intent-filter>
+        </service>
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

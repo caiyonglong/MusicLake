@@ -43,7 +43,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    private static final String TAG = "LoginActivity";
     /** 显示认证后的信息，如 AccessToken */
     /**
      * 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能

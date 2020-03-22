@@ -1,8 +1,6 @@
 package com.cyl.musiclake.ui.music.bottom
 
 import android.animation.ObjectAnimator
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -35,12 +33,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChangeListener, PlayContract.View {
-    override fun setPlayingBg(albumArt: Drawable?, isInit: Boolean?) {
-
-    }
 
     private var coverAnimator: ObjectAnimator? = null
-
     private var mAdapter: BottomMusicAdapter? = null
     private val musicList = ArrayList<BaseMusicInfo>()
 
@@ -50,10 +44,10 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     public override fun initViews() {
         //初始化控件
-        updatePlayStatus(MusicPlayerManager.getInstance().isPlaying())
+        updatePlayStatus(MusicPlayerManager.getInstance().isPlaying)
         musicList.clear()
-        if (MusicPlayerManager.getInstance().getPlayList() != null) {
-            musicList.addAll(MusicPlayerManager.getInstance().getPlayList())
+        if (MusicPlayerManager.getInstance().playList != null) {
+            musicList.addAll(MusicPlayerManager.getInstance().playList)
         }
         initSongList()
     }
@@ -97,16 +91,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     }
 
 
-    override fun showLoading() {
-    }
-
-    override fun hideLoading() {
-    }
-
-
-    override fun setPlayingBitmap(albumArt: Bitmap?) {
-    }
-
     override fun updatePlayStatus(isPlaying: Boolean) {
         if (isPlaying && !playPauseView.isPlaying) {
             playPauseView.play()
@@ -115,8 +99,8 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
         }
     }
 
-    override fun updatePlayMode() {
-
+    override fun updateLoading(isLoading: Boolean) {
+        playPauseView.setLoading(isLoading)
     }
 
     override fun updateProgress(progress: Long, max: Long, bufferPercent: Int) {
@@ -155,7 +139,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStatusChangedEvent(event: StatusChangedEvent) {
-        playPauseView.setLoading(!event.isPrepared)
         updatePlayStatus(event.isPlaying)
     }
 
@@ -163,11 +146,18 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlayListChange(event: PlaylistEvent) {
         if (event.type == Constants.PLAYLIST_QUEUE_ID) {
-            LogUtil.d(TAG, "播放列表已改变" + MusicPlayerManager.getInstance().getPlayList().size + " - " + MusicPlayerManager.getInstance().getNowPlayingIndex())
+            val playlist = MusicPlayerManager.getInstance().playList
+            val index = MusicPlayerManager.getInstance().nowPlayingIndex
+            LogUtil.d(TAG, "播放列表已改变" + playlist.size + " - " + index)
             musicList.clear()
-            musicList.addAll(MusicPlayerManager.getInstance().getPlayList())
-            mAdapter?.notifyDataSetChanged()
-            bottomPlayRcv.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
+            musicList.addAll(playlist)
+            mAdapter?.notifyItemRangeChanged(0, playlist.size)
+            bottomPlayRcv.scrollToPosition(index)
+            if (musicList.size == 0) {
+                emptyView.visibility = View.VISIBLE
+            } else {
+                emptyView.visibility = View.GONE
+            }
         }
     }
 
@@ -211,6 +201,11 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
             mAdapter?.notifyDataSetChanged()
         }
         bottomPlayRcv.scrollToPosition(MusicPlayerManager.getInstance().getNowPlayingIndex())
+        if (musicList.size == 0) {
+            emptyView.visibility = View.VISIBLE
+        } else {
+            emptyView.visibility = View.GONE
+        }
     }
 
     companion object {

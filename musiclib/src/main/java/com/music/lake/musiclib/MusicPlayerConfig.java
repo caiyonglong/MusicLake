@@ -1,6 +1,6 @@
 package com.music.lake.musiclib;
 
-import com.music.lake.musiclib.listener.MusicRequest;
+import com.music.lake.musiclib.listener.MusicUrlRequest;
 
 public class MusicPlayerConfig {
     /**
@@ -8,7 +8,7 @@ public class MusicPlayerConfig {
      */
     private boolean useMediaPlayer;
     private boolean useCache;
-    public MusicRequest request;
+    public MusicUrlRequest request;
 
     private MusicPlayerConfig() {
     }
@@ -19,7 +19,7 @@ public class MusicPlayerConfig {
     public static class Builder {
         boolean useMediaPlayer;
         boolean useCache;
-        MusicRequest request;
+        MusicUrlRequest request;
 
         public Builder setUseMediaPlayer(boolean useMediaPlayer) {
             this.useMediaPlayer = useMediaPlayer;
@@ -31,7 +31,7 @@ public class MusicPlayerConfig {
             return this;
         }
 
-        public Builder setUrlRequest(MusicRequest request) {
+        public Builder setUrlRequest(MusicUrlRequest request) {
             this.request = request;
             return this;
         }

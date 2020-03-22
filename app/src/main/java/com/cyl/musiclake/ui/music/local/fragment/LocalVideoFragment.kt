@@ -14,7 +14,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract
 import com.cyl.musiclake.ui.music.local.presenter.FolderSongPresenter
-import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
+import com.cyl.musiclake.ui.music.mv.VideoPlayerActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
 
 import java.util.ArrayList
@@ -67,7 +67,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {
-                startActivity<BaiduMvDetailActivity>(Extras.VIDEO_PATH to baseMusicInfoInfoList[position].uri,
+                startActivity<VideoPlayerActivity>(Extras.VIDEO_PATH to baseMusicInfoInfoList[position].uri,
                         Extras.MV_TITLE to baseMusicInfoInfoList[position].title)
             }
         }

@@ -144,7 +144,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                     mArtist != null -> MusicPlayerManager.getInstance().playMusic(musicList, position)
                     mAlbum != null -> MusicPlayerManager.getInstance().playMusic(musicList, position)
                 }
-//                mAdapter?.notifyDataSetChanged()
             }
         }
         mAdapter?.setOnItemChildClickListener { _, _, position ->

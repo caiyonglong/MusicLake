@@ -6,7 +6,6 @@ import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BasePresenter
 
 class PlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
-    private val TAG = javaClass.simpleName
     private var curTag = "全部"
 
     private val navigateLibrary = Runnable {

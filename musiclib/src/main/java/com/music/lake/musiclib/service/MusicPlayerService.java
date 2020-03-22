@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
@@ -25,20 +26,21 @@ import android.telephony.TelephonyManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.google.android.exoplayer2.ui.PlayerView;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.listener.MusicPlayEventListener;
 import com.music.lake.musiclib.listener.MusicPlayerController;
-import com.music.lake.musiclib.listener.MusicRequest;
 import com.music.lake.musiclib.listener.MusicRequestCallBack;
+import com.music.lake.musiclib.listener.MusicUrlRequest;
 import com.music.lake.musiclib.manager.AudioAndFocusManager;
 import com.music.lake.musiclib.manager.MediaSessionManager;
 import com.music.lake.musiclib.manager.PlayListManager;
 import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.playback.PlaybackListener;
-import com.music.lake.musiclib.player.ExoPlayer;
+import com.music.lake.musiclib.player.BasePlayer;
+import com.music.lake.musiclib.player.MusicExoPlayer;
 import com.music.lake.musiclib.utils.Constants;
 import com.music.lake.musiclib.utils.LogUtil;
+import com.music.lake.musiclib.utils.CommonUtils;
 import com.music.lake.musiclib.utils.SystemUtils;
 import com.music.lake.musiclib.utils.ToastUtils;
 import com.music.lake.musiclib.widgets.appwidgets.StandardWidget;
@@ -54,7 +56,7 @@ import java.util.TimerTask;
 
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_CLOSE;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_IS_WIDGET;
-import static com.music.lake.musiclib.notification.NotifyManager.ACTION_LYRIC;
+import static com.music.lake.musiclib.notification.NotifyManager.ACTION_MUSIC_NOTIFY;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_NEXT;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_PLAY_PAUSE;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_PREV;
@@ -80,7 +82,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     public static final String PLAY_QUEUE_CLEAR = "com.cyl.music_lake.play_queue_clear"; //清空播放队列
     public static final String PLAY_QUEUE_CHANGE = "com.cyl.music_lake.play_queue_change"; //播放队列改变
 
-    public static final String META_CHANGED = "com.cyl.music_lake.metachanged";//状态改变(歌曲替换)
+    public static final String META_CHANGED = "com.cyl.music_lake.meta_changed";//状态改变(歌曲替换)
     public static final String SCHEDULE_CHANGED = "com.cyl.music_lake.schedule";//定时广播
 
     public static final String CMD_TOGGLE_PAUSE = "toggle_pause";//按键播放暂停
@@ -100,8 +102,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     public static final int VOLUME_FADE_DOWN = 13; //音量改变减少
     public static final int VOLUME_FADE_UP = 14; //音量改变增加
 
-    private final int NOTIFICATION_ID = 0x123;
-    private long mNotificationPostTime = 0;
     private int mServiceStartId = -1;
 
     /**
@@ -110,7 +110,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     private int playErrorTimes = 0;
     private int MAX_ERROR_TIMES = 1;
 
-    private ExoPlayer mPlayer = null;
+    private BasePlayer mPlayer = null;
     public PowerManager.WakeLock mWakeLock;
     private PowerManager powerManager;
     private TimerTask mPlayerTask;
@@ -130,6 +130,8 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     HeadsetPlugInReceiver mHeadsetPlugInReceiver;
     IntentFilter intentFilter;
 
+    public Bitmap coverBitmap;
+
 //    private FloatLyricViewManager mFloatLyricViewManager;
 
     private MediaSessionManager mediaSessionManager;
@@ -142,6 +144,9 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     private boolean isMusicPlaying = false;
     //暂时失去焦点，会再次回去音频焦点
     private boolean mPausedByTransientLossOfFocus = false;
+
+    //是否加载缓存
+    private boolean playWhenReady = false;
 
     //播放缓存进度
     private int percent = 0;
@@ -157,7 +162,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
     private static MusicPlayerService instance;
 
-    private MusicRequest musicRequest;
+    private MusicUrlRequest musicUrlRequest;
 
     //歌词定时器
     private Timer lyricTimer;
@@ -181,6 +186,11 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     @Override
     public void playMusic(List<BaseMusicInfo> songs, int index) {
         play(songs, index, "");
+    }
+
+    @Override
+    public void updatePlaylist(@NotNull List<BaseMusicInfo> songs, int index) {
+        updatePlaylist(songs, index, "");
     }
 
     @Override
@@ -262,10 +272,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         }
     }
 
-    public void setPlayView(PlayerView view) {
-        mPlayer.bindView(view);
-    }
-
     @Override
     public void addMusicPlayerEventListener(@NotNull MusicPlayEventListener listener) {
         playbackListeners.add(listener);
@@ -290,9 +296,9 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     }
 
     @Override
-    public void setMusicRequestListener(@NotNull MusicRequest request) {
+    public void setMusicRequestListener(@NotNull MusicUrlRequest request) {
         LogUtil.d(TAG, "setMusicRequestListener " + request);
-        musicRequest = request;
+        musicUrlRequest = request;
     }
 
 
@@ -323,7 +329,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         //执行prepared之后 准备完成，更新总时长
         //准备完成，可以播放
         isMusicPlaying = true;
-        notifyManager.updateNotification(isMusicPlaying, false);
+        notifyManager.updateNotification(isMusicPlaying, false, null);
         notifyChange(PLAY_STATE_CHANGED);
     }
 
@@ -331,11 +337,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     public void onError() {
         ToastUtils.show("歌曲播放地址异常，请切换其他歌曲");
         playErrorTimes++;
-        if (playErrorTimes < MAX_ERROR_TIMES) {
-            next(true);
-        } else {
-            pause();
-        }
+        next(true);
     }
 
     @Override
@@ -353,13 +355,15 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     @Override
     public void onPlayerStateChanged(boolean isMusicPlaying) {
         this.isMusicPlaying = isMusicPlaying;
+        if (isMusicPlaying && !playWhenReady) {
+            playWhenReady = true;
+        }
         notifyChange(PLAY_STATE_CHANGED);
-        notifyManager.updateNotification(isMusicPlaying, false);
+        notifyManager.updateNotification(isMusicPlaying, false, null);
         for (int i = 0; i < playbackListeners.size(); i++) {
             playbackListeners.get(i).onPlayerStateChanged(isMusicPlaying);
         }
     }
-
 
     public class MusicPlayerHandler extends Handler {
         private final WeakReference<MusicPlayerService> mService;
@@ -530,7 +534,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      * 初始化音乐播放服务
      */
     private void initMediaPlayer() {
-        mPlayer = new ExoPlayer(this);
+        mPlayer = new MusicExoPlayer(this);
         mPlayer.setPlayBackListener(this);
         mPlayerTask = new TimerTask() {
             public void run() {
@@ -555,6 +559,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         mHeadsetReceiver = new HeadsetReceiver();
         mStandardWidget = new StandardWidget();
         mHeadsetPlugInReceiver = new HeadsetPlugInReceiver();
+        intentFilter.addAction(ACTION_MUSIC_NOTIFY);
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
         intentFilter.addAction(META_CHANGED);
@@ -632,6 +637,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      */
     private void playCurrentAndNext() {
         synchronized (this) {
+            LogUtil.e(TAG, "playCurrentAndNext: " + mNowPlayingIndex + "-" + mPlaylist.size() + " - " + mNowPlayingMusic.toString());
             if (mNowPlayingIndex >= mPlaylist.size() || mNowPlayingIndex < 0) {
                 return;
             }
@@ -639,16 +645,13 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             mPlayer.setMusicInfo(mNowPlayingMusic);
             //更新当前歌曲
             isMusicPlaying = false;
+            //检查歌曲播放地址或者专辑
+            checkPlayOnValid();
             notifyChange(META_CHANGED);
             //更新播放播放状态
             notifyChange(PLAY_STATE_CHANGED);
-            notifyManager.updateNotification(isMusicPlaying, true);
-            LogUtil.e(TAG, "playingSongInfo:" + mNowPlayingMusic.toString());
-
-            checkPlayOnValid();
 
             mHistoryPos.add(mNowPlayingIndex);
-
             mediaSessionManager.updateMetaData(mNowPlayingMusic);
             audioAndFocusManager.requestAudioFocus();
 
@@ -665,19 +668,27 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     }
 
     private void checkPlayOnValid() {
-        if (musicRequest != null) {
-            musicRequest.checkNonValid(mNowPlayingMusic, new MusicRequestCallBack() {
+        if (musicUrlRequest != null) {
+            musicUrlRequest.checkNonValid(mNowPlayingMusic, new MusicRequestCallBack() {
+                @Override
+                public void onMusicBitmap(@NotNull Bitmap bitmap) {
+                    coverBitmap = bitmap;
+                    notifyManager.updateNotification(isMusicPlaying, true, bitmap);
+                }
+
                 @Override
                 public void onMusicValid(@NotNull String url) {
                     LogUtil.e(TAG, "checkNonValid-----" + url);
                     mNowPlayingMusic.setUri(url);
                     playErrorTimes = 0;
+                    mPlayer.playWhenReady = playWhenReady;
                     mPlayer.setDataSource(url);
                 }
 
                 @Override
                 public void onActionDirect() {
                     playErrorTimes = 0;
+                    mPlayer.playWhenReady = playWhenReady;
                     mPlayer.setDataSource(mNowPlayingMusic.getUri());
                 }
             });
@@ -804,7 +815,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             audioAndFocusManager.requestAudioFocus();
             mHandler.removeMessages(VOLUME_FADE_DOWN);
             mHandler.sendEmptyMessage(VOLUME_FADE_UP); //组件调到正常音量
-            notifyManager.updateNotification(isMusicPlaying, false);
+            notifyManager.updateNotification(isMusicPlaying, false, null);
         } else {
             playCurrentAndNext();
         }
@@ -866,11 +877,28 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     public void play(List<BaseMusicInfo> baseMusicInfoList, int id, String pid) {
         LogUtil.d(TAG, "musicList = " + baseMusicInfoList.size() + " id = " + id + " pid = " + pid + " mPlaylistId =" + mPlaylistId);
         if (baseMusicInfoList.size() <= id) return;
+
         if (mPlaylistId.equals(pid) && id == mNowPlayingIndex) return;
 
         setPlayQueue(baseMusicInfoList);
 
         mNowPlayingIndex = id;
+
+        playCurrentAndNext();
+    }
+
+    private void updatePlaylist(List<BaseMusicInfo> baseMusicInfoList, int id, String pid) {
+        LogUtil.d(TAG, "musicList = " + baseMusicInfoList.size() + " id = " + id + " pid = " + pid + " mPlaylistId =" + mPlaylistId);
+        if (baseMusicInfoList.size() <= id) return;
+        if (mPlaylistId.equals(pid) && id == mNowPlayingIndex) return;
+        playWhenReady = false;
+        setPlayQueue(baseMusicInfoList);
+
+        mNowPlayingIndex = id;
+
+        if (mNowPlayingIndex < mPlaylist.size()) {
+            mNowPlayingMusic = mPlaylist.get(mNowPlayingIndex);
+        }
         playCurrentAndNext();
     }
 
@@ -895,6 +923,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      */
     public void pause() {
         LogUtil.d(TAG, "Pausing playback");
+        mPausedByTransientLossOfFocus = false;
         synchronized (this) {
             mHandler.removeMessages(VOLUME_FADE_UP);
             mHandler.sendEmptyMessage(VOLUME_FADE_DOWN);
@@ -902,7 +931,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             if (isPlaying()) {
                 isMusicPlaying = false;
                 notifyChange(PLAY_STATE_CHANGED);
-                notifyManager.updateNotification(isMusicPlaying, false);
+                notifyManager.updateNotification(isMusicPlaying, false, null);
                 TimerTask task = new TimerTask() {
                     public void run() {
                         LogUtil.d(TAG, "TimerTask ");
@@ -951,7 +980,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         LogUtil.e(TAG, "onUnbind");
         mServiceInUse = false;
 //        savePlayQueue(false);
-
         releaseServiceUiAndStop();
         stopSelf(mServiceStartId);
         return true;
@@ -962,27 +990,16 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      *
      * @param full 是否存储
      */
-//    private void savePlayQueue(boolean full) {
-//        if (full) {
-//            PlayQueueLoader.INSTANCE.updateQueue(mPlaylist);
-//        }
-//        if (mPlayingMusic != null) {
-//            //保存歌曲id
-//            SPUtils.saveCurrentSongId(mPlayingMusic.getMid());
-//        }
-//        //保存歌曲id
-//        SPUtils.setPlayPosition(mNowPlayingIndex);
-//        //保存歌曲进度
-//        SPUtils.savePosition(getCurrentPosition());
-//
-//        LogUtil.e(TAG, "save 保存歌曲id=" + mNowPlayingIndex + " 歌曲进度= " + getCurrentPosition());
-//    }
+    private void savePlayQueue(boolean full) {
+        if (mNowPlayingMusic != null) {
+            //保存歌曲id
+            CommonUtils.saveCurrentSongId(mNowPlayingMusic.getMid());
+        }
+        //保存歌曲id
+        CommonUtils.setPlayPosition(mNowPlayingIndex);
 
-
-//    private void saveHistory() {
-//        PlayHistoryLoader.INSTANCE.addSongToHistory(mPlayingMusic);
-//        savePlayQueue(false);
-//    }
+        LogUtil.e(TAG, "save 保存歌曲位置=" + mNowPlayingIndex);
+    }
 
     /**
      * 从歌单移除歌曲
@@ -1093,7 +1110,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     private void updateWidget(String action) {
         Intent intent = new Intent(action);
         intent.putExtra(ACTION_IS_WIDGET, true);
-//        intent.putExtra(Extras.PLAY_STATUS, isPlaying());
+        intent.putExtra(PLAY_STATE_CHANGED, isPlaying());
 //        if (action.equals(META_CHANGED)) {
 //            intent.putExtra(Extras.SONG, mPlayingMusic);
 //        }
@@ -1278,11 +1295,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             LogUtil.d(TAG, intent.getAction());
 //            if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 //                LogUtil.e(TAG, "屏幕熄灭进入锁屏界面");
-//                Intent lockScreen = new Intent(MusicPlayerService.this, LockScreenPlayerActivity.class);
-//                lockScreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(lockScreen);
 //            }
-
             if (!intent.getBooleanExtra(ACTION_IS_WIDGET, false)) {
                 handleCommandIntent(intent);
             }
@@ -1291,46 +1304,52 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
 
     /**
-     * Intent处理
-     *
-     * @param intent
+     * 处理各种广播
      */
     private void handleCommandIntent(Intent intent) {
         final String action = intent.getAction();
-        final String command = SERVICE_CMD.equals(action) ? intent.getStringExtra(CMD_NAME) : null;
+        final String command = SERVICE_CMD.equals(action) ? intent.getStringExtra(CMD_NAME) : action;
         LogUtil.d(TAG, "handleCommandIntent: action = " + action + ", command = " + command);
-
-        if (CMD_NEXT.equals(command) || ACTION_NEXT.equals(action)) {
-            next(false);
-        } else if (CMD_PREVIOUS.equals(command) || ACTION_PREV.equals(action)) {
-            prev();
-        } else if (CMD_TOGGLE_PAUSE.equals(command) || PLAY_STATE_CHANGED.equals(action)
-                || ACTION_PLAY_PAUSE.equals(action)) {
-            if (isPlaying()) {
+        if (PLAY_STATE_CHANGED.equals(action)) {
+            pausePlay();
+            return;
+        }
+        if (command == null) return;
+        switch (command) {
+            case CMD_NEXT:
+            case ACTION_NEXT:
+                next(false);
+                break;
+            case CMD_PREVIOUS:
+            case ACTION_PREV:
+                prev();
+                break;
+            case CMD_TOGGLE_PAUSE:
+            case ACTION_PLAY_PAUSE:
+                pausePlay();
+                break;
+            case ACTION_CLOSE:
+                stop(true);
+                stopSelf();
+                releaseServiceUiAndStop();
+                System.exit(0);
+                break;
+            case CMD_PAUSE:
+                pause();
+                break;
+            case CMD_PLAY:
+                play();
+                break;
+            case CMD_STOP:
                 pause();
                 mPausedByTransientLossOfFocus = false;
-            } else {
-                play();
-            }
-        } else if (UNLOCK_DESKTOP_LYRIC.equals(command)) {
-//            mFloatLyricViewManager.saveLock(false, true);
-        } else if (CMD_PAUSE.equals(command)) {
-            pause();
-            mPausedByTransientLossOfFocus = false;
-        } else if (CMD_PLAY.equals(command)) {
-            play();
-        } else if (CMD_STOP.equals(command)) {
-            pause();
-            mPausedByTransientLossOfFocus = false;
-            seekTo(0, false);
-            releaseServiceUiAndStop();
-        } else if (ACTION_LYRIC.equals(action)) {
-//            startFloatLyric();
-        } else if (ACTION_CLOSE.equals(action)) {
-            stop(true);
-            stopSelf();
-            releaseServiceUiAndStop();
-            System.exit(0);
+                seekTo(0, false);
+                releaseServiceUiAndStop();
+                break;
+            case UNLOCK_DESKTOP_LYRIC:
+                break;
+            default:
+                break;
         }
     }
 //
@@ -1426,6 +1445,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         sendBroadcast(audioEffectsIntent);
 //        savePlayQueue(false);
 
+        coverBitmap = null;
         //释放mPlayer
         if (mPlayer != null) {
             mPlayer.stop();

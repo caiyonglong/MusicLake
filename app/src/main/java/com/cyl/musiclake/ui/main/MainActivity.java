@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.data.PlayQueueLoader;
+import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.bean.SocketOnlineEvent;
 import com.cyl.musiclake.common.Constants;
@@ -80,8 +82,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     ImageView mShowBindIv;
     CircleImageView mBindNeteaseView;
     TextView mOnlineNumTv;
-
-    private static final String TAG = "MainActivity";
 
     private boolean mIsCountDown = false;
     private boolean mIsLogin = false;
@@ -167,7 +167,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initData() {
-//        updatePlaySongInfo(MusicPlayerManager.getInstance().getPlayingMusic());
+        LogUtil.d(TAG, "queue =" + MusicPlayerManager.getInstance().getPlayList().size() +
+                " - " + PlayQueueLoader.INSTANCE.getPlayQueue().size() + " -");
+        //同步上次播放队列
+        if (!MusicPlayerManager.getInstance().getPlayList().equals(PlayQueueLoader.INSTANCE.getPlayQueue())) {
+            MusicPlayerManager.getInstance().updatePlaylist(PlayQueueLoader.INSTANCE.getPlayQueue(), SPUtils.getPlayPosition());
+        }
         //加载主fragment
         initShortCutsIntent();
     }

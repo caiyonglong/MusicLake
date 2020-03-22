@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -21,6 +23,7 @@ import com.cyl.musiclake.di.component.DaggerApplicationComponent;
 import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
+import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -30,6 +33,7 @@ import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.music.lake.musiclib.MusicPlayerConfig;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.MusicPlayerManager;
+import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.service.MusicPlayerService;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
@@ -39,6 +43,9 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * tinker热更新需要
@@ -50,6 +57,7 @@ public class MusicApp extends MultiDexApplication {
     @SuppressLint("StaticFieldLeak")
     public static Context mContext;
 
+    private final String TAG = "MusicApp";
     //QQ第三方登录
     public static Tencent mTencent;
 
@@ -76,6 +84,7 @@ public class MusicApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate");
         sInstance = this;
         mContext = this;
         registerListener();
@@ -110,21 +119,27 @@ public class MusicApp extends MultiDexApplication {
                     } else {
                         call.onActionDirect();
                     }
+                    CoverLoader.INSTANCE.loadBitmap(this, musicInfo.getCoverUri(), new Function1<Bitmap, Unit>() {
+                        @Override
+                        public Unit invoke(Bitmap bitmap) {
+                            call.onMusicBitmap(bitmap);
+                            return null;
+                        }
+                    });
                 })
                 .create();
         MusicPlayerManager.getInstance().init(this, config);
+        MusicPlayerManager.getInstance().initialize(this, null);
         LitePal.initialize(this);
         initBugly();
         initDB();
-        //内存检测
-//        if (BuildConfig.DEBUG) {
-//            LeakCanary.install(this);
-//        }
-
         mpBroadcastReceiver = new MPBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter(MusicPlayerService.ACTION_SERVICE);
         intentFilter.addAction(MusicPlayerService.META_CHANGED);
         intentFilter.addAction(MusicPlayerService.PLAY_QUEUE_CHANGE);
+        intentFilter.addAction(NotifyManager.ACTION_MUSIC_NOTIFY);
+        intentFilter.addAction(NotifyManager.ACTION_CLOSE);
+        intentFilter.addAction(NotifyManager.ACTION_LYRIC);
         //注册广播
         registerReceiver(mpBroadcastReceiver, intentFilter);
     }

@@ -8,7 +8,6 @@ import android.os.PowerManager;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
-import com.music.lake.musiclib.playback.PlaybackListener;
 import com.music.lake.musiclib.utils.LogUtil;
 
 
@@ -16,22 +15,29 @@ import com.music.lake.musiclib.utils.LogUtil;
  * Created by D22434 on 2018/1/16.
  */
 
-public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnErrorListener,
+public class MusicMediaPlayer extends BasePlayer implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener {
 
     private String TAG = "MusicPlayerEngine";
-    private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
+    private MediaPlayer mCurrentMediaPlayer;
     //是否已经初始化
     private boolean mIsInitialized = false;
     //是否已经初始化
     private boolean mIsPrepared = false;
     private Context context;
-    private PlaybackListener listener;
 
-    MusicPlayerEngine(final Context context) {
+    public MusicMediaPlayer(final Context context) {
         this.context = context;
-        listener = (PlaybackListener) context;
+        initMediaPlayer();
         mCurrentMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+    }
+
+    private void initMediaPlayer() {
+        mCurrentMediaPlayer = new MediaPlayer();
+        mCurrentMediaPlayer.setOnPreparedListener(this);
+        mCurrentMediaPlayer.setOnBufferingUpdateListener(this);
+        mCurrentMediaPlayer.setOnErrorListener(this);
+        mCurrentMediaPlayer.setOnCompletionListener(this);
     }
 
     public void setMusicInfo(final BaseMusicInfo baseMusicInfo) {
@@ -39,35 +45,37 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
     }
 
     public void setDataSource(final String path) {
-        mIsInitialized = setDataSourceImpl(mCurrentMediaPlayer, path);
+        mIsInitialized = setDataSourceImpl(path);
     }
 
-    private boolean setDataSourceImpl(final MediaPlayer player, final String path) {
+    private boolean setDataSourceImpl(final String path) {
         if (path == null) return false;
         try {
-            if (player.isPlaying()) player.stop();
             mIsPrepared = false;
-            player.reset();
+            mCurrentMediaPlayer.reset();
+            if (listener != null) {
+                listener.onPlayerStateChanged(false);
+            }
             boolean cacheSetting = MusicPlayerManager.getInstance().isHasCache();
             LogUtil.d(TAG, "缓存设置：" + cacheSetting);
             //本地歌曲无需缓存
             if (path.startsWith("content://") || path.startsWith("/storage")) {
-                player.setDataSource(context, Uri.parse(path));
+                mCurrentMediaPlayer.setDataSource(context, Uri.parse(path));
             } else if (cacheSetting) {
                 //缓存开启，读取缓存
                 HttpProxyCacheServer proxy = MusicPlayerManager.getProxy();
                 String proxyUrl = proxy.getProxyUrl(path);
                 LogUtil.d(TAG, "设置缓存,缓存地址：proxyUrl=" + proxyUrl);
-                player.setDataSource(proxyUrl);
+                mCurrentMediaPlayer.setDataSource(proxyUrl);
             } else {
                 //不缓存
-                player.setDataSource(path);
+                mCurrentMediaPlayer.setDataSource(path);
             }
-            player.setOnPreparedListener(this);
-            player.setOnBufferingUpdateListener(this);
-            player.setOnErrorListener(this);
-            player.setOnCompletionListener(this);
-            player.prepareAsync();
+            LogUtil.d(TAG, "prepareAsync");
+            mCurrentMediaPlayer.prepareAsync();
+            if (listener != null) {
+                listener.onLoading(true);
+            }
         } catch (Exception todo) {
             LogUtil.e(TAG, "Exception:" + todo.getMessage());
             todo.printStackTrace();
@@ -76,21 +84,31 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
         return true;
     }
 
+
+    @Override
     public boolean isInitialized() {
         return mIsInitialized;
     }
 
+    @Override
     public boolean isPrepared() {
         return mIsPrepared;
     }
 
+    @Override
     public void start() {
+        super.start();
+        LogUtil.d(TAG, "start");
         mCurrentMediaPlayer.start();
+        if (listener != null) {
+            listener.onPlayerStateChanged(isPlaying());
+        }
     }
 
     @Override
     public void stop() {
         super.stop();
+        LogUtil.d(TAG, "stop");
         try {
             mCurrentMediaPlayer.reset();
             mIsInitialized = false;
@@ -103,13 +121,18 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
     @Override
     public void release() {
         super.release();
+        LogUtil.d(TAG, "release");
         mCurrentMediaPlayer.release();
     }
 
     @Override
     public void pause() {
         super.pause();
+        LogUtil.d(TAG, "pause");
         mCurrentMediaPlayer.pause();
+        if (listener != null) {
+            listener.onPlayerStateChanged(isPlaying());
+        }
     }
 
     @Override
@@ -118,30 +141,39 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
     }
 
     /**
-     * getDuration 只能在prepared之后才能调用，不然会报-38错误
-     *
-     * @return
+     * 只有在mediaPlayer prepared之后才能调用，不然会报-38错误
      */
     public long duration() {
         if (mIsPrepared) {
             return mCurrentMediaPlayer.getDuration();
-        } else return 0;
-    }
-
-    public long position() {
-        try {
-            return mCurrentMediaPlayer.getCurrentPosition();
-        } catch (IllegalStateException e) {
-            return -1;
         }
+        return 0;
     }
 
-    public void seek(final long whereto) {
-        mCurrentMediaPlayer.seekTo((int) whereto);
+    /**
+     * 只有在mediaPlayer prepared之后才能调用，不然会报-38错误
+     */
+    @Override
+    public long position() {
+        if (mIsPrepared) {
+            try {
+                return mCurrentMediaPlayer.getCurrentPosition();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
     }
 
+    @Override
+    public void seekTo(long ms) {
+        super.seekTo(ms);
+        mCurrentMediaPlayer.seekTo((int) ms);
+    }
 
+    @Override
     public void setVolume(final float vol) {
+        super.setVolume(vol);
         LogUtil.e("Volume", "vol = " + vol);
         try {
             mCurrentMediaPlayer.setVolume(vol, vol);
@@ -150,6 +182,7 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
         }
     }
 
+    @Override
     public int getAudioSessionId() {
         return mCurrentMediaPlayer.getAudioSessionId();
     }
@@ -165,16 +198,16 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
                 mCurrentMediaPlayer = new MediaPlayer();
                 //唤醒锁，
                 mCurrentMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
-                if (listener != null) {
-                    listener.onError();
-                }
                 return true;
             default:
                 break;
         }
+        if (listener != null) {
+            listener.onLoading(false);
+            listener.onError();
+        }
         return true;
     }
-
 
     /**
      * 播放完成
@@ -187,13 +220,6 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
         } else if (listener != null) {
             listener.onCompletionEnd();
         }
-//        if (mp == mCurrentMediaPlayer) {
-//            mHandler.sendEmptyMessage(MusicPlayerService.TRACK_WENT_TO_NEXT);
-//        } else {
-//            //        mService.get().mWakeLock.acquire(30000);
-//            mHandler.sendEmptyMessage(MusicPlayerService.TRACK_PLAY_ENDED);
-//            mHandler.sendEmptyMessage(MusicPlayerService.RELEASE_WAKELOCK);
-//        }
     }
 
     @Override
@@ -206,39 +232,15 @@ public class MusicPlayerEngine extends BasePlayer implements MediaPlayer.OnError
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        mp.start();
+        LogUtil.d(TAG, "onPrepared");
+        mIsPrepared = true;
+        if (playWhenReady) {
+            mp.start();
+        }
         if (listener != null) {
             listener.onPrepared();
-        }
-        if (!mIsPrepared) {
-            mIsPrepared = true;
-        }
-    }
-
-    private class TrackErrorInfo {
-
-        private String audioId;
-        private String trackName;
-
-        public TrackErrorInfo(String audioId, String trackName) {
-            this.audioId = audioId;
-            this.trackName = trackName;
-        }
-
-        public String getAudioId() {
-            return audioId;
-        }
-
-        public void setAudioId(String audioId) {
-            this.audioId = audioId;
-        }
-
-        public String getTrackName() {
-            return trackName;
-        }
-
-        public void setTrackName(String trackName) {
-            this.trackName = trackName;
+            listener.onLoading(false);
+            listener.onPlayerStateChanged(true);
         }
     }
 }

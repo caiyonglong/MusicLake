@@ -31,8 +31,8 @@ import com.cyl.musiclake.utils.FloatLyricViewManager
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Tools
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import kotlinx.android.synthetic.main.activity_player.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -53,7 +53,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     override fun showNowPlaying(baseMusicInfo: BaseMusicInfo?) {
         if (baseMusicInfo == null) finish()
 
-        playingBaseMusicInfoInfo = baseMusicInfo as BaseMusicInfo?
+        playingBaseMusicInfoInfo = baseMusicInfo
         //更新标题
         titleIv.text = baseMusicInfo?.title
         subTitleTv.text = baseMusicInfo?.artist
@@ -67,7 +67,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 //        downloadIv.visibility = if (BuildConfig.HAS_DOWNLOAD && !music?.isDl!!) View.VISIBLE else View.GONE
         LogUtil.d("PlayerActivity", "showNowPlaying 开始旋转动画")
         //开始旋转动画
-        coverFragment?.startRotateAnimation(MusicPlayerManager.getInstance().isPlaying())
+        coverFragment?.startRotateAnimation(MusicPlayerManager.getInstance().isPlaying)
     }
 
     override fun getLayoutResID(): Int {
@@ -125,7 +125,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
     override fun initData() {
         setupViewPager(viewPager)
         coverFragment?.initAlbumPic()
-        mPresenter?.updateNowPlaying(MusicPlayerManager.getInstance().getNowPlayingMusic(), true)
+        mPresenter?.updateNowPlaying(MusicPlayerManager.getInstance().nowPlayingMusic, true)
         //更新播放状态
         updatePlayStatus(MusicPlayerManager.getInstance().isPlaying())
         lyricFragment?.showLyric(FloatLyricViewManager.lyricInfo, true)
@@ -253,6 +253,10 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         }
     }
 
+    override fun updateLoading(isLoading: Boolean) {
+        playPauseIv.setLoading(isLoading)
+    }
+
     private fun setupViewPager(viewPager: MultiTouchViewPager) {
         fragments.clear()
         coverFragment?.let {
@@ -268,10 +272,12 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         viewPager.offscreenPageLimit = 2
         viewPager.currentItem = 0
         viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                LogUtil.d(TAG, "--$position --$positionOffset  $positionOffsetPixels")
+            }
 
             override fun onPageSelected(position: Int) {
-                LogUtil.d("PlayControlFragment", "--$position")
+                LogUtil.d(TAG, "--$position")
                 if (position == 0) {
                     searchLyricIv.visibility = View.GONE
                     operateSongIv.visibility = View.VISIBLE
@@ -303,6 +309,8 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         return mHiddenAction
     }
 
+    private fun moveToHideViewLocation() {
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlayModeChangedEvent(event: PlayModeEvent) {

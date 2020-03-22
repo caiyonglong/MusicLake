@@ -40,6 +40,9 @@ class LockScreenPlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.Vie
         playPauseIv.setImageResource(if (isPlaying) R.drawable.ic_play else R.drawable.ic_pause);
     }
 
+    override fun updateLoading(isLoading: Boolean) {
+    }
+
     override fun updateProgress(progress: Long, max: Long, bufferPercent: Int) {
         runOnUiThread {
             //获取当前时间

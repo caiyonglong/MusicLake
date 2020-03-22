@@ -1,7 +1,5 @@
 package com.cyl.musiclake.ui.music.playlist.square
 
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import com.cyl.musiclake.R
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
@@ -9,13 +7,12 @@ import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.playlist.PlaylistFragment
 import com.cyl.musiclake.utils.LogUtil
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_all_playlist.*
 
 class PlaylistSquareActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     var mViewPager: androidx.viewpager.widget.ViewPager? = null
     var mTabLayout: TabLayout? = null
-
-    private val TAG = javaClass.simpleName
     private var cateList = mutableListOf("推荐", "精品", "华语", "民谣", "摇滚", "流行", "古风", "日语")
 
     override fun getLayoutResID(): Int {

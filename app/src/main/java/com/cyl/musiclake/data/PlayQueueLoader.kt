@@ -23,10 +23,10 @@ object PlayQueueLoader {
     /**
      * 添加歌曲到歌单
      */
-    fun updateQueue(baseMusicInfoInfos: List<BaseMusicInfo>) {
+    fun updateQueue(musicList: List<BaseMusicInfo>) {
         doAsync {
             clearQueue()
-            baseMusicInfoInfos.forEach {
+            musicList.forEach {
                 DaoLitepal.addToPlaylist(it, Constants.PLAYLIST_QUEUE_ID)
             }
         }

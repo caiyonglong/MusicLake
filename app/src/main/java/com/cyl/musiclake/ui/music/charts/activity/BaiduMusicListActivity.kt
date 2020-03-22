@@ -58,8 +58,4 @@ class BaiduMusicListActivity : BasePlaylistActivity() {
         }, recyclerView)
     }
 
-
-    companion object {
-        private val TAG = "NeteasePlaylistActivity"
-    }
 }

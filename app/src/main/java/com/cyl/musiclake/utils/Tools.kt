@@ -48,7 +48,7 @@ object Tools {
         textIntent.type = "text/plain"
         textIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString())
 //        if (music.type == Constants.LOCAL) {
-//            textIntent.type = "video/mp3"
+//            textIntent.type = "com.music.lake.musiclib.video/mp3"
 //            textIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(music.uri))
 //        }
         activity.startActivity(Intent.createChooser(textIntent, "歌曲分享"))

@@ -15,19 +15,18 @@ import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.utils.DisplayUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
+import com.music.lake.musiclib.player.MusicExoPlayer
 import kotlinx.android.synthetic.main.activity_video.*
-import kotlinx.android.synthetic.main.exo_player_control_view.*
 
 /**
  * 作者：yonglong on 2016/8/24 10:43
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.View {
-
+class VideoPlayerActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.View {
 
     private val fullScreenListener = FullScreenListener()
-
+    private var musicExoPlayer: MusicExoPlayer? = null
     //是否是横屏
     internal var isPortrait = true
 
@@ -90,14 +89,15 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     override fun initData() {
         val mVid = intent.getStringExtra(Extras.MV_ID)
         showLoading()
+        initPlayer()
         mVid?.let {
             mPresenter?.loadBaiduMvInfo(mVid)
         }
 
         //加载本地视频
         intent.getStringExtra(Extras.VIDEO_PATH)?.let {
-            initPlayer()
             LogUtil.d(TAG, "url = $it")
+            musicExoPlayer?.setDataSource(it)
 //            video_view.setVideoURI(Uri.parse(it))
 //            video_view.setOnPreparedListener {
 //                video_view.start()
@@ -119,7 +119,9 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {
         if (mvInfoBean?.uri != null) {
             LogUtil.d(TAG, "url = ${mvInfoBean.uri}")
-            initPlayer()
+            mvInfoBean.uri?.let {
+                musicExoPlayer?.setDataSource(it)
+            }
             //For now we just picked an arbitrary item to play
 //            video_view.setPreviewImage(Uri.parse(mvInfoBean.picUrl))
 //            video_view.setVideoURI(Uri.parse(mvInfoBean.uri))
@@ -177,7 +179,6 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
                 return
             }
             LogUtil.d(TAG, "url = $url")
-            initPlayer()
             //For now we just picked an arbitrary item to play
 //            video_view.setPreviewImage(Uri.parse(mvInfoDetailInfo.cover))
 //            video_view.setVideoURI(Uri.parse(url))
@@ -193,6 +194,7 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
     }
 
     private fun initPlayer() {
+        musicExoPlayer = MusicExoPlayer(this)
         video_view.visibility = View.VISIBLE
 //        video_view.setOnPreparedListener(this)
 //        video_view.setRepeatMode(Player.REPEAT_MODE_ONE)
@@ -271,9 +273,4 @@ class BaiduMvDetailActivity : BaseActivity<MvDetailPresenter>(), MvDetailContrac
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
 
-
-    companion object {
-
-        private val TAG = "MvDetailActivity"
-    }
 }

@@ -6,7 +6,6 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -18,13 +17,13 @@ import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
 import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import kotlinx.android.synthetic.main.activity_import_playlist.*
 
 
 @Suppress("UNUSED_ANONYMOUS_PARAMETER")
 class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
-    private val TAG = "ImportPlaylistActivity"
     var mAdapter: SongAdapter? = null
     var name: String? = null
     var vendor: String? = null

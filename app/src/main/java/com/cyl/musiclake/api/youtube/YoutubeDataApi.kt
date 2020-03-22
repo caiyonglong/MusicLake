@@ -1,6 +1,5 @@
 package com.cyl.musiclake.api.youtube
 
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.google.api.client.http.HttpRequestInitializer
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -9,6 +8,7 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import java.io.IOException
 
 object YoutubeDataApi {

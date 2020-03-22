@@ -11,11 +11,6 @@ import com.music.lake.musiclib.notification.NotifyManager
 import com.music.lake.musiclib.service.MusicPlayerService
 import com.music.lake.musiclib.utils.LogUtil
 
-
-/**
- * Created by nv95 on 08.07.16.
- */
-
 class StandardWidget : BaseWidget() {
 
     private var isFirstCreate = true
@@ -24,67 +19,74 @@ class StandardWidget : BaseWidget() {
         return R.layout.widget_standard
     }
 
+    override fun onViewsPlayStatus(context: Context, remoteViews: RemoteViews, serviceName: ComponentName, extras: Bundle?) {
+        if (extras != null) {
+            remoteViews.setImageViewResource(R.id.app_widgets_play_pause,
+                    if (extras.getBoolean(MusicPlayerService.PLAY_STATE_CHANGED, false)) R.drawable.ic_pause else R.drawable.ic_play)
+        }
+    }
+
     override fun onViewsUpdate(context: Context, remoteViews: RemoteViews, serviceName: ComponentName, extras: Bundle?) {
-        LogUtil.e("BaseWidget", "接收到广播------------- onViewsUpdate")
+        LogUtil.e("StandardWidget", "接收到广播------------- onViewsUpdate")
         if (isFirstCreate) {
-            remoteViews.setOnClickPendingIntent(R.id.iv_next, PendingIntent.getService(
+            remoteViews.setOnClickPendingIntent(R.id.app_widgets_next, PendingIntent.getService(
                     context,
                     REQUEST_NEXT,
-                    Intent(context, MusicPlayerService::class.java)
-                            .setAction(NotifyManager.ACTION_NEXT)
-                            .setComponent(serviceName),
+                    retrievePlaybackAction(context, NotifyManager.ACTION_NEXT, serviceName),
                     0
             ))
-            remoteViews.setOnClickPendingIntent(R.id.iv_prev, PendingIntent.getService(
+            remoteViews.setOnClickPendingIntent(R.id.app_widgets_prev, PendingIntent.getService(
                     context,
                     REQUEST_PREV,
-                    Intent(context, MusicPlayerService::class.java)
-                            .setAction(NotifyManager.ACTION_PREV)
-                            .setComponent(serviceName),
+                    retrievePlaybackAction(context, NotifyManager.ACTION_PREV, serviceName),
                     0
             ))
-            remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, PendingIntent.getService(
+            remoteViews.setOnClickPendingIntent(R.id.app_widgets_play_pause, PendingIntent.getService(
                     context,
                     REQUEST_PLAYPAUSE,
-                    Intent(context, MusicPlayerService::class.java)
-                            .setAction(NotifyManager.ACTION_PLAY_PAUSE)
-                            .setComponent(serviceName),
+                    retrievePlaybackAction(context, NotifyManager.ACTION_PLAY_PAUSE, serviceName),
                     PendingIntent.FLAG_UPDATE_CURRENT
             ))
-//            remoteViews.setOnClickPendingIntent(R.id.iv_cover, PendingIntent.getActivity(
-//                    context,
-//                    0,
-//                    NavigationHelper.getNowPlayingIntent(context)
-//                            .setComponent(serviceName),
-//                    PendingIntent.FLAG_UPDATE_CURRENT
-//            ))
-//
-//            remoteViews.setOnClickPendingIntent(R.id.iv_lyric, PendingIntent.getService(
-//                    context,
-//                    0,
-//                    NavigationHelper.getLyricIntent(context)
-//                            .setComponent(serviceName),
-//                    PendingIntent.FLAG_UPDATE_CURRENT
-//            ))
+            remoteViews.setOnClickPendingIntent(R.id.app_widgets_cover,
+                    PendingIntent.getActivity(
+                            context,
+                            0,
+                            retrieveAction(context, NotifyManager.ACTION_MUSIC_NOTIFY, serviceName),
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    ))
+            remoteViews.setOnClickPendingIntent(R.id.app_widgets_lyric, PendingIntent.getBroadcast(
+                    context,
+                    0,
+                    retrieveAction(context, NotifyManager.ACTION_LYRIC, serviceName),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            ))
             isFirstCreate = false;
-
         }
-//        if (extras != null) {
-//            remoteViews.setImageViewResource(R.id.iv_play_pause,
-//                    if (extras.getBoolean(Extras.PLAY_STATUS, false)) R.drawable.ic_pause else R.drawable.ic_play)
-//        }
-//        if (MusicPlayerService.getInstance() != null) {
-//            val music = MusicPlayerService.getInstance().playingMusic ?: return
-//            remoteViews.setTextViewText(R.id.tv_title, music.title + " - " + music.artist)
-//            CoverLoader.loadImageViewByMusic(context, music) { artwork ->
-//                if (artwork != null) {
-//                    remoteViews.setImageViewBitmap(R.id.iv_cover, artwork)
-//                } else {
-//                    remoteViews.setImageViewResource(R.id.iv_cover, R.drawable.default_cover)
-//                }
-//            }
-//        }
+        if (extras != null) {
+            remoteViews.setImageViewResource(R.id.app_widgets_play_pause,
+                    if (extras.getBoolean(MusicPlayerService.PLAY_STATE_CHANGED, false)) R.drawable.ic_pause else R.drawable.ic_play)
+        }
+        if (MusicPlayerService.getInstance() != null) {
+            val music = MusicPlayerService.getInstance().playingMusic ?: return
+            remoteViews.setTextViewText(R.id.app_widgets_title, music.title + " - " + music.artist)
+            if (MusicPlayerService.getInstance().coverBitmap != null) {
+                remoteViews.setImageViewBitmap(R.id.app_widgets_cover, MusicPlayerService.getInstance().coverBitmap)
+            }
+        }
     }
+
+    private fun retrieveAction(context: Context, action: String, serviceName: ComponentName): Intent {
+        return Intent(context, MusicPlayerService::class.java)
+                .setAction(action)
+                .setComponent(serviceName)
+    }
+
+    private fun retrievePlaybackAction(context: Context, action: String, serviceName: ComponentName): Intent {
+        return Intent(context, MusicPlayerService::class.java)
+                .setAction(action)
+                .setComponent(serviceName)
+    }
+
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)

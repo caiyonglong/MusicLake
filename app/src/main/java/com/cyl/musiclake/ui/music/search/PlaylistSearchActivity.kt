@@ -9,7 +9,6 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import com.cyl.musiclake.R
-import com.music.lake.musiclib.bean.BaseMusicInfo
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.ui.base.BaseContract
@@ -18,6 +17,7 @@ import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.utils.Tools
 import com.music.lake.musiclib.MusicPlayerManager
+import com.music.lake.musiclib.bean.BaseMusicInfo
 import kotlinx.android.synthetic.main.activity_playlist_search.*
 import kotlinx.android.synthetic.main.toolbar_search_layout.*
 
@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.toolbar_search_layout.*
  * 作者：yonglong on 2016/9/15 12:32
  * 邮箱：643872807@qq.com
  * 版本：2.5
+ * 歌单内搜索
  */
 class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     /**
@@ -38,7 +39,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
 
     companion object {
         /**
-         * 歌曲列表
+         * 歌单内歌曲列表
          */
         var musicList = mutableListOf<BaseMusicInfo>()
     }
@@ -126,7 +127,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             MusicPlayerManager.getInstance().playMusic(searchResults, position)
         }
         mAdapter.setOnItemChildClickListener { _, _, position ->
-            val music = musicList[position]
+            val music = searchResults[position]
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(this)
         }
     }

@@ -129,13 +129,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     kapt 'com.google.dagger:dagger-compiler:2.11'
 
-    //leakCanary
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
-//    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
-
-    // Optional, if you use support library fragments:
-    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
-
     // 编辑音乐文件标签 新版本2.2.6版本报错
     implementation files('libs/jaudiotagger-2.2.4-SNAPSHOT.jar')
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
@@ -171,6 +164,9 @@ dependencies {
 
     //Android音乐接口Api
 //    implementation 'com.github.caiyonglong:musicapi:1.0.7'
+
+    //内存泄漏库
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 
     implementation project(path: ':musiclib')
     implementation project(':musicapi')

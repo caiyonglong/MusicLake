@@ -5,7 +5,7 @@ import android.os.Binder;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.listener.MusicPlayEventListener;
 import com.music.lake.musiclib.listener.MusicPlayerController;
-import com.music.lake.musiclib.listener.MusicRequest;
+import com.music.lake.musiclib.listener.MusicUrlRequest;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +38,12 @@ public class MusicServiceBinder extends Binder {
     public void playMusic(List<BaseMusicInfo> songs, int index) {
         if (controller != null) {
             controller.playMusic(songs, index);
+        }
+    }
+
+    public void updatePlaylist(List<BaseMusicInfo> songs, int index) {
+        if (controller != null) {
+            controller.updatePlaylist(songs, index);
         }
     }
 
@@ -110,14 +116,12 @@ public class MusicServiceBinder extends Binder {
         return 0;
     }
 
-    @NotNull
     public List<BaseMusicInfo> getPlayList() {
         if (controller != null) {
             return controller.getPlayList();
         }
         return null;
     }
-
 
     public void removeFromPlaylist(int position) {
         if (controller != null) {
@@ -174,7 +178,7 @@ public class MusicServiceBinder extends Binder {
 
     }
 
-    public void setMusicRequestListener(MusicRequest request) {
+    public void setMusicRequestListener(MusicUrlRequest request) {
         if (controller != null) {
             controller.setMusicRequestListener(request);
         }
