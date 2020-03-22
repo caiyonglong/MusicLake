@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.cyl.musicapi.BaseApiImpl;
 import com.cyl.musiclake.api.music.MusicApi;
 import com.cyl.musiclake.api.net.ApiManager;
 import com.cyl.musiclake.api.net.RequestCallBack;
@@ -24,6 +25,7 @@ import com.cyl.musiclake.di.module.ApplicationModule;
 import com.cyl.musiclake.socket.SocketManager;
 import com.cyl.musiclake.ui.download.TasksManager;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.FloatLyricViewManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
 import com.cyl.musiclake.utils.ToastUtils;
@@ -31,10 +33,13 @@ import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.music.lake.musiclib.MusicPlayerConfig;
-import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.MusicPlayerManager;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
+import com.music.lake.musiclib.listener.MusicUrlRequest;
 import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.service.MusicPlayerService;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
@@ -94,45 +99,13 @@ public class MusicApp extends MultiDexApplication {
     }
 
     private void initSDK() {
-        MusicPlayerConfig config = new MusicPlayerConfig.Builder()
-                .setUseCache(true)
-                .setUrlRequest((musicInfo, call) -> {
-                    if (musicInfo.getUri() == null || !Objects.equals(musicInfo.getType(), Constants.LOCAL) || musicInfo.getUri().equals("") || musicInfo.getUri().equals("null")) {
-                        if (!NetworkUtils.isNetworkAvailable(this)) {
-                            ToastUtils.show("网络不可用，请检查网络连接");
-                        } else {
-                            ApiManager.request(MusicApi.INSTANCE.getMusicInfo(musicInfo), new RequestCallBack<BaseMusicInfo>() {
-                                @Override
-                                public void success(BaseMusicInfo result) {
-                                    LogUtil.e("MusicApp", "-----" + result.toString());
-                                    if (result.getUri() != null) {
-                                        call.onMusicValid(result.getUri());
-                                    }
-                                }
-
-                                @Override
-                                public void error(String msg) {
-                                    LogUtil.e("MusicApp", "播放异常-----" + msg);
-                                }
-                            });
-                        }
-                    } else {
-                        call.onActionDirect();
-                    }
-                    CoverLoader.INSTANCE.loadBitmap(this, musicInfo.getCoverUri(), new Function1<Bitmap, Unit>() {
-                        @Override
-                        public Unit invoke(Bitmap bitmap) {
-                            call.onMusicBitmap(bitmap);
-                            return null;
-                        }
-                    });
-                })
-                .create();
-        MusicPlayerManager.getInstance().init(this, config);
-        MusicPlayerManager.getInstance().initialize(this, null);
         LitePal.initialize(this);
         initBugly();
         initDB();
+        //初始化WebView
+        BaseApiImpl.INSTANCE.initWebView(this);
+        initLogin();
+        initMusicPlayer();
         mpBroadcastReceiver = new MPBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter(MusicPlayerService.ACTION_SERVICE);
         intentFilter.addAction(MusicPlayerService.META_CHANGED);
@@ -142,6 +115,26 @@ public class MusicApp extends MultiDexApplication {
         intentFilter.addAction(NotifyManager.ACTION_LYRIC);
         //注册广播
         registerReceiver(mpBroadcastReceiver, intentFilter);
+    }
+
+    private void initMusicPlayer() {
+        MusicPlayerConfig config = new MusicPlayerConfig.Builder()
+                .setUseCache(true)
+                .setUseExoPlayer(true)
+                .setUrlRequest(musicUrlRequest)
+                .create();
+        MusicPlayerManager.getInstance().init(this, config);
+        MusicPlayerManager.getInstance().initialize(this, null);
+        FloatLyricViewManager.getInstance().init(this);
+    }
+
+    private void initLogin() {
+        //创建微博实例
+        WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
+        //腾讯
+        MusicApp.mTencent = Tencent.createInstance(Constants.APP_ID, this);
+        //初始化socket，因后台服务器压力大，暂时注释
+//        SocketManager.INSTANCE.initSocket();
     }
 
     /**
@@ -193,6 +186,39 @@ public class MusicApp extends MultiDexApplication {
         TasksManager.INSTANCE.onDestroy();
         FileDownloader.getImpl().pauseAll();
     }
+
+    private MusicUrlRequest musicUrlRequest = (musicInfo, call) -> {
+        if (musicInfo.getUri() == null || !Objects.equals(musicInfo.getType(), Constants.LOCAL) || musicInfo.getUri().equals("") || musicInfo.getUri().equals("null")) {
+            if (!NetworkUtils.isNetworkAvailable(MusicApp.getAppContext())) {
+                ToastUtils.show("网络不可用，请检查网络连接");
+            } else {
+                ApiManager.request(MusicApi.INSTANCE.getMusicInfo(musicInfo), new RequestCallBack<BaseMusicInfo>() {
+                    @Override
+                    public void success(BaseMusicInfo result) {
+                        LogUtil.e("MusicApp", "-----" + result.toString());
+                        if (result.getUri() != null) {
+                            call.onMusicValid(result.getUri());
+                        }
+                    }
+
+                    @Override
+                    public void error(String msg) {
+                        LogUtil.e("MusicApp", "播放异常-----" + msg);
+                        call.onActionDirect();
+                    }
+                });
+            }
+        } else {
+            call.onActionDirect();
+        }
+        CoverLoader.INSTANCE.loadBitmap(MusicApp.getAppContext(), musicInfo.getCoverUri(), new Function1<Bitmap, Unit>() {
+            @Override
+            public Unit invoke(Bitmap bitmap) {
+                call.onMusicBitmap(bitmap);
+                return null;
+            }
+        });
+    };
 
     /**
      * 注册监听

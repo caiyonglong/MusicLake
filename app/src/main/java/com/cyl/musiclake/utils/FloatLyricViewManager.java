@@ -1,10 +1,12 @@
 package com.cyl.musiclake.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.WindowManager;
 
@@ -14,14 +16,17 @@ import com.cyl.musiclake.api.music.MusicApi;
 import com.cyl.musiclake.api.music.MusicApiServiceImpl;
 import com.cyl.musiclake.api.net.ApiManager;
 import com.cyl.musiclake.api.net.RequestCallBack;
-import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.cyl.musiclake.ui.widget.LyricView;
 import com.cyl.musiclake.ui.widget.lyric.FloatLyricView;
 import com.cyl.musiclake.ui.widget.lyric.LyricInfo;
 import com.cyl.musiclake.ui.widget.lyric.LyricParseUtils;
+import com.music.lake.musiclib.MusicPlayerManager;
+import com.music.lake.musiclib.bean.BaseMusicInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.reactivex.Observable;
 
@@ -43,14 +48,36 @@ public class FloatLyricViewManager {
      * 歌词信息
      */
     public static String lyricInfo;
+    private boolean showLyric;
+    private Handler mMainHandler;
 
     /**
      * 定时器，定时进行检测当前应该创建还是移除悬浮窗。
      */
     private Context mContext;
 
-    FloatLyricViewManager(Context context) {
+    @SuppressLint("StaticFieldLeak")
+    private volatile static FloatLyricViewManager manager;
+
+    public static FloatLyricViewManager getInstance() {
+        if (manager == null) {
+            synchronized (FloatLyricViewManager.class) {
+                if (manager == null) {
+                    manager = new FloatLyricViewManager();
+                }
+            }
+        }
+        return manager;
+    }
+
+    private FloatLyricViewManager() {
+    }
+
+    public void init(Context context) {
         mContext = context;
+
+        //初始化主线程Handler
+        mMainHandler = new Handler(Looper.getMainLooper());
     }
 
     /**
@@ -58,11 +85,11 @@ public class FloatLyricViewManager {
      */
     private static List<LyricView> lyricViews = new ArrayList<>();
 
-    public static void setLyricChangeListener(LyricView lyricView) {
+    public void setLyricChangeListener(LyricView lyricView) {
         lyricViews.add(lyricView);
     }
 
-    public static void removeLyricChangeListener(LyricView lyricView) {
+    public void removeLyricChangeListener(LyricView lyricView) {
         lyricViews.remove(lyricView);
     }
 
@@ -110,7 +137,7 @@ public class FloatLyricViewManager {
      *
      * @param info 歌词
      */
-    public static void saveLyricInfo(String name, String artist, String info) {
+    public void saveLyricInfo(String name, String artist, String info) {
         lyricInfo = info;
         MusicApiServiceImpl.INSTANCE.saveLyricInfo(name, artist, info);
         setLyric(lyricInfo);
@@ -235,6 +262,55 @@ public class FloatLyricViewManager {
             e.printStackTrace();
         }
     }
+
+    private Timer lyricTimer;
+
+    /**
+     * 显示桌面歌词
+     * 开个定时器定时刷新桌面歌词
+     *
+     * @param show
+     */
+    public void showDesktopLyric(boolean show) {
+        if (show) {
+            // 开启定时器，每隔0.5秒刷新一次
+            if (lyricTimer == null) {
+                lyricTimer = new Timer();
+                lyricTimer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        mMainHandler.post(() -> {
+                            if (MusicPlayerManager.getInstance().isPlaying()) {
+                                //正在播放时刷新
+                                updateLyric(MusicPlayerManager.getInstance().getPlayingPosition(), MusicPlayerManager.getInstance().getDuration());
+                            }
+                        });
+                    }
+                }, 0, 200);
+            }
+        } else {
+            if (lyricTimer != null) {
+                lyricTimer.cancel();
+                lyricTimer = null;
+            }
+            removeFloatLyricView(mContext);
+        }
+    }
+
+
+    /**
+     * 开启歌词
+     */
+    public void startFloatLyric() {
+        if (SystemUtils.isOpenFloatWindow()) {
+            showLyric = !showLyric;
+            SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false);
+            showDesktopLyric(showLyric);
+        } else {
+            SystemUtils.applySystemWindow();
+        }
+    }
+
 
     /**
      * 更新小悬浮窗的TextView上的数据，显示内存使用的百分比。

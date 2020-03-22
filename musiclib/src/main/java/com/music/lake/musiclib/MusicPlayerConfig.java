@@ -6,7 +6,7 @@ public class MusicPlayerConfig {
     /**
      * 是否使用MediaPlayer
      */
-    private boolean useMediaPlayer;
+    private boolean useExoPlayer;
     private boolean useCache;
     public MusicUrlRequest request;
 
@@ -17,12 +17,12 @@ public class MusicPlayerConfig {
      * 配置类的Builder
      */
     public static class Builder {
-        boolean useMediaPlayer;
+        boolean useExoPlayer;
         boolean useCache;
         MusicUrlRequest request;
 
-        public Builder setUseMediaPlayer(boolean useMediaPlayer) {
-            this.useMediaPlayer = useMediaPlayer;
+        public Builder setUseExoPlayer(boolean useExoPlayer) {
+            this.useExoPlayer = useExoPlayer;
             return this;
         }
 
@@ -37,7 +37,7 @@ public class MusicPlayerConfig {
         }
 
         void applyConfig(MusicPlayerConfig config) {
-            config.useMediaPlayer = this.useMediaPlayer;
+            config.useExoPlayer = this.useExoPlayer;
             config.useCache = this.useCache;
             config.request = this.request;
         }

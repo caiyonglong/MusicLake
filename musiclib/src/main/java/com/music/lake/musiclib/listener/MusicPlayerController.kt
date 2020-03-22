@@ -124,7 +124,6 @@ interface MusicPlayerController {
      */
     fun setMusicRequestListener(urlRequest: MusicUrlRequest)
 
-
     fun showDesktopLyric(show: Boolean)
 
     fun AudioSessionId(): Int

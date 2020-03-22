@@ -132,8 +132,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
     public Bitmap coverBitmap;
 
-//    private FloatLyricViewManager mFloatLyricViewManager;
-
     private MediaSessionManager mediaSessionManager;
     private AudioAndFocusManager audioAndFocusManager;
 
@@ -157,8 +155,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     private HandlerThread mWorkThread;
     //主线程Handler
     private Handler mMainHandler;
-
-    private boolean showLyric;
 
     private static MusicPlayerService instance;
 
@@ -355,7 +351,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     @Override
     public void onPlayerStateChanged(boolean isMusicPlaying) {
         this.isMusicPlaying = isMusicPlaying;
-        if (isMusicPlaying && !playWhenReady) {
+        if (!playWhenReady) {
             playWhenReady = true;
         }
         notifyChange(PLAY_STATE_CHANGED);
@@ -473,8 +469,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         //电源键
         powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PlayerWakelockTag");
-
-//        mFloatLyricViewManager = new FloatLyricViewManager(this);
 
         //初始化和设置MediaSessionCompat
         mediaSessionManager = new MediaSessionManager(mBindStub, this, mMainHandler);
@@ -1087,7 +1081,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         LogUtil.d(TAG, "notifyChange: what = " + what);
         switch (what) {
             case META_CHANGED:
-//                mFloatLyricViewManager.loadLyric(mPlayingMusic);
                 updateWidget(META_CHANGED);
 //                notifyChange(PLAY_STATE_CHANGED);
 //                EventBus.getDefault().post(new MetaChangedEvent(mPlayingMusic));
@@ -1235,36 +1228,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
 
     /**
-     * 显示桌面歌词
-     * 开个定时器定时刷新桌面歌词
-     *
-     * @param show
-     */
-//    public void showDesktopLyric(boolean show) {
-//        if (show) {
-//            // 开启定时器，每隔0.5秒刷新一次
-//            if (lyricTimer == null) {
-//                lyricTimer = new Timer();
-//                lyricTimer.scheduleAtFixedRate(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        if (isMusicPlaying){
-//                            //正在播放时刷新
-//                            mFloatLyricViewManager.updateLyric(getCurrentPosition(), getDuration());
-//                        }
-//                    }
-//                }, 0, 1);
-//            }
-//        } else {
-//            if (lyricTimer != null) {
-//                lyricTimer.cancel();
-//                lyricTimer = null;
-//            }
-//            mFloatLyricViewManager.removeFloatLyricView(this);
-//        }
-//    }
-
-    /**
      * 电话监听
      */
     private class ServicePhoneStateListener extends PhoneStateListener {
@@ -1352,20 +1315,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
                 break;
         }
     }
-//
-//    /**
-//     * 开启歌词
-//     */
-//    private void startFloatLyric() {
-//        if (SystemUtils.isOpenFloatWindow()) {
-//            showLyric = !showLyric;
-//            SPUtils.putAnyCommit(SPUtils.SP_KEY_FLOAT_LYRIC_LOCK, false);
-//            showDesktopLyric(showLyric);
-//        } else {
-//            SystemUtils.applySystemWindow();
-//        }
-//    }
-
     /**
      * 耳机插入广播接收器
      */

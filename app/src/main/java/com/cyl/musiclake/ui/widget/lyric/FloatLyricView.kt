@@ -13,10 +13,7 @@ import android.widget.TextView
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.NavigationHelper
-import com.cyl.musiclake.utils.LogUtil
-import com.cyl.musiclake.utils.SPUtils
-import com.cyl.musiclake.utils.ToastUtils
-import com.cyl.musiclake.utils.UnLockNotify
+import com.cyl.musiclake.utils.*
 import com.music.lake.musiclib.service.MusicPlayerService
 import com.rtugeek.android.colorseekbar.ColorSeekBar
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder
@@ -257,7 +254,7 @@ class FloatLyricView(context: Context) : FrameLayout(context), View.OnClickListe
                 intent.flags = FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
-//            R.id.btn_close -> MusicPlayerService.getInstance().showDesktopLyric(false)
+            R.id.btn_close -> FloatLyricViewManager.getInstance().showDesktopLyric(false)
             R.id.btn_lock -> {
                 mMovement = !mMovement
                 if (mMovement) {

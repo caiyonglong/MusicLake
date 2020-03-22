@@ -182,7 +182,7 @@ class MusicLyricDialog : androidx.fragment.app.DialogFragment() {
                                     loadingView.visibility = View.GONE
                                     lyricListener?.invoke(it1)
                                     selectId = position
-                                    FloatLyricViewManager.saveLyricInfo(title, artist, it1)
+                                    FloatLyricViewManager.getInstance().saveLyricInfo(title, artist, it1)
                                     ToastUtils.show(getString(R.string.lyric_search_apply))
                                     dismiss()
                                 }

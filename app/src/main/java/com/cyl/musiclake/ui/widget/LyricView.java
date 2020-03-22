@@ -831,13 +831,13 @@ public class LyricView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        FloatLyricViewManager.setLyricChangeListener(this);
+        FloatLyricViewManager.getInstance().setLyricChangeListener(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        FloatLyricViewManager.removeLyricChangeListener(this);
+        FloatLyricViewManager.getInstance().removeLyricChangeListener(this);
     }
 
     /**

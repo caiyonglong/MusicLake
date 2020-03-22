@@ -9,6 +9,7 @@ import com.cyl.musiclake.data.PlayQueueLoader;
 import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.event.PlaylistEvent;
 import com.cyl.musiclake.ui.music.playpage.PlayerActivity;
+import com.cyl.musiclake.utils.FloatLyricViewManager;
 import com.cyl.musiclake.utils.SPUtils;
 import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.notification.NotifyManager;
@@ -26,9 +27,15 @@ public class MPBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         LogUtil.d(TAG, "MPBroadcastReceiver =" + intent.getAction());
         if (MusicPlayerService.META_CHANGED.equals(intent.getAction())) {
+            //通知更新当前播放歌曲
             EventBus.getDefault().post(new MetaChangedEvent(MusicPlayerManager.getInstance().getNowPlayingMusic()));
+            //保存播放历史
             PlayHistoryLoader.INSTANCE.addSongToHistory(MusicPlayerManager.getInstance().getNowPlayingMusic());
+            //通知更新播放历史
             EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_HISTORY_ID, null));
+            //加载歌词
+            FloatLyricViewManager.getInstance().loadLyric(MusicPlayerManager.getInstance().getNowPlayingMusic());
+            //保存当前位置
             SPUtils.setPlayPosition(MusicPlayerManager.getInstance().getNowPlayingIndex());
         } else if (MusicPlayerService.PLAY_QUEUE_CHANGE.equals(intent.getAction())) {
             EventBus.getDefault().post(new PlaylistEvent(Constants.PLAYLIST_QUEUE_ID, null));
@@ -52,6 +59,7 @@ public class MPBroadcastReceiver extends BroadcastReceiver {
     private void showDesktopLyric(Context context) {
         //通知栏点击
         ToastUtils.show("显示桌面歌词");
+        FloatLyricViewManager.getInstance().startFloatLyric();
     }
 
     private void close(Context context) {

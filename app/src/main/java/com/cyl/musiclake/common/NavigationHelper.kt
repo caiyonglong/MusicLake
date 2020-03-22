@@ -211,7 +211,7 @@ object NavigationHelper {
 
     fun getNowPlayingIntent(context: Context): Intent {
         val intent = Intent(context, MainActivity::class.java)
-        intent.action = Constants.DEAULT_NOTIFICATION
+//        intent.action = Constants.DEAULT_NOTIFICATION
         return intent
     }
 
