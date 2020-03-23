@@ -163,11 +163,11 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.3'
 
     //Android音乐接口Api
-//    implementation 'com.github.caiyonglong:musicapi:1.0.7'
+    implementation 'com.github.caiyonglong:musicapi:1.0.8'
 
     //内存泄漏库
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 
     implementation project(path: ':musiclib')
-    implementation project(':musicapi')
+//    implementation project(':musicapi')
 }
