@@ -169,10 +169,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void initData() {
         LogUtil.d(TAG, "queue =" + MusicPlayerManager.getInstance().getPlayList().size() +
                 " - " + PlayQueueLoader.INSTANCE.getPlayQueue().size() + " -");
-        //同步上次播放队列
-        if (!MusicPlayerManager.getInstance().getPlayList().equals(PlayQueueLoader.INSTANCE.getPlayQueue())) {
-            MusicPlayerManager.getInstance().updatePlaylist(PlayQueueLoader.INSTANCE.getPlayQueue(), SPUtils.getPlayPosition());
-        }
         //加载主fragment
         initShortCutsIntent();
     }

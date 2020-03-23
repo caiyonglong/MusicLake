@@ -18,9 +18,6 @@ import com.music.lake.musiclib.utils.LogUtil
 
 abstract class BaseWidget : AppWidgetProvider() {
 
-    protected val REQUEST_NEXT = 1
-    protected val REQUEST_PREV = 2
-    protected val REQUEST_PLAYPAUSE = 3
     @LayoutRes
     abstract fun getLayoutRes(): Int
 

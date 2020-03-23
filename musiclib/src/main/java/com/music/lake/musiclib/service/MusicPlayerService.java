@@ -38,9 +38,9 @@ import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.playback.PlaybackListener;
 import com.music.lake.musiclib.player.BasePlayer;
 import com.music.lake.musiclib.player.MusicExoPlayer;
+import com.music.lake.musiclib.utils.CommonUtils;
 import com.music.lake.musiclib.utils.Constants;
 import com.music.lake.musiclib.utils.LogUtil;
-import com.music.lake.musiclib.utils.CommonUtils;
 import com.music.lake.musiclib.utils.SystemUtils;
 import com.music.lake.musiclib.utils.ToastUtils;
 import com.music.lake.musiclib.widgets.appwidgets.StandardWidget;
@@ -50,16 +50,17 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_CLOSE;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_IS_WIDGET;
+import static com.music.lake.musiclib.notification.NotifyManager.ACTION_LYRIC;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_MUSIC_NOTIFY;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_NEXT;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_PLAY_PAUSE;
 import static com.music.lake.musiclib.notification.NotifyManager.ACTION_PREV;
+import static com.music.lake.musiclib.notification.NotifyManager.ACTION_SHUFFLE;
 
 /**
  * 作者：yonglong on 2020/2/29
@@ -185,7 +186,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     }
 
     @Override
-    public void updatePlaylist(@NotNull List<BaseMusicInfo> songs, int index) {
+    public void updatePlaylist(List<BaseMusicInfo> songs, int index) {
         updatePlaylist(songs, index, "");
     }
 
@@ -631,7 +632,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      */
     private void playCurrentAndNext() {
         synchronized (this) {
-            LogUtil.e(TAG, "playCurrentAndNext: " + mNowPlayingIndex + "-" + mPlaylist.size() + " - " + mNowPlayingMusic.toString());
+            LogUtil.e(TAG, "playCurrentAndNext: " + mNowPlayingIndex + "-" + mPlaylist.size());
             if (mNowPlayingIndex >= mPlaylist.size() || mNowPlayingIndex < 0) {
                 return;
             }
@@ -719,67 +720,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         if (remove_status_icon) {
             isMusicPlaying = false;
         }
-    }
-
-    /**
-     * 获取下一首位置
-     *
-     * @return
-     */
-    private int getNextPosition(Boolean isAuto) {
-        int playModeId = PlayListManager.INSTANCE.getLoopMode();
-        if (mPlaylist == null || mPlaylist.isEmpty()) {
-            return -1;
-        }
-        if (mPlaylist.size() == 1) {
-            return 0;
-        }
-        if (playModeId == PlayListManager.PLAY_MODE_REPEAT && isAuto) {
-            if (mNowPlayingIndex < 0) {
-                return 0;
-            } else {
-                return mNowPlayingIndex;
-            }
-        } else if (playModeId == PlayListManager.PLAY_MODE_RANDOM) {
-            return new Random().nextInt(mPlaylist.size());
-        } else {
-            if (mNowPlayingIndex == mPlaylist.size() - 1) {
-                return 0;
-            } else if (mNowPlayingIndex < mPlaylist.size() - 1) {
-                return mNowPlayingIndex + 1;
-            }
-        }
-        return mNowPlayingIndex;
-    }
-
-    /**
-     * 获取上一首位置
-     *
-     * @return
-     */
-    private int getPreviousPosition() {
-        int playModeId = PlayListManager.INSTANCE.getLoopMode();
-        if (mPlaylist == null || mPlaylist.isEmpty()) {
-            return -1;
-        }
-        if (mPlaylist.size() == 1) {
-            return 0;
-        }
-        if (playModeId == PlayListManager.PLAY_MODE_REPEAT) {
-            if (mNowPlayingIndex < 0) {
-                return 0;
-            }
-        } else if (playModeId == PlayListManager.PLAY_MODE_RANDOM) {
-            mNowPlayingIndex = new Random().nextInt(mPlaylist.size());
-            return new Random().nextInt(mPlaylist.size());
-        } else {
-            if (mNowPlayingIndex == 0) {
-                return mPlaylist.size() - 1;
-            } else if (mNowPlayingIndex > 0) {
-                return mNowPlayingIndex - 1;
-            }
-        }
-        return mNowPlayingIndex;
     }
 
     /**
@@ -1082,13 +1022,10 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         switch (what) {
             case META_CHANGED:
                 updateWidget(META_CHANGED);
-//                notifyChange(PLAY_STATE_CHANGED);
-//                EventBus.getDefault().post(new MetaChangedEvent(mPlayingMusic));
                 break;
             case PLAY_STATE_CHANGED:
                 updateWidget(ACTION_PLAY_PAUSE);
                 mediaSessionManager.updatePlaybackState();
-//                EventBus.getDefault().post(new StatusChangedEvent(isPrepared(), isPlaying(), percent * getDuration()));
                 break;
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
@@ -1104,9 +1041,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         Intent intent = new Intent(action);
         intent.putExtra(ACTION_IS_WIDGET, true);
         intent.putExtra(PLAY_STATE_CHANGED, isPlaying());
-//        if (action.equals(META_CHANGED)) {
-//            intent.putExtra(Extras.SONG, mPlayingMusic);
-//        }
+        intent.putExtra(PlayListManager.PLAY_MODE, getLoopMode());
         sendBroadcast(intent);
     }
 
@@ -1279,6 +1214,12 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         }
         if (command == null) return;
         switch (command) {
+            case ACTION_MUSIC_NOTIFY:
+                updateWidget(ACTION_MUSIC_NOTIFY);
+                break;
+            case ACTION_LYRIC:
+                updateWidget(ACTION_LYRIC);
+                break;
             case CMD_NEXT:
             case ACTION_NEXT:
                 next(false);
@@ -1300,6 +1241,10 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             case CMD_PAUSE:
                 pause();
                 break;
+            case ACTION_SHUFFLE:
+                PlayListManager.INSTANCE.updateLoopMode();
+                notifyChange(PLAY_STATE_CHANGED);
+                break;
             case CMD_PLAY:
                 play();
                 break;
@@ -1315,6 +1260,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
                 break;
         }
     }
+
     /**
      * 耳机插入广播接收器
      */

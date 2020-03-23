@@ -13,6 +13,7 @@ object PlayListManager {
     const val PLAY_MODE_LOOP = 0
     const val PLAY_MODE_REPEAT = 1
     const val PLAY_MODE_RANDOM = 2
+    const val PLAY_MODE = "PLAY_MODE"
     //播放模式
     private var playingModeId = 0
 
@@ -29,6 +30,14 @@ object PlayListManager {
      */
     fun setLoopMode(loopMode: Int) {
         playingModeId = loopMode
+    }
+
+    /**
+     * 更新播放模式
+     */
+    fun updateLoopMode(): Int {
+        playingModeId = (playingModeId + 1) % 3
+        return playingModeId
     }
 
     /**

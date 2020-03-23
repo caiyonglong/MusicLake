@@ -15,7 +15,6 @@ import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.service.MusicPlayerService;
 import com.music.lake.musiclib.utils.LogUtil;
-import com.music.lake.musiclib.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,7 +57,6 @@ public class MPBroadcastReceiver extends BroadcastReceiver {
 
     private void showDesktopLyric(Context context) {
         //通知栏点击
-        ToastUtils.show("显示桌面歌词");
         FloatLyricViewManager.getInstance().startFloatLyric();
     }
 

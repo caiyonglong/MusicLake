@@ -18,6 +18,7 @@ import com.cyl.musiclake.bean.HotSearchBean;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.MPBroadcastReceiver;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.data.PlayQueueLoader;
 import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.di.component.ApplicationComponent;
 import com.cyl.musiclake.di.component.DaggerApplicationComponent;
@@ -28,6 +29,7 @@ import com.cyl.musiclake.utils.CoverLoader;
 import com.cyl.musiclake.utils.FloatLyricViewManager;
 import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.NetworkUtils;
+import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -35,6 +37,7 @@ import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.music.lake.musiclib.MusicPlayerConfig;
 import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
+import com.music.lake.musiclib.listener.BindServiceCallBack;
 import com.music.lake.musiclib.listener.MusicUrlRequest;
 import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.service.MusicPlayerService;
@@ -124,7 +127,20 @@ public class MusicApp extends MultiDexApplication {
                 .setUrlRequest(musicUrlRequest)
                 .create();
         MusicPlayerManager.getInstance().init(this, config);
-        MusicPlayerManager.getInstance().initialize(this, null);
+        MusicPlayerManager.getInstance().initialize(this, new BindServiceCallBack() {
+            @Override
+            public void onSuccess() {
+                //同步上次播放队列
+                if (!MusicPlayerManager.getInstance().getPlayList().equals(PlayQueueLoader.INSTANCE.getPlayQueue())) {
+                    MusicPlayerManager.getInstance().updatePlaylist(PlayQueueLoader.INSTANCE.getPlayQueue(), SPUtils.getPlayPosition());
+                }
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
         FloatLyricViewManager.getInstance().init(this);
     }
 

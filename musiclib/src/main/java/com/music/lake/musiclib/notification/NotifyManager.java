@@ -37,6 +37,7 @@ public class NotifyManager {
     public static final String ACTION_PREV = "com.cyl.music_lake.notify.prev";// 上一首广播标志
     public static final String ACTION_PLAY_PAUSE = "com.cyl.music_lake.notify.play_state";// 播放暂停广播
     public static final String ACTION_CLOSE = "com.cyl.music_lake.notify.close";// 关闭
+    public static final String ACTION_SHUFFLE = "com.cyl.music_lake.notify.shuffle";// 关闭
 
     public static final String ACTION_IS_WIDGET = "ACTION_IS_WIDGET";// 是否是桌面小控件
 

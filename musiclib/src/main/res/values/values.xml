@@ -8,4 +8,5 @@
     <item name="app_widgets_prev" type="id" />
     <item name="app_widgets_cover" type="id" />
     <item name="app_widgets_title" type="id" />
+    <item name="app_widgets_shuffle" type="id" />
 </resources>

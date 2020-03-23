@@ -272,6 +272,7 @@ public class FloatLyricViewManager {
      * @param show
      */
     public void showDesktopLyric(boolean show) {
+        updateLyric(MusicPlayerManager.getInstance().getPlayingPosition(), MusicPlayerManager.getInstance().getDuration());
         if (show) {
             // 开启定时器，每隔0.5秒刷新一次
             if (lyricTimer == null) {
