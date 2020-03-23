@@ -1,5 +1,7 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
 
+[MediaPlayer、ExoPlayer音乐库封装](https://github.com/caiyonglong/MusicLake/tree/dev_musiclib)
+
 # 因收到网易云音乐和QQ音乐的官方警告函，我们已关闭app的相关api服务,不再提供任何apk。
 
 # 编译&服务器部署 
