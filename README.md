@@ -1,9 +1,13 @@
 # MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
 
-# 因收到网易云音乐和QQ音乐的官方警告函，我们已关闭app的相关api服务,不再提供任何apk。
 
-# 编译&服务器部署 
- [build.md](BUILD.md)
+# 前言
+当前分支，是一个音乐播放器封装库， 集成了 **MediaPlayer**、**ExoPlayer**。可以通过*config*配置来选择对应的播放器。
+
+由于时间原因，
+
+- 封装音乐播放器，集成 **MediaPlayer**、**ExoPlayer**（当前版本分支，正在封装播放功能、部分功能还无法满足）
+
   
 # 功能版本
 - Android 音乐播放器(本地/在线播放) （最低支持Android版本5.0）
@@ -24,13 +28,6 @@
 ### 开源不易，有兴趣可给个star，支持一下哦！
 持续更新，有什么问题可以提[issues](https://github.com/caiyonglong/MusicLake/issues)！
 
-# *新功能*
-- 项目迁移AndroidX
-- 接入YouTube(目前仅支持搜索，播放)
-
-# 计划
-- [ ] 整理文档
-- [ ] 代码重构
  
 # 相关项目|音乐API
 - [客户端音乐API](https://github.com/caiyonglong/MusicApi)
