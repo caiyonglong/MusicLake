@@ -18,7 +18,7 @@ import com.music.lake.musiclib.utils.LogUtil;
 public class MusicMediaPlayer extends BasePlayer implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener {
 
-    private String TAG = "MusicPlayerEngine";
+    private String TAG = "MusicMediaPlayer";
     private MediaPlayer mCurrentMediaPlayer;
     //是否已经初始化
     private boolean mIsInitialized = false;
@@ -240,7 +240,7 @@ public class MusicMediaPlayer extends BasePlayer implements MediaPlayer.OnErrorL
         if (listener != null) {
             listener.onPrepared();
             listener.onLoading(false);
-            listener.onPlayerStateChanged(true);
+            listener.onPlayerStateChanged(playWhenReady);
         }
     }
 }

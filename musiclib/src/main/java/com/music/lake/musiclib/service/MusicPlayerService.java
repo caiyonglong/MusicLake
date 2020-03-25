@@ -26,6 +26,7 @@ import android.telephony.TelephonyManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.listener.MusicPlayEventListener;
 import com.music.lake.musiclib.listener.MusicPlayerController;
@@ -38,6 +39,7 @@ import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.playback.PlaybackListener;
 import com.music.lake.musiclib.player.BasePlayer;
 import com.music.lake.musiclib.player.MusicExoPlayer;
+import com.music.lake.musiclib.player.MusicMediaPlayer;
 import com.music.lake.musiclib.utils.CommonUtils;
 import com.music.lake.musiclib.utils.Constants;
 import com.music.lake.musiclib.utils.LogUtil;
@@ -144,8 +146,8 @@ public class MusicPlayerService extends Service implements MusicPlayerController
     //暂时失去焦点，会再次回去音频焦点
     private boolean mPausedByTransientLossOfFocus = false;
 
-    //是否加载缓存
-    private boolean playWhenReady = false;
+    //准备好直接播放
+    private boolean playWhenReady = true;
 
     //播放缓存进度
     private int percent = 0;
@@ -187,6 +189,7 @@ public class MusicPlayerService extends Service implements MusicPlayerController
 
     @Override
     public void updatePlaylist(List<BaseMusicInfo> songs, int index) {
+        playWhenReady = false;
         updatePlaylist(songs, index, "");
     }
 
@@ -529,7 +532,11 @@ public class MusicPlayerService extends Service implements MusicPlayerController
      * 初始化音乐播放服务
      */
     private void initMediaPlayer() {
-        mPlayer = new MusicExoPlayer(this);
+        if (MusicPlayerManager.getInstance().useExoPlayer) {
+            mPlayer = new MusicExoPlayer(this);
+        } else {
+            mPlayer = new MusicMediaPlayer(this);
+        }
         mPlayer.setPlayBackListener(this);
         mPlayerTask = new TimerTask() {
             public void run() {
@@ -825,7 +832,6 @@ public class MusicPlayerService extends Service implements MusicPlayerController
         LogUtil.d(TAG, "musicList = " + baseMusicInfoList.size() + " id = " + id + " pid = " + pid + " mPlaylistId =" + mPlaylistId);
         if (baseMusicInfoList.size() <= id) return;
         if (mPlaylistId.equals(pid) && id == mNowPlayingIndex) return;
-        playWhenReady = false;
         setPlayQueue(baseMusicInfoList);
 
         mNowPlayingIndex = id;

@@ -21,6 +21,7 @@ import com.music.lake.musiclib.utils.LogUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -36,6 +37,7 @@ public class MusicPlayerManager {
     private ServiceToken mToken;
 
     private MusicUrlRequest request;
+    public Boolean useExoPlayer;
 
     private static final WeakHashMap<Context, ServiceBinder> mConnectionMap;
 
@@ -62,6 +64,7 @@ public class MusicPlayerManager {
     public void init(Application application, MusicPlayerConfig config) {
         this.application = application;
         this.request = config.request;
+        this.useExoPlayer = config.useExoPlayer;
     }
 
     public Context getAppContext() {
@@ -277,7 +280,7 @@ public class MusicPlayerManager {
         if (mBinder != null) {
             return mBinder.getPlayList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public boolean isPlaying() {

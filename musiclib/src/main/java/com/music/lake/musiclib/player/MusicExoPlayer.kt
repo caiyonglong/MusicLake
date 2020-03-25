@@ -26,7 +26,7 @@ import com.music.lake.musiclib.utils.LogUtil
 
 class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener {
 
-    private val TAG = "ExoPlayer"
+    private val TAG = "MusicExoPlayer"
 
     //exoPlayer播放器
     private var exoPlayer: SimpleExoPlayer? = null

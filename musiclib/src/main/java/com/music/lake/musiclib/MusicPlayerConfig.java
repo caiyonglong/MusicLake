@@ -6,7 +6,7 @@ public class MusicPlayerConfig {
     /**
      * 是否使用MediaPlayer
      */
-    private boolean useExoPlayer;
+    public boolean useExoPlayer;
     private boolean useCache;
     public MusicUrlRequest request;
 

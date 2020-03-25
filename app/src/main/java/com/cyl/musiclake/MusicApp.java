@@ -38,6 +38,7 @@ import com.music.lake.musiclib.MusicPlayerConfig;
 import com.music.lake.musiclib.MusicPlayerManager;
 import com.music.lake.musiclib.bean.BaseMusicInfo;
 import com.music.lake.musiclib.listener.BindServiceCallBack;
+import com.music.lake.musiclib.listener.MusicPlayEventListener;
 import com.music.lake.musiclib.listener.MusicUrlRequest;
 import com.music.lake.musiclib.notification.NotifyManager;
 import com.music.lake.musiclib.service.MusicPlayerService;
@@ -46,6 +47,7 @@ import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
+import org.jetbrains.annotations.Nullable;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -123,7 +125,7 @@ public class MusicApp extends MultiDexApplication {
     private void initMusicPlayer() {
         MusicPlayerConfig config = new MusicPlayerConfig.Builder()
                 .setUseCache(true)
-                .setUseExoPlayer(true)
+                .setUseExoPlayer(false)
                 .setUrlRequest(musicUrlRequest)
                 .create();
         MusicPlayerManager.getInstance().init(this, config);
@@ -134,6 +136,47 @@ public class MusicApp extends MultiDexApplication {
                 if (!MusicPlayerManager.getInstance().getPlayList().equals(PlayQueueLoader.INSTANCE.getPlayQueue())) {
                     MusicPlayerManager.getInstance().updatePlaylist(PlayQueueLoader.INSTANCE.getPlayQueue(), SPUtils.getPlayPosition());
                 }
+                MusicPlayerManager.getInstance().addMusicPlayerEventListener(new MusicPlayEventListener() {
+                    @Override
+                    public void onLoading(boolean isLoading) {
+
+                    }
+
+                    @Override
+                    public void onPlaybackProgress(long curPosition, long duration, int bufferPercent) {
+
+                    }
+
+                    @Override
+                    public void onAudioSessionId(int audioSessionId) {
+
+                    }
+
+                    @Override
+                    public void onPlayCompletion() {
+
+                    }
+
+                    @Override
+                    public void onPlayStart() {
+
+                    }
+
+                    @Override
+                    public void onPlayerStateChanged(boolean isPlaying) {
+
+                    }
+
+                    @Override
+                    public void onPlayStop() {
+
+                    }
+
+                    @Override
+                    public void onPlayerError(@Nullable Throwable error) {
+
+                    }
+                });
             }
 
             @Override
