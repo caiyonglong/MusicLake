@@ -98,6 +98,7 @@ class VideoPlayerActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.
         intent.getStringExtra(Extras.VIDEO_PATH)?.let {
             LogUtil.d(TAG, "url = $it")
             musicExoPlayer?.setDataSource(it)
+
 //            video_view.setVideoURI(Uri.parse(it))
 //            video_view.setOnPreparedListener {
 //                video_view.start()
@@ -196,6 +197,7 @@ class VideoPlayerActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.
     private fun initPlayer() {
         musicExoPlayer = MusicExoPlayer(this)
         video_view.visibility = View.VISIBLE
+        musicExoPlayer?.bindView(video_view)
 //        video_view.setOnPreparedListener(this)
 //        video_view.setRepeatMode(Player.REPEAT_MODE_ONE)
     }

@@ -47,6 +47,7 @@ import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.litepal.LitePal;
 
@@ -137,6 +138,11 @@ public class MusicApp extends MultiDexApplication {
                     MusicPlayerManager.getInstance().updatePlaylist(PlayQueueLoader.INSTANCE.getPlayQueue(), SPUtils.getPlayPosition());
                 }
                 MusicPlayerManager.getInstance().addMusicPlayerEventListener(new MusicPlayEventListener() {
+                    @Override
+                    public void onUpdatePlayList(@NotNull List<BaseMusicInfo> playlist) {
+
+                    }
+
                     @Override
                     public void onLoading(boolean isLoading) {
 

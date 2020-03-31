@@ -8,10 +8,16 @@ repositories {
 }
 android {
     signingConfigs {
-        release {
-            keyAlias 'musiclake'
+//        release {
+//            keyAlias 'musiclake'
+//            keyPassword '123123'
+//            storeFile file('../app/jks/musiclake.jks')
+//            storePassword '123123'
+//        }
+        debug {
+            keyAlias 'musiclake_debug'
             keyPassword '123123'
-            storeFile file('../app/musiclake.jks')
+            storeFile file('../app/jks/musiclake_debug.jks')
             storePassword '123123'
         }
     }
@@ -35,13 +41,13 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             //自定义配置参数
             buildConfigField "boolean", "HAS_DOWNLOAD", "true"//是否屏蔽下载功能
             buildConfigField "boolean", "IS_LOCAL", "true"//是否屏蔽下载功能
         }
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             //自定义配置参数
             buildConfigField "boolean", "HAS_DOWNLOAD", "true"//是否屏蔽下载功能
             buildConfigField "boolean", "IS_LOCAL", "true"//是否屏蔽下载功能

@@ -85,4 +85,8 @@ constructor() : BasePresenter<PlayContract.View>(), PlayContract.Presenter, Musi
     override fun onPlayerError(error: Throwable?) {
     }
 
+    override fun onUpdatePlayList(playlist: MutableList<BaseMusicInfo>) {
+
+    }
+
 }

@@ -9,7 +9,7 @@ public class BasePlayer {
     /**
      * 准备好了直接播放
      */
-    public boolean playWhenReady;
+    public boolean playWhenReady = true;
 
     public void stop() {
     }

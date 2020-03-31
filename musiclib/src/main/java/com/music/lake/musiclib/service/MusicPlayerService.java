@@ -1036,6 +1036,9 @@ public class MusicPlayerService extends Service implements MusicPlayerController
             case PLAY_QUEUE_CLEAR:
             case PLAY_QUEUE_CHANGE:
                 updateWidget(PLAY_QUEUE_CHANGE);
+                for (int i = 0; i < playbackListeners.size(); i++) {
+                    playbackListeners.get(i).onUpdatePlayList(mPlaylist);
+                }
                 break;
         }
     }
