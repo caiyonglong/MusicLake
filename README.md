@@ -19,6 +19,7 @@
 - [PC端](https://github.com/sunzongzheng/music)
 
 - [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ) 加群需要问题验证，正确回答：github
+- [交流2号群:824825515](https://jq.qq.com/?_wv=1027&k=h1t2ST8z) 因为QQ群人数限制，所以新建2号群，欢迎加入交流
 
 ![功能](screenshots/features.png)
 
