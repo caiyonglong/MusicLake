@@ -41,6 +41,11 @@
 - [后台/云歌单API](https://github.com/sunzongzheng/player-be)
 - [三方/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
+# 运行环境
+Gradle 4.0.1
+buildToolsVersion 28.0.3
+Android Studio 4.0.0
+
 # 第三方库
 
 - [rxjava](https://github.com/ReactiveX/RxJava)

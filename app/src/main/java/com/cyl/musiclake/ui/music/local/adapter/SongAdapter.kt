@@ -116,18 +116,18 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
                 }
             }
         }
-        if (item.coverUri != null) {
-            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
-        }
-        if (item.coverUri.isNullOrEmpty()) {
-            //加载歌曲专辑图
-            item.title?.let {
-                MusicApi.getMusicAlbumPic(item.title.toString(), success = {
-                    item.coverUri = it
-                    CoverLoader.loadImageView(MusicApp.getAppContext(), it, holder.getView(R.id.iv_cover))
-                })
-            }
-        }
+//        if (item.coverUri != null) {
+//            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+//        }
+//        if (item.coverUri.isNullOrEmpty()) {
+//            //加载歌曲专辑图
+//            item.title?.let {
+//                MusicApi.getMusicAlbumPic(item.title.toString(), success = {
+//                    item.coverUri = it
+//                    CoverLoader.loadImageView(MusicApp.getAppContext(), it, holder.getView(R.id.iv_cover))
+//                })
+//            }
+//        }
         if (item.isCp) {
             holder.itemView.setOnClickListener {
                 ToastUtils.show("歌曲无法播放")
