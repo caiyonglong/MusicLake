@@ -1,5 +1,6 @@
 package com.cyl.musiclake.api.playlist
 
+import android.text.TextUtils
 import com.cyl.musicapi.playlist.*
 import com.cyl.musiclake.api.music.MusicApiServiceImpl
 import com.cyl.musiclake.api.music.MusicUtils
@@ -283,8 +284,14 @@ object PlaylistApiServiceImpl {
         }
         return observable.flatMap { data ->
             val user = User()
-            user.nick = data.nickname
-            user.name = data.nickname
+            //增加非空判断，解决github登录nickname为空情况
+            if (TextUtils.isEmpty(data.nickname)) {
+                user.nick = ""
+                user.name = ""
+            } else {
+                user.nick = data.nickname
+                user.name = data.nickname
+            }
             user.avatar = data.avatar
             user.token = data.token
             Observable.create(ObservableOnSubscribe<User> {

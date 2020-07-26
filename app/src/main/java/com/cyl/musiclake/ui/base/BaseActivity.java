@@ -92,6 +92,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     public Boolean isPause = true;
 
     private List<Disposable> disposables = new ArrayList<>();
+    public String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

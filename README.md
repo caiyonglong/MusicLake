@@ -27,10 +27,6 @@
 ### 开源不易，有兴趣可给个star，支持一下哦！
 持续更新，有什么问题可以提[issues](https://github.com/caiyonglong/MusicLake/issues)！
 
-# *新功能*
-- 项目迁移AndroidX
-- 接入YouTube(目前仅支持搜索，播放)
-
 # 计划
 - [ ] 整理文档
 - [ ] 代码重构
@@ -40,11 +36,6 @@
 - [客户端/PC音乐共用API](https://github.com/sunzongzheng/musicApi)
 - [后台/云歌单API](https://github.com/sunzongzheng/player-be)
 - [三方/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
-
-# 运行环境
-Gradle 4.0.1
-buildToolsVersion 28.0.3
-Android Studio 4.0.0
 
 # 第三方库
 

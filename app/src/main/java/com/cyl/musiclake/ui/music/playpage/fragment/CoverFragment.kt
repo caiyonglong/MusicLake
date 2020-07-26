@@ -27,8 +27,6 @@ import org.jetbrains.anko.support.v4.startActivity
 class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     val TAG = "CoverFragment"
-    val coverView by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover) }
-    val cover2View by lazy { rootView?.findViewById<ImageView>(R.id.civ_cover_2) }
 
     //当前专辑图片
     var currentBitmap: Bitmap? = null
@@ -45,7 +43,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
     private var objectAnimator3: ObjectAnimator? = null
     private var objectAnimator2: ObjectAnimator? = null
     private var animatorSet: AnimatorSet? = null
-
+    private var clickListener: (() -> Unit)? = null
     override fun getLayoutId(): Int {
         return R.layout.frag_player_coverview
     }
@@ -75,6 +73,12 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
             searchInfo?.let {
                 startActivity<SearchActivity>(Extras.SEARCH_INFO to it)
             }
+        }
+        cover2View.setOnClickListener {
+            clickListener?.invoke()
+        }
+        coverView.setOnClickListener {
+            clickListener?.invoke()
         }
     }
 
@@ -120,8 +124,9 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
      * 设置Bitmap
      */
     fun setImageBitmap(bm: Bitmap?) {
-        civ_cover.setImageBitmap(bm)
-        LogUtil.d(TAG, "coverView =${civ_cover == null} rootView =${rootView == null} 设置Bitmap bm =${bm == null}")
+        coverView.setImageBitmap(bm)
+        coverView.visibility = View.VISIBLE
+        LogUtil.d(TAG, "coverView =${coverView == null} rootView =${rootView == null} 设置Bitmap bm =${bm == null}")
         if (currentBitmap == null) {
             LogUtil.d(TAG, "civ_cover2 设置Bitmap")
             cover2View?.visibility = View.GONE
@@ -136,13 +141,14 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
     fun initAlbumPic() {
         LogUtil.d(TAG, "initAlbumPic")
         //旋转动画
-        coverAnimator = ObjectAnimator.ofFloat(coverView, "rotation", 0F, 359F).apply {
+        coverAnimator = ObjectAnimator.ofFloat(cover2View, "rotation", 0F, 359F).apply {
             duration = (20 * 1000).toLong()
             repeatCount = -1
             repeatMode = ObjectAnimator.RESTART
             interpolator = LinearInterpolator()
             addUpdateListener {
                 //同时更新civ_cover_2
+                coverView?.rotation = it.animatedValue as Float
                 cover2View?.rotation = it.animatedValue as Float
             }
         }
@@ -152,7 +158,8 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
             interpolator = AccelerateInterpolator()
             interpolator = AccelerateInterpolator()
             addUpdateListener {
-                cover2View?.scaleY = it.animatedValue as Float
+                cover2View.scaleY = it.animatedValue as Float
+                cover2View.scaleX = it.animatedValue as Float
             }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
@@ -177,9 +184,13 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
         //coverView 由透明变成不透明
         objectAnimator3 = ObjectAnimator.ofFloat(coverView, "alpha", 0f, 1F).apply {
             duration = 300L
+            addUpdateListener {
+                coverView.alpha = it.animatedValue as Float
+            }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
-                    LogUtil.d("objectAnimator", "objectAnimator2 onAnimationEnd")
+                    coverView?.alpha = 1f
+                    LogUtil.d("objectAnimator", "objectAnimator3 onAnimationEnd")
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
@@ -187,7 +198,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
                 }
 
                 override fun onAnimationStart(animation: Animator?) {
-                    LogUtil.d("objectAnimator", "objectAnimator2 动画开始")
+                    LogUtil.d("objectAnimator", "objectAnimator3 动画开始")
                 }
 
                 override fun onAnimationRepeat(animation: Animator?) {
@@ -198,6 +209,9 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
         objectAnimator2 = ObjectAnimator.ofFloat(cover2View, "translationY", 0f, -1000f).apply {
             duration = 300L
             interpolator = AccelerateInterpolator()
+            addUpdateListener {
+                cover2View.translationY = it.animatedValue as Float
+            }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
                     cover2View?.translationY = 0f
@@ -226,15 +240,15 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
      * 切换歌曲，开始旋转动画
      */
     fun startRotateAnimation(isPlaying: Boolean = false) {
-        LogUtil.d(TAG, "startRotateAnimation ，isInitAnimator=$isInitAnimator")
+        LogUtil.d(TAG, "startRotateAnimation ，isInitAnimator=$isInitAnimator isPlaying =$isPlaying")
         if (isPlaying) {
-            coverAnimator?.cancel()
+            coverAnimator?.pause()
             coverAnimator?.start()
         }
         if (isInitAnimator) {
             cover2View?.visibility = View.VISIBLE
             //组合动画
-            animatorSet?.cancel()
+            animatorSet?.pause()
             animatorSet?.start()
         } else {
             //第一次进入不播放切换动画
@@ -278,4 +292,7 @@ class CoverFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
         animatorSet?.pause()
     }
 
+    fun setOnclickAlbumListener(clickListener: (() -> Unit)?) {
+        this.clickListener = clickListener;
+    }
 }

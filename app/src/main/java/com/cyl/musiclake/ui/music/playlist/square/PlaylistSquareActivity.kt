@@ -15,7 +15,6 @@ class PlaylistSquareActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     var mViewPager: androidx.viewpager.widget.ViewPager? = null
     var mTabLayout: TabLayout? = null
 
-    private val TAG = javaClass.simpleName
     private var cateList = mutableListOf("推荐", "精品", "华语", "民谣", "摇滚", "流行", "古风", "日语")
 
     override fun getLayoutResID(): Int {

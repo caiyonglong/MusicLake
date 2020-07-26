@@ -173,5 +173,5 @@ dependencies {
 //    implementation project(':musicapi')
     //缓存
     implementation 'com.danikula:videocache:2.7.1'
-
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }

@@ -8,7 +8,7 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
-import com.cyl.musiclake.BuildConfig
+import androidx.viewpager2.widget.ViewPager2
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Extras
@@ -25,12 +25,11 @@ import com.cyl.musiclake.ui.music.comment.SongCommentActivity
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.dialog.MusicLyricDialog
 import com.cyl.musiclake.ui.music.dialog.QualitySelectDialog
-import com.cyl.musiclake.ui.music.local.adapter.MyViewPagerAdapter
+import com.cyl.musiclake.ui.music.local.adapter.PlayerPagerAdapter
 import com.cyl.musiclake.ui.music.playpage.fragment.CoverFragment
 import com.cyl.musiclake.ui.music.playpage.fragment.LyricFragment
 import com.cyl.musiclake.ui.music.playqueue.PlayQueueDialog
 import com.cyl.musiclake.ui.widget.DepthPageTransformer
-import com.cyl.musiclake.ui.widget.MultiTouchViewPager
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.Tools
@@ -151,6 +150,11 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
             BottomDialogFragment.newInstance(playingMusic)
                     .show(this)
         }
+
+        coverFragment?.setOnclickAlbumListener {
+            LogUtil.d(TAG,"coverFragment click")
+            viewPager.currentItem = 1
+        }
     }
 
     override fun initInjector() {
@@ -251,7 +255,7 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         }
     }
 
-    private fun setupViewPager(viewPager: MultiTouchViewPager) {
+    private fun setupViewPager(viewPager: ViewPager2) {
         fragments.clear()
         coverFragment?.let {
             fragments.add(it)
@@ -259,17 +263,25 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
         lyricFragment?.let {
             fragments.add(it)
         }
-        val mAdapter = MyViewPagerAdapter(supportFragmentManager, fragments)
-
+        val mAdapter = PlayerPagerAdapter(this, fragments)
         viewPager.adapter = mAdapter
-        viewPager.setPageTransformer(false, DepthPageTransformer())
+        viewPager.setPageTransformer(DepthPageTransformer())
         viewPager.offscreenPageLimit = 2
         viewPager.currentItem = 0
-        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        var height = 0
+        bottomOpView?.post {
+            height = bottomOpView.height;
+        }
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                if (positionOffset <= 1 && position == 0) {
+                    detailView.translationY = (height * positionOffset)
+                } else {
+                    detailView.translationY = (height * 1f)
+                }
+            }
 
             override fun onPageSelected(position: Int) {
-                LogUtil.d("PlayControlFragment", "--$position")
                 if (position == 0) {
                     searchLyricIv.visibility = View.GONE
                     operateSongIv.visibility = View.VISIBLE
@@ -332,6 +344,5 @@ class PlayerActivity : BaseActivity<PlayPresenter>(), PlayContract.View {
 //        overridePendingTransition(0, 0)
 //        ActivityCompat.finishAfterTransition(this)
     }
-
 
 }

@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.activity_import_playlist.*
 @Suppress("UNUSED_ANONYMOUS_PARAMETER")
 class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
 
-    private val TAG = "ImportPlaylistActivity"
     var mAdapter: SongAdapter? = null
     var name: String? = null
     var vendor: String? = null

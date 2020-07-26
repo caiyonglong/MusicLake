@@ -64,7 +64,8 @@ object UIUtils {
     /**
      * 改变播放模式
      */
-    fun updatePlayMode(imageView: ImageView, isChange: Boolean = false) {
+    fun updatePlayMode(imageView: ImageView?, isChange: Boolean = false) {
+        if (imageView == null) return
         try {
             var playMode = PlayQueueManager.getPlayModeId()
             if (isChange) playMode = PlayQueueManager.updatePlayMode()
