@@ -22,7 +22,7 @@ class EditSongAdapter(list: MutableList<Music>) : BaseItemDraggableAdapter<Music
     override fun convert(holder: BaseViewHolder, item: Music) {
         holder.setText(R.id.tv_title, item.title)
         holder.setText(R.id.tv_artist, item.artist)
-        CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+//        CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
         holder.getView<CheckBox>(R.id.cb_select).isChecked = checkedMap.containsKey(item.mid.toString())
         holder.itemView.setOnClickListener {
             if (checkedMap.containsKey(item.mid.toString())) {

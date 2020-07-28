@@ -25,7 +25,7 @@ class NeteasePlaylistActivity : BasePlaylistActivity() {
         mPlaylist?.pid?.let {
             mPresenter?.loadPlaylist(it, mPlaylist?.type)
         }
-        LogUtil.d(TAG,"mPlaylist "+mPlaylist.toString())
+        LogUtil.d(TAG,"mPlaylist "+mPlaylist?.toString())
     }
 
     override fun retryLoading() {
@@ -47,7 +47,4 @@ class NeteasePlaylistActivity : BasePlaylistActivity() {
         return mPlaylist
     }
 
-    companion object {
-        private val TAG = "NeteasePlaylistActivity"
-    }
 }
