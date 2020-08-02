@@ -203,4 +203,13 @@
         <item name="android:popupBackground">?windowBackground</item>
     </style>
 
+
+    <style name="AppTranslucent" parent="AppTheme">
+        <item name="android:windowBackground">@color/translucent</item> <!-- 背景色透明度 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowIsTranslucent">false</item><!-- 半透明,设置为false无透明效果 -->
+        <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent
+        </item> <!-- 窗口样式Dialog -->
+    </style>
 </resources>

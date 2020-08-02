@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
@@ -30,6 +33,7 @@ import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
+import com.cyl.musiclake.ui.music.mv.VideoListAdapter;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.BindLoginActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
@@ -52,6 +56,8 @@ import com.tencent.bugly.beta.Beta;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -104,11 +110,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         disableNavigationViewScrollbars(mNavigationView);
         checkLoginStatus();
         initCountDownView();
-
         //检查更新
         Beta.checkUpgrade(false, false);
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMetaChangedEvent(MetaChangedEvent event) {

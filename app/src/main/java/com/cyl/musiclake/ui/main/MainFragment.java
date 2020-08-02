@@ -1,7 +1,6 @@
 package com.cyl.musiclake.ui.main;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +11,8 @@ import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
-import com.cyl.musiclake.ui.music.mv.MvFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
+import com.cyl.musiclake.ui.music.video.VideoSquareFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
@@ -73,13 +72,13 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 3) {
-                    mTabLayout.setVisibility(View.GONE);
-                    mToolbar.setTitle("音乐MV");
-                } else {
-                    mTabLayout.setVisibility(View.VISIBLE);
-                    mToolbar.setTitle("音乐湖");
-                }
+//                if (position == 3) {
+//                    mTabLayout.setVisibility(View.GONE);
+//                    mToolbar.setTitle("音乐MV");
+//                } else {
+//                    mTabLayout.setVisibility(View.VISIBLE);
+//                    mToolbar.setTitle("音乐湖");
+//                }
             }
 
             @Override
@@ -99,7 +98,7 @@ public class MainFragment extends BaseFragment {
         mAdapter.addFragment(MyMusicFragment.Companion.newInstance(), getContext().getString(R.string.my));
         mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), getContext().getString(R.string.discover));
         mAdapter.addFragment(ChartsDetailFragment.Companion.newInstance(), getContext().getString(R.string.charts));
-        mAdapter.addFragment(MvFragment.newInstance(), getContext().getString(R.string.mv));
+        mAdapter.addFragment(VideoSquareFragment.Companion.newInstance(), getContext().getString(R.string.video_title));
         mViewPager.setAdapter(mAdapter);
     }
 

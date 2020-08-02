@@ -148,6 +148,7 @@ object CoverLoader {
         if (mContext == null) return
         GlideApp.with(mContext)
                 .load(url)
+                .placeholder(defaultUrl)
                 .error(defaultUrl)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

@@ -15,6 +15,14 @@ import com.cyl.musiclake.api.net.RequestCallBack
 
 class MvModel {
     /**
+     * 加载mv Url
+     */
+    fun loadMvUrl(type: Int, mvid: String?, result: RequestCallBack<String>?) {
+        val observable = mvid?.let { NeteaseApiServiceImpl.getVideoUrlInfo(type, mvid) } ?: return
+        ApiManager.request(observable, result)
+    }
+
+    /**
      * 加载mv详情
      */
     fun loadMvDetail(mvid: String?, result: RequestCallBack<MvDetailInfo>?) {
@@ -44,7 +52,7 @@ class MvModel {
      *
      * 加载推荐mv
      */
-    fun loadPersonalizedMv( result: RequestCallBack<MvInfo>?) {
+    fun loadPersonalizedMv(result: RequestCallBack<MvInfo>?) {
         val observable = NeteaseApiServiceImpl.personalizedMv()
         ApiManager.request(observable, result)
     }
@@ -60,8 +68,8 @@ class MvModel {
     /**
      *获取mv数据
      */
-    fun loadMvComment(mvid: String?, result: RequestCallBack<MvComment>?) {
-        val observable = mvid?.let { NeteaseApiServiceImpl.getMvComment(it) } ?: return
+    fun loadMvComment(mvid: String?, offset: Int = 0, result: RequestCallBack<MvComment>?) {
+        val observable = mvid?.let { NeteaseApiServiceImpl.getMvComment(it, offset) } ?: return
         ApiManager.request(observable, result)
     }
 

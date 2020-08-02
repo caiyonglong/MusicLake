@@ -5,26 +5,18 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.cyl.musiclake.R
-import com.cyl.musiclake.ui.base.BaseFragment
-import com.cyl.musiclake.common.Constants
-import com.cyl.musiclake.common.Extras
-import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.player.PlayManager
+import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract
 import com.cyl.musiclake.ui.music.local.presenter.FolderSongPresenter
-import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
+import com.cyl.musiclake.ui.music.mv.VideoPlayerActivity
 import com.cyl.musiclake.ui.widget.ItemDecoration
-
-import java.util.ArrayList
-
-import butterknife.BindView
-import com.cyl.musiclake.ui.music.mv.MvDetailActivity
 import org.jetbrains.anko.support.v4.startActivity
+import java.util.*
 
 class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContract.View {
 
@@ -72,7 +64,7 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {
-                startActivity<BaiduMvDetailActivity>(Extras.VIDEO_PATH to musicList[position].uri,
+                startActivity<VideoPlayerActivity>(Extras.VIDEO_PATH to musicList[position].uri,
                         Extras.MV_TITLE to musicList[position].title)
             }
         }

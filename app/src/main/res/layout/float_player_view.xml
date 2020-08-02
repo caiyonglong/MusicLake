@@ -8,7 +8,7 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
-    <com.devbrackets.android.exomedia.ui.widget.VideoView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/exoPlayerView"
         style="@style/AppTheme"
         android:layout_width="match_parent"

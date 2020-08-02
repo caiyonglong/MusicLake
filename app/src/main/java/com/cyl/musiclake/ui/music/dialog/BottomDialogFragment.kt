@@ -25,7 +25,7 @@ import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.deleteSingleMusic
 import com.cyl.musiclake.ui.music.edit.EditMusicActivity
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils
-import com.cyl.musiclake.ui.music.mv.BaiduMvDetailActivity
+import com.cyl.musiclake.ui.music.mv.VideoPlayerActivity
 import com.cyl.musiclake.utils.ConvertUtils
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.ToastUtils
@@ -252,7 +252,7 @@ class BottomDialogFragment : BaseBottomSheetDialogFragment() {
                     }
                     R.drawable.ic_video_label -> {
                         if (music?.type == Constants.BAIDU || music?.type == Constants.VIDEO) {
-                            startActivity<BaiduMvDetailActivity>(Extras.MV_ID to music?.mid)
+                            startActivity<VideoPlayerActivity>(Extras.VIDEO_VID to music?.mid)
                         } else {
 
                         }

@@ -68,7 +68,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
@@ -122,7 +122,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
     implementation 'com.amitshekhar.android:debug-db:1.0.3'
-    implementation 'com.devbrackets.android:exomedia:4.3.0'
+//    implementation 'com.devbrackets.android:exomedia:4.3.0'
+
+    //exoplayer
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.3'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.11.3'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.3'
+
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.3'
+    implementation "com.google.android.exoplayer:extension-mediasession:2.11.3"
 
     //Eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
@@ -169,8 +177,8 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.3'
 
     //Android音乐接口Api
-    implementation 'com.github.caiyonglong:musicapi:1.0.8'
-//    implementation project(':musicapi')
+//    implementation 'com.github.caiyonglong:musicapi:1.0.8'
+    implementation project(':musicapi')
     //缓存
     implementation 'com.danikula:videocache:2.7.1'
     implementation "androidx.viewpager2:viewpager2:1.0.0"

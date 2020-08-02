@@ -2,6 +2,7 @@ package com.cyl.musiclake.ui.music.mv;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,9 +97,10 @@ public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(mFragmentComponent.getActivity(), MvDetailActivity.class);
+            Intent intent = new Intent(mFragmentComponent.getActivity(), VideoDetailActivity.class);
             intent.putExtra(Extras.MV_TITLE, mvList.get(position).getName());
-            intent.putExtra(Extras.MV_ID, String.valueOf(mvList.get(position).getId()));
+            intent.putExtra(Extras.VIDEO_VID, String.valueOf(mvList.get(position).getId()));
+            intent.putExtra(Extras.VIDEO_TYPE, 2);
             startActivity(intent);
         });
     }

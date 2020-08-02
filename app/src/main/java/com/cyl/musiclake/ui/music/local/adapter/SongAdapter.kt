@@ -159,7 +159,6 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         notifyDataSetChanged()
     }
 
-
     override fun getSectionName(position: Int): String {
         return musicList[position].title?.get(0).toString()
     }

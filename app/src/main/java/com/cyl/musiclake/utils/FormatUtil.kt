@@ -43,7 +43,7 @@ object FormatUtil {
      * 格式化播放次数
      *
      */
-    fun formatPlayCount(count: Int): String {
+    fun formatPlayCount(count: Long): String {
         return when {
             count < 10000 -> "$count"
             else -> {

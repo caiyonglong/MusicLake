@@ -34,10 +34,16 @@ public class Extras {
     public static final String ARTIST = "artist";
 
     public static final String MV_TITLE = "mv_title";
-    public static final String MV_ID = "mv_mid";
+    public static final String VIDEO_VID = "mv_mid";
+    //视频类型
+    public static final String VIDEO_TYPE = "video_type";
 
     //视频路径
     public static final String VIDEO_PATH = "video_path";
+
+
+    //视频数据
+    public static final String VIDEO_DATA = "video_data";
 
 
     //在线歌曲id

@@ -5,18 +5,17 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
@@ -145,7 +144,9 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     protected void initViews() {
     }
 
-    protected abstract void initInjector();
+    protected void initInjector() {
+
+    }
 
     protected void loadData() {
 

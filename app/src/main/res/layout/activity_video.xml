@@ -7,20 +7,16 @@
 
     <include layout="@layout/item_toolbar" />
 
-    <com.devbrackets.android.exomedia.ui.widget.VideoView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/black"
         android:gravity="center"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:useDefaultControls="true"
-        app:useTextureViewBacking="true"
-        app:videoScale="fitCenter" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/loading_progress_bar"

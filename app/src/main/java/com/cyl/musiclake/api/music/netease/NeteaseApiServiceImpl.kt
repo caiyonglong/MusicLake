@@ -1,12 +1,12 @@
 package com.cyl.musiclake.api.music.netease
 
 import com.cyl.musicapi.netease.*
+import com.cyl.musicapi.netease.base.NeteaseBaseData
+import com.cyl.musicapi.netease.video.VideoGroup
 import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.api.net.ApiManager
+import com.cyl.musiclake.bean.*
 import com.cyl.musiclake.bean.Artist
-import com.cyl.musiclake.bean.HotSearchBean
-import com.cyl.musiclake.bean.Music
-import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.LogUtil
 import com.cyl.musiclake.utils.SPUtils
@@ -193,8 +193,8 @@ object NeteaseApiServiceImpl {
     /**
      * 获取mv评论
      */
-    fun getMvComment(mvid: String): Observable<MvComment> {
-        return apiService.getMvComment(mvid)
+    fun getMvComment(mvid: String, offset: Int = 0): Observable<MvComment> {
+        return apiService.getMvComment(mvid, offset)
     }
 
     /**
@@ -378,7 +378,7 @@ object NeteaseApiServiceImpl {
                                             artistName = it.artistName,
                                             artists = it.artists,
                                             cover = it.picUrl,
-                                            playCount = it.playCount.toInt(),
+                                            playCount = it.playCount,
                                             duration = it.duration,
                                             desc = it.copywriter,
                                             name = it.name
@@ -528,5 +528,163 @@ object NeteaseApiServiceImpl {
 //                    })
 //                }
 //    }
+
+    /**
+     * 获取风格
+     */
+    fun getVideoCatList(): Observable<MutableList<CategoryInfo>> {
+        return apiService.getVideoGroupList()
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MutableList<CategoryInfo>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<CategoryInfo>()
+                                LogUtil.d(TAG, "getVideoGroupList= ${it.data}")
+                                it.data?.forEach {
+                                    val categoryInfo = CategoryInfo(it.id, it.name)
+                                    LogUtil.d(TAG, "categoryInfo = $categoryInfo ")
+                                    if ("MV" == it.name) {
+                                        list.add(0, categoryInfo)
+                                    } else {
+                                        list.add(categoryInfo)
+                                    }
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                LogUtil.d(TAG, "网络异常=")
+                                e.onError(Throwable("网络异常"))
+                            }
+                        } catch (ep: Exception) {
+                            LogUtil.d(TAG, "Exception= ${ep.message}")
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+    /**
+     * 获取视频列表
+     */
+    fun getVideoList(id: String, offset: Int = 0): Observable<MutableList<VideoInfoBean>> {
+        return apiService.getVideoList(id, offset)
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<MutableList<VideoInfoBean>> { e ->
+                        try {
+                            if (it.code == 200 && it.data?.size ?: 0 > 0) {
+                                val list = mutableListOf<VideoInfoBean>()
+                                LogUtil.d(TAG, "getVideoGroupList= ${it.msg}")
+                                it.data?.forEach {
+                                    if (it.type == 1) {
+                                        it.data.vid?.let { vid ->
+                                            val bean = VideoInfoBean(vid, it.data.title)
+                                            bean.commentCount = it.data.commentCount
+                                            bean.coverUrl = it.data.coverUrl
+                                            bean.description = it.data.description
+                                            bean.durationms = it.data.durationms
+                                            bean.praisedCount = it.data.praisedCount
+                                            bean.playTime = it.data.playTime
+                                            bean.shareCount = it.data.shareCount
+                                            bean.type = it.type
+                                            //解析creator
+                                            val artist = Artist()
+                                            artist.artistId = it.data.creator.userId
+                                            artist.name = it.data.creator.nickname
+                                            artist.picUrl = it.data.creator.avatarUrl
+                                            bean.artist = mutableListOf(artist)
+                                            list.add(bean)
+                                        }
+                                    } else if (it.type == 2) {//mv
+                                        it.data.id?.let { id ->
+                                            val bean = VideoInfoBean(id, it.data.name)
+                                            bean.commentCount = it.data.commentCount
+                                            bean.coverUrl = it.data.coverUrl
+                                            bean.durationms = it.data.duration
+                                            bean.praisedCount = it.data.likeCount
+                                            bean.playTime = it.data.playCount
+                                            bean.shareCount = it.data.shareCount
+                                            bean.type = it.type
+                                            //解析歌手
+                                            val artists = mutableListOf<Artist>()
+                                            it.data.artists?.forEach { art ->
+                                                val artist = Artist()
+                                                artist.artistId = art.id
+                                                artist.name = art.name
+                                                artist.picUrl = art.img1v1Url
+                                                artist.followed = art.followed
+                                                artists.add(artist)
+                                            }
+                                            bean.artist = artists
+                                            list.add(bean)
+                                        }
+                                    }
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                val msg = it.msg
+                                LogUtil.e(TAG, msg)
+                                e.onError(Throwable(msg))
+                            }
+                        } catch (ep: Exception) {
+                            LogUtil.e(TAG, "Exception= ${ep.message}")
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+    /**
+     * 获取视频、MV播放地址
+     */
+    fun getVideoUrlInfo(type: Int, id: String): Observable<String> {
+        if (type == 2) {
+            return apiService.getMvUrlInfo(id)
+                    .flatMap { it ->
+                        Observable.create(ObservableOnSubscribe<String> { e ->
+                            try {
+                                if (it.code == 200) {
+                                    var url = ""
+                                    it.data?.url?.let {
+                                        LogUtil.d(TAG, "播放地址=$it")
+                                        url = it
+                                    }
+                                    e.onNext(url)
+                                    e.onComplete()
+                                } else {
+                                    LogUtil.d(TAG, "网络异常=")
+                                    e.onError(Throwable("网络异常"))
+                                }
+                            } catch (ep: Exception) {
+                                LogUtil.d(TAG, "Exception= ${ep.message}")
+                                e.onError(ep)
+                            }
+                        })
+                    }
+        }
+        return apiService.getVideoUrlInfo(id)
+                .flatMap { it ->
+                    Observable.create(ObservableOnSubscribe<String> { e ->
+                        try {
+                            if (it.code == 200) {
+                                var url = ""
+                                it.urls.forEach {
+                                    LogUtil.d(TAG, "播放地址=$it")
+                                    url = it.url
+                                    return@forEach
+                                }
+                                e.onNext(url)
+                                e.onComplete()
+                            } else {
+                                LogUtil.d(TAG, "网络异常=")
+                                e.onError(Throwable("网络异常"))
+                            }
+                        } catch (ep: Exception) {
+                            LogUtil.d(TAG, "Exception= ${ep.message}")
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
 
 }

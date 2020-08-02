@@ -19,6 +19,8 @@ import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.mv.MvListFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 import com.cyl.musiclake.ui.music.mv.MvSearchListFragment;
+import com.cyl.musiclake.ui.music.mv.VideoCommentFragment;
+import com.cyl.musiclake.ui.music.mv.VideoDetailFragment;
 import com.cyl.musiclake.ui.music.playlist.love.LoveFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 import com.cyl.musiclake.ui.music.bottom.PlayControlFragment;
@@ -104,4 +106,8 @@ public interface FragmentComponent {
     void inject(@NotNull SearchSongsFragment searchSongsFragment);
 
     void inject(@NotNull YoutubeSearchFragment youtubeSearchFragment);
+
+    void inject(@NotNull VideoDetailFragment videoDetailFragment);
+
+    void inject(@NotNull VideoCommentFragment videoCommentFragment);
 }

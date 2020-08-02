@@ -2,16 +2,17 @@ package com.cyl.musiclake.ui.music.mv;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cyl.musicapi.netease.MvInfoDetail;
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseLazyFragment;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.ui.base.BaseLazyFragment;
 import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -118,9 +119,9 @@ public class MvSearchListFragment extends BaseLazyFragment<MvListPresenter> impl
     @Override
     protected void listener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(mFragmentComponent.getActivity(), MvDetailActivity.class);
+            Intent intent = new Intent(mFragmentComponent.getActivity(), VideoDetailActivity.class);
             intent.putExtra(Extras.MV_TITLE, mvList.get(position).getName());
-            intent.putExtra(Extras.MV_ID, String.valueOf(mvList.get(position).getId()));
+            intent.putExtra(Extras.VIDEO_VID, String.valueOf(mvList.get(position).getId()));
             startActivity(intent);
         });
     }

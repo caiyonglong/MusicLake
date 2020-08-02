@@ -33,6 +33,19 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
 
     private val mvModel = MvModel()
 
+
+    fun loadMvUrl(type: Int, mvid: String?) {
+        mvModel.loadMvUrl(type, mvid, object : RequestCallBack<String> {
+            override fun success(result: String?) {
+                mView?.showMvUrlInfo(result)
+            }
+
+            override fun error(msg: String?) {
+
+            }
+        })
+    }
+
     override fun loadMvDetail(mvid: String?) {
         mvModel.loadMvDetail(mvid, object : RequestCallBack<MvDetailInfo> {
             override fun success(result: MvDetailInfo?) {
@@ -46,7 +59,6 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
                 mView?.hideLoading()
                 mView?.showError(msg, true)
             }
-
         })
     }
 
@@ -78,14 +90,16 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
         })
     }
 
-    override fun loadMvComment(mvid: String?) {
-        mvModel.loadMvComment(mvid, object : RequestCallBack<MvComment> {
+    override fun loadMvComment(mvid: String?, offset: Int) {
+        mvModel.loadMvComment(mvid, offset, object : RequestCallBack<MvComment> {
             override fun success(result: MvComment?) {
+                result?.hotComments?.let {
+                    if (it.size > 0) {
+                        mView?.showMvHotComment(it)
+                    }
+                }
                 result?.comments?.let {
                     mView?.showMvComment(it)
-                }
-                result?.hotComments?.let {
-                    mView?.showMvHotComment(it)
                 }
             }
 

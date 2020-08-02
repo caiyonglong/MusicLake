@@ -13,7 +13,7 @@ import java.io.Serializable
 class Artist() : LitePalSupport(), Parcelable {
     var name: String? = null
     var id: Long = 0
-    var artistId: String?=null
+    var artistId: String? = null
     var count: Int = 0
     var type: String? = Constants.LOCAL
     var picUrl: String? = null
@@ -21,6 +21,7 @@ class Artist() : LitePalSupport(), Parcelable {
     var musicSize: Int = 0
     var score: Int = 0
     var albumSize: Int = 0
+    var followed: Boolean = false
 
     var songs = mutableListOf<Music>()
 

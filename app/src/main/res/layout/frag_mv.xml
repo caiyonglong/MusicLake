@@ -9,12 +9,12 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_40"
         android:tag="tab_indicator_accent_color,bg_primary_color"
         android:theme="?android:tabWidgetStyle"
-        app:tabGravity="fill"
+        app:tabGravity="center"
         app:tabIndicatorFullWidth="false"
-        app:tabMode="fixed"
+        app:tabMode="scrollable"
         app:tabSelectedTextColor="?accentColor" />
 
     <androidx.viewpager.widget.ViewPager

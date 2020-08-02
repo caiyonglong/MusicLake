@@ -20,7 +20,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
-import com.cyl.musiclake.ui.music.mv.MvDetailActivity
+import com.cyl.musiclake.ui.music.mv.VideoDetailActivity
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.Tools
 import com.zhouwei.mzbanner.holder.MZViewHolder
@@ -97,7 +97,7 @@ class BannerViewHolder(val activity: Activity) : MZViewHolder<BannerBean> {
                 }
                 data?.targetType == "1004" -> {
                     //mv
-                    context.startActivity<MvDetailActivity>(Extras.MV_ID to data.targetId)
+                    context.startActivity<VideoDetailActivity>(Extras.VIDEO_VID to data.targetId)
                 }
                 data?.targetType == "1" -> {
                     //单曲

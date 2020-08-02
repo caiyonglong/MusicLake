@@ -104,8 +104,13 @@
             android:name=".ui.music.charts.activity.BaiduMusicListActivity"
             android:label="@string/app_name"
             android:theme="@style/MainActivityTheme" />
+<!--        <activity-->
+<!--            android:name=".ui.music.mv.VideoDetailActivity"-->
+<!--            android:configChanges="keyboardHidden|orientation|screenSize|locale"-->
+<!--            android:label="@string/app_name"-->
+<!--            android:screenOrientation="portrait" />-->
         <activity
-            android:name=".ui.music.mv.MvDetailActivity"
+            android:name=".ui.music.mv.VideoDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
@@ -159,7 +164,7 @@
             android:name=".ui.main.WebActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.music.mv.BaiduMvDetailActivity"
+            android:name=".ui.music.mv.VideoPlayerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -243,6 +248,13 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_count_down"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".ui.music.video.YouTubeDemoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTranslucent"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <provider
