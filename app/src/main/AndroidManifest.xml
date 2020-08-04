@@ -113,6 +113,7 @@
             android:name=".ui.music.mv.VideoDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.music.charts.activity.NeteasePlaylistActivity"

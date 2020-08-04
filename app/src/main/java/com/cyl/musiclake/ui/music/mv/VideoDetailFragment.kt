@@ -11,6 +11,7 @@ import com.cyl.musicapi.netease.MvInfoDetailInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.MvInfoBean
+import com.cyl.musiclake.bean.VideoInfoBean
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper.navigateToArtist
@@ -24,17 +25,15 @@ import kotlinx.android.synthetic.main.frag_mv_detail.*
  * 版本：2.5
  * 视频播放详情fragment
  */
-class VideoDetailFragment : BaseFragment<MvDetailPresenter>(), MvDetailContract.View {
+class VideoDetailFragment : BaseFragment<VideoDetailPresenter>(), VideoDetailContract.View {
 
     private var mAdapter: SimiMvListAdapter? = null
 
     override fun loadData() {
         val mVid: String? = arguments?.getString(Extras.VIDEO_VID)
         val type: Int = arguments?.getInt(Extras.VIDEO_TYPE, 1) ?: 1
-        if (type == 2) {
-            mPresenter?.loadMvDetail(mVid)
-            mPresenter?.loadSimilarMv(mVid)
-        }
+        mPresenter?.loadMvDetail(mVid, type)
+        mPresenter?.loadSimilarMv(mVid, type)
     }
 
     override fun getLayoutId(): Int {
@@ -78,17 +77,16 @@ class VideoDetailFragment : BaseFragment<MvDetailPresenter>(), MvDetailContract.
     override fun showMvUrlInfo(mvUrl: String?) {
     }
 
-    override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
+    override fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?) {
         mvInfoDetailInfo?.let { updateMvInfo(it) }
     }
 
-    override fun showMvList(mvList: List<MvInfoDetail>) {
+    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
         mAdapter?.setNewData(mvList)
         mAdapter?.setOnItemClickListener { _: BaseQuickAdapter<*, *>?, view: View?, position: Int ->
             val intent = Intent(activity, VideoDetailActivity::class.java)
-            val putExtra = intent.putExtra(Extras.MV_TITLE, mvList!![position].name)
-            intent.putExtra(Extras.VIDEO_VID, mvList[position].id.toString())
-            intent.putExtra(Extras.VIDEO_TYPE, 2)
+            intent.putExtra(Extras.VIDEO_VID, mvList[position].vid)
+            intent.putExtra(Extras.VIDEO_TYPE, mvList[position].type)
             startActivity(intent)
         }
     }
@@ -99,23 +97,22 @@ class VideoDetailFragment : BaseFragment<MvDetailPresenter>(), MvDetailContract.
     override fun showMvHotComment(mvHotCommentInfo: List<CommentsItemInfo>) {
     }
 
-    private fun updateMvInfo(info: MvInfoDetailInfo) {
+    private fun updateMvInfo(info: VideoInfoBean) {
         videoPlayCountTv.text = getString(R.string.play_count, info.playCount)
-        videoLikeCountTv.text = info.subCount.toString()
+        videoLikeCountTv.text = info.commentCount.toString()
         shareCountTv.text = info.shareCount.toString()
-        videoCollectCountTv.text = info.subCount.toString()
+        videoCollectCountTv.text = info.commentCount.toString()
         commentCountTv.text = info.commentCount.toString()
-        videoNameTv.text = info.name
+        videoNameTv.text = info.title
         llView.visibility = View.VISIBLE
-        videoCreatorTv.text = info.artistName
-        CoverLoader.loadImageView(activity, info.cover, videoCreatorIv)
-        videoDescTv.text = info.desc
-        videoPublishTimeTv.text = getString(R.string.publish_time, info.publishTime)
+        if (info.artist.size > 0) {
+            videoCreatorTv.text = info.artist[0].name
+        }
+        CoverLoader.loadImageView(activity, info.coverUrl, videoCreatorIv)
+        videoDescTv.text = info.description
+//        videoPublishTimeTv.text = getString(R.string.publish_time, info.publishTime)
         singerView.setOnClickListener {
-            val artist = Artist()
-            artist.artistId = info.artistId.toString()
-            artist.type = Constants.NETEASE
-            artist.name = info.artistName
+            val artist = info.artist[0]
             activity?.let { it1 -> navigateToArtist(it1, artist, null) }
         }
         //显示

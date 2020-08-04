@@ -2,7 +2,6 @@ package com.cyl.musiclake.bean
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.cyl.musiclake.common.Constants
 
 /**
  * 分类标题信息(视频分类)
@@ -30,7 +29,7 @@ class VideoInfoBean() : Parcelable {
     var praisedCount: Long = 0
 
     //播放次数
-    var playTime: Long = 0
+    var playCount: Long = 0
 
     //评论次数
     var commentCount: Long = 0
@@ -68,7 +67,7 @@ class VideoInfoBean() : Parcelable {
         description = parcel.readString()
         shareCount = parcel.readLong()
         praisedCount = parcel.readLong()
-        playTime = parcel.readLong()
+        playCount = parcel.readLong()
         commentCount = parcel.readLong()
         height = parcel.readInt()
         width = parcel.readInt()
@@ -84,7 +83,7 @@ class VideoInfoBean() : Parcelable {
         parcel.writeString(description)
         parcel.writeLong(shareCount)
         parcel.writeLong(praisedCount)
-        parcel.writeLong(playTime)
+        parcel.writeLong(playCount)
         parcel.writeLong(commentCount)
         parcel.writeInt(height)
         parcel.writeInt(width)

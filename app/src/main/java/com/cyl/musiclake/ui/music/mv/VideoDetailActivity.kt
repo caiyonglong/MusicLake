@@ -1,14 +1,15 @@
 package com.cyl.musiclake.ui.music.mv
 
 import android.content.Intent
-import android.view.View
-import com.chad.library.adapter.base.BaseQuickAdapter
+import android.os.Bundle
 import com.cyl.musicapi.netease.CommentsItemInfo
 import com.cyl.musicapi.netease.MvInfoDetail
 import com.cyl.musicapi.netease.MvInfoDetailInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MvInfoBean
+import com.cyl.musiclake.bean.VideoInfoBean
 import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.player.exoplayer.ExoPlayerManager
 import com.cyl.musiclake.player.exoplayer.ExoPlayerManager.bindView
 import com.cyl.musiclake.player.exoplayer.ExoPlayerManager.setDataSource
 import com.cyl.musiclake.ui.base.BaseActivity
@@ -23,14 +24,16 @@ import java.util.*
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class VideoDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract.View {
+class VideoDetailActivity : BaseActivity<VideoDetailPresenter?>(), VideoDetailContract.View {
     private val mvInfoDetails: List<MvInfoDetail> = ArrayList()
-    private var mAdapter: SimiMvListAdapter? = null
-    private var mCommentAdapter: MvCommentAdapter? = null
-    private var mHotCommentAdapter: MvCommentAdapter? = null
-    private val brs: Map<String, String> = HashMap()
     private var mVid: String = ""
     private var mType: Int = 1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        mVid = intent.getStringExtra(Extras.VIDEO_VID)
+        mType = intent.getIntExtra(Extras.VIDEO_TYPE, 1)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun getLayoutResID(): Int {
         return R.layout.activity_video_detail
@@ -55,19 +58,11 @@ class VideoDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract
         initData()
     }
 
-    override fun showMvList(mvList: List<MvInfoDetail>) {
-        mAdapter?.setNewData(mvList)
-        mAdapter?.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int ->
-            val intent = Intent(this, VideoDetailActivity::class.java)
-            intent.putExtra(Extras.MV_TITLE, mvList[position].name)
-            intent.putExtra(Extras.VIDEO_VID, mvList[position].id.toString())
-            startActivity(intent)
-            finish()
-        }
+    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
     }
 
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {}
-    override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
+    override fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?) {
     }
 
     override fun showMvUrlInfo(mvUrl: String?) {
@@ -83,15 +78,28 @@ class VideoDetailActivity : BaseActivity<MvDetailPresenter?>(), MvDetailContract
     }
 
     private fun setupViewPager() {
-        mVid = intent.getStringExtra(Extras.VIDEO_VID)
-        mType = intent.getIntExtra(Extras.VIDEO_TYPE, 1)
-
         val mAdapter = PageAdapter(supportFragmentManager)
         mAdapter.addFragment(VideoDetailFragment.newInstance(mVid, mType), "详情")
         mAdapter.addFragment(VideoCommentFragment.newInstance(mVid, mType), "评论")
         viewPager?.adapter = mAdapter
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.getStringExtra(Extras.VIDEO_VID)?.let {
+            mVid = it
+        }
+        intent?.getIntExtra(Extras.VIDEO_TYPE, 1)?.let {
+            mType = it
+        }
+        setupViewPager()
+        initData()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ExoPlayerManager.stop()
+    }
 
     companion object {
         private const val TAG = "MvDetailActivity"

@@ -6,6 +6,8 @@ import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.bean.VideoInfoBean
+import io.reactivex.Observable
 
 /**
  * Des    :
@@ -13,7 +15,7 @@ import com.cyl.musiclake.api.net.RequestCallBack
  * Date   : 2018/7/8 .
  */
 
-class MvModel {
+class VideoLoadModel {
     /**
      * 加载mv Url
      */
@@ -25,8 +27,12 @@ class MvModel {
     /**
      * 加载mv详情
      */
-    fun loadMvDetail(mvid: String?, result: RequestCallBack<MvDetailInfo>?) {
-        val observable = mvid?.let { NeteaseApiServiceImpl.getMvDetailInfo(it) } ?: return
+    fun loadMvDetail(mvid: String?, type: Int, result: RequestCallBack<VideoInfoBean>?) {
+        val observable = if (type == 2) {
+            mvid?.let { NeteaseApiServiceImpl.getMvDetailInfo(it) }
+        } else {
+            mvid?.let { NeteaseApiServiceImpl.getVideoDetailInfo(it) }
+        }
         ApiManager.request(observable, result)
     }
 
@@ -60,16 +66,23 @@ class MvModel {
     /**
      * 获取相似mv
      */
-    fun loadSimilarMv(mvid: String?, result: RequestCallBack<SimilarMvInfo>?) {
-        val observable = mvid?.let { NeteaseApiServiceImpl.getSimilarMv(it) } ?: return
-        ApiManager.request(observable, result)
+    fun loadSimilarMv(mvid: String?, type: Int, result: RequestCallBack<MutableList<VideoInfoBean>>?) {
+        val observable = if (type == 2) {
+            mvid?.let { NeteaseApiServiceImpl.getSimilarMv(it) }
+        } else {
+            mvid?.let { NeteaseApiServiceImpl.getRelatedVideoList(it) }
+        }
+        observable?.let {
+            ApiManager.request(it, result)
+        }
     }
 
     /**
      *获取mv数据
      */
-    fun loadMvComment(mvid: String?, offset: Int = 0, result: RequestCallBack<MvComment>?) {
-        val observable = mvid?.let { NeteaseApiServiceImpl.getMvComment(it, offset) } ?: return
+    fun loadMvComment(mvid: String?, type: String, offset: Int = 0, result: RequestCallBack<MvComment>?) {
+        val observable = mvid?.let { NeteaseApiServiceImpl.getMvComment(it, type, offset) }
+                ?: return
         ApiManager.request(observable, result)
     }
 

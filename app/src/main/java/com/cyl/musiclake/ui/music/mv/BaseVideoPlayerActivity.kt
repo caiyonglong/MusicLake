@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.view.View
 import android.view.ViewGroup
 import com.cyl.musicapi.netease.MvInfoDetailInfo
+import com.cyl.musiclake.bean.VideoInfoBean
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseActivity
 import com.cyl.musiclake.utils.DisplayUtils
@@ -16,7 +17,7 @@ import com.google.android.exoplayer2.ui.PlayerView
  * 版本：2.5
  * 描述：视频播放基础类，负责视频播放相关操作
  */
-abstract class BaseVideoPlayerActivity : BaseActivity<MvDetailPresenter>(), MvDetailContract.View {
+abstract class BaseVideoPlayerActivity : BaseActivity<VideoDetailPresenter>(), VideoDetailContract.View {
 
     private val fullScreenListener = FullScreenListener()
 
@@ -99,7 +100,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity<MvDetailPresenter>(), MvDe
         initData()
     }
 
-    override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
+    override fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?) {
         hideLoading()
     }
 

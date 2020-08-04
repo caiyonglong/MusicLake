@@ -6,6 +6,7 @@ import com.cyl.musicapi.netease.MvInfoDetail
 import com.cyl.musicapi.netease.MvInfoDetailInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MvInfoBean
+import com.cyl.musiclake.bean.VideoInfoBean
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.player.exoplayer.ExoPlayerManager
 import com.cyl.musiclake.utils.LogUtil
@@ -70,6 +71,9 @@ class VideoPlayerActivity : BaseVideoPlayerActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
+    }
+
     override fun showMvComment(mvCommentInfo: List<CommentsItemInfo>) {
     }
 
@@ -77,10 +81,7 @@ class VideoPlayerActivity : BaseVideoPlayerActivity() {
 
     }
 
-    override fun showMvList(mvList: List<MvInfoDetail>) {
-    }
-
-    override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
+    override fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?) {
         hideLoading()
         if (mvInfoDetailInfo != null) {
             val url = when {

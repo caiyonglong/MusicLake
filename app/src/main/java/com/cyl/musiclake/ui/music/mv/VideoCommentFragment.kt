@@ -7,6 +7,7 @@ import com.cyl.musicapi.netease.MvInfoDetail
 import com.cyl.musicapi.netease.MvInfoDetailInfo
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MvInfoBean
+import com.cyl.musiclake.bean.VideoInfoBean
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import kotlinx.android.synthetic.main.frag_mv_list.recyclerView
@@ -17,13 +18,14 @@ import kotlinx.android.synthetic.main.frag_mv_list.recyclerView
  * 版本：2.5
  * 视频播放详情fragment
  */
-class VideoCommentFragment : BaseLazyFragment<MvDetailPresenter>(), MvDetailContract.View {
+class VideoCommentFragment : BaseLazyFragment<VideoDetailPresenter>(), VideoDetailContract.View {
 
     private var mCommentAdapter: MvCommentAdapter? = null
     private val mHotCommentAdapter: MvCommentAdapter? = null
 
     private var offset = 0
     private var vid = ""
+    private var mType = 1
 
     private val videoCommentList = mutableListOf<CommentsItemInfo>()
 
@@ -47,12 +49,11 @@ class VideoCommentFragment : BaseLazyFragment<MvDetailPresenter>(), MvDetailCont
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = mCommentAdapter
         recyclerView.isNestedScrollingEnabled = false
-        mCommentAdapter?.setEmptyView(R.layout.view_comment_empty, recyclerView)
         mCommentAdapter?.bindToRecyclerView(recyclerView)
         mCommentAdapter?.setEnableLoadMore(true)
         mCommentAdapter?.setOnLoadMoreListener({
 //               成功获取更多数据
-            mPresenter?.loadMvComment(vid, videoCommentList.size - offset)
+            mPresenter?.loadMvComment(vid, mType, videoCommentList.size - offset)
         }, recyclerView)
     }
 
@@ -83,10 +84,10 @@ class VideoCommentFragment : BaseLazyFragment<MvDetailPresenter>(), MvDetailCont
     override fun showMvUrlInfo(mvUrl: String?) {
     }
 
-    override fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?) {
+    override fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?) {
     }
 
-    override fun showMvList(mvList: List<MvInfoDetail>) {
+    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
     }
 
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {
@@ -102,10 +103,8 @@ class VideoCommentFragment : BaseLazyFragment<MvDetailPresenter>(), MvDetailCont
 
     override fun onLazyLoad() {
         vid = arguments?.getString(Extras.VIDEO_VID).toString()
-        val type = arguments?.getInt(Extras.VIDEO_TYPE) ?: 1
-        if (type == 2) {
-            showLoading()
-            mPresenter?.loadMvComment(vid, 0)
-        }
+        mType = arguments?.getInt(Extras.VIDEO_TYPE) ?: 1
+        showLoading()
+        mPresenter?.loadMvComment(vid, mType, 0)
     }
 }

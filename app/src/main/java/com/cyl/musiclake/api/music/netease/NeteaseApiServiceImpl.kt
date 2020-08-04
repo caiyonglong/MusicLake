@@ -1,8 +1,6 @@
 package com.cyl.musiclake.api.music.netease
 
 import com.cyl.musicapi.netease.*
-import com.cyl.musicapi.netease.base.NeteaseBaseData
-import com.cyl.musicapi.netease.video.VideoGroup
 import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.bean.*
@@ -179,22 +177,172 @@ object NeteaseApiServiceImpl {
     /**
      * 获取mv信息
      */
-    fun getMvDetailInfo(mvid: String): Observable<MvDetailInfo> {
+    fun getMvDetailInfo(mvid: String): Observable<VideoInfoBean> {
         return apiService.getMvDetailInfo(mvid)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<VideoInfoBean> { e ->
+                        try {
+                            if (it.code == 200) {
+                                it.data.let {
+                                    val videoInfoBean = VideoInfoBean(it.id.toString(), it.name)
+                                    videoInfoBean.coverUrl = it.cover
+                                    videoInfoBean.commentCount = it.commentCount
+                                    videoInfoBean.shareCount = it.shareCount
+                                    videoInfoBean.playCount = it.playCount
+                                    videoInfoBean.durationms = it.duration
+                                    videoInfoBean.description = it.desc
+                                    val artists = mutableListOf<Artist>()
+                                    it.artists?.forEach { item ->
+                                        val artist = Artist()
+                                        artist.name = item.name
+                                        artist.picUrl = item.img1v1Url
+                                        artist.followed = item.followed
+                                        artist.id = item.id.toLong()
+                                        artists.add(artist)
+                                    }
+                                    videoInfoBean.artist = artists
+                                    e.onNext(videoInfoBean)
+                                }
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable("接口请求异常"))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
     }
 
     /**
      * 获取相似mv
      */
-    fun getSimilarMv(mvid: String): Observable<SimilarMvInfo> {
+    fun getSimilarMv(mvid: String): Observable<MutableList<VideoInfoBean>> {
         return apiService.getSimilarMv(mvid)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<MutableList<VideoInfoBean>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<VideoInfoBean>()
+                                it.data?.forEach {
+                                    val videoInfoBean = VideoInfoBean(it.id, it.name)
+                                    videoInfoBean.coverUrl = it.cover
+                                    videoInfoBean.playCount = it.playCount
+                                    videoInfoBean.durationms = it.duration
+                                    videoInfoBean.description = it.desc
+                                    videoInfoBean.type = 2
+                                    val artists = mutableListOf<Artist>()
+                                    it.artists?.forEach { item ->
+                                        val artist = Artist()
+                                        artist.name = item.name
+                                        artist.id = item.id
+                                        artists.add(artist)
+                                    }
+                                    videoInfoBean.artist = artists
+                                    list.add(videoInfoBean)
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable("接口请求异常"))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+    /**
+     * 获取mv信息
+     */
+    fun getVideoDetailInfo(mvid: String): Observable<VideoInfoBean> {
+        return apiService.getVideoDetailInfo(mvid)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<VideoInfoBean> { e ->
+                        try {
+                            if (it.code == 200) {
+                                it.data?.let {
+                                    val videoInfoBean = VideoInfoBean(it.id.toString(), it.title)
+                                    videoInfoBean.coverUrl = it.coverUrl
+                                    videoInfoBean.commentCount = it.commentCount
+                                    videoInfoBean.shareCount = it.shareCount
+                                    videoInfoBean.playCount = it.playTime
+                                    videoInfoBean.durationms = it.durationms
+                                    videoInfoBean.width = it.width
+                                    videoInfoBean.height = it.height
+                                    videoInfoBean.description = it.description
+                                    val artists = mutableListOf<Artist>()
+                                    it.creator?.let { item ->
+                                        val artist = Artist()
+                                        artist.name = item.nickname
+                                        artist.picUrl = item.avatarUrl
+                                        artist.followed = item.followed
+                                        artist.id = item.userId.toLong()
+                                        artists.add(artist)
+                                    }
+                                    videoInfoBean.artist = artists
+                                    e.onNext(videoInfoBean)
+                                }
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable("接口请求异常"))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
+    }
+
+    /**
+     * 获取相关Video
+     */
+    fun getRelatedVideoList(mvid: String): Observable<MutableList<VideoInfoBean>> {
+        return apiService.getRelatedVideoList(mvid)
+                .flatMap {
+                    Observable.create(ObservableOnSubscribe<MutableList<VideoInfoBean>> { e ->
+                        try {
+                            if (it.code == 200) {
+                                val list = mutableListOf<VideoInfoBean>()
+                                it.data?.forEach {
+                                    it.vid?.let { vid ->
+                                        val videoInfoBean = VideoInfoBean(vid, it.title)
+                                        videoInfoBean.coverUrl = it.coverUrl
+                                        videoInfoBean.commentCount = it.commentCount
+                                        videoInfoBean.shareCount = it.shareCount
+                                        videoInfoBean.playCount = it.playCount
+                                        videoInfoBean.durationms = it.durationms
+                                        videoInfoBean.description = it.description
+                                        videoInfoBean.type = 1
+                                        val artists = mutableListOf<Artist>()
+                                        it.creator?.forEach { item ->
+                                            val artist = Artist()
+                                            artist.name = item.userName
+                                            artist.id = item.userId.toLong()
+                                            artists.add(artist)
+                                        }
+                                        videoInfoBean.artist = artists
+                                        list.add(videoInfoBean)
+                                    }
+                                }
+                                e.onNext(list)
+                                e.onComplete()
+                            } else {
+                                e.onError(Throwable("接口请求异常"))
+                            }
+                        } catch (ep: Exception) {
+                            e.onError(ep)
+                        }
+                    })
+                }
     }
 
     /**
      * 获取mv评论
      */
-    fun getMvComment(mvid: String, offset: Int = 0): Observable<MvComment> {
-        return apiService.getMvComment(mvid, offset)
+    fun getMvComment(mvid: String, type: String, offset: Int = 0): Observable<MvComment> {
+        return apiService.getMvComment(type, mvid, offset)
     }
 
     /**
@@ -374,7 +522,7 @@ object NeteaseApiServiceImpl {
                                 it.result?.forEach {
                                     val data = MvInfoDetail(
                                             artistId = it.artistId,
-                                            id = it.id.toInt(),
+                                            id = it.id.toString(),
                                             artistName = it.artistName,
                                             artists = it.artists,
                                             cover = it.picUrl,
@@ -583,14 +731,14 @@ object NeteaseApiServiceImpl {
                                             bean.description = it.data.description
                                             bean.durationms = it.data.durationms
                                             bean.praisedCount = it.data.praisedCount
-                                            bean.playTime = it.data.playTime
+                                            bean.playCount = it.data.playTime
                                             bean.shareCount = it.data.shareCount
                                             bean.type = it.type
                                             //解析creator
                                             val artist = Artist()
-                                            artist.artistId = it.data.creator.userId
-                                            artist.name = it.data.creator.nickname
-                                            artist.picUrl = it.data.creator.avatarUrl
+                                            artist.artistId = it.data.creator?.userId
+                                            artist.name = it.data.creator?.nickname
+                                            artist.picUrl = it.data.creator?.avatarUrl
                                             bean.artist = mutableListOf(artist)
                                             list.add(bean)
                                         }
@@ -601,7 +749,7 @@ object NeteaseApiServiceImpl {
                                             bean.coverUrl = it.data.coverUrl
                                             bean.durationms = it.data.duration
                                             bean.praisedCount = it.data.likeCount
-                                            bean.playTime = it.data.playCount
+                                            bean.playCount = it.data.playCount
                                             bean.shareCount = it.data.shareCount
                                             bean.type = it.type
                                             //解析歌手

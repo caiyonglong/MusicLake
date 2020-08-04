@@ -2,12 +2,8 @@ package com.cyl.musiclake.ui.music.mv
 
 import com.cyl.musicapi.netease.MvInfo
 import com.cyl.musicapi.netease.SearchInfo
-import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.api.net.RequestCallBack
-import com.cyl.musiclake.bean.VideoInfoBean
-import com.cyl.musiclake.utils.ToastUtils
 import javax.inject.Inject
 
 /**
@@ -17,7 +13,7 @@ import javax.inject.Inject
  */
 class MvListPresenter @Inject
 constructor() : BasePresenter<MvListContract.View>(), MvListContract.Presenter {
-    private val mvModel = MvModel()
+    private val mvModel = VideoLoadModel()
 
     /**
      * 获取MV精选列表

@@ -7,6 +7,7 @@ import com.cyl.musicapi.netease.SimilarMvInfo
 import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.bean.VideoInfoBean
 import javax.inject.Inject
 
 /**
@@ -14,8 +15,11 @@ import javax.inject.Inject
  * Author : master.
  * Date   : 2018/5/20 .
  */
-class MvDetailPresenter @Inject
-constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Presenter {
+class VideoDetailPresenter @Inject
+constructor() : BasePresenter<VideoDetailContract.View>(), VideoDetailContract.Presenter {
+
+    private val mvModel = VideoLoadModel()
+
     override fun loadBaiduMvInfo(songId: String?) {
         mvModel.loadBaiduMv(songId, object : RequestCallBack<MvInfoBean> {
             override fun success(result: MvInfoBean?) {
@@ -31,9 +35,6 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
         })
     }
 
-    private val mvModel = MvModel()
-
-
     fun loadMvUrl(type: Int, mvid: String?) {
         mvModel.loadMvUrl(type, mvid, object : RequestCallBack<String> {
             override fun success(result: String?) {
@@ -46,11 +47,11 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
         })
     }
 
-    override fun loadMvDetail(mvid: String?) {
-        mvModel.loadMvDetail(mvid, object : RequestCallBack<MvDetailInfo> {
-            override fun success(result: MvDetailInfo?) {
+    override fun loadMvDetail(mvid: String?, type: Int) {
+        mvModel.loadMvDetail(mvid, type,object : RequestCallBack<VideoInfoBean> {
+            override fun success(result: VideoInfoBean?) {
                 mView?.hideLoading()
-                result?.data?.let {
+                result?.let {
                     mView?.showMvDetailInfo(it)
                 }
             }
@@ -66,7 +67,7 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
         mvModel.loadMv(offset, object : RequestCallBack<MvInfo> {
             override fun success(result: MvInfo?) {
                 result?.data?.let {
-                    mView?.showMvList(it)
+//                    mView?.showVideoInfoList(it)
                 }
             }
 
@@ -76,12 +77,10 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
         })
     }
 
-    override fun loadSimilarMv(mvid: String?) {
-        mvModel.loadSimilarMv(mvid, object : RequestCallBack<SimilarMvInfo> {
-            override fun success(result: SimilarMvInfo?) {
-                result?.data?.let {
-                    mView?.showMvList(it)
-                }
+    override fun loadSimilarMv(mvid: String?, type: Int) {
+        mvModel.loadSimilarMv(mvid, type, object : RequestCallBack<MutableList<VideoInfoBean>> {
+            override fun success(result: MutableList<VideoInfoBean>) {
+                mView?.showVideoInfoList(result)
             }
 
             override fun error(msg: String?) {
@@ -90,8 +89,9 @@ constructor() : BasePresenter<MvDetailContract.View>(), MvDetailContract.Present
         })
     }
 
-    override fun loadMvComment(mvid: String?, offset: Int) {
-        mvModel.loadMvComment(mvid, offset, object : RequestCallBack<MvComment> {
+    override fun loadMvComment(mvid: String?, type: Int, offset: Int) {
+        val videoType = if (type == 2) "mv" else "video"
+        mvModel.loadMvComment(mvid, videoType, offset, object : RequestCallBack<MvComment> {
             override fun success(result: MvComment?) {
                 result?.hotComments?.let {
                     if (it.size > 0) {

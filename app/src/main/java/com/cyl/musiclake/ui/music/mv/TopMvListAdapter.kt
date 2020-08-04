@@ -3,7 +3,6 @@ package com.cyl.musiclake.ui.music.mv
 import android.graphics.Color
 import android.text.TextUtils
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -13,15 +12,12 @@ import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.bean.VideoInfoBean
-import com.cyl.musiclake.event.MetaChangedEvent
 import com.cyl.musiclake.player.exoplayer.ExoPlayerManager
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.FormatUtil
 import com.cyl.musiclake.utils.LogUtil
 import com.google.android.exoplayer2.ui.PlayerView
 import de.hdodenhof.circleimageview.CircleImageView
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 作者：yonglong on 2016/8/10 21:36
@@ -60,7 +56,7 @@ class VideoListAdapter(list: List<VideoInfoBean>) : BaseQuickAdapter<VideoInfoBe
         helper.setText(R.id.videoCommentCountTv, commentCount.toString())
         helper.setText(R.id.videoCommentCountTv, shareCount.toString())
 
-        helper.setText(R.id.tv_playCount, FormatUtil.formatPlayCount(video.playTime))
+        helper.setText(R.id.tv_playCount, FormatUtil.formatPlayCount(video.playCount))
 
         helper.setVisible(R.id.exo_artwork, true)
 
@@ -68,14 +64,15 @@ class VideoListAdapter(list: List<VideoInfoBean>) : BaseQuickAdapter<VideoInfoBe
             helper.getView<PlayerView>(R.id.videoView).defaultArtwork = drawable
         }
 
-//        CoverLoader.loadImageView(mContext, video.coverUrl, R.drawable.default_cover, helper.getView(R.id.exo_artwork))
+        CoverLoader.loadImageView(mContext, video.coverUrl, R.drawable.default_cover, helper.getView(R.id.videoCoverIv))
         LogUtil.d(TAG, "${playIndex != helper.adapterPosition} artwork可见 = ${helper.getView<ImageView>(R.id.exo_artwork).visibility == View.VISIBLE}")
         if (playIndex != helper.adapterPosition) {
             helper.getView<PlayerView>(R.id.videoView).player = null
-            helper.setVisible(R.id.tv_playCount, false)
-        } else {
-            helper.setVisible(R.id.exo_artwork, false)
             helper.setVisible(R.id.tv_playCount, true)
+            helper.setVisible(R.id.videoView, false)
+        } else {
+            helper.setVisible(R.id.videoView, true)
+            helper.setVisible(R.id.tv_playCount, false)
         }
 
         if (video.artist.size > 0) {

@@ -4,14 +4,15 @@ import com.cyl.musicapi.netease.CommentsItemInfo
 import com.cyl.musicapi.netease.MvInfoDetail
 import com.cyl.musicapi.netease.MvInfoDetailInfo
 import com.cyl.musiclake.bean.MvInfoBean
+import com.cyl.musiclake.bean.VideoInfoBean
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BaseContract.BaseView
 
-interface MvDetailContract {
+interface VideoDetailContract {
     interface View : BaseView {
-        fun showMvList(mvList: List<MvInfoDetail>)
+        fun showVideoInfoList(mvList: List<VideoInfoBean>)
         fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?)
-        fun showMvDetailInfo(mvInfoDetailInfo: MvInfoDetailInfo?)
+        fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?)
         fun showMvUrlInfo(mvUrl: String?)
         fun showMvHotComment(mvHotCommentInfo: List<CommentsItemInfo>)
         fun showMvComment(mvCommentInfo: List<CommentsItemInfo>)
@@ -19,9 +20,9 @@ interface MvDetailContract {
 
     interface Presenter : BaseContract.BasePresenter<View?> {
         fun loadMv(offset: Int)
-        fun loadMvDetail(mvid: String?)
+        fun loadMvDetail(mvid: String?, type: Int)
         fun loadBaiduMvInfo(songId: String?)
-        fun loadSimilarMv(mvid: String?)
-        fun loadMvComment(mvid: String?, offset: Int)
+        fun loadSimilarMv(mvid: String?, type: Int)
+        fun loadMvComment(mvid: String?, type: Int, offset: Int)
     }
 }

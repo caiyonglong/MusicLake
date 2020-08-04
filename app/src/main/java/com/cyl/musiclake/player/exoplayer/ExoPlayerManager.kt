@@ -15,4 +15,8 @@ object ExoPlayerManager {
         videoView?.let { musicExoPlayer.bindView(it) }
     }
 
+    fun stop() {
+        musicExoPlayer.stop()
+    }
+
 }
