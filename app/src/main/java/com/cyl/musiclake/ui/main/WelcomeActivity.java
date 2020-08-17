@@ -3,23 +3,18 @@ package com.cyl.musiclake.ui.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.cyl.musicapi.BaseApiImpl;
-import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.MusicApp;
-import com.cyl.musiclake.common.Constants;
-import com.google.android.material.snackbar.Snackbar;
-
-import android.widget.ImageView;
-
 import com.cyl.musiclake.R;
+import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
-import com.liulishuo.filedownloader.FileDownloader;
-import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.google.android.material.snackbar.Snackbar;
 import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;

@@ -1,7 +1,5 @@
 package com.cyl.musiclake.api.net;
 
-import android.util.Log;
-
 import com.cyl.musiclake.BuildConfig;
 import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
@@ -181,6 +179,9 @@ public class ApiManager {
                             } catch (IOException | JSONException e1) {
                                 e1.printStackTrace();
                                 LogUtil.d("ApiManager", "errorInfo=" + errorInfo);
+                                if (errorInfo.contains("LeanEngine")) {
+                                    errorInfo = "默认LeanEngine服务器请求超出限制\n请稍后再试！";
+                                }
                                 if (e1 instanceof JSONException) {
                                     result.error(errorInfo);
                                 } else {

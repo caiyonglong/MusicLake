@@ -11,13 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
@@ -33,7 +30,6 @@ import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.chat.ChatActivity;
 import com.cyl.musiclake.ui.music.importplaylist.ImportPlaylistActivity;
-import com.cyl.musiclake.ui.music.mv.VideoListAdapter;
 import com.cyl.musiclake.ui.music.search.SearchActivity;
 import com.cyl.musiclake.ui.my.BindLoginActivity;
 import com.cyl.musiclake.ui.my.LoginActivity;
@@ -57,10 +53,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import static com.cyl.musiclake.ui.UIUtilsKt.logout;
 import static com.cyl.musiclake.ui.UIUtilsKt.updateLoginToken;
@@ -147,26 +143,33 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      *
      * @param isInit
      */
-    private void checkBindNeteaseStatus(Boolean isInit) {
-        UIUtilsKt.getNeteaseLoginStatus(user -> {
-            ToastUtils.show("已绑定网易云音乐");
-            LogUtil.d(TAG, "success " + user.getId());
-            if (isInit) {
-                User user1 = new User();
-                user1.setType(Constants.NETEASE);
-                user1.setAvatar(user.getAvatar());
-                user1.setName(user.getName());
-                EventBus.getDefault().post(new LoginEvent(true, user1));
-            }
-            return null;
-        }, () -> {
-            LogUtil.d(TAG, "fail ");
-            if (!isInit) {
-                Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
-                startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
-            }
-            return null;
-        });
+    public void checkBindNeteaseStatus(Boolean isInit, Function1<Boolean, Unit> function1) {
+        UIUtilsKt.getNeteaseLoginStatus(
+                user -> {
+                    ToastUtils.show("已绑定网易云音乐");
+                    LogUtil.d(TAG, "success " + user.getId());
+                    if (isInit) {
+                        User user1 = new User();
+                        user1.setType(Constants.NETEASE);
+                        user1.setAvatar(user.getAvatar());
+                        user1.setName(user.getName());
+                        EventBus.getDefault().post(new LoginEvent(true, user1));
+                    }
+                    if (function1 != null) {
+                        function1.invoke(true);
+                    }
+                    return null;
+                }, () -> {
+                    LogUtil.d(TAG, "fail ");
+                    if (!isInit) {
+                        Intent intent = new Intent(MainActivity.this, BindLoginActivity.class);
+                        startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN);
+                    }
+                    if (function1 != null) {
+                        function1.invoke(false);
+                    }
+                    return null;
+                });
     }
 
 
@@ -252,7 +255,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 NavigationHelper.INSTANCE.navigatePlayQueue(this);
                 break;
             case R.id.nav_bind_wy:
-                checkBindNeteaseStatus(false);
+                checkBindNeteaseStatus(false, null);
                 break;
             case R.id.nav_menu_import:
                 mTargetClass = ImportPlaylistActivity.class;
@@ -423,7 +426,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (UserStatus.getLoginStatus()) {
             updateUserInfo(new LoginEvent(true, UserStatus.getUserInfo()));
         }
-        checkBindNeteaseStatus(true);
+        checkBindNeteaseStatus(true, null);
     }
 
     /**
@@ -488,7 +491,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             String uid = SPUtils.getAnyByKey(SPUtils.SP_KEY_NETEASE_UID, "");
             if (uid != null && uid.length() > 0) {
                 LogUtil.d(TAG, "绑定成功 uid = " + uid);
-                checkBindNeteaseStatus(true);
+                checkBindNeteaseStatus(true, null);
             }
         }
     }

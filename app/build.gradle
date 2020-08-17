@@ -177,8 +177,8 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.3'
 
     //Android音乐接口Api
-//    implementation 'com.github.caiyonglong:musicapi:1.0.8'
-    implementation project(':musicapi')
+    implementation 'com.github.caiyonglong:musicapi:1.1.0'
+//    implementation project(':musicapi')
     //缓存
     implementation 'com.danikula:videocache:2.7.1'
     implementation "androidx.viewpager2:viewpager2:1.0.0"

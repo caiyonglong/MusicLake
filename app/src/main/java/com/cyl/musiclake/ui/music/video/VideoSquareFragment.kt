@@ -8,9 +8,11 @@ import com.cyl.musiclake.api.net.RequestCallBack
 import com.cyl.musiclake.bean.CategoryInfo
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.base.BasePresenter
+import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.mv.MvListFragment
 import com.cyl.musiclake.utils.ToastUtils
+import com.squareup.haha.perflib.Main
 import kotlinx.android.synthetic.main.frag_mv.*
 
 /**
@@ -35,9 +37,22 @@ class VideoSquareFragment : BaseFragment<BasePresenter<*>?>() {
 
             override fun error(msg: String) {
                 hideLoading()
-                ToastUtils.show(msg)
+                showError(msg, true)
             }
         })
+    }
+
+    override fun retryLoading() {
+        super.retryLoading()
+        if (errorTextView?.text?.equals("需要登录") == true) {
+            (activity as MainActivity).checkBindNeteaseStatus(false) { success ->
+                if (success) {
+                    loadData()
+                }
+            }
+        } else {
+            loadData()
+        }
     }
 
     /**

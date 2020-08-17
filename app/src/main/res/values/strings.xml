@@ -508,7 +508,7 @@
 
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
-    <string name="copyright_info">Copyright© 2019 MusicLake Group</string>
+    <string name="copyright_info">Copyright© 2020 MusicLake Group</string>
     <string name="delete_playlist_tips">是否删除这个歌单？</string>
     <string name="clear_history_playlist_tips">是否清空播放历史？</string>
     <string name="choose_singer">选择歌手</string>
