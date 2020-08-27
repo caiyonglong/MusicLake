@@ -6,14 +6,15 @@ android:
     - platform-tools
     - build-tools-29.0.3
     - android-29
-
+    - add-on
+    - extra
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
   licenses:
-    - 'android-sdk-preview-license-.+'
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
+    - 'android-sdk-preview-license'
+    - 'android-sdk-license'
+    - 'google-gdk-license'
 before_install:
 - chmod +x gradlew
 script:
