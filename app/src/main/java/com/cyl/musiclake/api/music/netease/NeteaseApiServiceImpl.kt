@@ -428,11 +428,33 @@ object NeteaseApiServiceImpl {
                         try {
                             if (it.code == 200) {
                                 val list = mutableListOf<Music>()
-                                list.addAll(MusicUtils.getNeteaseRecommendMusic(it.recommend))
+                                it.data?.dailySongs?.forEach {
+                                    val music = Music()
+                                    music.mid = it.id
+                                    music.title = it.name
+                                    music.type = Constants.NETEASE
+                                    music.album = it.al?.name
+                                    music.isOnline = true
+                                    music.albumId = it.al?.id
+                                    if (it.ar != null) {
+                                        var artistIds = it.ar?.get(0)?.id.toString()
+                                        var artistNames = it.ar?.get(0)?.name
+                                        for (j in 1 until it.ar?.size!! - 1) {
+                                            artistIds += ",${it.ar?.get(j)?.id}"
+                                            artistNames += ",${it.ar?.get(j)?.name}"
+                                        }
+                                        music.artist = artistNames
+                                        music.artistId = artistIds
+                                    }
+                                    music.coverUri = MusicUtils.getAlbumPic(it.al?.picUrl, Constants.NETEASE, MusicUtils.PIC_SIZE_NORMAL)
+                                    music.coverBig = MusicUtils.getAlbumPic(it.al?.picUrl, Constants.NETEASE, MusicUtils.PIC_SIZE_BIG)
+                                    music.coverSmall = MusicUtils.getAlbumPic(it.al?.picUrl, Constants.NETEASE, MusicUtils.PIC_SIZE_SMALL)
+                                    list.add(music)
+                                }
                                 e.onNext(list)
                                 e.onComplete()
                             } else {
-                                e.onError(Throwable(it.msg))
+                                e.onError(Throwable(it.message))
                             }
                         } catch (ep: Exception) {
                             e.onError(ep)

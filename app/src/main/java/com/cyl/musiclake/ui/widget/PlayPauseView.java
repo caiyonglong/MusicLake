@@ -16,7 +16,6 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.SizeUtils;
 
 /**
@@ -316,7 +315,7 @@ public class PlayPauseView extends View {
         if (isLoading && progress > 0) {
             isLoading = false;
         }
-        LogUtil.d("playPauseView ", "newAngle =" + newAngle);
+//        LogUtil.d("playPauseView ", "newAngle =" + newAngle);
         postInvalidate();
     }
 

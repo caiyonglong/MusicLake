@@ -115,7 +115,7 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
     override fun updateProgress(progress: Long, max: Long) {
         progressBar.progress = progress.toInt()
         progressBar.max = max.toInt()
-        LogUtil.d(TAG, "progress : " + 1.0f * progress / max);
+//        LogUtil.d(TAG, "progress : " + 1.0f * progress / max);
         playPauseView.setProgress(1.0f * progress / max)
     }
 

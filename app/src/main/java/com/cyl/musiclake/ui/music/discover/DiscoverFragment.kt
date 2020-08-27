@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.discover
 import android.os.Bundle
 import android.util.Pair
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
@@ -223,7 +224,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             //适配器
             mRadioAdapter = BaiduRadioAdapter(this.channels)
             //电台列表
-            radioRsv?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
+            radioRsv?.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.HORIZONTAL, false)
             radioRsv?.adapter = mRadioAdapter
             radioRsv?.isFocusable = false
             radioRsv?.isNestedScrollingEnabled = false

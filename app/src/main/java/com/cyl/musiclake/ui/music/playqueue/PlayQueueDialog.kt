@@ -110,11 +110,8 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
             when (view.id) {
                 R.id.iv_more -> {
                     PlayManager.removeFromQueue(position)
+                    showSongs(PlayManager.getPlayList())
                     musicList = PlayManager.getPlayList()
-                    if (musicList.size == 0)
-                        dismiss()
-                    else
-                        mAdapter?.setNewData(musicList)
                 }
             }
         }
@@ -171,6 +168,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
         if (songs.isEmpty()) {
             mAdapter?.setEmptyView(R.layout.view_queue_empty)
+            dismissAllowingStateLoss()
         }
     }
 

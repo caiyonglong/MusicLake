@@ -14,6 +14,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
@@ -1109,6 +1110,7 @@ public class MusicPlayerService extends Service {
 
         int playButtonResId = isMusicPlaying
                 ? R.drawable.ic_pause : R.drawable.ic_play;
+        String title = isMusicPlaying ? "暂停" : "播放";
 
         Intent nowPlayingIntent = new Intent(this, PlayerActivity.class);
         nowPlayingIntent.setAction(Constants.DEAULT_NOTIFICATION);
@@ -1123,19 +1125,19 @@ public class MusicPlayerService extends Service {
                 .setContentTitle(getTitle())
                 .setContentText(text)
                 .setWhen(mNotificationPostTime)
-                .addAction(playButtonResId, "",
-                        retrievePlaybackAction(ACTION_PLAY_PAUSE))
                 .addAction(R.drawable.ic_skip_previous,
-                        "",
+                        "上一首",
                         retrievePlaybackAction(ACTION_PREV))
+                .addAction(playButtonResId, title,
+                        retrievePlaybackAction(ACTION_PLAY_PAUSE))
                 .addAction(R.drawable.ic_skip_next,
-                        "",
+                        "下一首",
                         retrievePlaybackAction(ACTION_NEXT))
                 .addAction(R.drawable.ic_lyric,
-                        "",
+                        "歌词",
                         retrievePlaybackAction(ACTION_LYRIC))
                 .addAction(R.drawable.ic_clear,
-                        "",
+                        "关闭",
                         retrievePlaybackAction(ACTION_CLOSE))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP));
@@ -1220,7 +1222,7 @@ public class MusicPlayerService extends Service {
                 lyricTimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
-                        if (isMusicPlaying){
+                        if (isMusicPlaying) {
                             //正在播放时刷新
                             mFloatLyricViewManager.updateLyric(getCurrentPosition(), getDuration());
                         }
@@ -1271,12 +1273,14 @@ public class MusicPlayerService extends Service {
             mNotificationBuilder.setContentText(getArtistName());
             mNotificationBuilder.setTicker(getTitle() + "-" + getArtistName());
         }
-        LogUtil.d("播放状态 = " + isPlaying());
+        LogUtil.d(TAG, "播放状态 = " + isPlaying());
         if (isMusicPlaying)
-            mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_pause;
+            mNotificationBuilder.mActions.set(1, new NotificationCompat.Action(R.drawable.ic_pause, "",
+                    retrievePlaybackAction(ACTION_PLAY_PAUSE)));
+            //.getIconCompat() = R.drawable.ic_pause;
         else
-            mNotificationBuilder.mActions.get(0).icon = R.drawable.ic_play;
-
+            mNotificationBuilder.mActions.set(1, new NotificationCompat.Action(R.drawable.ic_play, "",
+                    retrievePlaybackAction(ACTION_PLAY_PAUSE)));
         mNotification = mNotificationBuilder.build();
         mFloatLyricViewManager.updatePlayStatus(isMusicPlaying);
 

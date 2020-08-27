@@ -1,15 +1,17 @@
 package com.cyl.musiclake.ui.music.playpage.fragment
 
 import com.cyl.musiclake.R
+import com.cyl.musiclake.player.FloatLyricViewManager
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseContract
 import com.cyl.musiclake.ui.base.BaseFragment
+import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.widget.LyricView
 import com.cyl.musiclake.utils.SPUtils
 import kotlinx.android.synthetic.main.frag_player_lrcview.*
 
-class LyricFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
+class LyricFragment : BaseLazyFragment<BasePresenter<BaseContract.BaseView>>() {
 
     val lyricTv by lazy { rootView?.findViewById<LyricView>(R.id.lyricShow) }
 
@@ -19,12 +21,6 @@ class LyricFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     override fun initInjector() {
     }
-
-    override fun initViews() {
-        super.initViews()
-
-    }
-
     /**
      *显示歌词
      */
@@ -46,5 +42,13 @@ class LyricFragment : BaseFragment<BasePresenter<BaseContract.BaseView>>() {
 
     fun setCurrentTimeMillis(current: Long = 0) {
         lyricShow?.setCurrentTimeMillis(current)
+    }
+
+    override fun onLazyLoad() {
+        showLyric(FloatLyricViewManager.lyricInfo, true)
+    }
+
+    override fun initViews() {
+
     }
 }

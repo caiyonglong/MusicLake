@@ -38,5 +38,6 @@ public class PlayQueuePresenter extends BasePresenter<PlayQueueContract.View> im
     @Override
     public void clearQueue() {
         PlayManager.clearQueue();
+        loadSongs();
     }
 }
