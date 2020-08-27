@@ -127,7 +127,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             PlayManager.play(position,searchResults,queryString.hashCode().toString())
         }
         mAdapter.setOnItemChildClickListener { _, _, position ->
-            val music = musicList[position]
+            val music = searchResults[position]
             BottomDialogFragment.newInstance(music, Constants.PLAYLIST_SEARCH_ID).show(this)
         }
     }
