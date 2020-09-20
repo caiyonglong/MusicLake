@@ -29,8 +29,8 @@ object MusicUtils {
         music.title = musicInfo.name
         music.isOnline = true
         music.type = musicInfo.vendor
-        music.album = musicInfo.album.name
-        music.albumId = musicInfo.album.id
+        music.album = musicInfo.album?.name
+        music.albumId = musicInfo.album?.id
         music.isCp = musicInfo.cp
         music.isDl = musicInfo.dl
         musicInfo.quality?.let {
@@ -48,9 +48,9 @@ object MusicUtils {
             music.artist = artistNames
             music.artistId = artistIds
         }
-        music.coverUri = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
-        music.coverBig = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
-        music.coverSmall = getAlbumPic(musicInfo.album.cover, musicInfo.vendor, PIC_SIZE_SMALL)
+        music.coverUri = getAlbumPic(musicInfo.album?.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
+        music.coverBig = getAlbumPic(musicInfo.album?.cover, musicInfo.vendor, PIC_SIZE_NORMAL)
+        music.coverSmall = getAlbumPic(musicInfo.album?.cover, musicInfo.vendor, PIC_SIZE_SMALL)
         return music
     }
 
@@ -58,7 +58,7 @@ object MusicUtils {
      * 在线歌单歌曲歌曲实体类转化成本地歌曲实体(即可)
      * (网易云歌曲)
      */
-    fun getMusicList(musicInfo: MutableList<MusicInfo>?, type: String): MutableList<Music> {
+    fun getMusicList(musicInfo: List<MusicInfo>?, type: String): MutableList<Music> {
         val musicList = mutableListOf<Music>()
         musicInfo?.forEach {
             val music = Music()
@@ -68,8 +68,8 @@ object MusicUtils {
             music.title = it.name
             music.type = type
             music.isOnline = true
-            music.album = it.album.name
-            music.albumId = it.album.id
+            music.album = it.album?.name
+            music.albumId = it.album?.id
             music.isCp = it.cp
             music.isDl = it.dl
             it.quality?.let { quality ->
@@ -87,9 +87,9 @@ object MusicUtils {
                 music.artist = artistNames
                 music.artistId = artistIds
             }
-            music.coverUri = getAlbumPic(it.album.cover, type, PIC_SIZE_NORMAL)
-            music.coverBig = getAlbumPic(it.album.cover, type, PIC_SIZE_BIG)
-            music.coverSmall = getAlbumPic(it.album.cover, type, PIC_SIZE_SMALL)
+            music.coverUri = getAlbumPic(it.album?.cover, type, PIC_SIZE_NORMAL)
+            music.coverBig = getAlbumPic(it.album?.cover, type, PIC_SIZE_BIG)
+            music.coverSmall = getAlbumPic(it.album?.cover, type, PIC_SIZE_SMALL)
             if (!it.cp) {
                 musicList.add(music)
             }
@@ -208,11 +208,11 @@ object MusicUtils {
      * 获取所有的歌手
      */
     fun getArtistInfo(music: Music?): MutableList<Artist> {
-        LogUtil.d("getArtistInfo","music?.artistId = " + music?.artistId + ": artistNames =" + music?.artist)
+        LogUtil.d("getArtistInfo", "music?.artistId = " + music?.artistId + ": artistNames =" + music?.artist)
         val artistIds = music?.artistId?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artistNames = music?.artist?.let { it.split(",").dropLastWhile { it.isEmpty() }.toTypedArray() }
         val artists = mutableListOf<Artist>()
-        LogUtil.d("getArtistInfo","music?.artistId = " + artistIds.toString() + ": artistNames =" + artists.toString())
+        LogUtil.d("getArtistInfo", "music?.artistId = " + artistIds.toString() + ": artistNames =" + artists.toString())
         if (artistNames != null && artistIds?.size ?: 0 == artistNames.size) {
             for (i in artistNames.indices) {
                 val artist = Artist()

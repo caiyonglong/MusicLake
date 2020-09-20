@@ -13,6 +13,18 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btn_netease_topList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取网易云榜单列表" />
+
+        <Button
+            android:id="@+id/btn_qq_topList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取QQ榜单列表" />
+
+        <Button
             android:id="@+id/btn_test1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +90,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_24">
 
         <TextView
             android:id="@+id/tv_status"

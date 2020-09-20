@@ -18,11 +18,31 @@ public class TestActivity extends BaseActivity {
     @BindView(R.id.tv_status)
     TextView statusTv;
 
+    @OnClick(R.id.btn_qq_topList)
+    void btn_qq_topList() {
+        searchApi.getAllQQTopList(result -> {
+            statusTv.setText("getAllQQTopList");
+            resultTv.setText(result.toString());
+            return null;
+        }, null);
+    }
+
+    @OnClick(R.id.btn_netease_topList)
+    void btn_netease_topList() {
+        searchApi.getAllNeteaseTopList(result -> {
+            statusTv.setText("getAllNeteaseTopList");
+            resultTv.setText(result.toString());
+            return null;
+        }, null);
+    }
+
     @OnClick(R.id.btn_test1)
     void test() {
         searchApi.getTopList("1", result -> {
             statusTv.setText("getTopList");
             resultTv.setText(result.toString());
+            return null;
+        }, fail -> {
             return null;
         });
     }
@@ -112,6 +132,7 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        searchApi = BaseApiImpl.INSTANCE;
     }
 
     @Override

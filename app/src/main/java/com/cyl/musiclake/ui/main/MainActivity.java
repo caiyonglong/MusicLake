@@ -275,6 +275,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_menu_about:
                 mTargetClass = AboutActivity.class;
                 break;
+            case R.id.nav_menu_test:
+                mTargetClass = TestActivity.class;
+                break;
             case R.id.nav_menu_equalizer:
                 NavigationHelper.INSTANCE.navigateToSoundEffect(this);
                 break;

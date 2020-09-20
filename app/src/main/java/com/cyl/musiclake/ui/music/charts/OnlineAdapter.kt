@@ -20,7 +20,7 @@ import com.cyl.musiclake.utils.CoverLoader
 /**
  * 排行榜列表
  */
-class ChartsAdapter(val context: Context, val data: List<GroupItemData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChartsAdapter(val context: Context, val data: MutableList<GroupItemData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var clickListener: ((Int) -> Unit)? = null
     var tag: String? = null
 
@@ -29,10 +29,29 @@ class ChartsAdapter(val context: Context, val data: List<GroupItemData>) : Recyc
     companion object {
         //标题
         val ITEM_TITLE = 0
+
         //排行榜单正方形
         val ITEM_CHART = 1
+
         //排行榜单长方形
         val ITEM_CHART_LARGE = 2
+    }
+
+    /**
+     * 添加新数据
+     */
+    fun addNewData(newList: MutableList<GroupItemData>) {
+        val startIndex = data.size
+        data.addAll(newList)
+        notifyItemRangeInserted(startIndex, newList.size)
+    }
+
+    /**
+     * 清空数据
+     */
+    fun cleanData() {
+        data.clear()
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -115,7 +134,6 @@ class ChartsAdapter(val context: Context, val data: List<GroupItemData>) : Recyc
         val contentTv2 = itemView.findViewById<TextView>(R.id.tv_music_2)
         val contentTv3 = itemView.findViewById<TextView>(R.id.tv_music_3)
     }
-
 }
 
 @SuppressLint("ParcelCreator")

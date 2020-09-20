@@ -24,9 +24,7 @@ import kotlinx.android.synthetic.main.fragment_charts.*
  */
 class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), OnlinePlaylistContract.View {
     //适配器
-    private var mNeteaseAdapter: ChartsAdapter? = null
-    private var mQQAdapter: ChartsAdapter? = null
-    private var mBaiduAdapter: ChartsAdapter? = null
+    private var mTopListAdapter: ChartsAdapter? = null
     private var chartsType: String = Constants.BAIDU
 
     override fun getLayoutId(): Int {
@@ -34,99 +32,28 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
     }
 
     /**
-     * 显示网易云歌单
+     * 显示网易云榜单
      */
     override fun showNeteaseCharts(charts: MutableList<GroupItemData>?) {
         hideLoading()
-        if (mNeteaseAdapter == null) {
-            mNeteaseAdapter = charts?.let { activity?.let { it1 -> ChartsAdapter(it1, it) } }
-            //初始化列表
-            val layoutManager = GridLayoutManager(activity, 3)
-            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (charts?.get(position)?.itemType != ChartsAdapter.ITEM_CHART) 3
-                    else 1
-                }
-            }
-            neteaseChartsRcv.visibility = View.VISIBLE
-            neteaseChartsRcv.adapter = mNeteaseAdapter
-            neteaseChartsRcv.layoutManager = layoutManager
-            neteaseChartsRcv.isNestedScrollingEnabled = false
-            mNeteaseAdapter?.clickListener = { position ->
-                val intent = Intent()
-                charts?.get(position)?.data?.let {
-                    intent.setClass(activity, NeteasePlaylistActivity::class.java)
-                    intent.putExtra(Extras.PLAYLIST, it as Playlist)
-                }
-                startActivity(intent)
-            }
-        }
-
+        charts?.let { mTopListAdapter?.addNewData(it) }
     }
 
+    /**
+     * 显示QQ榜单
+     */
     override fun showQQCharts(charts: MutableList<GroupItemData>?) {
         hideLoading()
-
-        if (mQQAdapter == null) {
-            mQQAdapter = charts?.let { context?.let { it1 -> ChartsAdapter(it1, it) } }
-
-            //初始化列表
-            val layoutManager = GridLayoutManager(activity, 3)
-            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (charts?.get(position)?.itemType != ChartsAdapter.ITEM_CHART) 3
-                    else 1
-                }
-            }
-
-            qqChartsRcv.visibility = View.VISIBLE
-            qqChartsRcv.adapter = mQQAdapter
-            qqChartsRcv.layoutManager = layoutManager
-            qqChartsRcv.isNestedScrollingEnabled = false
-            mQQAdapter?.clickListener = { position ->
-                val intent = Intent()
-
-                charts?.get(position)?.data?.let {
-                    intent.setClass(activity, NeteasePlaylistActivity::class.java)
-                    intent.putExtra(Extras.PLAYLIST, it as Playlist)
-                }
-                startActivity(intent)
-            }
-        }
+        charts?.let { mTopListAdapter?.addNewData(it) }
     }
 
     override fun showBaiduCharts(charts: MutableList<GroupItemData>?) {
         hideLoading()
-
-        if (mBaiduAdapter == null) {
-
-            mBaiduAdapter = charts?.let { activity?.let { it1 -> ChartsAdapter(it1, it) } }
-            //初始化列表
-            val layoutManager = GridLayoutManager(activity, 3)
-            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (charts?.get(position)?.itemType != ChartsAdapter.ITEM_CHART) 3
-                    else 1
-                }
-            }
-            baiduChartsRcv.visibility = View.VISIBLE
-            baiduChartsRcv.adapter = mBaiduAdapter
-            baiduChartsRcv.layoutManager = layoutManager
-            baiduChartsRcv.isNestedScrollingEnabled = false
-            mBaiduAdapter?.clickListener = { position ->
-                val intent = Intent()
-                charts?.get(position)?.data?.let {
-                    intent.setClass(activity, BaiduMusicListActivity::class.java)
-                    intent.putExtra(Extras.PLAYLIST, it as Playlist)
-                }
-                startActivity(intent)
-            }
-        }
+        charts?.let { mTopListAdapter?.addNewData(it) }
     }
 
     override fun initViews() {
-        chartsType = arguments?.getString("type") ?: Constants.BAIDU
-
+        chartsType = arguments?.getString("type") ?: Constants.PLAYLIST_BD_ID
     }
 
     override fun initInjector() {
@@ -134,6 +61,39 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
     }
 
     override fun onLazyLoad() {
+        if (mTopListAdapter == null) {
+            mTopListAdapter = activity?.let { ChartsAdapter(it, mutableListOf()) }
+            //初始化列表
+            val layoutManager = GridLayoutManager(activity, 3)
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (mTopListAdapter?.data?.get(position)?.itemType != ChartsAdapter.ITEM_CHART) 3
+                    else 1
+                }
+            }
+            chartListRcv.adapter = mTopListAdapter
+            chartListRcv.layoutManager = layoutManager
+            mTopListAdapter?.clickListener = { position ->
+                val intent = Intent()
+                mTopListAdapter?.data?.get(position)?.data?.let {
+                    when {
+                        (it as Playlist).type == Constants.PLAYLIST_QQ_ID -> {
+                            intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                        }
+                        it.type == Constants.PLAYLIST_WY_ID -> {
+                            intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                        }
+                        else -> {
+                            intent.setClass(activity, BaiduMusicListActivity::class.java)
+                        }
+                    }
+                    intent.putExtra(Extras.PLAYLIST, it as Playlist)
+                }
+                startActivity(intent)
+            }
+        } else {
+            mTopListAdapter?.cleanData()
+        }
         showLoading()
         mPresenter?.loadBaiDuPlaylist()
         mPresenter?.loadQQList()
@@ -141,6 +101,7 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
     }
 
     override fun loadData() {
+
     }
 
     override fun listener() {

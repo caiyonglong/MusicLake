@@ -280,29 +280,26 @@ object MusicApiServiceImpl {
      */
     fun getArtistSongs(vendor: String, id: String, offset: Int = 0, limit: Int = 50): Observable<Artist> {
         return create { result ->
-            BaseApiImpl
-                    .getArtistSongs(vendor, id, offset, limit, {
-                        if (it.status) {
-                            LogUtil.d(TAG, it.toString())
-                            val musicList = arrayListOf<Music>()
-                            it.data.songs.forEach {
-                                if (!it.cp) {
-                                    it.vendor = vendor
-                                    musicList.add(MusicUtils.getMusic(it))
-                                }
-                            }
-                            val artist = Artist()
-                            artist.songs = musicList
-                            artist.name = it.data.detail.name
-                            artist.picUrl = it.data.detail.cover
-                            artist.desc = it.data.detail.desc
-                            artist.artistId = it.data.detail.id
-                            result.onNext(artist)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(it.msg))
-                        }
-                    }, {})
+            BaseApiImpl.getArtistSongs(vendor, id, offset, limit, {
+                LogUtil.d(TAG, it.toString())
+                val musicList = arrayListOf<Music>()
+                it.songs.forEach {
+                    if (!it.cp) {
+                        it.vendor = vendor
+                        musicList.add(MusicUtils.getMusic(it))
+                    }
+                }
+                val artist = Artist()
+                artist.songs = musicList
+                artist.name = it.detail.name
+                artist.picUrl = it.detail.cover
+                artist.desc = it.detail.desc
+                artist.artistId = it.detail.id
+                result.onNext(artist)
+                result.onComplete()
+            }, {
+                result.onError(Throwable(it))
+            })
         }
     }
 
@@ -346,25 +343,19 @@ object MusicApiServiceImpl {
      */
     fun getPlaylistSongs(vendor: String, id: String): Observable<Playlist> {
         return create { result ->
-            BaseApiImpl
-                    .getAlbumSongs(vendor, id, {
-                        if (it.status) {
-                            val playlist = Playlist()
-                            playlist.type = Constants.PLAYLIST_CUSTOM_ID
-                            playlist.name = it.data.detail.name
-                            playlist.des = it.data.detail.desc
-                            playlist.coverUrl = it.data.detail.cover
-                            playlist.pid = it.data.detail.id
-                            it.data.songs.forEach {
-                                it.vendor = vendor
-                                playlist.musicList.add(MusicUtils.getMusic(it))
-                            }
-                            result.onNext(playlist)
-                            result.onComplete()
-                        } else {
-                            result.onError(Throwable(it.msg))
-                        }
-                    }, {})
+            BaseApiImpl.getPlaylistDetail(vendor, id, {
+                val playlist = Playlist()
+                playlist.type = Constants.PLAYLIST_WY_ID
+                playlist.name = it.detail.name
+                playlist.des = it.detail.desc
+                playlist.coverUrl = it.detail.cover
+                playlist.pid = it.detail.id
+                playlist.musicList = MusicUtils.getMusicList(it.songs, vendor)
+                result.onNext(playlist)
+                result.onComplete()
+            }, {
+                result.onError(Throwable(it))
+            })
         }
     }
 

@@ -115,10 +115,12 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
 //            } else {
 //                dateTv.visibility = View.GONE
 //            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                descTv.text = Html.fromHtml(playlist.des, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                descTv.text = Html.fromHtml(playlist.des)
+            playlist.des?.let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    descTv.text = Html.fromHtml(playlist.des, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    descTv.text = Html.fromHtml(playlist.des)
+                }
             }
         }
     }
@@ -127,6 +129,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mAdapter?.setEnableLoadMore(false)
         mPlaylist = playlist
         musicList = playlist.musicList
+        showHeaderInfo(playlist)
         mAdapter?.setNewData(playlist.musicList)
     }
 

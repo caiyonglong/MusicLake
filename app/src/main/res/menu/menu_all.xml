@@ -50,6 +50,10 @@
     <item android:title="@string/menu_other">
         <menu>
             <item
+                android:id="@+id/nav_menu_test"
+                android:icon="@drawable/ic_about"
+                android:title="@string/title_test" />
+            <item
                 android:id="@+id/nav_menu_about"
                 android:icon="@drawable/ic_about"
                 android:title="@string/pref_title_about" />

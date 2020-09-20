@@ -74,7 +74,7 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
                 return@setOnClickListener
             }
             if (musicList.size == 0) return@setOnClickListener
-            PlaylistManagerUtils.addToPlaylist(this,musicList)
+            PlaylistManagerUtils.addToPlaylist(this, musicList)
         }
     }
 

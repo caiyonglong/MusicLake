@@ -1,12 +1,11 @@
 package com.cyl.musiclake.ui.music.charts.presenter
 
-import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
+import com.cyl.musicapi.BaseApiImpl
+import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
-import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
-import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.bean.Playlist
-import com.cyl.musiclake.api.net.ApiManager
-import com.cyl.musiclake.api.net.RequestCallBack
+import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.charts.ChartsAdapter
 import com.cyl.musiclake.ui.music.charts.GroupItemData
 import com.cyl.musiclake.ui.music.charts.contract.OnlinePlaylistContract
@@ -16,31 +15,32 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-/**
- * Created by D22434 on 2018/1/4.
- */
-
 class OnlinePlaylistPresenter @Inject
 constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistContract.Presenter {
     override fun loadQQList() {
-        val observable = PlaylistApiServiceImpl.getQQRank(3)
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
-            override fun success(result: MutableList<Playlist>) {
-                val data = mutableListOf<GroupItemData>()
-                data.add(GroupItemData("QQ音乐官方榜单"))
-                result.forEach {
-                    val item = GroupItemData(it)
-                    if (it.musicList.size > 0) {
-                        item.itemType = ChartsAdapter.ITEM_CHART_LARGE
-                    }
-                    data.add(item)
+        BaseApiImpl.getAllQQTopList(success = { result ->
+            val data = mutableListOf<GroupItemData>()
+            data.add(GroupItemData("QQ音乐官方榜单"))
+            var flag = true
+            result.forEach {
+                val playlist = Playlist()
+                playlist.pid = it.id
+                playlist.des = it.description
+                playlist.name = it.name
+                playlist.coverUrl = it.cover
+                playlist.playCount = it.playCount
+                playlist.musicList = MusicUtils.getMusicList(it.list, Constants.QQ)
+                playlist.type = Constants.PLAYLIST_QQ_ID
+                val item = GroupItemData(playlist)
+                if (it.list?.size == 0) {
+                    item.itemType = ChartsAdapter.ITEM_CHART
+                } else {
+                    item.itemType = ChartsAdapter.ITEM_CHART_LARGE
                 }
-                mView?.showQQCharts(data)
+                data.add(item)
             }
-
-            override fun error(msg: String) {
-                mView?.hideLoading()
-            }
+            mView?.showQQCharts(data)
+        }, fail = {
         })
     }
 
@@ -81,52 +81,35 @@ constructor() : BasePresenter<OnlinePlaylistContract.View>(), OnlinePlaylistCont
      * 加载网易云歌单
      */
     override fun loadTopList() {
-        val observable = PlaylistApiServiceImpl.getNeteaseRank(IntArray(22) { i -> i }, 3)
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
-            override fun success(result: MutableList<Playlist>) {
-                val data = mutableListOf<GroupItemData>()
-                data.add(GroupItemData("QQ音乐官方榜单"))
-                result.forEach {
-                    val item = GroupItemData(it)
-                    item.itemType = ChartsAdapter.ITEM_CHART
-                    data.add(item)
-                }
-                mView?.showNeteaseCharts(data)
-            }
-
-            override fun error(msg: String) {
-                mView.hideLoading()
-            }
-        })
     }
 
     /**
      * 加载Netease网易云歌单
      */
     fun loadNeteaseTopList() {
-        val observable = NeteaseApiServiceImpl.getTopList()
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
-            override fun success(result: MutableList<Playlist>) {
-                val data = mutableListOf<GroupItemData>()
-                data.add(GroupItemData("网易云音乐官方榜单"))
-                var flag = true
-                result.forEach {
-                    val item = GroupItemData(it)
-                    if (it.musicList.size > 0) {
-                        item.itemType = ChartsAdapter.ITEM_CHART_LARGE
-                    }
-                    if (it.musicList.size == 0 && flag) {
-                        data.add(GroupItemData("网易云音乐更多榜单"))
-                        flag = false
-                    }
-                    data.add(item)
+        BaseApiImpl.getAllNeteaseTopList(success = { result ->
+            val data = mutableListOf<GroupItemData>()
+            data.add(GroupItemData("网易云音乐官方榜单"))
+            var flag = true
+            result.forEach {
+                val playlist = Playlist()
+                playlist.pid = it.id
+                playlist.des = it.description
+                playlist.name = it.name
+                playlist.coverUrl = it.cover
+                playlist.playCount = it.playCount
+                playlist.musicList = MusicUtils.getMusicList(it.list, Constants.NETEASE)
+                playlist.type = Constants.PLAYLIST_WY_ID
+                val item = GroupItemData(playlist)
+                if (it.list?.size == 0) {
+                    item.itemType = ChartsAdapter.ITEM_CHART
+                } else {
+                    item.itemType = ChartsAdapter.ITEM_CHART_LARGE
                 }
-                mView?.showNeteaseCharts(data)
+                data.add(item)
             }
-
-            override fun error(msg: String) {
-                mView?.hideLoading()
-            }
+            mView?.showNeteaseCharts(data)
+        }, fail = {
         })
     }
 }

@@ -1,10 +1,12 @@
 package com.cyl.musiclake.ui.music.charts
 
+import com.cyl.musicapi.BaseApiImpl
+import com.cyl.musicapi.bean.TopListBean
+import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.api.music.baidu.BaiduApiServiceImpl
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
 import com.cyl.musiclake.api.net.ApiManager
 import com.cyl.musiclake.api.net.RequestCallBack
-import com.cyl.musiclake.api.playlist.PlaylistApiServiceImpl
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.Constants
@@ -17,7 +19,6 @@ import javax.inject.Inject
 
 class PlaylistPresenter @Inject
 constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Presenter {
-
 
     /**
      *根据歌单id获取歌单详情
@@ -43,24 +44,41 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
      * 获取排行榜歌单
      */
     override fun loadPlaylist(idx: String, type: String?) {
-        if (type == Constants.PLAYLIST_WY_ID) {
-            loadNeteasePlaylist(idx)
-            return
-        }
-
+        val musicType = if (type == Constants.PLAYLIST_QQ_ID) Constants.QQ else Constants.NETEASE
         mView?.showLoading()
-        val observable = PlaylistApiServiceImpl.getRankDetailInfo(intArrayOf(idx.toInt()), null, type)
-        ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
-            override fun success(result: MutableList<Playlist>) {
+        val callBack: (result: TopListBean) -> Unit = { bean ->
+            bean.let {
+                val playlist = Playlist()
+                playlist.coverUrl = it.cover
+                playlist.des = it.description
+                playlist.pid = it.id
+                playlist.name = it.name
+                playlist.type = type.toString()
+                playlist.playCount = it.playCount
+                playlist.musicList = MusicUtils.getMusicList(it.list, musicType)
                 mView?.hideLoading()
-                mView?.showPlayList(result.first())
+                mView?.showPlayList(playlist)
             }
-
-            override fun error(msg: String) {
-                mView?.showError(msg, true)
+        }
+        if (type == Constants.PLAYLIST_QQ_ID) {
+            BaseApiImpl.getQQTopList(idx, success = callBack, fail = {
+                mView?.showError(it, true)
+            })
+        } else {
+            BaseApiImpl.getPlaylistDetail(musicType, idx, {
+                val playlist = Playlist()
+                playlist.type = Constants.PLAYLIST_WY_ID
+                playlist.name = it.detail.name
+                playlist.des = it.detail.desc
+                playlist.coverUrl = it.detail.cover
+                playlist.pid = it.detail.id
+                playlist.musicList = MusicUtils.getMusicList(it.songs, musicType)
                 mView?.hideLoading()
-            }
-        })
+                mView?.showPlayList(playlist)
+            }, {
+                mView.showError(it, true)
+            })
+        }
     }
 
     /**

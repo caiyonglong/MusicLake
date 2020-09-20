@@ -164,7 +164,7 @@ constructor() : BasePresenter<PlaylistDetailContract.View>(), PlaylistDetailCont
                 })
 
             }
-            Constants.PLAYLIST_WY_ID -> {
+            Constants.NETEASE -> {
                 ApiManager.request(playlist.pid?.let { NeteaseApiServiceImpl.getPlaylistDetail(it) }, object : RequestCallBack<Playlist> {
                     override fun error(msg: String?) {
                         mView?.showError(msg, true)
