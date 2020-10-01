@@ -10,11 +10,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+
 import com.cyl.musiclake.utils.LogUtil;
+
 import android.view.KeyEvent;
 
 import com.cyl.musiclake.ui.main.MainActivity;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.ToastUtils;
 
 import java.util.List;
 
@@ -68,6 +71,7 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                     final String command;
 
                     if (DEBUG) LogUtil.v(TAG, "Handling headset click, count = " + clickCount);
+                    ToastUtils.show("Handling headset click, count = " + mClickCounter);
                     switch (clickCount) {
                         case 1:
                             command = MusicPlayerService.CMD_TOGGLE_PAUSE;
@@ -126,7 +130,8 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
     private static void releaseWakeLockIfHandlerIdle() {
         if (mHandler.hasMessages(MSG_LONGPRESS_TIMEOUT)
                 || mHandler.hasMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)) {
-            if (DEBUG) LogUtil.v(TAG, "Handler still has messages pending, not releasing wake lock");
+            if (DEBUG)
+                LogUtil.v(TAG, "Handler still has messages pending, not releasing wake lock");
             return;
         }
 
@@ -207,7 +212,9 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
                             }
 
                             mClickCounter++;
-                            if (DEBUG) LogUtil.v(TAG, "Got headset click, count = " + mClickCounter);
+                            if (DEBUG)
+                                LogUtil.v(TAG, "Got headset click, count = " + mClickCounter);
+                            ToastUtils.show("Got headset click, count = " + mClickCounter);
                             mHandler.removeMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT);
 
                             Message msg = mHandler.obtainMessage(

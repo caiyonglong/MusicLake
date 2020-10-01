@@ -62,7 +62,7 @@ class VideoInfoBean() : Parcelable {
     }
 
     constructor(parcel: Parcel) : this() {
-        vid = parcel.readString()
+        vid = parcel.readString().toString()
         title = parcel.readString()
         description = parcel.readString()
         shareCount = parcel.readLong()

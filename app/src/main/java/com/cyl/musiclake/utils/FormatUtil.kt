@@ -247,7 +247,7 @@ object FormatUtil {
 
     private fun formatFor(pattern: String): SimpleDateFormat {
         val ref = THREADLOCAL_FORMATS.get()
-        var formats: MutableMap<String, SimpleDateFormat>? = ref.get() as MutableMap<String, SimpleDateFormat>
+        var formats: MutableMap<String, SimpleDateFormat>? = ref?.get() as MutableMap<String, SimpleDateFormat>
         if (formats == null) {
             formats = HashMap()
             THREADLOCAL_FORMATS.set(

@@ -33,6 +33,7 @@ import com.cyl.musiclake.event.MetaChangedEvent;
 import com.cyl.musiclake.player.PlayManager;
 import com.cyl.musiclake.ui.theme.ThemeStore;
 import com.cyl.musiclake.utils.LogUtil;
+import com.cyl.musiclake.utils.StatusBarUtil;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -97,6 +98,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setUpTheme();
+        StatusBarUtil.setTransparentForWindow(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);

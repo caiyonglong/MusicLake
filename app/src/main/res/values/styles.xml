@@ -5,7 +5,7 @@
     <attr name="accentColor" format="reference" />
     <attr name="cardColor" format="reference" />
     <!--背景色-->
-    <attr name="backgroundColor" format="reference" />
+    <!--    <attr name="backgroundColor" format="reference" />-->
     <!--通用图标色-->
     <attr name="iconColor" format="reference" />
     <attr name="progressBackgroundColor" format="reference" />
@@ -24,7 +24,7 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar" />
 
     <!-- 为主色调 -->
     <style name="MyThemeBlue" parent="BaseTheme">
@@ -50,7 +50,7 @@
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
         </item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
 
         <item name="android:popupMenuStyle">@style/PopupMenuDayStyle</item>
         <item name="android:tabWidgetStyle">@style/CustomTabLayout.Light</item>
@@ -88,7 +88,7 @@
         <item name="progressDrawableWithBackground">@drawable/progress_drawable_withbackground
         </item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
 
         <item name="android:popupMenuStyle">@style/PopupMenuNightStyle</item>
         <item name="android:tabWidgetStyle">@style/CustomTabLayout.Dark</item>

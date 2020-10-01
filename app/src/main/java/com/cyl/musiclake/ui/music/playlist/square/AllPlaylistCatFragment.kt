@@ -47,7 +47,7 @@ class AllPlaylistCatFragment : androidx.fragment.app.DialogFragment(), ChannelVi
             lp?.height = WindowManager.LayoutParams.MATCH_PARENT
             lp?.windowAnimations = com.cyl.musiclake.R.style.dialogAnim
             lp?.gravity = Gravity.BOTTOM
-            it.window.attributes = lp
+            it.window?.attributes = lp
             it.setCanceledOnTouchOutside(true)
         }
         super.onStart()

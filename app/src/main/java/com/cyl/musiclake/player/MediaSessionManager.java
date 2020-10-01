@@ -1,6 +1,7 @@
 package com.cyl.musiclake.player;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -10,6 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.utils.CoverLoader;
+import com.cyl.musiclake.utils.LogUtil;
 
 /**
  * MediaSession管理类
@@ -53,6 +55,7 @@ public class MediaSessionManager {
         //指明支持的按键信息类型
         mMediaSession.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
         );
         mMediaSession.setCallback(callback, mHandler);
@@ -151,7 +154,12 @@ public class MediaSessionManager {
      */
     private MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
 
-//        接收到监听事件，可以有选择的进行重写相关方法
+        //        接收到监听事件，可以有选择的进行重写相关方法
+        @Override
+        public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+            LogUtil.d(TAG, "mediaButtonEvent" + mediaButtonEvent);
+            return super.onMediaButtonEvent(mediaButtonEvent);
+        }
 
         @Override
         public void onPlay() {

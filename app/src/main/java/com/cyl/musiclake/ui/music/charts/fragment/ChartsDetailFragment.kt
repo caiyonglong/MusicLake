@@ -75,19 +75,21 @@ class ChartsDetailFragment : BaseLazyFragment<OnlinePlaylistPresenter>(), Online
             chartListRcv.layoutManager = layoutManager
             mTopListAdapter?.clickListener = { position ->
                 val intent = Intent()
-                mTopListAdapter?.data?.get(position)?.data?.let {
-                    when {
-                        (it as Playlist).type == Constants.PLAYLIST_QQ_ID -> {
-                            intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                activity?.let {activity->
+                    mTopListAdapter?.data?.get(position)?.data?.let {
+                        when {
+                            (it as Playlist).type == Constants.PLAYLIST_QQ_ID -> {
+                                intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                            }
+                            it.type == Constants.PLAYLIST_WY_ID -> {
+                                intent.setClass(activity, NeteasePlaylistActivity::class.java)
+                            }
+                            else -> {
+                                intent.setClass(activity, BaiduMusicListActivity::class.java)
+                            }
                         }
-                        it.type == Constants.PLAYLIST_WY_ID -> {
-                            intent.setClass(activity, NeteasePlaylistActivity::class.java)
-                        }
-                        else -> {
-                            intent.setClass(activity, BaiduMusicListActivity::class.java)
-                        }
+                        intent.putExtra(Extras.PLAYLIST, it as Playlist)
                     }
-                    intent.putExtra(Extras.PLAYLIST, it as Playlist)
                 }
                 startActivity(intent)
             }

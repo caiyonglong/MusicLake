@@ -51,7 +51,7 @@ class Playlist() : LitePalSupport(), Parcelable {
         des = parcel.readString()
         order = parcel.readString()
         coverUrl = parcel.readString()
-        type = parcel.readString()
+        type = parcel.readString().toString()
     }
 
 

@@ -1,5 +1,5 @@
 <resources>
     <style name="PlayerActivity" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
     </style>
 </resources>
