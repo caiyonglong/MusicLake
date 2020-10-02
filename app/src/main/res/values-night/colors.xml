@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--应用基础色-->
+    <color name="colorPrimary">#111111</color>
+    <color name="colorPrimaryDark">#111111</color>
+    <color name="colorAccent">#ff5722</color>
+    <color name="window_background">#1C1C1C</color>
+
+    <!--文字主色调-->
+    <color name="textColorPrimary">#ffffff</color>
+    <color name="textColorSecondary">@color/white_translucent</color>
+
+    <!--背景色-->
+    <color name="main_background">#212121</color>
+    <color name="iconColor">@color/white</color>
+    <color name="cardColor">#202020</color>
+
+    <!--对话框-->
+    <color name="md_background_color">@color/window_background_dark</color>
+    <color name="md_ripple_color">@color/colorAccent</color>
+    <color name="md_color_title">@color/textColorPrimary</color>
+    <color name="md_color_content">@color/textColorPrimary</color>
+    <color name="md_color_button_text">@color/colorPrimary</color>
+
+
+    <color name="progressBackgroundColor">@color/progressBackgroundColorLight</color>
+
+</resources>

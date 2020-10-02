@@ -42,10 +42,11 @@
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_playlist_add"
+            android:drawableTint="@color/iconColor"
             android:gravity="center"
             android:lineSpacingExtra="2sp"
             android:text="@string/add_to_playlist"
-            android:textColor="@color/black"
+            android:textColor="@color/textColorPrimary"
             android:textSize="@dimen/sp_12" />
 
         <TextView
@@ -56,10 +57,11 @@
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/item_download"
+            android:drawableTint="@color/iconColor"
             android:gravity="center"
             android:lineSpacingExtra="2sp"
             android:text="@string/download_batch"
-            android:textColor="@color/black"
+            android:textColor="@color/textColorPrimary"
             android:textSize="@dimen/sp_12" />
 
         <TextView
@@ -70,10 +72,11 @@
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_delete_black"
+            android:drawableTint="@color/iconColor"
             android:gravity="center"
             android:lineSpacingExtra="2sp"
             android:text="@string/delete"
-            android:textColor="@color/black"
+            android:textColor="@color/textColorPrimary"
             android:textSize="@dimen/sp_12"
             android:visibility="gone" />
     </LinearLayout>

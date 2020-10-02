@@ -85,12 +85,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         //加载通知
         mPresenter?.loadMusicLakeNotice()
 
-        //显示通知
-        val noticeInfo = NoticeInfo()
-        noticeInfo.dismiss = true
-        noticeInfo.message = "因为网易云API是使用免费的云引擎搭建的服务器，所以请求会有些限制，云服务每天最多运行18个小时。所以有时候网易云音乐的API会请求异常，也可以自己部署本地的网易云音乐api服务"
-        noticeInfo.title = "提示"
-        showNoticeInfo(noticeInfo)
 
         //初始化歌单Tab
         playlistTab.addTab(playlistTab.newTab().setText("本地歌单").setTag(Constants.PLAYLIST_LOCAL_ID))
@@ -142,6 +136,19 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        //是否显示
+        if (SPUtils.getAnyByKey(SPUtils.SP_KEY_NOTICE_CODE, 0) == 0) {
+            //显示通知
+            val noticeInfo = NoticeInfo()
+            noticeInfo.id = 10
+            noticeInfo.dismiss = true
+            noticeInfo.message = "因为网易云API是使用免费的云引擎搭建的服务器，所以请求会有些限制，云服务每天最多运行18个小时。所以有时候网易云音乐的API会请求异常，也可以自己部署本地的网易云音乐api服务"
+            noticeInfo.title = "提示"
+            showNoticeInfo(noticeInfo)
+        }
+    }
 
     /**
      * 数据加载

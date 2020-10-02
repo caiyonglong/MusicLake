@@ -24,7 +24,6 @@
     <ImageView
         android:id="@+id/iv_cover"
         android:layout_width="45dp"
-        android:visibility="gone"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
@@ -32,6 +31,7 @@
         android:elevation="1dp"
         android:scaleType="centerCrop"
         android:transitionName="@string/transition_cover"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,11 +49,10 @@
         android:ellipsize="end"
         android:lines="1"
         android:text="@string/song"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="?android:textColor"
         android:textSize="@dimen/text_size_common"
         app:layout_constraintBottom_toTopOf="@+id/tv_artist"
         app:layout_constraintEnd_toStartOf="@+id/view_tag"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
         app:layout_constraintTop_toTopOf="parent" />
 

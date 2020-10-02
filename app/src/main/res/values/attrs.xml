@@ -109,4 +109,16 @@
         <attr name="tipFinishTextColor" format="color" />
         <attr name="tipFinishTextSize" format="dimension" />
     </declare-styleable>
+
+    <!--设置暗黑模式-->
+    <string-array name="settings_night_mode_entries">
+        <item>日间模式（浅色）</item>
+        <item>夜间模式（深色）</item>
+        <item>跟随系统</item>
+    </string-array>
+    <string-array name="settings_night_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

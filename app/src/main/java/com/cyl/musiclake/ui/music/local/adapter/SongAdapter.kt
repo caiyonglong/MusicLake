@@ -56,11 +56,12 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             recyclerView.scrollToPosition(holder.adapterPosition)
         } else {
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
-            if (ThemeStore.THEME_MODE == ThemeStore.DAY) {
-                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.black))
-            } else {
-                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.white))
-            }
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.textColorPrimary))
+
+//            if (ThemeStore.THEME_MODE == ThemeStore.DAY) {
+//                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.black))
+//            } else {
+//            }
             holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
         }
 

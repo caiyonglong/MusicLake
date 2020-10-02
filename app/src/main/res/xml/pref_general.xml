@@ -1,6 +1,10 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:iconSpaceReserved="false">
 
-    <PreferenceCategory android:title="@string/info_common_settings">
+    <PreferenceCategory
+        android:title="@string/info_common_settings"
+        app:iconSpaceReserved="false">
 
         <!--<CheckBoxPreference-->
         <!--android:key="night_mode"-->
@@ -9,23 +13,29 @@
         <CheckBoxPreference
             android:key="key_lyric"
             android:summary="@string/setting_lyric_des"
-            android:title="@string/setting_lyric" />
+            android:title="@string/setting_lyric"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreference
             android:key="key_socket"
             android:summary="@string/setting_socket_des"
-            android:title="@string/setting_socket" />
+            android:title="@string/setting_socket"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="wifi_mode"
             android:summary="@string/pref_title_wifi_summary"
-            android:title="@string/pref_title_wifi" />
+            android:title="@string/pref_title_wifi"
+            app:iconSpaceReserved="false" />
 
-        <SwitchPreference
-            android:defaultValue="false"
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/settings_night_mode_entries"
+            android:entryValues="@array/settings_night_mode_values"
             android:key="key_night_mode"
-            android:title="@string/nav_night" />
+            android:title="@string/nav_night"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
@@ -36,39 +46,52 @@
         android:key="key_music_quality"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="@string/pref_title_select_quality" />
+        android:title="@string/pref_title_select_quality"
+        app:iconSpaceReserved="false" />
 
-    <PreferenceCategory android:title="@string/item_download">
+    <PreferenceCategory
+        android:title="@string/item_download"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="key_download_file"
-            android:title="@string/pref_title_download" />
+            android:title="@string/pref_title_download"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreference
             android:checked="true"
             android:defaultValue="false"
             android:key="key_cache_mode"
             android:summary="@string/pref_summary_cache_switch"
-            android:title="@string/pref_title_cache_switch" />
+            android:title="@string/pref_title_cache_switch"
+            app:iconSpaceReserved="false" />
 
         <Preference
             android:enabled="false"
             android:key="key_cache_file"
-            android:title="@string/pref_title_cache" />
+            android:title="@string/pref_title_cache"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_notifications">
+    <PreferenceCategory
+        android:title="@string/pref_header_notifications"
+        app:iconSpaceReserved="false">
         <EditTextPreference
             android:key="key_music_api"
-            android:title="@string/pref_title_music_api" />
+            android:title="@string/pref_title_music_api"
+            app:iconSpaceReserved="false" />
         <EditTextPreference
             android:key="key_netease_api"
-            android:title="@string/pref_title_netease" />
+            android:title="@string/pref_title_netease"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_data_sync">
+    <PreferenceCategory
+        android:title="@string/pref_header_data_sync"
+        app:iconSpaceReserved="false">
         <PreferenceScreen
             android:key="key_cache"
-            android:title="@string/pref_title_clear" />
+            android:title="@string/pref_title_clear"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>

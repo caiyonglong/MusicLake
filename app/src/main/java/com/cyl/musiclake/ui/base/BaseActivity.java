@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -15,11 +16,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -99,6 +102,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setUpTheme();
         StatusBarUtil.setTransparentForWindow(this);
+        initStatusBar();
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);
@@ -312,15 +316,51 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     public void onDefaultEvent(MetaChangedEvent event) {
     }
 
-    private void setUpTheme() {
-        ThemeStore.THEME_MODE = ThemeStore.getThemeMode();
-        if (ThemeStore.THEME_MODE == ThemeStore.NIGHT) {
-            setTheme(R.style.MyThemeDark);
-        } else {
-            setTheme(R.style.MyThemeBlue);
+
+
+    /**
+     * 全屏沉淀式状态栏
+     */
+    public void initStatusBar() {
+        // 延伸显示区域到刘海
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            // 延伸显示区域到刘海
+            getWindow().setAttributes(layoutParams);
         }
     }
 
+    private void setUpTheme() {
+        ThemeStore.THEME_MODE = ThemeStore.getThemeMode();
+        LogUtil.d("BaseActivity", "setUpTheme THEME_MODE = " + ThemeStore.THEME_MODE);
+        if (ThemeStore.THEME_MODE == ThemeStore.SYSTEM) {
+            if (isDarkTheme(this)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        } else {
+            if (ThemeStore.THEME_MODE == ThemeStore.NIGHT) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        }
+    }
+
+    /**
+     * 更新App主题
+     */
+    public void updateAppTheme(int index) {
+        ThemeStore.updateThemeMode(index);
+        setUpTheme();
+    }
+
+    public boolean isDarkTheme(Context context) {
+        int flag = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return flag == Configuration.UI_MODE_NIGHT_YES;
+    }
 
     /**
      * https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA

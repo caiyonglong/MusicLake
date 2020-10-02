@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--夜间模式菜单-->
+    <style name="PopupMenuStyle" parent="Base.ThemeOverlay.AppCompat.Dark">
+        <item name="android:disabledAlpha">0.5</item>
+        <item name="android:textColor">@color/night_text_color_primary</item>
+    </style>
+
+    <!--tabLayout样式-->
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/colorAccentDarkTheme</item>
+    </style>
+
+    <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="android:textColor">@color/dark_normal_tab_text_color</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+</resources>
