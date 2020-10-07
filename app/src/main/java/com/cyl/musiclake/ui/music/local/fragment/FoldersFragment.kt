@@ -7,6 +7,7 @@ import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.FolderInfo
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.common.Constants
+import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
@@ -24,7 +25,6 @@ import org.jetbrains.anko.support.v4.startActivity
  */
 
 class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.View {
-
     private var mAdapter: FolderAdapter? = null
     private var mSongAdapter: SongAdapter? = null
     var folderInfos = mutableListOf<FolderInfo>()
@@ -32,12 +32,10 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     var curFolderName: String? = null
 
     override fun getLayoutId(): Int {
-        return R.layout.frag_local_song
+        return R.layout.frag_folder
     }
 
     override fun initViews() {
-        recyclerView?.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
-        initHeader()
     }
 
     override fun initInjector() {
@@ -45,10 +43,6 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
     }
 
     override fun listener() {
-        menuIv.setOnClickListener {
-            EditSongListActivity.musicList = songList
-            startActivity<EditSongListActivity>()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -64,18 +58,19 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
         mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 
-    override fun showFolders(folderInfos: List<FolderInfo>) {
-        updateHeader(true)
+    override fun showFolders(folderInfos: MutableList<FolderInfo>) {
         if (mAdapter == null) {
-            this.folderInfos = folderInfos as MutableList<FolderInfo>
+            this.folderInfos = folderInfos
             mAdapter = FolderAdapter(folderInfos)
             recyclerView?.adapter = mAdapter
             mAdapter?.bindToRecyclerView(recyclerView)
             mAdapter?.setOnItemClickListener { adapter, _, position ->
+                //打开文件夹
                 val folderInfo = adapter.getItem(position) as FolderInfo?
-                folderInfo?.folderPath?.let {
-                    mPresenter?.loadSongs(it)
-                    updateHeader(false, it)
+                activity?.let { it1 ->
+                    if (folderInfo != null) {
+                        NavigationHelper.navigateToFolderSongs(it1, folderInfo)
+                    }
                 }
             }
         } else {
@@ -83,7 +78,6 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
             mAdapter?.setNewData(folderInfos)
         }
     }
-
 
     override fun showSongs(musicList: MutableList<Music>?) {
         songList.clear()
@@ -114,41 +108,10 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
         }
     }
 
-    private fun updateHeader(isFolderMode: Boolean, curFolder: String? = null) {
-        swipe_refresh.isRefreshing = false
-        if (isFolderMode) {
-            songNumTv.text = "..."
-            reloadIv.visibility = View.GONE
-            menuIv.visibility = View.GONE
-        } else {
-            curFolderName = curFolder
-            songNumTv.text = curFolder
-            reloadIv.visibility = View.VISIBLE
-            menuIv.visibility = View.VISIBLE
-        }
-    }
-
-    /**
-     * 初始化文件头
-     */
-    private fun initHeader() {
-        songNumTv.text = "..."
-        reloadIv.visibility = View.GONE
-        menuIv.visibility = View.GONE
-        iconIv.setImageResource(R.drawable.ic_folder)
-        reloadIv.setImageResource(R.drawable.ic_arrow_back)
-        reloadIv.setOnClickListener {
-            reloadIv.visibility = View.GONE
-            showFolders(folderInfos)
-        }
-    }
 
     companion object {
-
         fun newInstance(): FoldersFragment {
-
             val args = Bundle()
-
             val fragment = FoldersFragment()
             fragment.arguments = args
             return fragment

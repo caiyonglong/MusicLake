@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item>
+        <shape
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <solid android:color="@color/default_cover_bg" />
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/ic_music"
+        android:gravity="center"
+        android:left="@dimen/dp_24"
+        android:right="@dimen/dp_24" />
+</layer-list>

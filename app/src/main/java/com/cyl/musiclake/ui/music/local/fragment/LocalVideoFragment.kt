@@ -2,12 +2,15 @@ package com.cyl.musiclake.ui.music.local.fragment
 
 
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
+import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.base.BaseFragment
 import com.cyl.musiclake.ui.music.dialog.BottomDialogFragment
 import com.cyl.musiclake.ui.music.local.adapter.SongAdapter
@@ -26,15 +29,14 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     private var path: String? = null
     private var musicList: List<Music> = ArrayList()
 
-
     override fun showEmptyView() {
         mAdapter?.setEmptyView(R.layout.view_song_empty, mRecyclerView)
     }
 
-
     override fun loadData() {
         showLoading()
-        path?.let { mPresenter?.loadSongs(it) }
+        val name = arguments?.getString(Extras.FOLDER_NAME)
+        path?.let { mPresenter?.loadSongs(it, !TextUtils.isEmpty(name)) }
     }
 
     override fun getLayoutId(): Int {
@@ -45,7 +47,6 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
         mAdapter = SongAdapter(musicList)
         mRecyclerView?.layoutManager = LinearLayoutManager(activity)
         mRecyclerView?.adapter = mAdapter
-        mRecyclerView?.addItemDecoration(ItemDecoration(mFragmentComponent.activity, ItemDecoration.VERTICAL_LIST))
         mAdapter?.bindToRecyclerView(mRecyclerView)
         setHasOptionsMenu(true)
     }
@@ -53,6 +54,10 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     override fun getToolBarTitle(): String? {
         if (arguments != null) {
             path = arguments?.getString(Extras.FOLDER_PATH)
+            val name = arguments?.getString(Extras.FOLDER_NAME)
+            if (!TextUtils.isEmpty(name)) {
+                return name
+            }
         }
         return context?.getString(R.string.item_video)
     }
@@ -64,19 +69,15 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {
-                startActivity<VideoPlayerActivity>(Extras.VIDEO_PATH to musicList[position].uri,
-                        Extras.MV_TITLE to musicList[position].title)
+                if (Constants.VIDEO == musicList[position].type) {
+                    startActivity<VideoPlayerActivity>(Extras.VIDEO_PATH to musicList[position].uri,
+                            Extras.MV_TITLE to musicList[position].title)
+                } else {
+                    PlayManager.play(position, musicList, Constants.PLAYLIST_LOCAL_ID)
+                }
             }
         }
         mAdapter?.setOnItemChildClickListener { adapter, view, position -> BottomDialogFragment.newInstance(musicList[position]).show(mFragmentComponent.activity as AppCompatActivity) }
-    }
-
-    override fun showLoading() {
-        super.showLoading()
-    }
-
-    override fun hideLoading() {
-        super.hideLoading()
     }
 
     override fun showSongs(musicList: List<Music>) {
@@ -86,12 +87,19 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
     }
 
     companion object {
-
         fun newInstance(path: String): LocalVideoFragment {
-
             val args = Bundle()
             args.putString(Extras.FOLDER_PATH, path)
+            args.putString(Extras.FOLDER_NAME, path)
+            val fragment = LocalVideoFragment()
+            fragment.arguments = args
+            return fragment
+        }
 
+        fun newInstance(path: String, name: String): LocalVideoFragment {
+            val args = Bundle()
+            args.putString(Extras.FOLDER_PATH, path)
+            args.putString(Extras.FOLDER_NAME, name)
             val fragment = LocalVideoFragment()
             fragment.arguments = args
             return fragment

@@ -10,6 +10,7 @@ import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.common.NavigationHelper
 import com.cyl.musiclake.ui.base.BaseFragment
+import com.cyl.musiclake.ui.base.BaseLazyFragment
 import com.cyl.musiclake.ui.music.charts.PlaylistContract
 import com.cyl.musiclake.ui.music.charts.PlaylistPresenter
 import com.cyl.musiclake.ui.music.discover.TopPlaylistAdapter
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 /**
  * Created by Monkey on 2015/6/29.
  */
-class PlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.View {
+class PlaylistFragment : BaseLazyFragment<PlaylistPresenter>(), PlaylistContract.View {
 
     /**
      * 适配器
@@ -36,7 +37,7 @@ class PlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.Vie
         if (mNeteaseAdapter == null) {
             //适配器
             mNeteaseAdapter = TopPlaylistAdapter(playlist)
-            recyclerView?.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            recyclerView?.layoutManager = GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
             recyclerView?.adapter = mNeteaseAdapter
             recyclerView?.isFocusable = false
             recyclerView?.isNestedScrollingEnabled = false
@@ -72,8 +73,6 @@ class PlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.Vie
     }
 
     override fun loadData() {
-        val tag = arguments?.getString("Tag", "全部")
-        tag?.let { mPresenter?.loadNetease(it) }
     }
 
 
@@ -90,5 +89,10 @@ class PlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.Vie
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onLazyLoad() {
+        val tag = arguments?.getString("Tag", "全部")
+        tag?.let { mPresenter?.loadNetease(it) }
     }
 }

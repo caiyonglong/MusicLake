@@ -217,7 +217,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item?.itemId == R.id.action_detail) {
             startActivity<ChatDetailActivity>()
         } else if (item?.itemId == R.id.action_about) {

@@ -22,7 +22,7 @@ class AlbumAdapter(private val albumList: List<Album>) : BaseQuickAdapter<Album,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             helper.getView<View>(R.id.album).transitionName = Constants.TRANSTITION_ALBUM
         }
-        CoverLoader.loadImageView(mContext, album.cover, helper.getView(R.id.album))
+        CoverLoader.loadImageView(mContext, album.cover, R.drawable.default_cover_place_hor,helper.getView(R.id.album))
         if (album.cover.isNullOrEmpty()) {
             album.name?.let {
                 MusicApi.getMusicAlbumPic(album.name.toString(), success = {

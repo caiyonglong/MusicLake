@@ -13,6 +13,7 @@ class FolderAdapter(folderInfos: List<FolderInfo>) : BaseQuickAdapter<FolderInfo
 
     override fun convert(holder: BaseViewHolder, folderInfo: FolderInfo) {
         holder.setText(R.id.tv_title, folderInfo.folderName)
-        holder.setText(R.id.tv_artist, folderInfo.folderPath)
+        holder.setText(R.id.tv_artist, "${folderInfo.songCount} "+mContext.getString(R.string.song))
+        holder.setText(R.id.tv_folder_path,  folderInfo.folderPath)
     }
 }

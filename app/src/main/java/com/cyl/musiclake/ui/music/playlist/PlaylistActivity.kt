@@ -24,11 +24,11 @@ class PlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>() {
     }
 
     override fun setToolbarTitle(): String {
-        return intent.getStringExtra("curTag")
+        return intent.getStringExtra("curTag")?:""
     }
 
     override fun initData() {
-        curTag = intent.getStringExtra("curTag")
+        curTag = intent.getStringExtra("curTag")?:""
         //开始加载
         navigateLibrary.run()
     }

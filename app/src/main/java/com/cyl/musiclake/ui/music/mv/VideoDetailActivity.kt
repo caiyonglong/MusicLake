@@ -30,7 +30,7 @@ class VideoDetailActivity : BaseActivity<VideoDetailPresenter?>(), VideoDetailCo
     private var mType: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mVid = intent.getStringExtra(Extras.VIDEO_VID)
+        mVid = intent.getStringExtra(Extras.VIDEO_VID)?:""
         mType = intent.getIntExtra(Extras.VIDEO_TYPE, 1)
         super.onCreate(savedInstanceState)
     }

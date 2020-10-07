@@ -35,7 +35,7 @@
                     android:layout_height="@dimen/dp_56"
                     android:gravity="center_vertical"
                     app:iv_icon="@drawable/item_music"
-                    app:iv_icon_color="@color/colorPrimary"
+                    app:iv_icon_color="@color/logo_blue"
                     app:tv_desc="@string/default_num"
                     app:tv_name="@string/item_local" />
 

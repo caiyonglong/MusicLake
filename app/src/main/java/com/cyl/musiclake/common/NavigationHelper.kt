@@ -16,6 +16,7 @@ import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.bean.Artist
+import com.cyl.musiclake.bean.FolderInfo
 import com.cyl.musiclake.bean.Playlist
 import com.cyl.musiclake.event.PlaylistEvent
 import com.cyl.musiclake.player.MusicPlayerService
@@ -86,12 +87,13 @@ object NavigationHelper {
         }
     }
 
-
-    fun navigateToFolderSongs(context: Activity, path: String) {
+    /**
+     * 打开指定文件夹
+     */
+    fun navigateToFolderSongs(context: Activity, folderInfo: FolderInfo) {
         val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
         val fragment: androidx.fragment.app.Fragment
-
-        fragment = LocalVideoFragment.newInstance(path)
+        fragment = LocalVideoFragment.newInstance(folderInfo.folderPath, folderInfo.folderName)
         context.supportFragmentManager.findFragmentById(R.id.fragment_container)?.let { transaction.hide(it) }
         transaction.add(R.id.fragment_container, fragment)
         transaction.addToBackStack(fragment.getTag()).commit()

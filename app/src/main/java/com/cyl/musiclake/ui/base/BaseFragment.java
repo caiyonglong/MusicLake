@@ -135,7 +135,6 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
         detachView();
     }
 
@@ -200,6 +199,9 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
     private void detachView() {
         if (mPresenter != null) {
             mPresenter.detachView();
+        }
+        if (unbinder!=null){
+            unbinder.unbind();
         }
     }
 

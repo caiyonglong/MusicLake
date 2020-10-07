@@ -6,7 +6,7 @@ class FolderInfo : LitePalSupport {
 
     val folderName: String
     val folderPath: String
-    val songCount: Int
+    var songCount: Int
 
     constructor(_folderName: String, _folderPath: String, _songCount: Int) {
         this.folderName = _folderName

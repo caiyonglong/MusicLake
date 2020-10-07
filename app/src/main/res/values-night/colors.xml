@@ -20,9 +20,11 @@
     <color name="md_ripple_color">@color/colorAccent</color>
     <color name="md_color_title">@color/textColorPrimary</color>
     <color name="md_color_content">@color/textColorPrimary</color>
-    <color name="md_color_button_text">@color/colorPrimary</color>
-
+    <color name="md_color_button_text">@color/colorAccent</color>
 
     <color name="progressBackgroundColor">@color/progressBackgroundColorLight</color>
+
+    <!--占位图背景色-->
+    <color name="default_cover_bg">#111111</color>
 
 </resources>

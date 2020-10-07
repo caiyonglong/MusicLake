@@ -35,11 +35,13 @@ class SongCommentActivity : BaseActivity<BasePresenter<BaseContract.BaseView>>()
 
     override fun initData() {
         val music = intent.getParcelableExtra<Music>(Extras.SONG)
-        MusicApi.getMusicCommentInfo(music, success = {
+        music?.let {
+            MusicApi.getMusicCommentInfo(it, success = {
             updateSongComment(it)
         }, fail = {
             showError("未搜索到当前歌曲评论", false)
         })
+        }
     }
 
     private fun updateSongComment(comments: MutableList<SongComment>?) {

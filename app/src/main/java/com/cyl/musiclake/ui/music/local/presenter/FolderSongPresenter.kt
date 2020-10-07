@@ -1,5 +1,7 @@
 package com.cyl.musiclake.ui.music.local.presenter
 
+import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.data.VideoLoader
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.music.local.contract.FolderSongsContract
@@ -16,7 +18,20 @@ constructor() : BasePresenter<FolderSongsContract.View>(), FolderSongsContract.P
 
     override fun loadSongs(path: String) {
         doAsync {
-            val musicList = VideoLoader.getAllLocalVideos(mView.context)
+            val musicList = SongLoader.getSongListInFolder(mView.context, path)
+            uiThread {
+                mView?.showSongs(musicList)
+            }
+        }
+    }
+
+    fun loadSongs(path: String, isMusic: Boolean) {
+        doAsync {
+            val musicList = if (isMusic) {
+                SongLoader.getSongListInFolder(mView.context, path)
+            } else {
+                VideoLoader.getAllLocalVideos(mView.context)
+            }
             uiThread {
                 mView?.showSongs(musicList)
             }

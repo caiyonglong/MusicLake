@@ -25,6 +25,8 @@
 
     <color name="progressBackgroundColor">@color/white</color>
 
+    <!--占位图背景色-->
+    <color name="default_cover_bg">#EAF0FC</color>
 
     <color name="white">#ffffff</color>
     <color name="gray">#9e9e9e</color>

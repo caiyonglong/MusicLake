@@ -21,7 +21,7 @@ class ArtistAdapter(private val artistList: List<Artist>) : BaseQuickAdapter<Art
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             helper.getView<ImageView>(R.id.album).transitionName = Constants.TRANSTITION_ALBUM
         }
-        CoverLoader.loadImageView(mContext, artist.picUrl, helper.getView(R.id.album))
+        CoverLoader.loadImageView(mContext, artist.picUrl,R.drawable.default_cover_place_hor, helper.getView(R.id.album))
         if (artist.picUrl.isNullOrEmpty()) {
             artist.name?.let {
                 MusicApi.getMusicAlbumPic(artist.name.toString(), success = {

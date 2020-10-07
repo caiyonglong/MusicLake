@@ -92,7 +92,7 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item?.itemId == R.id.menu_select_all) {
             if (mAdapter?.checkedMap?.size == musicList.size) {
                 item.title = getString(R.string.all_select)

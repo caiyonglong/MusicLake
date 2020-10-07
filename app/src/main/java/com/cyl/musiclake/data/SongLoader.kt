@@ -12,6 +12,7 @@ import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.utils.CoverLoader
 import com.cyl.musiclake.utils.LogUtil
 import org.litepal.LitePal
+import java.io.File
 
 
 object SongLoader {
@@ -66,6 +67,10 @@ object SongLoader {
     }
 
 
+    private fun getSongsForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
+        return getSongsForMedia(context, cursor, null);
+    }
+
     /**
      * Android 扫描获取到的数据
      *
@@ -73,7 +78,7 @@ object SongLoader {
      * @param cursor
      * @return
      */
-    private fun getSongsForMedia(context: Context, cursor: Cursor?): MutableList<Music> {
+    private fun getSongsForMedia(context: Context, cursor: Cursor?, folderPath: String?): MutableList<Music> {
         val results = mutableListOf<Music>()
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -102,8 +107,11 @@ object SongLoader {
                     music.duration = duration.toLong()
                     music.title = title
                     music.date = System.currentTimeMillis()
-                    DaoLitepal.saveOrUpdateMusic(music)
-                    results.add(music)
+                    //解决获取文件夹内歌曲时，数量不对
+                    if (TextUtils.isEmpty(folderPath) || (!TextUtils.isEmpty(folderPath) && File(path).parent == folderPath)) {
+                        DaoLitepal.saveOrUpdateMusic(music)
+                        results.add(music)
+                    }
                 } while (cursor.moveToNext())
             }
             cursor?.close()
@@ -198,7 +206,7 @@ object SongLoader {
 
     fun getSongListInFolder(context: Context, path: String): MutableList<Music> {
         val whereArgs = arrayOf("$path%")
-        return getSongsForMedia(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null))
+        return getSongsForMedia(context, makeSongCursor(context, MediaStore.Audio.Media.DATA + " LIKE ?", whereArgs, null), path)
     }
 
     fun makeSongCursor(context: Context, selection: String?, paramArrayOfString: Array<String>?): Cursor? {

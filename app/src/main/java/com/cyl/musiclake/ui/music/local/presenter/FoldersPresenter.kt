@@ -50,7 +50,9 @@ constructor() : BasePresenter<FoldersContract.View>(), FoldersContract.Presenter
                     }
 
                     override fun onError(e: Throwable) {
+                        e.printStackTrace()
                         mView.hideLoading()
+                        mView.showFolders(mutableListOf())
                     }
 
                     override fun onComplete() {

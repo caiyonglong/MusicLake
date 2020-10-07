@@ -40,7 +40,6 @@ import org.jetbrains.anko.yesButton
  */
 class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
-
     private var localPlaylists = mutableListOf<Playlist>()
     private var playlists = mutableListOf<Playlist>()
     private var wyPlaylists = mutableListOf<Playlist>()
@@ -51,7 +50,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
     override fun getLayoutId(): Int {
         return R.layout.frag_local
     }
-
 
     override fun showNoticeInfo(notice: NoticeInfo) {
         alert {

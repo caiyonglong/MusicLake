@@ -5,12 +5,14 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.ui.music.charts.fragment.ChartsDetailFragment;
 import com.cyl.musiclake.ui.music.discover.DiscoverFragment;
+import com.cyl.musiclake.ui.music.local.fragment.FoldersFragment;
 import com.cyl.musiclake.ui.music.my.MyMusicFragment;
 import com.cyl.musiclake.ui.music.video.VideoSquareFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -63,7 +65,7 @@ public class MainFragment extends BaseFragment {
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
         setupViewPager(mViewPager);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(5);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -88,10 +90,12 @@ public class MainFragment extends BaseFragment {
         });
     }
 
+
     @Override
     protected void initInjector() {
 
     }
+
 
     private void setupViewPager(ViewPager mViewPager) {
         PageAdapter mAdapter = new PageAdapter(getChildFragmentManager());
@@ -99,8 +103,8 @@ public class MainFragment extends BaseFragment {
         mAdapter.addFragment(DiscoverFragment.Companion.newInstance(), getContext().getString(R.string.discover));
         mAdapter.addFragment(ChartsDetailFragment.Companion.newInstance(), getContext().getString(R.string.charts));
         mAdapter.addFragment(VideoSquareFragment.Companion.newInstance(), getContext().getString(R.string.video_title));
+        mAdapter.addFragment(FoldersFragment.Companion.newInstance(), getString(R.string.folder_title));
         mViewPager.setAdapter(mAdapter);
     }
 
 }
-

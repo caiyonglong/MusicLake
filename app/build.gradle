@@ -15,11 +15,11 @@ android {
             storePassword '123123'
         }
     }
-    buildToolsVersion '29.0.3'
+    buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "com.cyl.musiclake"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 35
         versionName "5.0.4"
         multiDexEnabled true
@@ -60,7 +60,7 @@ android {
             outputFileName = "musicLake-${variant.name}-v${defaultConfig.versionCode}-${defaultConfig.versionName}-${time}.apk"
         }
     }
-    compileSdkVersion 29
+    compileSdkVersion 30
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -179,7 +179,7 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.3'
 
     //Android音乐接口Api
-    implementation 'com.github.caiyonglong:musicapi:1.1.2'
+    implementation 'com.github.caiyonglong:musicapi:1.1.3'
 //    implementation project(':musicapi')
     //缓存
     implementation 'com.danikula:videocache:2.7.1'
