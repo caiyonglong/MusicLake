@@ -6,7 +6,7 @@
 
 # 编译&服务器部署 
  [build.md](BUILD.md)
-  
+
 # 功能版本
 - Android 音乐播放器(本地/在线播放) （最低支持Android版本5.0）
 - 支持多平台音乐源，百度音乐，虾米音乐、网易云音乐、Youtube（需要翻墙）
@@ -15,22 +15,17 @@
 - QQ登录、微博登陆、在线歌单同步
 - 网易云热门歌手，百度电台列表，网易云mv排行榜，mv播放评论
 - 酷狗歌词搜索、修改歌词样式、歌词翻译
-- 精力有限，需求不饱和都会逐步完善
 - [PC端](https://github.com/sunzongzheng/music)
 
-- [交流群:549939157](https://jq.qq.com/?_wv=1027&k=5XrNrCJ) 加群需要问题验证，正确回答：github
-- [交流2号群:824825515](https://jq.qq.com/?_wv=1027&k=h1t2ST8z) 因为QQ群人数限制，所以新建2号群，欢迎加入交流
+### 开源不易，有兴趣可给个star，支持一下哦！
+- 群聊已经解散，有什么问题可以提[issues](https://github.com/caiyonglong/MusicLake/issues)！，有想法可以提PR。感谢关注🙏
 
 ![功能](screenshots/features.png)
-
-
-### 开源不易，有兴趣可给个star，支持一下哦！
-持续更新，有什么问题可以提[issues](https://github.com/caiyonglong/MusicLake/issues)！
 
 # 计划
 - [ ] 整理文档
 - [ ] 代码重构
- 
+
 # 相关项目|音乐API
 - [客户端音乐API](https://github.com/caiyonglong/MusicApi)
 - [客户端/PC音乐共用API](https://github.com/sunzongzheng/musicApi)
