@@ -173,9 +173,13 @@ public class ApiManager {
                             String errorInfo = "";
                             try {
                                 errorInfo = ((HttpException) e).response().errorBody().string();
-                                JSONObject jsonObject = new JSONObject(errorInfo);
-                                String error = jsonObject.getString("msg");
-                                result.error(error);
+                                if (errorInfo.startsWith("{")){
+                                    JSONObject jsonObject = new JSONObject(errorInfo);
+                                    String error = jsonObject.getString("msg");
+                                    result.error(error);
+                                }else{
+                                    result.error(errorInfo);
+                                }
                             } catch (IOException | JSONException e1) {
                                 e1.printStackTrace();
                                 LogUtil.d("ApiManager", "errorInfo=" + errorInfo);

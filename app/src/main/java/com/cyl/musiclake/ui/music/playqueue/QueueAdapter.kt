@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.playqueue
 import android.graphics.Color
 import androidx.palette.graphics.Palette
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.cyl.musiclake.R
@@ -30,12 +31,8 @@ class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHol
             holder.setTextColor(R.id.tv_title, Color.parseColor("#0091EA"))
             holder.setTextColor(R.id.tv_artist, Color.parseColor("#01579B"))
         } else {
-            if (ThemeStore.THEME_MODE == ThemeStore.DAY) {
-                holder.setTextColor(R.id.tv_title, Color.parseColor("#000000"))
-            } else {
-                holder.setTextColor(R.id.tv_title, Color.parseColor("#ffffff"))
-            }
-            holder.setTextColor(R.id.tv_artist, Color.parseColor("#9e9e9e"))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.textColorPrimary))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.textColorSecondary))
         }
         holder.addOnClickListener(R.id.iv_more)
         if (item.type == Constants.LOCAL) {

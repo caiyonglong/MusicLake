@@ -6,13 +6,9 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musicapi.netease.CommentsItemInfo
-import com.cyl.musicapi.netease.MvInfoDetail
-import com.cyl.musicapi.netease.MvInfoDetailInfo
 import com.cyl.musiclake.R
-import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.bean.MvInfoBean
 import com.cyl.musiclake.bean.VideoInfoBean
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.common.Extras
 import com.cyl.musiclake.common.NavigationHelper.navigateToArtist
 import com.cyl.musiclake.ui.base.BaseFragment

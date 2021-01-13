@@ -62,7 +62,7 @@ object NeteaseApiServiceImpl {
                     Observable.create(ObservableOnSubscribe<MutableList<Playlist>> { e ->
                         try {
                             if (it.code == 200) {
-                                val list = mutableListOf<Playlist>()
+                                val list    = mutableListOf<Playlist>()
                                 it.playlists?.forEach {
                                     val playlist = Playlist()
                                     playlist.pid = it.id.toString()
