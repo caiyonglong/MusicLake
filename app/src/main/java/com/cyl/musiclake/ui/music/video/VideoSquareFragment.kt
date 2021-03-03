@@ -11,8 +11,6 @@ import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.ui.main.MainActivity
 import com.cyl.musiclake.ui.main.PageAdapter
 import com.cyl.musiclake.ui.music.mv.MvListFragment
-import com.cyl.musiclake.utils.ToastUtils
-import com.squareup.haha.perflib.Main
 import kotlinx.android.synthetic.main.frag_mv.*
 
 /**
