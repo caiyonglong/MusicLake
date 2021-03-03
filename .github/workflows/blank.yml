@@ -34,4 +34,4 @@ jobs:
 
       # 执行编译脚本
       - name: Build project
-        run: ./gradlew build
+        run: ./gradlew assembleRelease
