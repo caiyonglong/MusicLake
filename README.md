@@ -1,4 +1,5 @@
-# MusicLake [![Build Status](https://travis-ci.org/caiyonglong/MusicLake.svg?branch=develop)](https://travis-ci.org/caiyonglong/MusicLake)
+# MusicLake
+![Workflow result](https://github.com/caiyonglong/MusicLake/workflows/Check/badge.svg)
 
 [MediaPlayer、ExoPlayer音乐库封装](https://github.com/caiyonglong/MusicLake/tree/dev_musiclib)
 
